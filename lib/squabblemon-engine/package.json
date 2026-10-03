@@ -7,6 +7,7 @@
     "./rookie": "./src/rookie.ts",
     "./multiplayer": "./src/multiplayer.ts",
     "./economy": "./src/economy.ts",
+    "./pullBanners": "./src/pullBanners.ts",
     "./packRules": "./src/packRules.ts",
     ".": "./src/gameEngine.ts",
     "./data": "./src/data.ts",

@@ -117,6 +117,7 @@ const catalogPools = Object.fromEntries(
 
 /** Testable tier boundary used by pack generation; empty authored tiers fail loudly. */
 export function drawGameplayCard(input: {
+  featuredCardIds?: readonly string[];
   pools?: CardPools;
   pulledCardIds: ReadonlySet<string>;
   ownedCardIds: ReadonlySet<string>;
@@ -125,6 +126,7 @@ export function drawGameplayCard(input: {
 }) {
   const rarity = rollWeightedRarity(STREET_PACK_RARITY_WEIGHTS, input.rng);
   return choosePackCardFromTier({
+    featuredCardIds: input.featuredCardIds,
     rarity,
     tier: (input.pools ?? catalogPools)[rarity],
     pulledCardIds: input.pulledCardIds,
@@ -137,6 +139,7 @@ export function drawGameplayCard(input: {
 export function generateStreetPack(
   current: { ownedCardIds: string[]; discoveredCardIds: string[]; ownedVariants: string[]; pity: number },
   rng: PackRandomInt = randomInt,
+  featuredCardIds: readonly string[] = [],
 ): GeneratedStreetPack {
   const ownedCards = new Set(current.ownedCardIds);
   const discoveredCards = new Set(current.discoveredCardIds);
@@ -147,7 +150,7 @@ export function generateStreetPack(
   for (let slot = 0; slot < STREET_PACK_RULES.gameplaySlots; slot++) {
     const card = drawGameplayCard({
       pulledCardIds: pulled, ownedCardIds: ownedCards,
-      protectNew: slot < STREET_PACK_RULES.protectedSlots, rng,
+      protectNew: slot < STREET_PACK_RULES.protectedSlots, rng, featuredCardIds,
     });
     pulled.add(card.catalogId);
     discoveredCards.add(card.catalogId);
@@ -216,11 +219,12 @@ function rebuildInventory(
 export function generateStreetTenPull(
   current: { ownedCardIds: string[]; discoveredCardIds: string[]; ownedVariants: string[]; pity: number },
   rng: PackRandomInt = randomInt,
+  featuredCardIds: readonly string[] = [],
 ): GeneratedStreetTenPull {
   let state = { ...current };
   const rewards: ApiPackReward[] = [];
   for (let pull = 0; pull < STREET_PACK_TEN_PULL_CONFIG.pullCount; pull++) {
-    const result = generateStreetPack(state, rng);
+    const result = generateStreetPack(state, rng, featuredCardIds);
     rewards.push(...result.rewards);
     state = {
       ownedCardIds: result.ownedCardIds, discoveredCardIds: result.discoveredCardIds,
@@ -233,7 +237,7 @@ export function generateStreetTenPull(
     // Final gameplay slot, never the cosmetic/currency bonus.
     guaranteedRareIndex = rewards.length - 2;
     const rarity = rollWeightedRarity(RARE_PLUS_GUARANTEE_WEIGHTS, rng);
-    const card = choose(catalogPools[rarity], rng);
+    const card = choosePackCardFromTier({ rarity, tier: catalogPools[rarity], pulledCardIds: new Set(), ownedCardIds: new Set(), protectNew: false, rng, featuredCardIds });
     const initiallyOrPreviouslyOwned = current.ownedCardIds.includes(card.catalogId)
       || rewards.slice(0, guaranteedRareIndex).some(r => r.kind === "card" && r.cardId === card.catalogId);
     rewards[guaranteedRareIndex] = initiallyOrPreviouslyOwned

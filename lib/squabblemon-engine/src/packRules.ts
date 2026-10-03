@@ -75,6 +75,7 @@ export function choosePackCardFromTier<T extends { catalogId: string }>(input: {
   ownedCardIds: ReadonlySet<string>;
   protectNew: boolean;
   rng: PackRandomInt;
+  featuredCardIds?: readonly string[];
 }): T {
   if (input.tier.length === 0) {
     throw new Error(`Street Pack rarity tier ${input.rarity} has no gameplay cards`);
@@ -85,7 +86,15 @@ export function choosePackCardFromTier<T extends { catalogId: string }>(input: {
     ? eligible.filter(card => !input.ownedCardIds.has(card.catalogId))
     : [];
   const pool = protectedPool.length > 0 ? protectedPool : eligible;
-  return pool[input.rng(pool.length)];
+  if (!input.featuredCardIds?.length) return pool[input.rng(pool.length)];
+  // Integer weights preserve an exact 1.5x relative weight without changing rarity.
+  const weights = pool.map(card => input.featuredCardIds!.includes(card.catalogId) ? 3 : 2);
+  let roll = input.rng(weights.reduce((sum, weight) => sum + weight, 0));
+  for (let i = 0; i < pool.length; i++) {
+    roll -= weights[i];
+    if (roll < 0) return pool[i];
+  }
+  return pool[pool.length - 1];
 }
 
 export const STREET_PACK_DISCLOSURES = [

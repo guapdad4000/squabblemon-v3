@@ -5061,6 +5061,7 @@ export const openPlayerPackBodyPullCountMax = 10;
 
 export const OpenPlayerPackBody = zod.object({
   "idempotencyKey": zod.string().min(openPlayerPackBodyIdempotencyKeyMin).max(openPlayerPackBodyIdempotencyKeyMax),
+  "bannerId": zod.string().optional().describe('Selected active pull banner. Defaults to standard.'),
   "paymentMethod": zod.enum(['ticket', 'softCurrency']),
   "pullCount": zod.number().min(1).max(openPlayerPackBodyPullCountMax).optional().describe('Number of packs to open. Defaults to 1; 10 unlocks the upgraded ten-pull experience.')
 })

@@ -1063,6 +1063,8 @@ export interface OpenPackInput {
      * @maxLength 80
      */
   idempotencyKey: string;
+  /** Selected active pull banner. Defaults to standard. */
+  bannerId?: string;
   paymentMethod: OpenPackInputPaymentMethod;
   /**
      * Number of packs to open. Defaults to 1; 10 unlocks the upgraded ten-pull experience.

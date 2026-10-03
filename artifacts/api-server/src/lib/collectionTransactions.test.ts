@@ -282,3 +282,21 @@ test("a concurrent bootstrap read cannot erase a pack reward", async (t) => {
   assert.equal(profile.packTickets, 0);
   assert.equal(profile.ownedCardIds.includes(rewardedCardId), true);
 });
+
+test('focused banner charges once, records its identity, and rejects unavailable banners without spending', async t => {
+  t.mock.method(Date, 'now', () => Date.parse('2026-10-05T00:00:00Z'));
+  const clerkUserId = `banner-${randomUUID()}`;
+  await db.insert(playerProfilesTable).values({ clerkUserId, onboardingStep: 'complete', packTickets: 2 });
+  t.after(async () => { await db.delete(playerProfilesTable).where(eq(playerProfilesTable.clerkUserId, clerkUserId)); });
+  await assert.rejects(openStreetPackForPlayer(clerkUserId, { idempotencyKey: randomUUID(), paymentMethod: 'ticket', bannerId: 'missing' }), error => error instanceof EconomyTransactionError && error.status === 400);
+  const request = { idempotencyKey: randomUUID(), paymentMethod: 'ticket' as const, bannerId: 'red-blue' };
+  const first = await openStreetPackForPlayer(clerkUserId, request);
+  assert.match(first.opening.oddsVersion, /:banner-red-blue-v1$/);
+  t.mock.method(Date, 'now', () => Date.parse('2026-10-18T00:00:00Z'));
+  const retry = await openStreetPackForPlayer(clerkUserId, request);
+  assert.equal(retry.opening.id, first.opening.id);
+  assert.equal(retry.alreadyOpened, true);
+  await assert.rejects(openStreetPackForPlayer(clerkUserId, { ...request, idempotencyKey: randomUUID() }), error => error instanceof EconomyTransactionError && error.status === 400);
+  const [profile] = await db.select().from(playerProfilesTable).where(eq(playerProfilesTable.clerkUserId, clerkUserId));
+  assert.equal(profile.packTickets, 1);
+});

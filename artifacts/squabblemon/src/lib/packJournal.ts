@@ -8,6 +8,7 @@ export type PendingPackRequest = {
   // Persist the original pull size so a refresh mid-punch sends the same
   // intent (1 or 10) when the user taps "Retry this opening".
   pullCount?: 1 | 10;
+  bannerId?: string;
 };
 const key = (player: string, kind: 'request' | 'reveal') => `squabblemon:pack-${kind}:${player}`;
 function read(storage: StoragePort, name: string): unknown {
@@ -17,6 +18,7 @@ export function loadPackRequest(storage: StoragePort, player: string): PendingPa
   const value = read(storage, key(player, 'request')) as Partial<PendingPackRequest> | null;
   if (!value || typeof value.idempotencyKey !== 'string' || value.idempotencyKey.length === 0) return null;
   if (value.paymentMethod !== 'ticket' && value.paymentMethod !== 'softCurrency') return null;
+  if (value.bannerId !== undefined && (typeof value.bannerId !== 'string' || !value.bannerId)) return null;
   if (value.pullCount !== undefined && value.pullCount !== 1 && value.pullCount !== 10) return null;
   return value as PendingPackRequest;
 }
@@ -27,11 +29,12 @@ export function reservePackRequest(
   paymentMethod: PackPayment,
   createId: () => string,
   pullCount: 1 | 10 = 1,
+  bannerId?: string,
 ): PendingPackRequest {
   const existing = loadPackRequest(storage, player);
   const request = existing
     ? { ...existing, pullCount: existing.pullCount ?? 1 }
-    : { idempotencyKey: createId(), paymentMethod, pullCount };
+    : { idempotencyKey: createId(), paymentMethod, pullCount, ...(bannerId ? { bannerId } : {}) };
   storage.setItem(key(player, 'request'), JSON.stringify(request));
   return request;
 }

@@ -50,3 +50,11 @@ test('malformed local data never becomes an opening or payment intent', () => {
   assert.equal(loadPackRequest(storage, 'player-a'), null);
   assert.equal(loadPackOpening(storage, 'player-a'), null);
 });
+
+test('a retry preserves the featured banner even if a different banner is requested', () => {
+  const storage = memoryStorage();
+  const first = reservePackRequest(storage, 'banner-player', 'ticket', () => 'banner-request', 10, 'red-blue');
+  const retry = reservePackRequest(storage, 'banner-player', 'softCurrency', () => 'unused', 1, 'oz');
+  assert.deepEqual(retry, first);
+  assert.equal(loadPackRequest(storage, 'banner-player')?.bannerId, 'red-blue');
+});

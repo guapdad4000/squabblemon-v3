@@ -1940,6 +1940,9 @@ components:
           type: string
           minLength: 8
           maxLength: 80
+        bannerId:
+          type: string
+          description: Selected active pull banner. Defaults to standard.
         paymentMethod:
           type: string
           enum: [ticket, softCurrency]

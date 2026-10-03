@@ -6,6 +6,7 @@ import { CornerStore } from './CornerStore';
 import '../../styles/ui-polish.css';
 import { CharacterUnlock } from '../../components/CharacterUnlock';
 import { styleSetFor } from '@workspace/squabblemon-engine/cosmetics';
+import { PULL_BANNERS, isPullBannerActive } from "@workspace/squabblemon-engine/pullBanners";
 import { STREET_PACK_RULES } from '@workspace/squabblemon-engine/packRules';
 import { PropArt } from '../../components/venue/PropArt';
 import { GameGlyph } from '../../components/venue/GameGlyph';
@@ -14,6 +15,7 @@ import { useLocation, useSearch } from 'wouter';
 import { Market } from './Market';
 import '../../styles/market.css';
 import '../../styles/gacha-stage.css';
+import '../../styles/pull-banners.css';
 import { useEffect, useRef, useState } from 'react';
 import {
   customFetch,
@@ -24,7 +26,7 @@ import {
   type PlayerBootstrap,
 } from '@workspace/api-client-react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { cardCatalog, catalogCardById, CARD_RARITY_DEFINITIONS, type CardRarity } from '../../data';
+import { cardCatalog, catalogCardById, getCardImage, CARD_RARITY_DEFINITIONS, type CardRarity } from '../../data';
 import { CardView } from '../../components/CardView';
 import { DepthReveal } from '../../components/DepthReveal';
 import { SceneFrame, sendScene } from '../../components/venue/SceneFrame';
@@ -39,11 +41,12 @@ import {
 } from '../../lib/packJournal';
 import { playSoundEffect, playVoiceLine, stopSoundEffect, type SoundEffect, type VoiceLine } from '../../lib/sfx';
 import { loadFeedbackPreferences } from '../../battleFeedback';
-import { ArrowRight, Check, History, Info, Volume2, VolumeX, X, Star } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Check, Star, Volume2, VolumeX, X } from 'lucide-react';
 
 type Phase = 'idle' | 'requesting' | 'punching' | 'tenPunching' | 'knockout' | 'tenKnockout' | 'reveal' | 'summary';
 type Payment = 'softCurrency' | 'ticket';
 type PullSize = 1 | 10;
+const openingBannerId = (oddsVersion?: string) => oddsVersion?.match(/:banner-(.+)-v\d+$/)?.[1] ?? 'standard';
 const isTenPullOpening = (opening: Pick<PackOpening, 'oddsVersion' | 'pullCount'> | null | undefined) =>
   opening?.pullCount === 10 || /^street-pack-ten-v[12]$/.test(opening?.oddsVersion ?? '');
 
@@ -197,6 +200,33 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   );
   const isWelcomeOpening = opening?.oddsVersion === WELCOME_PULL_KEY;
   const welcomeOffer = !opening && !preview && (pending?.idempotencyKey === WELCOME_PULL_KEY || (!pending && welcome.data?.available));
+  const [bannerId, setBannerId] = useState(pending?.bannerId ?? openingBannerId(opening?.oddsVersion));
+  const [bannerNow, setBannerNow] = useState(Date.now());
+  useEffect(() => { const timer = setInterval(() => setBannerNow(Date.now()), 10000); return () => clearInterval(timer); }, []);
+  const banner = PULL_BANNERS.find(item => item.id === bannerId) ?? PULL_BANNERS[0];
+  const availableBanners = PULL_BANNERS.filter(item => isPullBannerActive(item, bannerNow));
+  const bannerIndex = availableBanners.findIndex(item => item.id === banner.id);
+  const browseLocked = phase !== 'idle' || Boolean(pending);
+  const cycleBanner = (direction: number) => {
+    if (browseLocked || !availableBanners.length) return;
+    const nextIndex = bannerIndex < 0 ? 0 : (bannerIndex + direction + availableBanners.length) % availableBanners.length;
+    setBannerId(availableBanners[nextIndex].id);
+    setError(null);
+  };
+  useEffect(() => {
+    const active = PULL_BANNERS.filter(item => isPullBannerActive(item));
+    const index = active.findIndex(item => item.id === banner.id);
+    for (const direction of [-1, 1]) {
+      const neighbor = active[(Math.max(0, index) + direction + active.length) % active.length];
+      if (neighbor && neighbor.id !== banner.id) {
+        const image = new Image();
+        image.src = `${PUBLIC_BASE}assets/gacha-banners/${neighbor.id}-v1.webp`;
+      }
+    }
+  }, [banner.id]);
+  const bannerActive = isPullBannerActive(banner, bannerNow);
+  const bannerRemaining = banner.endsAt ? Math.max(0, Date.parse(banner.endsAt) - bannerNow) : 0;
+  const bannerTime = !bannerActive ? (banner.startsAt && bannerNow < Date.parse(banner.startsAt) ? 'Coming soon' : 'Ended') : `${Math.floor(bannerRemaining / 86400000)}d ${Math.floor(bannerRemaining / 3600000) % 24}h ${Math.floor(bannerRemaining / 60000) % 60}m left`;
   const [hits, setHits] = useState(0);
   const [revealIndex, setRevealIndex] = useState(0);
   const [sound, setSound] = useState(() => loadFeedbackPreferences().audioEnabled);
@@ -340,6 +370,7 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
     const cost = payment === 'ticket' ? tier.ticketCost : tier.softCurrencyCost;
     const balance = payment === 'ticket' ? bootstrap.profile.packTickets : bootstrap.profile.softCurrency;
     if (!freeWelcome && !pending && balance < cost) return;
+    if (!freeWelcome && !pending && !bannerActive) { setError('This banner is unavailable. Choose an active banner.'); return; }
     busy.current = true;
     if (!freeWelcome) playVoiceLine('gacha-intro', sound, 0.9);
     playSoundEffect(requestedSize === 10 ? 'pack-ten' : 'pack-tear', sound, 0.72);
@@ -355,6 +386,7 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
         payment,
         () => freeWelcome ? WELCOME_PULL_KEY : crypto.randomUUID(),
         requestedSize,
+        banner.id,
       );
       setPending(nextRequest);
       let result: PackOpening;
@@ -434,8 +466,15 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
         if (window.matchMedia('(max-width: 760px)').matches)
           arena.current?.scrollIntoView({ block: 'start', behavior: 'smooth' });
       }
-    } catch {
+    } catch (cause) {
       if (mounted.current) {
+        if (cause && typeof cause === 'object' && 'status' in cause && cause.status === 400) {
+          sessionStorage.removeItem(`squabblemon:pack-request:${bootstrap.profile.id}`);
+          setPending(null);
+          setError('This opening was declined without a charge. Check your balance and select an active banner.');
+          setPhase('idle');
+          return;
+        }
         setError(
           'The opening could not be confirmed. Retry this opening to recover the result; it will use the same request.',
         );
@@ -500,6 +539,7 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
     <div
       className="gym venue-page studio-page gacha-stage world-decor-host"
       data-phase={phase}
+      data-banner-view={false}
       data-pull-size={pullSize}
       data-reduced-motion={reduced}
       data-round={isPunching ? beatIndex + 1 : undefined}
@@ -569,8 +609,8 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
         </div>
       </aside>}
       {isWelcomeOpening && isPunching && <div className="welcome-pull__coach" role="status"><strong>DR. FADE · {beatIndex + 1} / 3</strong><p>{WELCOME_PULL_LINES[(['jab', 'hook', 'finish'] as const)[beatIndex]]}</p></div>}
-      <aside className="fight-bill gym__offer" aria-label="Open a pack" hidden={Boolean(welcomeOffer) || (!preview && (welcome.isPending || welcome.isError) && !pending && !opening)}>
-        <div className="fight-bill__inner">
+      <aside className="fight-bill gym__offer" data-focus={banner.id !== 'standard'} aria-label="Open a pack" hidden={Boolean(welcomeOffer) || (!preview && (welcome.isPending || welcome.isError) && !pending && !opening)}>
+        <div className="fight-bill__inner" aria-hidden={banner.id !== 'standard'} inert={banner.id !== 'standard'}>
           <header className="fight-bill__header">
             <div className="fight-bill__stars-row">
               <Star size={14} fill="currentColor" strokeWidth={0} />
@@ -787,6 +827,71 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
           )}
 
         </div>
+      <section className="pull-feature" data-banner={banner.id} aria-label="Open a pack"
+        hidden={Boolean(welcomeOffer) || (phase !== 'idle' && phase !== 'requesting') || (!preview && (welcome.isPending || welcome.isError) && !pending && !opening)}>
+        {banner.id !== 'standard' && <div className="pull-feature__backdrop" aria-hidden="true">
+          <img key={banner.id} src={`${PUBLIC_BASE}assets/gacha-banners/${banner.id}-v1.webp`} alt="" />
+        </div>}
+        <nav className="pull-feature__arrows" aria-label="Pull banners">
+          <button type="button" className="pull-feature__previous" aria-label="Previous banner"
+            disabled={browseLocked || (availableBanners.length < 2 && bannerIndex >= 0)} onClick={() => cycleBanner(-1)}><ArrowLeft /></button>
+          <button type="button" className="pull-feature__next" aria-label="Next banner"
+            disabled={browseLocked || (availableBanners.length < 2 && bannerIndex >= 0)} onClick={() => cycleBanner(1)}><ArrowRight /></button>
+        </nav>
+        {banner.id !== 'standard' && <><div className="pull-feature__composition" key={banner.id}>
+          <img className="pull-feature__poster-art" src={`${PUBLIC_BASE}assets/gacha-banners/${banner.id}-v1.webp`} alt="" aria-hidden="true" />
+          <header className="pull-feature__billing">
+            <p className="pull-feature__edition">{banner.id === 'standard' ? 'THE ORIGINAL STREET PACK' : `${banner.name} · LIMITED FEATURE`}</p>
+            <h2 className="pull-feature__title">{banner.headline}</h2>
+            <p className="pull-feature__schedule">{banner.endsAt
+              ? <time dateTime={banner.endsAt} title={`Ends ${new Date(banner.endsAt).toLocaleString()}`}>{bannerTime}</time>
+              : 'EVERY FIGHT STARTS SOMEWHERE'}</p>
+          </header>
+          <div className="pull-feature__cast" aria-label={`${banner.name} showcase`}>
+            {banner.showcaseCardIds.map((id, index) => <figure key={id} data-position={index}>
+              <img src={getCardImage(id)} alt={catalogCardById[id]?.name ?? id} draggable={false} />
+              <figcaption>{catalogCardById[id]?.name}</figcaption>
+            </figure>)}
+          </div>
+          <div className="pull-feature__offer">
+            <div className="pull-feature__size" role="group" aria-label="Pull size">
+              <button type="button" aria-pressed={!isTenPull} disabled={browseLocked} onClick={() => setPullSize(1)}>1 PULL</button>
+              <span aria-hidden="true">/</span>
+              <button type="button" aria-pressed={isTenPull} disabled={browseLocked} onClick={() => setPullSize(10)}>10 PULLS</button>
+            </div>
+            <div className="pull-feature__payments">
+              {(['ticket', 'softCurrency'] as const).map(method => {
+                const cost = method === 'ticket' ? selectedTier.ticketCost : selectedTier.softCurrencyCost;
+                const balance = method === 'ticket' ? bootstrap.profile.packTickets : bootstrap.profile.softCurrency;
+                if (pending && (pending.paymentMethod !== method || (pending.pullCount ?? 1) !== pullSize)) return null;
+                const currency = method === 'ticket' ? (cost === 1 ? 'ticket' : 'tickets') : 'Clout';
+                const label = phase === 'requesting' ? 'Securing your pull' : pending ? 'Retry this opening'
+                  : `Open${isTenPull ? ' 10×' : ''} · ${cost.toLocaleString()} ${currency}`;
+                return <button key={method} type="button" className="pull-feature__pay" aria-label={label}
+                  disabled={phase !== 'idle' || (!pending && (balance < cost || !bannerActive))}
+                  onClick={() => void handleOpen(method, pullSize)}>
+                  <img src={`${PUBLIC_BASE}assets/rewards/${method === 'ticket' ? 'fight' : 'clout'}-ticket.webp`} alt="" />
+                  <span><strong>{phase === 'requesting' ? 'SECURING…' : pending ? 'RETRY PULL' : `${cost.toLocaleString()} ${currency.toUpperCase()}`}</strong>
+                    <small>{balance.toLocaleString()} owned</small></span>
+                  <ArrowRight aria-hidden="true" />
+                </button>;
+              })}
+            </div>
+            <p className="pull-feature__pity">{preview ? 'Preview · sample rewards' : isTenPull ? 'Every 10-pull includes Rare or better'
+              : unownedCosmeticVariants === 0 ? 'All featured styles owned'
+              : `Style guarantee ${bootstrap.profile.packPity} / ${bootstrap.packConfig.pityLimit}`}</p>
+            {error && <p className="pull-feature__error" role="alert">{error}</p>}
+            <nav className="pull-feature__utility" aria-label="Gacha information">
+              <button type="button" aria-label="Drop rates" onClick={() => showInfo('odds')}>DROP RATES</button>
+              <span aria-hidden="true">·</span>
+              <button type="button" aria-label="Your openings" onClick={() => showInfo('history')}>PULL HISTORY</button>
+              <span className="pull-feature__page">{Math.max(0, bannerIndex) + 1} / {availableBanners.length}</span>
+            </nav>
+          </div>
+          </div>
+          <p className="pull-feature__boost pull-feature__description">1.5× featured weight · Same rarity odds</p>
+        </>}
+      </section>
       </aside>
       {isPunching && (
         <div className="gacha-stage__bag-cue" aria-hidden="true">
@@ -1024,6 +1129,12 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
         </header>
         {info === 'odds' ? (
           <>
+            <p><strong>{banner.name} banner.</strong> {banner.id === 'standard' ? 'Standard card selection.' : 'Featured cards receive 1.5× relative selection weight within the rolled rarity. Rarity odds stay the same. A featured card is not guaranteed. New-card protection and within-pack repeat protection apply before the featured weights. The ten-pull guarantee uses the same featured weights.'}</p>
+            {banner.id !== 'standard' && <div className="pull-banner-roster">
+              <h3>{banner.featuredCardIds.length} featured cards</h3>
+              <p>Story-exclusive rewards keep their story unlocks and are excluded from all random pulls.</p>
+              <ul>{banner.featuredCardIds.map(id => <li key={id}>{catalogCardById[id].name} <small>{CARD_RARITY_DEFINITIONS[catalogCardById[id].rarity].label}</small></li>)}</ul>
+            </div>}
             {preview ? (
               <p>
                 Local preview uses curated sample rewards to test the reveal. Live drop rates and guarantees come from
@@ -1064,7 +1175,7 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
               <article key={item.id}>
                 <span>{new Date(item.createdAt).toLocaleString()}</span>
                 <strong>
-                  {isTenPullOpening(item) ? '10× · ' : ''}{item.cost} {item.paymentMethod === 'ticket' ? 'ticket(s)' : 'Clout'}
+                  {PULL_BANNERS.find(b => b.id === openingBannerId(item.oddsVersion))?.name ?? 'Street Pack'} · {isTenPullOpening(item) ? '10× · ' : ''}{item.cost} {item.paymentMethod === 'ticket' ? 'ticket(s)' : 'Clout'}
                 </strong>
                 <p>{item.rewards.map((r) => r.name ?? resourceName(r)).join(' · ')}</p>
               </article>

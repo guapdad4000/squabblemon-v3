@@ -1,3 +1,4 @@
+import { resolvePullBanner } from "@workspace/squabblemon-engine/pullBanners";
 import { addStyleShardBalances, spendStyleShards } from '@workspace/squabblemon-engine/styleShards';
 import { and, eq, sql } from "drizzle-orm";
 import {
@@ -35,6 +36,7 @@ export async function openStreetPackForPlayer(
     idempotencyKey: string;
     paymentMethod: "ticket" | "softCurrency";
     pullCount?: number;
+    bannerId?: string;
   },
 ): Promise<{
   opening: PlayerPackOpeningRecord;
@@ -71,6 +73,9 @@ export async function openStreetPackForPlayer(
       throw new EconomyTransactionError(404, "Player profile not found");
     }
 
+    let banner;
+    try { banner = resolvePullBanner(input.bannerId); }
+    catch (error) { throw new EconomyTransactionError(400, (error as Error).message); }
     const pullCount = isPullCount(input.pullCount) ? input.pullCount : 1;
     const tier = tierForPullCount(pullCount);
     const cost =
@@ -102,13 +107,13 @@ export async function openStreetPackForPlayer(
             discoveredCardIds: profile.discoveredCardIds,
             ownedVariants: profile.ownedVariants,
             pity: profile.packPity,
-          })
+          }, undefined, banner.featuredCardIds)
         : generateStreetPack({
             ownedCardIds: profile.ownedCardIds,
             discoveredCardIds: profile.discoveredCardIds,
             ownedVariants: profile.ownedVariants,
             pity: profile.packPity,
-          });
+          }, undefined, banner.featuredCardIds);
     await tx
       .update(playerProfilesTable)
       .set({
@@ -135,7 +140,7 @@ export async function openStreetPackForPlayer(
       .values({
         clerkUserId: userId,
         idempotencyKey: input.idempotencyKey,
-        oddsVersion: tier.oddsVersion,
+        oddsVersion: banner.id === "standard" ? tier.oddsVersion : `${tier.oddsVersion}:banner-${banner.id}-v1`,
         paymentMethod: input.paymentMethod,
         cost,
         rewards: generated.rewards,

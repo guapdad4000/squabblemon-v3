@@ -1,0 +1,231 @@
+/* Full-bleed fight artwork. Navigation and controls sit directly on the scene. */
+.trading-post > .gym.gacha-stage[data-banner-view='true'] {
+  display:block; min-height:calc(100svh - 140px); height:auto; padding:0 0 24px; background:none; overflow:visible;
+}
+.gacha-stage[data-banner-view='true'] .gym__arena { visibility:hidden; }
+.gacha-stage[data-banner-view='true'] .gacha-stage__ringside { display:none; }
+.pull-feature { position:relative; isolation:isolate; width:100%; color:#fff5df; background:none; border:0; box-shadow:none; }
+.pull-feature[hidden] { display:none; }
+.pull-feature__backdrop { position:fixed; inset:62px 0 0; z-index:-1; pointer-events:none; overflow:hidden; }
+.pull-feature__backdrop img { width:100%; height:100%; object-fit:cover; object-position:center; animation:banner-scene-arrive .4s ease-out; }
+.pull-feature__backdrop::after { content:''; position:absolute; inset:0; background:linear-gradient(90deg,#090b10b8,transparent 72%),linear-gradient(0deg,#05070ce6,transparent 65%); }
+.pull-feature__composition { display:grid; grid-template-columns:1fr 1.1fr; grid-template-rows:auto auto; align-content:center; column-gap:24px; min-height:min(730px,calc(100svh - 150px)); max-width:1360px; margin:auto; padding:38px 90px 24px; animation:banner-content-arrive .25s ease-out; }
+.pull-feature__billing { grid-column:1; grid-row:1; position:relative; z-index:2; align-self:end; }
+.pull-feature__edition { margin:0 0 17px; font:800 11px/1.4 var(--font-sans); letter-spacing:.2em; color:#ffdb8f; text-transform:uppercase; }
+.pull-feature__title { margin:0; max-width:9ch; font:950 italic clamp(62px,7.8vw,108px)/.86 var(--font-display); letter-spacing:-.055em; text-transform:uppercase; color:#fff2cc; text-shadow:3px 4px 0 #15141a,6px 7px 0 #bf6a33,0 12px 35px #000a; transform:rotate(-3deg); transform-origin:left center; text-wrap:balance; }
+.pull-feature__schedule { margin:24px 0 22px; color:#f4dcc4; font:700 11px/1.5 var(--font-sans); letter-spacing:.1em; text-transform:uppercase; }
+.pull-feature__cast { grid-column:2; grid-row:1 / 3; display:flex; align-items:flex-end; justify-content:center; align-self:center; min-width:0; height:490px; margin-left:-38px; pointer-events:none; }
+.pull-feature__cast figure { position:relative; display:flex; flex-direction:column; justify-content:flex-end; align-items:center; margin:0 -8%; width:48%; height:83%; }
+.pull-feature__cast figure[data-position='1'] { z-index:2; height:100%; width:54%; margin-inline:-10%; }
+.pull-feature__cast figure[data-position='0'] { transform:rotate(-5deg); }
+.pull-feature__cast figure[data-position='2'] { transform:rotate(5deg); }
+.pull-feature__cast img { height:calc(100% - 26px); width:100%; object-fit:contain; object-position:bottom; filter:drop-shadow(0 12px 8px #0009); }
+.pull-feature__cast figcaption { position:relative; z-index:3; padding-top:12px; color:#fff4dc; text-shadow:0 2px 4px #000,0 0 10px #000; font:900 italic 11px/1.1 var(--font-display); text-align:center; text-transform:uppercase; }
+.pull-feature__offer { grid-column:1; grid-row:2; position:relative; z-index:3; align-self:start; }
+.pull-feature__boost { margin:0 0 6px; font:900 12px/1.3 var(--font-sans); letter-spacing:.045em; color:#ffdb8f; }
+.pull-feature__terms { margin:0 0 16px; max-width:370px; font:12px/1.55 var(--font-sans); color:#eee4d4; text-shadow:0 1px 4px #000; }
+.pull-feature__size { display:flex; align-items:center; gap:15px; margin:5px 0 10px; color:#a29788; }
+.pull-feature__size button { appearance:none; padding:8px 0; border:0; background:none; box-shadow:none; color:#b6aca0; font:900 italic 19px/1 var(--font-display); cursor:pointer; }
+.pull-feature__size button[aria-pressed='true'] { color:#fff3cf; text-decoration:underline; text-underline-offset:7px; text-decoration-color:#f5c374; }
+.pull-feature__payments { display:flex; flex-wrap:wrap; gap:12px 24px; }
+.pull-feature__pay { appearance:none; display:flex; align-items:center; justify-content:flex-start; gap:8px; min-height:72px; padding:0; border:0; background:none; box-shadow:none; color:#fff4dc; cursor:pointer; text-align:left; transition:transform .15s; }
+.pull-feature__pay img { width:70px; height:58px; object-fit:contain; transform:rotate(-9deg); filter:drop-shadow(0 3px 5px #0009); }
+.pull-feature__pay strong { display:block; font:900 italic 20px/1.2 var(--font-display); text-shadow:0 2px 5px #000; white-space:nowrap; }
+.pull-feature__pay small { display:block; margin-top:3px; font:10px/1.2 var(--font-sans); color:#dfd5c2; }
+.pull-feature__pay>svg { width:18px; color:#eecb83; }
+.pull-feature__pay:hover:not(:disabled) { transform:translateY(-3px); }
+.pull-feature button:disabled { opacity:.4; cursor:default; }
+.pull-feature button:focus-visible { outline:2px solid #ffe8b8; outline-offset:6px; }
+.pull-feature__pity { margin:12px 0; color:#dbcdb7; font:10px/1.4 var(--font-sans); }
+.pull-feature__utility { display:flex; align-items:center; gap:14px; margin-top:17px; max-width:400px; }
+.pull-feature__utility button { padding:8px 0; background:none; border:0; color:#f5e4c9; font:800 10px/1 var(--font-sans); letter-spacing:.08em; cursor:pointer; }
+.pull-feature__page { margin-left:auto; color:#e0c694; font:800 11px/1 var(--font-sans); letter-spacing:.2em; }
+.pull-feature__error { max-width:400px; color:#ffd19b; font:12px/1.5 var(--font-sans); }
+.pull-feature__arrows { position:absolute; z-index:5; inset:0; pointer-events:none; }
+.pull-feature__arrows button { pointer-events:auto; appearance:none; position:absolute; top:43%; display:grid; place-items:center; width:60px; height:76px; padding:5px; background:none; border:0; box-shadow:none; color:#fff1cb; cursor:pointer; filter:drop-shadow(0 3px 3px #000); transition:transform .15s; }
+.pull-feature__arrows svg { width:44px; height:44px; stroke-width:2.5px; }
+.pull-feature__previous { left:12px; transform:rotate(-5deg); }
+.pull-feature__next { right:12px; transform:rotate(5deg); }
+.pull-feature__previous:hover:not(:disabled) { transform:translateX(-4px) rotate(-5deg); }
+.pull-feature__next:hover:not(:disabled) { transform:translateX(4px) rotate(5deg); }
+.pull-feature[data-banner='inmates'] .pull-feature__title { color:#ffe3ba; text-shadow:3px 4px #25150e,6px 7px #d46525,0 12px 35px #000a; }
+.pull-feature[data-banner='oz'] .pull-feature__title { color:#fff2a5; text-shadow:3px 4px #133f32,6px 7px #389d66,0 12px 35px #000a; }
+.pull-feature[data-banner='wonderland'] .pull-feature__title { color:#ffe0f3; text-shadow:3px 4px #251833,6px 7px #b44791,0 12px 35px #000a; }
+.pull-feature[data-banner='red-blue'] .pull-feature__title { color:#fff0df; text-shadow:-4px 3px #b5313c,4px 6px #315dba,0 12px 35px #000a; }
+.pull-banner-roster ul { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:6px 16px; list-style:none; padding:0; }
+.pull-banner-roster li { padding:6px 0; border-bottom:1px solid #8885; font-size:13px; }
+.pull-banner-roster li small { display:block; opacity:.7; }
+@keyframes banner-scene-arrive { from { opacity:.6; } to { opacity:1; } }
+@keyframes banner-content-arrive { from { opacity:.4; translate:12px 0; } to { opacity:1; translate:0 0; } }
+@media(max-width:1000px) and (min-width:701px) { .pull-feature__composition { padding-inline:65px; column-gap:0; } .pull-feature__cast { height:390px; } .pull-feature__pay img { width:52px; } .pull-feature__pay strong { font-size:17px; } .pull-feature__payments { gap:8px; } }
+@media(max-width:700px) {
+  .trading-post > .gym.gacha-stage[data-banner-view='true'] { min-height:calc(100svh - 140px); padding-bottom:12px; }
+  .pull-feature__composition { display:flex; flex-direction:column; min-height:0; padding:16px 30px 10px; }
+  .pull-feature__billing { width:100%; text-align:center; }
+  .pull-feature__edition { font-size:9px; letter-spacing:.13em; margin-bottom:10px; }
+  .pull-feature__title { max-width:13ch; margin:0 auto; font-size:clamp(38px,10.5vw,66px); line-height:.91; transform-origin:center; }
+  .pull-feature__schedule { margin:15px 0 0; font-size:9px; }
+  .pull-feature__cast { width:100%; height:clamp(190px,30svh,290px); margin:3px 0 9px; flex:none; }
+  .pull-feature__cast figure { width:41%; margin-inline:-5%; }
+  .pull-feature__cast figure[data-position='1'] { width:47%; margin-inline:-8%; }
+  .pull-feature__cast figcaption { font-size:9px; padding-top:5px; }
+  .pull-feature__offer { width:100%; text-align:center; }
+  .pull-feature__boost { font-size:10px; }
+  .pull-feature__terms { font-size:10px; margin:0 auto 4px; max-width:300px; }
+  .pull-feature__size { justify-content:center; margin:2px 0 5px; }
+  .pull-feature__size button { font-size:17px; }
+  .pull-feature__payments { justify-content:center; gap:8px 16px; flex-wrap:nowrap; }
+  .pull-feature__pay { min-height:62px; gap:5px; }
+  .pull-feature__pay img { width:45px; height:47px; }
+  .pull-feature__pay strong { font-size:16px; }
+  .pull-feature__pay small { font-size:9px; }
+  .pull-feature__pay>svg { display:none; }
+  .pull-feature__pity { font-size:9px; margin:6px 0; }
+  .pull-feature__utility { justify-content:center; margin-top:3px; gap:16px; }
+  .pull-feature__page { margin-left:0; font-size:9px; }
+  .pull-feature__arrows button { top:28%; width:38px; height:64px; }
+  .pull-feature__arrows svg { width:31px; height:31px; }
+  .pull-feature__previous { left:0; }
+  .pull-feature__next { right:0; }
+  .pull-feature__backdrop::after { background:linear-gradient(0deg,#07080dea,transparent 80%),linear-gradient(180deg,#06081170,transparent 55%); }
+}
+@media(prefers-reduced-motion:reduce) { .pull-feature__backdrop img,.pull-feature__composition { animation:none; } .pull-feature button { transition:none; } }
+
+/* The illustrated fight poster is the focal point; its scene spills into the room. */
+.pull-feature { padding:24px 72px 32px; }
+.pull-feature__backdrop img { filter:blur(16px) saturate(.7); opacity:.46; transform:scale(1.06); }
+.pull-feature__backdrop::after { background:linear-gradient(180deg,#090b1080,#07090ddd); }
+.pull-feature__composition { position:relative; isolation:isolate; max-width:1120px; min-height:610px; padding:38px 46px 28px; background:#16121a; box-shadow:0 22px 60px #0009; }
+.pull-feature__composition::before,.pull-feature__composition::after { content:''; position:absolute; inset:0; z-index:-3; pointer-events:none; background:#483b37; transform:rotate(-2deg); box-shadow:0 5px 14px #0006; }
+.pull-feature__composition::after { background:#75604d; transform:rotate(1.5deg); z-index:-2; }
+.pull-feature__poster-art { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:-1; filter:brightness(.62); }
+.pull-feature__billing,.pull-feature__cast,.pull-feature__offer { position:relative; }
+.pull-feature__title { font-size:clamp(58px,6.5vw,92px); }
+.pull-feature__cast { height:440px; }
+.pull-feature__arrows button { top:42%; }
+@media(max-width:1000px) and (min-width:701px) {
+ .pull-feature { padding-inline:55px; }
+ .pull-feature__composition { padding-inline:28px; }
+ .pull-feature__cast { height:350px; }
+}
+@media(max-width:700px) {
+ .pull-feature { padding:16px 26px 24px; }
+ .pull-feature__composition { min-height:0; padding:20px 12px 14px; }
+ .pull-feature__title { font-size:clamp(34px,9vw,60px); }
+ .pull-feature__cast { height:clamp(175px,28svh,260px); }
+ .pull-feature__arrows button { top:32%; width:27px; }
+ .pull-feature__arrows svg { width:25px; }
+ .pull-feature__payments { gap:8px; }
+ .pull-feature__pay { gap:2px; }
+ .pull-feature__pay img { width:35px; }
+ .pull-feature__pay strong { font-size:14px; }
+ .pull-feature__utility { gap:10px; }
+ .pull-feature__utility button { font-size:9px; }
+}
+
+/* The original permanent bill remains in its original gym layout. */
+.pull-feature[data-banner='standard'] { position:absolute; inset:0; width:100%; padding:0; pointer-events:none; z-index:3; }
+.pull-feature[data-banner='standard'] .pull-feature__arrows button { top:40%; }
+
+/* Every banner occupies the original bill, with navigation attached to its edges. */
+.fight-bill:has(.pull-feature) { overflow:visible; }
+.fight-bill[data-focus='true'] { background:none; }
+.fight-bill[data-focus='true'] > .fight-bill__inner { visibility:hidden; }
+.fight-bill > .pull-feature { position:absolute; inset:0; width:100%; height:100%; padding:0; z-index:3; }
+.fight-bill .pull-feature__backdrop { display:none; }
+.fight-bill .pull-feature__composition { display:flex; flex-direction:column; gap:0; height:100%; min-height:0; width:100%; padding:12px 14px 10px; text-align:center; }
+.fight-bill .pull-feature__billing { width:100%; flex:none; }
+.fight-bill .pull-feature__edition { font-size:8px; margin:0 0 6px; letter-spacing:.08em; }
+.fight-bill .pull-feature__title { font-size:34px; line-height:.92; max-width:16ch; margin:auto; transform-origin:center; }
+.fight-bill .pull-feature__schedule { font-size:8px; margin:8px 0 0; }
+.fight-bill .pull-feature__cast { flex:1; min-height:55px; height:0; width:100%; margin:4px 0; }
+.fight-bill .pull-feature__cast figure { width:40%; margin-inline:-5%; }
+.fight-bill .pull-feature__cast figure[data-position='1'] { width:46%; margin-inline:-7%; }
+.fight-bill .pull-feature__cast figcaption { font-size:7px; padding-top:2px; }
+.fight-bill .pull-feature__cast img { height:calc(100% - 12px); }
+.fight-bill .pull-feature__offer { flex:none; width:100%; }
+.fight-bill .pull-feature__boost { font-size:9px; margin-bottom:3px; }
+.fight-bill .pull-feature__terms { font-size:9px; line-height:1.25; margin:0 auto 3px; }
+.fight-bill .pull-feature__size { justify-content:center; margin:0; gap:12px; }
+.fight-bill .pull-feature__size button { font-size:15px; padding:7px 0; }
+.fight-bill .pull-feature__payments { justify-content:center; gap:12px; flex-wrap:nowrap; }
+.fight-bill .pull-feature__pay { min-height:45px; gap:3px; }
+.fight-bill .pull-feature__pay img { width:35px; height:38px; }
+.fight-bill .pull-feature__pay strong { font-size:14px; }
+.fight-bill .pull-feature__pay small { font-size:8px; }
+.fight-bill .pull-feature__pay>svg { display:none; }
+.fight-bill .pull-feature__pity { font-size:8px; margin:4px 0; }
+.fight-bill .pull-feature__utility { justify-content:center; margin:0; gap:10px; }
+.fight-bill .pull-feature__utility button { font-size:8px; padding:5px 0; }
+.fight-bill .pull-feature__page { margin-left:0; font-size:8px; }
+.fight-bill .pull-feature__arrows button { top:50%; translate:0 -50%; width:30px; height:48px; }
+.fight-bill .pull-feature__arrows svg { width:25px; height:25px; }
+.fight-bill .pull-feature__previous { left:-30px; }
+.fight-bill .pull-feature__next { right:-30px; }
+@media(max-width:700px) {
+ .fight-bill .pull-feature__composition { padding:10px 10px 8px; }
+ .fight-bill .pull-feature__title { font-size:28px; }
+ .fight-bill .pull-feature__previous { left:-25px; }
+ .fight-bill .pull-feature__next { right:-25px; }
+ .fight-bill .pull-feature__arrows button { width:25px; }
+}
+.fight-bill .pull-feature__cast { flex:1 1 85px; height:85px; }
+.fight-bill .pull-feature__cast figure { height:100%; }
+
+/* Checkout floats below the artwork, without a panel or border. */
+.fight-bill[data-focus='true'] { margin-bottom:260px; }
+.fight-bill .pull-feature__offer { position:absolute; top:calc(100% + 20px); left:0; width:100%; padding:0; background:none; border:0; box-shadow:none; text-align:center; transform:rotate(1.5deg); text-shadow:0 2px 6px #000,0 0 14px #000; }
+.fight-bill .pull-feature__boost { font-size:11px; margin:0 0 9px; }
+.fight-bill .pull-feature__size button { min-height:40px; font-size:18px; }
+.fight-bill .pull-feature__payments { gap:18px; }
+.fight-bill .pull-feature__pay { flex:1; flex-direction:column; gap:0; min-height:125px; text-align:center; }
+.fight-bill .pull-feature__pay img { width:132px; height:85px; }
+.fight-bill .pull-feature__pay strong { font-size:18px; }
+.fight-bill .pull-feature__pay small { font-size:10px; }
+.fight-bill .pull-feature__pity { font-size:10px; margin:8px 0 2px; }
+.fight-bill .pull-feature__utility button { min-height:36px; font-size:10px; }
+.fight-bill .pull-feature__page { font-size:10px; }
+.fight-bill .pull-feature__error { margin:8px 0; font-size:12px; }
+@media(max-width:700px) {
+ .fight-bill[data-focus='true'] { margin-bottom:275px; }
+ .fight-bill .pull-feature__offer { transform:none; }
+ .fight-bill .pull-feature__boost { font-size:10px; }
+ .fight-bill .pull-feature__pay img { width:112px; height:78px; }
+ .fight-bill .pull-feature__pay strong { font-size:16px; }
+}
+
+/* Only the rate description floats below; ticket controls remain on the poster. */
+.fight-bill[data-focus='true'] { margin-bottom:64px; }
+.fight-bill .pull-feature__offer { position:relative; top:auto; left:auto; flex:none; transform:none; }
+.fight-bill .pull-feature__description { position:absolute; top:calc(100% + 18px); left:0; width:100%; margin:0; text-align:center; color:#ffdb8f; text-shadow:0 2px 6px #000; }
+.fight-bill .pull-feature__pay { min-height:105px; }
+.fight-bill .pull-feature__pay img { width:120px; height:70px; }
+.fight-bill .pull-feature__size button { min-height:32px; padding:5px 0; }
+.fight-bill .pull-feature__utility button { min-height:28px; }
+@media(max-width:700px) {
+ .fight-bill .pull-feature__pay { min-height:85px; }
+ .fight-bill .pull-feature__pay img { width:96px; height:56px; }
+ .fight-bill .pull-feature__pay strong { font-size:15px; }
+ .fight-bill .pull-feature__pity { margin:4px 0 0; font-size:9px; }
+ .fight-bill .pull-feature__utility button { font-size:9px; }
+ .fight-bill .pull-feature__cast { min-height:50px; }
+}
+/* Give the fighters the poster's center; checkout stays compact along its foot. */
+.fight-bill .pull-feature__cast { position:absolute; inset:78px 8px 105px; width:calc(100% - 16px); height:auto; min-height:0; margin:0; }
+.fight-bill .pull-feature__cast figure { height:100%; }
+.fight-bill .pull-feature__cast img { height:100%; }
+.fight-bill .pull-feature__cast figcaption { display:none; }
+.fight-bill .pull-feature__offer { margin-top:auto; z-index:4; }
+.fight-bill .pull-feature__payments { gap:10px; }
+.fight-bill .pull-feature__pay { flex-direction:row; justify-content:center; min-height:62px; gap:0; }
+.fight-bill .pull-feature__pay img { width:85px; height:64px; margin-right:-5px; }
+.fight-bill .pull-feature__pay strong { font-size:15px; }
+.fight-bill .pull-feature__pity { display:none; }
+.fight-bill .pull-feature__utility button { min-height:24px; }
+@media(max-width:700px) {
+ .fight-bill .pull-feature__cast { inset:72px 5px 100px; width:calc(100% - 10px); }
+ .fight-bill .pull-feature__pay { min-height:56px; }
+ .fight-bill .pull-feature__pay img { width:72px; height:56px; }
+ .fight-bill .pull-feature__pay strong { font-size:12px; }
+ .fight-bill .pull-feature__pay small { font-size:8px; }
+}
