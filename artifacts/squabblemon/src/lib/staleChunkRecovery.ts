@@ -1,39 +1,11 @@
-const reloadMarkerPrefix = 'squabblemon:stale-chunk-reload:';
-
-type PreloadErrorEvent = Event & { payload?: unknown };
-type RecoveryTarget = Pick<Window, 'addEventListener' | 'removeEventListener' | 'sessionStorage' | 'location'>;
-
-function payloadMessage(payload: unknown) {
-  if (payload instanceof Error) return payload.message;
-  if (typeof payload === 'string') return payload;
-  try { return JSON.stringify(payload) || 'unknown'; }
-  catch { return String(payload); }
-}
-
+type RecoveryTarget = Pick<Window, 'addEventListener' | 'removeEventListener'>;
+/** Compatibility key for existing clients; no automatic reloads are performed. */
 export function staleChunkReloadKey(payload: unknown) {
-  return `${reloadMarkerPrefix}${payloadMessage(payload).slice(0, 768)}`;
+  return `squabblemon:stale-chunk-reload:${payload instanceof Error ? payload.message : String(payload)}`;
 }
-
-/**
- * A tab left open across an atomic deploy can still request chunk hashes from
- * the previous release. Refresh once for that exact missing chunk so the tab
- * receives the current HTML manifest without creating a reload loop.
- */
+/** Let navigation errors reach the error boundary; background failures remain caught. */
 export function installStaleChunkRecovery(target: RecoveryTarget = window) {
-  const recover = (event: Event) => {
-    const preloadError = event as PreloadErrorEvent;
-    const marker = staleChunkReloadKey(preloadError.payload);
-    try {
-      if (target.sessionStorage.getItem(marker)) return;
-      target.sessionStorage.setItem(marker, '1');
-    } catch {
-      // If storage is blocked, keep the normal error boundary instead of
-      // risking an unbounded reload loop.
-      return;
-    }
-    event.preventDefault();
-    target.location.reload();
-  };
+  const recover = () => { /* Never reload an active pull, scene, or match. */ };
   target.addEventListener('vite:preloadError', recover);
   return () => target.removeEventListener('vite:preloadError', recover);
 }

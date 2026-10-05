@@ -54,10 +54,10 @@ function DefaultFallback({ error, resetError }: ErrorFallbackProps) {
         ) : null}
         <button
           type="button"
-          onClick={resetError}
+          onClick={() => /dynamically imported module|Loading chunk|Importing a module script|Failed to fetch/i.test(error.message) ? window.location.reload() : resetError()}
           className="mt-4 rounded bg-gray-900 px-4 py-2 text-sm text-white hover:bg-gray-700"
         >
-          Try again
+          {/dynamically imported module|Loading chunk|Importing a module script|Failed to fetch/i.test(error.message) ? 'Load latest version' : 'Try again'}
         </button>
       </div>
     </div>

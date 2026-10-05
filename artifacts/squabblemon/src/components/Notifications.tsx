@@ -1,3 +1,7 @@
+import { lazy, Suspense } from 'react';
+const SocialRequestPopups = lazy(() => import('./SocialRequestPopups').then(module => ({ default: module.SocialRequestPopups })));
+const SOCIAL_POPUP_EVENT = 'squabblemon:open-social-request';
+import { useOptionalSocial } from '../lib/social';
 import { createContext, useCallback, useContext, useEffect, useId, useRef, useState, type ReactNode } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { customFetch, getGetPlayerBootstrapQueryKey, type PlayerBootstrap } from '@workspace/api-client-react';
@@ -11,7 +15,7 @@ import { CORNER_OFFERS } from '../lib/cornerStore';
 import '../styles/notifications.css';
 import { NotificationArrival } from './NotificationArrival';
 
-type Section = 'cards' | 'style' | 'bag' | 'mail' | 'missions' | 'challenges' | 'shop' | 'growth' | 'story' | 'profile';
+type Section = 'cards' | 'style' | 'bag' | 'mail' | 'missions' | 'challenges' | 'shop' | 'growth' | 'story' | 'profile' | 'friends' | 'friendly fade';
 type Notice = { id: string; section: Section; title: string; href: string; sticky?: boolean; dismissalKey?: string };
 type Daily = { date: string; available: boolean; amount: number; attemptsRemaining: number; resetsAt: string };
 type ReceiptResponse = { ids: string[] };
@@ -107,7 +111,10 @@ function PlayerNotifications({ bootstrap, children }: { bootstrap: PlayerBootstr
     window.addEventListener('storage', sync);
     return () => window.removeEventListener('storage', sync);
   }, [applyReceipts, key]);
+  const social = useOptionalSocial();
   const notices: Notice[] = [];
+  for (const request of social?.query.data?.incomingRequests ?? []) notices.push({ id: `friend:${request.id}`, section: 'friends', title: `${request.player.displayName} sent a friend request`, href: '/game/settings#homies', sticky: true });
+  for (const invite of social?.query.data?.invitations ?? []) if (invite.direction === 'incoming' && invite.status === 'pending' && Date.parse(invite.expiresAt) > Date.now()) notices.push({ id: `fade:${invite.id}`, section: 'friendly fade', title: `${invite.player.displayName} wants a Friendly Fade`, href: `/game/online?tab=friends&invite=${encodeURIComponent(invite.id)}`, sticky: true });
   for (const id of p.ownedCardIds) notices.push({ id: `card:${id}`, section: 'cards', title: `New card · ${cardCatalog.find(c => c.catalogId === id)?.name ?? id}`, href: `/game/collection?card=${encodeURIComponent(id)}` });
   for (const set of Object.values(CHARACTER_STYLE_SETS)) if (p.ownedCardIds.includes(set.cardId)) notices.push({ id: `banner:${set.cardId}`, section: 'style', title: `New banner · ${cardCatalog.find(c => c.catalogId === set.cardId)?.name ?? set.cardId}`, href: `/game/style/${set.cardId}?tab=banner` });
   for (const id of p.unlockedCosmeticIds) {
@@ -157,7 +164,7 @@ function PlayerNotifications({ bootstrap, children }: { bootstrap: PlayerBootstr
       : [n.id, `dismissed:${n.dismissalKey ?? n.id}`]));
   };
   const has = (section: string) => visible.some(n => n.section === section || (section === 'safehouse' && ['mail','missions','challenges','bag','growth'].includes(n.section)) || (section === 'cards' && n.section === 'style'));
-  return <Context.Provider value={{ notices: visible, seen, dismiss, has }}>{children}<NotificationArrival /><NotificationPageReceipt /></Context.Provider>;
+  return <Context.Provider value={{ notices: visible, seen, dismiss, has }}>{children}<NotificationArrival /><NotificationPageReceipt /><Suspense fallback={null}><SocialRequestPopups bootstrap={bootstrap} /></Suspense></Context.Provider>;
 }
 
 /** Story and Fighter ID are overview destinations. Seeing the page is enough;
@@ -197,6 +204,15 @@ export function Attention({ section, micro = false }: { section: string; micro?:
 export function NotificationInbox() {
   const { notices, seen, dismiss } = useNotifications();
   const dialog = useRef<HTMLDialogElement>(null), clearButton = useRef<HTMLButtonElement>(null);
+  const bell = useRef<HTMLButtonElement>(null);
+  const [isOpen, setIsOpen] = useState(false);
+  useEffect(() => {
+    if (!isOpen) return;
+    const outside = (event: PointerEvent) => { if (event.target instanceof Node && !dialog.current?.contains(event.target) && !bell.current?.contains(event.target)) { dialog.current?.close(); setIsOpen(false); } };
+    const escape = (event: KeyboardEvent) => { if (event.key === 'Escape') { dialog.current?.close(); setIsOpen(false); bell.current?.focus(); } };
+    document.addEventListener('pointerdown', outside); document.addEventListener('keydown', escape);
+    return () => { document.removeEventListener('pointerdown', outside); document.removeEventListener('keydown', escape); };
+  }, [isOpen]);
   const descriptionId = useId();
   const [, navigate] = useLocation();
   const clear = (ids: NoticeIds) => {
@@ -204,10 +220,10 @@ export function NotificationInbox() {
     // Keep keyboard focus in the dialog when the focused row disappears.
     clearButton.current?.focus({ preventScroll: true });
   };
-  return <><button className="notification-bell" aria-label={`Notifications, ${notices.length} updates`} aria-haspopup="dialog" onClick={() => dialog.current?.showModal()}><Bell size={18}/>{notices.length > 0 && <span className="attention-mark attention-mark--dot" />}</button>
-    <dialog className="notification-inbox" aria-label="On your radar" aria-describedby={descriptionId} ref={dialog}>
+  return <><button ref={bell} className="notification-bell" aria-expanded={isOpen} aria-label={`Notifications, ${notices.length} updates`} aria-haspopup="dialog" onClick={() => { if (dialog.current?.open) { dialog.current.close(); setIsOpen(false); } else { dialog.current?.show(); setIsOpen(true); } }}><Bell size={18}/>{notices.length > 0 && <span className="attention-mark attention-mark--dot" />}</button>
+    <dialog className="notification-inbox" aria-label="On your radar" aria-describedby={descriptionId} ref={dialog} onClose={() => setIsOpen(false)}>
       <div className="notification-inbox__top">
-        <header><h2>On your radar</h2><button aria-label="Close notifications" onClick={() => dialog.current?.close()}><X size={22}/></button></header>
+        <header><h2>On your radar</h2><button aria-label="Close notifications" onClick={() => { dialog.current?.close(); bell.current?.focus(); }}><X size={22}/></button></header>
         <p id={descriptionId}>Clear alerts here. Your rewards stay available.</p>
         <div className="notification-inbox__actions"><span role="status">{notices.length ? `${notices.length} alerts` : 'You’re all caught up.'}</span><button ref={clearButton} className="notification-clear" aria-disabled={!notices.length} onClick={() => clear(notices.map(n => n.id))}>Clear all</button></div>
       </div>
@@ -218,6 +234,7 @@ export function NotificationInbox() {
             // highlight until the player has actually viewed and left the card.
             if (!n.sticky && n.section !== 'cards') seen(n.id);
             dialog.current?.close();
+            if (n.section === 'friends' || n.section === 'friendly fade') { window.dispatchEvent(new CustomEvent(SOCIAL_POPUP_EVENT, { detail: n.id })); return; }
             const url = new URL(n.href, window.location.origin);
             url.searchParams.set('notification', n.id);
             url.searchParams.set('opened', crypto.randomUUID());

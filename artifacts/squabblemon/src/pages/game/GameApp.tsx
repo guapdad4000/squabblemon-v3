@@ -25,7 +25,7 @@ import { cardCatalog, starterRecipes } from '../../data';
 import { STREET_PACK_RULES } from '@workspace/squabblemon-engine/packRules';
 import { Home, Events, PatchDesk, Inventory, CharacterStyles, CharacterCollections, Collection,
   DeckEditor, Decks, DeckTest, PlayerDeckPlay, Missions, Onboarding, Settings,
-  Shop, Story, Multiplayer, ChallengesHub, preloadGameRoute, preloadAllGameRoutes } from './routeModules';
+  Shop, Story, Multiplayer, ChallengesHub, preloadGameRoute } from './routeModules';
 import { Redirect, Route, Switch, useLocation, useSearch } from 'wouter';
 import '../../styles/paper-tabs.css';
 
@@ -94,7 +94,7 @@ function GameRoutes({ bootstrap }: { bootstrap: PlayerBootstrap }) {
       bootstrap.profile.settings.reducedMotion ? 'true' : 'false';
   }, [bootstrap.profile.settings.reducedMotion]);
 
-  useEffect(() => { preloadAllGameRoutes(); warmScreenArt(); }, []);
+  useEffect(() => { preloadGameRoute('/game'); warmScreenArt(); }, []);
 
   useEffect(() => {
     const warmDestination = (event: Event) => {

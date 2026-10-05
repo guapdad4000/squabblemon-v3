@@ -20,24 +20,16 @@ function preloadError(message: string) {
   return event;
 }
 
-test('a stale deployment chunk reloads once for each failed asset', () => {
+test('failed chunks never reload an active page, including multiple missing assets', () => {
   const target = new RecoveryTarget();
   const uninstall = installStaleChunkRecovery(target as unknown as Window);
-  const first = preloadError('Failed to fetch dynamically imported module: /assets/DeckEditor-old.js');
-  target.dispatchEvent(first);
-  assert.equal(first.defaultPrevented, true);
-  assert.equal(target.reloads, 1);
-
-  const duplicate = preloadError('Failed to fetch dynamically imported module: /assets/DeckEditor-old.js');
-  target.dispatchEvent(duplicate);
-  assert.equal(duplicate.defaultPrevented, false);
-  assert.equal(target.reloads, 1);
-
-  target.dispatchEvent(preloadError('Failed to fetch dynamically imported module: /assets/GangBackdrop-old.js'));
-  assert.equal(target.reloads, 2);
+  for (const asset of ['DeckEditor-old.js', 'GangBackdrop-old.js', 'Shop-old.js']) {
+    const event = preloadError(`Failed to fetch dynamically imported module: /assets/${asset}`);
+    target.dispatchEvent(event);
+    assert.equal(event.defaultPrevented, false, 'navigation errors remain available to the boundary');
+  }
+  assert.equal(target.reloads, 0);
   uninstall();
-  target.dispatchEvent(preloadError('Failed to fetch dynamically imported module: /assets/Another-old.js'));
-  assert.equal(target.reloads, 2);
 });
 
 test('reload markers are stable for the same missing chunk', () => {

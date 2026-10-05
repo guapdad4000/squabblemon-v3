@@ -30,7 +30,6 @@ export function Decks({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   const [selectedDeckId, setSelectedDeckId] = usePersistentDeckSelection(
     bootstrap.profile.id,
     [...savedDeckIds, ...starterDeckIds.filter(id => !savedDeckIds.includes(id))],
-    restoredContext.current?.selectedDeckId,
   );
   const atCapacity = bootstrap.profile.savedDecks.length >= bootstrap.profile.deckSlots;
   selectedDeckRef.current = selectedDeckId;

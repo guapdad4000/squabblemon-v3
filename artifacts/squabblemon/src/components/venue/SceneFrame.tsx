@@ -7,6 +7,15 @@ export function sendScene(frame: RefObject<HTMLIFrameElement | null>, payload: R
   frame.current?.contentWindow?.postMessage({ channel: 'squabblemon-scene', ...payload }, window.location.origin);
 }
 
+async function loadSceneQuality(): Promise<GPUQuality> {
+  let timeout: number | undefined;
+  const deadline = new Promise<GPUQuality>((_, reject) => {
+    timeout = window.setTimeout(() => reject(new Error('Scene setup timed out')), 8000);
+  });
+  try { return await Promise.race([detectGPUQuality(), deadline]); }
+  finally { window.clearTimeout(timeout); }
+}
+
 /** Leaving the route destroys the scene document and its GPU lifecycle. */
 export function SceneFrame({ kind, frameRef, onMessage, onReady, poster }: {
   kind: 'safehouse' | 'gym';
@@ -23,7 +32,16 @@ export function SceneFrame({ kind, frameRef, onMessage, onReady, poster }: {
   handlers.current = { onMessage, onReady };
   useEffect(() => {
     let active = true;
-    const sync = () => { void detectGPUQuality().then(next => { if (active) setQuality(next); }); };
+    const sync = () => {
+      void loadSceneQuality().then(next => {
+        if (active) setQuality(previous => previous && JSON.stringify(previous) === JSON.stringify(next) ? previous : next);
+      }).catch(() => {
+        if (active) {
+          setStatus('error');
+          handlers.current.onMessage?.({ type: 'error' });
+        }
+      });
+    };
     const media = matchMedia('(prefers-reduced-motion: reduce)');
     const observer = new MutationObserver(sync);
     observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-reduce-motion', 'data-reduced-motion'] });
@@ -61,18 +79,23 @@ export function SceneFrame({ kind, frameRef, onMessage, onReady, poster }: {
     return () => { clearTimeout(timeout); clearInterval(probe); window.removeEventListener('message', receive); };
   }, [attempt, frameRef, kind, quality]);
   useEffect(() => {
+    if (status !== 'error' || attempt >= 1 || !quality || quality.tier === 'static') return;
+    const timer = window.setTimeout(() => { setStatus('loading'); setAttempt(value => value + 1); }, 500);
+    return () => window.clearTimeout(timer);
+  }, [status, attempt, quality]);
+  useEffect(() => {
     if (quality?.tier === 'static') handlers.current.onMessage?.({ type: 'static' });
   }, [quality]);
   return <div className={`venue-scene is-${quality?.tier === 'static' ? 'static' : status}`}>
     {poster && <img className="venue-scene__poster" src={poster} alt="" />}
-    {quality && quality.tier !== 'static' && <iframe key={attempt} ref={frameRef} src={`${publicBase}scenes/${kind}/index.html?gpuTier=${quality.tier}`}
+    {quality && quality.tier !== 'static' && status !== 'error' && <iframe key={attempt} ref={frameRef} src={`${publicBase}scenes/${kind}/index.html?gpuTier=${quality.tier}`}
       onLoad={() => sendScene(frameRef, { type: 'ping', quality })}
       title={kind === 'safehouse' ? 'Interactive safehouse' : 'Interactive heavy bag'} className="venue-scene__frame" />}
     {quality?.tier !== 'static' && status !== 'ready' && <div className="venue-scene__status" role="status">
       <span className="venue-kicker">{status === 'loading' ? 'Setting the scene' : 'Room unavailable'}</span>
       <strong>{status === 'loading' ? 'Stepping inside…' : 'The lights went out.'}</strong>
       {status === 'error' && <><p>You can still use the menu and open packs without the 3D scene.</p>
-        <button className="venue-button" onClick={() => { setStatus('loading'); setAttempt(value => value + 1); }}>Reload scene</button></>}
+        <button className="venue-button" onClick={() => { setStatus('loading'); if (!quality) { void loadSceneQuality().then(setQuality).catch(() => setStatus('error')); } setAttempt(value => value + 1); }}>Reload scene</button></>}
     </div>}
   </div>;
 }

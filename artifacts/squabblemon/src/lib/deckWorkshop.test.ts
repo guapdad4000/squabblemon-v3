@@ -1,3 +1,5 @@
+import { autoBuildDeck } from './deckWorkshop';
+import { cardCatalog } from '../data';
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { recommendedWorkshopCrews, replaceDeckCard, summarizeDeckTest, workshopSuggestions } from './deckWorkshop';
@@ -108,4 +110,23 @@ test('starter crews reserve fairytale cards for a later drop and migrate without
   assert(next.every(id => !LATER_DROP_STARTER_IDS.includes(id as typeof LATER_DROP_STARTER_IDS[number])));
   assert.deepEqual(starterStreetCrew(next), next);
   assert.deepEqual(starterStreetCrew(ROOKIE_MENTOR_CORE_IDS), ROOKIE_MENTOR_CORE_IDS);
+});
+
+
+test('auto build uses ten distinct owned cards, preserves a partial lineup, and supports undo by leaving the input untouched', () => {
+  const owned = cardCatalog.slice(0, 24).map(card => card.catalogId);
+  const draft = { name: 'My crew', cardIds: owned.slice(0, 2), heroCardId: owned[0], recipeId: null };
+  const next = autoBuildDeck(draft, owned);
+  assert.equal(next.cardIds.length, 10);
+  assert.equal(new Set(next.cardIds).size, 10);
+  assert(next.cardIds.every(id => owned.includes(id)));
+  assert(draft.cardIds.every(id => next.cardIds.includes(id)));
+  assert.equal(next.heroCardId, draft.heroCardId);
+  assert.equal(draft.cardIds.length, 2);
+});
+test('auto build never invents missing cards when the collection is too small', () => {
+  const owned = cardCatalog.slice(0, 4).map(card => card.catalogId);
+  const next = autoBuildDeck({name:'Small',cardIds:[],heroCardId:owned[0],recipeId:null}, [...owned, owned[0], 'invalid']);
+  assert.equal(next.cardIds.length, 4);
+  assert(next.cardIds.every(id => owned.includes(id)));
 });

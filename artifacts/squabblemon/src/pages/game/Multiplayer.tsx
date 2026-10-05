@@ -1,4 +1,5 @@
 import { FadePark, FightTabs } from './FadePark';
+import { usePersistentDeckSelection } from '../../lib/deckSelection';
 import { useRef, useState } from "react";
 import { Link, useLocation, useSearch } from "wouter";
 import { ApiError, type PlayerBootstrap } from "@workspace/api-client-react";
@@ -35,7 +36,7 @@ export function Multiplayer({ bootstrap, code }: { bootstrap: PlayerBootstrap; c
     ...recipes.filter(deck => !saved.some(s => s.id === deck.id))
       .map(deck => ({ id: deck.id, name: deck.name, heroCardId: deck.hero, cardIds: deck.catalogCardIds })),
   ];
-  const [crewId, setCrewId] = useState(crews[0]?.id ?? "");
+  const [crewId, setCrewId] = usePersistentDeckSelection(profile.id, crews.map(crew => crew.id));
   const chosen = crews.find(crew => crew.id === crewId) ?? crews[0];
   const [enteredCode, setEnteredCode] = useState(code ?? "");
   const [busy, setBusy] = useState(false);
