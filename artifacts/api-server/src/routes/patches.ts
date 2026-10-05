@@ -28,7 +28,6 @@ import {
 } from "../lib/patches";
 import { getClerkProxyHost } from "../middlewares/clerkProxyMiddleware";
 import { catalogCardById } from "@workspace/squabblemon-engine/data";
-import { previewSuperduperkyleGift, sendSuperduperkyleGift, SuperduperkyleGiftError } from '../lib/superduperkyleGift';
 
 const router = Router();
 
@@ -259,24 +258,6 @@ router.post("/admin/patches/:id/deliver", async (req, res): Promise<void> => {
     res.json(ResumeAdminPatchDeliveryResponse.parse(await getAdminPatch(params.data.id)));
   } catch {
     res.status(503).json({ error: "Patch delivery progress is unavailable. Please retry." });
-  }
-});
-
-router.get('/admin/player-gifts/superduperkyle-guap/preview', async (req, res): Promise<void> => {
-  if (!adminId(req, res)) return;
-  try { res.json(await previewSuperduperkyleGift()); }
-  catch (error) {
-    if (error instanceof SuperduperkyleGiftError) { res.status(error.status).json({ error: error.message }); return; }
-    res.status(503).json({ error: 'Player gift preview is unavailable.' });
-  }
-});
-
-router.post('/admin/player-gifts/superduperkyle-guap/send', async (req, res): Promise<void> => {
-  if (!authorizeMutation(req, res)) return;
-  try { res.json(await sendSuperduperkyleGift()); }
-  catch (error) {
-    if (error instanceof SuperduperkyleGiftError) { res.status(error.status).json({ error: error.message }); return; }
-    res.status(503).json({ error: 'Player gift could not be delivered.' });
   }
 });
 
