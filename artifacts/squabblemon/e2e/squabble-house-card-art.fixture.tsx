@@ -8,9 +8,10 @@ import '../src/index.css';
 const houseIds = [
   'squabble-house-manager', 'squabbleserver', 'squabblecook', 'janitor',
   'squabblehouse-bus-boy', 'squabblehouse-cashier', 'squabblehouse-security',
-  'squabblehouse-teknician', 'griddle-master', 'inmate-reformed', 'waffle-warlord',
+  'squabblehouse-teknician', 'griddle-master', 'inmate-reformed', 'waffle-warlord', 'sideofhands',
 ];
-const cards = houseIds.map(id => {
+const requestedCards = new URLSearchParams(location.search).get('cards')?.split(',');
+const cards = houseIds.filter(id => !requestedCards || requestedCards.includes(id)).map(id => {
   const card = cardCatalog.find(item => item.engineId === id);
   if (!card) throw new Error(`Missing Squabble House card: ${id}`);
   return card;

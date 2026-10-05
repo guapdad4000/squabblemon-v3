@@ -29,27 +29,11 @@ const SQUABBLEHOUSE_SUPPLIED_ARTWORK = [
     hasAlpha: true,
   },
   {
-    engineId: 'squabblehouse-cashier',
-    artworkId: 'squabblehouse-cashier',
-    source: 'e9a8934c-c434-4db0-a98a-d2a734dade02_1790802359775.png',
-    width: 1024,
-    height: 1365,
-    hasAlpha: false,
-  },
-  {
     engineId: 'waffle-warlord',
     artworkId: 'waffle-warlord',
     source: 'ChatGPT_Image_Sep_30,_2026,_01_54_16_PM_(Edited)_1790802321353.png',
     width: 493,
     height: 654,
-    hasAlpha: true,
-  },
-  {
-    engineId: 'sideofhands',
-    artworkId: 'a-side-of-hands',
-    source: 'ChatGPT_Image_Sep_30,_2026,_01_54_16_PM_(Edited_2)_1790802321352.png',
-    width: 659,
-    height: 373,
     hasAlpha: true,
   },
 ] as const;
@@ -208,7 +192,7 @@ test("every catalog card and deck hero has one valid local character image", asy
   }
 });
 
-test('Squabblehouse portraits and A Side of Hands use the supplied artwork and preserve source alpha', async () => {
+test('Unchanged Squabblehouse portraits preserve their supplied artwork and alpha', async () => {
   for (const asset of SQUABBLEHOUSE_SUPPLIED_ARTWORK) {
     const catalogCard = cardCatalog.find(card => card.engineId === asset.engineId);
     assert.ok(catalogCard, `${asset.engineId} must be registered in the catalog`);
@@ -236,6 +220,24 @@ test('Squabblehouse portraits and A Side of Hands use the supplied artwork and p
 
     const digest = createHash('sha256').update(imported).digest('hex').slice(0, 16);
     assert.equal(revision, digest, `${expectedFile} revision should match the optimized WebP`);
+  }
+});
+
+test('Cashier and A Side of Hands have clean transparent backdrops and revised artwork URLs', async () => {
+  for (const [engineId, artworkId] of [['squabblehouse-cashier', 'squabblehouse-cashier'], ['sideofhands', 'a-side-of-hands']]) {
+    const file = `${artworkId}.webp`;
+    const bytes = await readFile(join(CHARACTER_DIRECTORY, file));
+    const metadata = readWebpMetadata(bytes);
+    assert(metadata.hasAlpha, `${file} must have an alpha channel`);
+    const alpha = await readAlphaChannel(bytes);
+    assertUsefulCutout(file, alpha);
+    for (const corner of [0, metadata.width - 1, alpha.length - metadata.width, alpha.length - 1]) {
+      assert.equal(alpha[corner], 0, `${file} backdrop must be fully transparent at every corner`);
+    }
+    assert(alpha[Math.floor(metadata.height / 2) * metadata.width + Math.floor(metadata.width / 2)] >= 250,
+      `${file} must retain an opaque foreground`);
+    const revision = createHash('sha256').update(bytes).digest('hex').slice(0, 16);
+    assert.equal(getCardImage(engineId), `/assets/characters/${file}?v=${revision}`);
   }
 });
 
