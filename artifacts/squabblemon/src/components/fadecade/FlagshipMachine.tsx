@@ -1,3 +1,4 @@
+import { usePersistentDeckSelection } from '../../lib/deckSelection';
 import { CompactDeckPicker } from '../CompactDeckPicker';
 import { useSearch } from 'wouter';
 import { useViewMemory } from '../../lib/navigationMemory';
@@ -37,7 +38,7 @@ export function FlagshipMachine({ bootstrap, legalCrews, runsQuery, onBattle, ro
   bootstrap: PlayerBootstrap; legalCrews: Deck[]; runsQuery: RunsQuery;
   onBattle: (config: BattleConfig) => void; roadReturn?: RoadReturn | null;
 }) {
-  const [crewId, setCrewId] = useState(legalCrews[0]?.id ?? '');
+  const [crewId, setCrewId] = usePersistentDeckSelection(bootstrap.profile.id, legalCrews.map(crew => crew.id));
   const [open, setOpen] = useViewMemory(`road-open:${bootstrap.profile.id}`, Boolean(roadReturn));
   const [error, setError] = useState<string | null>(null);
   const [confirmEnd, setConfirmEnd] = useState(false);

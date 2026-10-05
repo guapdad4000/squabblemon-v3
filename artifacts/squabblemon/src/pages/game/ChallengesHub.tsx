@@ -109,9 +109,9 @@ export function ChallengesHub({ bootstrap, trainingOnly = false }: { bootstrap: 
           <div className="fadecade-row">
             {!trainingOnly && <BountyMachine bootstrap={bootstrap} cadence="daily" />}
             {!trainingOnly && <BountyMachine bootstrap={bootstrap} cadence="weekly" />}
-            <TrainingMachine legalCrews={legalCrews} onBattle={launchBattle} initiallyOpen={trainingOnly} />
+            <TrainingMachine playerId={bootstrap.profile.id} legalCrews={legalCrews} onBattle={launchBattle} initiallyOpen={trainingOnly} />
             {!trainingOnly && <StockzMachine bootstrap={bootstrap} />}
-            {!trainingOnly && <EventsMachine legalCrews={legalCrews} onBattle={launchBattle} />}
+            {!trainingOnly && <EventsMachine playerId={bootstrap.profile.id} legalCrews={legalCrews} onBattle={launchBattle} />}
           </div>
         </div>
 

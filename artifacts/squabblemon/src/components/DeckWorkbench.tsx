@@ -8,7 +8,7 @@ import { DECK_SIZE, catalogCardById, getCardImage, validateSavedDeck } from '../
 import { CardView } from './CardView';
 import { CardPressTarget } from './CardInspection';
 import { ArsenalScreen } from './venue/ArsenalScreen';
-import { replaceDeckCard, workshopSuggestions, type DeckDraft } from '../lib/deckWorkshop';
+import { autoBuildDeck, replaceDeckCard, workshopSuggestions, type DeckDraft } from '../lib/deckWorkshop';
 import '../styles/deck-workshop.css';
 import { trackEvent } from '../lib/analytics';
 import { GangBackdrop } from './GangBackdrop';
@@ -243,6 +243,11 @@ export function DeckWorkbench({ initial, ownedCardIds, equippedVariants, onSave,
         {(error || externalError) && <p role="alert">{error || externalError}</p>}
       </div>
       <div className="deck-workbench__action-buttons">
+        {!lesson && <button type="button" className="arsenal-link" disabled={busy || deleting} onClick={() => {
+          const next = autoBuildDeck(draft, ownedCardIds);
+          setUndo(draft); setDraft(next); setSlot(null); setPlannedCardId(null);
+          setNotice(next.cardIds.length === DECK_SIZE ? 'Auto-built around your cover. Review the lineup, then save. Undo is available.' : `Added your owned cards. ${DECK_SIZE - next.cardIds.length} more needed for a full deck.`);
+        }}>Auto build</button>}
         {lesson ? <>
           <button className="arsenal-link deck-workbench__test" disabled={busy} onClick={() => void persist(false)}><Save size={16} aria-hidden="true" />Save deck</button>
           <button data-guide-save="true" className="arsenal-action deck-workbench__save" disabled={busy || !legality.valid} onClick={() => void persist(true)}><GameGlyph name="fight" />{busy ? 'Saving…' : 'Save & review fight goal'}</button>

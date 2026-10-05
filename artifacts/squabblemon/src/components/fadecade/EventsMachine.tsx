@@ -1,3 +1,4 @@
+import { usePersistentDeckSelection } from '../../lib/deckSelection';
 import { CompactDeckPicker } from '../CompactDeckPicker';
 import { CrewPreview } from './CrewPreview';
 import { StreetSelect } from '../ui/street-select';
@@ -8,10 +9,10 @@ import { activities, type ActivityId, draftOffers, eventWeek, makeActivityEncoun
 import { getCardImage, catalogCardByEngineId, type Deck, DECK_SIZE } from '../../data';
 import type { BattleConfig } from '../../pages/game/ChallengesHub';
 
-export function EventsMachine({ legalCrews, onBattle }: { legalCrews: Deck[]; onBattle: (c: BattleConfig) => void }) {
+export function EventsMachine({ legalCrews, onBattle, playerId }: { playerId: string; legalCrews: Deck[]; onBattle: (c: BattleConfig) => void }) {
   const [tab, setTab] = useState<'draft' | 'events'>('draft');
   const [eventMode, setEventMode] = useState<ActivityId>('neighborhood');
-  const [crewId, setCrewId] = useState(legalCrews[0]?.id);
+  const [crewId, setCrewId] = usePersistentDeckSelection(playerId, legalCrews.map(crew => crew.id));
   const [isOpen, setIsOpen] = useState(false);
 
   const [picks, setPicks] = useState<string[]>([]);

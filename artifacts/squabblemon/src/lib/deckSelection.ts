@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
+const SELECTION_EVENT = 'squabblemon:deck-selection';
 const STORAGE_PREFIX = 'squabblemon:last-deck:v1:';
 
 export interface DeckSelectionStorage {
@@ -35,7 +36,12 @@ export function persistDeckSelection(
 ) {
   if (!deckId || !availableDeckIds.includes(deckId)) return false;
   try {
-    storage?.setItem(deckSelectionStorageKey(profileId), deckId);
+    const key = deckSelectionStorageKey(profileId);
+    if (storage?.getItem(key) === deckId) return true;
+    storage?.setItem(key, deckId);
+    if (typeof window !== 'undefined' && storage === getDeckSelectionStorage()) {
+      window.dispatchEvent(new CustomEvent(SELECTION_EVENT, { detail: { profileId, deckId } }));
+    }
     return true;
   } catch {
     return false;
@@ -69,8 +75,19 @@ export function usePersistentDeckSelection(
     if (selection.profileId !== profileId || selection.id !== resolvedId) {
       setSelection({ profileId, id: resolvedId });
     }
-    if (resolvedId) persistDeckSelection(profileId, resolvedId, ids, getDeckSelectionStorage());
   }, [ids, profileId, resolvedId, selection]);
+
+  useEffect(() => {
+    const update = (deckId: string | null) => {
+      if (!deckId || !ids.includes(deckId)) return;
+      setSelection(previous => previous.profileId === profileId && previous.id === deckId ? previous : { profileId, id: deckId });
+    };
+    const local = (event: Event) => { const detail = (event as CustomEvent<{ profileId: string; deckId: string }>).detail; if (detail?.profileId === profileId) update(detail.deckId); };
+    const remote = (event: StorageEvent) => { if (event.key === deckSelectionStorageKey(profileId)) update(event.newValue); };
+    window.addEventListener(SELECTION_EVENT, local);
+    window.addEventListener('storage', remote);
+    return () => { window.removeEventListener(SELECTION_EVENT, local); window.removeEventListener('storage', remote); };
+  }, [ids, profileId]);
 
   const selectDeck = useCallback((deckId: string) => {
     if (!ids.includes(deckId)) return;

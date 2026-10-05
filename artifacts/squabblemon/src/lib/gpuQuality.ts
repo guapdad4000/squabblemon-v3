@@ -7,7 +7,7 @@ let modulePromise: Promise<Detector> | undefined;
 function detector() {
   return modulePromise ??= import(/* @vite-ignore */ new URL(getAssetUrl('scenes/shared/gpu-quality.js'), window.location.href).href) as Promise<Detector>;
 }
-export async function detectGPUQuality() { return (await detector()).detectGPUQuality(); }
+export async function detectGPUQuality() { try { return await (await detector()).detectGPUQuality(); } catch (error) { modulePromise = undefined; throw error; } }
 export async function currentGPUQuality() { return (await detector()).gpuQuality(); }
 type DetectorWithDowngrade = Detector & { downgradeGPUQuality?: () => GPUQuality | null };
 const qualityListeners = new Set<() => void>();

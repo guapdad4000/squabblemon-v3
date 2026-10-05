@@ -46,3 +46,34 @@ export function summarizeDeckTest(match: Match, cardId: string): string {
   const ability = match.effectLog.find(event => event.type === 'ability' && event.owner === 'player' && event.cardInstanceId === play.cardInstanceId);
   return ability ? `${card.name}: ${ability.note}` : `${card.name} was played in round ${play.round}. Review its ability condition and compare it with the card you replaced.`;
 }
+
+/** Build an owned ten-card crew around its cover, retaining partial lineups. */
+export function autoBuildDeck(draft: DeckDraft, ownedIds: readonly string[]): DeckDraft {
+  const pool = [...new Set(ownedIds)].filter(id => catalogCardById[id] && catalogCardById[id].kind !== 'token');
+  const owned = new Set(pool);
+  const hero = owned.has(draft.heroCardId) ? draft.heroCardId : pool.find(id => catalogCardById[id].kind !== 'support') ?? pool[0] ?? '';
+  const chosen = draft.cardIds.length < 10 ? [...new Set(draft.cardIds)].filter(id => owned.has(id)).slice(0, 10) : [];
+  if (hero && !chosen.includes(hero)) chosen.unshift(hero);
+  const anchor = catalogCardById[hero];
+  while (chosen.length < 10) {
+    const supports = chosen.filter(id => catalogCardById[id].kind === 'support').length;
+    const cheap = chosen.filter(id => catalogCardById[id].cost <= 2).length;
+    const expensive = chosen.filter(id => catalogCardById[id].cost >= 5).length;
+    const score = (id: string) => {
+      const c = catalogCardById[id];
+      return (anchor && c.faction === anchor.faction ? 8 : 0)
+        + (anchor && c.type === anchor.type ? 4 : 0)
+        + (c.cost <= 2 && cheap < 4 ? 10 : 0)
+        + (c.cost >= 3 && c.cost <= 4 ? 5 : 0)
+        - (c.cost >= 5 && expensive >= 2 ? 18 : 0)
+        - (c.kind === 'support' && supports >= 2 ? 24 : 0)
+        + c.power / Math.max(1, c.cost);
+    };
+    const next = pool.filter(id => !chosen.includes(id)).sort((a, z) => score(z) - score(a) || a.localeCompare(z))[0];
+    if (!next) break;
+    chosen.push(next);
+  }
+  // Opening hand has playable costs; later draws supply finishers.
+  const ordered = chosen.sort((a, z) => catalogCardById[a].cost - catalogCardById[z].cost || a.localeCompare(z));
+  return { ...draft, cardIds: ordered, heroCardId: hero, recipeId: null };
+}
