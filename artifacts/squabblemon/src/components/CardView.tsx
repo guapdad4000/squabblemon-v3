@@ -36,6 +36,8 @@ interface CardViewProps {
   effectRole?: 'source' | 'target';
   effectKind?: 'ability' | 'fire' | 'water' | 'move' | 'blocked' | 'story';
   disableLayout?: boolean;
+  /** Battle hand membership/order; unrelated effect updates do not move cards. */
+  layoutDependency?: string;
   inspectionLayout?: string;
   unavailable?: boolean;
   disabledReason?: string;
@@ -72,7 +74,7 @@ function movementLockCue(instance: CardInstance | null, currentRound?: number) {
 function CardViewComponent({
   card, queued, squabble, onClick, onInspect, inspectable, testId, className = '',
   isBoard, isEnemy, effectivePower, cost, highlighted,
-  effectRole, effectKind, disableLayout, unavailable, inspectionLayout,
+  effectRole, effectKind, disableLayout, layoutDependency, unavailable, inspectionLayout,
   disabledReason, variantId, progress, isInspector,
   fillContainer, presentationOnly, dragEnabled = false, covered = false,
   entryBurst, scoreStance, portraitPop, backgroundUrl, currentRound,
@@ -192,6 +194,7 @@ function CardViewComponent({
       {...inspection.props}
       layoutId={inspectionLayout ?? (disableLayout ? undefined : instance?.instanceId)}
       layout={!disableLayout}
+      layoutDependency={layoutDependency}
       transition={{ layout: { type: 'spring', stiffness: 420, damping: 28 }, duration: 0.2 }}
       data-testid={testId ?? `card-${card.id}`}
       data-card-id={card.id}
@@ -388,6 +391,7 @@ function cardViewPropsEqual(previous: CardViewProps, next: CardViewProps) {
     && previous.effectKind === next.effectKind
     && previous.inspectionLayout === next.inspectionLayout
     && previous.disableLayout === next.disableLayout
+    && previous.layoutDependency === next.layoutDependency
     && previous.unavailable === next.unavailable
     && previous.disabledReason === next.disabledReason
     && previous.variantId === next.variantId

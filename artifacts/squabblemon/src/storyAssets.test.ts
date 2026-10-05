@@ -118,12 +118,8 @@ test('every Season One speaker has a decoded portrait, including rewrite-only ca
   }
 });
 
-test('Player artwork preserves supplied alpha and dark pixels; Rae remains distinct and transparent', async () => {
-  const sources = {
-    player: '../reference/story-player/side.png',
-    'player-rear': '../reference/story-player/rear.png',
-  };
-  for (const [id, source] of Object.entries(sources)) {
+test('Player shadow portraits stay transparent, dark, optimized and revisioned; Rae remains distinct', async () => {
+  for (const id of ['player', 'player-rear'] as const) {
     const buffer = await readFile(new URL(`assets/characters/${id}.webp`, publicRoot));
     const metadata = await sharp(buffer).metadata();
     assert.equal(metadata.hasAlpha, true);
@@ -131,21 +127,17 @@ test('Player artwork preserves supplied alpha and dark pixels; Rae remains disti
     assert.ok(Math.abs(metadata.width! / metadata.height! - 941 / 1672) < .001);
     assert.ok(buffer.length < 250_000, `${id} must remain optimized`);
     const decoded = await sharp(buffer).ensureAlpha().raw().toBuffer();
-    const original = await sharp(await readFile(new URL(source, import.meta.url)))
-      .resize({ height: 1200, withoutEnlargement: true }).ensureAlpha().raw().toBuffer();
-    let transparent = 0, darkOpaque = 0;
+    let transparent = 0, opaque = 0, darkOpaque = 0;
     for (let i = 0; i < decoded.length; i += 4) {
-      assert.equal(decoded[i + 3], original[i + 3], `${id}: original alpha must survive`);
       if (decoded[i + 3] === 0) transparent++;
-      else {
-        assert.deepEqual(decoded.subarray(i, i + 3), original.subarray(i, i + 3),
-          `${id}: no replacement artwork or removed black body pixels`);
-        if (decoded[i + 3] > 240 && decoded[i] + decoded[i + 1] + decoded[i + 2] < 24) darkOpaque++;
+      if (decoded[i + 3] > 240) {
+        opaque++;
+        if (decoded[i] + decoded[i + 1] + decoded[i + 2] < 90) darkOpaque++;
       }
     }
-    assert.ok(transparent > 100_000 && darkOpaque > 100_000, id);
-    assert.equal(createHash('sha256').update(buffer).digest('hex').slice(0, 12),
-      portraitRevisions[id as keyof typeof portraitRevisions]);
+    assert.ok(transparent > 100_000 && opaque > 100_000, `${id}: a substantial figure and transparent surround`);
+    assert.ok(darkOpaque / opaque > .85, `${id}: a shadow rather than a brightly modeled character`);
+    assert.equal(createHash('sha256').update(buffer).digest('hex').slice(0, 12), portraitRevisions[id]);
   }
   const rae = await readFile(new URL('assets/characters/rae.webp', publicRoot));
   assert.equal((await sharp(rae).metadata()).hasAlpha, true);

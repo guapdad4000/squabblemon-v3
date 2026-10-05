@@ -21,6 +21,7 @@ export function LevelUpMoment({
   const backX = useTransform(sx, (value) => value * -0.6),
     backY = useTransform(sy, (value) => value * -0.6);
   const id = useId().replaceAll(":", "");
+  const levelNumber = String(level).padStart(2, "0");
   return (
     <section
       className="level-moment"
@@ -150,7 +151,7 @@ export function LevelUpMoment({
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2 }}
         >
-          THE BLOCK FELT THAT · LEVEL {String(level).padStart(2, "0")}
+          THEM STREETS TALKIN...
         </motion.span>
         <motion.h2
           id="reward-reveal-title"
@@ -163,6 +164,7 @@ export function LevelUpMoment({
             delay: reduced ? 0 : 0.28,
           }}
         >
+          <span className="sr-only">Level {level} reached. </span>
           GOOD
           <br />
           <span>MONEY</span>
@@ -178,6 +180,17 @@ export function LevelUpMoment({
           them hands, mud!
         </motion.p>
       </div>
+      <motion.div
+        className="level-moment__level"
+        style={{ "--level-digits": levelNumber.length } as CSSProperties}
+        initial={reduced ? false : { opacity: 0, y: 16, scale: 0.86 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        transition={{ duration: 0.32, delay: reduced ? 0 : 0.55, ease: "easeOut" }}
+        aria-hidden="true"
+      >
+        <span>LEVEL</span>
+        <strong data-testid="level-number">{levelNumber}</strong>
+      </motion.div>
       <div className="level-moment__footer">
         <motion.strong
           initial={reduced ? false : { y: 30, opacity: 0, rotate: 4 }}

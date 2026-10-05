@@ -1,0 +1,152 @@
+[
+  {
+    "name": "phone",
+    "width": 390,
+    "height": 844,
+    "level": 9,
+    "fontSize": 101.4,
+    "number": {
+      "x": 27.296875,
+      "y": 337.71875,
+      "width": 132.921875,
+      "height": 86.1875
+    },
+    "result": "passed",
+    "errors": []
+  },
+  {
+    "name": "reference",
+    "width": 496,
+    "height": 1014,
+    "level": 9,
+    "fontSize": 128.96,
+    "number": {
+      "x": 34.71875,
+      "y": 402.3125,
+      "width": 169.0625,
+      "height": 109.609375
+    },
+    "result": "passed",
+    "errors": []
+  },
+  {
+    "name": "small-phone",
+    "width": 320,
+    "height": 568,
+    "level": 9,
+    "fontSize": 96,
+    "number": {
+      "x": 22.390625,
+      "y": 266.90625,
+      "width": 125.859375,
+      "height": 81.59375
+    },
+    "result": "passed",
+    "errors": []
+  },
+  {
+    "name": "landscape",
+    "width": 844,
+    "height": 390,
+    "level": 9,
+    "fontSize": 117,
+    "number": {
+      "x": 42.1875,
+      "y": 252,
+      "width": 153.390625,
+      "height": 99.4375
+    },
+    "result": "passed",
+    "errors": []
+  },
+  {
+    "name": "tablet",
+    "width": 768,
+    "height": 1024,
+    "level": 9,
+    "fontSize": 150,
+    "number": {
+      "x": 46.078125,
+      "y": 530,
+      "width": 196.65625,
+      "height": 127.5
+    },
+    "result": "passed",
+    "errors": []
+  },
+  {
+    "name": "desktop",
+    "width": 1440,
+    "height": 1000,
+    "level": 9,
+    "fontSize": 240,
+    "number": {
+      "x": 86.390625,
+      "y": 528,
+      "width": 314.640625,
+      "height": 204
+    },
+    "result": "passed",
+    "errors": []
+  },
+  {
+    "name": "short-desktop",
+    "width": 1280,
+    "height": 720,
+    "level": 9,
+    "fontSize": 180,
+    "number": {
+      "x": 967.21875,
+      "y": 75.59375,
+      "width": 235.984375,
+      "height": 153
+    },
+    "result": "passed",
+    "errors": []
+  },
+  {
+    "name": "three-digits",
+    "width": 390,
+    "height": 844,
+    "level": 100,
+    "fontSize": 67.6,
+    "number": {
+      "x": 27.296875,
+      "y": 337.71875,
+      "width": 112.421875,
+      "height": 57.453125
+    },
+    "result": "passed",
+    "errors": []
+  },
+  {
+    "name": "small-three-digits",
+    "width": 320,
+    "height": 568,
+    "level": 100,
+    "fontSize": 64,
+    "number": {
+      "x": 22.390625,
+      "y": 266.90625,
+      "width": 106.4375,
+      "height": 54.390625
+    },
+    "result": "passed",
+    "errors": []
+  },
+  {
+    "name": "reduced",
+    "width": 390,
+    "height": 844,
+    "level": 9,
+    "fontSize": 101.4,
+    "number": {
+      "x": 27.296875,
+      "y": 337.71875,
+      "width": 132.921875,
+      "height": 86.1875
+    },
+    "result": "passed",
+    "errors": []
+  }
+]

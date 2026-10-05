@@ -34,27 +34,54 @@ export function SpecialMove({ clip, onStatus, audioEnabled = false, speed = 1 }:
     surface.addEventListener('webglcontextlost', contextLost);
     const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
     let video: HTMLVideoElement | undefined;
-    let frame = 0, lastFrame = 0, stopped = false, revealed = false;
+    let frame = 0, videoFrame = 0, lastFrame = 0, lastMediaTime = -1, stopped = false, revealed = false;
+    const cancelDraw = () => {
+      cancelAnimationFrame(frame);
+      if (videoFrame) video?.cancelVideoFrameCallback(videoFrame);
+      frame = videoFrame = 0;
+    };
+    const scheduleDraw = () => {
+      if (stopped || !video || video.paused || document.hidden || frame || videoFrame) return;
+      if (typeof video.requestVideoFrameCallback === 'function') {
+        videoFrame = video.requestVideoFrameCallback(now => { videoFrame = 0; draw(now); });
+      } else {
+        frame = requestAnimationFrame(now => { frame = 0; draw(now); });
+      }
+    };
+    const draw = (now: number) => {
+      if (stopped || !video || document.hidden || video.paused) return;
+      const interval = 1000 / 24;
+      if ((!revealed || now - lastFrame >= interval - 1) && video.readyState >= 2 && !video.seeking && video.currentTime !== lastMediaTime) {
+        // Keep fractional time so a 30fps source does not collapse to 15fps.
+        lastFrame = !revealed ? now : now - Math.max(0, (now - lastFrame) % interval);
+        lastMediaTime = video.currentTime;
+        try {
+          renderer.draw(video);
+          if (!revealed) { revealed = true; setReady(true); onStatus?.('Playing'); }
+        } catch { fail(); return; }
+      }
+      scheduleDraw();
+    };
     const stop = () => {
       stopped = true;
-      cancelAnimationFrame(frame);
+      cancelDraw();
       video?.pause();
       setReady(false);
     };
     const fail = () => { if (stopped) return; stop(); onStatus?.('Clip unavailable — using the card effect.'); };
     const play = async () => {
       if (!video || stopped || document.hidden || video.ended) return;
-      try { await video.play(); }
+      try { await video.play(); scheduleDraw(); }
       catch {
         if (stopped) return;
         // Browser sound restrictions must never prevent the animation itself.
         if (!video.muted) {
           video.muted = true;
-          try { await video.play(); } catch { fail(); }
+          try { await video.play(); scheduleDraw(); } catch { fail(); }
         } else fail();
       }
     };
-    const visibility = () => { if (document.hidden) video?.pause(); else void play(); };
+    const visibility = () => { if (document.hidden) { cancelDraw(); video?.pause(); } else void play(); };
     document.addEventListener('visibilitychange', visibility);
     const reduce = () => {
       if (motion.matches || document.documentElement.dataset.reduceMotion === 'true') {
@@ -89,23 +116,14 @@ export function SpecialMove({ clip, onStatus, audioEnabled = false, speed = 1 }:
       video.onerror = fail;
       video.onended = stop;
       video.src = getMoveClipUrl(clip);
-      const draw = (now: number) => {
-        if (stopped || !video) return;
-        if (now - lastFrame >= 1000 / 24 && video.readyState >= 2 && !video.seeking) {
-          lastFrame = now;
-          try {
-            renderer.draw(video);
-            if (!revealed) { revealed = true; setReady(true); onStatus?.('Playing'); }
-          } catch { fail(); return; }
-        }
-        frame = requestAnimationFrame(draw);
-      };
-      frame = requestAnimationFrame(draw);
+      video.onplaying = scheduleDraw;
+      video.onpause = cancelDraw;
+      scheduleDraw();
     }
     return () => {
       stopped = true;
       clearTimeout(timer);
-      cancelAnimationFrame(frame);
+      cancelDraw();
       motion.removeEventListener('change', reduce);
       document.removeEventListener('visibilitychange', visibility);
       observer.disconnect();
@@ -114,7 +132,7 @@ export function SpecialMove({ clip, onStatus, audioEnabled = false, speed = 1 }:
       surface.removeEventListener('webglcontextlost', contextLost);
       renderer.dispose();
       if (video) {
-        video.onloadedmetadata = null; video.onerror = null; video.onended = null; video.onvolumechange = null;
+        video.onplaying = null; video.onpause = null; video.onloadedmetadata = null; video.onerror = null; video.onended = null; video.onvolumechange = null;
         video.pause(); video.removeAttribute('src'); video.load();
       }
     };

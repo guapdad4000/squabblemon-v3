@@ -1,0 +1,110 @@
+[
+  {
+    "width": 390,
+    "kind": "entry-burst",
+    "time": 0,
+    "identical": true
+  },
+  {
+    "width": 390,
+    "kind": "entry-burst",
+    "time": 140,
+    "identical": true
+  },
+  {
+    "width": 390,
+    "kind": "entry-burst",
+    "time": 300,
+    "identical": true
+  },
+  {
+    "width": 390,
+    "kind": "effect-source beat-windup",
+    "time": 0,
+    "identical": true
+  },
+  {
+    "width": 390,
+    "kind": "effect-source beat-windup",
+    "time": 140,
+    "identical": true
+  },
+  {
+    "width": 390,
+    "kind": "effect-source beat-windup",
+    "time": 300,
+    "identical": true
+  },
+  {
+    "width": 390,
+    "kind": "effect-target beat-impact",
+    "time": 0,
+    "identical": true
+  },
+  {
+    "width": 390,
+    "kind": "effect-target beat-impact",
+    "time": 140,
+    "identical": true
+  },
+  {
+    "width": 390,
+    "kind": "effect-target beat-impact",
+    "time": 300,
+    "identical": true
+  },
+  {
+    "width": 1440,
+    "kind": "entry-burst",
+    "time": 0,
+    "identical": true
+  },
+  {
+    "width": 1440,
+    "kind": "entry-burst",
+    "time": 140,
+    "identical": true
+  },
+  {
+    "width": 1440,
+    "kind": "entry-burst",
+    "time": 300,
+    "identical": true
+  },
+  {
+    "width": 1440,
+    "kind": "effect-source beat-windup",
+    "time": 0,
+    "identical": true
+  },
+  {
+    "width": 1440,
+    "kind": "effect-source beat-windup",
+    "time": 140,
+    "identical": true
+  },
+  {
+    "width": 1440,
+    "kind": "effect-source beat-windup",
+    "time": 300,
+    "identical": true
+  },
+  {
+    "width": 1440,
+    "kind": "effect-target beat-impact",
+    "time": 0,
+    "identical": true
+  },
+  {
+    "width": 1440,
+    "kind": "effect-target beat-impact",
+    "time": 140,
+    "identical": true
+  },
+  {
+    "width": 1440,
+    "kind": "effect-target beat-impact",
+    "time": 300,
+    "identical": true
+  }
+]

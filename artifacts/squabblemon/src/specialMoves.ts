@@ -1,6 +1,7 @@
 import { cards, type Card } from './data';
 import catalog from './specialMoves.json';
 import type { EffectLogEntry } from './gameEngine';
+import { abilityTookEffect } from './abilityOutcome';
 import { getAssetUrl } from './lib/assets';
 
 export type MoveClip = {
@@ -43,8 +44,8 @@ export function resolveSpecialMove(card: Card | string, overrides: MoveOverrides
   return clip?.enabled ? { id: clipId!, ...clip } : null;
 }
 
-export function specialMoveForEvent(event: Pick<EffectLogEntry, 'type' | 'kind' | 'cardId'>, overrides: MoveOverrides = {}) {
-  return event.type === 'ability' && !['blocked', 'fizzle', 'story'].includes(event.kind)
+export function specialMoveForEvent(event: Pick<EffectLogEntry, 'type' | 'cardId'> & Parameters<typeof abilityTookEffect>[0], overrides: MoveOverrides = {}) {
+  return abilityTookEffect(event)
     ? resolveSpecialMove(event.cardId, overrides) : null;
 }
 

@@ -59,3 +59,13 @@ for (const [cardId, homeLane] of [['triple-og-blue', 0], ['triple-og-red', 2]] a
       'ordinary card previews remain blocked by the same lane lock');
   });
 }
+
+test('preview highlights a creative buff even when its event has no explicit targets', () => {
+  const barber = createCardInstance('barber', 'player', 'creative-preview', 0);
+  const ally = { ...createCardInstance('hooper', 'player', 'creative-preview', 1), lane: 0 as const };
+  const match = { ...createMatch('block', 'combo'), playerMotion: 20, playerHand: [barber], boards: [[ally], [], []] };
+  ally.statuses.frozen = true;
+  const before = JSON.stringify(match);
+  assert.ok(previewBattlePlay(match, barber.instanceId, 0)!.targets.includes(ally.instanceId));
+  assert.equal(JSON.stringify(match), before);
+});
