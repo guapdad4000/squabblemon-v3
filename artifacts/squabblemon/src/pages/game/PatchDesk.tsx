@@ -8,6 +8,7 @@ import { useAdminPatches, usePatchActions, usePatchPreview } from '../../hooks/u
 import { useAppAuth } from '../../lib/auth';
 import { PREPARED_PATCHES } from '../../lib/preparedPatches';
 import { getPatchBanner } from '../../lib/patchBanners';
+import { SuperduperkyleGift } from '../../components/SuperduperkyleGift';
 import '../../styles/patches.css';
 
 type DraftForm = Required<Omit<PatchInput, 'artCardId'>> & { artCardId: string | null };
@@ -124,7 +125,7 @@ export function PatchDesk() {
     {admin.isPending ? <div className="patch-desk__layout" role="status" aria-label="Checking desk access"><div className="patch-skeleton" /><div className="patch-skeleton" /></div> :
       admin.isError ? <div className="patch-state patch-state--error" role="alert" style={{ marginTop: 20 }}><strong>Desk unavailable.</strong> Access is restricted, or the desk could not be reached. No drafts are shown. <button type="button" data-testid="button-retry-admin" onClick={() => void admin.refetch()}>Try again</button>
         {userId && <p className="patch-desk__account" data-testid="text-admin-account">To request access, give the site owner this account ID to add to <code>PATCH_ADMIN_USER_IDS</code>: <code data-testid="text-admin-user-id">{userId}</code> <button type="button" onClick={() => void copyUserId()} data-testid="button-copy-user-id"><Copy size={13} aria-hidden="true" /> {copied ? 'Copied' : 'Copy'}</button></p>}</div> :
-      <div className="patch-desk__layout">
+      <><SuperduperkyleGift /><div className="patch-desk__layout">
         <aside className="patch-desk__rail"><h2>On the desk</h2><button type="button" className="patch-button" onClick={() => load()} data-testid="button-new-patch"><Plus size={15} aria-hidden="true" /> New draft</button>
           {!patches.length && <p>No drafts yet. Start with the version and a clear summary.</p>}
           {patches.map(patch => <button key={patch.id} type="button" aria-current={selectedId === String(patch.id) ? 'true' : undefined} onClick={() => load(patch)} data-testid={`button-edit-patch-${patch.id}`}><small>{patch.status} / {patch.version}</small><strong>{patch.title}</strong></button>)}
@@ -156,7 +157,7 @@ export function PatchDesk() {
             </>}
           </div>}
         </section>
-      </div>}
+      </div></>}
     <dialog ref={dialog} className="patch-confirm" aria-labelledby="patch-confirm-title" onCancel={e => { e.preventDefault(); setConfirmOpen(false); setConfirmation(''); }}>
       {preview.data && <><h2 id="patch-confirm-title">Publish {preview.data.patch.version}?</h2><p>This pins the patch publicly and starts mail delivery to <strong>{preview.data.audienceCount.toLocaleString()} players</strong>. Each letter carries <strong>{reward(preview.data.letter.gift.softCurrency, preview.data.letter.gift.packTickets)} and {preview.data.letter.gift.styleShards} Style Shards</strong>. Players who join later receive it on their next visit. Published copy cannot be edited.</p>
         <label>Type <strong>{preview.data.patch.version}</strong> to confirm<input autoComplete="off" value={confirmation} onChange={e => setConfirmation(e.target.value)} data-testid="input-confirm-version" /></label>
