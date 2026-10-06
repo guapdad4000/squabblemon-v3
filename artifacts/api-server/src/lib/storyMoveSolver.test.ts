@@ -382,3 +382,19 @@ test("suppressed presentation events preserve complete boss gameplay state", {
   assert.equal(suppressed.effectLog.length, 0);
   assert.deepEqual(gameplayState(suppressed), gameplayState(normal));
 });
+
+test("Dead Air Soundcheck stays solvable within the existing budget with the campaign mentor crew", {
+  timeout: STORY_SOLVER_NODE_BUDGET_MS + 2_000,
+}, () => {
+  const battle = getStoryBattle("sherlock-dead-air-soundcheck");
+  assert(battle);
+  const cards = catalogIdsToEngineIds(ROOKIE_CORE_IDS.map(id => id === "hooper" ? "dr-fade" : id));
+  const districts = createDistrictSnapshot("story-node-v1:sherlock-dead-air-soundcheck");
+  const initial = createStoryMatch(battle.encounter, cards, ROOKIE_DECK_ID, undefined, districts);
+  const startedAt = performance.now();
+  const moves = solveStoryMoves(initial);
+  const elapsed = performance.now() - startedAt;
+  const completed = verifyStoryMatchTranscript(battle.encounter, cards, moves, ROOKIE_DECK_ID, undefined, districts);
+  assert.equal(getMatchWinner(completed), "player");
+  assert(elapsed <= STORY_SOLVER_NODE_BUDGET_MS + 500, `Soundcheck solve took ${elapsed.toFixed(1)}ms`);
+});

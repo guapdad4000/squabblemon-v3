@@ -1,0 +1,757 @@
+# Subtest: failed chunks never reload an active page, including multiple missing assets
+ok 1 - failed chunks never reload an active page, including multiple missing assets
+# Subtest: reload markers are stable for the same missing chunk
+ok 2 - reload markers are stable for the same missing chunk
+# Subtest: missing hashed assets return 404 before the SPA fallback
+ok 3 - missing hashed assets return 404 before the SPA fallback
+# Subtest: hashed assets are immutable while the HTML manifest revalidates
+ok 4 - hashed assets are immutable while the HTML manifest revalidates
+# tests 4
+# pass 4
+# fail 0
+# cancelled 0
+# skipped 0
+# duration_ms 346.068335
+# Subtest: known-board preview predicts a freeze and leaves the live fade untouched
+ok 1 - known-board preview predicts a freeze and leaves the live fade untouched
+# Subtest: preview cannot disclose which private cards the rival holds
+ok 2 - preview cannot disclose which private cards the rival holds
+# Subtest: preview respects unaffordable choices and includes the armed Squabble
+ok 3 - preview respects unaffordable choices and includes the armed Squabble
+# Subtest: triple-og-blue selection previews its home district and rejects off-side placement
+ok 4 - triple-og-blue selection previews its home district and rejects off-side placement
+# Subtest: triple-og-red selection previews its home district and rejects off-side placement
+ok 5 - triple-og-red selection previews its home district and rejects off-side placement
+# Subtest: preview highlights a creative buff even when its event has no explicit targets
+ok 6 - preview highlights a creative buff even when its event has no explicit targets
+# Subtest: Squabblehouse staff and dogs register as collectible, pack-eligible cards with their authored rarity and faction tags
+ok 7 - Squabblehouse staff and dogs register as collectible, pack-eligible cards with their authored rarity and faction tags
+# Subtest: A Side of Hands is a pack-eligible support with its catalog alias and no staff tag
+ok 8 - A Side of Hands is a pack-eligible support with its catalog alias and no staff tag
+# Subtest: the previous saved staff/utility crew remains legal without being rewritten to the new recipe
+ok 9 - the previous saved staff/utility crew remains legal without being rewritten to the new recipe
+# Subtest: diner crew classifications retain staff identities without replacing collection factions
+ok 10 - diner crew classifications retain staff identities without replacing collection factions
+# Subtest: every diner card display name starts with the SquabbleHouse brand
+ok 11 - every diner card display name starts with the SquabbleHouse brand
+# Subtest: Squabblehouse Shift is a legal ten-card staff recipe with no gang cards
+ok 12 - Squabblehouse Shift is a legal ten-card staff recipe with no gang cards
+# Subtest: Squabblehouse wave definitions expose all nine playable identities, budgets, rarity, and faction
+ok 13 - Squabblehouse wave definitions expose all nine playable identities, budgets, rarity, and faction
+# Subtest: dogs support their OG only after reaching its district
+ok 14 - dogs support their OG only after reaching its district
+# Subtest: both OG dogs wait when unmatched, then walk exactly one adjacent lane per round
+ok 15 - both OG dogs wait when unmatched, then walk exactly one adjacent lane per round
+# Subtest: Dog On Reveal waits without its matching OG and never teleports as part of the reveal
+ok 16 - Dog On Reveal waits without its matching OG and never teleports as part of the reveal
+# Subtest: Red dog leaps two lanes to intercept one complete Griddle damage-and-Burn package
+ok 17 - Red dog leaps two lanes to intercept one complete Griddle damage-and-Burn package
+# Subtest: same-lane dogs guard in place, one dog spends one package per round, and duplicates resolve deterministically
+ok 18 - same-lane dogs guard in place, one dog spends one package per round, and duplicates resolve deterministically
+# Subtest: Blue dog grants Blue OG once per round; OG Hands-loss immunity remains authoritative
+ok 19 - Blue dog grants Blue OG once per round; OG Hands-loss immunity remains authoritative
+# Subtest: uncounterable attacks, Griddle shieldbreak, Wifey, and disabled dogs retain their order ahead of dog redirection
+ok 20 - uncounterable attacks, Griddle shieldbreak, Wifey, and disabled dogs retain their order ahead of dog redirection
+# Subtest: Red dog attacks only its matching OG district, and Red/Blue dog effects are once per round
+ok 21 - Red dog attacks only its matching OG district, and Red/Blue dog effects are once per round
+# Subtest: Security hits the strongest enemy on reveal and its bounded first-arrival trigger resolves once
+ok 22 - Security hits the strongest enemy on reveal and its bounded first-arrival trigger resolves once
+# Subtest: Security reacts to movement into its district and ignores repeat arrivals until next round
+ok 23 - Security reacts to movement into its district and ignores repeat arrivals until next round
+# Subtest: Security gains its arrival reward only when the Hands loss lands
+ok 24 - Security gains its arrival reward only when the Hands loss lands
+# Subtest: Teknician repeats the latest eligible staff reveal and its district trigger cannot recurse
+ok 25 - Teknician repeats the latest eligible staff reveal and its district trigger cannot recurse
+# Subtest: Teknician skips destroyed or disabled latest staff and falls back to the latest live active reveal
+ok 26 - Teknician skips destroyed or disabled latest staff and falls back to the latest live active reveal
+# Subtest: Teknician has a clean no-target fallback and never treats Janitor or a dog as repeatable staff
+ok 27 - Teknician has a clean no-target fallback and never treats Janitor or a dog as repeatable staff
+# Subtest: Griddle damage scales against Burn and applies damage plus Burn as one hostile package
+ok 28 - Griddle damage scales against Burn and applies damage plus Burn as one hostile package
+# Subtest: Grown-Man Fanboy Griddle redirects scale damage from the actual recipient Burn state
+ok 29 - Grown-Man Fanboy Griddle redirects scale damage from the actual recipient Burn state
+# Subtest: Inmate Reformed gains Hands only with house staff but always checks its strongest enemy
+ok 30 - Inmate Reformed gains Hands only with house staff but always checks its strongest enemy
+# Subtest: Janitor retains one shared hostile-effect reversal per district each round
+ok 31 - Janitor retains one shared hostile-effect reversal per district each round
+# Subtest: Squabblehouse wave ability upgrades train from a successful base reveal
+ok 32 - Squabblehouse wave ability upgrades train from a successful base reveal
+# Subtest: full JSON snapshot replay parity includes dog and Teknician marks and replay frames
+ok 33 - full JSON snapshot replay parity includes dog and Teknician marks and replay frames
+# Subtest: Bus Boy moves only eligible staff, respects movement blocks and open destinations for both owners
+ok 34 - Bus Boy moves only eligible staff, respects movement blocks and open destinations for both owners
+# Subtest: Bus Boy replay frames preserve movement, Security arrival, and the later +1 reward as adjacent transitions
+ok 35 - Bus Boy replay frames preserve movement, Security arrival, and the later +1 reward as adjacent transitions
+# Subtest: Waffle Warlord keeps its +2 full-coverage payout and excludes itself and nonstaff
+ok 36 - Waffle Warlord keeps its +2 full-coverage payout and excludes itself and nonstaff
+# Subtest: Waffle Warlord pays +1 to the weakest other staff with only one or two staffed districts
+ok 37 - Waffle Warlord pays +1 to the weakest other staff with only one or two staffed districts
+# Subtest: Waffle Warlord counts its own occupied district but still buffs only other staff
+ok 38 - Waffle Warlord counts its own occupied district but still buffs only other staff
+# Subtest: A Side of Hands is ephemeral support with independent halves, protection, and friendly-only upgrade targeting
+ok 39 - A Side of Hands is ephemeral support with independent halves, protection, and friendly-only upgrade targeting
+# Subtest: support side cannot SQUABBLE and Tek echoes new diner staff reveals from history deterministically
+ok 40 - support side cannot SQUABBLE and Tek echoes new diner staff reveals from history deterministically
+# Subtest: the Triple OG set ships as a complete, pullable catalog wave
+ok 41 - the Triple OG set ships as a complete, pullable catalog wave
+# Subtest: mythical Triple OGs remain on their assigned board sides
+ok 42 - mythical Triple OGs remain on their assigned board sides
+# Subtest: home-side Triple OG reveals resolve in story-scheduled, runtime-locked, and closed districts
+ok 43 - home-side Triple OG reveals resolve in story-scheduled, runtime-locked, and closed districts
+# Subtest: home-side OGs waive only Corrupt Church Motion while preserving other cost rules
+ok 44 - home-side OGs waive only Corrupt Church Motion while preserving other cost rules
+# Subtest: CLUE COOKY collects homage only while losing, and never loses Hands
+ok 45 - CLUE COOKY collects homage only while losing, and never loses Hands
+# Subtest: RED PUNCH taxes his own district and moves anyone he cannot touch
+ok 46 - RED PUNCH taxes his own district and moves anyone he cannot touch
+# Subtest: a silenced Triple OG still answers roll call
+ok 47 - a silenced Triple OG still answers roll call
+# Subtest: INITIATION puts the next character on with the set already in the district
+ok 48 - INITIATION puts the next character on with the set already in the district
+# Subtest: BLOCK SPINNER burns an enemy here and the next enemy played here
+ok 49 - BLOCK SPINNER burns an enemy here and the next enemy played here
+# Subtest: LOOK OUT discounts your next card in the district the opponent walked into
+ok 50 - LOOK OUT discounts your next card in the district the opponent walked into
+# Subtest: Roll Call removes a 1-Hand ally instead of leaving it at zero, and replays continuously
+ok 51 - Roll Call removes a 1-Hand ally instead of leaving it at zero, and replays continuously
+# Subtest: a Triple OG reveal that moves someone leaves no discontinuous replay frame
+ok 52 - a Triple OG reveal that moves someone leaves no discontinuous replay frame
+# tests 52
+# pass 52
+# fail 0
+# cancelled 0
+# skipped 0
+# duration_ms 461.949169
+# Subtest: all supplied lines have audio assets and alternate cards/costs cannot announce the wrong recording
+ok 1 - all supplied lines have audio assets and alternate cards/costs cannot announce the wrong recording
+# Subtest: expanded recordings match decoded exports and decode completely when tools are available
+ok 2 - expanded recordings match decoded exports and decode completely when tools are available
+# Subtest: stable Rookie Road context routes only truthful cues; missing coverage stays written
+ok 3 - stable Rookie Road context routes only truthful cues; missing coverage stays written
+# Subtest: the rival-reading line plays in the coached pause and stops when the player continues
+ok 4 - the rival-reading line plays in the coached pause and stops when the player continues
+# Subtest: sequences advance, duck music, and stop completely when a new prompt takes over
+ok 5 - sequences advance, duck music, and stop completely when a new prompt takes over
+# Subtest: mute and backgrounding pause speech and resume the same clip, with AAC fallback
+ok 6 - mute and backgrounding pause speech and resume the same clip, with AAC fallback
+# Subtest: autoplay denial retries on a gesture; a late play resolution cannot resurrect an old cue
+ok 7 - autoplay denial retries on a gesture; a late play resolution cannot resurrect an old cue
+# Subtest: failed clips advance without trapping the lesson or leaving music quiet
+ok 8 - failed clips advance without trapping the lesson or leaving music quiet
+# Subtest: every tour stop and revised card prompt has its exact recording
+ok 9 - every tour stop and revised card prompt has its exact recording
+# Subtest: every first-sighting mechanic still maps its displayed explanation to a dedicated recording
+ok 10 - every first-sighting mechanic still maps its displayed explanation to a dedicated recording
+# tests 10
+# pass 10
+# fail 0
+# cancelled 0
+# skipped 0
+# duration_ms 4940.746524
+# Subtest: battle renders after ashlee special and its summons have unique identities
+ok 1 - battle renders after ashlee special and its summons have unique identities
+# Subtest: battle renders after captainjigga special and its summons have unique identities
+ok 2 - battle renders after captainjigga special and its summons have unique identities
+# Subtest: battle renders after kyle special and its summons have unique identities
+ok 3 - battle renders after kyle special and its summons have unique identities
+# Subtest: summons render in multiplayer and can be inspected without becoming collectibles
+ok 4 - summons render in multiplayer and can be inspected without becoming collectibles
+# Subtest: later copy, cheap ally buffs, and enemy targeting handle summoned cards
+ok 5 - later copy, cheap ally buffs, and enemy targeting handle summoned cards
+# Subtest: summon Hands stay synchronized with live lane totals during ashlee animation
+ok 6 - summon Hands stay synchronized with live lane totals during ashlee animation
+# Subtest: summon Hands stay synchronized with live lane totals during captainjigga animation
+ok 7 - summon Hands stay synchronized with live lane totals during captainjigga animation
+# Subtest: summon Hands stay synchronized with live lane totals during kyle animation
+ok 8 - summon Hands stay synchronized with live lane totals during kyle animation
+# Subtest: stewardesses each remove exactly 2 Hands from distinct unprotected enemies
+ok 9 - stewardesses each remove exactly 2 Hands from distinct unprotected enemies
+# tests 9
+# pass 9
+# fail 0
+# cancelled 0
+# skipped 0
+# duration_ms 843.816819
+# Subtest: Squabble Cook keeps its retaliation at 3 printed Hands for player
+ok 1 - Squabble Cook keeps its retaliation at 3 printed Hands for player
+# Subtest: Squabble Cook keeps its retaliation at 3 printed Hands for cpu
+ok 2 - Squabble Cook keeps its retaliation at 3 printed Hands for cpu
+# Subtest: granted Protection survives its grantor returning to hand
+ok 3 - granted Protection survives its grantor returning to hand
+# Subtest: confiscation and donations cannot heal Homeless Legend; capped refunds cannot charge Powerhouse
+ok 4 - confiscation and donations cannot heal Homeless Legend; capped refunds cannot charge Powerhouse
+# Subtest: damage after Fanboy interception triggers only watchers in the actual recipient district
+ok 5 - damage after Fanboy interception triggers only watchers in the actual recipient district
+# Subtest: new district state is replayed before/after and a full solo transcript verifies with Alice returns
+ok 6 - new district state is replayed before/after and a full solo transcript verifies with Alice returns
+# Subtest: all 22 identities, approved costs, artwork, eight alternate pairs and training integrate with acquisition
+ok 7 - all 22 identities, approved costs, artwork, eight alternate pairs and training integrate with acquisition
+# Subtest: every new ability is deterministic and immutable for player
+ok 8 - every new ability is deterministic and immutable for player
+# Subtest: Dorothy returns identity, clears temporary effects and attaches a minimum-one discount for player
+ok 9 - Dorothy returns identity, clears temporary effects and attaches a minimum-one discount for player
+# Subtest: Dorothy can return a cheap ally from another district but not an enemy or token for player
+ok 10 - Dorothy can return a cheap ally from another district but not an enemy or token for player
+# Subtest: Dorothy's returned ally receives her bonus on its next play despite competing discounts for player
+ok 11 - Dorothy's returned ally receives her bonus on its next play despite competing discounts for player
+# Subtest: every new ability is deterministic and immutable for cpu
+ok 12 - every new ability is deterministic and immutable for cpu
+# Subtest: Dorothy returns identity, clears temporary effects and attaches a minimum-one discount for cpu
+ok 13 - Dorothy returns identity, clears temporary effects and attaches a minimum-one discount for cpu
+# Subtest: Dorothy can return a cheap ally from another district but not an enemy or token for cpu
+ok 14 - Dorothy can return a cheap ally from another district but not an enemy or token for cpu
+# Subtest: Dorothy's returned ally receives her bonus on its next play despite competing discounts for cpu
+ok 15 - Dorothy's returned ally receives her bonus on its next play despite competing discounts for cpu
+# Subtest: Scarecrow moves alone to the first empty legal district for player
+ok 16 - Scarecrow moves alone to the first empty legal district for player
+# Subtest: Scarecrow does not move without a swap ally or empty legal district for player
+ok 17 - Scarecrow does not move without a swap ally or empty legal district for player
+# Subtest: Scarecrow keeps its ally swap, Hands and movement hooks for player
+ok 18 - Scarecrow keeps its ally swap, Hands and movement hooks for player
+# Subtest: Tin Man grants a bigger first reward to a moved ally or Oz traveler for player
+ok 19 - Tin Man grants a bigger first reward to a moved ally or Oz traveler for player
+# Subtest: Tin Man triggers once on Mad Hatter's arrival and still rewards paired movement for player
+ok 20 - Tin Man triggers once on Mad Hatter's arrival and still rewards paired movement for player
+# Subtest: Scarecrow moves alone to the first empty legal district for cpu
+ok 21 - Scarecrow moves alone to the first empty legal district for cpu
+# Subtest: Scarecrow does not move without a swap ally or empty legal district for cpu
+ok 22 - Scarecrow does not move without a swap ally or empty legal district for cpu
+# Subtest: Scarecrow keeps its ally swap, Hands and movement hooks for cpu
+ok 23 - Scarecrow keeps its ally swap, Hands and movement hooks for cpu
+# Subtest: Tin Man grants a bigger first reward to a moved ally or Oz traveler for cpu
+ok 24 - Tin Man grants a bigger first reward to a moved ally or Oz traveler for cpu
+# Subtest: Tin Man triggers once on Mad Hatter's arrival and still rewards paired movement for cpu
+ok 25 - Tin Man triggers once on Mad Hatter's arrival and still rewards paired movement for cpu
+# Subtest: Tin Man and Lion respect once-per-round and active-status gates
+ok 26 - Tin Man and Lion respect once-per-round and active-status gates
+# Subtest: Alice returns once, leaves a capped Grin and receives +3 on her next deployment
+ok 27 - Alice returns once, leaves a capped Grin and receives +3 on her next deployment
+# Subtest: Cheshire in player's hand leaves one six-Hand Grin on an ally's return
+ok 28 - Cheshire in player's hand leaves one six-Hand Grin on an ally's return
+# Subtest: Alice's own next-play discount works for player without Mr Rabbit
+ok 29 - Alice's own next-play discount works for player without Mr Rabbit
+# Subtest: Mr Rabbit in player's hand discounts Alice's next play, even after Rabbit leaves hand
+ok 30 - Mr Rabbit in player's hand discounts Alice's next play, even after Rabbit leaves hand
+# Subtest: Mr Rabbit on player's board gains Hands on Dorothy and Alice returns alongside Cheshire
+ok 31 - Mr Rabbit on player's board gains Hands on Dorothy and Alice returns alongside Cheshire
+# Subtest: Mr Rabbit's return credit stacks with an existing targeted discount for player, with a 1-Motion floor
+ok 32 - Mr Rabbit's return credit stacks with an existing targeted discount for player, with a 1-Motion floor
+# Subtest: Cheshire in cpu's hand leaves one six-Hand Grin on an ally's return
+ok 33 - Cheshire in cpu's hand leaves one six-Hand Grin on an ally's return
+# Subtest: Alice's own next-play discount works for cpu without Mr Rabbit
+ok 34 - Alice's own next-play discount works for cpu without Mr Rabbit
+# Subtest: Mr Rabbit in cpu's hand discounts Alice's next play, even after Rabbit leaves hand
+ok 35 - Mr Rabbit in cpu's hand discounts Alice's next play, even after Rabbit leaves hand
+# Subtest: Mr Rabbit on cpu's board gains Hands on Dorothy and Alice returns alongside Cheshire
+ok 36 - Mr Rabbit on cpu's board gains Hands on Dorothy and Alice returns alongside Cheshire
+# Subtest: Mr Rabbit's return credit stacks with an existing targeted discount for cpu, with a 1-Motion floor
+ok 37 - Mr Rabbit's return credit stacks with an existing targeted discount for cpu, with a 1-Motion floor
+# Subtest: Cheshire only leaves one Grin each round and never duplicates a district token
+ok 38 - Cheshire only leaves one Grin each round and never duplicates a district token
+# Subtest: Queen executes only at threshold; Protection and Built Different prevent a guard
+ok 39 - Queen executes only at threshold; Protection and Built Different prevent a guard
+# Subtest: Sherlock visibly cancels one entrance, expires, and does not erase passive abilities
+ok 40 - Sherlock visibly cancels one entrance, expires, and does not erase passive abilities
+# Subtest: DMV queue replaces the surcharge, does not stack, and expires
+ok 41 - DMV queue replaces the surcharge, does not stack, and expires
+# Subtest: Watson restores actual damage only; Fresh Pot removes Burn and Freeze without unrelated buffs
+ok 42 - Watson restores actual damage only; Fresh Pot removes Burn and Freeze without unrelated buffs
+# Subtest: Watson pairs with an active friendly Sherlock anywhere without manufacturing healing (player)
+ok 43 - Watson pairs with an active friendly Sherlock anywhere without manufacturing healing (player)
+# Subtest: Watson pairs with an active friendly Sherlock anywhere without manufacturing healing (cpu)
+ok 44 - Watson pairs with an active friendly Sherlock anywhere without manufacturing healing (cpu)
+# Subtest: Undercover waits until entrance resolves, steals once and escapes into the weakest open district
+ok 45 - Undercover waits until entrance resolves, steals once and escapes into the weakest open district
+# Subtest: The Feds seize bonus Hands without creating healing debt or triggering damage reactions
+ok 46 - The Feds seize bonus Hands without creating healing debt or triggering damage reactions
+# Subtest: P. Tang damage and push are one protected package; locked survivors stay put
+ok 47 - P. Tang damage and push are one protected package; locked survivors stay put
+# Subtest: P. Tang pays only for landed damage whose survivor cannot be knocked back for player
+ok 48 - P. Tang pays only for landed damage whose survivor cannot be knocked back for player
+# Subtest: P. Tang pays only for landed damage whose survivor cannot be knocked back for cpu
+ok 49 - P. Tang pays only for landed damage whose survivor cannot be knocked back for cpu
+# Subtest: Pastor counts actual donations, leaves one Hand, and creates no damage reactions
+ok 50 - Pastor counts actual donations, leaves one Hand, and creates no damage reactions
+# Subtest: Powerhouse banks actual refunds in hand up to three; income and discounts never count
+ok 51 - Powerhouse banks actual refunds in hand up to three; income and discounts never count
+# Subtest: Bonnet Girl, Ronald and Trap Vamp react to actual damage with correct caps
+ok 52 - Bonnet Girl, Ronald and Trap Vamp react to actual damage with correct caps
+# Subtest: Protection prevents damage reactions, and opposing cooks cannot retaliate indefinitely
+ok 53 - Protection prevents damage reactions, and opposing cooks cannot retaliate indefinitely
+# Subtest: Oz prefers the most recent eligible Oz traveler over a newer ordinary entrance for player
+ok 54 - Oz prefers the most recent eligible Oz traveler over a newer ordinary entrance for player
+# Subtest: Oz falls back to the most recent eligible ordinary entrance when no traveler qualifies for player
+ok 55 - Oz falls back to the most recent eligible ordinary entrance when no traveler qualifies for player
+# Subtest: Oz refuses copying loops for player
+ok 56 - Oz refuses copying loops for player
+# Subtest: Oz prefers the most recent eligible Oz traveler over a newer ordinary entrance for cpu
+ok 57 - Oz prefers the most recent eligible Oz traveler over a newer ordinary entrance for cpu
+# Subtest: Oz falls back to the most recent eligible ordinary entrance when no traveler qualifies for cpu
+ok 58 - Oz falls back to the most recent eligible ordinary entrance when no traveler qualifies for cpu
+# Subtest: Oz refuses copying loops for cpu
+ok 59 - Oz refuses copying loops for cpu
+# Subtest: Oz movement bonus uses successful current-round IDs, not persistent moved flags or one-mover history
+ok 60 - Oz movement bonus uses successful current-round IDs, not persistent moved flags or one-mover history
+# Subtest: the same fairytale rules survive six-round authoritative online games for both seats
+ok 61 - the same fairytale rules survive six-round authoritative online games for both seats
+# Subtest: player: Stakeout pays only on cancellation and snapshots both rewards at every training tier
+ok 62 - player: Stakeout pays only on cancellation and snapshots both rewards at every training tier
+# Subtest: player: absent or disabled Sherlock still cancels but grants neither reward; expiry and avoidance never pay
+ok 63 - player: absent or disabled Sherlock still cancels but grants neither reward; expiry and avoidance never pay
+# Subtest: player: Stakeout excludes tokens, support, hazards and enemies from its reward, and Watson retains the three-Hand heal cap
+ok 64 - player: Stakeout excludes tokens, support, hazards and enemies from its reward, and Watson retains the three-Hand heal cap
+# Subtest: cpu: Stakeout pays only on cancellation and snapshots both rewards at every training tier
+ok 65 - cpu: Stakeout pays only on cancellation and snapshots both rewards at every training tier
+# Subtest: cpu: absent or disabled Sherlock still cancels but grants neither reward; expiry and avoidance never pay
+ok 66 - cpu: absent or disabled Sherlock still cancels but grants neither reward; expiry and avoidance never pay
+# Subtest: cpu: Stakeout excludes tokens, support, hazards and enemies from its reward, and Watson retains the three-Hand heal cap
+ok 67 - cpu: Stakeout excludes tokens, support, hazards and enemies from its reward, and Watson retains the three-Hand heal cap
+# Subtest: Heart Starter gives one Hand even to a protected arrival and shares its round cap for player
+ok 68 - Heart Starter gives one Hand even to a protected arrival and shares its round cap for player
+# Subtest: Heart Starter gives one Hand even to a protected arrival and shares its round cap for cpu
+ok 69 - Heart Starter gives one Hand even to a protected arrival and shares its round cap for cpu
+# Subtest: all twelve retain collection, rarity, artwork, cosmetics and training IDs at the approved costs
+ok 70 - all twelve retain collection, rarity, artwork, cosmetics and training IDs at the approved costs
+# Subtest: every redesigned reveal is deterministic and immutable for player
+ok 71 - every redesigned reveal is deterministic and immutable for player
+# Subtest: Nothing to Lose spends a chosen amount; spending extra cannot activate the steal for player
+ok 72 - Nothing to Lose spends a chosen amount; spending extra cannot activate the steal for player
+# Subtest: every redesigned reveal is deterministic and immutable for cpu
+ok 73 - every redesigned reveal is deterministic and immutable for cpu
+# Subtest: Nothing to Lose spends a chosen amount; spending extra cannot activate the steal for cpu
+ok 74 - Nothing to Lose spends a chosen amount; spending extra cannot activate the steal for cpu
+# Subtest: investment rejects fractions, negatives, overspend and other cards; shields stop a steal
+ok 75 - investment rejects fractions, negatives, overspend and other cards; shields stop a steal
+# Subtest: Fangirl follows a specific idol, triggers once each round and survives serialization
+ok 76 - Fangirl follows a specific idol, triggers once each round and survives serialization
+# Subtest: Fanboy intercepts one hostile package per round, then leaves the idol exposed
+ok 77 - Fanboy intercepts one hostile package per round, then leaves the idol exposed
+# Subtest: Street Apostle echoes actual Plant growth once across other districts without recursive copies
+ok 78 - Street Apostle echoes actual Plant growth once across other districts without recursive copies
+# Subtest: Wrong Block moves the weakest enemy to its strongest other district
+ok 79 - Wrong Block moves the weakest enemy to its strongest other district
+# Subtest: Wrong Block respects shield
+ok 80 - Wrong Block respects shield
+# Subtest: Wrong Block respects locked
+ok 81 - Wrong Block respects locked
+# Subtest: Wrong Block respects uncounterable
+ok 82 - Wrong Block respects uncounterable
+# Subtest: Wrong Block respects asphalt
+ok 83 - Wrong Block respects asphalt
+# Subtest: Concrete Congregation protects on reveal and blocks only one forced Earth move per round
+ok 84 - Concrete Congregation protects on reveal and blocks only one forced Earth move per round
+# Subtest: Scent ignores current enemies, triggers once per round on entry and expires after next round
+ok 85 - Scent ignores current enemies, triggers once per round on entry and expires after next round
+# Subtest: hostile forced movement can route an enemy into Lingering Scent
+ok 86 - hostile forced movement can route an enemy into Lingering Scent
+# Subtest: Passport Bro cleanses a Water passenger only when leaving a losing district, without a refund
+ok 87 - Passport Bro cleanses a Water passenger only when leaving a losing district, without a refund
+# Subtest: Wrong Block rewards a real enemy displacement only for player
+ok 88 - Wrong Block rewards a real enemy displacement only for player
+# Subtest: Wrong Block rewards a real enemy displacement only for cpu
+ok 89 - Wrong Block rewards a real enemy displacement only for cpu
+# Subtest: Extra Sauce detonates stored Burn immediately once; a shield blocks the entire package
+ok 90 - Extra Sauce detonates stored Burn immediately once; a shield blocks the entire package
+# Subtest: Built Different survives overkill once, heals only damage and cannot manufacture growth
+ok 91 - Built Different survives overkill once, heals only damage and cannot manufacture growth
+# Subtest: Pass the Hose spreads once per district; incoming smoke never ticks or chains in the same round
+ok 92 - Pass the Hose spreads once per district; incoming smoke never ticks or chains in the same round
+# Subtest: Mailman creates one persistent Package; only the next Electric in that district consumes it
+ok 93 - Mailman creates one persistent Package; only the next Electric in that district consumes it
+# Subtest: passive training pays once per match even across rounds and serialization
+ok 94 - passive training pays once per match even across rounds and serialization
+# Subtest: online commands and public markers work for player
+ok 95 - online commands and public markers work for player
+# Subtest: online commands and public markers work for cpu
+ok 96 - online commands and public markers work for cpu
+# Subtest: a complete custom-deck fade replays every paid investment through server verification
+ok 97 - a complete custom-deck fade replays every paid investment through server verification
+# Subtest: online projections expose Scent and Package markers without exposing engine state
+ok 98 - online projections expose Scent and Package markers without exposing engine state
+# Subtest: Fanboy redirects Folks’ Burn away from the protected Mythical
+ok 99 - Fanboy redirects Folks’ Burn away from the protected Mythical
+# Subtest: Scent replay starts with no mark and shows the newly created mark after reveal
+ok 100 - Scent replay starts with no mark and shows the newly created mark after reveal
+# Subtest: Nothing to Lose investment bonus is flat and requires spending for player
+ok 101 - Nothing to Lose investment bonus is flat and requires spending for player
+# Subtest: Nothing to Lose investment bonus is flat and requires spending for cpu
+ok 102 - Nothing to Lose investment bonus is flat and requires spending for cpu
+# Subtest: last played follows gameplay, survives lobby activity, and timestamps timeouts at the deadline
+ok 103 - last played follows gameplay, survives lobby activity, and timestamps timeouts at the deadline
+# Subtest: unplayed and legacy rooms do not invent a last-played timestamp
+ok 104 - unplayed and legacy rooms do not invent a last-played timestamp
+# Subtest: card balance and online room versions reject incompatible in-progress fades safely
+ok 105 - card balance and online room versions reject incompatible in-progress fades safely
+# Subtest: locked-lane mythical plays are accepted online and reproduce in authoritative transcript replay
+ok 106 - locked-lane mythical plays are accepted online and reproduce in authoritative transcript replay
+# Subtest: both players receive saved sticker avatars through ready, reconnect and rematch
+ok 107 - both players receive saved sticker avatars through ready, reconnect and rematch
+# Subtest: six rounds alternate the first human, preserve multi-card turns, and never auto-play a CPU
+ok 108 - six rounds alternate the first human, preserve multi-card turns, and never auto-play a CPU
+# Subtest: both seats can Squabble exactly once, including the guest playing first
+ok 109 - both seats can Squabble exactly once, including the guest playing first
+# Subtest: Buddy forms, Bud timing and hazard metadata are public to both seats and survive reconnect
+ok 110 - Buddy forms, Bud timing and hazard metadata are public to both seats and survive reconnect
+# Subtest: wrong turns, wrong hands, overspending and repeated used cards are rejected
+ok 111 - wrong turns, wrong hands, overspending and repeated used cards are rejected
+# Subtest: private projections omit rival hands, draw order, user IDs and full replay frames
+ok 112 - private projections omit rival hands, draw order, user IDs and full replay frames
+# Subtest: timeout forfeits once and both players must consent to a rematch
+ok 113 - timeout forfeits once and both players must consent to a rematch
+# Subtest: either seat forfeits on timeout despite leading two districts, with distinct messages for both players
+ok 114 - either seat forfeits on timeout despite leading two districts, with distinct messages for both players
+# Subtest: district finishes, surrenders, and draws keep their normal result copy
+ok 115 - district finishes, surrenders, and draws keep their normal result copy
+# Subtest: starting near the waiting-room expiry gives the active fade its full lifetime
+ok 116 - starting near the waiting-room expiry gives the active fade its full lifetime
+# Subtest: base-strength snapshots and saved opening order survive serialization
+ok 117 - base-strength snapshots and saved opening order survive serialization
+# Subtest: a friendly room tallies every ending once and keeps the record through rematches and lobby returns
+ok 118 - a friendly room tallies every ending once and keeps the record through rematches and lobby returns
+# Subtest: rooms stored before the series existed keep working and ranked rooms never tally
+ok 119 - rooms stored before the series existed keep working and ranked rooms never tally
+# Subtest: leaving closes a friendly room for both players and names who closed it
+ok 120 - leaving closes a friendly room for both players and names who closed it
+# Subtest: only a confirmed close leaves a friendly room; failed or offline attempts keep the player there
+ok 121 - only a confirmed close leaves a friendly room; failed or offline attempts keep the player there
+# Subtest: existing Epic leaders retain their costs, IDs and base kits; Ashlee is Plant
+ok 122 - existing Epic leaders retain their costs, IDs and base kits; Ashlee is Plant
+# Subtest: DJ rewards exactly the second Electric character for player
+ok 123 - DJ rewards exactly the second Electric character for player
+# Subtest: DJ rewards exactly the second Electric character for cpu
+ok 124 - DJ rewards exactly the second Electric character for cpu
+# Subtest: DJ can be the second Electric play, but a later DJ cannot grant an earlier missed bonus
+ok 125 - DJ can be the second Electric play, but a later DJ cannot grant an earlier missed bonus
+# Subtest: DJ bonus resets next round and never charges a negative cost
+ok 126 - DJ bonus resets next round and never charges a negative cost
+# Subtest: disabled DJ grants no bonus: silenced
+ok 127 - disabled DJ grants no bonus: silenced
+# Subtest: disabled DJ grants no bonus: frozen
+ok 128 - disabled DJ grants no bonus: frozen
+# Subtest: disabled DJ grants no bonus: weakened
+ok 129 - disabled DJ grants no bonus: weakened
+# Subtest: Electric supports and summons do not consume the second character trigger
+ok 130 - Electric supports and summons do not consume the second character trigger
+# Subtest: Promoter rewards successful Air movement, once per round, for player
+ok 131 - Promoter rewards successful Air movement, once per round, for player
+# Subtest: Promoter rewards successful Air movement, once per round, for cpu
+ok 132 - Promoter rewards successful Air movement, once per round, for cpu
+# Subtest: Promoter ignores blocked movement and non-Air passengers
+ok 133 - Promoter ignores blocked movement and non-Air passengers
+# Subtest: Promoter also sees district rides and settles before the next player action
+ok 134 - Promoter also sees district rides and settles before the next player action
+# Subtest: Gamer rewards disruption while Shotta no longer grants Mirror shields for player
+ok 135 - Gamer rewards disruption while Shotta no longer grants Mirror shields for player
+# Subtest: Gamer rewards disruption while Shotta no longer grants Mirror shields for cpu
+ok 136 - Gamer rewards disruption while Shotta no longer grants Mirror shields for cpu
+# Subtest: blocked, repeated, friendly-district and already-present statuses never farm Dark leader bonuses
+ok 137 - blocked, repeated, friendly-district and already-present statuses never farm Dark leader bonuses
+# Subtest: normal Buddy Buds do not invoke the retired Mythical disruption kit
+ok 138 - normal Buddy Buds do not invoke the retired Mythical disruption kit
+# Subtest: disabled Gamer and Shotta cannot react: silenced
+ok 139 - disabled Gamer and Shotta cannot react: silenced
+# Subtest: disabled Gamer and Shotta cannot react: frozen
+ok 140 - disabled Gamer and Shotta cannot react: frozen
+# Subtest: disabled Gamer and Shotta cannot react: weakened
+ok 141 - disabled Gamer and Shotta cannot react: weakened
+# Subtest: Dark leaders trigger again next round, while copies share each per-side cap
+ok 142 - Dark leaders trigger again next round, while copies share each per-side cap
+# Subtest: Stewards enhance existing Air allies and preserve both artwork IDs for player
+ok 143 - Stewards enhance existing Air allies and preserve both artwork IDs for player
+# Subtest: Stewards enhance existing Air allies and preserve both artwork IDs for cpu
+ok 144 - Stewards enhance existing Air allies and preserve both artwork IDs for cpu
+# Subtest: Ashlee rewards a full Plant spread; Air cards and Guyana do not fill missing Plant districts
+ok 145 - Ashlee rewards a full Plant spread; Air cards and Guyana do not fill missing Plant districts
+# Subtest: Conductor cleanses moved passengers and gives Water +3 total Hands
+ok 146 - Conductor cleanses moved passengers and gives Water +3 total Hands
+# Subtest: Conductor movement can trigger Promoter, and a cleansed Light passenger can trigger Medic
+ok 147 - Conductor movement can trigger Promoter, and a cleansed Light passenger can trigger Medic
+# Subtest: new element reactions match AI search without presentation events
+ok 148 - new element reactions match AI search without presentation events
+# Subtest: Guest List includes bottle and shares the Air movement cap for player
+ok 149 - Guest List includes bottle and shares the Air movement cap for player
+# Subtest: Guest List includes piratedj and shares the Air movement cap for player
+ok 150 - Guest List includes piratedj and shares the Air movement cap for player
+# Subtest: Guest List includes dancecaptain and shares the Air movement cap for player
+ok 151 - Guest List includes dancecaptain and shares the Air movement cap for player
+# Subtest: Guest List includes bottle and shares the Air movement cap for cpu
+ok 152 - Guest List includes bottle and shares the Air movement cap for cpu
+# Subtest: Guest List includes piratedj and shares the Air movement cap for cpu
+ok 153 - Guest List includes piratedj and shares the Air movement cap for cpu
+# Subtest: Guest List includes dancecaptain and shares the Air movement cap for cpu
+ok 154 - Guest List includes dancecaptain and shares the Air movement cap for cpu
+# Subtest: both leaders become Epic without changing IDs, training keys, opening grants, or printed budget
+ok 155 - both leaders become Epic without changing IDs, training keys, opening grants, or printed budget
+# Subtest: Auntie rewards the Light target protected by church-protection for player
+ok 156 - Auntie rewards the Light target protected by church-protection for player
+# Subtest: Auntie rewards the Light target protected by salon-protection for player
+ok 157 - Auntie rewards the Light target protected by salon-protection for player
+# Subtest: Auntie rewards the Light target protected by wifey for player
+ok 158 - Auntie rewards the Light target protected by wifey for player
+# Subtest: Auntie rewards the Light target protected by church-protection for cpu
+ok 159 - Auntie rewards the Light target protected by church-protection for cpu
+# Subtest: Auntie rewards the Light target protected by salon-protection for cpu
+ok 160 - Auntie rewards the Light target protected by salon-protection for cpu
+# Subtest: Auntie rewards the Light target protected by wifey for cpu
+ok 161 - Auntie rewards the Light target protected by wifey for cpu
+# Subtest: Auntie keeps Covered reveal and does not reward merely granting protection
+ok 162 - Auntie keeps Covered reveal and does not reward merely granting protection
+# Subtest: Covered gives +3 to Light and +2 to non-Light, including already protected targets (player)
+ok 163 - Covered gives +3 to Light and +2 to non-Light, including already protected targets (player)
+# Subtest: Covered gives +3 to Light and +2 to non-Light, including already protected targets (cpu)
+ok 164 - Covered gives +3 to Light and +2 to non-Light, including already protected targets (cpu)
+# Subtest: Auntie caps board-wide multi-hit reactions at one and refreshes next round
+ok 165 - Auntie caps board-wide multi-hit reactions at one and refreshes next round
+# Subtest: Auntie does not reward silenced
+ok 166 - Auntie does not reward silenced
+# Subtest: Auntie does not reward frozen
+ok 167 - Auntie does not reward frozen
+# Subtest: Auntie does not reward weakened
+ok 168 - Auntie does not reward weakened
+# Subtest: Auntie does not reward absent
+ok 169 - Auntie does not reward absent
+# Subtest: Auntie does not reward hand
+ok 170 - Auntie does not reward hand
+# Subtest: Auntie does not reward non-light
+ok 171 - Auntie does not reward non-light
+# Subtest: Auntie does not reward support
+ok 172 - Auntie does not reward support
+# Subtest: Auntie does not reward hazard
+ok 173 - Auntie does not reward hazard
+# Subtest: Auntie does not reward immune
+ok 174 - Auntie does not reward immune
+# Subtest: Auntie does not reward mitigation
+ok 175 - Auntie does not reward mitigation
+# Subtest: Scammer copies share the per-side cap; a copied Auntie works by itself
+ok 176 - Scammer copies share the per-side cap; a copied Auntie works by itself
+# Subtest: Medic clears every harmful status locally and rewards one Light character for player
+ok 177 - Medic clears every harmful status locally and rewards one Light character for player
+# Subtest: Medic clears every harmful status locally and rewards one Light character for cpu
+ok 178 - Medic clears every harmful status locally and rewards one Light character for cpu
+# Subtest: Medic recognizes frozen alone
+ok 179 - Medic recognizes frozen alone
+# Subtest: Medic recognizes silenced alone
+ok 180 - Medic recognizes silenced alone
+# Subtest: Medic recognizes weakened alone
+ok 181 - Medic recognizes weakened alone
+# Subtest: Medic recognizes locked alone
+ok 182 - Medic recognizes locked alone
+# Subtest: Medic recognizes burnStacks alone
+ok 183 - Medic recognizes burnStacks alone
+# Subtest: Medic rewards the weakest healthy local Light character without inventing a cleanse (player)
+ok 184 - Medic rewards the weakest healthy local Light character without inventing a cleanse (player)
+# Subtest: Medic rewards the weakest healthy local Light character without inventing a cleanse (cpu)
+ok 185 - Medic rewards the weakest healthy local Light character without inventing a cleanse (cpu)
+# Subtest: Foodz cleanses Burn/Weaken/Lock across the board and triggers Medic once
+ok 186 - Foodz cleanses Burn/Weaken/Lock across the board and triggers Medic once
+# Subtest: Foodz selects one weakest character per district, with Light premium and real recovery only (player)
+ok 187 - Foodz selects one weakest character per district, with Light premium and real recovery only (player)
+# Subtest: Foodz selects one weakest character per district, with Light premium and real recovery only (cpu)
+ok 188 - Foodz selects one weakest character per district, with Light premium and real recovery only (cpu)
+# Subtest: rastamon can trigger an active Medic in another district
+ok 189 - rastamon can trigger an active Medic in another district
+# Subtest: laundry can trigger an active Medic in another district
+ok 190 - laundry can trigger an active Medic in another district
+# Subtest: firstaid can trigger an active Medic in another district
+ok 191 - firstaid can trigger an active Medic in another district
+# Subtest: pinaynurse can trigger an active Medic in another district
+ok 192 - pinaynurse can trigger an active Medic in another district
+# Subtest: soulfood can trigger an active Medic in another district
+ok 193 - soulfood can trigger an active Medic in another district
+# Subtest: stonersr can trigger an active Medic in another district
+ok 194 - stonersr can trigger an active Medic in another district
+# Subtest: Medic never rewards healthy allies, natural status expiry, or cleaning only non-Light cards
+ok 195 - Medic never rewards healthy allies, natural status expiry, or cleaning only non-Light cards
+# Subtest: Medic cannot reward her own recovery from silenced
+ok 196 - Medic cannot reward her own recovery from silenced
+# Subtest: Medic cannot reward her own recovery from frozen
+ok 197 - Medic cannot reward her own recovery from frozen
+# Subtest: Medic cannot reward her own recovery from weakened
+ok 198 - Medic cannot reward her own recovery from weakened
+# Subtest: Medic is once per round, survives JSON saves and copy changes, and refreshes next round
+ok 199 - Medic is once per round, survives JSON saves and copy changes, and refreshes next round
+# Subtest: both leader rewards agree in AI search and replayable matches
+ok 200 - both leader rewards agree in AI search and replayable matches
+# Subtest: BUDDY is a Legendary Earth character with a distinct normal and Squabble contract
+ok 201 - BUDDY is a Legendary Earth character with a distinct normal and Squabble contract
+# Subtest: normal Buddy selects two or three eligible Bud lanes deterministically and discounts its lane for player
+ok 202 - normal Buddy selects two or three eligible Bud lanes deterministically and discounts its lane for player
+# Subtest: normal Buddy selects two or three eligible Bud lanes deterministically and discounts its lane for cpu
+ok 203 - normal Buddy selects two or three eligible Bud lanes deterministically and discounts its lane for cpu
+# Subtest: normal Buddy growth and sprouting resolve together at the two-round boundary for player
+ok 204 - normal Buddy growth and sprouting resolve together at the two-round boundary for player
+# Subtest: normal Buddy growth and sprouting resolve together at the two-round boundary for cpu
+ok 205 - normal Buddy growth and sprouting resolve together at the two-round boundary for cpu
+# Subtest: a moved older arrival cannot replace the last-summoned Buddy Bud recipient
+ok 206 - a moved older arrival cannot replace the last-summoned Buddy Bud recipient
+# Subtest: normal Buddy skips Bud planting when every friendly district is full
+ok 207 - normal Buddy skips Bud planting when every friendly district is full
+# Subtest: Squabbled Buddy transforms, buffs Earth and weakens enemies for exactly two rounds: player
+ok 208 - Squabbled Buddy transforms, buffs Earth and weakens enemies for exactly two rounds: player
+# Subtest: Squabbled Buddy transforms, buffs Earth and weakens enemies for exactly two rounds: cpu
+ok 209 - Squabbled Buddy transforms, buffs Earth and weakens enemies for exactly two rounds: cpu
+# Subtest: a sprouted Bud without a later recipient remains harmless, and late Buddy plants no unusable Buds
+ok 210 - a sprouted Bud without a later recipient remains harmless, and late Buddy plants no unusable Buds
+# Subtest: active Earth Squabble affects later arrivals and honors protection and uncounterable defense
+ok 211 - active Earth Squabble affects later arrivals and honors protection and uncounterable defense
+# Subtest: Folks burns every enemy district and buffs only other Fire characters for player
+ok 212 - Folks burns every enemy district and buffs only other Fire characters for player
+# Subtest: Folks burns every enemy district and buffs only other Fire characters for cpu
+ok 213 - Folks burns every enemy district and buffs only other Fire characters for cpu
+# Subtest: Folks respects shields, ignores uncounterable enemies, and resolves final-round Burn before scoring
+ok 214 - Folks respects shields, ignores uncounterable enemies, and resolves final-round Burn before scoring
+# Subtest: buddy cannot trigger while disabled or manufacture upgrades on an empty board
+ok 215 - buddy cannot trigger while disabled or manufacture upgrades on an empty board
+# Subtest: folks cannot trigger while disabled or manufacture upgrades on an empty board
+ok 216 - folks cannot trigger while disabled or manufacture upgrades on an empty board
+# Subtest: SQUABBLE doubles printed Hands without doubling either ability
+ok 217 - SQUABBLE doubles printed Hands without doubling either ability
+# Subtest: trained tiers add small targeted bonuses without multiplying board-wide Burn
+ok 218 - trained tiers add small targeted bonuses without multiplying board-wide Burn
+# Subtest: KYLE is a collectible Legendary with the supplied portrait and valid upgrade path
+ok 219 - KYLE is a collectible Legendary with the supplied portrait and valid upgrade path
+# Subtest: player: four unique bombs land only on the opponent side and survive JSON save/reload
+ok 220 - player: four unique bombs land only on the opponent side and survive JSON save/reload
+# Subtest: cpu: four unique bombs land only on the opponent side and survive JSON save/reload
+ok 221 - cpu: four unique bombs land only on the opponent side and survive JSON save/reload
+# Subtest: each of four explosions damages exactly one random enemy in its own lane, once
+ok 222 - each of four explosions damages exactly one random enemy in its own lane, once
+# Subtest: four kills award exactly +8 persistent Hands to their KYLE, with no collateral damage
+ok 223 - four kills award exactly +8 persistent Hands to their KYLE, with no collateral damage
+# Subtest: protection blocks bombs while mitigation absorbs one point without awarding a knockout
+ok 224 - protection blocks bombs while mitigation absorbs one point without awarding a knockout
+# Subtest: Freeze is not a kill: underlying Hands must reach zero from bomb damage
+ok 225 - Freeze is not a kill: underlying Hands must reach zero from bomb damage
+# Subtest: planted bombs keep their fuse after KYLE leaves, and removed bombs cannot detonate
+ok 226 - planted bombs keep their fuse after KYLE leaves, and removed bombs cannot detonate
+# Subtest: multiple KYLEs receive only their own bombs kill credit
+ok 227 - multiple KYLEs receive only their own bombs kill credit
+# Subtest: hazards do not gain Hands or change gang-based district scoring
+ok 228 - hazards do not gain Hands or change gang-based district scoring
+# Subtest: silenced KYLE plants no bombs, and final-round fuses cannot create a seventh round
+ok 229 - silenced KYLE plants no bombs, and final-round fuses cannot create a seventh round
+# Subtest: host and guest see the same bomb placement, fuse, hits and kill rewards after both humans end the round
+ok 230 - host and guest see the same bomb placement, fuse, hits and kill rewards after both humans end the round
+# Subtest: STOCKZ is a collectible Rare with valid upgrades and supplied portrait
+ok 231 - STOCKZ is a collectible Rare with valid upgrades and supplied portrait
+# Subtest: Compound Interest grows on every later friendly character across districts and rounds without a cap
+ok 232 - Compound Interest grows on every later friendly character across districts and rounds without a cap
+# Subtest: STOCKZ ignores supports and enemy plays, and disabled abilities do not trigger
+ok 233 - STOCKZ ignores supports and enemy plays, and disabled abilities do not trigger
+# Subtest: story-earned fighters stay out of Street Packs until the story grants them
+ok 234 - story-earned fighters stay out of Street Packs until the story grants them
+# Subtest: new Squabblehouse cards are part of their regular rarity pools, not story rewards
+ok 235 - new Squabblehouse cards are part of their regular rarity pools, not story rewards
+# Subtest: published v7 rules disclose the authoritative independent rarity and bonus behavior
+ok 236 - published v7 rules disclose the authoritative independent rarity and bonus behavior
+# Subtest: rarity selection is independent of ownership and first-two protection stays in the rolled tier
+ok 237 - rarity selection is independent of ownership and first-two protection stays in the rolled tier
+# Subtest: same-pack exclusion restores a tier only after exhaustion
+ok 238 - same-pack exclusion restores a tier only after exhaustion
+# Subtest: an authored empty rarity tier fails explicitly
+ok 239 - an authored empty rarity tier fails explicitly
+# Subtest: bonus boundaries, amounts, pity, and exhausted style conversion match v7
+ok 240 - bonus boundaries, amounts, pity, and exhausted style conversion match v7
+# Subtest: ten-pull counts duplicate Rare+ gameplay pulls and never cosmetics
+ok 241 - ten-pull counts duplicate Rare+ gameplay pulls and never cosmetics
+# Subtest: forced Rare+ uses 80/15/4/1 rarity boundaries independent of ownership
+ok 242 - forced Rare+ uses 80/15/4/1 rarity boundaries independent of ownership
+# Subtest: effective rarity frequencies follow the fixed weights regardless of ownership
+ok 243 - effective rarity frequencies follow the fixed weights regardless of ownership
+# Subtest: future earned IDs remain intact while active rewards come from the current catalog
+ok 244 - future earned IDs remain intact while active rewards come from the current catalog
+# tests 244
+# pass 244
+# fail 0
+# cancelled 0
+# skipped 0
+# duration_ms 1103.023021
+# Subtest: character cosmetics debit only Style Shards, retain badges, and never change card strength
+ok 1 - character cosmetics debit only Style Shards, retain badges, and never change card strength
+# Subtest: purchases reject unowned fighters, insufficient funds, and unfinished character collections
+ok 2 - purchases reject unowned fighters, insufficient funds, and unfinished character collections
+# Subtest: base banner is included; paid scenes, finish and individual stickers require ownership
+ok 3 - base banner is included; paid scenes, finish and individual stickers require ownership
+# Subtest: database: retry-safe purchase and equip persist across reload without overwriting settings or earned badges
+ok 4 - database: retry-safe purchase and equip persist across reload without overwriting settings or earned badges # SKIP
+# Subtest: every completed collection has real unique stickers and isolated purchase ownership
+ok 5 - every completed collection has real unique stickers and isolated purchase ownership
+# Subtest: new individual stickers mix with legacy stickers without repurchasing an owned pack
+ok 6 - new individual stickers mix with legacy stickers without repurchasing an owned pack
+# Subtest: owned sticker packs mix across banners while preserving per-character scenes
+ok 7 - owned sticker packs mix across banners while preserving per-character scenes
+# Subtest: configuration requires an exact HTTPS origin, matching Clerk key, and smoke user
+ok 8 - configuration requires an exact HTTPS origin, matching Clerk key, and smoke user
+# Subtest: passes when the deployed catalog reports checkout enabled in live mode
+ok 9 - passes when the deployed catalog reports checkout enabled in live mode
+# Subtest: fails the release when the store quietly disables checkout
+ok 10 - fails the release when the store quietly disables checkout
+# Subtest: fails when the mode is not live or individual offers are unavailable
+ok 11 - fails when the mode is not live or individual offers are unavailable
+# Subtest: fails when the payment boundary stops requiring sign-in or errors
+ok 12 - fails when the payment boundary stops requiring sign-in or errors
+# Subtest: revokes the smoke session even when token minting fails after session creation
+ok 13 - revokes the smoke session even when token minting fails after session creation
+# Subtest: still revokes the smoke session when the catalog assertion fails
+ok 14 - still revokes the smoke session when the catalog assertion fails
+# Subtest: surfaces revocation failures in logs without masking a passing check
+ok 15 - surfaces revocation failures in logs without masking a passing check
+# Subtest: posts to the alert webhook on failure without masking the original error
+ok 16 - posts to the alert webhook on failure without masking the original error
+# Subtest: every offered signature pack has a real portrait and background, with legacy atlas gutters preserved
+ok 17 - every offered signature pack has a real portrait and background, with legacy atlas gutters preserved
+# Subtest: all ten supplied packs are accounted for: 60 banners, 60 deck covers and 239 transparent stickers
+ok 18 - all ten supplied packs are accounted for: 60 banners, 60 deck covers and 239 transparent stickers
+# tests 18
+# pass 17
+# fail 0
+# cancelled 0
+# skipped 1
+# duration_ms 6056.908071
+# Subtest: compiled tuples exactly preserve the delivered export, without fences or count annotations
+ok 1 - compiled tuples exactly preserve the delivered export, without fences or count annotations
+# Subtest: the rewritten screenplay covers every Season One scene using shipped portraits
+ok 2 - the rewritten screenplay covers every Season One scene using shipped portraits
+# Subtest: node revisions only change when that node’s screenplay changes
+ok 3 - node revisions only change when that node’s screenplay changes
+# Subtest: new dialogue cannot be skipped by an old read marker; other seasons keep theirs
+ok 4 - new dialogue cannot be skipped by an old read marker; other seasons keep theirs
+# Subtest: theater artwork is real, optimized and within the complete scene budget
+ok 5 - theater artwork is real, optimized and within the complete scene budget
+# Subtest: cinema props preserve transparency and proportion within a one-megabyte art budget
+ok 6 - cinema props preserve transparency and proportion within a one-megabyte art budget
+# Subtest: every new chapter's rendered background, portrait, puzzle and poster exists
+ok 7 - every new chapter's rendered background, portrait, puzzle and poster exists
+# Subtest: authored environments cover every new story scene with all 38 supplied locations
+ok 8 - authored environments cover every new story scene with all 38 supplied locations
+# Subtest: all sixteen environment props retain transparent alpha
+ok 9 - all sixteen environment props retain transparent alpha
+# Subtest: every Season One speaker has a decoded portrait, including rewrite-only cast
+ok 10 - every Season One speaker has a decoded portrait, including rewrite-only cast
+# Subtest: Player shadow portraits stay transparent, dark, optimized and revisioned; Rae remains distinct
+ok 11 - Player shadow portraits stay transparent, dark, optimized and revisioned; Rae remains distinct
+# Subtest: Season One expansion keeps every shipped line as an exact prefix
+ok 12 - Season One expansion keeps every shipped line as an exact prefix
+# Subtest: Season One expansion leaves encounters, rewards and routing untouched
+ok 13 - Season One expansion leaves encounters, rewards and routing untouched
+# Subtest: Sherlock registry has unique IDs, two varied battles per chapter and one puzzle
+ok 14 - Sherlock registry has unique IDs, two varied battles per chapter and one puzzle
+# Subtest: Sherlock chapters satisfy executable story-content validation
+ok 15 - Sherlock chapters satisfy executable story-content validation
+# Subtest: season expansion preserves every legacy progression, encounter and reward identity
+ok 16 - season expansion preserves every legacy progression, encounter and reward identity
+# Subtest: each chapter has exactly one presentation and every advertised chapter exists
+ok 17 - each chapter has exactly one presentation and every advertised chapter exists
+# Subtest: new seasons preserve distinct entry requirements and validate as one campaign
+ok 18 - new seasons preserve distinct entry requirements and validate as one campaign
+# Subtest: puzzle solutions reject omissions, duplicates, extra pieces and the wrong order
+ok 19 - puzzle solutions reject omissions, duplicates, extra pieces and the wrong order
+# tests 19
+# pass 19
+# fail 0
+# cancelled 0
+# skipped 0
+# duration_ms 1687.469048
+Public entry bundle: 211.2 KiB / 475 KiB across 3 static chunk(s).
+GameApp static JavaScript: 852.1 KiB / 900 KiB.
+Home static JavaScript: 931.1 KiB / 1200 KiB.

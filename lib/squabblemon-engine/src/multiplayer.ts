@@ -6,6 +6,7 @@ import {
   createDistrictSnapshot,
   getMatchDistricts,
   getCharacterDistrictMarks,
+  getCharacterMovementLockThroughRound,
   type CharacterDistrictMark,
   createMatchFromEngineCards,
   getDistrictResults,
@@ -28,13 +29,13 @@ import {
 } from "./gameEngine";
 
 /** Bumped whenever a persisted online room can no longer be replayed safely. */
-export const ONLINE_RULES_VERSION = 46;
+export const ONLINE_RULES_VERSION = 47;
 /**
  * Card values and trigger semantics are part of a reward match's issued
  * snapshot.  Keep this separate from the transport rules version so a
  * cosmetic/network change does not invalidate an in-progress reward fade.
  */
-export const CARD_BALANCE_VERSION = 46;
+export const CARD_BALANCE_VERSION = 47;
 export const TURN_SECONDS = 75;
 export const ROOM_LIFETIME_MS = 30 * 60 * 1000;
 export type Seat = Owner;
@@ -535,9 +536,8 @@ export function onlineRoomView(
     statuses: { ...card.statuses },
     covered: match?.timedEffects.some(effect => (effect.kind === 'church-protection' || effect.kind === 'salon-protection') && effect.targetInstanceId === card.instanceId) ?? false,
     moved: card.moved,
-    ...(card.squabblehouseCannotMoveThroughRound !== undefined
-      && card.squabblehouseCannotMoveThroughRound >= (match?.round ?? 1)
-      ? { movementLockedThroughRound: card.squabblehouseCannotMoveThroughRound } : {}),
+    ...(match && getCharacterMovementLockThroughRound(match, card) !== undefined
+      ? { movementLockedThroughRound: getCharacterMovementLockThroughRound(match, card) } : {}),
     costs: [0, 1, 2].map((lane) =>
       getLegalCardCost(match!, card.owner, card, lane as Lane),
     ) as [number, number, number],

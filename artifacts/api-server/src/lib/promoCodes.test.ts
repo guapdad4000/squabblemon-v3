@@ -234,7 +234,7 @@ test('promo redemption persists rewards once and works with the real economy', {
     const current = await profile(id);
     const allIds = Object.values(testerGrants).flat();
     assert.deepEqual(new Set(current.ownedCardIds), new Set(['cornball', ...allIds]));
-    assert.equal(current.ownedCardIds.length, 20);
+    assert.equal(current.ownedCardIds.length, new Set(['cornball', ...allIds]).size, 'each granted identity appears exactly once');
     assert.deepEqual(current.cardProgression['ganger-blue'], { xp: 300, level: 3, moveTier: 1 });
     assert.deepEqual(current.cardProgression['blue-side-2'], { xp: 300, level: 3, moveTier: 1 });
     assert.deepEqual(current.cardProgression['wicked-witch'], { xp: 0, level: 1, moveTier: 0 });

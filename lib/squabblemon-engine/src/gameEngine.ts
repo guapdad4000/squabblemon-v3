@@ -1,3 +1,7 @@
+import { streetLegendsCards } from './streetLegendsWave';
+import { streetLegendsReveal, streetLegendsPreventGain, streetLegendsGain, streetLegendsMoved, streetLegendsArrival, streetLegendsAfterPlay, streetLegendsRoundStart, streetLegendsCanMove, streetLegendsCleansed, streetLegendsTax, streetLegendsPaidAudit, streetLegendsIntercept, streetLegendsFinishIntercept, streetLegendsDistrictMarks, type StreetLegendsTools } from './streetLegendsAbilities';
+import { musicIndustryWaveCards } from './musicIndustryWave';
+import { musicReveal, musicResolved, musicAfterPlay, musicMoved, musicDamage, musicGain, musicAfterAction, musicRoundEnd, musicRoundStart, musicCanMove, musicCleansed, musicDistrictMarks, type MusicTools, type MusicEntranceOutcome } from './musicIndustryAbilities';
 import { HOMECOMING_KIT_IDS, homecomingReveal, homecomingArrival, homecomingAfterPlay, homecomingRoundEnd, type HomecomingTools } from './homecomingAbilities';
 import { homecomingCards } from './homecomingWave';
 import { isActiveOngoing } from './rosterBalance';
@@ -671,7 +675,7 @@ export function getLegalCardCost(match: Match, owner: Owner, card: CardInstance,
     : districtDiscount(match, owner, card, targetLane);
   return Math.max(minimum, card.cost - reduction - (aliceReturnDiscount ? 1 : 0) - (card.rabbitReturnDiscount ? 1 : 0))
     + (taxed ? 1 : 0) + (ignoresLocationMotionPenalty ? 0 : districtTax(match, owner, targetLane))
-    + (dmvTax(match, owner, targetLane) ? 1 : 0);
+    + (dmvTax(match, owner, targetLane) ? 1 : 0) + streetLegendsTax(match, owner, targetLane, card);
 }
 export function getCardCostExplanation(match: Match, owner: Owner, card: CardInstance, targetLane: Lane): string {
   const token = discountFor(match, owner, card, targetLane);
@@ -690,6 +694,7 @@ export function getCardCostExplanation(match: Match, owner: Owner, card: CardIns
   if (card.cardId === 'alice' && card.aliceReady) parts.push("−1 Drink Me / Eat Me return discount (minimum 1 Motion)");
   if (card.rabbitReturnDiscount) parts.push("−1 Pocket Watch return discount (minimum 1 Motion)");
   if (dmvTax(match, owner, targetLane)) parts.push("+1 Take a Number");
+  if (streetLegendsTax(match, owner, targetLane, card)) parts.push('+1 PAY WHAT YOU OWE Audit');
   if (taxed) parts.push("+1 Rent Due tax");
   if (districtTax(match, owner, targetLane) && !ignoresLocationMotionPenalty) parts.push("+1 Corrupt Church tithe");
   else if (districtTax(match, owner, targetLane) && ignoresLocationMotionPenalty) parts.push("Corrupt Church tithe ignored for home-side Triple OG");
@@ -716,7 +721,9 @@ export function getCharacterDistrictMarks(match: Match): CharacterDistrictMark[]
     }));
   return [
     ...janitorMarks,
-    ...creativeDistrictMarks(match),
+    ...creativeDistrictMarks(match).filter(mark => !mark.text.includes('mi-') && !mark.text.includes('sl-')),
+    ...streetLegendsDistrictMarks(match),
+    ...musicDistrictMarks(match),
     ...match.discountTokens.filter(t => t.eligibility === 'creative-local' && t.targetLane !== undefined && (t.expiresAfterRound??99) >= match.round).map(t => ({owner:t.owner,lane:t.targetLane!,text:`Local pass · next character here −1 Motion (minimum 1) · R${t.startsAtRound}–${t.expiresAfterRound}`})),
     ...(match.districtTraps ?? []).filter(t => t.expiresAfterRound >= match.round
       && (t.kind !== 'dead-air' || match.boards[t.lane].some(c => c.instanceId === t.source.instanceId && activeAbility(c)))).map(t => ({ owner: t.owner, lane: t.lane,
@@ -753,7 +760,7 @@ export function canAffordSelection(match: Match, owner: Owner, instanceId: strin
 const cannotLoseHands = (card: Pick<CardInstance, 'cardId'>) => (CANNOT_LOSE_HANDS_CARD_IDS as readonly string[]).includes(card.cardId);
 const cannotLoseHandsLabel = (card: Pick<CardInstance, 'cardId' | 'name'>) => card.cardId === 'blueside1' ? 'OG Blue' : card.name;
 const activeAbility = (card: CardInstance) => !card.hazard && !card.statuses.silenced && !card.statuses.frozen && !card.statuses.weakened;
-const modify = (m: Match, id: string, change: (c: CardInstance) => CardInstance, copiedGain = false): Match => {
+const modify = (m: Match, id: string, change: (c: CardInstance) => CardInstance, copiedGain = false, nonDamage = false): Match => {
   const before = m.boards.flat().find(c => c.instanceId === id);
   if (!before) return m;
   let after = change(before);
@@ -761,11 +768,16 @@ const modify = (m: Match, id: string, change: (c: CardInstance) => CardInstance,
     after = { ...after, powerModifier: before.powerModifier,
       lastEffectNote: after.lastEffectNote + ` ${cannotLoseHandsLabel(before)} cannot lose Hands.` };
   }
-  if(after.powerModifier<before.powerModifier) {
+  if(!nonDamage && after.powerModifier<before.powerModifier) {
     const prevented=creativePreventDamage(m,before,before.powerModifier-after.powerModifier,m[DAMAGE_OWNER]);
     const absorbed=before.powerModifier-after.powerModifier-prevented.amount;
     m=prevented.match;
     after={...after,powerModifier:before.powerModifier-prevented.amount,...(absorbed?{lastEffectNote:after.lastEffectNote+' Emergency Kit prevented '+absorbed+' Hands of damage.'}:{})};
+  }
+  if (after.powerModifier > before.powerModifier) {
+    const checked = streetLegendsPreventGain(m, before, after.powerModifier - before.powerModifier);
+    m = checked.match;
+    after = { ...after, powerModifier: before.powerModifier + checked.amount };
   }
   const delta = after.powerModifier - before.powerModifier;
   let result = reconcileContinuousPower({ ...m, boards: m.boards.map(items => items.map(c => c.instanceId === id ? after : c)) as Match['boards'] });
@@ -774,11 +786,11 @@ const modify = (m: Match, id: string, change: (c: CardInstance) => CardInstance,
     Math.max(0, rawCombatPower(before) - rawCombatPower(damagedState)),
     Math.max(0, before.powerModifier - after.powerModifier),
   );
-  if (abilityCardId(before) === 'homelesslegend' && actualDamage > 0) {
+  if (!nonDamage && abilityCardId(before) === 'homelesslegend' && actualDamage > 0) {
     result = { ...result, boards: result.boards.map(items => items.map(c => c.instanceId === id
       ? { ...c, recoverableDamage: (before.recoverableDamage ?? 0) + actualDamage } : c)) as Match['boards'] };
   }
-  if (delta < 0 && before.lane !== null && !before.hazard && !m.repeatingLaneDamage) {
+  if (!nonDamage && delta < 0 && before.lane !== null && !before.hazard && !m.repeatingLaneDamage) {
     result = { ...result, laneDamage: [...(m.laneDamage ?? []).filter(d => d.round === m.round), {
       round: m.round, lane: before.lane, instanceId: id, amount: actualDamage,
     }].filter(d => d.amount > 0) };
@@ -798,7 +810,7 @@ const modify = (m: Match, id: string, change: (c: CardInstance) => CardInstance,
       pendingLeaderReactions: [...(result.pendingLeaderReactions ?? []), { kind: 'streetapostle', owner: before.owner,
         sourceInstanceId: leader.instanceId, targetInstanceId: id, amount: Math.min(2, delta), triggerLane: before.lane }] };
   }
-  return result;
+  return streetLegendsGain(m, musicGain(m, result, before, waveTools()), before, waveTools(), copiedGain);
 };
 
 const findCard = (m: Match, id: string): CardInstance | undefined =>
@@ -849,6 +861,7 @@ const move = (
   deferArrival = false, captureBeforeArrival = false, skipOpenTab = false, allowFullDestination = false,
 ): Match => {
   if (card.hazard) return m;
+  if (!musicCanMove(m, card.instanceId) || !streetLegendsCanMove(m, card.instanceId)) return modify(m, card.instanceId, c => ({ ...c, lastEffectNote: 'Contract or Curfew blocked movement.' }));
   const sourceLane = card.lane ?? m.boards.findIndex((items) => items.some((candidate) => candidate.instanceId === card.instanceId)) as Lane;
   if (sourceLane === destination) return m;
   if (m.districtRuntime?.detainedCardIds.includes(card.instanceId)) {
@@ -924,7 +937,9 @@ const move = (
   if (deferArrival) return moved;
   moved = fairytaleDeparture(moved, card);
   moved = fairytaleArrival(moved, card.instanceId, true);
-  return homecomingArrival(creativeMoved(m, applyScentEntry(moved, card.instanceId), card.instanceId, creativeTools()), card.instanceId, homecomingTools());
+  moved = homecomingArrival(creativeMoved(m, applyScentEntry(moved, card.instanceId), card.instanceId, creativeTools()), card.instanceId, homecomingTools());
+  moved = streetLegendsMoved(m, moved, card.instanceId, waveTools());
+  return musicMoved(m, moved, card.instanceId, waveTools());
 };
 const lowestFriendlyLane = (m: Match, owner: Owner, except: Lane): Lane => ([0, 1, 2] as Lane[]).filter((x) => x !== except).sort((a, b) => getLaneScoreForMatch(m, inLane(m, owner, a), a, owner) - getLaneScoreForMatch(m, inLane(m, owner, b), b, owner) || a - b)[0];
 
@@ -1037,7 +1052,7 @@ const recordElectricPlay = (match: Match, card: CardInstance): Match => {
 
 const cleanseAlly = (match: Match, targetId: string, apply: (card: CardInstance) => CardInstance): Match => {
   const before = findCard(match, targetId);
-  const after = creativeCleansed(modify(match, targetId, apply), targetId);
+  const after = musicCleansed(streetLegendsCleansed(creativeCleansed(modify(match, targetId, apply), targetId), targetId), targetId, waveTools());
   const cleansed = findCard(after, targetId);
   return before && cleansed && needsCleanse(before) && !needsCleanse(cleansed)
     ? queueLeaderReaction(after, 'nightmedic', targetId, match) : after;
@@ -1358,6 +1373,13 @@ const hostileEffect = (m: Match, source: CardInstance, target: CardInstance,
       return creativeFinishIntercept(hit, intercept.interceptor, creativeTools());
     }
   }
+  if (!intercepted) {
+    const bond = streetLegendsIntercept(m, target);
+    if (bond.interceptor) {
+      const hit = hostileEffect(bond.match, source, bond.interceptor, apply, bypassWifeyGuard, true, honorImmunity, false, captureDamageBeforeWatchers);
+      return streetLegendsFinishIntercept(bond.match, hit, bond.interceptor, waveTools());
+    }
+  }
   const fan = !intercepted && m.boards.flat().find(c => c.owner === target.owner && abilityCardId(c) === 'grownfanboy'
     && c.idolId === target.instanceId && c.instanceId !== target.instanceId && c.fanRound !== m.round && activeAbility(c));
   if (fan) {
@@ -1405,6 +1427,8 @@ const hostileEffect = (m: Match, source: CardInstance, target: CardInstance,
     || (!target.statuses.locked && attemptedTarget.statuses.locked)
     || (attemptedTarget.squabblehouseCannotMoveThroughRound ?? 0) > (target.squabblehouseCannotMoveThroughRound ?? 0)
     || attemptedTarget.statuses.burnStacks > target.statuses.burnStacks
+    || (streetLegendsCanMove(m, target.instanceId) && !streetLegendsCanMove(attempted, target.instanceId))
+    || (musicCanMove(m, target.instanceId) && !musicCanMove(attempted, target.instanceId))
   );
   const kitSpent=m.creativeMarks?.some(x=>x.kind==='kit'&&x.targets.includes(target.instanceId)&&!attempted.creativeMarks?.some(y=>y.id===x.id));
   const execution = source.cardId === 'queenofhearts' && !attemptedTarget;
@@ -1548,7 +1572,7 @@ const trainWaveAbility = (m: Match, id: string): Match => {
   const card = m.boards.flat().find(c => c.instanceId === id)
     ?? [...m.playerHand, ...m.cpuHand].find(c => c.instanceId === id && c.cardId === 'cheshire');
   // Initiation has recipient upgrades and uses its own delayed-payoff ledger.
-  if (!card || !(HOMECOMING_KIT_IDS.has(card.cardId) || ['triple-og-blue', 'triple-og-red', 'block-spinner', 'look-out'].includes(card.cardId) || Object.hasOwn(characterWaveCards, card.cardId) || Object.hasOwn(fairytaleCards, card.cardId) || Object.hasOwn(neighborhoodWaveCards, card.cardId) || Object.hasOwn(cellblockWaveCards, card.cardId) || Object.hasOwn(afterHoursWaveCards, card.cardId) || Object.hasOwn(sideOzWaveCards, card.cardId) || Object.hasOwn(storyCharacterWaveCards, card.cardId) || Object.hasOwn(squabblehouseWaveCards, card.cardId)) || card.waveTrainingUsed) return m;
+  if (!card || !(HOMECOMING_KIT_IDS.has(card.cardId) || ['triple-og-blue', 'triple-og-red', 'block-spinner', 'look-out'].includes(card.cardId) || Object.hasOwn(characterWaveCards, card.cardId) || Object.hasOwn(fairytaleCards, card.cardId) || Object.hasOwn(neighborhoodWaveCards, card.cardId) || Object.hasOwn(cellblockWaveCards, card.cardId) || Object.hasOwn(afterHoursWaveCards, card.cardId) || Object.hasOwn(sideOzWaveCards, card.cardId) || Object.hasOwn(storyCharacterWaveCards, card.cardId) || Object.hasOwn(squabblehouseWaveCards, card.cardId) || Object.hasOwn(streetLegendsCards, card.cardId) || Object.hasOwn(musicIndustryWaveCards, card.cardId)) || card.waveTrainingUsed) return m;
   const update = (state: Match, change: (c: CardInstance) => CardInstance, copiedGain = false): Match => {
     if (card.lane !== null) return modify(state, id, change, copiedGain);
     const hand = card.owner === 'player' ? 'playerHand' : 'cpuHand';
@@ -1876,7 +1900,7 @@ const forceMoveUnshielded = (state: Match, actual: CardInstance, destination: La
     const anchored = creativeAnchor(state, actual, creativeTools());
     if (anchored) return anchored;
     if (actual.statuses.uncounterable || (actual.statuses.locked && !creativeCanCross(state,actual.instanceId)) || state.districtRuntime?.detainedCardIds.includes(actual.instanceId)
-      || squabblehouseMovementLocked(state, actual) || actual.lane === destination
+      || squabblehouseMovementLocked(state, actual) || !musicCanMove(state, actual.instanceId) || !streetLegendsCanMove(state, actual.instanceId) || actual.lane === destination
       || getStoryLockedLanes(state, actual.owner).includes(destination)) {
       return modify(state, actual.instanceId, c => ({ ...c, lastEffectNote: 'Wrong Block: movement blocked.' }));
     }
@@ -2032,8 +2056,7 @@ function fairytaleDeparture(m: Match, departed: CardInstance): Match {
 }
 /** Transfers and confiscation cannot become healing credit, including for Built Different. */
 function modifyWithoutDamage(m: Match, target: CardInstance, apply: (c: CardInstance) => CardInstance): Match {
-  const result = modify(m, target.instanceId, apply);
-  return modify(result, target.instanceId, c => ({ ...c, recoverableDamage: target.recoverableDamage }));
+  return modify(m, target.instanceId, apply, false, true);
 }
 function refundMotion(m: Match, owner: Owner, amount: number): Match {
   const key = owner === 'player' ? 'playerMotion' : 'cpuMotion';
@@ -2101,11 +2124,12 @@ function recordDamage(before: Match, after: Match, source: Pick<CardInstance, 'i
   const creativeVictim = current
     ? { ...victim, continuousPower: current.continuousPower ?? 0 }
     : { ...victim, basePower: amount, powerModifier: 0, continuousPower: 0 };
-  return creativeDamage(before, m, source, creativeVictim, { ...creativeTools(), power: rawCombatPower }, burn);
+  m = creativeDamage(before, m, source, creativeVictim, { ...creativeTools(), power: rawCombatPower }, burn);
+  return musicDamage(before, m, source, victim, waveTools(), burn);
 }
 function returnToHand(m: Match, source: CardInstance, target: CardInstance, discount = false): Match {
   if (target.lane === null || (target.kind ?? 'character') !== 'character' || !m.boards.flat().some(c => c.instanceId === target.instanceId)) return m;
-  if (squabblehouseMovementLocked(m, target)) return m;
+  if (squabblehouseMovementLocked(m, target) || !musicCanMove(m, target.instanceId) || !streetLegendsCanMove(m, target.instanceId)) return m;
   const departure = openTabDeparture(m, target);
   m = departure.match;
   if (departure.stopped) return m;
@@ -2169,13 +2193,14 @@ function returnAliceAtRoundEnd(m: Match): Match {
 }
 function canMoveTo(m: Match, card: CardInstance, destination: Lane): boolean {
   return card.lane !== null && card.lane !== destination && !card.hazard && (!card.statuses.locked || creativeCanCross(m,card.instanceId))
-    && !m.districtRuntime?.detainedCardIds.includes(card.instanceId) && !getStoryRuleLockedLanes(m, card.owner).includes(destination);
+    && !m.districtRuntime?.detainedCardIds.includes(card.instanceId) && !getStoryRuleLockedLanes(m, card.owner).includes(destination)
+    && !squabblehouseMovementLocked(m, card) && musicCanMove(m, card.instanceId) && streetLegendsCanMove(m, card.instanceId);
 }
 function moveRouteLegal(m: Match, card: CardInstance, destination: Lane): boolean {
   return card.lane !== null && card.lane !== destination && !card.hazard
     && !m.districtRuntime?.detainedCardIds.includes(card.instanceId)
     && !getStoryRuleLockedLanes(m, card.owner).includes(destination)
-    && !squabblehouseMovementLocked(m, card)
+    && !squabblehouseMovementLocked(m, card) && musicCanMove(m, card.instanceId) && streetLegendsCanMove(m, card.instanceId)
     && (!card.statuses.locked || creativeCanCross(m, card.instanceId));
 }
 function undercovaReaction(m: Match, beforePlay: Match, id: string, origin: Lane, owner: Owner): Match {
@@ -2757,7 +2782,8 @@ export function getStoryModifierSummaries(value: Match | StoryEncounterSnapshot)
 
 function resolveAbility(match: Match, source: CardInstance, options: {echoed?:boolean} = {}): Match {
   const result=resolveAbilityBase(match,source,options);
-  return activeAbility(source)?creativeAbilityResolved(match,result,source,creativeTools()):result;
+  const settled = activeAbility(source) ? creativeAbilityResolved(match, result, source, creativeTools()) : result;
+  return musicResolved(match, settled, source, waveTools(), options.echoed ?? false);
 }
 function resolveAbilityBase(match: Match, source: CardInstance, { echoed = false }: { echoed?: boolean } = {}): Match {
   const before = match;
@@ -2788,6 +2814,8 @@ function resolveAbilityBase(match: Match, source: CardInstance, { echoed = false
   };
   if ((source.statuses.silenced || source.statuses.frozen || source.statuses.weakened)
     && !(UNSILENCEABLE_CARD_IDS as readonly string[]).includes(source.cardId)) { note('Ability did not fire (silenced, frozen, or weakened).'); return m; }
+  const wave = streetLegendsReveal(m, source, waveTools(), echoed) ?? musicReveal(m, source, waveTools(), echoed);
+  if (wave) return !echoed && source.effect.includes('On Reveal:') ? { ...wave, lastRevealedCardId: source.cardId, entranceHistory: [...(wave.entranceHistory ?? []).filter(id => id !== source.instanceId), source.instanceId] } : wave;
   const homecoming = homecomingReveal(m, source, homecomingTools(), echoed);
   if (homecoming) return !echoed ? { ...homecoming, lastRevealedCardId: source.cardId,
     entranceHistory: [...(homecoming.entranceHistory ?? []).filter(id => id !== source.instanceId), source.instanceId] } : homecoming;
@@ -4669,6 +4697,7 @@ function resolveCardPlay(match: Match, owner: Owner, instanceId: string, targetL
     squabbleUsed: match.squabbleUsed || (owner === 'player' && squabble),
     ...(match.squabbleByOwner ? { squabbleByOwner: { ...match.squabbleByOwner, [owner]: match.squabbleByOwner[owner] || squabble } } : {}),
   };
+  m = streetLegendsPaidAudit(m, owner, targetLane, card);
   if (card.kind === 'blockbuster') {
     const source = { ...card, lane: targetLane, playedRound: m.round };
     const staged = { ...m, boards: m.boards.map((cs,i) => i === targetLane ? [...cs,source] : cs) as Match['boards'] };
@@ -4678,7 +4707,7 @@ function resolveCardPlay(match: Match, owner: Owner, instanceId: string, targetL
     m = { ...resolved.match, boards: resolved.match.boards.map(cs => cs.filter(c => c.instanceId !== instanceId)) as Match['boards'],
       phase: endTurn ? owner === 'player' ? 'cpu-reveal' : 'resolved' : match.phase };
     m = settleLeaderReactions(m);
-    m = creativeAfterAction(match,m,creativeTools());
+    m = musicAfterAction(match, creativeAfterAction(match,m,creativeTools()), waveTools());
     return applyStoryEffects(addEvent(beforeEffect, m, { type: 'ability', sourceId: instanceId, owner, lane: targetLane,
       targetIds: resolved.targets, note: resolved.note, kind: 'ability' }));
   }
@@ -4763,6 +4792,7 @@ function resolveCardPlay(match: Match, owner: Owner, instanceId: string, targetL
   m = applyDistrictArrival(m, owner, instanceId, targetLane);
   m = squabblehouseSecurityArrival(m, instanceId);
   m = squabblehouseManagerArrival(m, instanceId);
+  m = streetLegendsArrival(m, instanceId, waveTools());
   m = recordElectricPlay(m, placed);
   m = homecomingArrival(fairytaleArrival(m, instanceId), instanceId, homecomingTools());
   m = applyScentEntry(m, instanceId);
@@ -4827,6 +4857,7 @@ function resolveCardPlay(match: Match, owner: Owner, instanceId: string, targetL
         note: actual ? 'Told You: predicted character targeted with Weaken; Protection and immunity can block it.' : 'Told You: predicted character already left the board.' });
     }
   }
+  let entranceOutcome: MusicEntranceOutcome = 'none';
   const revealed = m.boards.flat().find(c => c.instanceId === instanceId);
   if (revealed) {
     // Demario's Mushroom is a one-use lane resource for the next subsequently
@@ -4849,6 +4880,7 @@ function resolveCardPlay(match: Match, owner: Owner, instanceId: string, targetL
     const trap = (m.districtTraps ?? []).find(t => t.kind === 'stakeout' && t.owner !== owner && t.lane === targetLane && t.expiresAfterRound >= m.round);
     const entrance = survivingReveal ? hasEntrance(survivingReveal) : false;
     if (trap && survivingReveal && entrance) {
+      entranceOutcome = 'cancelled';
       const beforeTrap = m;
       // Both watched districts share one case, not one cancellation per lane.
       m = { ...m, districtTraps: m.districtTraps!.filter(t => !(t.kind === 'stakeout'
@@ -4871,6 +4903,7 @@ function resolveCardPlay(match: Match, owner: Owner, instanceId: string, targetL
     } else if (survivingReveal) {
       const queued = creativeBeforeEntrance(m, survivingReveal, creativeTools());
       m = queued.match;
+      entranceOutcome = queued.delayed ? 'delayed' : 'resolved';
       const live = findCard(m, survivingReveal.instanceId);
       if (!queued.delayed && live) {
         m = resolveAbility(m, live);
@@ -4897,6 +4930,10 @@ function resolveCardPlay(match: Match, owner: Owner, instanceId: string, targetL
   // The reactive logic was removed; resolveAbility now handles Sneaker's branch directly.
   m = creativeAfterPlay(match, m, instanceId, creativeTools(), placed);
   m = settleLeaderReactions(homecomingAfterPlay(m, placed, homecomingTools()));
+  m = musicAfterPlay(match, m, instanceId, waveTools(), placed, entranceOutcome);
+  const entranceSucceeded = entranceOutcome === 'resolved' && !!findCard(m, instanceId)?.creativeEntranceSucceeded;
+  m = streetLegendsAfterPlay(match, m, instanceId, waveTools(), entranceSucceeded);
+  m = musicAfterAction(match, m, waveTools());
   const finalized: Match = { ...m, phase: endTurn ? owner === 'player' ? 'cpu-reveal' : 'resolved' : match.phase };
   const lastEventIndex = finalized.effectLog.length - 1;
   return applyStoryEffects({
@@ -5264,8 +5301,9 @@ function detonateSmileBombs(match: Match): Match {
 export function nextRound(match: Match): Match {
   if (match.phase !== 'resolved') throw new Error('Round is not resolved');
   // Resolve persistent statuses and hand bonds before either advancing or scoring.
-  const ordinaryRoundEnd = settleLeaderReactions(returnAliceAtRoundEnd(applyOngoingRoundEndHandEffects(applyOngoingRoundEndEffects(creativeRoundEnd(homecomingRoundEnd(applyBurntPlates(match), homecomingTools()), creativeTools())))));
-  const roundEnded = settleLeaderReactions(creativeAfterAction(match,ordinaryRoundEnd,creativeTools()));
+  const trainedRoundEnd = musicRoundEnd(match, waveTools());
+  const ordinaryRoundEnd = settleLeaderReactions(returnAliceAtRoundEnd(applyOngoingRoundEndHandEffects(applyOngoingRoundEndEffects(creativeRoundEnd(homecomingRoundEnd(applyBurntPlates(trainedRoundEnd), homecomingTools()), creativeTools())))));
+  const roundEnded = settleLeaderReactions(musicAfterAction(match, creativeAfterAction(match,ordinaryRoundEnd,creativeTools()), waveTools()));
   if (match.round >= getMatchRoundLimit(match)) {
     const complete = applyStoryEffects({ ...roundEnded, phase: 'complete' as const });
     return addEvent(match, complete, { type: 'match-complete', owner: 'player', note: 'The match is complete.' });
@@ -5332,7 +5370,7 @@ export function nextRound(match: Match): Match {
     playerDrawIndex: m.playerDrawIndex + (p ? 1 : 0),
     cpuDrawIndex: m.cpuDrawIndex + (c ? 1 : 0),
   };
-  m = creativeRoundStart(m, creativeTools());
+  m = musicRoundStart(streetLegendsRoundStart(creativeRoundStart(m, creativeTools()), waveTools()), waveTools());
   m = resolveBuddyGrowthAtRoundStart(m);
   m = sproutBuddyBuds(m);
   m = resolveSquabblehouseRoundStart(m);
@@ -5966,6 +6004,7 @@ function creativeMovePair(
     m = fairytaleArrival(m, original.instanceId, findCard(m, original.instanceId)?.lane === destination);
     m = applyScentEntry(m, original.instanceId);
     m = homecomingArrival(creativeMoved(before, m, original.instanceId, creativeTools()), original.instanceId, homecomingTools());
+    m = musicMoved(before, streetLegendsMoved(before, m, original.instanceId, waveTools()), original.instanceId, waveTools());
   }
   return m;
 }
@@ -5989,4 +6028,26 @@ function homecomingTools(): HomecomingTools {
         lastEffectNote: `Tow & Collect: received ${amount} repossessed Hands.` }));
     }, false, false, true),
   };
+}
+
+
+/** These stateless adapters are shared; every operation receives its match. */
+let sharedWaveTools: (StreetLegendsTools & MusicTools) | undefined;
+function waveTools(): StreetLegendsTools & MusicTools {
+  return sharedWaveTools ??= { ...creativeTools(), train: trainWaveAbility,
+    buff: (m, id, amount, copiedGain = false) => modify(m, id, c => ({ ...c, powerModifier: c.powerModifier + amount }), copiedGain),
+    hostile: (m, source, target, apply) => hostileEffect(m, source, target, apply, false, false, true),
+    damage: (m, target, amount, note) => reduceHands(m, target, amount, note),
+    unlock: (m, id) => musicCleansed(streetLegendsCleansed(modify(m, id, c => ({ ...c, squabblehouseCannotMoveThroughRound: undefined })), id), id),
+    returnAlly: (m, source, target) => returnToHand(m, source, target, true),
+    removeBonus: (m, target, amount) => modifyWithoutDamage(m, target, c => ({ ...c, powerModifier: c.powerModifier - Math.min(amount, Math.max(0, c.powerModifier)) })),
+    echo: (m, source) => resolveAbility(m, source, { echoed: true }),
+    laneOpen: (m, owner, targetLane) => !getStoryLockedLanes(m, owner).includes(targetLane),
+  };
+}
+
+/** Public inspector status uses the same active marks as movement legality. */
+export function getCharacterMovementLockThroughRound(m: Match, card: CardInstance): number | undefined {
+  const values = [card.squabblehouseCannotMoveThroughRound ?? 0, ...(m.creativeMarks ?? []).filter(x => (x.kind === 'sl-curfew' || x.kind === 'mi-contract') && x.targets.includes(card.instanceId)).map(x => x.expires)].filter(round => round >= m.round);
+  return values.length ? Math.max(...values) : undefined;
 }

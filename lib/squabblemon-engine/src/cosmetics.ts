@@ -1,5 +1,6 @@
 import { cardCatalog, catalogCardById } from './data';
 import { CHARACTER_STYLE_ARTWORK } from './characterStyleArtwork';
+import { STREET_LEGENDS_STYLE_SCENES } from './streetLegendsStyles';
 export { CHARACTER_STYLE_ARTWORK } from './characterStyleArtwork';
 
 export const CHARACTER_STYLE_VERSION = 'character-style-v3';
@@ -69,6 +70,31 @@ if (shottaStyle) {
   shottaStyle.banner = portrait;
   shottaStyle.deckCover = portrait;
   shottaStyle.stickers = shottaStyle.stickers.map(sticker => ({ ...sticker, image: portrait }));
+}
+// The new wave uses the finished transparent fighter art itself. Bespoke older
+// imports and every saved cosmetic identifier remain valid.
+for (const [cardId, [sceneName, location]] of Object.entries(STREET_LEGENDS_STYLE_SCENES)) {
+  const card = catalogCardById[cardId];
+  if (!card) continue;
+  const previous = CHARACTER_STYLE_SETS[cardId];
+  const portrait = `assets/characters/${cardId}.webp`;
+  CHARACTER_STYLE_SETS[cardId] = {
+    ...(previous ?? {
+      cardId, series: String(nextSeries++).padStart(3, '0'),
+      title: `${card.name}. Your signature.`, tagline: card.ability,
+      sceneName, sceneDescription: `${card.name} on the block.`,
+      emblem: '✊', accent: card.portraitAccent ?? '#f0ce78',
+      background: `assets/locations/${location}.webp`, stickerAtlas: null,
+    }),
+    banner: portrait, deckCover: portrait,
+    stickers: [...(previous?.stickers ?? []), {
+      id: `${cardId}:street-legends-portrait`, name: `${card.name} · Fighter`, image: portrait,
+    }, {
+      id: `${cardId}:street-legends-signature`, name: `${card.ability} · Signature`, image: `assets/cosmetics/street-legends/${cardId}-signature.svg`,
+    }, {
+      id: `${cardId}:street-legends-emblem`, name: `${card.name} · Emblem`, image: `assets/cosmetics/street-legends/${cardId}-emblem.svg`,
+    }],
+  };
 }
 export function hasCharacterStickers(set: CharacterStyleSet | undefined): boolean {
   return !!set?.stickers.length && set.stickers.every(sticker => !!sticker.image || (!!set.stickerAtlas && sticker.cell !== undefined));

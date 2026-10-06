@@ -6,7 +6,7 @@ import { elementDecks } from './element-balance-audit-decks';
 // Keep Vite asset types outside the scripts project while loading the exact offered crews.
 const workshopModuleUrl = new URL('../../artifacts/squabblemon/src/lib/deckWorkshop.ts', import.meta.url).href;
 const { recommendedWorkshopCrews } = await import(workshopModuleUrl) as {
-  recommendedWorkshopCrews: Record<'cellblock' | 'mushroom', readonly string[]>;
+  recommendedWorkshopCrews: Record<'cellblock' | 'mushroom' | 'investigations' | 'relationships' | 'streetgrowth', readonly string[]>;
 };
 
 export const excludedRankingCardIds = ['guap', 'folks'] as const;
@@ -30,6 +30,9 @@ export function allRankingDecks(): BalanceDeck[] {
     },
     { id: 'cellblock-pressure', name: 'Cellblock Pressure', cardIds: [...recommendedWorkshopCrews.cellblock] },
     { id: 'mushroom-plant', name: 'Mushroom Garden', cardIds: [...recommendedWorkshopCrews.mushroom] },
+    { id: 'street-legends-investigations', name: 'Street Legends — Investigations', cardIds: [...recommendedWorkshopCrews.investigations] },
+    { id: 'street-legends-relationships', name: 'Street Legends — Relationship Pressure', cardIds: [...recommendedWorkshopCrews.relationships] },
+    { id: 'street-legends-growth', name: 'Street Legends — Growth and Routes', cardIds: [...recommendedWorkshopCrews.streetgrowth] },
   ];
   const unique = new Map<string, BalanceDeck>();
   for (const deck of candidates) {

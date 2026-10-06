@@ -50,7 +50,9 @@ test('chapter training funds grant once and the first fund can buy Dr. Fade firs
   });
   const first=await Promise.all([award('block-crowned','block-party'),award('block-crowned','block-party')]);
   const firstFund=trainingFund('block-crowned');
-  assert.equal(first.flat().length,1); assert.match(first.flat()[0].description,new RegExp(`${firstFund} Clout`));
+  const cloutReceipts = first.flat().filter(reward => reward.kind === 'currency' && reward.id === 'clout');
+  assert.equal(cloutReceipts.length,1); assert.match(cloutReceipts[0].description,new RegExp(`${firstFund} Clout`));
+  assert.equal(first.flat().filter(reward => reward.kind === 'card' && reward.id === 'cracked-head').length,1, 'the current mandatory card contract is also granted only once');
   const [profile]=await db.select().from(playerProfilesTable).where(eq(playerProfilesTable.clerkUserId,id));
   assert.equal(profile.softCurrency,firstFund);
   const trained=planShopPurchase(profile as ShopWallet,{itemId:'training',cardId:'dr-fade'});
@@ -58,8 +60,10 @@ test('chapter training funds grant once and the first fund can buy Dr. Fade firs
   const practiceCost=SHOP_OFFERS.find(offer=>offer.id==='training')!.price;
   assert.equal(coached.wallet.softCurrency,firstFund-practiceCost-MOVE_TRAINING_COSTS[0]);assert.equal(coached.wallet.cardProgression['dr-fade'].moveTier,1);
   const second=await Promise.all([award('red-tapes-let-her-grieve','red-side-tapes'),award('red-tapes-let-her-grieve','red-side-tapes')]);
-  assert.equal(second.flat().length,1);
+  assert.equal(second.flat().filter(reward => reward.kind === 'currency' && reward.id === 'clout').length,1);
   const [after]=await db.select().from(playerProfilesTable).where(eq(playerProfilesTable.clerkUserId,id));
   assert.equal(after.softCurrency,firstFund+trainingFund('red-tapes-let-her-grieve'));
-  assert.equal((await db.select().from(playerStoryRewardClaimsTable).where(eq(playerStoryRewardClaimsTable.clerkUserId,id))).length,2);
+  const claims=await db.select().from(playerStoryRewardClaimsTable).where(eq(playerStoryRewardClaimsTable.clerkUserId,id));
+  assert.equal(claims.filter(claim => claim.reward.kind === 'currency' && claim.reward.id === 'clout').length,2);
+  assert.equal(new Set(claims.map(claim => claim.rewardKey)).size,claims.length);
 });

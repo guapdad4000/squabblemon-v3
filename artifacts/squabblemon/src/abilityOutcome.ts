@@ -46,7 +46,8 @@ export function abilityTookEffect(event: OutcomeEvent): boolean {
   if (changed(roster(before), roster(after))) return true;
   for (const key of ['discountTokens', 'timedEffects', 'creativeMarks', 'districtTraps', 'lingeringScents'] as const) {
     // Consuming protection during a blocked attack must not trigger its video.
-    if (after[key]?.some(item => !before[key]?.some(old => !changed(old, item)))) return true;
+    const visible = (item: unknown) => key !== 'creativeMarks' || !/^((mi|sl)-ledger-)/.test((item as { kind?: string }).kind ?? '');
+    if (after[key]?.some(item => visible(item) && !before[key]?.some(old => !changed(old, item)))) return true;
   }
   return changed(before.plugDiscountLane, after.plugDiscountLane)
     || changed(before.afterParty, after.afterParty);

@@ -54,7 +54,7 @@ test('custom deck transcript replays the issued roster even if the saved deck ch
 test('workshop teaches each affected archetype without creating or replacing decks', () => {
   assert.deepEqual(
     workshopSuggestions.map(lesson => lesson.cardId),
-    ['landlord', 'dorothy', 'alice', 'sherlock', 'guap', 'bottle-girl', 'inmate-crafty', 'demario', 'counter'],
+    ['landlord', 'dorothy', 'alice', 'sherlock', 'guap', 'bottle-girl', 'inmate-crafty', 'demario', 'the-opening-act', 'personal-trainer', 'boo-boo-the-fool', 'side-chick', 'ms-mary-mack', 'counter'],
   );
   for (const lesson of workshopSuggestions) {
     assert.ok(lesson.title.length > 0);
@@ -84,17 +84,17 @@ test('revised workshop copy explains the dependable setup and bounded payoff', (
   const detail = (cardId: string) => workshopSuggestions.find(lesson => lesson.cardId === cardId)!.detail;
   assert.match(detail('inmate-crafty'), /another inmate or a real support card first/i);
   assert.match(detail('inmate-crafty'), /2\/3 Crafty/);
-  assert.match(detail('inmate-crafty'), /\+2 locally and \+2 across districts/);
+  assert.match(detail('inmate-crafty'), /\+3 locally and \+3 across districts/);
   assert.match(detail('sherlock'), /actual Sherlock cancellation/i);
   assert.match(detail('sherlock'), /weakest other character \+2/i);
   assert.match(detail('sherlock'), /Watson is a 2\/3/i);
   assert.match(detail('sherlock'), /repairs up to 3 actual damage/i);
   assert.match(detail('sherlock'), /Protects that ally or a fallback ally, and Protects Sherlock anywhere/i);
-  assert.match(detail('demario'), /2\/2 Demario/);
+  assert.match(detail('demario'), /2\/3 Demario/);
   assert.match(detail('demario'), /Normal or Powered Luigion consumes it once for \+2/);
   assert.match(detail('demario'), /SQUABBLE is optional for the powered jump/i);
   assert.doesNotMatch(detail('demario'), /adds only the powered jump/i);
-  assert.match(detail('counter'), /two 1-Hand encore shots, once per round/i);
+  assert.match(detail('counter'), /two 1-Hand encore shots per match, at most once per round/i);
   assert.match(detail('counter'), /Gamer still rewards new Silence and Weaken/i);
   assert.doesNotMatch(detail('counter'), /Closet Nerd (?:costs|is) 3/i);
 });
@@ -129,4 +129,55 @@ test('auto build never invents missing cards when the collection is too small', 
   const next = autoBuildDeck({name:'Small',cardIds:[],heroCardId:owned[0],recipeId:null}, [...owned, owned[0], 'invalid']);
   assert.equal(next.cardIds.length, 4);
   assert(next.cardIds.every(id => owned.includes(id)));
+});
+
+
+test('Music and Fitness lessons expose complete owned-card recipes and coherent automatic builds', () => {
+  const cases = [
+    ['the-opening-act', 'music', 'music-industry'],
+    ['personal-trainer', 'fitness', 'fitness-circuit'],
+  ] as const;
+  const owned = cardCatalog.map(card => card.catalogId);
+  for (const [hero, crewKey, starterId] of cases) {
+    const engineIds = [...recommendedWorkshopCrews[crewKey]];
+    const catalogIds = engineIdsToCatalogIds(engineIds);
+    assert.equal(engineIds.length, 10);
+    assert.equal(new Set(engineIds).size, 10);
+    const lesson = workshopSuggestions.find(item => item.cardId === hero)!;
+    assert.deepEqual(lesson.testCrew, catalogIds);
+    const starter = decks.find(deck => deck.id === starterId)!;
+    assert(starter, starterId + ' is a discoverable starter recipe');
+    assert.deepEqual(new Set(starter.cards), new Set(engineIds));
+    const original = { name: 'My crew', cardIds: [hero], heroCardId: hero, recipeId: null };
+    const built = autoBuildDeck(original, owned);
+    assert.deepEqual(new Set(built.cardIds), new Set(catalogIds));
+    assert.deepEqual(original.cardIds, [hero], 'automatic build must not mutate the player draft');
+  }
+});
+
+test('new faction builds preserve chosen partial lineups and never recruit an unowned performer', () => {
+  const hero = 'the-opening-act';
+  const owned = cardCatalog.map(card => card.catalogId).filter(id => id !== 'the-og-rap-legend');
+  const built = autoBuildDeck({ name: 'My remix', cardIds: [hero, 'cornball'], heroCardId: hero, recipeId: null }, owned);
+  assert.equal(built.cardIds.length, 10);
+  assert(built.cardIds.includes('cornball'));
+  assert(!built.cardIds.includes('the-og-rap-legend'));
+  assert.equal(new Set(built.cardIds).size, 10);
+});
+
+
+test('each new Street Legends practice crew has ten unique collectible cards and covers all fifteen people', () => {
+  const personalIds = ['boo-boo-the-fool', 'mr-mc-hands', 'ms-mary-mack', 'pimp-swookie', 'og-uncle-harley-davidson', 'suga-mama', 'side-chick', 'gas-station-window-wiper', 'parole-officer', 'work-hubby', 'he-just-a-friend', 'crazy-ex-boyfriend', 'uncle-sam', 'apartment-maintenance-sage', 'bail-bonds-auntie'];
+  const covered = new Set<string>();
+  for (const key of ['investigations', 'relationships', 'streetgrowth'] as const) {
+    const crew = [...recommendedWorkshopCrews[key]];
+    assert.equal(crew.length, 10);
+    assert.equal(new Set(crew).size, 10);
+    for (const id of engineIdsToCatalogIds(crew)) {
+      assert(catalogCardById[id]);
+      assert.notEqual(catalogCardById[id].kind, 'token');
+      covered.add(id);
+    }
+  }
+  for (const id of personalIds) assert(covered.has(id), id + ' needs an authored practice crew');
 });

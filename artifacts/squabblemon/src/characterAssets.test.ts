@@ -1,5 +1,8 @@
 import { BLOCKBUSTERS } from '../../../lib/squabblemon-engine/src/blockbusterWave';
 import assert from "node:assert/strict";
+import { existsSync } from "node:fs";
+import { STREET_LEGENDS_WAVE } from "../../../lib/squabblemon-engine/src/streetLegendsWave";
+import { MUSIC_INDUSTRY_WAVE } from "../../../lib/squabblemon-engine/src/musicIndustryWave";
 import { createHash } from "node:crypto";
 import { readFile, readdir } from "node:fs/promises";
 import { dirname, join } from "node:path";
@@ -23,6 +26,7 @@ const SQUABBLEHOUSE_SUPPLIED_ARTWORK = [
   {
     engineId: 'squabblehouse-bus-boy',
     artworkId: 'squabblehouse-bus-boy',
+    approvedRevision: '7203e633595fd9a6',
     source: '13317d89-fd08-4259-a13b-abc9c748d296_1790802321353.png',
     width: 1086,
     height: 1448,
@@ -31,6 +35,7 @@ const SQUABBLEHOUSE_SUPPLIED_ARTWORK = [
   {
     engineId: 'waffle-warlord',
     artworkId: 'waffle-warlord',
+    approvedRevision: '0f75ba756675161c',
     source: 'ChatGPT_Image_Sep_30,_2026,_01_54_16_PM_(Edited)_1790802321353.png',
     width: 493,
     height: 654,
@@ -205,16 +210,21 @@ test('Unchanged Squabblehouse portraits preserve their supplied artwork and alph
 
     const targetPath = join(CHARACTER_DIRECTORY, expectedFile);
     const sourcePath = fileURLToPath(new URL(`../../../attached_assets/${asset.source}`, import.meta.url));
-    const source = await readFile(sourcePath);
+    // Clean checkouts lack ignored attachments. Pin the approved imported bytes
+    // so alpha and visible pixels still cannot change without a deliberate update.
+    const source = existsSync(sourcePath) ? await readFile(sourcePath) : null;
     const imported = await readFile(targetPath);
     const metadata = readWebpMetadata(imported);
     assert.deepEqual([metadata.width, metadata.height], [asset.width, asset.height]);
     assert.equal(metadata.hasAlpha, asset.hasAlpha, `${expectedFile} should retain its supplied alpha channel`);
 
+    assert.equal(createHash('sha256').update(imported).digest('hex').slice(0, 16), asset.approvedRevision, `${expectedFile}: preserve the approved import`);
     if (asset.hasAlpha) {
-      const sourceAlpha = await sharp(source).extractChannel('alpha').raw().toBuffer();
-      const importedAlpha = await sharp(imported).extractChannel('alpha').raw().toBuffer();
-      assert.deepEqual(importedAlpha, sourceAlpha, `${expectedFile} must preserve supplied transparency exactly`);
+      if (source) {
+        const sourceAlpha = await sharp(source).extractChannel('alpha').raw().toBuffer();
+        const importedAlpha = await sharp(imported).extractChannel('alpha').raw().toBuffer();
+        assert.deepEqual(importedAlpha, sourceAlpha, `${expectedFile} must preserve supplied transparency exactly`);
+      }
       assertUsefulCutout(expectedFile, await readAlphaChannel(imported));
     }
 
@@ -331,6 +341,8 @@ test('Simmy has no opaque black matte, while Foodz retains the supplied portrait
     'waffle-warlord',
     'cane-corso-red',
     'blue-nose-pit',
+    ...STREET_LEGENDS_WAVE.map(([id]) => id),
+    ...MUSIC_INDUSTRY_WAVE.map(([id]) => id),
     'kyle',
     'stockz',
   ]);
