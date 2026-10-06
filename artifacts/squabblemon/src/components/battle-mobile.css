@@ -107,6 +107,15 @@
   .battle-arena.battle-hud picture.battle-venue__art > img { object-position: center top; }
   .battle-arena.battle-hud .location-wallpaper { display: none; }
 }
+/* Tablet proportions need a filled canvas in either orientation. The picture
+   still selects its authored portrait or landscape composition; scale uniformly
+   around the center instead of leaving phone/widescreen letterbox bands. */
+@media (min-width: 601px) and (max-width: 1400px) and (min-height: 600px) and (max-aspect-ratio: 8/5) {
+  .battle-arena.battle-hud picture.battle-venue__art > img {
+    object-fit: cover;
+    object-position: center;
+  }
+}
 .battle-arena .battle-target-line { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; z-index: 45; visibility: hidden; }
 .battle-target-line path { fill: none; stroke-linecap: round; }
 .battle-target-line__shadow { stroke: #071019b3; stroke-width: 5; }
