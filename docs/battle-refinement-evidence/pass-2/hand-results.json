@@ -1,0 +1,94 @@
+[
+  {
+    "width": 390,
+    "selection": true,
+    "drag": true,
+    "rearrangement": true,
+    "resize": true,
+    "geometry": [
+      {
+        "id": "player:drag:1:plug",
+        "w": 112,
+        "h": 156.4375,
+        "x": 14
+      },
+      {
+        "id": "player:drag:2:roaster",
+        "w": 112,
+        "h": 156.4375,
+        "x": 134
+      },
+      {
+        "id": "player:drag:3:wifey",
+        "w": 112,
+        "h": 156.4375,
+        "x": 254
+      },
+      {
+        "id": "player:drag:4:hooper",
+        "w": 112,
+        "h": 156.4375,
+        "x": 374
+      },
+      {
+        "id": "player:drag:5:snow",
+        "w": 112,
+        "h": 156.4375,
+        "x": 494
+      },
+      {
+        "id": "player:drag:6:og",
+        "w": 112,
+        "h": 156.4375,
+        "x": 614
+      }
+    ],
+    "errors": []
+  },
+  {
+    "width": 1280,
+    "selection": true,
+    "drag": true,
+    "rearrangement": true,
+    "resize": true,
+    "geometry": [
+      {
+        "id": "player:drag:1:plug",
+        "w": 128,
+        "h": 178.78125,
+        "x": 226
+      },
+      {
+        "id": "player:drag:2:roaster",
+        "w": 128,
+        "h": 178.78125,
+        "x": 366
+      },
+      {
+        "id": "player:drag:3:wifey",
+        "w": 128,
+        "h": 178.78125,
+        "x": 506
+      },
+      {
+        "id": "player:drag:4:hooper",
+        "w": 128,
+        "h": 178.78125,
+        "x": 646
+      },
+      {
+        "id": "player:drag:5:snow",
+        "w": 128,
+        "h": 178.78125,
+        "x": 786
+      },
+      {
+        "id": "player:drag:6:og",
+        "w": 128,
+        "h": 178.78125,
+        "x": 926
+      }
+    ],
+    "errors": []
+  }
+]

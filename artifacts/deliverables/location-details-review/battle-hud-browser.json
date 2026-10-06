@@ -1,0 +1,2388 @@
+[
+  {
+    "width": 1440,
+    "height": 1000,
+    "phases": [
+      {
+        "phase": "player-ready",
+        "speed": {
+          "x": 1352.8125,
+          "y": 77,
+          "width": 44,
+          "height": 36
+        },
+        "skip": null,
+        "board": {
+          "x": 30,
+          "y": 122.5,
+          "width": 1380,
+          "height": 581.5
+        },
+        "header": {
+          "top": 18,
+          "bottom": 62
+        },
+        "action": {
+          "x": 709.109375,
+          "y": 942,
+          "width": 270,
+          "height": 48
+        },
+        "handCard": {
+          "x": 236,
+          "y": 751.21875,
+          "width": 128,
+          "height": 178.78125
+        },
+        "timer": {
+          "box": {
+            "x": 350,
+            "y": 704,
+            "width": 740,
+            "height": 26
+          },
+          "track": {
+            "x": 368,
+            "y": 728,
+            "width": 704,
+            "height": 2
+          },
+          "state": {
+            "topState": "calm",
+            "topValue": "20",
+            "bottomState": "calm",
+            "bottomValue": "20s",
+            "progress": "scaleX(1)"
+          }
+        }
+      },
+      {
+        "phase": "rival-thinking",
+        "speed": {
+          "x": 1352.8125,
+          "y": 77,
+          "width": 44,
+          "height": 36
+        },
+        "skip": {
+          "x": 1290.8125,
+          "y": 77,
+          "width": 58,
+          "height": 36
+        },
+        "board": {
+          "x": 30,
+          "y": 122.5,
+          "width": 1380,
+          "height": 581.5
+        },
+        "header": {
+          "top": 18,
+          "bottom": 62
+        },
+        "action": {
+          "x": 709.109375,
+          "y": 942,
+          "width": 270,
+          "height": 48
+        },
+        "handCard": {
+          "x": 236,
+          "y": 751.21875,
+          "width": 128,
+          "height": 178.78125
+        },
+        "timer": {
+          "box": {
+            "x": 350,
+            "y": 704,
+            "width": 740,
+            "height": 26
+          },
+          "track": {
+            "x": 368,
+            "y": 728,
+            "width": 704,
+            "height": 2
+          },
+          "state": {
+            "topState": "paused",
+            "topValue": "—",
+            "bottomState": "paused",
+            "bottomValue": "—",
+            "progress": "scaleX(0)"
+          }
+        }
+      },
+      {
+        "phase": "player-reveal",
+        "speed": {
+          "x": 1352.8125,
+          "y": 77,
+          "width": 44,
+          "height": 36
+        },
+        "skip": {
+          "x": 1290.8125,
+          "y": 77,
+          "width": 58,
+          "height": 36
+        },
+        "board": {
+          "x": 30,
+          "y": 122.5,
+          "width": 1380,
+          "height": 581.5
+        },
+        "header": {
+          "top": 18,
+          "bottom": 62
+        },
+        "action": {
+          "x": 709.109375,
+          "y": 942,
+          "width": 270,
+          "height": 48
+        },
+        "handCard": {
+          "x": 236,
+          "y": 751.21875,
+          "width": 128,
+          "height": 178.78125
+        },
+        "timer": {
+          "box": {
+            "x": 350,
+            "y": 704,
+            "width": 740,
+            "height": 26
+          },
+          "track": {
+            "x": 368,
+            "y": 728,
+            "width": 704,
+            "height": 2
+          },
+          "state": {
+            "topState": "paused",
+            "topValue": "—",
+            "bottomState": "paused",
+            "bottomValue": "—",
+            "progress": "scaleX(0)"
+          }
+        }
+      },
+      {
+        "phase": "effects",
+        "speed": {
+          "x": 1352.8125,
+          "y": 77,
+          "width": 44,
+          "height": 36
+        },
+        "skip": {
+          "x": 1290.8125,
+          "y": 77,
+          "width": 58,
+          "height": 36
+        },
+        "board": {
+          "x": 30,
+          "y": 122.5,
+          "width": 1380,
+          "height": 581.5
+        },
+        "header": {
+          "top": 18,
+          "bottom": 62
+        },
+        "action": {
+          "x": 709.109375,
+          "y": 942,
+          "width": 270,
+          "height": 48
+        },
+        "handCard": {
+          "x": 236,
+          "y": 751.21875,
+          "width": 128,
+          "height": 178.78125
+        },
+        "timer": {
+          "box": {
+            "x": 350,
+            "y": 704,
+            "width": 740,
+            "height": 26
+          },
+          "track": {
+            "x": 368,
+            "y": 728,
+            "width": 704,
+            "height": 2
+          },
+          "state": {
+            "topState": "paused",
+            "topValue": "—",
+            "bottomState": "paused",
+            "bottomValue": "—",
+            "progress": "scaleX(0)"
+          }
+        }
+      },
+      {
+        "phase": "round-result",
+        "speed": {
+          "x": 1352.8125,
+          "y": 77,
+          "width": 44,
+          "height": 36
+        },
+        "skip": {
+          "x": 1290.8125,
+          "y": 77,
+          "width": 58,
+          "height": 36
+        },
+        "board": {
+          "x": 30,
+          "y": 148,
+          "width": 1380,
+          "height": 556
+        },
+        "header": {
+          "top": 18,
+          "bottom": 62
+        },
+        "action": {
+          "x": 709.109375,
+          "y": 942,
+          "width": 270,
+          "height": 48
+        },
+        "handCard": {
+          "x": 236,
+          "y": 751.21875,
+          "width": 128,
+          "height": 178.78125
+        },
+        "timer": {
+          "box": {
+            "x": 350,
+            "y": 704,
+            "width": 740,
+            "height": 26
+          },
+          "track": {
+            "x": 368,
+            "y": 728,
+            "width": 704,
+            "height": 2
+          },
+          "state": {
+            "topState": "paused",
+            "topValue": "—",
+            "bottomState": "paused",
+            "bottomValue": "—",
+            "progress": "scaleX(0)"
+          }
+        }
+      }
+    ],
+    "skip": true,
+    "speed": true,
+    "clock": true,
+    "urgent": true,
+    "noTimer": true,
+    "pvp": true,
+    "errors": []
+  },
+  {
+    "width": 1280,
+    "height": 720,
+    "phases": [
+      {
+        "phase": "player-ready",
+        "speed": {
+          "x": 1197.609375,
+          "y": 77,
+          "width": 44,
+          "height": 36
+        },
+        "skip": null,
+        "board": {
+          "x": 0,
+          "y": 122.5,
+          "width": 1280,
+          "height": 347.109375
+        },
+        "header": {
+          "top": 18,
+          "bottom": 62
+        },
+        "action": {
+          "x": 629.109375,
+          "y": 662,
+          "width": 270,
+          "height": 48
+        },
+        "handCard": {
+          "x": 238.625,
+          "y": 504.1875,
+          "width": 104.390625,
+          "height": 145.8125
+        },
+        "timer": {
+          "box": {
+            "x": 270,
+            "y": 469.609375,
+            "width": 740,
+            "height": 26
+          },
+          "track": {
+            "x": 288,
+            "y": 493.609375,
+            "width": 704,
+            "height": 2
+          },
+          "state": {
+            "topState": "calm",
+            "topValue": "20",
+            "bottomState": "calm",
+            "bottomValue": "20s",
+            "progress": "scaleX(1)"
+          }
+        }
+      },
+      {
+        "phase": "rival-thinking",
+        "speed": {
+          "x": 1197.609375,
+          "y": 77,
+          "width": 44,
+          "height": 36
+        },
+        "skip": {
+          "x": 1135.609375,
+          "y": 77,
+          "width": 58,
+          "height": 36
+        },
+        "board": {
+          "x": 0,
+          "y": 122.5,
+          "width": 1280,
+          "height": 347.109375
+        },
+        "header": {
+          "top": 18,
+          "bottom": 62
+        },
+        "action": {
+          "x": 629.109375,
+          "y": 662,
+          "width": 270,
+          "height": 48
+        },
+        "handCard": {
+          "x": 238.625,
+          "y": 504.1875,
+          "width": 104.390625,
+          "height": 145.8125
+        },
+        "timer": {
+          "box": {
+            "x": 270,
+            "y": 469.609375,
+            "width": 740,
+            "height": 26
+          },
+          "track": {
+            "x": 288,
+            "y": 493.609375,
+            "width": 704,
+            "height": 2
+          },
+          "state": {
+            "topState": "paused",
+            "topValue": "—",
+            "bottomState": "paused",
+            "bottomValue": "—",
+            "progress": "scaleX(0)"
+          }
+        }
+      },
+      {
+        "phase": "player-reveal",
+        "speed": {
+          "x": 1197.609375,
+          "y": 77,
+          "width": 44,
+          "height": 36
+        },
+        "skip": {
+          "x": 1135.609375,
+          "y": 77,
+          "width": 58,
+          "height": 36
+        },
+        "board": {
+          "x": 0,
+          "y": 122.5,
+          "width": 1280,
+          "height": 347.109375
+        },
+        "header": {
+          "top": 18,
+          "bottom": 62
+        },
+        "action": {
+          "x": 629.109375,
+          "y": 662,
+          "width": 270,
+          "height": 48
+        },
+        "handCard": {
+          "x": 238.625,
+          "y": 504.1875,
+          "width": 104.390625,
+          "height": 145.8125
+        },
+        "timer": {
+          "box": {
+            "x": 270,
+            "y": 469.609375,
+            "width": 740,
+            "height": 26
+          },
+          "track": {
+            "x": 288,
+            "y": 493.609375,
+            "width": 704,
+            "height": 2
+          },
+          "state": {
+            "topState": "paused",
+            "topValue": "—",
+            "bottomState": "paused",
+            "bottomValue": "—",
+            "progress": "scaleX(0)"
+          }
+        }
+      },
+      {
+        "phase": "effects",
+        "speed": {
+          "x": 1197.609375,
+          "y": 77,
+          "width": 44,
+          "height": 36
+        },
+        "skip": {
+          "x": 1135.609375,
+          "y": 77,
+          "width": 58,
+          "height": 36
+        },
+        "board": {
+          "x": 0,
+          "y": 122.5,
+          "width": 1280,
+          "height": 347.109375
+        },
+        "header": {
+          "top": 18,
+          "bottom": 62
+        },
+        "action": {
+          "x": 629.109375,
+          "y": 662,
+          "width": 270,
+          "height": 48
+        },
+        "handCard": {
+          "x": 238.625,
+          "y": 504.1875,
+          "width": 104.390625,
+          "height": 145.8125
+        },
+        "timer": {
+          "box": {
+            "x": 270,
+            "y": 469.609375,
+            "width": 740,
+            "height": 26
+          },
+          "track": {
+            "x": 288,
+            "y": 493.609375,
+            "width": 704,
+            "height": 2
+          },
+          "state": {
+            "topState": "paused",
+            "topValue": "—",
+            "bottomState": "paused",
+            "bottomValue": "—",
+            "progress": "scaleX(0)"
+          }
+        }
+      },
+      {
+        "phase": "round-result",
+        "speed": {
+          "x": 1197.609375,
+          "y": 77,
+          "width": 44,
+          "height": 36
+        },
+        "skip": {
+          "x": 1135.609375,
+          "y": 77,
+          "width": 58,
+          "height": 36
+        },
+        "board": {
+          "x": 0,
+          "y": 148,
+          "width": 1280,
+          "height": 321.609375
+        },
+        "header": {
+          "top": 18,
+          "bottom": 62
+        },
+        "action": {
+          "x": 629.109375,
+          "y": 662,
+          "width": 270,
+          "height": 48
+        },
+        "handCard": {
+          "x": 238.625,
+          "y": 504.1875,
+          "width": 104.390625,
+          "height": 145.8125
+        },
+        "timer": {
+          "box": {
+            "x": 270,
+            "y": 469.609375,
+            "width": 740,
+            "height": 26
+          },
+          "track": {
+            "x": 288,
+            "y": 493.609375,
+            "width": 704,
+            "height": 2
+          },
+          "state": {
+            "topState": "paused",
+            "topValue": "—",
+            "bottomState": "paused",
+            "bottomValue": "—",
+            "progress": "scaleX(0)"
+          }
+        }
+      }
+    ],
+    "skip": true,
+    "speed": true,
+    "clock": true,
+    "urgent": true,
+    "noTimer": true,
+    "pvp": true,
+    "errors": []
+  },
+  {
+    "width": 844,
+    "height": 390,
+    "phases": [
+      {
+        "phase": "player-ready",
+        "speed": {
+          "x": 782,
+          "y": 48,
+          "width": 44,
+          "height": 36
+        },
+        "skip": null,
+        "board": {
+          "x": 0,
+          "y": 85.5,
+          "width": 844,
+          "height": 147.203125
+        },
+        "header": {
+          "top": 2,
+          "bottom": 46
+        },
+        "action": {
+          "x": 608,
+          "y": 325,
+          "width": 210,
+          "height": 38
+        },
+        "handCard": {
+          "x": 26,
+          "y": 262.09375,
+          "width": 88,
+          "height": 122.90625
+        },
+        "timer": {
+          "box": {
+            "x": 192,
+            "y": 232.703125,
+            "width": 460,
+            "height": 18.296875
+          },
+          "track": {
+            "x": 210,
+            "y": 249,
+            "width": 424,
+            "height": 2
+          },
+          "state": {
+            "topState": "calm",
+            "topValue": "20",
+            "bottomState": "calm",
+            "bottomValue": "20s",
+            "progress": "scaleX(1)"
+          }
+        }
+      },
+      {
+        "phase": "rival-thinking",
+        "speed": {
+          "x": 782,
+          "y": 48,
+          "width": 44,
+          "height": 36
+        },
+        "skip": {
+          "x": 720,
+          "y": 48,
+          "width": 58,
+          "height": 36
+        },
+        "board": {
+          "x": 0,
+          "y": 85.5,
+          "width": 844,
+          "height": 147.203125
+        },
+        "header": {
+          "top": 2,
+          "bottom": 46
+        },
+        "action": {
+          "x": 608,
+          "y": 325,
+          "width": 210,
+          "height": 38
+        },
+        "handCard": {
+          "x": 26,
+          "y": 262.09375,
+          "width": 88,
+          "height": 122.90625
+        },
+        "timer": {
+          "box": {
+            "x": 192,
+            "y": 232.703125,
+            "width": 460,
+            "height": 18.296875
+          },
+          "track": {
+            "x": 210,
+            "y": 249,
+            "width": 424,
+            "height": 2
+          },
+          "state": {
+            "topState": "paused",
+            "topValue": "—",
+            "bottomState": "paused",
+            "bottomValue": "—",
+            "progress": "scaleX(0)"
+          }
+        }
+      },
+      {
+        "phase": "player-reveal",
+        "speed": {
+          "x": 782,
+          "y": 48,
+          "width": 44,
+          "height": 36
+        },
+        "skip": {
+          "x": 720,
+          "y": 48,
+          "width": 58,
+          "height": 36
+        },
+        "board": {
+          "x": 0,
+          "y": 85.5,
+          "width": 844,
+          "height": 147.203125
+        },
+        "header": {
+          "top": 2,
+          "bottom": 46
+        },
+        "action": {
+          "x": 608,
+          "y": 325,
+          "width": 210,
+          "height": 38
+        },
+        "handCard": {
+          "x": 26,
+          "y": 262.09375,
+          "width": 88,
+          "height": 122.90625
+        },
+        "timer": {
+          "box": {
+            "x": 192,
+            "y": 232.703125,
+            "width": 460,
+            "height": 18.296875
+          },
+          "track": {
+            "x": 210,
+            "y": 249,
+            "width": 424,
+            "height": 2
+          },
+          "state": {
+            "topState": "paused",
+            "topValue": "—",
+            "bottomState": "paused",
+            "bottomValue": "—",
+            "progress": "scaleX(0)"
+          }
+        }
+      },
+      {
+        "phase": "effects",
+        "speed": {
+          "x": 782,
+          "y": 48,
+          "width": 44,
+          "height": 36
+        },
+        "skip": {
+          "x": 720,
+          "y": 48,
+          "width": 58,
+          "height": 36
+        },
+        "board": {
+          "x": 0,
+          "y": 85.5,
+          "width": 844,
+          "height": 147.203125
+        },
+        "header": {
+          "top": 2,
+          "bottom": 46
+        },
+        "action": {
+          "x": 608,
+          "y": 325,
+          "width": 210,
+          "height": 38
+        },
+        "handCard": {
+          "x": 26,
+          "y": 262.09375,
+          "width": 88,
+          "height": 122.90625
+        },
+        "timer": {
+          "box": {
+            "x": 192,
+            "y": 232.703125,
+            "width": 460,
+            "height": 18.296875
+          },
+          "track": {
+            "x": 210,
+            "y": 249,
+            "width": 424,
+            "height": 2
+          },
+          "state": {
+            "topState": "paused",
+            "topValue": "—",
+            "bottomState": "paused",
+            "bottomValue": "—",
+            "progress": "scaleX(0)"
+          }
+        }
+      },
+      {
+        "phase": "round-result",
+        "speed": {
+          "x": 782,
+          "y": 48,
+          "width": 44,
+          "height": 36
+        },
+        "skip": {
+          "x": 720,
+          "y": 48,
+          "width": 58,
+          "height": 36
+        },
+        "board": {
+          "x": 0,
+          "y": 114,
+          "width": 844,
+          "height": 118.703125
+        },
+        "header": {
+          "top": 2,
+          "bottom": 46
+        },
+        "action": {
+          "x": 608,
+          "y": 325,
+          "width": 210,
+          "height": 38
+        },
+        "handCard": {
+          "x": 26,
+          "y": 262.09375,
+          "width": 88,
+          "height": 122.90625
+        },
+        "timer": {
+          "box": {
+            "x": 192,
+            "y": 232.703125,
+            "width": 460,
+            "height": 18.296875
+          },
+          "track": {
+            "x": 210,
+            "y": 249,
+            "width": 424,
+            "height": 2
+          },
+          "state": {
+            "topState": "paused",
+            "topValue": "—",
+            "bottomState": "paused",
+            "bottomValue": "—",
+            "progress": "scaleX(0)"
+          }
+        }
+      }
+    ],
+    "skip": true,
+    "speed": true,
+    "clock": true,
+    "urgent": true,
+    "noTimer": true,
+    "pvp": true,
+    "errors": []
+  },
+  {
+    "width": 490,
+    "height": 1000,
+    "phases": [
+      {
+        "phase": "player-ready",
+        "speed": {
+          "x": 276,
+          "y": 47,
+          "width": 36,
+          "height": 36
+        },
+        "skip": null,
+        "board": {
+          "x": 0,
+          "y": 84,
+          "width": 490,
+          "height": 662.703125
+        },
+        "header": {
+          "top": 6.5,
+          "bottom": 83
+        },
+        "action": {
+          "x": 176.25,
+          "y": 949,
+          "width": 270,
+          "height": 46
+        },
+        "handCard": {
+          "x": 10,
+          "y": 798.328125,
+          "width": 100,
+          "height": 139.671875
+        },
+        "timer": {
+          "box": {
+            "x": 0,
+            "y": 746.703125,
+            "width": 490,
+            "height": 25.296875
+          },
+          "track": {
+            "x": 10,
+            "y": 766,
+            "width": 470,
+            "height": 3
+          },
+          "state": {
+            "topState": "calm",
+            "topValue": "20",
+            "bottomState": "calm",
+            "bottomValue": "20s",
+            "progress": "scaleX(1)"
+          }
+        }
+      },
+      {
+        "phase": "rival-thinking",
+        "speed": {
+          "x": 276,
+          "y": 47,
+          "width": 36,
+          "height": 36
+        },
+        "skip": {
+          "x": 230,
+          "y": 47,
+          "width": 42,
+          "height": 36
+        },
+        "board": {
+          "x": 0,
+          "y": 84,
+          "width": 490,
+          "height": 662.703125
+        },
+        "header": {
+          "top": 6.5,
+          "bottom": 83
+        },
+        "action": {
+          "x": 176.25,
+          "y": 949,
+          "width": 270,
+          "height": 46
+        },
+        "handCard": {
+          "x": 10,
+          "y": 798.328125,
+          "width": 100,
+          "height": 139.671875
+        },
+        "timer": {
+          "box": {
+            "x": 0,
+            "y": 746.703125,
+            "width": 490,
+            "height": 25.296875
+          },
+          "track": {
+            "x": 10,
+            "y": 766,
+            "width": 470,
+            "height": 3
+          },
+          "state": {
+            "topState": "paused",
+            "topValue": "—",
+            "bottomState": "paused",
+            "bottomValue": "—",
+            "progress": "scaleX(0)"
+          }
+        }
+      },
+      {
+        "phase": "player-reveal",
+        "speed": {
+          "x": 276,
+          "y": 47,
+          "width": 36,
+          "height": 36
+        },
+        "skip": {
+          "x": 230,
+          "y": 47,
+          "width": 42,
+          "height": 36
+        },
+        "board": {
+          "x": 0,
+          "y": 84,
+          "width": 490,
+          "height": 662.703125
+        },
+        "header": {
+          "top": 6.5,
+          "bottom": 83
+        },
+        "action": {
+          "x": 176.25,
+          "y": 949,
+          "width": 270,
+          "height": 46
+        },
+        "handCard": {
+          "x": 10,
+          "y": 798.328125,
+          "width": 100,
+          "height": 139.671875
+        },
+        "timer": {
+          "box": {
+            "x": 0,
+            "y": 746.703125,
+            "width": 490,
+            "height": 25.296875
+          },
+          "track": {
+            "x": 10,
+            "y": 766,
+            "width": 470,
+            "height": 3
+          },
+          "state": {
+            "topState": "paused",
+            "topValue": "—",
+            "bottomState": "paused",
+            "bottomValue": "—",
+            "progress": "scaleX(0)"
+          }
+        }
+      },
+      {
+        "phase": "effects",
+        "speed": {
+          "x": 276,
+          "y": 47,
+          "width": 36,
+          "height": 36
+        },
+        "skip": {
+          "x": 230,
+          "y": 47,
+          "width": 42,
+          "height": 36
+        },
+        "board": {
+          "x": 0,
+          "y": 84,
+          "width": 490,
+          "height": 662.703125
+        },
+        "header": {
+          "top": 6.5,
+          "bottom": 83
+        },
+        "action": {
+          "x": 176.25,
+          "y": 949,
+          "width": 270,
+          "height": 46
+        },
+        "handCard": {
+          "x": 10,
+          "y": 798.328125,
+          "width": 100,
+          "height": 139.671875
+        },
+        "timer": {
+          "box": {
+            "x": 0,
+            "y": 746.703125,
+            "width": 490,
+            "height": 25.296875
+          },
+          "track": {
+            "x": 10,
+            "y": 766,
+            "width": 470,
+            "height": 3
+          },
+          "state": {
+            "topState": "paused",
+            "topValue": "—",
+            "bottomState": "paused",
+            "bottomValue": "—",
+            "progress": "scaleX(0)"
+          }
+        }
+      },
+      {
+        "phase": "round-result",
+        "speed": {
+          "x": 276,
+          "y": 47,
+          "width": 36,
+          "height": 36
+        },
+        "skip": {
+          "x": 230,
+          "y": 47,
+          "width": 42,
+          "height": 36
+        },
+        "board": {
+          "x": 0,
+          "y": 84,
+          "width": 490,
+          "height": 662.703125
+        },
+        "header": {
+          "top": 6.5,
+          "bottom": 83
+        },
+        "action": {
+          "x": 176.25,
+          "y": 949,
+          "width": 270,
+          "height": 46
+        },
+        "handCard": {
+          "x": 10,
+          "y": 798.328125,
+          "width": 100,
+          "height": 139.671875
+        },
+        "timer": {
+          "box": {
+            "x": 0,
+            "y": 746.703125,
+            "width": 490,
+            "height": 25.296875
+          },
+          "track": {
+            "x": 10,
+            "y": 766,
+            "width": 470,
+            "height": 3
+          },
+          "state": {
+            "topState": "paused",
+            "topValue": "—",
+            "bottomState": "paused",
+            "bottomValue": "—",
+            "progress": "scaleX(0)"
+          }
+        }
+      }
+    ],
+    "skip": true,
+    "speed": true,
+    "clock": true,
+    "urgent": true,
+    "noTimer": true,
+    "pvp": true,
+    "errors": []
+  },
+  {
+    "width": 600,
+    "height": 850,
+    "phases": [
+      {
+        "phase": "player-ready",
+        "speed": {
+          "x": 386,
+          "y": 47,
+          "width": 36,
+          "height": 36
+        },
+        "skip": null,
+        "board": {
+          "x": 0,
+          "y": 84,
+          "width": 600,
+          "height": 512.703125
+        },
+        "header": {
+          "top": 6.5,
+          "bottom": 83
+        },
+        "action": {
+          "x": 231.25,
+          "y": 799,
+          "width": 270,
+          "height": 46
+        },
+        "handCard": {
+          "x": 10,
+          "y": 648.328125,
+          "width": 100,
+          "height": 139.671875
+        },
+        "timer": {
+          "box": {
+            "x": 0,
+            "y": 596.703125,
+            "width": 600,
+            "height": 25.296875
+          },
+          "track": {
+            "x": 10,
+            "y": 616,
+            "width": 580,
+            "height": 3
+          },
+          "state": {
+            "topState": "calm",
+            "topValue": "20",
+            "bottomState": "calm",
+            "bottomValue": "20s",
+            "progress": "scaleX(1)"
+          }
+        }
+      },
+      {
+        "phase": "rival-thinking",
+        "speed": {
+          "x": 386,
+          "y": 47,
+          "width": 36,
+          "height": 36
+        },
+        "skip": {
+          "x": 340,
+          "y": 47,
+          "width": 42,
+          "height": 36
+        },
+        "board": {
+          "x": 0,
+          "y": 84,
+          "width": 600,
+          "height": 512.703125
+        },
+        "header": {
+          "top": 6.5,
+          "bottom": 83
+        },
+        "action": {
+          "x": 231.25,
+          "y": 799,
+          "width": 270,
+          "height": 46
+        },
+        "handCard": {
+          "x": 10,
+          "y": 648.328125,
+          "width": 100,
+          "height": 139.671875
+        },
+        "timer": {
+          "box": {
+            "x": 0,
+            "y": 596.703125,
+            "width": 600,
+            "height": 25.296875
+          },
+          "track": {
+            "x": 10,
+            "y": 616,
+            "width": 580,
+            "height": 3
+          },
+          "state": {
+            "topState": "paused",
+            "topValue": "—",
+            "bottomState": "paused",
+            "bottomValue": "—",
+            "progress": "scaleX(0)"
+          }
+        }
+      },
+      {
+        "phase": "player-reveal",
+        "speed": {
+          "x": 386,
+          "y": 47,
+          "width": 36,
+          "height": 36
+        },
+        "skip": {
+          "x": 340,
+          "y": 47,
+          "width": 42,
+          "height": 36
+        },
+        "board": {
+          "x": 0,
+          "y": 84,
+          "width": 600,
+          "height": 512.703125
+        },
+        "header": {
+          "top": 6.5,
+          "bottom": 83
+        },
+        "action": {
+          "x": 231.25,
+          "y": 799,
+          "width": 270,
+          "height": 46
+        },
+        "handCard": {
+          "x": 10,
+          "y": 648.328125,
+          "width": 100,
+          "height": 139.671875
+        },
+        "timer": {
+          "box": {
+            "x": 0,
+            "y": 596.703125,
+            "width": 600,
+            "height": 25.296875
+          },
+          "track": {
+            "x": 10,
+            "y": 616,
+            "width": 580,
+            "height": 3
+          },
+          "state": {
+            "topState": "paused",
+            "topValue": "—",
+            "bottomState": "paused",
+            "bottomValue": "—",
+            "progress": "scaleX(0)"
+          }
+        }
+      },
+      {
+        "phase": "effects",
+        "speed": {
+          "x": 386,
+          "y": 47,
+          "width": 36,
+          "height": 36
+        },
+        "skip": {
+          "x": 340,
+          "y": 47,
+          "width": 42,
+          "height": 36
+        },
+        "board": {
+          "x": 0,
+          "y": 84,
+          "width": 600,
+          "height": 512.703125
+        },
+        "header": {
+          "top": 6.5,
+          "bottom": 83
+        },
+        "action": {
+          "x": 231.25,
+          "y": 799,
+          "width": 270,
+          "height": 46
+        },
+        "handCard": {
+          "x": 10,
+          "y": 648.328125,
+          "width": 100,
+          "height": 139.671875
+        },
+        "timer": {
+          "box": {
+            "x": 0,
+            "y": 596.703125,
+            "width": 600,
+            "height": 25.296875
+          },
+          "track": {
+            "x": 10,
+            "y": 616,
+            "width": 580,
+            "height": 3
+          },
+          "state": {
+            "topState": "paused",
+            "topValue": "—",
+            "bottomState": "paused",
+            "bottomValue": "—",
+            "progress": "scaleX(0)"
+          }
+        }
+      },
+      {
+        "phase": "round-result",
+        "speed": {
+          "x": 386,
+          "y": 47,
+          "width": 36,
+          "height": 36
+        },
+        "skip": {
+          "x": 340,
+          "y": 47,
+          "width": 42,
+          "height": 36
+        },
+        "board": {
+          "x": 0,
+          "y": 84,
+          "width": 600,
+          "height": 512.703125
+        },
+        "header": {
+          "top": 6.5,
+          "bottom": 83
+        },
+        "action": {
+          "x": 231.25,
+          "y": 799,
+          "width": 270,
+          "height": 46
+        },
+        "handCard": {
+          "x": 10,
+          "y": 648.328125,
+          "width": 100,
+          "height": 139.671875
+        },
+        "timer": {
+          "box": {
+            "x": 0,
+            "y": 596.703125,
+            "width": 600,
+            "height": 25.296875
+          },
+          "track": {
+            "x": 10,
+            "y": 616,
+            "width": 580,
+            "height": 3
+          },
+          "state": {
+            "topState": "paused",
+            "topValue": "—",
+            "bottomState": "paused",
+            "bottomValue": "—",
+            "progress": "scaleX(0)"
+          }
+        }
+      }
+    ],
+    "skip": true,
+    "speed": true,
+    "clock": true,
+    "urgent": true,
+    "noTimer": true,
+    "pvp": true,
+    "errors": []
+  },
+  {
+    "width": 601,
+    "height": 850,
+    "phases": [
+      {
+        "phase": "player-ready",
+        "speed": {
+          "x": 538.984375,
+          "y": 77,
+          "width": 44,
+          "height": 36
+        },
+        "skip": null,
+        "board": {
+          "x": 0,
+          "y": 122.5,
+          "width": 601,
+          "height": 448.5
+        },
+        "header": {
+          "top": 18,
+          "bottom": 62
+        },
+        "action": {
+          "x": 289.328125,
+          "y": 792,
+          "width": 270,
+          "height": 48
+        },
+        "handCard": {
+          "x": 18,
+          "y": 607.84375,
+          "width": 123.25,
+          "height": 172.15625
+        },
+        "timer": {
+          "box": {
+            "x": 0,
+            "y": 571,
+            "width": 601,
+            "height": 26
+          },
+          "track": {
+            "x": 18,
+            "y": 595,
+            "width": 565,
+            "height": 2
+          },
+          "state": {
+            "topState": "calm",
+            "topValue": "20",
+            "bottomState": "calm",
+            "bottomValue": "20s",
+            "progress": "scaleX(1)"
+          }
+        }
+      },
+      {
+        "phase": "rival-thinking",
+        "speed": {
+          "x": 538.984375,
+          "y": 77,
+          "width": 44,
+          "height": 36
+        },
+        "skip": {
+          "x": 476.984375,
+          "y": 77,
+          "width": 58,
+          "height": 36
+        },
+        "board": {
+          "x": 0,
+          "y": 122.5,
+          "width": 601,
+          "height": 448.5
+        },
+        "header": {
+          "top": 18,
+          "bottom": 62
+        },
+        "action": {
+          "x": 289.328125,
+          "y": 792,
+          "width": 270,
+          "height": 48
+        },
+        "handCard": {
+          "x": 18,
+          "y": 607.84375,
+          "width": 123.25,
+          "height": 172.15625
+        },
+        "timer": {
+          "box": {
+            "x": 0,
+            "y": 571,
+            "width": 601,
+            "height": 26
+          },
+          "track": {
+            "x": 18,
+            "y": 595,
+            "width": 565,
+            "height": 2
+          },
+          "state": {
+            "topState": "paused",
+            "topValue": "—",
+            "bottomState": "paused",
+            "bottomValue": "—",
+            "progress": "scaleX(0)"
+          }
+        }
+      },
+      {
+        "phase": "player-reveal",
+        "speed": {
+          "x": 538.984375,
+          "y": 77,
+          "width": 44,
+          "height": 36
+        },
+        "skip": {
+          "x": 476.984375,
+          "y": 77,
+          "width": 58,
+          "height": 36
+        },
+        "board": {
+          "x": 0,
+          "y": 122.5,
+          "width": 601,
+          "height": 448.5
+        },
+        "header": {
+          "top": 18,
+          "bottom": 62
+        },
+        "action": {
+          "x": 289.328125,
+          "y": 792,
+          "width": 270,
+          "height": 48
+        },
+        "handCard": {
+          "x": 18,
+          "y": 607.84375,
+          "width": 123.25,
+          "height": 172.15625
+        },
+        "timer": {
+          "box": {
+            "x": 0,
+            "y": 571,
+            "width": 601,
+            "height": 26
+          },
+          "track": {
+            "x": 18,
+            "y": 595,
+            "width": 565,
+            "height": 2
+          },
+          "state": {
+            "topState": "paused",
+            "topValue": "—",
+            "bottomState": "paused",
+            "bottomValue": "—",
+            "progress": "scaleX(0)"
+          }
+        }
+      },
+      {
+        "phase": "effects",
+        "speed": {
+          "x": 538.984375,
+          "y": 77,
+          "width": 44,
+          "height": 36
+        },
+        "skip": {
+          "x": 476.984375,
+          "y": 77,
+          "width": 58,
+          "height": 36
+        },
+        "board": {
+          "x": 0,
+          "y": 122.5,
+          "width": 601,
+          "height": 448.5
+        },
+        "header": {
+          "top": 18,
+          "bottom": 62
+        },
+        "action": {
+          "x": 289.328125,
+          "y": 792,
+          "width": 270,
+          "height": 48
+        },
+        "handCard": {
+          "x": 18,
+          "y": 607.84375,
+          "width": 123.25,
+          "height": 172.15625
+        },
+        "timer": {
+          "box": {
+            "x": 0,
+            "y": 571,
+            "width": 601,
+            "height": 26
+          },
+          "track": {
+            "x": 18,
+            "y": 595,
+            "width": 565,
+            "height": 2
+          },
+          "state": {
+            "topState": "paused",
+            "topValue": "—",
+            "bottomState": "paused",
+            "bottomValue": "—",
+            "progress": "scaleX(0)"
+          }
+        }
+      },
+      {
+        "phase": "round-result",
+        "speed": {
+          "x": 538.984375,
+          "y": 77,
+          "width": 44,
+          "height": 36
+        },
+        "skip": {
+          "x": 476.984375,
+          "y": 77,
+          "width": 58,
+          "height": 36
+        },
+        "board": {
+          "x": 0,
+          "y": 148,
+          "width": 601,
+          "height": 423
+        },
+        "header": {
+          "top": 18,
+          "bottom": 62
+        },
+        "action": {
+          "x": 289.328125,
+          "y": 792,
+          "width": 270,
+          "height": 48
+        },
+        "handCard": {
+          "x": 18,
+          "y": 607.84375,
+          "width": 123.25,
+          "height": 172.15625
+        },
+        "timer": {
+          "box": {
+            "x": 0,
+            "y": 571,
+            "width": 601,
+            "height": 26
+          },
+          "track": {
+            "x": 18,
+            "y": 595,
+            "width": 565,
+            "height": 2
+          },
+          "state": {
+            "topState": "paused",
+            "topValue": "—",
+            "bottomState": "paused",
+            "bottomValue": "—",
+            "progress": "scaleX(0)"
+          }
+        }
+      }
+    ],
+    "skip": true,
+    "speed": true,
+    "clock": true,
+    "urgent": true,
+    "noTimer": true,
+    "pvp": true,
+    "errors": []
+  },
+  {
+    "width": 320,
+    "height": 568,
+    "touch": true,
+    "phases": [
+      {
+        "phase": "player-ready",
+        "speed": {
+          "x": 106,
+          "y": 47,
+          "width": 36,
+          "height": 36
+        },
+        "skip": null,
+        "board": {
+          "x": 0,
+          "y": 84,
+          "width": 320,
+          "height": 277
+        },
+        "header": {
+          "top": 6.5,
+          "bottom": 83
+        },
+        "action": {
+          "x": 142.5,
+          "y": 517,
+          "width": 167.5,
+          "height": 46
+        },
+        "handCard": {
+          "x": 10,
+          "y": 391.46875,
+          "width": 82,
+          "height": 114.53125
+        },
+        "timer": {
+          "box": {
+            "x": 0,
+            "y": 361,
+            "width": 320,
+            "height": 9
+          },
+          "track": {
+            "x": 10,
+            "y": 364,
+            "width": 300,
+            "height": 3
+          },
+          "state": {
+            "topState": "calm",
+            "topValue": "20",
+            "bottomState": "calm",
+            "bottomValue": "20s",
+            "progress": "scaleX(1)"
+          }
+        }
+      },
+      {
+        "phase": "rival-thinking",
+        "speed": {
+          "x": 106,
+          "y": 47,
+          "width": 36,
+          "height": 36
+        },
+        "skip": {
+          "x": 60,
+          "y": 47,
+          "width": 42,
+          "height": 36
+        },
+        "board": {
+          "x": 0,
+          "y": 84,
+          "width": 320,
+          "height": 277
+        },
+        "header": {
+          "top": 6.5,
+          "bottom": 83
+        },
+        "action": {
+          "x": 142.5,
+          "y": 517,
+          "width": 167.5,
+          "height": 46
+        },
+        "handCard": {
+          "x": 10,
+          "y": 391.46875,
+          "width": 82,
+          "height": 114.53125
+        },
+        "timer": {
+          "box": {
+            "x": 0,
+            "y": 361,
+            "width": 320,
+            "height": 9
+          },
+          "track": {
+            "x": 10,
+            "y": 364,
+            "width": 300,
+            "height": 3
+          },
+          "state": {
+            "topState": "paused",
+            "topValue": "—",
+            "bottomState": "paused",
+            "bottomValue": "—",
+            "progress": "scaleX(0)"
+          }
+        }
+      },
+      {
+        "phase": "player-reveal",
+        "speed": {
+          "x": 106,
+          "y": 47,
+          "width": 36,
+          "height": 36
+        },
+        "skip": {
+          "x": 60,
+          "y": 47,
+          "width": 42,
+          "height": 36
+        },
+        "board": {
+          "x": 0,
+          "y": 84,
+          "width": 320,
+          "height": 277
+        },
+        "header": {
+          "top": 6.5,
+          "bottom": 83
+        },
+        "action": {
+          "x": 142.5,
+          "y": 517,
+          "width": 167.5,
+          "height": 46
+        },
+        "handCard": {
+          "x": 10,
+          "y": 391.46875,
+          "width": 82,
+          "height": 114.53125
+        },
+        "timer": {
+          "box": {
+            "x": 0,
+            "y": 361,
+            "width": 320,
+            "height": 9
+          },
+          "track": {
+            "x": 10,
+            "y": 364,
+            "width": 300,
+            "height": 3
+          },
+          "state": {
+            "topState": "paused",
+            "topValue": "—",
+            "bottomState": "paused",
+            "bottomValue": "—",
+            "progress": "scaleX(0)"
+          }
+        }
+      },
+      {
+        "phase": "effects",
+        "speed": {
+          "x": 106,
+          "y": 47,
+          "width": 36,
+          "height": 36
+        },
+        "skip": {
+          "x": 60,
+          "y": 47,
+          "width": 42,
+          "height": 36
+        },
+        "board": {
+          "x": 0,
+          "y": 84,
+          "width": 320,
+          "height": 277
+        },
+        "header": {
+          "top": 6.5,
+          "bottom": 83
+        },
+        "action": {
+          "x": 142.5,
+          "y": 517,
+          "width": 167.5,
+          "height": 46
+        },
+        "handCard": {
+          "x": 10,
+          "y": 391.46875,
+          "width": 82,
+          "height": 114.53125
+        },
+        "timer": {
+          "box": {
+            "x": 0,
+            "y": 361,
+            "width": 320,
+            "height": 9
+          },
+          "track": {
+            "x": 10,
+            "y": 364,
+            "width": 300,
+            "height": 3
+          },
+          "state": {
+            "topState": "paused",
+            "topValue": "—",
+            "bottomState": "paused",
+            "bottomValue": "—",
+            "progress": "scaleX(0)"
+          }
+        }
+      },
+      {
+        "phase": "round-result",
+        "speed": {
+          "x": 106,
+          "y": 47,
+          "width": 36,
+          "height": 36
+        },
+        "skip": {
+          "x": 60,
+          "y": 47,
+          "width": 42,
+          "height": 36
+        },
+        "board": {
+          "x": 0,
+          "y": 84,
+          "width": 320,
+          "height": 277
+        },
+        "header": {
+          "top": 6.5,
+          "bottom": 83
+        },
+        "action": {
+          "x": 142.5,
+          "y": 517,
+          "width": 167.5,
+          "height": 46
+        },
+        "handCard": {
+          "x": 10,
+          "y": 391.46875,
+          "width": 82,
+          "height": 114.53125
+        },
+        "timer": {
+          "box": {
+            "x": 0,
+            "y": 361,
+            "width": 320,
+            "height": 9
+          },
+          "track": {
+            "x": 10,
+            "y": 364,
+            "width": 300,
+            "height": 3
+          },
+          "state": {
+            "topState": "paused",
+            "topValue": "—",
+            "bottomState": "paused",
+            "bottomValue": "—",
+            "progress": "scaleX(0)"
+          }
+        }
+      }
+    ],
+    "skip": true,
+    "speed": true,
+    "clock": true,
+    "urgent": true,
+    "noTimer": true,
+    "pvp": true,
+    "errors": []
+  },
+  {
+    "width": 390,
+    "height": 844,
+    "touch": true,
+    "phases": [
+      {
+        "phase": "player-ready",
+        "speed": {
+          "x": 176,
+          "y": 47,
+          "width": 36,
+          "height": 36
+        },
+        "skip": null,
+        "board": {
+          "x": 0,
+          "y": 84,
+          "width": 390,
+          "height": 523
+        },
+        "header": {
+          "top": 6.5,
+          "bottom": 83
+        },
+        "action": {
+          "x": 142.5,
+          "y": 793,
+          "width": 237.5,
+          "height": 46
+        },
+        "handCard": {
+          "x": 10,
+          "y": 642.328125,
+          "width": 100,
+          "height": 139.671875
+        },
+        "timer": {
+          "box": {
+            "x": 0,
+            "y": 607,
+            "width": 390,
+            "height": 9
+          },
+          "track": {
+            "x": 10,
+            "y": 610,
+            "width": 370,
+            "height": 3
+          },
+          "state": {
+            "topState": "calm",
+            "topValue": "20",
+            "bottomState": "calm",
+            "bottomValue": "20s",
+            "progress": "scaleX(1)"
+          }
+        }
+      },
+      {
+        "phase": "rival-thinking",
+        "speed": {
+          "x": 176,
+          "y": 47,
+          "width": 36,
+          "height": 36
+        },
+        "skip": {
+          "x": 130,
+          "y": 47,
+          "width": 42,
+          "height": 36
+        },
+        "board": {
+          "x": 0,
+          "y": 84,
+          "width": 390,
+          "height": 523
+        },
+        "header": {
+          "top": 6.5,
+          "bottom": 83
+        },
+        "action": {
+          "x": 142.5,
+          "y": 793,
+          "width": 237.5,
+          "height": 46
+        },
+        "handCard": {
+          "x": 10,
+          "y": 642.328125,
+          "width": 100,
+          "height": 139.671875
+        },
+        "timer": {
+          "box": {
+            "x": 0,
+            "y": 607,
+            "width": 390,
+            "height": 9
+          },
+          "track": {
+            "x": 10,
+            "y": 610,
+            "width": 370,
+            "height": 3
+          },
+          "state": {
+            "topState": "paused",
+            "topValue": "—",
+            "bottomState": "paused",
+            "bottomValue": "—",
+            "progress": "scaleX(0)"
+          }
+        }
+      },
+      {
+        "phase": "player-reveal",
+        "speed": {
+          "x": 176,
+          "y": 47,
+          "width": 36,
+          "height": 36
+        },
+        "skip": {
+          "x": 130,
+          "y": 47,
+          "width": 42,
+          "height": 36
+        },
+        "board": {
+          "x": 0,
+          "y": 84,
+          "width": 390,
+          "height": 523
+        },
+        "header": {
+          "top": 6.5,
+          "bottom": 83
+        },
+        "action": {
+          "x": 142.5,
+          "y": 793,
+          "width": 237.5,
+          "height": 46
+        },
+        "handCard": {
+          "x": 10,
+          "y": 642.328125,
+          "width": 100,
+          "height": 139.671875
+        },
+        "timer": {
+          "box": {
+            "x": 0,
+            "y": 607,
+            "width": 390,
+            "height": 9
+          },
+          "track": {
+            "x": 10,
+            "y": 610,
+            "width": 370,
+            "height": 3
+          },
+          "state": {
+            "topState": "paused",
+            "topValue": "—",
+            "bottomState": "paused",
+            "bottomValue": "—",
+            "progress": "scaleX(0)"
+          }
+        }
+      },
+      {
+        "phase": "effects",
+        "speed": {
+          "x": 176,
+          "y": 47,
+          "width": 36,
+          "height": 36
+        },
+        "skip": {
+          "x": 130,
+          "y": 47,
+          "width": 42,
+          "height": 36
+        },
+        "board": {
+          "x": 0,
+          "y": 84,
+          "width": 390,
+          "height": 523
+        },
+        "header": {
+          "top": 6.5,
+          "bottom": 83
+        },
+        "action": {
+          "x": 142.5,
+          "y": 793,
+          "width": 237.5,
+          "height": 46
+        },
+        "handCard": {
+          "x": 10,
+          "y": 642.328125,
+          "width": 100,
+          "height": 139.671875
+        },
+        "timer": {
+          "box": {
+            "x": 0,
+            "y": 607,
+            "width": 390,
+            "height": 9
+          },
+          "track": {
+            "x": 10,
+            "y": 610,
+            "width": 370,
+            "height": 3
+          },
+          "state": {
+            "topState": "paused",
+            "topValue": "—",
+            "bottomState": "paused",
+            "bottomValue": "—",
+            "progress": "scaleX(0)"
+          }
+        }
+      },
+      {
+        "phase": "round-result",
+        "speed": {
+          "x": 176,
+          "y": 47,
+          "width": 36,
+          "height": 36
+        },
+        "skip": {
+          "x": 130,
+          "y": 47,
+          "width": 42,
+          "height": 36
+        },
+        "board": {
+          "x": 0,
+          "y": 84,
+          "width": 390,
+          "height": 523
+        },
+        "header": {
+          "top": 6.5,
+          "bottom": 83
+        },
+        "action": {
+          "x": 142.5,
+          "y": 793,
+          "width": 237.5,
+          "height": 46
+        },
+        "handCard": {
+          "x": 10,
+          "y": 642.328125,
+          "width": 100,
+          "height": 139.671875
+        },
+        "timer": {
+          "box": {
+            "x": 0,
+            "y": 607,
+            "width": 390,
+            "height": 9
+          },
+          "track": {
+            "x": 10,
+            "y": 610,
+            "width": 370,
+            "height": 3
+          },
+          "state": {
+            "topState": "paused",
+            "topValue": "—",
+            "bottomState": "paused",
+            "bottomValue": "—",
+            "progress": "scaleX(0)"
+          }
+        }
+      }
+    ],
+    "skip": true,
+    "speed": true,
+    "clock": true,
+    "urgent": true,
+    "noTimer": true,
+    "pvp": true,
+    "errors": []
+  }
+]

@@ -1,0 +1,28 @@
+.street-legends-review { min-height:100vh; padding:clamp(18px,3vw,48px); color:#f4ead5; background:radial-gradient(ellipse at 80% 0%,#2b2118 0,transparent 45%),#0c1010; }
+.street-legends-review__header { max-width:1600px; margin:0 auto 26px; border-bottom:1px solid #5f4f34; padding-bottom:22px; }
+.street-legends-review__header>p,.street-legends-review__decks>p { font:700 11px/1.4 monospace; letter-spacing:.22em; color:#a4c8cf; }
+.street-legends-review__header h1 { font-size:clamp(40px,5vw,78px); font-weight:900; line-height:.94; letter-spacing:-.04em; margin:15px 0 20px; }
+.street-legends-review__header em { color:#edd090; font-style:italic; }
+.street-legends-review__header>span { color:#c2beb4; font-size:14px; }
+.street-legends-review__groups { display:flex; flex-wrap:wrap; gap:8px; max-width:1600px; margin:0 auto 24px; }
+.street-legends-review__groups button,.street-legends-review__note button { border:1px solid #65543a; color:#dfd5bf; background:#141b1b; padding:11px 14px; font-size:11px; font-weight:800; letter-spacing:.04em; min-height:42px; }
+.street-legends-review__groups button[aria-pressed=true] { color:#1c1812; background:#e8c87f; border-color:#e8c87f; }
+.street-legends-review__cards { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:28px 20px; max-width:1600px; margin:auto; }
+.street-legends-review__card { aspect-ratio:2/3; width:100%; }
+.street-legends-review__card>.card-3d-wrapper { height:100%; }
+.street-legends-review__note { margin:14px 2px 0; }
+.street-legends-review__note strong { display:block; font-size:15px; color:#ead090; }
+.street-legends-review__note>span { display:block; margin-top:4px; font:11px/1.5 monospace; color:#9cd4db; }
+.street-legends-review__note p { color:#c2beb6; font-size:12px; line-height:1.65; margin:9px 0 12px; }
+.street-legends-review__note button { background:transparent; padding:8px 0; border:0; color:#e7cb8c; text-align:left; }
+.street-legends-review__decks { max-width:1600px; margin:50px auto 0; padding-top:25px; border-top:1px solid #5f4f34; }
+.street-legends-review__decks h2 { font-size:clamp(26px,4vw,40px); font-weight:900; margin:7px 0 18px; }
+.street-legends-review__decks h3 { font-size:18px; font-weight:900; color:#ebcc86; margin:20px 0; }
+.street-legends-review__crew { display:grid; grid-template-columns:repeat(10,minmax(0,1fr)); gap:8px; }
+.street-legends-review__crew>div { aspect-ratio:2/3; min-width:0; }
+@media(min-width:1900px) { .street-legends-review__cards { grid-template-columns:repeat(6,minmax(0,1fr)); } }
+@media(max-width:1100px) { .street-legends-review__cards { grid-template-columns:repeat(3,minmax(0,1fr)); } .street-legends-review__crew { grid-template-columns:repeat(5,minmax(0,1fr)); } }
+@media(max-width:600px) { .street-legends-review__cards { grid-template-columns:repeat(2,minmax(0,1fr)); gap:24px 12px; } .street-legends-review__crew { grid-template-columns:repeat(2,minmax(0,1fr)); } .street-legends-review__groups button { font-size:10px; padding:10px; } }
+
+.street-legends-review[data-roster-group="beauty"] .street-legends-review__cards { grid-template-columns: repeat(2, minmax(0, 1fr)); max-width: 760px; }
+@media (max-width: 600px) { .street-legends-review[data-roster-group="beauty"] .street-legends-review__cards { grid-template-columns: minmax(0, 1fr); } }

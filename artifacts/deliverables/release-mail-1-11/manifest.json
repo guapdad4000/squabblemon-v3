@@ -1,0 +1,38 @@
+{
+  "status": "prepared-unpublished",
+  "version": "1.11",
+  "campaignId": "patch_1-11_b096c134b668c19b",
+  "gift": {
+    "softCurrency": 0,
+    "packTickets": 10,
+    "styleShards": 0
+  },
+  "audience": "All real player profiles; future players receive the letter on their next visit. Publish-time recipient counts stay frozen.",
+  "banner": {
+    "path": "artifacts/squabblemon/public/assets/events/street-legends-patch-1-11.webp",
+    "width": 2172,
+    "height": 724,
+    "sha256": "5561f1deca55752a4b2b9054c5ca55d5b16b055ac1f7e8e3ab1dedebf57ee46b",
+    "generator": "Built-in imagegen",
+    "source": "/home/falcon/.codex/generated_images/01a0fed0-9461-76a1-bdb2-a885962a8772/exec-91fa3dab-87e2-405e-9db9-b36fde4f240f.png"
+  },
+  "rulesVersion": 49,
+  "unpublishedRework": "Mythical Ms. Mary Mack — 15 Cents, 2/3 to 4/4",
+  "validation": {
+    "appChecks": 1822,
+    "bundleChecks": 5,
+    "balanceChecks": 8,
+    "maryChecks": 17,
+    "onlineChecks": 24,
+    "nativeDatabaseChecks": 10,
+    "releaseBrowserChecks": 13,
+    "maryResponsiveBrowserChecks": 4,
+    "build": "passed",
+    "mailPublished": false,
+    "ticketsCreditedToProduction": false,
+    "districtBrowserChecks": 16,
+    "netlifyReleaseGates": "passed"
+  },
+  "sourceBaseCommit": "1ba429cfd3a0fb330f4f0875abc3bf708110dbc1",
+  "maryCosmeticArtwork": "Fresh portrait and signature/emblem URLs; purchased cosmetic IDs preserved."
+}

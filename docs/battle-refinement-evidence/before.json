@@ -1,0 +1,36 @@
+{
+  "standard": {
+    "commits": 231,
+    "renderDurationMs": 1493.2999994754791,
+    "occupiedDistricts": 3,
+    "longTasks": 137,
+    "longTaskMs": 12503,
+    "sampledFrames": 1822,
+    "p95FrameMs": 66.60000000000218,
+    "droppedFrameRatio": 0.07793633369923161,
+    "boardCards": 12,
+    "minimumBoardCardWidth": 44.759033203125,
+    "minimumBoardCardHeight": 62.45226287841797,
+    "viewport": [
+      390,
+      844
+    ]
+  },
+  "reduced": {
+    "commits": 148,
+    "renderDurationMs": 920.3999999761581,
+    "occupiedDistricts": 3,
+    "longTasks": 71,
+    "longTaskMs": 5522,
+    "sampledFrames": 281,
+    "p95FrameMs": 100,
+    "droppedFrameRatio": 0.25622775800711745,
+    "boardCards": 12,
+    "minimumBoardCardWidth": 44.84375,
+    "minimumBoardCardHeight": 62.625,
+    "viewport": [
+      390,
+      844
+    ]
+  }
+}

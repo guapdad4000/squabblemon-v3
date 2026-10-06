@@ -1,0 +1,62 @@
+[
+  {
+    "file": "char37_chroma.mp4",
+    "time": 1,
+    "meanCompositeError": 0.31243257912733025,
+    "largeErrorFraction": 0,
+    "drawMs": [
+      0.5366666674613952,
+      0.6566666642824809
+    ]
+  },
+  {
+    "file": "char37_chroma.mp4",
+    "time": 2.5,
+    "meanCompositeError": 0.3797030182529118,
+    "largeErrorFraction": 0,
+    "drawMs": [
+      0.3433333357175191,
+      0.5099999984105428
+    ]
+  },
+  {
+    "file": "char37_chroma.mp4",
+    "time": 4,
+    "meanCompositeError": 0.5091548236235492,
+    "largeErrorFraction": 0.000016075102880658438,
+    "drawMs": [
+      0.27666666905085247,
+      0.5066666642824809
+    ]
+  },
+  {
+    "file": "char91_chroma.mp4",
+    "time": 1,
+    "meanCompositeError": 0.4191109333393845,
+    "largeErrorFraction": 0,
+    "drawMs": [
+      0.4300000031789144,
+      0.6233333309491476
+    ]
+  },
+  {
+    "file": "char91_chroma.mp4",
+    "time": 2.5,
+    "meanCompositeError": 0.3193211914824231,
+    "largeErrorFraction": 0,
+    "drawMs": [
+      0.4099999984105428,
+      0.6766666650772095
+    ]
+  },
+  {
+    "file": "char91_chroma.mp4",
+    "time": 4,
+    "meanCompositeError": 0.6018922602477202,
+    "largeErrorFraction": 0,
+    "drawMs": [
+      0.28666666746139524,
+      0.5166666666666667
+    ]
+  }
+]

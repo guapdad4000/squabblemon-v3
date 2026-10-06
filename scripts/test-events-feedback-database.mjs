@@ -90,8 +90,8 @@ async function verify(client) {
   const columns = await client.query("SELECT datetime_precision FROM information_schema.columns WHERE table_name='event_feedback' AND column_name='created_at'");
   if (columns.rows[0]?.datetime_precision !== 3) throw new Error("Feedback timestamp precision is not milliseconds.");
   const giftCheck = await client.query("SELECT pg_get_constraintdef(oid) AS definition FROM pg_constraint WHERE conrelid='patch_drafts'::regclass AND conname='patch_drafts_gift_check'");
-  if (!giftCheck.rows[0]?.definition.includes("soft_currency <= 100") || !giftCheck.rows[0]?.definition.includes("pack_tickets <= 1")) {
-    throw new Error("Patch gift database bounds are not 100 Clout and 1 ticket.");
+  if (!giftCheck.rows[0]?.definition.includes("soft_currency <= 100") || !giftCheck.rows[0]?.definition.includes("pack_tickets <= 10")) {
+    throw new Error("Patch gift database bounds are not 100 Clout and 10 tickets.");
   }
   const targetForeignKeys = await client.query("SELECT conname FROM pg_constraint WHERE conrelid='patch_delivery_targets'::regclass AND contype='f'");
   if (targetForeignKeys.rows.some(row => row.conname.includes("clerk_user_id"))) {

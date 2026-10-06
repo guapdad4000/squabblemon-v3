@@ -16,8 +16,8 @@ test('prepared patch notes fit the publication contract', () => {
     for (const line of [...patch.buffs, ...patch.changes]) assert.ok(line.trim() && line.length <= 500, line);
     const letter = [patch.version, patch.title, patch.overview, ...patch.buffs, ...patch.changes].join('\n');
     assert.ok(letter.length < 5500, `${patch.version} letter too long`);
-    assert.equal(patch.softCurrency, ['1.9', '1.10'].includes(patch.version) ? 0 : patch.version === '1.8' ? 50 : 100);
-    assert.equal(patch.packTickets, ['1.8', '1.9', '1.10'].includes(patch.version) ? 0 : 1);
+    assert.equal(patch.softCurrency, ['1.9', '1.10', '1.11'].includes(patch.version) ? 0 : patch.version === '1.8' ? 50 : 100);
+    assert.equal(patch.packTickets, patch.version === '1.11' ? 10 : ['1.8', '1.9', '1.10'].includes(patch.version) ? 0 : 1);
   }
   const versionParts = (version: string) => version.split('.').map(Number);
   assert.deepEqual([...versions], [...versions].sort((a, b) => {
@@ -74,4 +74,17 @@ test('editorial banner is version-and-art-bound with a valid bundled asset path'
   assert.deepEqual(house, PATCH_BANNERS['1.9']);
   assert.ok(existsSync(new URL(`../../public/${house!.path}`, import.meta.url)));
   assert.equal(getPatchBanner('1.9', 'triple-og-blue'), undefined);
+});
+
+test('Street Legends release carries ten tickets with a version-bound uncropped banner', () => {
+  const patch = PREPARED_PATCHES.find(item => item.version === '1.11');
+  assert.ok(patch);
+  assert.equal(patch.packTickets, 10);
+  assert.equal(patch.softCurrency, 0);
+  assert.ok(patch.changes.some(line => /Lash Tech is her own character/.test(line)));
+  const banner = getPatchBanner(patch.version, patch.artCardId);
+  assert.ok(banner);
+  assert.equal(banner.aspectRatio, '3 / 1');
+  assert.ok(existsSync(new URL(`../../public/${banner.path}`, import.meta.url)));
+  assert.equal(getPatchBanner('1.11', 'nail'), undefined);
 });

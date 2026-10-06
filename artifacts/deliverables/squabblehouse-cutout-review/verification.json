@@ -1,0 +1,98 @@
+[
+  {
+    "name": "desktop",
+    "width": 1280,
+    "height": 1000,
+    "errors": [],
+    "sources": [
+      {
+        "url": "http://127.0.0.1:4210/assets/characters/squabblehouse-cashier.webp?v=ef3af9de3fde38ba",
+        "width": 1086,
+        "height": 1448
+      },
+      {
+        "url": "http://127.0.0.1:4210/assets/characters/a-side-of-hands.webp?v=c8d7917a011cba82",
+        "width": 1668,
+        "height": 943
+      },
+      {
+        "url": "http://127.0.0.1:4210/assets/characters/squabblehouse-cashier.webp?v=ef3af9de3fde38ba",
+        "width": 1086,
+        "height": 1448
+      },
+      {
+        "url": "http://127.0.0.1:4210/assets/characters/a-side-of-hands.webp?v=c8d7917a011cba82",
+        "width": 1668,
+        "height": 943
+      },
+      {
+        "url": "http://127.0.0.1:4210/assets/characters/squabblehouse-cashier.webp?v=ef3af9de3fde38ba",
+        "width": 1086,
+        "height": 1448
+      },
+      {
+        "url": "http://127.0.0.1:4210/assets/characters/squabblehouse-cashier.webp?v=ef3af9de3fde38ba",
+        "width": 1086,
+        "height": 1448
+      },
+      {
+        "url": "http://127.0.0.1:4210/assets/characters/a-side-of-hands.webp?v=c8d7917a011cba82",
+        "width": 1668,
+        "height": 943
+      },
+      {
+        "url": "http://127.0.0.1:4210/assets/characters/a-side-of-hands.webp?v=c8d7917a011cba82",
+        "width": 1668,
+        "height": 943
+      }
+    ]
+  },
+  {
+    "name": "mobile",
+    "width": 390,
+    "height": 844,
+    "errors": [],
+    "sources": [
+      {
+        "url": "http://127.0.0.1:4210/assets/characters/squabblehouse-cashier.webp?v=ef3af9de3fde38ba",
+        "width": 1086,
+        "height": 1448
+      },
+      {
+        "url": "http://127.0.0.1:4210/assets/characters/a-side-of-hands.webp?v=c8d7917a011cba82",
+        "width": 1668,
+        "height": 943
+      },
+      {
+        "url": "http://127.0.0.1:4210/assets/characters/squabblehouse-cashier.webp?v=ef3af9de3fde38ba",
+        "width": 1086,
+        "height": 1448
+      },
+      {
+        "url": "http://127.0.0.1:4210/assets/characters/a-side-of-hands.webp?v=c8d7917a011cba82",
+        "width": 1668,
+        "height": 943
+      },
+      {
+        "url": "http://127.0.0.1:4210/assets/characters/squabblehouse-cashier.webp?v=ef3af9de3fde38ba",
+        "width": 1086,
+        "height": 1448
+      },
+      {
+        "url": "http://127.0.0.1:4210/assets/characters/squabblehouse-cashier.webp?v=ef3af9de3fde38ba",
+        "width": 1086,
+        "height": 1448
+      },
+      {
+        "url": "http://127.0.0.1:4210/assets/characters/a-side-of-hands.webp?v=c8d7917a011cba82",
+        "width": 1668,
+        "height": 943
+      },
+      {
+        "url": "http://127.0.0.1:4210/assets/characters/a-side-of-hands.webp?v=c8d7917a011cba82",
+        "width": 1668,
+        "height": 943
+      }
+    ]
+  }
+]

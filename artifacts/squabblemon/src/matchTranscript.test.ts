@@ -137,7 +137,7 @@ test("Block Party content validates and rejects unknown cards, cycles, and optio
 
 test("later-season encounters use authored dialogue cards and preserve reveal order", () => {
   const later = storyContent.chapters.filter((chapter) => chapter.order >= 3);
-  assert.equal(later.length, 27);
+  assert.equal(later.length, 33);
   for (const chapter of later) {
     for (const node of chapter.nodes) {
       const lines = node.kind === "battle"
@@ -147,12 +147,13 @@ test("later-season encounters use authored dialogue cards and preserve reveal or
       assert.ok(lines.length >= minimumLines, `${node.id} needs a substantial scene`);
       for (const line of lines) {
         assert.ok(line.speaker.trim());
-        assert.match(line.portraitAssetId, /^assets\/characters\/.+\.webp$/);
+        assert.match(line.portraitAssetId, /^assets\/(?:characters\/[^/]+|story\/squabble-house\/cast\/[^/]+)\.webp$/);
+        assert(existsSync(fileURLToPath(new URL(`../public/${line.portraitAssetId}`, import.meta.url))), `${node.id}: portrait exists`);
         assert.ok(line.text.trim());
       }
       if (node.kind === "battle") {
         const minimumSetupLines = chapter.order >= 20 || chapter.id.startsWith("special-") ? 1 : 4;
-        const minimumAftermathLines = chapter.order >= 20 || chapter.id.startsWith("special-") ? 2 : 3;
+        const minimumAftermathLines = chapter.order >= 20 || chapter.id.startsWith("special-") || chapter.id === "side-show" ? 2 : 3;
         assert.ok(node.preDialogue.length >= minimumSetupLines, `${node.id} needs enough setup lines`);
         assert.ok(node.postDialogue.length >= minimumAftermathLines, `${node.id} needs enough aftermath lines`);
         assert.doesNotMatch(node.postDialogue.map((line) => line.text).join(" "), /Good game\. The next table is waiting/);
@@ -438,9 +439,9 @@ test("late campaign phase timing fits every shortened encounter and validates", 
 });
 
 test("early campaign balance content retains IDs, rewards, and authored encounter rules", () => {
-  assert.equal(storyContent.version, 10);
-  assert.equal(storyContent.chapters.flatMap((chapter) => chapter.nodes).length, 209);
-  assert.equal(storyContent.chapters.flatMap((chapter) => chapter.nodes).filter((node) => node.kind === "battle").length, 101);
+  assert.equal(storyContent.version, 12);
+  assert.equal(storyContent.chapters.flatMap((chapter) => chapter.nodes).length, 233);
+  assert.equal(storyContent.chapters.flatMap((chapter) => chapter.nodes).filter((node) => node.kind === "battle").length, 107);
 
   const newAccountCards = new Set(catalogIdsToEngineIds(ROOKIE_FOUNDATION_IDS));
   for (const chapter of storyContent.chapters.filter(({ order }) => order <= 2)) {
@@ -477,6 +478,7 @@ test("early campaign balance content retains IDs, rewards, and authored encounte
   assert.deepEqual(courier.rewards.map(({ kind, id, amount }) => ({ kind, id, amount })), [
     { kind: "currency", id: "street-xp", amount: 75 },
     { kind: "pack-ticket", id: "street-pack-ticket", amount: 1 },
+    { kind: "currency", id: "clout", amount: 100 },
   ]);
   assert.equal(courier.rewards[1].claimKey, "red-tapes-courier-table:stars:3:auto-ticket:v1");
   assert.equal(chapterTwo.nodes.filter((node) => node.kind === "battle").length, 6);

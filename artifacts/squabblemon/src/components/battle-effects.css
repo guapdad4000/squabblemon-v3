@@ -20,7 +20,7 @@
 .fx-charge i { border-radius:50%; width:4px; height:4px; animation-name:fx-charge-particle; }
 .fx-burn { --fx-color:#fb923c; }
 .fx-burn i { animation-name:fx-ember; width:4px; height:7px; }
-.fx-shockwave { position:absolute; inset:5%; border:3px solid var(--fx-color); border-radius:50%; animation:fx-wave .65s ease-out both; }
+.fx-shockwave { position:absolute; inset:5%; border:1.5px solid var(--fx-color); border-radius:50%; animation:fx-wave .65s ease-out both; }
 .fx-slash { position:absolute; top:42%; left:-15%; width:130%; height:7%; background:#fff7ed; box-shadow:0 0 8px #fb923c,0 0 18px #ef4444; clip-path:polygon(0 50%,100% 0,86% 65%,0 100%); transform:rotate(-35deg); animation:fx-slash .34s ease-out both; }
 .fx-slash-second { top:62%; left:-8%; animation-delay:.08s; }
 .fx-scorch { position:absolute; inset:0; border:4px solid #ff6a18; box-shadow:inset 0 0 24px #ea580c,0 0 10px #f97316; background:linear-gradient(0deg,#431407bb,transparent 65%); clip-path:polygon(0 0,10% 6%,24% 0,42% 5%,64% 0,83% 7%,100% 0,95% 33%,100% 60%,94% 83%,100% 100%,69% 95%,35% 100%,0 94%,6% 65%,0 40%); animation:fx-scorch .85s ease-out both; }

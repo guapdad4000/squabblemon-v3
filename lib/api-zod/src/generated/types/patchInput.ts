@@ -47,7 +47,7 @@ export interface PatchInput {
   softCurrency?: number;
   /**
      * @minimum 0
-     * @maximum 1
+     * @maximum 10
      */
   packTickets?: number;
   /**

@@ -1,0 +1,81 @@
+Using fresh owned native PostgreSQL with independent connections; no external database is modified.
+# Subtest: card levels change at every XP threshold and stop at level 10
+ok 1 - card levels change at every XP threshold and stop at level 10
+# Subtest: earning XP reaches move eligibility without purchasing the next move tier
+ok 2 - earning XP reaches move eligibility without purchasing the next move tier
+# Subtest: all outcomes award the expected XP and cap rewards at the remaining XP
+ok 3 - all outcomes award the expected XP and cap rewards at the remaining XP
+# Subtest: card progression snapshots reject forged or unowned card ids
+ok 4 - card progression snapshots reject forged or unowned card ids
+# Subtest: card XP only changes unique participants present in the fade snapshot
+ok 5 - card XP only changes unique participants present in the fade snapshot
+# Subtest: a fade progression snapshot stays unchanged after live progression advances
+ok 6 - a fade progression snapshot stays unchanged after live progression advances
+# Subtest: fade upgrade snapshots reject forged, stale, and malformed upgrades
+ok 7 - fade upgrade snapshots reject forged, stale, and malformed upgrades
+# Subtest: reward snapshots carry the card balance version and reject older rules
+ok 8 - reward snapshots carry the card balance version and reject older rules
+# Subtest: stored JSONB key order does not invalidate a genuine progression snapshot
+ok 9 - stored JSONB key order does not invalidate a genuine progression snapshot
+# Subtest: story-earned fighters stay out of Street Packs until the story grants them
+ok 10 - story-earned fighters stay out of Street Packs until the story grants them
+# Subtest: new Squabblehouse cards are part of their regular rarity pools, not story rewards
+ok 11 - new Squabblehouse cards are part of their regular rarity pools, not story rewards
+# Subtest: published v7 rules disclose the authoritative independent rarity and bonus behavior
+ok 12 - published v7 rules disclose the authoritative independent rarity and bonus behavior
+# Subtest: rarity selection is independent of ownership and first-two protection stays in the rolled tier
+ok 13 - rarity selection is independent of ownership and first-two protection stays in the rolled tier
+# Subtest: same-pack exclusion restores a tier only after exhaustion
+ok 14 - same-pack exclusion restores a tier only after exhaustion
+# Subtest: an authored empty rarity tier fails explicitly
+ok 15 - an authored empty rarity tier fails explicitly
+# Subtest: bonus boundaries, amounts, pity, and exhausted style conversion match v7
+ok 16 - bonus boundaries, amounts, pity, and exhausted style conversion match v7
+# Subtest: ten-pull counts duplicate Rare+ gameplay pulls and never cosmetics
+ok 17 - ten-pull counts duplicate Rare+ gameplay pulls and never cosmetics
+# Subtest: forced Rare+ uses 80/15/4/1 rarity boundaries independent of ownership
+ok 18 - forced Rare+ uses 80/15/4/1 rarity boundaries independent of ownership
+# Subtest: effective rarity frequencies follow the fixed weights regardless of ownership
+ok 19 - effective rarity frequencies follow the fixed weights regardless of ownership
+# Subtest: future earned IDs remain intact while active rewards come from the current catalog
+ok 20 - future earned IDs remain intact while active rewards come from the current catalog
+# Subtest: character cosmetics debit only Style Shards, retain badges, and never change card strength
+ok 21 - character cosmetics debit only Style Shards, retain badges, and never change card strength
+# Subtest: purchases reject unowned fighters, insufficient funds, and unfinished character collections
+ok 22 - purchases reject unowned fighters, insufficient funds, and unfinished character collections
+# Subtest: base banner is included; paid scenes, finish and individual stickers require ownership
+ok 23 - base banner is included; paid scenes, finish and individual stickers require ownership
+# Subtest: database: retry-safe purchase and equip persist across reload without overwriting settings or earned badges
+ok 24 - database: retry-safe purchase and equip persist across reload without overwriting settings or earned badges
+# Subtest: every completed collection has real unique stickers and isolated purchase ownership
+ok 25 - every completed collection has real unique stickers and isolated purchase ownership
+# Subtest: new individual stickers mix with legacy stickers without repurchasing an owned pack
+ok 26 - new individual stickers mix with legacy stickers without repurchasing an owned pack
+# Subtest: owned sticker packs mix across banners while preserving per-character scenes
+ok 27 - owned sticker packs mix across banners while preserving per-character scenes
+# Subtest: fresh rookie crew solves the guided opening within the node ceiling
+ok 28 - fresh rookie crew solves the guided opening within the node ceiling
+# Subtest: OG Uncle boss keeps both phases and has a bounded fresh-roster win
+ok 29 - OG Uncle boss keeps both phases and has a bounded fresh-roster win
+# Subtest: Bar Fight keeps its center lock and has a bounded fresh-roster win
+ok 30 - Bar Fight keeps its center lock and has a bounded fresh-roster win
+# Subtest: Crown Open Entry keeps its guided length and has a bounded fresh-roster win
+ok 31 - Crown Open Entry keeps its guided length and has a bounded fresh-roster win
+# Subtest: Crown Hooper keeps its semifinal phase and has a bounded fresh-roster win
+ok 32 - Crown Hooper keeps its semifinal phase and has a bounded fresh-roster win
+# Subtest: Baby Momma's Terms has a bounded win with the owned rookie core crew
+ok 33 - Baby Momma's Terms has a bounded win with the owned rookie core crew
+# Subtest: Published Exhibition has a bounded win with the saved Dr Fade crew
+ok 34 - Published Exhibition has a bounded win with the saved Dr Fade crew
+# Subtest: Pledge Drive Final keeps its announced phases and has a bounded campaign-crew win
+ok 35 - Pledge Drive Final keeps its announced phases and has a bounded campaign-crew win
+# Subtest: suppressed presentation events preserve complete boss gameplay state
+ok 36 - suppressed presentation events preserve complete boss gameplay state
+# Subtest: Dead Air Soundcheck stays solvable within the existing budget with the campaign mentor crew
+ok 37 - Dead Air Soundcheck stays solvable within the existing budget with the campaign mentor crew
+# tests 37
+# pass 37
+# fail 0
+# cancelled 0
+# skipped 0
+# duration_ms 24251.971107

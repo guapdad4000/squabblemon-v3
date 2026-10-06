@@ -163,7 +163,8 @@ export default defineConfig({
         ? { 'react-dom/client': 'react-dom/profiling' }
         : {}),
     },
-    dedupe: ['react', 'react-dom'],
+    // Workspace API hooks and the app must share one query-provider context.
+    dedupe: ['react', 'react-dom', '@tanstack/react-query'],
   },
   root: path.resolve(import.meta.dirname),
   build: {

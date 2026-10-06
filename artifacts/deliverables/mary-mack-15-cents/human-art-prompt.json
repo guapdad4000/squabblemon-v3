@@ -1,0 +1,5 @@
+{
+  "prompt": "Background removal: isolate ONLY the woman in this reference. Erase the entire gray smoky halo and gradient background. Keep the woman\u2019s original black coat, silver buttons, face, hands and boots unchanged. All space outside the exact silhouette and all gaps between the coat tails must be completely transparent alpha=0. No haze, no smoke, no backdrop, no ground shadow. Deliver a clean production transparent character cutout.",
+  "reference": "/tmp/codex-clipboard-4750668c-186b-4975-bdfb-7818716478f8.png",
+  "transparent_background": true
+}

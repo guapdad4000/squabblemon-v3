@@ -1,0 +1,77 @@
+/* Keep a reserved Skip slot so playback controls never reflow between turns. */
+.battle-arena.battle-hud .battle-guidance > .min-w-0 { flex: 1; min-width: 0; }
+.battle-arena.battle-hud .battle-playback-controls { display: grid; grid-template-columns: 58px 44px; gap: 4px; width: 106px; min-height: 36px; flex: none; align-self: flex-start; align-items: start; }
+.battle-playback-controls[data-has-speed='false'] { grid-template-columns: 58px; width: 58px; }
+.battle-arena.battle-hud .battle-playback-controls .battle-speed-toggle { grid-column: 2; grid-row: 1; width: 100%; min-width: 0; margin: 0; padding-inline: 4px; }
+.battle-arena.battle-hud .battle-playback-controls .battle-fast-forward { grid-column: 1; grid-row: 1; width: 100%; justify-content: center; white-space: nowrap; }
+.battle-arena.battle-hud .battle-playback-controls[data-has-speed='false'] .battle-fast-forward { grid-column: 1; }
+
+/* Offline matches borrow the PvP portrait and clear identity hierarchy. */
+.battle-command-header--organized .battle-header-music {
+  display: flex; align-items: center; justify-content: flex-start; gap: 12px;
+  width: 100%; min-height: 44px; padding: 8px; border: 0;
+  border-radius: 6px; background: none; box-shadow: none;
+  font: 500 12px/1.3 var(--font-sans); color: #dce4ee;
+}
+.battle-command-header--organized .battle-header-music:hover { background: #ffffff0d; }
+.battle-command-header--organized .referee-clipboard > .battle-header-music { color: #28302a; text-shadow: none; }
+.battle-command-header--organized .referee-clipboard > .battle-header-music:hover { background: #151b1810; }
+.battle-command-header--organized .battle-tools__panel > .music-dialog { width: min(420px,calc(100vw - 24px)); }
+.battle-command-header--organized .battle-rival-avatar { width: 40px; height: 40px; }
+.battle-command-header--organized .battle-rival-avatar.is-thinking { border-color: #86d5ec; }
+@media (max-width: 600px) {
+  .battle-arena.battle-hud .battle-command-header--organized {
+    display: grid; flex: none; position: relative; z-index: 45;
+    grid-template-columns: minmax(0,1fr) 82px 58px 62px 36px;
+    grid-template-areas: 'rival rival rival round clock' 'cue controls claims energy tools';
+    grid-template-rows: 42px minmax(36px,auto); gap: 0 4px;
+    padding: max(5px,env(safe-area-inset-top)) 10px 1px;
+    background: linear-gradient(#070b12e8,#070b1220); text-shadow: var(--hud-shadow);
+    align-items: center;
+  }
+  .battle-command-header--organized:has(.battle-tools[open]) { z-index: 70 !important; }
+  .battle-arena.battle-hud .battle-command-header--organized :is(.battle-header,.battle-match-meta,.battle-guidance) { display: contents; }
+  .battle-arena.battle-hud .battle-command-header--organized .battle-rival { grid-area: rival; gap: 10px; min-width: 0; }
+  .battle-arena.battle-hud .battle-command-header--organized .battle-rival-avatar { width: 34px; height: 34px; border-width: 1px; }
+  .battle-arena.battle-hud .battle-command-header--organized .battle-rival-copy { min-width: 0; }
+  .battle-arena.battle-hud .battle-command-header--organized .battle-rival-copy .font-display { font-size: 13px; max-width: none; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .battle-arena.battle-hud .battle-command-header--organized .battle-rival-copy > :first-child { font-size: 7px; margin-bottom: 4px; letter-spacing: .1em; }
+  .battle-command-header--organized .battle-round { grid-area: round; position: relative; padding-top: 9px; gap: 4px; }
+  .battle-command-header--organized .battle-round::before { content: 'Round'; position: absolute; top: 0; font: 600 6px var(--font-sans); text-transform: uppercase; letter-spacing: .15em; color: #b1b6be; }
+  .battle-command-header--organized .battle-round > span { display: flex; align-items: baseline; justify-content: center; gap: 2px; font-size: 0; letter-spacing: 0; }
+  .battle-command-header--organized .battle-round b { font-size: 24px; margin: 0; }
+  .battle-command-header--organized .battle-round small { font-size: 8px; }
+  .battle-command-header--organized .battle-round__steps { gap: 3px; width: 62px; }
+  .battle-command-header--organized .battle-round__steps i { width: 7px; }
+  .battle-arena.battle-hud .battle-command-header--organized .turn-timer { grid-area: clock; justify-self: center; width: 36px; height: 36px; }
+  .battle-command-header--organized .battle-tools { grid-area: tools; justify-self: center; position: relative; }
+  .battle-arena.battle-hud .battle-command-header--organized .battle-tools summary { width: 44px; height: 36px; }
+  .battle-arena.battle-hud .battle-command-header--organized .battle-tools__panel { top: 100%; right: 0; }
+  .battle-arena.battle-hud .battle-command-header--organized .battle-rival-energy { grid-area: energy; justify-self: center; gap: 4px; }
+  .battle-arena.battle-hud .battle-command-header--organized .battle-rival-energy::before { content: 'Rival'; font: 600 6px var(--font-mono); text-transform: uppercase; letter-spacing: .06em; color: #b1c6ce; }
+  .battle-arena.battle-hud .battle-command-header--organized .battle-rival-energy strong { font-size: 16px; }
+  .battle-arena.battle-hud .battle-command-header--organized .battle-claims { grid-area: claims; justify-self: end; gap: 4px; font-size: 15px; }
+  .battle-arena.battle-hud .battle-command-header--organized .battle-claims b { font-size: 15px; }
+  .battle-command-header--organized .mobile-turn-cue { grid-area: cue; flex-direction: column; align-items: flex-start; gap: 3px; min-width: 0; padding-block: 5px; line-height: 1.2; }
+  .battle-command-header--organized .mobile-turn-cue b { font-size: 8px; letter-spacing: .06em; max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .battle-command-header--organized .mobile-turn-cue span { width: 100%; font-size: 9px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .battle-command-header--organized .battle-guidance > .min-w-0 { grid-area: cue; padding-block: 5px; }
+  .battle-command-header--organized .battle-guidance:not(:has(.mobile-turn-cue)) .battle-guidance-kicker { font-size: 7px; }
+  .battle-command-header--organized .battle-guidance:not(:has(.mobile-turn-cue)) .battle-guidance-message { font-size: 9px; line-height: 1.3; }
+  .battle-command-header--organized .battle-guidance > .min-w-0:not(:has(.guided-reading-cue,[data-testid='replay-controls'])) { width: 100%; overflow: hidden; }
+  .battle-command-header--organized .battle-phase-status { display: flex; gap: 3px; font-size: 7px; letter-spacing: .06em; }
+  .battle-command-header--organized .battle-phase-status b { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+  .battle-command-header--organized .battle-phase-status span { display: none; }
+  .battle-command-header--organized .battle-guidance > .min-w-0:not(:has(.guided-reading-cue,[data-testid='replay-controls'])) .battle-guidance-message { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; max-height: 12px; }
+  .battle-command-header--organized:has(.guided-reading-cue) .battle-guidance > .min-w-0 { grid-column: 1 / -1; grid-row: 3; }
+
+  .battle-arena.battle-hud .battle-command-header--organized .battle-playback-controls { grid-area: controls; justify-self: end; width: 82px; grid-template-columns: 42px 36px; }
+  .battle-command-header--organized .battle-playback-controls .battle-fast-forward { gap: 2px; padding: 4px 2px; font-size: 8px; }
+  .battle-command-header--organized .battle-playback-controls .battle-fast-forward svg { width: 12px; }
+  .battle-command-header--organized:has([data-testid='replay-controls']) .battle-guidance > .min-w-0 { grid-column: 1 / -1; grid-row: 3; }
+}
+
+/* Narrow desktop guidance keeps one line; round recaps and reading panels retain their space. */
+@media (min-width:601px) and (max-width:1000px) {
+  .battle-command-header--organized .battle-guidance > .min-w-0:not(:has(.round-recap,.guided-reading-cue,[data-testid='replay-controls'])) .battle-guidance-message { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+}

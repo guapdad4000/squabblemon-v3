@@ -1,7 +1,8 @@
 import type { PatchInput } from '@workspace/api-client-react';
+import streetLegendsRelease from './streetLegendsRelease.json' with { type: 'json' };
 
 /**
- * Ready-to-review notes for the passes shipped between September 27 and 29.
+ * Ready-to-review notes for shipped releases. Each remains a draft until reviewed.
  * They are only loaded into the private desk as drafts; nothing here publishes
  * or grants anything until an allowlisted admin previews and confirms each one.
  * Card numbers describe the live catalog (Motion / Hands) at the time of writing.
@@ -220,4 +221,5 @@ export const PREPARED_PATCHES: readonly PreparedPatch[] = [
     softCurrency: 0,
     packTickets: 0,
   },
+  streetLegendsRelease satisfies PreparedPatch,
 ];

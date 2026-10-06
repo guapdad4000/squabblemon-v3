@@ -1,3 +1,5 @@
+import { streetLegendsCards, streetLegendsRarities, streetLegendsUpgradeEffects, streetLegendsFactions } from './streetLegendsWave';
+import { musicIndustryWaveCards, musicIndustryRarities, musicIndustryUpgradeEffects, musicIndustryFactions, MUSIC_INDUSTRY_IDS, FITNESS_WAVE_IDS, MUSIC_CHARACTER_IDS, FITNESS_CHARACTER_IDS } from './musicIndustryWave';
 import { homecomingCards, homecomingRarities, homecomingUpgradeEffects } from './homecomingWave';
 import { applyRosterBalance } from './rosterBalance';
 import { applyCreativeCardKits } from './creativeReworks';
@@ -122,6 +124,8 @@ const upgradeEffects: Record<string, readonly AbilityUpgradeEffect[]> = {
   ...tripleOgUpgradeEffects,
   ...blockbusterWaveUpgradeEffects,
   ...squabblehouseUpgradeEffects,
+  ...streetLegendsUpgradeEffects,
+  ...musicIndustryUpgradeEffects,
   bossbabe: Array.from({ length: 3 }, () => ({ kind: "self-power" as const, amount: 1 as const, trigger: "base-success" as const })),
   scammer: Array.from({ length: 3 }, () => ({ kind: "self-power" as const, amount: 1 as const, trigger: "base-success" as const })),
   rastamon: [{ kind: "self-power", amount: 1, trigger: "base-success" }, { kind: "target-power", amount: 1, target: "friendly", trigger: "base-success" }, { kind: "self-power", amount: 1, trigger: "base-success" }],
@@ -277,6 +281,8 @@ export const cards: Record<string, Card> = {
   ...tripleOgCards,
   ...blockbusterWaveCards,
   ...squabblehouseWaveCards,
+  ...streetLegendsCards,
+  ...musicIndustryWaveCards,
   kyle: { id: 'kyle', name: 'KYLE', kind: 'character', type: 'Fire', cost: 4, power: 4, ability: 'Smile Bombs', effect: 'On Reveal: Plant 4 Smile Bombs in random enemy districts. At the start of the next round, each explodes for -2 Hands to one random enemy in its district. KYLE gains +1 Hands for every enemy hit, plus +1 more if that enemy is destroyed.', roles: ['Disruption', 'Growth'], artworkLayout: 'portrait', abilityUpgrades: upgrades('kyle', [['Good Company', 'Keep smiling.', 'Big Grin', 'Turn up the pressure.', 'Last Laugh', 'Make it count.']]), entryVfx: { accent: '#ffe02e' }, portraitAccent: '#ffe02e' },
   stockz: { id: 'stockz', name: 'STOCKZ', kind: 'character', type: 'Electric', cost: 3, power: 3, ability: 'Compound Interest', effect: 'Ongoing: After you play another character in any district, gain +1 Hand. This continues for the rest of the game.', roles: ['Growth', 'Combo'], artworkLayout: 'portrait', abilityUpgrades: upgrades('stockz', [['Seed Money', 'Build your position.', 'Reinvest', 'Let the gains compound.', 'Long Game', 'Stay invested.']]), entryVfx: { accent: '#8aff68' }, portraitAccent: '#8aff68' },
 };
@@ -317,6 +323,8 @@ export const decks: Deck[] = [
   { id: "vibes", name: "GOOD VIBES ONLY", archetype: "Sustain", accent: "CLEANSE", plan: "Cleanse, Protect, suppress hostile rules, and keep scaling pieces alive.", cards: ["rastamon", "wifey", "snow", "vibe", "hooper", "oink", "plug"], hero: "rastamon" },
   { id: "compound", name: "COMPOUND INTEREST", archetype: "Growth / Scaling", accent: "GROW", plan: "Invest early in STOCKZ and BUDDY, then freeze a rival threat while follow-up plays build late district value.", cards: ["cornball", "plug", "streamer", "rastamon", "gamer", "stockz", "snow", "buspass", "buddy", "cognac"], hero: "gamer" },
   { id: "voltage", name: "VOLTAGE IN MOTION", archetype: "Electric Tempo", accent: "CHARGE", plan: "Keep an Electric bond in hand, spread plays across districts, and turn clean sequencing into extra tempo.", cards: ["batteryback", "circuitcaptain", "wiretap", "livewire", "stockz", "bossbabe", "plug", "streamer", "techbro", "bikelife"], hero: "circuit-captain" },
+  { id: 'music-industry', name: 'WHO GOT THE AUX', archetype: 'Music / Sequencing', accent: 'PERFORM', plan: 'Soundcheck a second stage, perform across districts, protect the artist, Spinback one entrance, and Pass the Torch into the finish.', cards: [...MUSIC_INDUSTRY_IDS], hero: 'the-og-rap-legend' },
+  { id: 'fitness-circuit', name: 'ONE MORE REP', archetype: 'Fitness / Movement', accent: 'TRAIN', plan: 'Train a circuit across three districts, recover actual damage, and earn a bounded comeback after an athlete falls.', cards: ['failedathlete', 'fitness-girl', 'fitness-bro', 'personal-trainer', 'lash-tech', 'apartment-maintenance-sage', 'yn-atv-lord', 'hooper', 'sportsprodigy', 'demon-trainer'], hero: 'demon-trainer' },
   { id: "squabblehouse-shift", name: "SQUABBLEHOUSE SHIFT", archetype: "Staff & Support", accent: "SHIFT", plan: "Bring the diner staff together across all three districts for Waffle Warlord, while Bus Boy clears a lane, Cashier pins a threat, and A Side of Hands serves both sides. Teknician echoes staff reveals and Janitor reverses attacks. Dogs and Triple OGs belong in gang decks.", cards: ["squabble-house-manager", "squabblehouse-bus-boy", "squabblehouse-cashier", "squabblehouse-security", "squabblehouse-teknician", "griddle-master", "inmate-reformed", "janitor", "waffle-warlord", "sideofhands"], hero: "squabblehouse-security" },
 ].map(deck => ({ ...deck, cards: completeEngineCrew(deck.cards) }));
 
@@ -338,6 +346,8 @@ export const rarityByEngineId = {
   ...tripleOgRarities,
   ...blockbusterWaveRarities,
   ...squabblehouseRarityById,
+  ...streetLegendsRarities,
+  ...musicIndustryRarities,
   // City Legends overrides: four utility focused legends sit below the Mythical finishers.
   dragonflyjones: "Legendary",
   tron: "Legendary",
@@ -413,6 +423,8 @@ const factionByEngineId: Record<string, string> = {
   lola: "Old Heads Know", repoman: "Around the Block", madhatter: "Wonderland",
   ...Object.fromEntries(Object.entries(blockbusterWaveCards).map(([id,c]) => [id,c.kind === "blockbuster" ? "Blockbusters" : "Block Party"])),
   ...squabblehouseFactionById,
+  ...streetLegendsFactions,
+  ...musicIndustryFactions,
   ...Object.fromEntries(Object.keys(afterHoursWaveCards).map(id => [id, 'After Hours'])),
   ...Object.fromEntries(Object.keys(elementalBondWaveCards).map(id => [id, 'Elemental Bonds'])),
   ...sideOzWaveFactions,
@@ -512,6 +524,9 @@ export const cardCatalog: CatalogCard[] = Object.entries(cards).map(
       .map((deck) => deck.id).concat(Object.hasOwn(neighborhoodWaveCards, engineId) ? ['neighborhood'] : [],
         squabblehouseStaffCardIds.has(engineId) ? ['Squabblehouse'] : [],
         ['cane-corso-red', 'blue-nose-pit'].includes(engineId) ? ['OG-support'] : [],
+        MUSIC_CHARACTER_IDS.includes(engineId) ? ['Music Industry'] : [],
+        FITNESS_CHARACTER_IDS.includes(engineId) ? ['Fitness'] : [],
+        Object.hasOwn(streetLegendsCards, engineId) ? [engineId === 'lash-tech' ? 'Beauty' : 'Street Legends'] : [],
         Object.hasOwn(sideOzWaveCards, engineId) ? ['side-oz', sideOzWaveFactions[engineId] === 'Red Side' ? 'red-side'
           : sideOzWaveFactions[engineId] === 'Blue Side' ? 'blue-side' : 'the-wiz'] : []),
     acquisitionSources: sourceByEngineId[engineId] ?? (["barber", "bottle", "sneaker", "church", "landlord", "carmeet", "promoter", "nail", "og", "delivery"].includes(engineId) ? ["City Never Sleeps"] : ["Street Packs"]),

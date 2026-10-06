@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
+import { fileURLToPath } from 'node:url';
 import { existsSync, readFileSync } from 'node:fs';
 import { execFileSync, spawnSync } from 'node:child_process';
 import { playTutorialSequence, rookieRoadCues, tutorialClipsForText, tutorialScript } from './tutorialVoice';
@@ -81,9 +82,9 @@ test('expanded recordings match decoded exports and decode completely when tools
     const duration = take.end - take.start;
     for (const extension of ['ogg', 'm4a']) {
       const file = new URL(`../../public/audio/voice/dr-fade/tutorial/${take.id}.${extension}`, import.meta.url);
-      const decoded = Number(execFileSync('ffprobe', ['-v', 'error', '-show_entries', 'format=duration', '-of', 'csv=p=0', file.pathname], { encoding: 'utf8' }).trim());
+      const decoded = Number(execFileSync('ffprobe', ['-v', 'error', '-show_entries', 'format=duration', '-of', 'csv=p=0', fileURLToPath(file)], { encoding: 'utf8' }).trim());
       assert.ok(Math.abs(decoded - duration) < .22, `${take.id}.${extension}: ${decoded}s vs ${duration}s`);
-      execFileSync('ffmpeg', ['-v', 'error', '-xerror', '-i', file.pathname, '-f', 'null', '-'], { stdio: 'pipe' });
+      execFileSync('ffmpeg', ['-v', 'error', '-xerror', '-i', fileURLToPath(file), '-f', 'null', '-'], { stdio: 'pipe' });
     }
   }
 });

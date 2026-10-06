@@ -133,6 +133,12 @@
   left: -50%;
   width: 200%;
 }
+/* Keep the landscape Side of Hands strike above the card caption. */
+.collector-card[data-card-id="a-side-of-hands"] .collector-portrait {
+  bottom: 20%;
+  height: 70%;
+  object-position: center;
+}
 .collector-card--inspector h4 { font-size: clamp(14px, 9cqw, 30px); }
 .collector-card--long-name h4 { overflow-wrap: anywhere; }
 .collector-card--wide-word { container-type: inline-size; }

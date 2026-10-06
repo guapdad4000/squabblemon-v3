@@ -1,0 +1,62 @@
+{
+  "tabletCases": 40,
+  "rotations": 4,
+  "desktopCases": 15,
+  "storyCases": 7,
+  "regressions": 3,
+  "fixtureValidation": 2,
+  "storyArtwork": [
+    {
+      "encounter": "red-tapes-side-eye-security",
+      "width": 1920,
+      "height": 1080,
+      "source": "layered/red-court.webp",
+      "fit": "cover"
+    },
+    {
+      "encounter": "red-tapes-side-eye-security",
+      "width": 3440,
+      "height": 1440,
+      "source": "layered/red-court.webp",
+      "fit": "cover"
+    },
+    {
+      "encounter": "red-tapes-side-eye-security",
+      "width": 390,
+      "height": 844,
+      "source": "venues/red-fence-night-court.webp",
+      "fit": "contain"
+    },
+    {
+      "encounter": "red-tapes-side-eye-security",
+      "width": 768,
+      "height": 1024,
+      "source": "venues/red-fence-night-court.webp",
+      "fit": "cover"
+    },
+    {
+      "encounter": "red-tapes-side-eye-security",
+      "width": 1024,
+      "height": 768,
+      "source": "layered/red-court.webp",
+      "fit": "cover"
+    },
+    {
+      "encounter": "welcome-to-the-block",
+      "width": 1920,
+      "height": 1080,
+      "source": "layered/corner-store.webp",
+      "fit": "cover"
+    },
+    {
+      "encounter": "s2-rooftop-demo-table",
+      "width": 1920,
+      "height": 1080,
+      "source": "story/theater/rooftop.webp",
+      "fit": "cover"
+    }
+  ],
+  "battleUiTestsPassed": 69,
+  "productionBuild": "passed",
+  "entryBundleBudgets": "passed"
+}

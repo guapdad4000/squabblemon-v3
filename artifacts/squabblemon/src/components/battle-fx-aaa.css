@@ -10,7 +10,7 @@
 @keyframes attack-comet { from { stroke-dashoffset: .1; opacity: 1; } 92% { opacity: 1; } to { stroke-dashoffset: -1; opacity: .2; } }
 
 .attack-hit .attack-flash { fill: #fff; stroke: none; opacity: 0; transform-box: fill-box; transform-origin: center; animation: attack-flash calc(220ms / var(--presentation-speed, 1)) ease-out both; }
-.attack-hit .attack-star { fill: var(--attack-color); stroke: #fff; stroke-width: 3; stroke-linejoin: round; transform-box: fill-box; transform-origin: center; animation: attack-star calc(460ms / var(--presentation-speed, 1)) cubic-bezier(.2,1.6,.4,1) both; filter: drop-shadow(0 0 10px var(--attack-color)); }
+.attack-hit .attack-star { fill: var(--attack-color); stroke: #fff; stroke-width: 1.25; stroke-linejoin: round; transform-box: fill-box; transform-origin: center; animation: attack-star calc(460ms / var(--presentation-speed, 1)) cubic-bezier(.2,1.6,.4,1) both; filter: drop-shadow(0 0 10px var(--attack-color)); }
 .attack-hit .attack-spark { stroke: #fff; stroke-width: 3; stroke-linecap: round; stroke-dasharray: 18 80; stroke-dashoffset: 18; animation: attack-spark calc(380ms / var(--presentation-speed, 1)) calc(30ms / var(--presentation-speed, 1)) ease-out both; filter: drop-shadow(0 0 4px var(--attack-color)); }
 @keyframes attack-flash { 0% { opacity: .95; transform: scale(.4); } 100% { opacity: 0; transform: scale(1.35); } }
 @keyframes attack-star { 0% { opacity: 0; transform: scale(.2) rotate(-20deg); } 30% { opacity: 1; transform: scale(1.15) rotate(4deg); } 70% { opacity: .9; transform: scale(.95) rotate(0); } 100% { opacity: 0; transform: scale(1.25) rotate(8deg); } }
@@ -18,7 +18,7 @@
 .kind-fire .attack-hit .attack-star { fill: #ff7a1a; }
 .kind-water .attack-hit .attack-star { fill: #7ee8fa; }
 .kind-blocked .attack-hit :is(.attack-star, .attack-spark, .attack-flash) { display: none; }
-.intensity-squabble .attack-hit .attack-star { animation-duration: calc(640ms / var(--presentation-speed, 1)); stroke-width: 4; }
+.intensity-squabble .attack-hit .attack-star { animation-duration: calc(640ms / var(--presentation-speed, 1)); stroke-width: 1.75; }
 .intensity-squabble .attack-beam-glow { stroke-width: 28; opacity: .4; }
 .intensity-squabble .attack-comet { stroke-width: 16; }
 

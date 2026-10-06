@@ -1,0 +1,1964 @@
+{
+  "generatedAt": "2026-10-06T12:01:05.590Z",
+  "sourceHash": "9bbf0770bf077dc0e8b7837c6e07b959ef72a6093a776db16a088adfed8299e5",
+  "scriptHash": "5d541c0a66ad6e934105980040102cb70e7a23ea14c5f8e8a39476cdf6444786",
+  "rulesVersion": 47,
+  "balanceVersion": 47,
+  "counts": {
+    "catalog": 266,
+    "characters": 244,
+    "supports": 12,
+    "blockbusters": 10,
+    "newCharacters": 29,
+    "wavePortraits": 30
+  },
+  "games": 6888,
+  "failures": 0,
+  "crews": [
+    {
+      "id": "element-water",
+      "name": "Water",
+      "cardIds": [
+        "monsoonanchor",
+        "conductor",
+        "vibe",
+        "waterboy",
+        "laundry",
+        "alchy",
+        "icecream",
+        "stillwatermedic",
+        "riptidebruiser",
+        "watson"
+      ],
+      "games": 328,
+      "wins": 269,
+      "draws": 11,
+      "losses": 48,
+      "score": 0.836890243902439,
+      "byPolicy": {
+        "greedy": {
+          "games": 164,
+          "score": 0.8932926829268293
+        },
+        "seeded-legal": {
+          "games": 164,
+          "score": 0.7804878048780488
+        }
+      },
+      "motionCurve": [
+        3,
+        4,
+        2,
+        1,
+        2,
+        2,
+        3,
+        2,
+        1,
+        2
+      ],
+      "openingAffordable": 3
+    },
+    {
+      "id": "mushroom-plant",
+      "name": "Mushroom Garden",
+      "cardIds": [
+        "demario",
+        "luigion",
+        "gardener",
+        "sprout",
+        "rootnurse",
+        "canopykeeper",
+        "gardenwall",
+        "hair-stylist",
+        "stylist",
+        "black-cowboy"
+      ],
+      "games": 328,
+      "wins": 233,
+      "draws": 19,
+      "losses": 76,
+      "score": 0.739329268292683,
+      "byPolicy": {
+        "greedy": {
+          "games": 164,
+          "score": 0.8140243902439024
+        },
+        "seeded-legal": {
+          "games": 164,
+          "score": 0.6646341463414634
+        }
+      },
+      "motionCurve": [
+        2,
+        2,
+        1,
+        1,
+        2,
+        3,
+        4,
+        2,
+        2,
+        3
+      ],
+      "openingAffordable": 5
+    },
+    {
+      "id": "element-air",
+      "name": "Air",
+      "cardIds": [
+        "slipstream",
+        "promoter",
+        "captainjigga",
+        "honestthot",
+        "gust",
+        "crosswind",
+        "cloudbreak",
+        "ptang",
+        "ogdominican",
+        "cheshire"
+      ],
+      "games": 328,
+      "wins": 228,
+      "draws": 24,
+      "losses": 76,
+      "score": 0.7317073170731707,
+      "byPolicy": {
+        "greedy": {
+          "games": 164,
+          "score": 0.7957317073170732
+        },
+        "seeded-legal": {
+          "games": 164,
+          "score": 0.6676829268292683
+        }
+      },
+      "motionCurve": [
+        3,
+        3,
+        5,
+        1,
+        1,
+        2,
+        4,
+        3,
+        3,
+        2
+      ],
+      "openingAffordable": 2
+    },
+    {
+      "id": "element-light",
+      "name": "Light",
+      "cardIds": [
+        "abuela",
+        "church",
+        "nightmedic",
+        "foodz",
+        "drfade",
+        "pinaynurse",
+        "crossingguard",
+        "leroy",
+        "yasuke",
+        "homeless-wiseman"
+      ],
+      "games": 328,
+      "wins": 232,
+      "draws": 11,
+      "losses": 85,
+      "score": 0.7240853658536586,
+      "byPolicy": {
+        "greedy": {
+          "games": 164,
+          "score": 0.7621951219512195
+        },
+        "seeded-legal": {
+          "games": 164,
+          "score": 0.6859756097560976
+        }
+      },
+      "motionCurve": [
+        4,
+        3,
+        3,
+        3,
+        4,
+        2,
+        2,
+        3,
+        2,
+        4
+      ],
+      "openingAffordable": 0
+    },
+    {
+      "id": "element-electric",
+      "name": "Electric",
+      "cardIds": [
+        "circuitcaptain",
+        "piratedj",
+        "tron",
+        "plug",
+        "wiretap",
+        "batteryback",
+        "livewire",
+        "tinman",
+        "techbro",
+        "bossbabe"
+      ],
+      "games": 328,
+      "wins": 218,
+      "draws": 17,
+      "losses": 93,
+      "score": 0.6905487804878049,
+      "byPolicy": {
+        "greedy": {
+          "games": 164,
+          "score": 0.676829268292683
+        },
+        "seeded-legal": {
+          "games": 164,
+          "score": 0.7042682926829268
+        }
+      },
+      "motionCurve": [
+        4,
+        3,
+        3,
+        1,
+        2,
+        1,
+        3,
+        2,
+        3,
+        3
+      ],
+      "openingAffordable": 2
+    },
+    {
+      "id": "focus-wonderland",
+      "name": "Wonderland Return",
+      "cardIds": [
+        "alice",
+        "cheshire",
+        "queenofhearts",
+        "mrrabbit",
+        "dorothy",
+        "laundry",
+        "waterboy",
+        "redneck-evil",
+        "alchy",
+        "madhatter"
+      ],
+      "games": 328,
+      "wins": 203,
+      "draws": 26,
+      "losses": 99,
+      "score": 0.6585365853658537,
+      "byPolicy": {
+        "greedy": {
+          "games": 164,
+          "score": 0.7378048780487805
+        },
+        "seeded-legal": {
+          "games": 164,
+          "score": 0.5792682926829268
+        }
+      },
+      "motionCurve": [
+        2,
+        2,
+        3,
+        2,
+        2,
+        2,
+        1,
+        5,
+        2,
+        2
+      ],
+      "openingAffordable": 4
+    },
+    {
+      "id": "element-dark",
+      "name": "Dark",
+      "cardIds": [
+        "counter",
+        "gamer",
+        "gothkid",
+        "nerd",
+        "redpill",
+        "shonuff",
+        "queenofhearts",
+        "repoman",
+        "thefeds",
+        "chessregular"
+      ],
+      "games": 328,
+      "wins": 202,
+      "draws": 24,
+      "losses": 102,
+      "score": 0.6524390243902439,
+      "byPolicy": {
+        "greedy": {
+          "games": 164,
+          "score": 0.7469512195121951
+        },
+        "seeded-legal": {
+          "games": 164,
+          "score": 0.5579268292682927
+        }
+      },
+      "motionCurve": [
+        3,
+        3,
+        2,
+        3,
+        3,
+        3,
+        3,
+        4,
+        4,
+        3
+      ],
+      "openingAffordable": 1
+    },
+    {
+      "id": "starter-squabblehouse-shift",
+      "name": "SQUABBLEHOUSE SHIFT",
+      "cardIds": [
+        "squabble-house-manager",
+        "squabblehouse-bus-boy",
+        "squabblehouse-cashier",
+        "squabblehouse-security",
+        "squabblehouse-teknician",
+        "griddle-master",
+        "inmate-reformed",
+        "janitor",
+        "waffle-warlord",
+        "sideofhands"
+      ],
+      "games": 328,
+      "wins": 203,
+      "draws": 15,
+      "losses": 110,
+      "score": 0.6417682926829268,
+      "byPolicy": {
+        "greedy": {
+          "games": 164,
+          "score": 0.6737804878048781
+        },
+        "seeded-legal": {
+          "games": 164,
+          "score": 0.6097560975609756
+        }
+      },
+      "motionCurve": [
+        1,
+        1,
+        2,
+        3,
+        5,
+        3,
+        3,
+        3,
+        5,
+        2
+      ],
+      "openingAffordable": 3
+    },
+    {
+      "id": "focus-earth-tax",
+      "name": "Earth Tax and Finishers",
+      "cardIds": [
+        "landlord",
+        "bigzoey",
+        "stud",
+        "torta",
+        "concrete",
+        "mansamusa",
+        "johnhenry",
+        "partytitan",
+        "asphaltapostle",
+        "failedathlete"
+      ],
+      "games": 328,
+      "wins": 197,
+      "draws": 26,
+      "losses": 105,
+      "score": 0.6402439024390244,
+      "byPolicy": {
+        "greedy": {
+          "games": 164,
+          "score": 0.6890243902439024
+        },
+        "seeded-legal": {
+          "games": 164,
+          "score": 0.5914634146341463
+        }
+      },
+      "motionCurve": [
+        2,
+        3,
+        3,
+        2,
+        1,
+        4,
+        5,
+        6,
+        3,
+        3
+      ],
+      "openingAffordable": 3
+    },
+    {
+      "id": "focus-wave7-legends",
+      "name": "Wave 7 Legends",
+      "cardIds": [
+        "ashlee",
+        "captainjigga",
+        "counter",
+        "tayaty",
+        "youngbull",
+        "honestthot",
+        "buspass",
+        "soulfood",
+        "cognac",
+        "bustdown"
+      ],
+      "games": 328,
+      "wins": 191,
+      "draws": 22,
+      "losses": 115,
+      "score": 0.6158536585365854,
+      "byPolicy": {
+        "greedy": {
+          "games": 164,
+          "score": 0.7042682926829268
+        },
+        "seeded-legal": {
+          "games": 164,
+          "score": 0.5274390243902439
+        }
+      },
+      "motionCurve": [
+        5,
+        5,
+        3,
+        1,
+        2,
+        1,
+        0,
+        1,
+        1,
+        1
+      ],
+      "openingAffordable": 2
+    },
+    {
+      "id": "focus-demario-luigion",
+      "name": "Demario and Luigion",
+      "cardIds": [
+        "demario",
+        "luigion",
+        "rastamon",
+        "vibe",
+        "plug",
+        "bustdown",
+        "soulfood",
+        "black-cowboy",
+        "hair-stylist",
+        "stylist"
+      ],
+      "games": 328,
+      "wins": 187,
+      "draws": 24,
+      "losses": 117,
+      "score": 0.6067073170731707,
+      "byPolicy": {
+        "greedy": {
+          "games": 164,
+          "score": 0.5609756097560976
+        },
+        "seeded-legal": {
+          "games": 164,
+          "score": 0.6524390243902439
+        }
+      },
+      "motionCurve": [
+        2,
+        2,
+        2,
+        2,
+        1,
+        1,
+        1,
+        3,
+        2,
+        2
+      ],
+      "openingAffordable": 5
+    },
+    {
+      "id": "focus-air-bond",
+      "name": "Air Bond",
+      "cardIds": [
+        "honestthot",
+        "ashlee",
+        "captainjigga",
+        "roaster",
+        "bikelife",
+        "vibe",
+        "buspass",
+        "soulfood",
+        "cognac",
+        "bustdown"
+      ],
+      "games": 328,
+      "wins": 185,
+      "draws": 27,
+      "losses": 116,
+      "score": 0.6051829268292683,
+      "byPolicy": {
+        "greedy": {
+          "games": 164,
+          "score": 0.7560975609756098
+        },
+        "seeded-legal": {
+          "games": 164,
+          "score": 0.45426829268292684
+        }
+      },
+      "motionCurve": [
+        1,
+        5,
+        5,
+        3,
+        2,
+        2,
+        0,
+        1,
+        1,
+        1
+      ],
+      "openingAffordable": 2
+    },
+    {
+      "id": "starter-compound",
+      "name": "COMPOUND INTEREST",
+      "cardIds": [
+        "cornball",
+        "plug",
+        "streamer",
+        "rastamon",
+        "gamer",
+        "stockz",
+        "snow",
+        "buspass",
+        "buddy",
+        "cognac"
+      ],
+      "games": 328,
+      "wins": 180,
+      "draws": 20,
+      "losses": 128,
+      "score": 0.5792682926829268,
+      "byPolicy": {
+        "greedy": {
+          "games": 164,
+          "score": 0.5213414634146342
+        },
+        "seeded-legal": {
+          "games": 164,
+          "score": 0.6371951219512195
+        }
+      },
+      "motionCurve": [
+        1,
+        1,
+        2,
+        2,
+        3,
+        3,
+        3,
+        0,
+        3,
+        1
+      ],
+      "openingAffordable": 4
+    },
+    {
+      "id": "focus-wiz",
+      "name": "The Wiz",
+      "cardIds": [
+        "dorothy",
+        "scarecrow",
+        "tinman",
+        "oz",
+        "lion",
+        "passportbro",
+        "break",
+        "bboy",
+        "wickedwitch",
+        "flyingmonkeys"
+      ],
+      "games": 328,
+      "wins": 178,
+      "draws": 22,
+      "losses": 128,
+      "score": 0.5762195121951219,
+      "byPolicy": {
+        "greedy": {
+          "games": 164,
+          "score": 0.6646341463414634
+        },
+        "seeded-legal": {
+          "games": 164,
+          "score": 0.4878048780487805
+        }
+      },
+      "motionCurve": [
+        2,
+        2,
+        2,
+        4,
+        3,
+        3,
+        2,
+        2,
+        4,
+        4
+      ],
+      "openingAffordable": 3
+    },
+    {
+      "id": "focused-red-set",
+      "name": "Blood / Red Set",
+      "cardIds": [
+        "triple-og-red",
+        "block-spinner",
+        "redside1",
+        "ganger-red",
+        "cane-corso-red",
+        "initiation",
+        "redneck-evil",
+        "redside5",
+        "cognac",
+        "bustdown"
+      ],
+      "games": 328,
+      "wins": 172,
+      "draws": 30,
+      "losses": 126,
+      "score": 0.5701219512195121,
+      "byPolicy": {
+        "greedy": {
+          "games": 164,
+          "score": 0.5457317073170732
+        },
+        "seeded-legal": {
+          "games": 164,
+          "score": 0.5945121951219512
+        }
+      },
+      "motionCurve": [
+        4,
+        1,
+        1,
+        3,
+        2,
+        1,
+        5,
+        3,
+        1,
+        1
+      ],
+      "openingAffordable": 3
+    },
+    {
+      "id": "element-plant",
+      "name": "Plant",
+      "cardIds": [
+        "canopykeeper",
+        "ashlee",
+        "gardener",
+        "sprout",
+        "rootnurse",
+        "gardenwall",
+        "streetapostle",
+        "homelesslegend",
+        "rastamon",
+        "lola"
+      ],
+      "games": 328,
+      "wins": 168,
+      "draws": 28,
+      "losses": 132,
+      "score": 0.5548780487804879,
+      "byPolicy": {
+        "greedy": {
+          "games": 164,
+          "score": 0.5396341463414634
+        },
+        "seeded-legal": {
+          "games": 164,
+          "score": 0.5701219512195121
+        }
+      },
+      "motionCurve": [
+        3,
+        5,
+        1,
+        1,
+        2,
+        4,
+        3,
+        4,
+        2,
+        3
+      ],
+      "openingAffordable": 3
+    },
+    {
+      "id": "starter-slide",
+      "name": "SLIDE THRU",
+      "cardIds": [
+        "cornball",
+        "bikelife",
+        "vibe",
+        "plug",
+        "snow",
+        "hooper",
+        "baby",
+        "buspass",
+        "soulfood",
+        "cognac"
+      ],
+      "games": 328,
+      "wins": 169,
+      "draws": 25,
+      "losses": 134,
+      "score": 0.5533536585365854,
+      "byPolicy": {
+        "greedy": {
+          "games": 164,
+          "score": 0.6158536585365854
+        },
+        "seeded-legal": {
+          "games": 164,
+          "score": 0.49085365853658536
+        }
+      },
+      "motionCurve": [
+        1,
+        2,
+        2,
+        1,
+        3,
+        5,
+        4,
+        0,
+        1,
+        1
+      ],
+      "openingAffordable": 4
+    },
+    {
+      "id": "focused-blue-set",
+      "name": "Crip / Blue Set",
+      "cardIds": [
+        "triple-og-blue",
+        "look-out",
+        "blueside1",
+        "ganger-blue",
+        "blue-nose-pit",
+        "initiation",
+        "waterboy",
+        "alchy",
+        "cognac",
+        "bustdown"
+      ],
+      "games": 328,
+      "wins": 165,
+      "draws": 21,
+      "losses": 142,
+      "score": 0.5350609756097561,
+      "byPolicy": {
+        "greedy": {
+          "games": 164,
+          "score": 0.43597560975609756
+        },
+        "seeded-legal": {
+          "games": 164,
+          "score": 0.6341463414634146
+        }
+      },
+      "motionCurve": [
+        4,
+        1,
+        1,
+        2,
+        2,
+        1,
+        1,
+        2,
+        1,
+        1
+      ],
+      "openingAffordable": 4
+    },
+    {
+      "id": "element-earth",
+      "name": "Earth",
+      "cardIds": [
+        "torta",
+        "concrete",
+        "mansamusa",
+        "johnhenry",
+        "asphaltapostle",
+        "landlord",
+        "bigzoey",
+        "stud",
+        "bouncer",
+        "lion"
+      ],
+      "games": 328,
+      "wins": 164,
+      "draws": 22,
+      "losses": 142,
+      "score": 0.5335365853658537,
+      "byPolicy": {
+        "greedy": {
+          "games": 164,
+          "score": 0.6432926829268293
+        },
+        "seeded-legal": {
+          "games": 164,
+          "score": 0.42378048780487804
+        }
+      },
+      "motionCurve": [
+        2,
+        1,
+        4,
+        5,
+        3,
+        2,
+        3,
+        3,
+        4,
+        3
+      ],
+      "openingAffordable": 2
+    },
+    {
+      "id": "focus-counterplay-coherent",
+      "name": "Counterplay — Dark Control",
+      "cardIds": [
+        "counter",
+        "gamer",
+        "gothkid",
+        "nerd",
+        "redpill",
+        "buddy",
+        "wifey",
+        "pinaynurse",
+        "plug",
+        "bustdown"
+      ],
+      "games": 328,
+      "wins": 167,
+      "draws": 13,
+      "losses": 148,
+      "score": 0.5289634146341463,
+      "byPolicy": {
+        "greedy": {
+          "games": 164,
+          "score": 0.43902439024390244
+        },
+        "seeded-legal": {
+          "games": 164,
+          "score": 0.6189024390243902
+        }
+      },
+      "motionCurve": [
+        3,
+        3,
+        2,
+        3,
+        3,
+        3,
+        4,
+        2,
+        1,
+        1
+      ],
+      "openingAffordable": 1
+    },
+    {
+      "id": "focus-poison-entry",
+      "name": "Poison Entry Punishment",
+      "cardIds": [
+        "bottle",
+        "colognecriminal",
+        "nail",
+        "mural",
+        "fein",
+        "simmy",
+        "bbldemon",
+        "roaster",
+        "plug",
+        "wifey"
+      ],
+      "games": 328,
+      "wins": 157,
+      "draws": 23,
+      "losses": 148,
+      "score": 0.5137195121951219,
+      "byPolicy": {
+        "greedy": {
+          "games": 164,
+          "score": 0.5701219512195121
+        },
+        "seeded-legal": {
+          "games": 164,
+          "score": 0.4573170731707317
+        }
+      },
+      "motionCurve": [
+        2,
+        3,
+        2,
+        2,
+        1,
+        4,
+        4,
+        3,
+        1,
+        4
+      ],
+      "openingAffordable": 4
+    },
+    {
+      "id": "element-poison",
+      "name": "Poison",
+      "cardIds": [
+        "bottle",
+        "nail",
+        "mural",
+        "fein",
+        "simmy",
+        "colognecriminal",
+        "seafoodassassin",
+        "godofhookah",
+        "buspass",
+        "soulfood"
+      ],
+      "games": 328,
+      "wins": 153,
+      "draws": 29,
+      "losses": 146,
+      "score": 0.510670731707317,
+      "byPolicy": {
+        "greedy": {
+          "games": 164,
+          "score": 0.524390243902439
+        },
+        "seeded-legal": {
+          "games": 164,
+          "score": 0.4969512195121951
+        }
+      },
+      "motionCurve": [
+        2,
+        2,
+        2,
+        1,
+        4,
+        3,
+        4,
+        4,
+        0,
+        1
+      ],
+      "openingAffordable": 4
+    },
+    {
+      "id": "focus-cellblock",
+      "name": "Cellblock Lane Sequence",
+      "cardIds": [
+        "inmate-crafty",
+        "inmate-boyfriend",
+        "inmate-informant",
+        "inmate-contraband",
+        "inmate-kingpin",
+        "lebron-james",
+        "bustdown",
+        "cognac",
+        "rastamon",
+        "wifey"
+      ],
+      "games": 328,
+      "wins": 155,
+      "draws": 23,
+      "losses": 150,
+      "score": 0.5076219512195121,
+      "byPolicy": {
+        "greedy": {
+          "games": 164,
+          "score": 0.5274390243902439
+        },
+        "seeded-legal": {
+          "games": 164,
+          "score": 0.4878048780487805
+        }
+      },
+      "motionCurve": [
+        2,
+        3,
+        3,
+        2,
+        1,
+        4,
+        1,
+        1,
+        2,
+        4
+      ],
+      "openingAffordable": 3
+    },
+    {
+      "id": "starter-voltage",
+      "name": "VOLTAGE IN MOTION",
+      "cardIds": [
+        "batteryback",
+        "circuitcaptain",
+        "wiretap",
+        "livewire",
+        "stockz",
+        "bossbabe",
+        "plug",
+        "streamer",
+        "techbro",
+        "bikelife"
+      ],
+      "games": 328,
+      "wins": 137,
+      "draws": 39,
+      "losses": 152,
+      "score": 0.4771341463414634,
+      "byPolicy": {
+        "greedy": {
+          "games": 164,
+          "score": 0.3628048780487805
+        },
+        "seeded-legal": {
+          "games": 164,
+          "score": 0.5914634146341463
+        }
+      },
+      "motionCurve": [
+        1,
+        4,
+        2,
+        3,
+        3,
+        3,
+        1,
+        2,
+        3,
+        2
+      ],
+      "openingAffordable": 2
+    },
+    {
+      "id": "street-legends-growth",
+      "name": "Street Legends — Growth and Routes",
+      "cardIds": [
+        "mr-mc-hands",
+        "og-uncle-harley-davidson",
+        "pimp-swookie",
+        "gas-station-window-wiper",
+        "bail-bonds-auntie",
+        "ms-mary-mack",
+        "landlord",
+        "bottle",
+        "nail",
+        "manman"
+      ],
+      "games": 328,
+      "wins": 145,
+      "draws": 22,
+      "losses": 161,
+      "score": 0.47560975609756095,
+      "byPolicy": {
+        "greedy": {
+          "games": 164,
+          "score": 0.4451219512195122
+        },
+        "seeded-legal": {
+          "games": 164,
+          "score": 0.5060975609756098
+        }
+      },
+      "motionCurve": [
+        4,
+        4,
+        3,
+        1,
+        2,
+        3,
+        2,
+        2,
+        2,
+        3
+      ],
+      "openingAffordable": 2
+    },
+    {
+      "id": "cellblock-pressure",
+      "name": "Cellblock Pressure",
+      "cardIds": [
+        "inmate-crafty",
+        "inmate-boyfriend",
+        "inmate-informant",
+        "inmate-contraband",
+        "lebron-james",
+        "bustdown",
+        "cognac",
+        "tinman",
+        "counter",
+        "roaster"
+      ],
+      "games": 328,
+      "wins": 137,
+      "draws": 26,
+      "losses": 165,
+      "score": 0.4573170731707317,
+      "byPolicy": {
+        "greedy": {
+          "games": 164,
+          "score": 0.3780487804878049
+        },
+        "seeded-legal": {
+          "games": 164,
+          "score": 0.5365853658536586
+        }
+      },
+      "motionCurve": [
+        2,
+        3,
+        3,
+        2,
+        4,
+        1,
+        1,
+        2,
+        3,
+        3
+      ],
+      "openingAffordable": 2
+    },
+    {
+      "id": "starter-combo",
+      "name": "WHO YOU KNOW",
+      "cardIds": [
+        "cornball",
+        "plug",
+        "streamer",
+        "gamer",
+        "techbro",
+        "bossbabe",
+        "wifey",
+        "buspass",
+        "stockz",
+        "sneaker"
+      ],
+      "games": 328,
+      "wins": 137,
+      "draws": 20,
+      "losses": 171,
+      "score": 0.4481707317073171,
+      "byPolicy": {
+        "greedy": {
+          "games": 164,
+          "score": 0.3597560975609756
+        },
+        "seeded-legal": {
+          "games": 164,
+          "score": 0.5365853658536586
+        }
+      },
+      "motionCurve": [
+        1,
+        1,
+        2,
+        3,
+        3,
+        3,
+        4,
+        0,
+        3,
+        3
+      ],
+      "openingAffordable": 3
+    },
+    {
+      "id": "starter-receipts",
+      "name": "RECEIPTS",
+      "cardIds": [
+        "cornball",
+        "roaster",
+        "nerd",
+        "snow",
+        "plug",
+        "baby",
+        "hooper",
+        "buspass",
+        "soulfood",
+        "cognac"
+      ],
+      "games": 328,
+      "wins": 132,
+      "draws": 19,
+      "losses": 177,
+      "score": 0.43140243902439024,
+      "byPolicy": {
+        "greedy": {
+          "games": 164,
+          "score": 0.5182926829268293
+        },
+        "seeded-legal": {
+          "games": 164,
+          "score": 0.3445121951219512
+        }
+      },
+      "motionCurve": [
+        1,
+        3,
+        3,
+        3,
+        1,
+        4,
+        5,
+        0,
+        1,
+        1
+      ],
+      "openingAffordable": 2
+    },
+    {
+      "id": "focus-cellblock-classic",
+      "name": "Cellblock — No Kingpin",
+      "cardIds": [
+        "inmate-crafty",
+        "inmate-boyfriend",
+        "inmate-informant",
+        "inmate-contraband",
+        "lebron-james",
+        "bustdown",
+        "cognac",
+        "rastamon",
+        "wifey",
+        "stud"
+      ],
+      "games": 328,
+      "wins": 124,
+      "draws": 25,
+      "losses": 179,
+      "score": 0.41615853658536583,
+      "byPolicy": {
+        "greedy": {
+          "games": 164,
+          "score": 0.3719512195121951
+        },
+        "seeded-legal": {
+          "games": 164,
+          "score": 0.4603658536585366
+        }
+      },
+      "motionCurve": [
+        2,
+        3,
+        3,
+        2,
+        4,
+        1,
+        1,
+        2,
+        4,
+        3
+      ],
+      "openingAffordable": 2
+    },
+    {
+      "id": "starter-vibes",
+      "name": "GOOD VIBES ONLY",
+      "cardIds": [
+        "rastamon",
+        "wifey",
+        "snow",
+        "vibe",
+        "hooper",
+        "oink",
+        "plug",
+        "buspass",
+        "soulfood",
+        "cognac"
+      ],
+      "games": 328,
+      "wins": 120,
+      "draws": 26,
+      "losses": 182,
+      "score": 0.4054878048780488,
+      "byPolicy": {
+        "greedy": {
+          "games": 164,
+          "score": 0.4481707317073171
+        },
+        "seeded-legal": {
+          "games": 164,
+          "score": 0.3628048780487805
+        }
+      },
+      "motionCurve": [
+        2,
+        4,
+        3,
+        2,
+        5,
+        5,
+        1,
+        0,
+        1,
+        1
+      ],
+      "openingAffordable": 2
+    },
+    {
+      "id": "focus-detective",
+      "name": "Sherlock and Watson",
+      "cardIds": [
+        "sherlock",
+        "watson",
+        "crossingguard",
+        "nightmedic",
+        "wifey",
+        "counter",
+        "oz",
+        "rastamon",
+        "bustdown",
+        "tinman"
+      ],
+      "games": 328,
+      "wins": 113,
+      "draws": 22,
+      "losses": 193,
+      "score": 0.3780487804878049,
+      "byPolicy": {
+        "greedy": {
+          "games": 164,
+          "score": 0.3170731707317073
+        },
+        "seeded-legal": {
+          "games": 164,
+          "score": 0.43902439024390244
+        }
+      },
+      "motionCurve": [
+        2,
+        2,
+        2,
+        3,
+        4,
+        3,
+        4,
+        2,
+        1,
+        2
+      ],
+      "openingAffordable": 3
+    },
+    {
+      "id": "street-legends-investigations",
+      "name": "Street Legends — Investigations",
+      "cardIds": [
+        "sherlock",
+        "watson",
+        "boo-boo-the-fool",
+        "parole-officer",
+        "uncle-sam",
+        "apartment-maintenance-sage",
+        "bail-bonds-auntie",
+        "nerd",
+        "homeless-wiseman",
+        "counter"
+      ],
+      "games": 328,
+      "wins": 110,
+      "draws": 24,
+      "losses": 194,
+      "score": 0.3719512195121951,
+      "byPolicy": {
+        "greedy": {
+          "games": 164,
+          "score": 0.3353658536585366
+        },
+        "seeded-legal": {
+          "games": 164,
+          "score": 0.40853658536585363
+        }
+      },
+      "motionCurve": [
+        2,
+        2,
+        2,
+        3,
+        4,
+        3,
+        2,
+        3,
+        4,
+        3
+      ],
+      "openingAffordable": 3
+    },
+    {
+      "id": "focus-late-scaling",
+      "name": "Late Scaling",
+      "cardIds": [
+        "alchy",
+        "icecream",
+        "waterboy",
+        "laundry",
+        "stonersr",
+        "foodz",
+        "buspass",
+        "soulfood",
+        "cognac",
+        "bustdown"
+      ],
+      "games": 328,
+      "wins": 112,
+      "draws": 17,
+      "losses": 199,
+      "score": 0.3673780487804878,
+      "byPolicy": {
+        "greedy": {
+          "games": 164,
+          "score": 0.3384146341463415
+        },
+        "seeded-legal": {
+          "games": 164,
+          "score": 0.39634146341463417
+        }
+      },
+      "motionCurve": [
+        2,
+        3,
+        1,
+        2,
+        3,
+        3,
+        0,
+        1,
+        1,
+        1
+      ],
+      "openingAffordable": 3
+    },
+    {
+      "id": "starter-music-industry",
+      "name": "WHO GOT THE AUX",
+      "cardIds": [
+        "the-opening-act",
+        "the-dj",
+        "the-hype-man",
+        "the-manager-nice",
+        "the-rapper",
+        "the-janky-promoter",
+        "the-local-celebrity",
+        "the-battle-rapper",
+        "the-manager-evil",
+        "the-og-rap-legend"
+      ],
+      "games": 328,
+      "wins": 98,
+      "draws": 41,
+      "losses": 189,
+      "score": 0.36128048780487804,
+      "byPolicy": {
+        "greedy": {
+          "games": 164,
+          "score": 0.29878048780487804
+        },
+        "seeded-legal": {
+          "games": 164,
+          "score": 0.42378048780487804
+        }
+      },
+      "motionCurve": [
+        1,
+        2,
+        2,
+        2,
+        3,
+        3,
+        3,
+        3,
+        4,
+        5
+      ],
+      "openingAffordable": 4
+    },
+    {
+      "id": "starter-block",
+      "name": "THE BLOCK IS HOT",
+      "cardIds": [
+        "cornball",
+        "snow",
+        "roaster",
+        "rastamon",
+        "wifey",
+        "oink",
+        "baby",
+        "buspass",
+        "soulfood",
+        "cognac"
+      ],
+      "games": 328,
+      "wins": 99,
+      "draws": 32,
+      "losses": 197,
+      "score": 0.35060975609756095,
+      "byPolicy": {
+        "greedy": {
+          "games": 164,
+          "score": 0.35365853658536583
+        },
+        "seeded-legal": {
+          "games": 164,
+          "score": 0.3475609756097561
+        }
+      },
+      "motionCurve": [
+        1,
+        3,
+        3,
+        2,
+        4,
+        5,
+        4,
+        0,
+        1,
+        1
+      ],
+      "openingAffordable": 2
+    },
+    {
+      "id": "street-legends-relationships",
+      "name": "Street Legends — Relationship Pressure",
+      "cardIds": [
+        "work-hubby",
+        "he-just-a-friend",
+        "crazy-ex-boyfriend",
+        "side-chick",
+        "suga-mama",
+        "wifey",
+        "baby",
+        "ms-mary-mack",
+        "bblnice",
+        "barber"
+      ],
+      "games": 328,
+      "wins": 101,
+      "draws": 28,
+      "losses": 199,
+      "score": 0.35060975609756095,
+      "byPolicy": {
+        "greedy": {
+          "games": 164,
+          "score": 0.2896341463414634
+        },
+        "seeded-legal": {
+          "games": 164,
+          "score": 0.4115853658536585
+        }
+      },
+      "motionCurve": [
+        2,
+        3,
+        3,
+        2,
+        3,
+        4,
+        4,
+        3,
+        3,
+        4
+      ],
+      "openingAffordable": 2
+    },
+    {
+      "id": "focus-counterplay",
+      "name": "Counterplay — Legacy Comparison",
+      "cardIds": [
+        "counter",
+        "stud",
+        "pinaynurse",
+        "wifey",
+        "rastamon",
+        "gothkid",
+        "buspass",
+        "soulfood",
+        "cognac",
+        "bustdown"
+      ],
+      "games": 328,
+      "wins": 97,
+      "draws": 26,
+      "losses": 205,
+      "score": 0.3353658536585366,
+      "byPolicy": {
+        "greedy": {
+          "games": 164,
+          "score": 0.2896341463414634
+        },
+        "seeded-legal": {
+          "games": 164,
+          "score": 0.38109756097560976
+        }
+      },
+      "motionCurve": [
+        3,
+        3,
+        2,
+        4,
+        2,
+        2,
+        0,
+        1,
+        1,
+        1
+      ],
+      "openingAffordable": 2
+    },
+    {
+      "id": "focus-wave7-tempo",
+      "name": "Wave 7 Tempo",
+      "cardIds": [
+        "tayaty",
+        "youngbull",
+        "fein",
+        "redpill",
+        "simmy",
+        "foodz",
+        "buspass",
+        "soulfood",
+        "cognac",
+        "bustdown"
+      ],
+      "games": 328,
+      "wins": 85,
+      "draws": 31,
+      "losses": 212,
+      "score": 0.30640243902439024,
+      "byPolicy": {
+        "greedy": {
+          "games": 164,
+          "score": 0.29878048780487804
+        },
+        "seeded-legal": {
+          "games": 164,
+          "score": 0.31402439024390244
+        }
+      },
+      "motionCurve": [
+        1,
+        2,
+        1,
+        3,
+        4,
+        3,
+        0,
+        1,
+        1,
+        1
+      ],
+      "openingAffordable": 3
+    },
+    {
+      "id": "starter-fitness-circuit",
+      "name": "ONE MORE REP",
+      "cardIds": [
+        "failedathlete",
+        "fitness-girl",
+        "fitness-bro",
+        "personal-trainer",
+        "nail",
+        "apartment-maintenance-sage",
+        "yn-atv-lord",
+        "hooper",
+        "sportsprodigy",
+        "demon-trainer"
+      ],
+      "games": 328,
+      "wins": 86,
+      "draws": 27,
+      "losses": 215,
+      "score": 0.30335365853658536,
+      "byPolicy": {
+        "greedy": {
+          "games": 164,
+          "score": 0.2621951219512195
+        },
+        "seeded-legal": {
+          "games": 164,
+          "score": 0.3445121951219512
+        }
+      },
+      "motionCurve": [
+        3,
+        2,
+        3,
+        3,
+        2,
+        3,
+        3,
+        5,
+        3,
+        4
+      ],
+      "openingAffordable": 2
+    },
+    {
+      "id": "starter-crashout",
+      "name": "CRASHOUT SEASON",
+      "cardIds": [
+        "cornball",
+        "rastamon",
+        "snow",
+        "wifey",
+        "baby",
+        "hooper",
+        "roaster",
+        "buspass",
+        "soulfood",
+        "cognac"
+      ],
+      "games": 328,
+      "wins": 76,
+      "draws": 25,
+      "losses": 227,
+      "score": 0.2698170731707317,
+      "byPolicy": {
+        "greedy": {
+          "games": 164,
+          "score": 0.2926829268292683
+        },
+        "seeded-legal": {
+          "games": 164,
+          "score": 0.24695121951219512
+        }
+      },
+      "motionCurve": [
+        1,
+        2,
+        3,
+        4,
+        4,
+        5,
+        3,
+        0,
+        1,
+        1
+      ],
+      "openingAffordable": 2
+    },
+    {
+      "id": "element-fire",
+      "name": "Fire",
+      "cardIds": [
+        "redneck-evil",
+        "redside5",
+        "hooper",
+        "bbldemon",
+        "cornercoach",
+        "krump",
+        "og",
+        "baby",
+        "youngbull",
+        "kyle"
+      ],
+      "games": 328,
+      "wins": 60,
+      "draws": 20,
+      "losses": 248,
+      "score": 0.21341463414634146,
+      "byPolicy": {
+        "greedy": {
+          "games": 164,
+          "score": 0.08841463414634146
+        },
+        "seeded-legal": {
+          "games": 164,
+          "score": 0.3384146341463415
+        }
+      },
+      "motionCurve": [
+        5,
+        3,
+        5,
+        4,
+        3,
+        3,
+        4,
+        4,
+        2,
+        4
+      ],
+      "openingAffordable": 0
+    },
+    {
+      "id": "focus-fire-guap",
+      "name": "Fire Pressure",
+      "cardIds": [
+        "redneck-evil",
+        "redside5",
+        "hooper",
+        "bbldemon",
+        "cornercoach",
+        "cognac",
+        "krump",
+        "dancecaptain",
+        "og",
+        "baby"
+      ],
+      "games": 328,
+      "wins": 48,
+      "draws": 18,
+      "losses": 262,
+      "score": 0.17378048780487804,
+      "byPolicy": {
+        "greedy": {
+          "games": 164,
+          "score": 0.11280487804878049
+        },
+        "seeded-legal": {
+          "games": 164,
+          "score": 0.2347560975609756
+        }
+      },
+      "motionCurve": [
+        5,
+        3,
+        5,
+        4,
+        3,
+        1,
+        3,
+        3,
+        4,
+        4
+      ],
+      "openingAffordable": 0
+    }
+  ],
+  "coverage": {
+    "boo-boo-the-fool": [
+      "street-legends-investigations"
+    ],
+    "mr-mc-hands": [
+      "street-legends-growth"
+    ],
+    "ms-mary-mack": [
+      "street-legends-growth",
+      "street-legends-relationships"
+    ],
+    "pimp-swookie": [
+      "street-legends-growth"
+    ],
+    "og-uncle-harley-davidson": [
+      "street-legends-growth"
+    ],
+    "suga-mama": [
+      "street-legends-relationships"
+    ],
+    "side-chick": [
+      "street-legends-relationships"
+    ],
+    "gas-station-window-wiper": [
+      "street-legends-growth"
+    ],
+    "parole-officer": [
+      "street-legends-investigations"
+    ],
+    "work-hubby": [
+      "street-legends-relationships"
+    ],
+    "he-just-a-friend": [
+      "street-legends-relationships"
+    ],
+    "crazy-ex-boyfriend": [
+      "street-legends-relationships"
+    ],
+    "uncle-sam": [
+      "street-legends-investigations"
+    ],
+    "apartment-maintenance-sage": [
+      "street-legends-investigations",
+      "starter-fitness-circuit"
+    ],
+    "bail-bonds-auntie": [
+      "street-legends-growth",
+      "street-legends-investigations"
+    ],
+    "the-opening-act": [
+      "starter-music-industry"
+    ],
+    "the-dj": [
+      "starter-music-industry"
+    ],
+    "the-hype-man": [
+      "starter-music-industry"
+    ],
+    "the-manager-nice": [
+      "starter-music-industry"
+    ],
+    "the-rapper": [
+      "starter-music-industry"
+    ],
+    "the-janky-promoter": [
+      "starter-music-industry"
+    ],
+    "the-local-celebrity": [
+      "starter-music-industry"
+    ],
+    "the-battle-rapper": [
+      "starter-music-industry"
+    ],
+    "the-manager-evil": [
+      "starter-music-industry"
+    ],
+    "the-og-rap-legend": [
+      "starter-music-industry"
+    ],
+    "fitness-bro": [
+      "starter-fitness-circuit"
+    ],
+    "fitness-girl": [
+      "starter-fitness-circuit"
+    ],
+    "personal-trainer": [
+      "starter-fitness-circuit"
+    ],
+    "demon-trainer": [
+      "starter-fitness-circuit"
+    ]
+  },
+  "excludedCardIds": [
+    "guap",
+    "folks"
+  ],
+  "limitations": "One fixed seeded district set, one draw rotation, base and fully trained tiers, two simple bot policies. Results are diagnostic bot outcomes, not human win rates or a solved balance ranking. Existing audit-only substitutions replace GUAP/Folks without changing the live recipes."
+}

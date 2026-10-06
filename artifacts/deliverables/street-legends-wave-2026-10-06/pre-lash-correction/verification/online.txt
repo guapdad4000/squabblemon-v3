@@ -1,0 +1,54 @@
+# Subtest: activity uses actual gameplay rather than a more recent lobby update
+ok 1 - activity uses actual gameplay rather than a more recent lobby update
+# Subtest: expiry is driven only by the stored expiry, including warning boundaries
+ok 2 - expiry is driven only by the stored expiry, including warning boundaries
+# Subtest: unplayed and legacy rows describe their known activity without fabricating a fade
+ok 3 - unplayed and legacy rows describe their known activity without fabricating a fade
+# Subtest: rows keep the room link and series, with an explicit non-color expiry warning
+ok 4 - rows keep the room link and series, with an explicit non-color expiry warning
+# Subtest: expired rows cannot lead players into a stale room
+ok 5 - expired rows cannot lead players into a stale room
+# Subtest: last played follows gameplay, survives lobby activity, and timestamps timeouts at the deadline
+ok 6 - last played follows gameplay, survives lobby activity, and timestamps timeouts at the deadline
+# Subtest: unplayed and legacy rooms do not invent a last-played timestamp
+ok 7 - unplayed and legacy rooms do not invent a last-played timestamp
+# Subtest: card balance and online room versions reject incompatible in-progress fades safely
+ok 8 - card balance and online room versions reject incompatible in-progress fades safely
+# Subtest: locked-lane mythical plays are accepted online and reproduce in authoritative transcript replay
+ok 9 - locked-lane mythical plays are accepted online and reproduce in authoritative transcript replay
+# Subtest: both players receive saved sticker avatars through ready, reconnect and rematch
+ok 10 - both players receive saved sticker avatars through ready, reconnect and rematch
+# Subtest: six rounds alternate the first human, preserve multi-card turns, and never auto-play a CPU
+ok 11 - six rounds alternate the first human, preserve multi-card turns, and never auto-play a CPU
+# Subtest: both seats can Squabble exactly once, including the guest playing first
+ok 12 - both seats can Squabble exactly once, including the guest playing first
+# Subtest: Buddy forms, Bud timing and hazard metadata are public to both seats and survive reconnect
+ok 13 - Buddy forms, Bud timing and hazard metadata are public to both seats and survive reconnect
+# Subtest: wrong turns, wrong hands, overspending and repeated used cards are rejected
+ok 14 - wrong turns, wrong hands, overspending and repeated used cards are rejected
+# Subtest: private projections omit rival hands, draw order, user IDs and full replay frames
+ok 15 - private projections omit rival hands, draw order, user IDs and full replay frames
+# Subtest: timeout forfeits once and both players must consent to a rematch
+ok 16 - timeout forfeits once and both players must consent to a rematch
+# Subtest: either seat forfeits on timeout despite leading two districts, with distinct messages for both players
+ok 17 - either seat forfeits on timeout despite leading two districts, with distinct messages for both players
+# Subtest: district finishes, surrenders, and draws keep their normal result copy
+ok 18 - district finishes, surrenders, and draws keep their normal result copy
+# Subtest: starting near the waiting-room expiry gives the active fade its full lifetime
+ok 19 - starting near the waiting-room expiry gives the active fade its full lifetime
+# Subtest: base-strength snapshots and saved opening order survive serialization
+ok 20 - base-strength snapshots and saved opening order survive serialization
+# Subtest: a friendly room tallies every ending once and keeps the record through rematches and lobby returns
+ok 21 - a friendly room tallies every ending once and keeps the record through rematches and lobby returns
+# Subtest: rooms stored before the series existed keep working and ranked rooms never tally
+ok 22 - rooms stored before the series existed keep working and ranked rooms never tally
+# Subtest: leaving closes a friendly room for both players and names who closed it
+ok 23 - leaving closes a friendly room for both players and names who closed it
+# Subtest: only a confirmed close leaves a friendly room; failed or offline attempts keep the player there
+ok 24 - only a confirmed close leaves a friendly room; failed or offline attempts keep the player there
+# tests 24
+# pass 24
+# fail 0
+# cancelled 0
+# skipped 0
+# duration_ms 380.733467

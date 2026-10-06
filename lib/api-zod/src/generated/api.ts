@@ -129,7 +129,7 @@ export const listAdminPatchesResponseOneSoftCurrencyMax = 100;
 
 export const listAdminPatchesResponseOnePackTicketsDefault = 0;
 export const listAdminPatchesResponseOnePackTicketsMin = 0;
-export const listAdminPatchesResponseOnePackTicketsMax = 1;
+export const listAdminPatchesResponseOnePackTicketsMax = 10;
 
 export const listAdminPatchesResponseOneArtCardIdMax = 80;
 
@@ -197,7 +197,7 @@ export const createAdminPatchBodySoftCurrencyMax = 100;
 
 export const createAdminPatchBodyPackTicketsDefault = 0;
 export const createAdminPatchBodyPackTicketsMin = 0;
-export const createAdminPatchBodyPackTicketsMax = 1;
+export const createAdminPatchBodyPackTicketsMax = 10;
 
 export const createAdminPatchBodyArtCardIdMax = 80;
 
@@ -242,7 +242,7 @@ export const createAdminPatchResponseOneSoftCurrencyMax = 100;
 
 export const createAdminPatchResponseOnePackTicketsDefault = 0;
 export const createAdminPatchResponseOnePackTicketsMin = 0;
-export const createAdminPatchResponseOnePackTicketsMax = 1;
+export const createAdminPatchResponseOnePackTicketsMax = 10;
 
 export const createAdminPatchResponseOneArtCardIdMax = 80;
 
@@ -310,7 +310,7 @@ export const updateAdminPatchBodySoftCurrencyMax = 100;
 
 export const updateAdminPatchBodyPackTicketsDefault = 0;
 export const updateAdminPatchBodyPackTicketsMin = 0;
-export const updateAdminPatchBodyPackTicketsMax = 1;
+export const updateAdminPatchBodyPackTicketsMax = 10;
 
 export const updateAdminPatchBodyArtCardIdMax = 80;
 
@@ -355,7 +355,7 @@ export const updateAdminPatchResponseOneSoftCurrencyMax = 100;
 
 export const updateAdminPatchResponseOnePackTicketsDefault = 0;
 export const updateAdminPatchResponseOnePackTicketsMin = 0;
-export const updateAdminPatchResponseOnePackTicketsMax = 1;
+export const updateAdminPatchResponseOnePackTicketsMax = 10;
 
 export const updateAdminPatchResponseOneArtCardIdMax = 80;
 
@@ -423,7 +423,7 @@ export const previewAdminPatchResponsePatchOneSoftCurrencyMax = 100;
 
 export const previewAdminPatchResponsePatchOnePackTicketsDefault = 0;
 export const previewAdminPatchResponsePatchOnePackTicketsMin = 0;
-export const previewAdminPatchResponsePatchOnePackTicketsMax = 1;
+export const previewAdminPatchResponsePatchOnePackTicketsMax = 10;
 
 export const previewAdminPatchResponsePatchOneArtCardIdMax = 80;
 
@@ -443,7 +443,7 @@ export const previewAdminPatchResponseLetterGiftSoftCurrencyMin = 0;
 export const previewAdminPatchResponseLetterGiftSoftCurrencyMax = 100;
 
 export const previewAdminPatchResponseLetterGiftPackTicketsMin = 0;
-export const previewAdminPatchResponseLetterGiftPackTicketsMax = 1;
+export const previewAdminPatchResponseLetterGiftPackTicketsMax = 10;
 
 export const previewAdminPatchResponseAudienceCountMin = 0;
 
@@ -525,7 +525,7 @@ export const publishAdminPatchResponseOneSoftCurrencyMax = 100;
 
 export const publishAdminPatchResponseOnePackTicketsDefault = 0;
 export const publishAdminPatchResponseOnePackTicketsMin = 0;
-export const publishAdminPatchResponseOnePackTicketsMax = 1;
+export const publishAdminPatchResponseOnePackTicketsMax = 10;
 
 export const publishAdminPatchResponseOneArtCardIdMax = 80;
 
@@ -593,7 +593,7 @@ export const resumeAdminPatchDeliveryResponseOneSoftCurrencyMax = 100;
 
 export const resumeAdminPatchDeliveryResponseOnePackTicketsDefault = 0;
 export const resumeAdminPatchDeliveryResponseOnePackTicketsMin = 0;
-export const resumeAdminPatchDeliveryResponseOnePackTicketsMax = 1;
+export const resumeAdminPatchDeliveryResponseOnePackTicketsMax = 10;
 
 export const resumeAdminPatchDeliveryResponseOneArtCardIdMax = 80;
 

@@ -43,6 +43,7 @@ export const asCard = (card: OnlinePublicCard): CardInstance => {
   const base = definition(card.cardId);
   return {
     ...base, ...card, ...card.form, id: card.artworkId ?? base.id,
+    ...(card.maryElephant ? { cost: 4, power: 4 } : {}),
     hazard: card.hazard ? true : undefined,
     deck: 'online', playedRound: null, lastEffectNote: '',
   };

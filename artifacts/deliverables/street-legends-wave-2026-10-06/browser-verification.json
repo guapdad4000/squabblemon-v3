@@ -1,0 +1,198 @@
+{
+  "results": [
+    {
+      "name": "street-legends-desktop",
+      "cards": 15,
+      "imageFailures": 0
+    },
+    {
+      "name": "music-desktop",
+      "cards": 10,
+      "imageFailures": 0
+    },
+    {
+      "name": "fitness-mobile",
+      "cards": 5,
+      "imageFailures": 0
+    },
+    {
+      "name": "lash-and-nail-desktop",
+      "cards": 2,
+      "imageFailures": 0
+    },
+    {
+      "name": "separate-lash-and-nail",
+      "distinctPortraits": true,
+      "distinctAbilities": true
+    },
+    {
+      "name": "battle-desktop",
+      "visibleBoardCards": 6,
+      "boardCards": [
+        {
+          "card": "lash-tech",
+          "w": 118.234375,
+          "h": 165.140625
+        },
+        {
+          "card": "the-dj",
+          "w": 118.25,
+          "h": 165.171875
+        },
+        {
+          "card": "the-hype-man",
+          "w": 118.25,
+          "h": 165.171875
+        },
+        {
+          "card": "fitness-bro",
+          "w": 111.15625,
+          "h": 155.265625
+        },
+        {
+          "card": "the-rapper",
+          "w": 111.15625,
+          "h": 155.265625
+        },
+        {
+          "card": "fitness-girl",
+          "w": 118.234375,
+          "h": 165.140625
+        }
+      ],
+      "remainingMotion": 2
+    },
+    {
+      "name": "battle-desktop-music-controls",
+      "repeatedOpen": true,
+      "persistedSettings": true
+    },
+    {
+      "name": "battle-mobile",
+      "visibleBoardCards": 6,
+      "boardCards": [
+        {
+          "card": "lash-tech",
+          "w": 54.65625,
+          "h": 76.34375
+        },
+        {
+          "card": "the-dj",
+          "w": 54.65625,
+          "h": 76.34375
+        },
+        {
+          "card": "the-hype-man",
+          "w": 54.65625,
+          "h": 76.34375
+        },
+        {
+          "card": "fitness-bro",
+          "w": 54.65625,
+          "h": 76.34375
+        },
+        {
+          "card": "the-rapper",
+          "w": 54.65625,
+          "h": 76.34375
+        },
+        {
+          "card": "fitness-girl",
+          "w": 54.671875,
+          "h": 76.359375
+        }
+      ],
+      "remainingMotion": 2
+    },
+    {
+      "name": "battle-mobile-music-controls",
+      "repeatedOpen": true,
+      "persistedSettings": true
+    },
+    {
+      "name": "battle-ipad-portrait",
+      "visibleBoardCards": 6,
+      "boardCards": [
+        {
+          "card": "lash-tech",
+          "w": 132,
+          "h": 184.375
+        },
+        {
+          "card": "the-dj",
+          "w": 107.265625,
+          "h": 149.828125
+        },
+        {
+          "card": "the-hype-man",
+          "w": 107.265625,
+          "h": 149.828125
+        },
+        {
+          "card": "fitness-bro",
+          "w": 132,
+          "h": 184.375
+        },
+        {
+          "card": "the-rapper",
+          "w": 132,
+          "h": 184.375
+        },
+        {
+          "card": "fitness-girl",
+          "w": 132,
+          "h": 184.375
+        }
+      ],
+      "remainingMotion": 2
+    },
+    {
+      "name": "battle-ipad-portrait-music-controls",
+      "repeatedOpen": true,
+      "persistedSettings": true
+    },
+    {
+      "name": "battle-ipad-landscape",
+      "visibleBoardCards": 6,
+      "boardCards": [
+        {
+          "card": "lash-tech",
+          "w": 62.71875,
+          "h": 87.59375
+        },
+        {
+          "card": "the-dj",
+          "w": 62.734375,
+          "h": 87.625
+        },
+        {
+          "card": "the-hype-man",
+          "w": 62.734375,
+          "h": 87.625
+        },
+        {
+          "card": "fitness-bro",
+          "w": 55.65625,
+          "h": 77.734375
+        },
+        {
+          "card": "the-rapper",
+          "w": 55.65625,
+          "h": 77.734375
+        },
+        {
+          "card": "fitness-girl",
+          "w": 62.71875,
+          "h": 87.59375
+        }
+      ],
+      "remainingMotion": 2
+    },
+    {
+      "name": "battle-ipad-landscape-music-controls",
+      "repeatedOpen": true,
+      "persistedSettings": true
+    }
+  ],
+  "errors": []
+}

@@ -608,7 +608,7 @@ test("Hot Off the Griddle keeps strongest-enemy targeting, breaks its Protection
   };
   const match = play(withShield, "griddle-master", "player", 0, 82);
   const cracked = boardCard(match, strongerUnprotected.instanceId)!;
-  assert.equal(cracked.powerModifier, -2, "the strongest target takes the full 2 damage");
+  assert.equal(cracked.powerModifier, -3, "the strongest target takes the current full 3 damage");
   assert.equal(cracked.statuses.burnStacks, 1, "the original attack still applies Burn");
   assert.equal(boardCard(match, weakerProtected.instanceId)?.powerModifier, 2,
     "a weaker protected enemy is not prioritized over the strongest enemy");
@@ -642,8 +642,8 @@ test("Hot Off the Griddle keeps strongest-enemy targeting, breaks its Protection
     }],
   };
   const fallback = play(burningShield, "griddle-master", "player", 0, 84);
-  assert.equal(boardCard(fallback, burning.instanceId)?.powerModifier, 1,
-    "stripping Protection does not skip the full 4 damage");
+  assert.equal(boardCard(fallback, burning.instanceId)?.powerModifier, 0,
+    "stripping Protection does not skip the current full 5 damage");
   assert.equal(boardCard(fallback, burning.instanceId)?.statuses.protected, false);
   assert.equal(boardCard(fallback, burning.instanceId)?.statuses.burnStacks, 2);
   assert.equal(fallback.timedEffects.some(effect => effect.id === "burning-target-shield"), false);

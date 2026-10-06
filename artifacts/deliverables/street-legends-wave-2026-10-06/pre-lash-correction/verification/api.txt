@@ -1,0 +1,591 @@
+Using fresh owned native PostgreSQL with independent connections; no external database is modified.
+# Subtest: check-in streak uses UTC days, repeats weekly, and resets after a missed day
+ok 1 - check-in streak uses UTC days, repeats weekly, and resets after a missed day
+# Subtest: Growth Lab rejects expired tasks and keeps earned plants across missed days
+ok 2 - Growth Lab rejects expired tasks and keeps earned plants across missed days
+# Subtest: watering requires verified tasks, survives retries, and pays exactly once for each seven-plant garden
+ok 3 - watering requires verified tasks, survives retries, and pays exactly once for each seven-plant garden
+# Subtest: concurrent login and level claims pay exactly once, without losing balances
+ok 4 - concurrent login and level claims pay exactly once, without losing balances
+# Subtest: real activity routes validate drafts, normalize combat, replay events and credit once
+ok 5 - real activity routes validate drafts, normalize combat, replay events and credit once
+# Subtest: provisional cleanup accepts an absent profile or the untouched database default
+ok 6 - provisional cleanup accepts an absent profile or the untouched database default
+# Subtest: enriched cleanup returns the exact locked initial or campaign display name
+ok 7 - enriched cleanup returns the exact locked initial or campaign display name
+# Subtest: cleanup rejects unrelated, stale, future, or ambiguous profiles
+ok 8 - cleanup rejects unrelated, stale, future, or ambiguous profiles
+# Subtest: provisional cleanup never accepts a profile that onboarding renamed
+ok 9 - provisional cleanup never accepts a profile that onboarding renamed
+# Subtest: card levels change at every XP threshold and stop at level 10
+ok 10 - card levels change at every XP threshold and stop at level 10
+# Subtest: earning XP reaches move eligibility without purchasing the next move tier
+ok 11 - earning XP reaches move eligibility without purchasing the next move tier
+# Subtest: all outcomes award the expected XP and cap rewards at the remaining XP
+ok 12 - all outcomes award the expected XP and cap rewards at the remaining XP
+# Subtest: card progression snapshots reject forged or unowned card ids
+ok 13 - card progression snapshots reject forged or unowned card ids
+# Subtest: card XP only changes unique participants present in the fade snapshot
+ok 14 - card XP only changes unique participants present in the fade snapshot
+# Subtest: a fade progression snapshot stays unchanged after live progression advances
+ok 15 - a fade progression snapshot stays unchanged after live progression advances
+# Subtest: fade upgrade snapshots reject forged, stale, and malformed upgrades
+ok 16 - fade upgrade snapshots reject forged, stale, and malformed upgrades
+# Subtest: reward snapshots carry the card balance version and reject older rules
+ok 17 - reward snapshots carry the card balance version and reject older rules
+# Subtest: stored JSONB key order does not invalidate a genuine progression snapshot
+ok 18 - stored JSONB key order does not invalidate a genuine progression snapshot
+# Subtest: story-earned fighters stay out of Street Packs until the story grants them
+ok 19 - story-earned fighters stay out of Street Packs until the story grants them
+# Subtest: new Squabblehouse cards are part of their regular rarity pools, not story rewards
+ok 20 - new Squabblehouse cards are part of their regular rarity pools, not story rewards
+# Subtest: published v7 rules disclose the authoritative independent rarity and bonus behavior
+ok 21 - published v7 rules disclose the authoritative independent rarity and bonus behavior
+# Subtest: rarity selection is independent of ownership and first-two protection stays in the rolled tier
+ok 22 - rarity selection is independent of ownership and first-two protection stays in the rolled tier
+# Subtest: same-pack exclusion restores a tier only after exhaustion
+ok 23 - same-pack exclusion restores a tier only after exhaustion
+# Subtest: an authored empty rarity tier fails explicitly
+ok 24 - an authored empty rarity tier fails explicitly
+# Subtest: bonus boundaries, amounts, pity, and exhausted style conversion match v7
+ok 25 - bonus boundaries, amounts, pity, and exhausted style conversion match v7
+# Subtest: ten-pull counts duplicate Rare+ gameplay pulls and never cosmetics
+ok 26 - ten-pull counts duplicate Rare+ gameplay pulls and never cosmetics
+# Subtest: forced Rare+ uses 80/15/4/1 rarity boundaries independent of ownership
+ok 27 - forced Rare+ uses 80/15/4/1 rarity boundaries independent of ownership
+# Subtest: effective rarity frequencies follow the fixed weights regardless of ownership
+ok 28 - effective rarity frequencies follow the fixed weights regardless of ownership
+# Subtest: future earned IDs remain intact while active rewards come from the current catalog
+ok 29 - future earned IDs remain intact while active rewards come from the current catalog
+# Subtest: concurrent retries spend one ticket and persist one pack opening
+ok 30 - concurrent retries spend one ticket and persist one pack opening
+# Subtest: a failed Street Pack payment persists no opening
+ok 31 - a failed Street Pack payment persists no opening
+# Subtest: concurrent crafting retries charge Style Shards once
+ok 32 - concurrent crafting retries charge Style Shards once
+# Subtest: concurrent Collection Road retries grant one claim
+ok 33 - concurrent Collection Road retries grant one claim
+# Subtest: Collection Road duplicates grant 5 shards
+ok 34 - Collection Road duplicates grant 5 shards
+# Subtest: Collection Road never raises deck slots above 24
+ok 35 - Collection Road never raises deck slots above 24
+# Subtest: a concurrent bootstrap read cannot erase a pack reward
+ok 36 - a concurrent bootstrap read cannot erase a pack reward
+# Subtest: focused banner charges once, records its identity, and rejects unavailable banners without spending
+ok 37 - focused banner charges once, records its identity, and rejects unavailable banners without spending
+# Subtest: character cosmetics debit only Style Shards, retain badges, and never change card strength
+ok 38 - character cosmetics debit only Style Shards, retain badges, and never change card strength
+# Subtest: purchases reject unowned fighters, insufficient funds, and unfinished character collections
+ok 39 - purchases reject unowned fighters, insufficient funds, and unfinished character collections
+# Subtest: base banner is included; paid scenes, finish and individual stickers require ownership
+ok 40 - base banner is included; paid scenes, finish and individual stickers require ownership
+# Subtest: database: retry-safe purchase and equip persist across reload without overwriting settings or earned badges
+ok 41 - database: retry-safe purchase and equip persist across reload without overwriting settings or earned badges
+# Subtest: every completed collection has real unique stickers and isolated purchase ownership
+ok 42 - every completed collection has real unique stickers and isolated purchase ownership
+# Subtest: new individual stickers mix with legacy stickers without repurchasing an owned pack
+ok 43 - new individual stickers mix with legacy stickers without repurchasing an owned pack
+# Subtest: owned sticker packs mix across banners while preserving per-character scenes
+ok 44 - owned sticker packs mix across banners while preserving per-character scenes
+# Subtest: daily Clout credits once across concurrent retries and resets only on a new UTC day
+ok 45 - daily Clout credits once across concurrent retries and resets only on a new UTC day
+# Subtest: missing player cannot collect Clout
+ok 46 - missing player cannot collect Clout
+# Subtest: new players receive Dr. Fade once, in their legal opening lineup, before the first battle
+ok 47 - new players receive Dr. Fade once, in their legal opening lineup, before the first battle
+# Subtest: returning players receive the mentor without changing existing decks, ownership, upgrades or wallet
+ok 48 - returning players receive the mentor without changing existing decks, ownership, upgrades or wallet
+# Subtest: chapter training funds grant once and the first fund can buy Dr. Fade first upgrade without duplicate pulls
+ok 49 - chapter training funds grant once and the first fund can buy Dr. Fade first upgrade without duplicate pulls
+# Subtest: rollout normalization never confiscates legacy balances, pity, or future catalog inventory
+ok 50 - rollout normalization never confiscates legacy balances, pity, or future catalog inventory
+# Subtest: overlapping bootstrap, pack, mission, and shop retries conserve one locked wallet
+ok 51 - overlapping bootstrap, pack, mission, and shop retries conserve one locked wallet
+# Subtest: pack history keeps legacy and current ten-pulls distinguishable after rollout
+ok 52 - pack history keeps legacy and current ten-pulls distinguishable after rollout
+# Subtest: feedback actions never mutate existing profile economy, mail, or settings
+ok 53 - feedback actions never mutate existing profile economy, mail, or settings
+# Subtest: saved feedback is public to signed-in players; receipts hide identity and preserve snapshot names
+ok 54 - saved feedback is public to signed-in players; receipts hide identity and preserve snapshot names
+# Subtest: concurrent retry lock deduplicates, concurrent new posts throttle, saved retries work after limit
+ok 55 - concurrent retry lock deduplicates, concurrent new posts throttle, saved retries work after limit
+# Subtest: keyset paging holds ties and new inserts never shift later pages
+ok 56 - keyset paging holds ties and new inserts never shift later pages
+# Subtest: HTTP validates strict fields, size, whitespace, query and auth; no uncommitted success
+ok 57 - HTTP validates strict fields, size, whitespace, query and auth; no uncommitted success
+# Subtest: real app origin gate blocks cross-origin writes without blocking same-session same-origin writes
+ok 58 - real app origin gate blocks cross-origin writes without blocking same-session same-origin writes
+# Subtest: feedback parser rejects malformed and oversized JSON without reflecting submitted text
+ok 59 - feedback parser rejects malformed and oversized JSON without reflecting submitted text
+# Subtest: foundation grants survive concurrent bootstrap normalization and repeat requests
+ok 60 - foundation grants survive concurrent bootstrap normalization and repeat requests
+# Subtest: welcome reward requires a completed personal practice and remains idempotent
+ok 61 - welcome reward requires a completed personal practice and remains idempotent
+# Subtest: experiment claims, fade retries, and bootstrap normalization preserve one reward
+ok 62 - experiment claims, fade retries, and bootstrap normalization preserve one reward
+# Subtest: Homies diagnostic timings on owned native PostgreSQL
+    # Subtest: a joined-room read queues on all five leases, without social locking
+    ok 1 - a joined-room read queues on all five leases, without social locking
+    # Subtest: a menu waits on a real advisory-lock owner on another backend
+    ok 2 - a menu waits on a real advisory-lock owner on another backend
+    # Subtest: a rollback ends measured lock hold and releases the PostgreSQL lock
+    ok 3 - a rollback ends measured lock hold and releases the PostgreSQL lock
+ok 63 - Homies diagnostic timings on owned native PostgreSQL
+# Subtest: disabled, invalid, and unsampled operations pass through promises and synchronous throws unchanged
+ok 64 - disabled, invalid, and unsampled operations pass through promises and synchronous throws unchanged
+# Subtest: bad sampler or initial clock does not affect task result or rejection identity
+ok 65 - bad sampler or initial clock does not affect task result or rejection identity
+# Subtest: selected fractional-rate operation emits once without reporter resampling
+ok 66 - selected fractional-rate operation emits once without reporter resampling
+# Subtest: checkout, lock wait, and lock hold include transaction settlement after the callback
+ok 67 - checkout, lock wait, and lock hold include transaction settlement after the callback
+# Subtest: rollback rejection is classified; failed lock wait and failed checkout have no hold
+ok 68 - rollback rejection is classified; failed lock wait and failed checkout have no hold
+# Subtest: overlapping operations isolate samples; nested transactions and retries count once per call
+ok 69 - overlapping operations isolate samples; nested transactions and retries count once per call
+# Subtest: room path classifies without acquiring locks; clock/sink failure never masks task result
+ok 70 - room path classifies without acquiring locks; clock/sink failure never masks task result
+# Subtest: parses only finite sample rates in the inclusive 0..1 range
+ok 71 - parses only finite sample rates in the inclusive 0..1 range
+# Subtest: warning thresholds are inclusive and joined operations use their own threshold
+ok 72 - warning thresholds are inclusive and joined operations use their own threshold
+# Subtest: just below each threshold stays normal
+ok 73 - just below each threshold stays normal
+# Subtest: independent per-category warning and normal budgets reset at the window boundary
+ok 74 - independent per-category warning and normal budgets reset at the window boundary
+# Subtest: a burst of thousands emits at most two events of each kind per category per window
+ok 75 - a burst of thousands emits at most two events of each kind per category per window
+# Subtest: only allowlisted scalar fields are emitted, not extra IDs, credentials or errors
+ok 76 - only allowlisted scalar fields are emitted, not extra IDs, credentials or errors
+# Subtest: invalid runtime strings, numbers, and hostile getters are silently discarded
+ok 77 - invalid runtime strings, numbers, and hostile getters are silently discarded
+# Subtest: throwing clock and sink never throw from record; sink failures still spend budget
+ok 78 - throwing clock and sink never throw from record; sink failures still spend budget
+# Subtest: disabled pool stays untouched; unscoped and unsampled calls return the exact original Promise
+ok 79 - disabled pool stays untouched; unscoped and unsampled calls return the exact original Promise
+# Subtest: patch is installed only once; cleanup does not clobber a later benchmark wrapper
+ok 80 - patch is installed only once; cleanup does not clobber a later benchmark wrapper
+# Subtest: promise checkout observes queue before/after enqueue and completion, preserving client and this
+ok 81 - promise checkout observes queue before/after enqueue and completion, preserving client and this
+# Subtest: promise rejection and synchronous connect throw preserve exact error identity
+ok 82 - promise rejection and synchronous connect throw preserve exact error identity
+# Subtest: callback connect passes original error/client/release exactly once and observes queue
+ok 83 - callback connect passes original error/client/release exactly once and observes queue
+# Subtest: successful callback connect preserves client and release and never counts an error
+ok 84 - successful callback connect preserves client and release and never counts an error
+# Subtest: mail validates gifts, preflights recipients, preserves unread state, and credits exactly once under concurrent claims
+ok 85 - mail validates gifts, preflights recipients, preserves unread state, and credits exactly once under concurrent claims
+# Subtest: failed credit rolls back mail and all wallet fields together
+ok 86 - failed credit rolls back mail and all wallet fields together
+# Subtest: mail HTTP routes require authentication and isolate recipients
+ok 87 - mail HTTP routes require authentication and isolate recipients
+# Subtest: rewarded practice accepts only gangs whose ten cards are owned
+ok 88 - rewarded practice accepts only gangs whose ten cards are owned
+# Subtest: custom fades require a legal owned saved roster, including mixed gangs
+ok 89 - custom fades require a legal owned saved roster, including mixed gangs
+# Subtest: story can recover with a canonical starter but never an arbitrary invalid gang
+ok 90 - story can recover with a canonical starter but never an arbitrary invalid gang
+# Subtest: every supported saved-deck ID length can start a practice or story fade
+ok 91 - every supported saved-deck ID length can start a practice or story fade
+# Subtest: fade requests still reject deck IDs beyond the saved-deck limit
+ok 92 - fade requests still reject deck IDs beyond the saved-deck limit
+# Subtest: Rookie Road uses one versioned district seed
+ok 93 - Rookie Road uses one versioned district seed
+# Subtest: each authored story node has one stable versioned district seed
+ok 94 - each authored story node has one stable versioned district seed
+# Subtest: practice, activity, draft, and malformed story requests retain their issued random seed
+ok 95 - practice, activity, draft, and malformed story requests retain their issued random seed
+# Subtest: match completion input accepts a four-round story transcript
+ok 96 - match completion input accepts a four-round story transcript
+# Subtest: new account completes every campaign node through HTTP with isolated, idempotent persistence
+ok 97 - new account completes every campaign node through HTTP with isolated, idempotent persistence
+# Subtest: notification receipt input is bounded, unique, and rejects malformed ids
+ok 98 - notification receipt input is bounded, unique, and rejects malformed ids
+# Subtest: notification receipts persist per account and concurrent saves stay idempotent
+ok 99 - notification receipts persist per account and concurrent saves stay idempotent
+# Subtest: real online routes: authorization, join races, private views, retries, complete fade, reconnect and rematch
+ok 100 - real online routes: authorization, join races, private views, retries, complete fade, reconnect and rematch
+# Subtest: request and campaign IDs accept bounded safe values and replace hostile values
+ok 101 - request and campaign IDs accept bounded safe values and replace hostile values
+# Subtest: logger paths redact credentials and cookies
+ok 102 - logger paths redact credentials and cookies
+# Subtest: readiness reports only availability and never returns connection errors
+ok 103 - readiness reports only availability and never returns connection errors
+# Subtest: deployment identity uses trusted runtime deploy values and request origin
+ok 104 - deployment identity uses trusted runtime deploy values and request origin
+# Subtest: deployment identity retains an explicit local and test fallback
+ok 105 - deployment identity retains an explicit local and test fallback
+# Subtest: Netlify runtime identity remains isolated across asynchronous requests
+ok 106 - Netlify runtime identity remains isolated across asynchronous requests
+# Subtest: readiness times out and deployment identity returns only attested non-secret fields
+ok 107 - readiness times out and deployment identity returns only attested non-secret fields
+# Subtest: published patch snapshots recipients and delivers resumable bounded, replay-safe mail
+ok 108 - published patch snapshots recipients and delivers resumable bounded, replay-safe mail
+# Subtest: private patch administration requires an allowlisted Clerk identity and rejects originless mutations
+ok 109 - private patch administration requires an allowlisted Clerk identity and rejects originless mutations
+# Subtest: Straight to the Back extends JSONB checkpoints through round two and rejects changed history
+ok 110 - Straight to the Back extends JSONB checkpoints through round two and rejects changed history
+# Subtest: HTTP challenge match start rejects story and tutorial modes without binding the run
+ok 111 - HTTP challenge match start rejects story and tutorial modes without binding the run
+# Subtest: HTTP reaction tray persists ordered owned IDs, rejects invalid edits and preserves profile state
+ok 112 - HTTP reaction tray persists ordered owned IDs, rejects invalid edits and preserves profile state
+# Subtest: HTTP profile update persists an owned catalog character avatar and preserves rewards and cosmetics
+ok 113 - HTTP profile update persists an owned catalog character avatar and preserves rewards and cosmetics
+# Subtest: HTTP profile persists any catalog sticker avatar without buying its banner pack
+ok 114 - HTTP profile persists any catalog sticker avatar without buying its banner pack
+# Subtest: HTTP profile update rejects unknown and unowned avatar selections without partial writes
+ok 115 - HTTP profile update rejects unknown and unowned avatar selections without partial writes
+# Subtest: HTTP profile update permits unrelated changes when a legacy avatar is unchanged or omitted
+ok 116 - HTTP profile update permits unrelated changes when a legacy avatar is unchanged or omitted
+# Subtest: concurrent HTTP fade completions return one persisted reward and apply it once
+ok 117 - concurrent HTTP fade completions return one persisted reward and apply it once
+# Subtest: pending rewarded fades issued under old card rules are rejected without granting rewards
+ok 118 - pending rewarded fades issued under old card rules are rejected without granting rewards
+# Subtest: concurrent HTTP starter claims return the same single-applied profile
+ok 119 - concurrent HTTP starter claims return the same single-applied profile
+# Subtest: concurrent HTTP mission claims return the same single-applied profile
+ok 120 - concurrent HTTP mission claims return the same single-applied profile
+# Subtest: simultaneous fade completions return one persisted reward and credit it once
+ok 121 - simultaneous fade completions return one persisted reward and credit it once
+# Subtest: simultaneous completions grant participating card XP once and persist the retry result
+ok 122 - simultaneous completions grant participating card XP once and persist the retry result
+# Subtest: challenge draw pays nothing and a later verified win advances the same road once
+ok 123 - challenge draw pays nothing and a later verified win advances the same road once
+# Subtest: a legacy active fade rebuilds its snapshot from the server-owned roster
+ok 124 - a legacy active fade rebuilds its snapshot from the server-owned roster
+# Subtest: starter and mission retries each apply one profile credit
+ok 125 - starter and mission retries each apply one profile credit
+# Subtest: a cadence reset racing a claim cannot reopen an expired claimed mission
+ok 126 - a cadence reset racing a claim cannot reopen an expired claimed mission
+# Subtest: a cadence reset racing fade completion preserves current-period progress
+ok 127 - a cadence reset racing fade completion preserves current-period progress
+# Subtest: only a completed tutorial fade unlocks tutorial advancement
+ok 128 - only a completed tutorial fade unlocks tutorial advancement
+# Subtest: normalization preserves legacy ownership and earned moves without new catalog grants
+ok 129 - normalization preserves legacy ownership and earned moves without new catalog grants
+# Subtest: new profiles earn their starter foundation through onboarding without receiving the expansion catalog
+ok 130 - new profiles earn their starter foundation through onboarding without receiving the expansion catalog
+# Subtest: profile refresh preserves cards and deck slots from a newer catalog
+ok 131 - profile refresh preserves cards and deck slots from a newer catalog
+# Subtest: saved gacha card receipts restore missing ownership without charging or replaying currencies
+ok 132 - saved gacha card receipts restore missing ownership without charging or replaying currencies
+# Subtest: Light leader promotions preserve existing copies, saved decks, training and cosmetics
+ok 133 - Light leader promotions preserve existing copies, saved decks, training and cosmetics
+# Subtest: tester codes grant exactly their catalog cards with no currency in development and production
+ok 134 - tester codes grant exactly their catalog cards with no currency in development and production
+# Subtest: tester grants do not alter story rewards or the story-only pack exclusion
+ok 135 - tester grants do not alter story rewards or the story-only pack exclusion
+# Subtest: public promo lookup accepts normalization and rejects unknown or inherited keys
+ok 136 - public promo lookup accepts normalization and rejects unknown or inherited keys
+# Subtest: internal test promos are available only in development
+ok 137 - internal test promos are available only in development
+# Subtest: City Legends grant covers all seven fighters through max level and three coached moves
+ok 138 - City Legends grant covers all seven fighters through max level and three coached moves
+# Subtest: promo redemption persists rewards once and works with the real economy
+    # Subtest: requires authentication and rejects malformed or client-supplied rewards
+    ok 1 - requires authentication and rejects malformed or client-supplied rewards
+    # Subtest: requires Rookie Road without consuming the code
+    ok 2 - requires Rookie Road without consuming the code
+    # Subtest: rejects unknown reward cards without consuming the code or changing the wallet
+    ok 3 - rejects unknown reward cards without consuming the code or changing the wallet
+    # Subtest: each tester code redeems through the production HTTP route exactly once per account
+    ok 4 - each tester code redeems through the production HTTP route exactly once per account
+    # Subtest: concurrent tester claims are independent, preserve pre-owned progress and make legal crews
+    ok 5 - concurrent tester claims are independent, preserve pre-owned progress and make legal crews
+    # Subtest: HTTP redemption returns credited balances and a durable retry receipt
+    ok 6 - HTTP redemption returns credited balances and a durable retry receipt
+    # Subtest: simultaneous requests grant only once, independently for each account
+    ok 7 - simultaneous requests grant only once, independently for each account
+    # Subtest: second code grants the same rewards to an account that already used the first
+    ok 8 - second code grants the same rewards to an account that already used the first
+    # Subtest: character code grants Simmy and Foodz once and leaves existing copies intact
+    ok 9 - character code grants Simmy and Foodz once and leaves existing copies intact
+    # Subtest: character code gives both cards to a fresh collection without spending a pack
+    ok 10 - character code gives both cards to a fresh collection without spending a pack
+    # Subtest: City Legends code gives seven cards and Clout once without replacing Leroy progress
+    ok 11 - City Legends code gives seven cards and Clout once without replacing Leroy progress
+    # Subtest: concurrent pulls, training and bootstrap retain both the grant and spending
+    ok 12 - concurrent pulls, training and bootstrap retain both the grant and spending
+    # Subtest: database failure leaves balances and claim unchanged, allowing a later retry
+    ok 13 - database failure leaves balances and claim unchanged, allowing a later retry
+ok 139 - promo redemption persists rewards once and works with the real economy
+# Subtest: DEVSTOCKZ grants only the redeemable STOCKZ character
+ok 140 - DEVSTOCKZ grants only the redeemable STOCKZ character
+# Subtest: KYLE grants the legendary character, tickets and Clout
+ok 141 - KYLE grants the legendary character, tickets and Clout
+# Subtest: banner schedules are fixed, inclusive at start and exclusive at expiry
+ok 142 - banner schedules are fixed, inclusive at start and exclusive at expiry
+# Subtest: featured weight is exactly 3:2, after protection and repeat exclusion
+ok 143 - featured weight is exactly 3:2, after protection and repeat exclusion
+# Subtest: focus cannot promote the independently rolled rarity
+ok 144 - focus cannot promote the independently rolled rarity
+# Subtest: focused ten pull preserves rewards and Rare+ guarantee
+ok 145 - focused ten pull preserves rewards and Rare+ guarantee
+# Subtest: ranked points use reduced bot rewards, floor at zero and preserve records
+ok 146 - ranked points use reduced bot rewards, floor at zero and preserve records
+# Subtest: ranked routes: human pairing, retries, cancellation race, bot completion, reconnect and exactly-once ranks
+ok 147 - ranked routes: human pairing, retries, cancellation race, bot completion, reconnect and exactly-once ranks
+# Subtest: all nine character packs validate, purchase and unlock exactly their playable reactions
+ok 148 - all nine character packs validate, purchase and unlock exactly their playable reactions
+# Subtest: saved tray read sanitation preserves explicit empty and order while filtering stale or locked IDs
+ok 149 - saved tray read sanitation preserves explicit empty and order while filtering stale or locked IDs
+# Subtest: reactions enforce ownership, independent seat cooldowns, and idempotent retries
+ok 150 - reactions enforce ownership, independent seat cooldowns, and idempotent retries
+# Subtest: database: reaction pack retries charge once and preserve other cosmetics
+ok 151 - database: reaction pack retries charge once and preserve other cosmetics
+# Subtest: character packs unlock only their four reactions
+ok 152 - character packs unlock only their four reactions
+# Subtest: Netlify invocations log a payment webhook 200 as completed, not aborted
+ok 153 - Netlify invocations log a payment webhook 200 as completed, not aborted
+# Subtest: Netlify invocations still log a response that never flushed as aborted
+ok 154 - Netlify invocations still log a response that never flushed as aborted
+# Subtest: direct HTTP path keeps the socket-lifecycle heuristic
+ok 155 - direct HTTP path keeps the socket-lifecycle heuristic
+# Subtest: routine social and room URLs retain only static endpoint context
+ok 156 - routine social and room URLs retain only static endpoint context
+# Subtest: static endpoints and unrelated paths remain useful without query strings
+ok 157 - static endpoints and unrelated paths remain useful without query strings
+# Subtest: account XP level helper is stable at every level boundary
+ok 158 - account XP level helper is stable at every level boundary
+# Subtest: starter Clout covers training and first move coaching; buying never mutates the input
+ok 159 - starter Clout covers training and first move coaching; buying never mutates the input
+# Subtest: training respects XP cap, proportionate pricing, ownership, and funds
+ok 160 - training respects XP cap, proportionate pricing, ownership, and funds
+# Subtest: move tiers require levels, charge 100/250/500, and preserve legacy-earned tiers
+ok 161 - move tiers require levels, charge 100/250/500, and preserve legacy-earned tiers
+# Subtest: tickets, slots, recruitment and styles use the correct currency and reject repeat ownership
+ok 162 - tickets, slots, recruitment and styles use the correct currency and reject repeat ownership
+# Subtest: XP does not activate unpurchased moves and an active fade retains its starting moves
+ok 163 - XP does not activate unpurchased moves and an active fade retains its starting moves
+# Subtest: verified battle earnings cover wins, draws and losses without generating repeatable tickets
+ok 164 - verified battle earnings cover wins, draws and losses without generating repeatable tickets
+# Subtest: database: simultaneous shop retries charge once and reject a changed request
+ok 165 - database: simultaneous shop retries charge once and reject a changed request
+# Subtest: database: separate simultaneous purchases cannot overspend the same wallet
+ok 166 - database: separate simultaneous purchases cannot overspend the same wallet
+# Subtest: database: normalization and a fade reward preserve a concurrent purchase
+ok 167 - database: normalization and a fade reward preserve a concurrent purchase
+# Subtest: Homies authenticated routes on owned native PostgreSQL
+    # Subtest: legacy 100-person identity allocation is batched and stable
+    ok 1 - legacy 100-person identity allocation is batched and stable
+    # Subtest: authenticated search discovers profile-only players in both directions and preserves identity
+    ok 2 - authenticated search discovers profile-only players in both directions and preserves identity
+    # Subtest: literal display-name prefixes, null handles, renames and chosen usernames
+    ok 3 - literal display-name prefixes, null handles, renames and chosen usernames
+    # Subtest: self and either-direction blocks filter before allocation; same-name results are bounded
+    ok 4 - self and either-direction blocks filter before allocation; same-name results are bounded
+    # Subtest: exact claimed handle outranks twelve unallocated public-name matches
+    ok 5 - exact claimed handle outranks twelve unallocated public-name matches
+    # Subtest: Fadebook handles, concurrent claims, bounded private search and durable opponents
+    ok 6 - Fadebook handles, concurrent claims, bounded private search and durable opponents
+    # Subtest: unauthenticated, minimal stable exact identity, duplicate/crossed requests and persistence
+    ok 7 - unauthenticated, minimal stable exact identity, duplicate/crossed requests and persistence
+    # Subtest: targeted invitation atomic retries, all code bypasses, legal decks, joined reconnect and ordinary rooms
+    ok 8 - targeted invitation atomic retries, all code bypasses, legal decks, joined reconnect and ordinary rooms
+    # Subtest: remove/block races cannot leave pending seats claimable
+    ok 9 - remove/block races cannot leave pending seats claimable
+    # Subtest: accept/cancel races, terminal retries, expiry and host room cancellation
+    ok 10 - accept/cancel races, terminal retries, expiry and host room cancellation
+    # Subtest: durable lookup throttle and resend cooldown survive separate connections
+    ok 11 - durable lookup throttle and resend cooldown survive separate connections
+    # Subtest: stale request IDs cannot accept a new send; concurrent crossed send and cancel stay explicit
+    ok 12 - stale request IDs cannot accept a new send; concurrent crossed send and cancel stay explicit
+    # Subtest: direct code join races with block and invitation decline is idempotent
+    ok 13 - direct code join races with block and invitation decline is idempotent
+    # Subtest: joined ordinary and targeted rooms bypass a held global social lock
+    ok 14 - joined ordinary and targeted rooms bypass a held global social lock
+    # Subtest: unclaimed targeted joins and social mutations wait for the global lock
+    ok 15 - unclaimed targeted joins and social mutations wait for the global lock
+    # Subtest: joined commands still serialize on their room row, independently of the global lock
+    ok 16 - joined commands still serialize on their room row, independently of the global lock
+    # Subtest: terminal invitation menus do not wait for their room row, but pending receipts do
+    ok 17 - terminal invitation menus do not wait for their room row, but pending receipts do
+    # Subtest: stale joined hint retries global-first after a seat is removed under the room lock
+    ok 18 - stale joined hint retries global-first after a seat is removed under the room lock
+    # Subtest: normal room creation competes atomically with invitation for the last hosted slot
+    ok 19 - normal room creation competes atomically with invitation for the last hosted slot
+    # Subtest: pending and homie limits are enforced atomically and lists bounded
+    ok 20 - pending and homie limits are enforced atomically and lists bounded
+    # Subtest: mutate throttle counts failures across independent requests
+    ok 21 - mutate throttle counts failures across independent requests
+    # Subtest: deleted invitation parties cannot turn targeted rooms into ordinary rooms
+    ok 22 - deleted invitation parties cannot turn targeted rooms into ordinary rooms
+    # Subtest: additive native/development migration parity and profile cascades
+    ok 23 - additive native/development migration parity and profile cascades
+ok 168 - Homies authenticated routes on owned native PostgreSQL
+# Subtest: numeric chapter counters and unrelated specials cannot unlock the Mythical
+ok 169 - numeric chapter counters and unrelated specials cannot unlock the Mythical
+# Subtest: finishing Chapter 4 unlocks the reward without Chapter 5 clears, optional nodes or login claims
+ok 170 - finishing Chapter 4 unlocks the reward without Chapter 5 clears, optional nodes or login claims
+# Subtest: existing owners keep one card and receive 25 shards plus all currency rewards
+ok 171 - existing owners keep one card and receive 25 shards plus all currency rewards
+# Subtest: login and milestone claims remain independent and preserve concurrent balances
+ok 172 - login and milestone claims remain independent and preserve concurrent balances
+# Subtest: HTTP endpoints authenticate, use saved eligibility, ignore forged rewards, and return the persisted claim
+ok 173 - HTTP endpoints authenticate, use saved eligibility, ignore forged rewards, and return the persisted claim
+# Subtest: Stockz hides the closing price, survives retries, and settles only once after the bell
+ok 174 - Stockz hides the closing price, survives retries, and settles only once after the bell
+# Subtest: Stockz enforces five daily trades and keeps an unfinished trade across midnight
+ok 175 - Stockz enforces five daily trades and keeps an unfinished trade across midnight
+# Subtest: fresh rookie crew solves the guided opening within the node ceiling
+ok 176 - fresh rookie crew solves the guided opening within the node ceiling
+# Subtest: OG Uncle boss keeps both phases and has a bounded fresh-roster win
+ok 177 - OG Uncle boss keeps both phases and has a bounded fresh-roster win
+# Subtest: Bar Fight keeps its center lock and has a bounded fresh-roster win
+ok 178 - Bar Fight keeps its center lock and has a bounded fresh-roster win
+# Subtest: Crown Open Entry keeps its guided length and has a bounded fresh-roster win
+ok 179 - Crown Open Entry keeps its guided length and has a bounded fresh-roster win
+# Subtest: Crown Hooper keeps its semifinal phase and has a bounded fresh-roster win
+ok 180 - Crown Hooper keeps its semifinal phase and has a bounded fresh-roster win
+# Subtest: Baby Momma's Terms has a bounded win with the owned rookie core crew
+ok 181 - Baby Momma's Terms has a bounded win with the owned rookie core crew
+# Subtest: Published Exhibition has a bounded win with the saved Dr Fade crew
+ok 182 - Published Exhibition has a bounded win with the saved Dr Fade crew
+# Subtest: Pledge Drive Final keeps its announced phases and has a bounded campaign-crew win
+ok 183 - Pledge Drive Final keeps its announced phases and has a bounded campaign-crew win
+# Subtest: suppressed presentation events preserve complete boss gameplay state
+ok 184 - suppressed presentation events preserve complete boss gameplay state
+# Subtest: Dead Air Soundcheck stays solvable within the existing budget with the campaign mentor crew
+ok 185 - Dead Air Soundcheck stays solvable within the existing budget with the campaign mentor crew
+# Subtest: campaign exposes authoritative summaries for every authored season
+ok 186 - campaign exposes authoritative summaries for every authored season
+# Subtest: puzzle completion validates authority, solutions, bypass, and idempotency
+ok 187 - puzzle completion validates authority, solutions, bypass, and idempotency
+# Subtest: an exact solved puzzle replay is stable and grants authored rewards once
+ok 188 - an exact solved puzzle replay is stable and grants authored rewards once
+# Subtest: squabble-house-last-waffle: solve authority and victory-gated rewards persist once
+ok 189 - squabble-house-last-waffle: solve authority and victory-gated rewards persist once
+# Subtest: squabble-house-last-waffle: skip authority and victory-gated rewards persist once
+ok 190 - squabble-house-last-waffle: skip authority and victory-gated rewards persist once
+# Subtest: squabble-house-receipts: solve authority and victory-gated rewards persist once
+ok 191 - squabble-house-receipts: solve authority and victory-gated rewards persist once
+# Subtest: squabble-house-receipts: skip authority and victory-gated rewards persist once
+ok 192 - squabble-house-receipts: skip authority and victory-gated rewards persist once
+# Subtest: squabble-house-family-discount: solve authority and victory-gated rewards persist once
+ok 193 - squabble-house-family-discount: solve authority and victory-gated rewards persist once
+# Subtest: squabble-house-family-discount: skip authority and victory-gated rewards persist once
+ok 194 - squabble-house-family-discount: skip authority and victory-gated rewards persist once
+# Subtest: squabble-house-hands-on-the-clock: solve authority and victory-gated rewards persist once
+ok 195 - squabble-house-hands-on-the-clock: solve authority and victory-gated rewards persist once
+# Subtest: squabble-house-hands-on-the-clock: skip authority and victory-gated rewards persist once
+ok 196 - squabble-house-hands-on-the-clock: skip authority and victory-gated rewards persist once
+# Subtest: squabble-house-wet-floor: solve authority and victory-gated rewards persist once
+ok 197 - squabble-house-wet-floor: solve authority and victory-gated rewards persist once
+# Subtest: squabble-house-wet-floor: skip authority and victory-gated rewards persist once
+ok 198 - squabble-house-wet-floor: skip authority and victory-gated rewards persist once
+# Subtest: squabble-house-real-thief: solve authority and victory-gated rewards persist once
+ok 199 - squabble-house-real-thief: solve authority and victory-gated rewards persist once
+# Subtest: squabble-house-real-thief: skip authority and victory-gated rewards persist once
+ok 200 - squabble-house-real-thief: skip authority and victory-gated rewards persist once
+# Subtest: an already-owned House card converts to shards once and keeps a single collection entry
+ok 201 - an already-owned House card converts to shards once and keeps a single collection entry
+# Subtest: story nodes persist normalized progress and merged dialogue
+ok 202 - story nodes persist normalized progress and merged dialogue
+# Subtest: Chapter Two opens after the Crown and hands off to Chapter Three
+ok 203 - Chapter Two opens after the Crown and hands off to Chapter Three
+# Subtest: Courier Table separates a legacy perfect ticket from its direct-clear payout
+ok 204 - Courier Table separates a legacy perfect ticket from its direct-clear payout
+# Subtest: story campaign GET backfills the lower-star Courier ticket once with confirmed bootstrap
+ok 205 - story campaign GET backfills the lower-star Courier ticket once with confirmed bootstrap
+# Subtest: story-earned cards are delivered on first clear and replayed idempotently
+ok 206 - story-earned cards are delivered on first clear and replayed idempotently
+# Subtest: authenticated campaign entry catches up earned cards without replaying money
+ok 207 - authenticated campaign entry catches up earned cards without replaying money
+# Subtest: campaign catch-up does not grant cards for uncleared story nodes
+ok 208 - campaign catch-up does not grant cards for uncleared story nodes
+# Subtest: concurrent story campaign GETs reconcile all cleared nodes once and exclude perfect tickets
+ok 209 - concurrent story campaign GETs reconcile all cleared nodes once and exclude perfect tickets
+# Subtest: all eight chapters unlock in order and the final reward is claimed once
+ok 210 - all eight chapters unlock in order and the final reward is claimed once
+# Subtest: every exported story node meets the direct-clear payout contract
+ok 211 - every exported story node meets the direct-clear payout contract
+# Subtest: completed nodes return only one-time Clout and direct-ticket make-good rewards
+ok 212 - completed nodes return only one-time Clout and direct-ticket make-good rewards
+# Subtest: concurrent completed-node checks make-good each historical payout gap once
+ok 213 - concurrent completed-node checks make-good each historical payout gap once
+# Subtest: server registry prerequisites reject out-of-order completion
+ok 214 - server registry prerequisites reject out-of-order completion
+# Subtest: optional Side Alley never gates required completion or recommendation
+ok 215 - optional Side Alley never gates required completion or recommendation
+# Subtest: development story reset guard is disabled outside development
+ok 216 - development story reset guard is disabled outside development
+# Subtest: concurrent story reward completion grants immutable rewards once
+ok 217 - concurrent story reward completion grants immutable rewards once
+# Subtest: story action keys reject cross-node, action, and payload reuse
+ok 218 - story action keys reject cross-node, action, and payload reuse
+# Subtest: dialogue actions persist on unlocked battle nodes without clearing
+ok 219 - dialogue actions persist on unlocked battle nodes without clearing
+# Subtest: season-one screenplay tokens fit bounded save actions without changing other-season tokens
+ok 220 - season-one screenplay tokens fit bounded save actions without changing other-season tokens
+# Subtest: unverified story battle results cannot unlock post-match dialogue
+ok 221 - unverified story battle results cannot unlock post-match dialogue
+# Subtest: cleared battle dialogue saves retain rewards, clear metadata, legacy markers, and issued snapshots
+ok 222 - cleared battle dialogue saves retain rewards, clear metadata, legacy markers, and issued snapshots
+# Subtest: story transcript verification uses explicit immutable snapshot and cards
+ok 223 - story transcript verification uses explicit immutable snapshot and cards
+# Subtest: story fade progression snapshot survives a later content revision
+ok 224 - story fade progression snapshot survives a later content revision
+# Subtest: old issued battle rewards stay immutable while first-clear delivery fills the current contract
+ok 225 - old issued battle rewards stay immutable while first-clear delivery fills the current contract
+# Subtest: perfect-battle ticket remains distinct from the direct-clear ticket
+ok 226 - perfect-battle ticket remains distinct from the direct-clear ticket
+# Subtest: stored story fade result reconstructs byte-equivalent retry metadata
+ok 227 - stored story fade result reconstructs byte-equivalent retry metadata
+# Subtest: saved closing dialogue can recover rewards and repeated delivery checks never mint twice
+ok 228 - saved closing dialogue can recover rewards and repeated delivery checks never mint twice
+# Subtest: pack retry credits each currency exactly once and survives bootstrap reload
+ok 229 - pack retry credits each currency exactly once and survives bootstrap reload
+# Subtest: craft and shop race cannot spend the same matching or universal shards twice
+ok 230 - craft and shop race cannot spend the same matching or universal shards twice
+# Subtest: shop retry persists its mixed payment and wrong-tier funds leave the account untouched
+ok 231 - shop retry persists its mixed payment and wrong-tier funds leave the account untouched
+# Subtest: legacy profile and duplicate receipts keep their universal balance across repeated loads
+ok 232 - legacy profile and duplicate receipts keep their universal balance across repeated loads
+# Subtest: existing shards retain every old crafting price with no migration or re-credit
+ok 233 - existing shards retain every old crafting price with no migration or re-credit
+# Subtest: matching shards spend first, other tiers are untouched, and the quote matches the debit
+ok 234 - matching shards spend first, other tiers are untouched, and the quote matches the debit
+# Subtest: wrong-tier shards cannot buy a style; malformed costs cannot mint currency
+ok 235 - wrong-tier shards cannot buy a style; malformed costs cannot mint currency
+# Subtest: all pack rarity boundaries award the matching amount and keep bonuses universal
+ok 236 - all pack rarity boundaries award the matching amount and keep bonuses universal
+# Subtest: shop plan spends the same wallet as direct crafting and records the exact payment
+ok 237 - shop plan spends the same wallet as direct crafting and records the exact payment
+# Subtest: rejects a pass-only tutorial transcript
+ok 238 - rejects a pass-only tutorial transcript
+# Subtest: does not count an end-turn pass or an empty pass as banking Motion
+ok 239 - does not count an end-turn pass or an empty pass as banking Motion
+# Subtest: rejects banking before the authored round-three lesson
+ok 240 - rejects banking before the authored round-three lesson
+# Subtest: rejects SQUABBLE before the authored round-four lesson
+ok 241 - rejects SQUABBLE before the authored round-four lesson
+# Subtest: requires the authoritative player SQUABBLE state transition
+ok 242 - requires the authoritative player SQUABBLE state transition
+# Subtest: accepts play, later positive-Motion bank, and player SQUABBLE
+ok 243 - accepts play, later positive-Motion bank, and player SQUABBLE
+# Subtest: accepts an owned variant for its owned gameplay card
+ok 244 - accepts an owned variant for its owned gameplay card
+# Subtest: rejects forged, mismatched, and unowned variants
+ok 245 - rejects forged, mismatched, and unowned variants
+# Subtest: allows an owned card to return to its base treatment
+ok 246 - allows an owned card to return to its base treatment
+# Subtest: hosting adapter preserves JSON, query parameters, auth headers, and separate cookies
+ok 247 - hosting adapter preserves JSON, query parameters, auth headers, and separate cookies
+# Subtest: Netlify GET player searches preserve encoded names, handles, and authentication
+ok 248 - Netlify GET player searches preserve encoded names, handles, and authentication
+# Subtest: hosting adapter preserves binary bodies and empty 204 responses
+ok 249 - hosting adapter preserves binary bodies and empty 204 responses
+# Subtest: Netlify adapter preserves signed UTF-8 JSON bytes before parsers or auth
+ok 250 - Netlify adapter preserves signed UTF-8 JSON bytes before parsers or auth
+# Subtest: free welcome ticket grants Dr. Fade exactly once across concurrent requests without changing wallet or pity
+ok 251 - free welcome ticket grants Dr. Fade exactly once across concurrent requests without changing wallet or pity
+# Subtest: existing mentor converts to normal duplicate shards once; retry returns same receipt
+ok 252 - existing mentor converts to normal duplicate shards once; retry returns same receipt
+# Subtest: welcome ticket cannot be claimed after a regular first opening
+ok 253 - welcome ticket cannot be claimed after a regular first opening
+# tests 292
+# pass 292
+# fail 0
+# cancelled 0
+# skipped 0
+# duration_ms 480266.835236

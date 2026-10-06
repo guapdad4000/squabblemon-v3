@@ -1,3 +1,4 @@
+import { abilityFailed } from './abilityOutcome';
 import { eventIntensity } from './battleChoreography';
 import type { EffectLogEntry } from './gameEngine';
 import { getGameAudioContext } from './gameAudioContext';
@@ -40,6 +41,7 @@ export function cueForBattleEvent(event: EffectLogEntry): BattleCue {
   if (event.type === 'reveal') return 'reveal';
   if (event.type === 'pass') return 'pass';
   if (event.type === 'match-complete') return 'claim';
+  if (abilityFailed(event)) return 'shield';
   if (event.kind === 'fire') return 'fire';
   if (event.kind === 'water') return 'ice';
   if (event.kind === 'blocked') return 'shield';

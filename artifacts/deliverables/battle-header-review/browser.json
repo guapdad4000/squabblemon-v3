@@ -1,0 +1,47 @@
+[
+  {
+    "width": 320,
+    "height": 568,
+    "menu": true,
+    "music": true,
+    "keyboard": true,
+    "pvp": true,
+    "errors": []
+  },
+  {
+    "width": 390,
+    "height": 844,
+    "menu": true,
+    "music": true,
+    "keyboard": true,
+    "pvp": true,
+    "errors": []
+  },
+  {
+    "width": 430,
+    "height": 932,
+    "menu": true,
+    "music": true,
+    "keyboard": true,
+    "pvp": true,
+    "errors": []
+  },
+  {
+    "width": 844,
+    "height": 390,
+    "menu": true,
+    "music": true,
+    "keyboard": true,
+    "pvp": true,
+    "errors": []
+  },
+  {
+    "width": 1440,
+    "height": 1000,
+    "menu": true,
+    "music": true,
+    "keyboard": true,
+    "pvp": true,
+    "errors": []
+  }
+]

@@ -1,0 +1,22 @@
+[
+  {
+    "artworkId": "ms-mary-mack",
+    "source": "/home/falcon/.codex/generated_images/01a0fed0-9461-76a1-bdb2-a885962a8772/exec-6d3b5092-b9cd-4bcf-b20e-13b846da1aff.png",
+    "sourceSha256": "a8829d0524fc9ad573fe9d2fbe3020e2c6dfbc4b816f8f9607b60b78be95bea4",
+    "file": "artifacts/squabblemon/public/assets/characters/ms-mary-mack.webp",
+    "sha256": "5414ecaa07229e6227cec1df51ff2bb36244e279532e00bd478a7e7b686f7977",
+    "width": 1024,
+    "height": 1536,
+    "alpha": true
+  },
+  {
+    "artworkId": "ms-mary-mack-elephant",
+    "source": "/tmp/codex-clipboard-49413efe-84e8-4bbe-9e97-ebbddc5d6119.png",
+    "sourceSha256": "cc9f5c841f0956d2a9ef5f1516e9543c0ed7435abe5e8599021b1a10d199cab4",
+    "file": "artifacts/squabblemon/public/assets/characters/ms-mary-mack-elephant.webp",
+    "sha256": "4ecc964e742b61a8deb4bc465624ba7a6501225cb125b2747fac942571587fc2",
+    "width": 1086,
+    "height": 1448,
+    "alpha": true
+  }
+]

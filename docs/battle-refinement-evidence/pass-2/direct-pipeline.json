@@ -1,0 +1,62 @@
+[
+  {
+    "file": "char37_chroma.mp4",
+    "time": 1,
+    "meanCompositeError": 1.800520171417333,
+    "largeErrorFraction": 0.04193190586419753,
+    "drawMs": [
+      0.5266666650772095,
+      3.7666666666666666
+    ]
+  },
+  {
+    "file": "char37_chroma.mp4",
+    "time": 2.5,
+    "meanCompositeError": 1.6985093861790272,
+    "largeErrorFraction": 0.03415155606995885,
+    "drawMs": [
+      0.4799999992052714,
+      3.8
+    ]
+  },
+  {
+    "file": "char37_chroma.mp4",
+    "time": 4,
+    "meanCompositeError": 3.143623426951377,
+    "largeErrorFraction": 0.08038355195473251,
+    "drawMs": [
+      0.3066666682561239,
+      3.966666666666667
+    ]
+  },
+  {
+    "file": "char91_chroma.mp4",
+    "time": 1,
+    "meanCompositeError": 1.8470241832586878,
+    "largeErrorFraction": 0.03722993827160494,
+    "drawMs": [
+      0.3866666674613953,
+      3.7799999992052715
+    ]
+  },
+  {
+    "file": "char91_chroma.mp4",
+    "time": 2.5,
+    "meanCompositeError": 1.2960675045052281,
+    "largeErrorFraction": 0.023911715534979425,
+    "drawMs": [
+      0.2966666658719381,
+      3.7266666690508523
+    ]
+  },
+  {
+    "file": "char91_chroma.mp4",
+    "time": 4,
+    "meanCompositeError": 2.337954683759641,
+    "largeErrorFraction": 0.033653227880658436,
+    "drawMs": [
+      0.3066666682561239,
+      4.676666665077209
+    ]
+  }
+]

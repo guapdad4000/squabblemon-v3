@@ -1,8 +1,10 @@
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
+import release from "../../../squabblemon/src/lib/streetLegendsRelease.json";
 import { after, before, test } from "node:test";
 import { db, patchDeliveryTargetsTable, patchDraftsTable, playerProfilesTable } from "@workspace/db";
 import { and, eq } from "drizzle-orm";
-import { createPatchDraft, deliverLatePatchLetters, listPublicPatches, previewPatch, processOutstandingPatchBatches, processPatchDeliveryBatch, publishPatch, updatePatchDraft } from "./patches";
+import { makePatchLetter, createPatchDraft, deliverLatePatchLetters, listPublicPatches, previewPatch, processOutstandingPatchBatches, processPatchDeliveryBatch, publishPatch, updatePatchDraft } from "./patches";
 import { updateMail } from "./mail";
 import { createApp } from "../app";
 
@@ -34,7 +36,7 @@ test("published patch snapshots recipients and delivers resumable bounded, repla
     buffs: ["Boosted moves."],
     changes: ["Adjusted matchmaking."],
     softCurrency: 50,
-    packTickets: 1,
+    packTickets: 10,
   }, "clerk-admin-test");
   patchId = draft.id;
   await db.update(playerProfilesTable).set({
@@ -58,7 +60,7 @@ test("published patch snapshots recipients and delivers resumable bounded, repla
   assert.ok(preview);
   assert.equal(preview.audienceCount, userIds.length);
   assert.equal(preview.letter.gift.softCurrency, 50);
-  assert.equal(preview.letter.gift.packTickets, 1);
+  assert.equal(preview.letter.gift.packTickets, 10);
   assert.equal(preview.letter.gift.styleShards, 0);
   assert.match(preview.letter.body, /October 5, 2026/);
   assert.ok(preview.letter.id.length <= 100);
@@ -132,7 +134,7 @@ test("published patch snapshots recipients and delivers resumable bounded, repla
     assert.equal(claims.filter(result => result.credited).length, 1);
     const [claimedProfile] = await db.select().from(playerProfilesTable).where(eq(playerProfilesTable.clerkUserId, userIds[2]));
     assert.equal(claimedProfile.softCurrency, 187);
-    assert.equal(claimedProfile.packTickets, 3);
+    assert.equal(claimedProfile.packTickets, 12);
     assert.equal(claimedProfile.inbox.filter(mail => mail.id === campaignId).length, 1);
 
     // Late joiners still get the letter once, outside the frozen snapshot counts.
@@ -168,6 +170,9 @@ test("published patch snapshots recipients and delivers resumable bounded, repla
     assert.equal(lateClaims.filter(result => result.credited).length, 1);
     const [lateProfile] = await db.select().from(playerProfilesTable).where(eq(playerProfilesTable.clerkUserId, lateId));
     assert.equal(lateProfile.inbox.filter(mail => mail.id === campaignId).length, 1);
+    assert.equal(lateProfile.packTickets, 10);
+    assert.equal((await updateMail(lateId, campaignId!, true)).credited, false);
+    assert.equal((await db.select().from(playerProfilesTable).where(eq(playerProfilesTable.clerkUserId, lateId)))[0].packTickets, 10);
   } finally {
     await db.delete(playerProfilesTable).where(eq(playerProfilesTable.clerkUserId, lateId));
   }
@@ -216,7 +221,7 @@ test("private patch administration requires an allowlisted Clerk identity and re
     buffs: [],
     changes: [],
     softCurrency: 50,
-    packTickets: 1,
+    packTickets: 10,
     artCardId: "sherlock",
   };
   const { softCurrency: _defaultClout, packTickets: _defaultTickets, artCardId: _defaultArt, ...withoutGift } = body;
@@ -241,7 +246,10 @@ test("private patch administration requires an allowlisted Clerk identity and re
 
   for (const [suffix, gift] of [
     ["clout-over", { softCurrency: 101, packTickets: 0 }],
-    ["ticket-over", { softCurrency: 50, packTickets: 2 }],
+    ["ticket-over", { softCurrency: 50, packTickets: 11 }],
+    ["ticket-negative", { softCurrency: 0, packTickets: -1 }],
+    ["ticket-fraction", { softCurrency: 0, packTickets: 1.5 }],
+    ["clout-fraction", { softCurrency: 1.5, packTickets: 0 }],
   ] as const) {
     const overCapResponse = await fetch(url, {
       method: "POST",
@@ -269,9 +277,11 @@ test("private patch administration requires an allowlisted Clerk identity and re
   assert.equal(created.status, 201);
   const draft = await created.json() as { id: string; artCardId: string | null; updatedAt: string; version: string; title: string; date: string; overview: string; buffs: string[]; changes: string[]; softCurrency: number; packTickets: number };
   assert.equal(draft.artCardId, "sherlock");
+  assert.equal(draft.packTickets, 10);
   const preview = await previewPatch(draft.id);
   assert.ok(preview);
   assert.equal(preview.patch.artCardId, "sherlock");
+  assert.equal(preview.letter.gift.packTickets, 10);
   await db.update(playerProfilesTable).set({
     inbox: [{
       id: preview.letter.id,
@@ -328,4 +338,9 @@ test("private patch administration requires an allowlisted Clerk identity and re
   });
   assert.equal(republish.status, 409);
   await db.delete(patchDraftsTable).where(eq(patchDraftsTable.id, draft.id));
+});
+test("prepared release letter matches the exact authoritative rendering", () => {
+  const fixture = JSON.parse(readFileSync(new URL('../../../deliverables/release-mail-1-11/mail-preview.json', import.meta.url), 'utf8'));
+  assert.deepEqual(makePatchLetter(release), fixture);
+  assert.equal(release.packTickets, 10);
 });

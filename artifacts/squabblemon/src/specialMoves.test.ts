@@ -6,6 +6,8 @@ import openart from '../reference/openart-specials.json';
 import { cardCatalog, cards, LATER_DROP_STARTER_IDS } from './data';
 import { getMoveClipUrl, gateSpecialMoveReplay, getMovePlayKey, keyChromaPixels, markSpecialMovePlayed, planSpecialMoveBeat, moveAssignments, moveClips, resolveSpecialMove, specialMoveForEvent } from './specialMoves';
 
+const appliedOutcome = { resources: { before: { playerMotion: 0, cpuMotion: 0 }, after: { playerMotion: 1, cpuMotion: 0 } } };
+
 test('all 100 OpenArt finishers resolve through engine and artwork IDs, preserve full timing and remain replaceable', () => {
   assert.equal(openart.clips.length, 100);
   assert.equal(new Set(openart.clips.map(clip => clip.engineId)).size, 100);
@@ -23,7 +25,7 @@ test('all 100 OpenArt finishers resolve through engine and artwork IDs, preserve
     assert.equal(clip.startSeconds, 0);
     assert.equal(clip.playbackRate, 1);
     assert.equal(clip.durationMs, Math.ceil(source.durationSeconds * 1000));
-    const event = { type: 'ability' as const, kind: 'ability' as const, cardId: source.engineId };
+    const event = { ...appliedOutcome, type: 'ability' as const, kind: 'ability' as const, cardId: source.engineId };
     assert.equal(specialMoveForEvent(event)?.id, source.clipId);
     for (const kind of ['blocked', 'fizzle', 'story'] as const) {
       assert.equal(specialMoveForEvent({ ...event, kind }), null);
@@ -61,7 +63,7 @@ test('new Side, story-reward and Wiz finishers match their playable fighters', (
     assert.equal(clip?.move, cards[cardId].ability);
     assert.equal(clip?.startSeconds, 0);
     assert.equal(clip?.durationMs, 5167);
-    assert.equal(specialMoveForEvent({ type: 'ability', kind: 'ability', cardId })?.id, clipId);
+    assert.equal(specialMoveForEvent({ ...appliedOutcome, type: 'ability', kind: 'ability', cardId })?.id, clipId);
   }
   assert.equal(new Set(Object.values(assigned)).size, 13, 'duplicate Red Robber render is not assigned twice');
   assert.equal(resolveSpecialMove('redside4'), null, 'no Red Hexer clip was supplied');
@@ -109,7 +111,7 @@ test('creator Mythicals use their delivered finishers with full playback and unc
     assert.equal(clip.startSeconds, 0);
     assert.equal(clip.playbackRate, 1);
     assert.equal(clip.durationMs, 6500);
-    assert.equal(specialMoveForEvent({ type: 'ability', kind: 'ability', cardId: id })?.id, clipId);
+    assert.equal(specialMoveForEvent({ ...appliedOutcome, type: 'ability', kind: 'ability', cardId: id })?.id, clipId);
     assert.equal(resolveSpecialMove(id, { [id]: null }), null);
   }
 });
@@ -151,7 +153,7 @@ test('replacement, disabled selection, missing cards and blocked events use safe
   assert.equal(resolveSpecialMove('future-card'), null);
   assert.equal(specialMoveForEvent({ type: 'play', kind: 'ability', cardId: 'barber' }), null);
   assert.equal(specialMoveForEvent({ type: 'ability', kind: 'blocked', cardId: 'barber' }), null);
-  assert.equal(specialMoveForEvent({ type: 'ability', kind: 'ability', cardId: 'barber' })?.id, 'char37');
+  assert.equal(specialMoveForEvent({ ...appliedOutcome, type: 'ability', kind: 'ability', cardId: 'barber' })?.id, 'char37');
 });
 
 test('Wave 3 fills its nine card gaps and resolves the correct ability video', () => {
@@ -160,7 +162,7 @@ test('Wave 3 fills its nine card gaps and resolves the correct ability video', (
     const clip = resolveSpecialMove(id);
     assert.equal(clip?.id, clipId);
     assert.equal(clip?.move, cards[id].ability);
-    assert.equal(specialMoveForEvent({ type: 'ability', kind: 'ability', cardId: id })?.id, clipId);
+    assert.equal(specialMoveForEvent({ ...appliedOutcome, type: 'ability', kind: 'ability', cardId: id })?.id, clipId);
     assert.equal(resolveSpecialMove(cards[id].id)?.id, clipId);
     assert.equal(resolveSpecialMove(id, { [id]: null }), null, 'manual disable remains available');
   }
@@ -173,7 +175,7 @@ test('Wave 4 covers the seven Super Commons while preserving printed moves, rari
     assert.equal(clip?.id, clipId);
     assert.equal(clip?.move, cards[id].ability);
     assert.equal(cardCatalog.find(card => card.engineId === id)?.rarity, 'SuperCommon');
-    assert.equal(specialMoveForEvent({ type: 'ability', kind: 'ability', cardId: id })?.id, clipId);
+    assert.equal(specialMoveForEvent({ ...appliedOutcome, type: 'ability', kind: 'ability', cardId: id })?.id, clipId);
     assert.equal(resolveSpecialMove(cards[id].id)?.id, clipId);
     assert.equal(resolveSpecialMove(id, { [id]: null }), null);
   }
@@ -195,7 +197,7 @@ test('Wave 5 covers all twenty expansion characters with their current printed m
     assert.equal(clip?.id, clipId);
     assert.equal(clip?.label, cards[id].name);
     assert.equal(clip?.move, cards[id].ability);
-    assert.equal(specialMoveForEvent({ type: 'ability', kind: 'ability', cardId: id })?.id, clipId);
+    assert.equal(specialMoveForEvent({ ...appliedOutcome, type: 'ability', kind: 'ability', cardId: id })?.id, clipId);
     assert.equal(resolveSpecialMove(cards[id].id)?.id, clipId);
     assert.equal(resolveSpecialMove(id, { [id]: null }), null);
     assert.equal(resolveSpecialMove(id, { [id]: 'char08' })?.id, 'char08');
@@ -219,7 +221,7 @@ test('Wave 6 covers the six original City Legends with their printed moves and c
     const clip = resolveSpecialMove(id);
     assert.equal(clip?.id, expected.clipId);
     assert.equal(clip?.label, cards[id].name);
-    assert.equal(specialMoveForEvent({ type: 'ability', kind: 'ability', cardId: id })?.id, expected.clipId);
+    assert.equal(specialMoveForEvent({ ...appliedOutcome, type: 'ability', kind: 'ability', cardId: id })?.id, expected.clipId);
     assert.equal(resolveSpecialMove(cards[id].id)?.id, expected.clipId);
     assert.equal(resolveSpecialMove(id, { [id]: null }), null, 'manual disable remains available');
     const rarity = cardCatalog.find(card => card.engineId === id)!.rarity;
@@ -236,7 +238,7 @@ test('Wave 7 keeps Ashlee and Captain Jigga clips and retires replaced likenesse
     assert.equal(clip?.label, cards[id].name);
     assert.equal(clip?.move, cards[id].ability);
     assert.equal(cardCatalog.find(card => card.engineId === id)?.rarity, 'Mythical');
-    assert.equal(specialMoveForEvent({ type: 'ability', kind: 'ability', cardId: id })?.id, clipId);
+    assert.equal(specialMoveForEvent({ ...appliedOutcome, type: 'ability', kind: 'ability', cardId: id })?.id, clipId);
   }
   assert.equal(moveAssignments.counter, null);
   assert.equal(resolveSpecialMove('counter'), null);
@@ -282,7 +284,7 @@ test('STOCKZ uses its delivered animation once while ongoing gains keep resolvin
   assert.equal(clip.move, cards.stockz.ability);
   assert.equal(clip.chroma, 'cyan');
   assert.equal(clip.durationMs, 6500);
-  assert.equal(specialMoveForEvent({ type: 'ability', kind: 'ability', cardId: 'stockz' })?.id, 'char102');
+  assert.equal(specialMoveForEvent({ ...appliedOutcome, type: 'ability', kind: 'ability', cardId: 'stockz' })?.id, 'char102');
   const key = { owner: 'player' as const, sourceInstanceId: 'stockz-1', moveId: clip.id };
   const played = new Set<string>();
   assert.equal(gateSpecialMoveReplay(clip, key, played)?.id, 'char102');
@@ -299,7 +301,7 @@ test('KYLE uses the delivered Smile Bombs animation once per fade', () => {
   assert.equal(clip.move, cards.kyle.ability);
   assert.equal(clip.chroma, 'cyan');
   assert.equal(clip.durationMs, 6500);
-  assert.equal(specialMoveForEvent({ type: 'ability', kind: 'ability', cardId: 'kyle' })?.id, 'char103');
+  assert.equal(specialMoveForEvent({ ...appliedOutcome, type: 'ability', kind: 'ability', cardId: 'kyle' })?.id, 'char103');
   assert.ok(existsSync(new URL('../public/assets/special-moves/char103_chroma.mp4', import.meta.url)));
   const key = { owner: 'player' as const, sourceInstanceId: 'kyle-1', moveId: clip.id };
   const played = new Set<string>();

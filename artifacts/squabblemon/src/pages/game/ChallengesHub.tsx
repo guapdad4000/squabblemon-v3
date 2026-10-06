@@ -13,6 +13,7 @@ import {
   FlagshipMachine,
   type RoadReturn,
 } from "../../components/fadecade/FlagshipMachine";
+import { EventsMachine } from "../../components/fadecade/EventsMachine";
 import { StockzMachine } from "../../components/fadecade/StockzMachine";
 import { TrainingMachine } from "../../components/fadecade/TrainingMachine";
 import {
@@ -239,6 +240,7 @@ export function ChallengesHub({
               />
             )}
             {!trainingOnly && <StockzMachine bootstrap={bootstrap} />}
+            {!trainingOnly && <EventsMachine playerId={bootstrap.profile.id} legalCrews={legalCrews} onBattle={launchBattle} />}
             {!trainingOnly && (
               <WaffleMachine onOpen={() => setWaffleOpen(true)} />
             )}

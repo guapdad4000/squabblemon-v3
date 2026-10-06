@@ -125,7 +125,8 @@ function validTextContent(input: ReturnType<typeof normalizedInput>): boolean {
     ...(input.buffs.length ? ["", "Buffs", ...input.buffs.map(item => `• ${item}`)] : []),
     ...(input.changes.length ? ["", "Changes", ...input.changes.map(item => `• ${item}`)] : []),
   ].join("\n");
-  return calendarDate && !!input.version.trim() && !!input.title.trim() && !!input.overview.trim() &&
+  return Number.isSafeInteger(input.packTickets) && Number.isSafeInteger(input.softCurrency) &&
+    calendarDate && !!input.version.trim() && !!input.title.trim() && !!input.overview.trim() &&
     `Patch ${input.version}: ${input.title}`.length <= 120 &&
     input.buffs.every(item => !!item.trim()) && input.changes.every(item => !!item.trim()) && letterBody.length <= 6000 &&
     validArtCard(input.artCardId);
@@ -158,7 +159,7 @@ router.post("/admin/patches", async (req, res): Promise<void> => {
   }
   const input = normalizedInput(parsed.data);
   if (!validTextContent(input)) {
-    res.status(400).json({ error: "Patch date, text, or artwork is invalid, blank, or too long for patch mail." });
+    res.status(400).json({ error: "Patch date, text, artwork, or gift is invalid, blank, or too long for patch mail." });
     return;
   }
   try {
@@ -179,7 +180,7 @@ router.put("/admin/patches/:id", async (req, res): Promise<void> => {
   }
   const input = normalizedInput(parsed.data);
   if (!validTextContent(input)) {
-    res.status(400).json({ error: "Patch date, text, or artwork is invalid, blank, or too long for patch mail." });
+    res.status(400).json({ error: "Patch date, text, artwork, or gift is invalid, blank, or too long for patch mail." });
     return;
   }
   try {

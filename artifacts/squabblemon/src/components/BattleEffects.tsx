@@ -2,13 +2,22 @@ import { CombatSprite } from './BattleArt';
 import React, { useEffect, useRef, useState } from 'react';
 import './battle-effects.css';
 
-const fragments = Array.from({ length: 12 }, (_, index) => index);
+const fragments = Array.from({ length: 12 }, (_, index) => ({ '--fx-angle': `${index * 30}deg`, '--fx-distance': `${42 + index % 3 * 18}px`, '--fx-delay': `${index % 4 * 24}ms` } as React.CSSProperties));
 
 /** Small, deterministic bursts: no animation loop or random render-time geometry. */
 export function BattleBurst({ kind }: { kind: 'burn' | 'charge' | 'freeze' | 'snap' }) {
+  const [finished, setFinished] = useState(false);
+  useEffect(() => {
+    setFinished(false);
+    // The last fragment ends at 872ms. Keep a margin, then release invisible
+    // particles without disturbing persistent frozen/locked status artwork.
+    const timer = window.setTimeout(() => setFinished(true), 950);
+    return () => window.clearTimeout(timer);
+  }, [kind]);
+  if (finished) return null;
   return <span className={`battle-fx-burst fx-${kind}`} data-battle-fx={kind} aria-hidden="true">
     <span className="fx-shockwave" />
-    {fragments.map(index => <i key={index} style={{ '--fx-angle': `${index * 30}deg`, '--fx-distance': `${42 + index % 3 * 18}px`, '--fx-delay': `${index % 4 * 24}ms` } as React.CSSProperties} />)}
+    {fragments.map((style, index) => <i key={index} style={style} />)}
     {kind === 'burn' && <><b className="fx-slash" /><b className="fx-slash fx-slash-second" /><span className="fx-scorch" /></>}
     {kind === 'charge' && <span className="fx-lightning">ϟ</span>}
   </span>;

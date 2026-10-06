@@ -1,0 +1,11 @@
+{
+  "start": true,
+  "play": true,
+  "inspect": true,
+  "errors": [
+    "Clerk: Failed to load Clerk JS, failed to load script: https://clerk.127.0.0.1/npm/@clerk/clerk-js@6/dist/clerk.browser.js\n\n(code=\"failed_to_load_clerk_js\")\n\n"
+  ],
+  "authWarnings": [
+    "Clerk: Failed to load Clerk JS, failed to load script: https://clerk.127.0.0.1/npm/@clerk/clerk-js@6/dist/clerk.browser.js\n\n(code=\"failed_to_load_clerk_js\")\n\n"
+  ]
+}

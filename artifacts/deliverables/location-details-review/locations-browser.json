@@ -1,0 +1,447 @@
+{
+  "artwork": [
+    {
+      "id": "bodega",
+      "name": "BODEGA",
+      "image": {
+        "source": "http://127.0.0.1:4213/assets/locations/bodega-node.webp",
+        "width": 420,
+        "height": 280
+      },
+      "description": "Cold drinks, crowded shelves, and a counter that hears everything. This corner stays open long after the rest of the block calls it a night.",
+      "issuedRule": true,
+      "alwaysVisible": true
+    },
+    {
+      "id": "the-trap",
+      "name": "THE TRAP",
+      "image": {
+        "source": "http://127.0.0.1:4213/assets/locations/the-trap-node.webp",
+        "width": 420,
+        "height": 280
+      },
+      "description": "Low lights spill through boarded windows while the bass carries down the alley. Every doorway has a lookout, and every arrival gets noticed.",
+      "issuedRule": true,
+      "alwaysVisible": true
+    },
+    {
+      "id": "waff-l-house",
+      "name": "WAFF-L HOUSE",
+      "image": {
+        "source": "http://127.0.0.1:4213/assets/locations/waff-l-house-node.webp",
+        "width": 420,
+        "height": 280
+      },
+      "description": "The griddle never cools and the coffee never quits. After midnight, this booth-lined diner turns into the block’s unofficial meeting room.",
+      "issuedRule": true,
+      "alwaysVisible": true
+    },
+    {
+      "id": "vip-section",
+      "name": "VIP SECTION",
+      "image": {
+        "source": "http://127.0.0.1:4213/assets/locations/vip-section-node.webp",
+        "width": 420,
+        "height": 280
+      },
+      "description": "Past the velvet rope, the lights get softer and the jewelry gets louder. The whole room watches who gets a seat.",
+      "issuedRule": true,
+      "alwaysVisible": true
+    },
+    {
+      "id": "county-jail",
+      "name": "COUNTY JAIL",
+      "image": {
+        "source": "http://127.0.0.1:4213/assets/locations/county-jail-node.webp",
+        "width": 420,
+        "height": 280
+      },
+      "description": "Steel doors, hard benches, and fluorescent lights that never sleep. Every sound travels down the corridor.",
+      "issuedRule": true,
+      "alwaysVisible": true
+    },
+    {
+      "id": "penthouse",
+      "name": "PENTHOUSE",
+      "image": {
+        "source": "http://127.0.0.1:4213/assets/locations/penthouse-node.webp",
+        "width": 420,
+        "height": 280
+      },
+      "description": "High above the street noise, the windows frame a city that never settles down. The elevator opens straight into the afterparty.",
+      "issuedRule": true,
+      "alwaysVisible": true
+    },
+    {
+      "id": "time-square",
+      "name": "TIME SQUARE",
+      "image": {
+        "source": "http://127.0.0.1:4213/assets/locations/time-square-node.webp",
+        "width": 420,
+        "height": 280
+      },
+      "description": "Towering signs paint the pavement in electric color. Tourists, hustlers, and late-night crews all cross paths under the same glow.",
+      "issuedRule": true,
+      "alwaysVisible": true
+    },
+    {
+      "id": "magic-city",
+      "name": "MAGIC CITY",
+      "image": {
+        "source": "http://127.0.0.1:4213/assets/locations/magic-city-node.webp",
+        "width": 420,
+        "height": 280
+      },
+      "description": "Pink neon cuts through the haze while the speakers keep the room moving. The night gets louder every time another crew walks in.",
+      "issuedRule": true,
+      "alwaysVisible": true
+    },
+    {
+      "id": "the-subway",
+      "name": "THE SUBWAY",
+      "image": {
+        "source": "http://127.0.0.1:4213/assets/locations/the-subway-node.webp",
+        "width": 420,
+        "height": 280
+      },
+      "description": "Train brakes scream beneath the city and warm air rolls across the platform. Everybody is waiting for their next stop.",
+      "issuedRule": true,
+      "alwaysVisible": true
+    },
+    {
+      "id": "o-block",
+      "name": "O-BLOCK",
+      "image": {
+        "source": "http://127.0.0.1:4213/assets/locations/o-block-node.webp",
+        "width": 420,
+        "height": 280
+      },
+      "description": "Apartment windows overlook a corner that remembers every face. The sidewalks belong to the people who show up for each other.",
+      "issuedRule": true,
+      "alwaysVisible": true
+    },
+    {
+      "id": "hollywood-strip",
+      "name": "HOLLYWOOD STRIP",
+      "image": {
+        "source": "http://127.0.0.1:4213/assets/locations/hollywood-strip-node.webp",
+        "width": 420,
+        "height": 280
+      },
+      "description": "Marquee lights and camera flashes turn the sidewalk into a stage. Around here, making an entrance is part of the job.",
+      "issuedRule": true,
+      "alwaysVisible": true
+    },
+    {
+      "id": "dive-bar",
+      "name": "DIVE BAR",
+      "image": {
+        "source": "http://127.0.0.1:4213/assets/locations/dive-bar-node.webp",
+        "width": 420,
+        "height": 280
+      },
+      "description": "Faded signs, sticky floors, and a jukebox with a long memory. The regulars know which stool belongs to who.",
+      "issuedRule": true,
+      "alwaysVisible": true
+    },
+    {
+      "id": "acorn-projects",
+      "name": "ACORN PROJECTS",
+      "image": {
+        "source": "http://127.0.0.1:4213/assets/locations/acorn-projects-node.webp",
+        "width": 420,
+        "height": 280
+      },
+      "description": "Concrete walkways connect the buildings, and every balcony has a view of the courtyard. Word travels fast between these doors.",
+      "issuedRule": true,
+      "alwaysVisible": true
+    },
+    {
+      "id": "corrupt-church",
+      "name": "CORRUPT CHURCH",
+      "image": {
+        "source": "http://127.0.0.1:4213/assets/locations/corrupt-church-node.webp",
+        "width": 420,
+        "height": 280
+      },
+      "description": "Colored light falls across old pews while quiet deals happen behind the pulpit. Even the collection plate has a story.",
+      "issuedRule": true,
+      "alwaysVisible": true
+    },
+    {
+      "id": "nail-salon",
+      "name": "NAIL SALON",
+      "image": {
+        "source": "http://127.0.0.1:4213/assets/locations/nail-salon-node.webp",
+        "width": 420,
+        "height": 280
+      },
+      "description": "Glossy polish, bright mirrors, and conversations that carry across every station. Fresh nails leave with fresher neighborhood news.",
+      "issuedRule": true,
+      "alwaysVisible": true
+    },
+    {
+      "id": "barbershop",
+      "name": "BARBERSHOP",
+      "image": {
+        "source": "http://127.0.0.1:4213/assets/locations/barbershop-node.webp",
+        "width": 420,
+        "height": 280
+      },
+      "description": "Clippers buzz under the striped pole while the chairs fill with familiar faces. A fresh cut comes with a full report from the block.",
+      "issuedRule": true,
+      "alwaysVisible": true
+    },
+    {
+      "id": "underground-ring",
+      "name": "UNDERGROUND RING",
+      "image": {
+        "source": "http://127.0.0.1:4213/assets/locations/underground-ring-node.webp",
+        "width": 420,
+        "height": 280
+      },
+      "description": "Bare bulbs hang above the ropes and the crowd presses close to the canvas. Down here, every hit echoes through the concrete.",
+      "issuedRule": true,
+      "alwaysVisible": true
+    },
+    {
+      "id": "rooftop-garden",
+      "name": "ROOFTOP GARDEN",
+      "image": {
+        "source": "http://127.0.0.1:4213/assets/locations/rooftop-garden-node.webp",
+        "width": 420,
+        "height": 280
+      },
+      "description": "Green leaves climb above the brick and satellite dishes. Up on this roof, the city sounds a little farther away.",
+      "issuedRule": true,
+      "alwaysVisible": true
+    },
+    {
+      "id": "pawn-shop",
+      "name": "PAWN SHOP",
+      "image": {
+        "source": "http://127.0.0.1:4213/assets/locations/pawn-shop-node.webp",
+        "width": 420,
+        "height": 280
+      },
+      "description": "Gold chains, old speakers, and somebody’s favorite things crowd the glass cases. Every price tag hides a story.",
+      "issuedRule": true,
+      "alwaysVisible": true
+    },
+    {
+      "id": "pirate-radio",
+      "name": "PIRATE RADIO",
+      "image": {
+        "source": "http://127.0.0.1:4213/assets/locations/pirate-radio-node.webp",
+        "width": 420,
+        "height": 280
+      },
+      "description": "A homemade antenna reaches over the rooftops while a hidden booth keeps the speakers alive. This signal belongs to the streets.",
+      "issuedRule": true,
+      "alwaysVisible": true
+    },
+    {
+      "id": "blackout-block",
+      "name": "BLACKOUT BLOCK",
+      "image": {
+        "source": "http://127.0.0.1:4213/assets/locations/blackout-block-node.webp",
+        "width": 420,
+        "height": 280
+      },
+      "description": "The streetlights are out and the windows have gone quiet. Footsteps and distant sirens fill the space the neon left behind.",
+      "issuedRule": true,
+      "alwaysVisible": true
+    },
+    {
+      "id": "flood-channel",
+      "name": "FLOOD CHANNEL",
+      "image": {
+        "source": "http://127.0.0.1:4213/assets/locations/flood-channel-node.webp",
+        "width": 420,
+        "height": 280
+      },
+      "description": "Rainwater races between concrete walls beneath the bridges. Even on a clear night, this stretch of the city feels restless.",
+      "issuedRule": true,
+      "alwaysVisible": true
+    },
+    {
+      "id": "construction-site",
+      "name": "CONSTRUCTION SITE",
+      "image": {
+        "source": "http://127.0.0.1:4213/assets/locations/construction-site-node.webp",
+        "width": 420,
+        "height": 280
+      },
+      "description": "Steel beams, warning tape, and unfinished floors cut into the skyline. Beyond the fence, the city is still taking shape.",
+      "issuedRule": true,
+      "alwaysVisible": true
+    },
+    {
+      "id": "night-market",
+      "name": "NIGHT MARKET",
+      "image": {
+        "source": "http://127.0.0.1:4213/assets/locations/night-market-node.webp",
+        "width": 420,
+        "height": 280
+      },
+      "description": "Lanterns swing above packed stalls and steam rises between the crowds. The best finds come after the rest of the city closes up.",
+      "issuedRule": true,
+      "alwaysVisible": true
+    },
+    {
+      "id": "mirror-arcade",
+      "name": "MIRROR ARCADE",
+      "image": {
+        "source": "http://127.0.0.1:4213/assets/locations/mirror-arcade-node.webp",
+        "width": 420,
+        "height": 280
+      },
+      "description": "Cabinet screens flicker across mirrored walls while tokens rattle in the trays. Every corner glows like another high score waiting to happen.",
+      "issuedRule": true,
+      "alwaysVisible": true
+    },
+    {
+      "id": "community-kitchen",
+      "name": "COMMUNITY KITCHEN",
+      "image": {
+        "source": "http://127.0.0.1:4213/assets/locations/community-kitchen-node.webp",
+        "width": 420,
+        "height": 280
+      },
+      "description": "Big pots simmer behind the serving counter and nobody leaves hungry. The whole block has a place at this table.",
+      "issuedRule": true,
+      "alwaysVisible": true
+    },
+    {
+      "id": "rush-hour",
+      "name": "RUSH HOUR",
+      "image": {
+        "source": "http://127.0.0.1:4213/assets/locations/rush-hour-node.webp",
+        "width": 420,
+        "height": 280
+      },
+      "description": "Headlights stack up beneath the signals while horns bounce between the buildings. Everybody has somewhere to be, all at once.",
+      "issuedRule": true,
+      "alwaysVisible": true
+    },
+    {
+      "id": "legacy-0",
+      "name": "THE TOWN",
+      "image": {
+        "source": "http://127.0.0.1:4213/assets/locations/legacy-0-node.webp",
+        "width": 420,
+        "height": 280
+      },
+      "description": "Familiar corners and warm windows stretch across the neighborhood. Every block has a story, and somebody here knows yours.",
+      "issuedRule": true,
+      "alwaysVisible": true
+    },
+    {
+      "id": "legacy-1",
+      "name": "GROUP CHAT",
+      "image": {
+        "source": "http://127.0.0.1:4213/assets/locations/legacy-1-node.webp",
+        "width": 420,
+        "height": 280
+      },
+      "description": "The messages keep flying and the whole crew stays tapped in. News hits this chat before it makes it down the street.",
+      "issuedRule": true,
+      "alwaysVisible": true
+    },
+    {
+      "id": "legacy-2",
+      "name": "SERVER ROOM",
+      "image": {
+        "source": "http://127.0.0.1:4213/assets/locations/legacy-2-node.webp",
+        "width": 420,
+        "height": 280
+      },
+      "description": "Rows of hardware hum beneath a cold electric glow. Behind these doors, the neighborhood’s noise becomes a signal.",
+      "issuedRule": true,
+      "alwaysVisible": true
+    }
+  ],
+  "responsive": [
+    {
+      "width": 320,
+      "height": 568,
+      "id": "bodega",
+      "issuedMatchText": true,
+      "detailsAlwaysVisible": true,
+      "soloOnly": true,
+      "formationSwitch": true,
+      "cardInspection": true,
+      "keyboard": true,
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "id": "pirate-radio",
+      "issuedMatchText": true,
+      "detailsAlwaysVisible": true,
+      "soloOnly": true,
+      "formationSwitch": true,
+      "cardInspection": true,
+      "keyboard": true,
+      "overflow": false
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "id": "construction-site",
+      "issuedMatchText": true,
+      "detailsAlwaysVisible": true,
+      "soloOnly": true,
+      "formationSwitch": true,
+      "cardInspection": true,
+      "keyboard": true,
+      "overflow": false
+    },
+    {
+      "width": 1280,
+      "height": 900,
+      "id": "the-subway",
+      "issuedMatchText": true,
+      "detailsAlwaysVisible": true,
+      "soloOnly": true,
+      "formationSwitch": true,
+      "cardInspection": true,
+      "keyboard": true,
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "id": "pirate-radio",
+      "actualBattle": true,
+      "realRule": "While you have exactly 2 cards here, your side gains +3 district Hands in each other lane.",
+      "realStatus": "Exactly 2 allies needed to broadcast",
+      "image": {
+        "source": "http://127.0.0.1:4213/assets/locations/pirate-radio-node.webp",
+        "width": 358,
+        "height": 239
+      },
+      "soloOnly": true,
+      "keyboard": true,
+      "overflow": false
+    },
+    {
+      "width": 1280,
+      "height": 900,
+      "id": "pirate-radio",
+      "actualBattle": true,
+      "realRule": "While you have exactly 2 cards here, your side gains +3 district Hands in each other lane.",
+      "realStatus": "Exactly 2 allies needed to broadcast",
+      "image": {
+        "source": "http://127.0.0.1:4213/assets/locations/pirate-radio-node.webp",
+        "width": 420,
+        "height": 280
+      },
+      "soloOnly": true,
+      "keyboard": true,
+      "overflow": false
+    }
+  ],
+  "errors": []
+}

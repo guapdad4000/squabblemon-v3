@@ -1,0 +1,442 @@
+{
+  "count": 60,
+  "description": "Each wave pack contains the finished fighter portrait plus its individual signature wordmark and thematic emblem. Existing saved sticker identifiers are retained.",
+  "artworks": [
+    {
+      "cardId": "boo-boo-the-fool",
+      "kind": "signature",
+      "file": "assets/cosmetics/street-legends/boo-boo-the-fool-signature.svg",
+      "sha256": "8ad618b72431391d46fc792976df3930108274e69d387887d6d18e05a9d8b90e",
+      "source": "Original vector signature typography"
+    },
+    {
+      "cardId": "boo-boo-the-fool",
+      "kind": "emblem",
+      "file": "assets/cosmetics/street-legends/boo-boo-the-fool-emblem.svg",
+      "sha256": "51e371e8c8a1cffeb019b9ac1bebda528576083e133320968dcfa26b80529003",
+      "source": "Original vector badge with SignpostBig from the installed Lucide icon library"
+    },
+    {
+      "cardId": "mr-mc-hands",
+      "kind": "signature",
+      "file": "assets/cosmetics/street-legends/mr-mc-hands-signature.svg",
+      "sha256": "9f44ea5ae76ad08bfd77b312838c7ddf58801b7f9c3855da82d8478b76e6c55d",
+      "source": "Original vector signature typography"
+    },
+    {
+      "cardId": "mr-mc-hands",
+      "kind": "emblem",
+      "file": "assets/cosmetics/street-legends/mr-mc-hands-emblem.svg",
+      "sha256": "56549f3dd3584dbd40a242755d01322dff7163d83c26595d42834010c0f09aec",
+      "source": "Original vector badge with HandFist from the installed Lucide icon library"
+    },
+    {
+      "cardId": "ms-mary-mack",
+      "kind": "signature",
+      "file": "assets/cosmetics/street-legends/ms-mary-mack-signature.svg",
+      "sha256": "9536a216049f66b5f21fda963b4f70ce7ab88a4641a9da2df80dc60ee2517f8c",
+      "source": "Original vector signature typography"
+    },
+    {
+      "cardId": "ms-mary-mack",
+      "kind": "emblem",
+      "file": "assets/cosmetics/street-legends/ms-mary-mack-emblem.svg",
+      "sha256": "79281b36824693449a45b7c074de1e5cf6250ee6905dddb6274446bf39c81b48",
+      "source": "Original vector badge with AudioLines from the installed Lucide icon library"
+    },
+    {
+      "cardId": "pimp-swookie",
+      "kind": "signature",
+      "file": "assets/cosmetics/street-legends/pimp-swookie-signature.svg",
+      "sha256": "7c19694fd44999cf8835dad514af4ef11580704f3c6ef124e1352af406ce2df1",
+      "source": "Original vector signature typography"
+    },
+    {
+      "cardId": "pimp-swookie",
+      "kind": "emblem",
+      "file": "assets/cosmetics/street-legends/pimp-swookie-emblem.svg",
+      "sha256": "4dd99645b7e8a76ec04721aeff7aa37adbf77d22bf597b9f247bbede64b2bafd",
+      "source": "Original vector badge with Feather from the installed Lucide icon library"
+    },
+    {
+      "cardId": "og-uncle-harley-davidson",
+      "kind": "signature",
+      "file": "assets/cosmetics/street-legends/og-uncle-harley-davidson-signature.svg",
+      "sha256": "20b285fe743769575662f1dc6c7db00fb312a0393dcbb1e80d8425b7963fd195",
+      "source": "Original vector signature typography"
+    },
+    {
+      "cardId": "og-uncle-harley-davidson",
+      "kind": "emblem",
+      "file": "assets/cosmetics/street-legends/og-uncle-harley-davidson-emblem.svg",
+      "sha256": "696ccdabbeebc98f5b811c353bd12e4635fddc6cc29a1dbb6de84ff3babafb9b",
+      "source": "Original vector badge with Bike from the installed Lucide icon library"
+    },
+    {
+      "cardId": "suga-mama",
+      "kind": "signature",
+      "file": "assets/cosmetics/street-legends/suga-mama-signature.svg",
+      "sha256": "e89348f535fcb43ca75227186ee2e0323e1bd1bd305fa6ff0f6e78ef9ec3717b",
+      "source": "Original vector signature typography"
+    },
+    {
+      "cardId": "suga-mama",
+      "kind": "emblem",
+      "file": "assets/cosmetics/street-legends/suga-mama-emblem.svg",
+      "sha256": "133df5c92f81fbc8a00d4b53d9eb73285b5eba8bffdc13bde3712242c1c02adf",
+      "source": "Original vector badge with ShoppingBag from the installed Lucide icon library"
+    },
+    {
+      "cardId": "side-chick",
+      "kind": "signature",
+      "file": "assets/cosmetics/street-legends/side-chick-signature.svg",
+      "sha256": "01be3db44c773486418a62433910fd8a14ed5fe07555d48d91bc8ae8d007b0aa",
+      "source": "Original vector signature typography"
+    },
+    {
+      "cardId": "side-chick",
+      "kind": "emblem",
+      "file": "assets/cosmetics/street-legends/side-chick-emblem.svg",
+      "sha256": "a4be4be009f663d462270363018174db6cfd18f47c23731499abe2116a23830d",
+      "source": "Original vector badge with HeartCrack from the installed Lucide icon library"
+    },
+    {
+      "cardId": "gas-station-window-wiper",
+      "kind": "signature",
+      "file": "assets/cosmetics/street-legends/gas-station-window-wiper-signature.svg",
+      "sha256": "5108103e4c5dbd741e5bfb27d07c1790b9136eb5f9ad4195815f8d5e48ab4663",
+      "source": "Original vector signature typography"
+    },
+    {
+      "cardId": "gas-station-window-wiper",
+      "kind": "emblem",
+      "file": "assets/cosmetics/street-legends/gas-station-window-wiper-emblem.svg",
+      "sha256": "056ccc5b3b2c5cb4feb90461361b588cec8fad71b5954448e63e680c84421cfc",
+      "source": "Original vector badge with SprayCan from the installed Lucide icon library"
+    },
+    {
+      "cardId": "parole-officer",
+      "kind": "signature",
+      "file": "assets/cosmetics/street-legends/parole-officer-signature.svg",
+      "sha256": "b4ba88397dbb0be48a462a8b79780b55cc6c13f2d61f8fbeb07630b38f24ad54",
+      "source": "Original vector signature typography"
+    },
+    {
+      "cardId": "parole-officer",
+      "kind": "emblem",
+      "file": "assets/cosmetics/street-legends/parole-officer-emblem.svg",
+      "sha256": "5ad37da1032c42d5352247a4ca0a04f455908ffe159157e634487543310c77b1",
+      "source": "Original vector badge with ClipboardCheck from the installed Lucide icon library"
+    },
+    {
+      "cardId": "work-hubby",
+      "kind": "signature",
+      "file": "assets/cosmetics/street-legends/work-hubby-signature.svg",
+      "sha256": "993f4d8721e4ef8e01e0c14071c27e9af42e4ff134967a2b2bb8f71cd623f9bc",
+      "source": "Original vector signature typography"
+    },
+    {
+      "cardId": "work-hubby",
+      "kind": "emblem",
+      "file": "assets/cosmetics/street-legends/work-hubby-emblem.svg",
+      "sha256": "5d6c96693e3fbdfedd3798a863052006b7a9e67958217d025d55dabe67c7b7bb",
+      "source": "Original vector badge with Sandwich from the installed Lucide icon library"
+    },
+    {
+      "cardId": "he-just-a-friend",
+      "kind": "signature",
+      "file": "assets/cosmetics/street-legends/he-just-a-friend-signature.svg",
+      "sha256": "c50655b01331ca5cb36b87a3bbda46673641abd613866e7946f1776e377576ec",
+      "source": "Original vector signature typography"
+    },
+    {
+      "cardId": "he-just-a-friend",
+      "kind": "emblem",
+      "file": "assets/cosmetics/street-legends/he-just-a-friend-emblem.svg",
+      "sha256": "a031b4b522a7f31101139370229e6bc61f059123451749d0b9f6662068209cdd",
+      "source": "Original vector badge with KeyRound from the installed Lucide icon library"
+    },
+    {
+      "cardId": "crazy-ex-boyfriend",
+      "kind": "signature",
+      "file": "assets/cosmetics/street-legends/crazy-ex-boyfriend-signature.svg",
+      "sha256": "1d85c88f80ab2251e89736b5b50469b993072108cac1c3f0624ea1954e86b585",
+      "source": "Original vector signature typography"
+    },
+    {
+      "cardId": "crazy-ex-boyfriend",
+      "kind": "emblem",
+      "file": "assets/cosmetics/street-legends/crazy-ex-boyfriend-emblem.svg",
+      "sha256": "92c6b8aca47f9bb224caf01686b1e4d0724df2661184528bb593ceec84a01e8c",
+      "source": "Original vector badge with PhoneCall from the installed Lucide icon library"
+    },
+    {
+      "cardId": "uncle-sam",
+      "kind": "signature",
+      "file": "assets/cosmetics/street-legends/uncle-sam-signature.svg",
+      "sha256": "2acab44a919cfce5e67db13364fc722f8f802e3d634ffd46d8cace9bcb8667f9",
+      "source": "Original vector signature typography"
+    },
+    {
+      "cardId": "uncle-sam",
+      "kind": "emblem",
+      "file": "assets/cosmetics/street-legends/uncle-sam-emblem.svg",
+      "sha256": "07586fdacbde785726b6cce0d2f0b5e9defe1a71d97a22c4173fc9a3d07c92c1",
+      "source": "Original vector badge with ReceiptText from the installed Lucide icon library"
+    },
+    {
+      "cardId": "apartment-maintenance-sage",
+      "kind": "signature",
+      "file": "assets/cosmetics/street-legends/apartment-maintenance-sage-signature.svg",
+      "sha256": "f215485dbe407291adfe9740a386a68911dbc688430fef39ccb663b1ec92c282",
+      "source": "Original vector signature typography"
+    },
+    {
+      "cardId": "apartment-maintenance-sage",
+      "kind": "emblem",
+      "file": "assets/cosmetics/street-legends/apartment-maintenance-sage-emblem.svg",
+      "sha256": "4da523f273dbab155ce97c8ba0af3ae1cb1fee2b1989d38263401799a607637d",
+      "source": "Original vector badge with Wrench from the installed Lucide icon library"
+    },
+    {
+      "cardId": "bail-bonds-auntie",
+      "kind": "signature",
+      "file": "assets/cosmetics/street-legends/bail-bonds-auntie-signature.svg",
+      "sha256": "92e2a95f88728e6de61461e317592c7ff4b42fdba2ef5fa4ca3dae1cbb686fc1",
+      "source": "Original vector signature typography"
+    },
+    {
+      "cardId": "bail-bonds-auntie",
+      "kind": "emblem",
+      "file": "assets/cosmetics/street-legends/bail-bonds-auntie-emblem.svg",
+      "sha256": "a45b4010431535c3d2fba8c2b4717b050d78307df9b0fc270825e6c08e249d92",
+      "source": "Original vector badge with ShieldCheck from the installed Lucide icon library"
+    },
+    {
+      "cardId": "the-rapper",
+      "kind": "signature",
+      "file": "assets/cosmetics/street-legends/the-rapper-signature.svg",
+      "sha256": "ca52ce2d3dac59659054b3cc5be75eb2a8bf14bede32c0792b94ec0414d674e2",
+      "source": "Original vector signature typography"
+    },
+    {
+      "cardId": "the-rapper",
+      "kind": "emblem",
+      "file": "assets/cosmetics/street-legends/the-rapper-emblem.svg",
+      "sha256": "d8b8222c7755d5326a65e2503ab92b36b5ddb0313fd505094404ea8196c8576b",
+      "source": "Original vector badge with MicVocal from the installed Lucide icon library"
+    },
+    {
+      "cardId": "the-dj",
+      "kind": "signature",
+      "file": "assets/cosmetics/street-legends/the-dj-signature.svg",
+      "sha256": "6a32f34c71240121efd3100e23a486ef7e820c718e272aadd066b95babbb7ce9",
+      "source": "Original vector signature typography"
+    },
+    {
+      "cardId": "the-dj",
+      "kind": "emblem",
+      "file": "assets/cosmetics/street-legends/the-dj-emblem.svg",
+      "sha256": "4943b7a1c2ddf652950a9ff7836786cbed26c567153258f52b8e5a0a1b5f1876",
+      "source": "Original vector badge with Disc3 from the installed Lucide icon library"
+    },
+    {
+      "cardId": "the-hype-man",
+      "kind": "signature",
+      "file": "assets/cosmetics/street-legends/the-hype-man-signature.svg",
+      "sha256": "b968283501a74cbc4ad621ce42a3dee1664e5deb3d985d26508a38d1fa00e9a1",
+      "source": "Original vector signature typography"
+    },
+    {
+      "cardId": "the-hype-man",
+      "kind": "emblem",
+      "file": "assets/cosmetics/street-legends/the-hype-man-emblem.svg",
+      "sha256": "9122aaa272473994afa6ff4792ef76b08ecdc1625169d136e444693e6fb2a9e9",
+      "source": "Original vector badge with Megaphone from the installed Lucide icon library"
+    },
+    {
+      "cardId": "the-janky-promoter",
+      "kind": "signature",
+      "file": "assets/cosmetics/street-legends/the-janky-promoter-signature.svg",
+      "sha256": "6a9efaf5b5a5727934ab6d6260282b5e8f2c9dfcaef278ad4582d2405cf9157c",
+      "source": "Original vector signature typography"
+    },
+    {
+      "cardId": "the-janky-promoter",
+      "kind": "emblem",
+      "file": "assets/cosmetics/street-legends/the-janky-promoter-emblem.svg",
+      "sha256": "a77735eacfaeb244486089c97847028e2422659fc91ba59dfac57a604b63714c",
+      "source": "Original vector badge with Tickets from the installed Lucide icon library"
+    },
+    {
+      "cardId": "the-manager-nice",
+      "kind": "signature",
+      "file": "assets/cosmetics/street-legends/the-manager-nice-signature.svg",
+      "sha256": "a67a0c086cf65b9836894a148cc105387b1d28736f8bd488f1d0745e2f552402",
+      "source": "Original vector signature typography"
+    },
+    {
+      "cardId": "the-manager-nice",
+      "kind": "emblem",
+      "file": "assets/cosmetics/street-legends/the-manager-nice-emblem.svg",
+      "sha256": "ff27d164f551ce2a0313617b3d594a1dd0c1dd958f8ccb11449d6ee71292d91e",
+      "source": "Original vector badge with FileCheck2 from the installed Lucide icon library"
+    },
+    {
+      "cardId": "the-manager-evil",
+      "kind": "signature",
+      "file": "assets/cosmetics/street-legends/the-manager-evil-signature.svg",
+      "sha256": "a3bf484a0923b1b5a1320ce2174b6b48ce4db37c6bca8be9b13c27d19aa39cc3",
+      "source": "Original vector signature typography"
+    },
+    {
+      "cardId": "the-manager-evil",
+      "kind": "emblem",
+      "file": "assets/cosmetics/street-legends/the-manager-evil-emblem.svg",
+      "sha256": "1ca43ee73c5f142ada776f4e1adfeba4f25e3a283d9c09489e0de03b0153dfb5",
+      "source": "Original vector badge with FileSignature from the installed Lucide icon library"
+    },
+    {
+      "cardId": "the-opening-act",
+      "kind": "signature",
+      "file": "assets/cosmetics/street-legends/the-opening-act-signature.svg",
+      "sha256": "657c9c27ce4323ae2f508593230601f161e2d6e5deafa015dfb98a74db05e386",
+      "source": "Original vector signature typography"
+    },
+    {
+      "cardId": "the-opening-act",
+      "kind": "emblem",
+      "file": "assets/cosmetics/street-legends/the-opening-act-emblem.svg",
+      "sha256": "05fc1e4bafbadf1f287829323fce23e581faa2e04379fd74633583433afaffd0",
+      "source": "Original vector badge with Speaker from the installed Lucide icon library"
+    },
+    {
+      "cardId": "the-local-celebrity",
+      "kind": "signature",
+      "file": "assets/cosmetics/street-legends/the-local-celebrity-signature.svg",
+      "sha256": "67f28c7534c304fe83c022feaf5b6f189e7dbb6d39b6088c172bdf62156674a3",
+      "source": "Original vector signature typography"
+    },
+    {
+      "cardId": "the-local-celebrity",
+      "kind": "emblem",
+      "file": "assets/cosmetics/street-legends/the-local-celebrity-emblem.svg",
+      "sha256": "a4462042888107ad49d7c1bf1e20402705f0b3493e1f9abbe0b692c4fcaea01e",
+      "source": "Original vector badge with Camera from the installed Lucide icon library"
+    },
+    {
+      "cardId": "the-battle-rapper",
+      "kind": "signature",
+      "file": "assets/cosmetics/street-legends/the-battle-rapper-signature.svg",
+      "sha256": "7d7dfb712d00084802965e4cc3a17b5172235fdf566dd13534d4eec118a2dbfc",
+      "source": "Original vector signature typography"
+    },
+    {
+      "cardId": "the-battle-rapper",
+      "kind": "emblem",
+      "file": "assets/cosmetics/street-legends/the-battle-rapper-emblem.svg",
+      "sha256": "2d717260c246004f407b5ee2578e8806b7065675439d575ff9e03e0551e24399",
+      "source": "Original vector badge with Swords from the installed Lucide icon library"
+    },
+    {
+      "cardId": "the-og-rap-legend",
+      "kind": "signature",
+      "file": "assets/cosmetics/street-legends/the-og-rap-legend-signature.svg",
+      "sha256": "229c514f78235a8aa46d3a31bad3f487eae6d84ba1fb1fc88d48301e81f913d8",
+      "source": "Original vector signature typography"
+    },
+    {
+      "cardId": "the-og-rap-legend",
+      "kind": "emblem",
+      "file": "assets/cosmetics/street-legends/the-og-rap-legend-emblem.svg",
+      "sha256": "ce2a097b4fe9ec5ae03d6e98ff3088d6f8a0902714e48c3ce31385e970c59454",
+      "source": "Original vector badge with Trophy from the installed Lucide icon library"
+    },
+    {
+      "cardId": "fitness-bro",
+      "kind": "signature",
+      "file": "assets/cosmetics/street-legends/fitness-bro-signature.svg",
+      "sha256": "7ab64bacba197ea083855a450a5e3155557a7b31b82f29f2606acd0ca3029d7b",
+      "source": "Original vector signature typography"
+    },
+    {
+      "cardId": "fitness-bro",
+      "kind": "emblem",
+      "file": "assets/cosmetics/street-legends/fitness-bro-emblem.svg",
+      "sha256": "5fdda4e67cbf27c3ef8a482ef9d43daaa5d378e9f4baf2e2f14294e9e7abe6cb",
+      "source": "Original vector badge with Dumbbell from the installed Lucide icon library"
+    },
+    {
+      "cardId": "fitness-girl",
+      "kind": "signature",
+      "file": "assets/cosmetics/street-legends/fitness-girl-signature.svg",
+      "sha256": "3d94c48702edff11245ad3da5ab910e34e4ed1f6b02491eca8133be691584842",
+      "source": "Original vector signature typography"
+    },
+    {
+      "cardId": "fitness-girl",
+      "kind": "emblem",
+      "file": "assets/cosmetics/street-legends/fitness-girl-emblem.svg",
+      "sha256": "c63a7b9fc169ac277ed943bf2858c275efac995c24bbe2e0c9a3a2efd54b824d",
+      "source": "Original vector badge with Droplets from the installed Lucide icon library"
+    },
+    {
+      "cardId": "personal-trainer",
+      "kind": "signature",
+      "file": "assets/cosmetics/street-legends/personal-trainer-signature.svg",
+      "sha256": "6e44b0ddc1352982dbbb56b655f2b526d1877e1619649873aee0f72ba7611b76",
+      "source": "Original vector signature typography"
+    },
+    {
+      "cardId": "personal-trainer",
+      "kind": "emblem",
+      "file": "assets/cosmetics/street-legends/personal-trainer-emblem.svg",
+      "sha256": "35f4e8a2779b64af4107f1a15bbe7dd6f35b049530aafb7c093f456c6671d7cb",
+      "source": "Original vector badge with Timer from the installed Lucide icon library"
+    },
+    {
+      "cardId": "demon-trainer",
+      "kind": "signature",
+      "file": "assets/cosmetics/street-legends/demon-trainer-signature.svg",
+      "sha256": "540f475e54b881d0c19e17bb4c61aa0c39f4da9b8fcdc4bc7866e137234100b6",
+      "source": "Original vector signature typography"
+    },
+    {
+      "cardId": "demon-trainer",
+      "kind": "emblem",
+      "file": "assets/cosmetics/street-legends/demon-trainer-emblem.svg",
+      "sha256": "0d695c1b82fac027f3658b5101473629180996eeff6ca66b8074de3b634bbb83",
+      "source": "Original vector badge with Flame from the installed Lucide icon library"
+    },
+    {
+      "cardId": "lash-tech",
+      "kind": "signature",
+      "file": "assets/cosmetics/street-legends/lash-tech-signature.svg",
+      "sha256": "8f053269dab9b8102d35754ada96379b20f5878f80347895d23bd02eaa0e87a0",
+      "source": "Original Lash Tech vector signature typography"
+    },
+    {
+      "cardId": "lash-tech",
+      "kind": "emblem",
+      "file": "assets/cosmetics/street-legends/lash-tech-emblem.svg",
+      "sha256": "0bf56c94ef73e9158e446026792b3aea50bbaf284863a59cc25baeeaca044fc4",
+      "source": "Original eye and lash vector emblem"
+    }
+  ],
+  "retainedNailTechCompanions": [
+    {
+      "cardId": "nail-tech",
+      "kind": "signature",
+      "file": "assets/cosmetics/street-legends/nail-tech-signature.svg",
+      "sha256": "315581d0209645ab3501ab0917bbc0b928ea78061411b9ec50f89dec16d34959",
+      "source": "Original vector signature typography"
+    },
+    {
+      "cardId": "nail-tech",
+      "kind": "emblem",
+      "file": "assets/cosmetics/street-legends/nail-tech-emblem.svg",
+      "sha256": "6e04e2fc9c59e25042395e39dde69fd3e2392a69fad9f6eddb840b1253ae908f",
+      "source": "Original vector badge with Paintbrush from the installed Lucide icon library"
+    }
+  ]
+}

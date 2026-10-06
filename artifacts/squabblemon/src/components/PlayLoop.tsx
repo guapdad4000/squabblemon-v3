@@ -14,6 +14,7 @@ import { CardInspector } from './CardInspector';
 import { RulesModal } from './RulesModal';
 import { StoryCinematic } from './StoryCinematic';
 import { PresentationTimeline } from '../presentationTimeline';
+import { abilityFailed, FAILED_ABILITY_BEAT_MS } from '../abilityOutcome';
 import { readMoveOverrides, specialMoveForEvent, planSpecialMoveBeat, markSpecialMovePlayed } from '../specialMoves';
 import { broadcastDelay, changedDistrictControl, isReducedMotionRequested, type DistrictOwner } from '../broadcastPresentation';
 import { scaleBattleBeat } from '../battleSpeed';
@@ -515,7 +516,7 @@ export function PlayLoop({ mode = 'practice', onExit, onTutorialComplete, onVeri
       const staged = isPlay ? cardById(resolved, sourceId) ?? cardById(frame, sourceId) ?? null : null;
       if (effect.owner === 'player') setStagedPlayer(staged); else setStagedRival(staged);
       frame = applyEventState(frame, resolved, effect, 'before'); setVisualFrame(frame); setPresentationScores(effect.scores.before); setPresentationPhase(phase); setActiveEffectId(effect.source ? sourceId : null); setActiveEffectLane(lane); setImpactLane(lane); setActiveEffect({ ...effect, chain, cardInstanceId: sourceId, lane, targetIds, durationLabel: effect.duration ? `Through round ${effect.duration.expiresAtRound - 1}` : undefined }); setPhaseMessage(effect.note);
-      if (!await waitForBeat(isPlay ? 320 : effect.type === 'reveal' ? 90 : EFFECT_PRESENTATION_TIMING.standard.beforeMs, isPlay ? 55 : EFFECT_PRESENTATION_TIMING.reduced.beforeMs, id, fast)) return false;
+      if (!await waitForBeat(isPlay ? 320 : effect.type === 'reveal' || abilityFailed(effect) ? 90 : EFFECT_PRESENTATION_TIMING.standard.beforeMs, isPlay ? 55 : EFFECT_PRESENTATION_TIMING.reduced.beforeMs, id, fast)) return false;
       frame = applyEventState(frame, resolved, effect, 'after'); setVisualFrame(frame); if (!isPlay) setPresentationScores(effect.scores.after);
       if (isPlay) {
         setPresentationPhase(effect.owner === 'player' ? 'player-reveal' : 'rival-reveal');
@@ -554,7 +555,7 @@ export function PlayLoop({ mode = 'practice', onExit, onTutorialComplete, onVeri
         body: describeTutorialEvent(effect, resolved),
         continueLabel: 'Continue the play',
       }, `${id}:event:${effect.sequence}`, id)) return false;
-      const afterMs = effect.type === 'reveal' ? 120 : effect.note.includes('SQUABBLE') ? 1000 : isPlay ? 450 : (() => {
+      const afterMs = abilityFailed(effect) ? FAILED_ABILITY_BEAT_MS : effect.type === 'reveal' ? 120 : effect.note.includes('SQUABBLE') ? 1000 : isPlay ? 450 : (() => {
         const move = specialMoveForEvent(effect, readMoveOverrides());
         const key = move ? buildMoveKey(effect, move) : null;
         const plan = key
@@ -987,13 +988,13 @@ export function PlayLoop({ mode = 'practice', onExit, initialDeckId = 'block', i
           document.documentElement.dataset.reduceMotion === 'true',
         ));
       }
-      if (!await waitForBeat(190, 70, id, fast)) return false;
+      if (!await waitForBeat(abilityFailed(effect) ? 90 : 190, 70, id, fast)) return false;
       if (isPlay) {
         setPresentationPhase(effect.owner === 'player' ? 'player-reveal' : 'rival-reveal');
         if (!await waitForBeat(160, 40, id, fast)) return false;
       }
       frame = applyEventState(frame, resolved, effect, 'after'); setVisualFrame(frame); setPresentationScores(effect.scores.after); setPresentationPhase(isPlay ? effect.owner === 'player' ? 'player-impact' : 'rival-impact' : phase);
-      if (!await waitForBeat(specialMoveForEvent(effect, readMoveOverrides())?.durationMs ?? 380, 90, id, fast)) return false;
+      if (!await waitForBeat(abilityFailed(effect) ? FAILED_ABILITY_BEAT_MS : specialMoveForEvent(effect, readMoveOverrides())?.durationMs ?? 380, 90, id, fast)) return false;
       setStagedPlayer(null); setStagedRival(null);
     }
     setActiveEffectId(null); setActiveEffectLane(null); setActiveEffect(null); setImpactLane(null); return true;
@@ -1203,9 +1204,9 @@ export function PlayLoop({ mode = 'practice', onExit, initialDeckId = 'block', i
           document.documentElement.dataset.reduceMotion === 'true',
         ));
       }
-      if (!await waitForBeat(190, 70, id, fast)) return false;
+      if (!await waitForBeat(abilityFailed(effect) ? 90 : 190, 70, id, fast)) return false;
       frame = applyEventState(frame, resolved, effect, 'after'); setVisualFrame(frame); setPresentationScores(effect.scores.after); setPresentationPhase(isPlay ? effect.owner === 'player' ? 'player-impact' : 'rival-impact' : phase);
-      if (!await waitForBeat(specialMoveForEvent(effect, readMoveOverrides())?.durationMs ?? 380, 90, id, fast)) return false;
+      if (!await waitForBeat(abilityFailed(effect) ? FAILED_ABILITY_BEAT_MS : specialMoveForEvent(effect, readMoveOverrides())?.durationMs ?? 380, 90, id, fast)) return false;
       setStagedPlayer(null); setStagedRival(null);
     }
     setActiveEffectId(null); setActiveEffectLane(null); setActiveEffect(null); setImpactLane(null); return true;
