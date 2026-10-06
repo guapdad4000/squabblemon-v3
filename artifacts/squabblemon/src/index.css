@@ -796,11 +796,6 @@ html[data-reduce-motion="true"] .battle-start-smoke { display: none; }
   box-shadow: 0 1px 3px #000;
 }
 .card-status span { font: 900 .34rem/1 var(--font-mono); }
-.target-trajectory { position:absolute; left:50%; bottom:140px; width:3px; height:clamp(130px,25vh,260px); z-index:10; pointer-events:none; transform-origin:bottom; }
-.target-trajectory span { display:block; width:100%; height:100%; background:linear-gradient(0deg,var(--color-primary),transparent); box-shadow:0 0 9px var(--color-primary); animation: target-pulse .75s infinite alternate; }
-.target-lane-0 { transform:rotate(-46deg); }
-.target-lane-1 { transform:rotate(0deg); }
-.target-lane-2 { transform:rotate(46deg); }
 @keyframes district-hit { 30% { transform: scale(.985) rotate(-.4deg); filter: brightness(1.6); } 60% { transform: scale(1.012) rotate(.3deg); } }
 @keyframes deal-card { from { opacity:0; transform:translateY(100px) rotate(10deg) scale(.7); } to { opacity:1; transform:none; } }
 @keyframes verdict-pulse { 50% { filter:brightness(1.45); transform:translateY(-2px); } }
@@ -812,7 +807,6 @@ html[data-reduce-motion="true"] .battle-start-smoke { display: none; }
 @keyframes effect-flash { from { opacity:1; transform:scale(.75); } to { opacity:0; transform:scale(1.1); } }
 @keyframes effect-beam { from { opacity:0; transform:scaleX(0); } 40% { opacity:1; } to { opacity:0; transform:scaleX(1); } }
 @keyframes effect-beam-vertical { from { opacity:0; transform:scaleY(0); } 40% { opacity:1; } to { opacity:0; transform:scaleY(1); } }
-@keyframes target-pulse { from { opacity:.35; } to { opacity:1; } }
 @keyframes card-focus { to { transform:scale(1.08) translateY(-4px); filter:brightness(1.3) drop-shadow(0 0 14px var(--color-primary)); } }
 @keyframes card-reveal { from { opacity:0; transform:rotateY(85deg) scale(.82); } }
 @keyframes timer-urgent { to { filter:brightness(1.35); transform:scale(1.035); } }
@@ -1023,9 +1017,6 @@ html[data-reduce-motion="true"] .battle-start-smoke { display: none; }
 :root[data-reduce-motion='true'] .effect-source,
 :root[data-reduce-motion='true'] .effect-target {
   outline: 3px solid var(--effect-color, var(--color-primary));
-}
-:root[data-reduce-motion='true'] .target-trajectory span {
-  opacity: .8;
 }
 :root[data-reduce-motion='true'] .district-impact { animation-duration: .28s; }
 :root[data-reduce-motion='true'] .district-impact::after { animation-duration: .28s; }
