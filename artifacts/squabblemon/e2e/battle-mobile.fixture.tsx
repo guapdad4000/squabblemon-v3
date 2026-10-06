@@ -32,7 +32,9 @@ function App() {
     lockedLanes: [], covered: new Set(), history: [], turnSeconds: 20, clockRunning: true,
     yourTurn: true, mode: 'ranked', status: 'Connected', rivalHandCount: 7,
   } : undefined;
-  const phase = query.get('phase') ?? (effectMode ? 'effects' : 'player-ready');
+  const [phase, setPhase] = useState(query.get('phase') ?? (effectMode ? 'effects' : 'player-ready'));
+  const [fast, setFast] = useState(query.has('fast'));
+  (window as any).__battleHudFixture = { setPhase };
   const resolved = effectMode ? playCard(match, 'player', match.playerHand[0].instanceId, 0) : match;
   const event = effectMode ? resolved.effectLog.find(e => e.type === 'ability' && e.cardId === 'barber') : null;
   const effect = event ? { ...event, targetIds: event.targets.map(t => t.cardInstanceId), impact: true } : null;
@@ -40,7 +42,7 @@ function App() {
   return <div style={{ height: '100dvh' }}><Battle match={resolved} deck={decks[0]} rivalDeck={query.has('long-name') ? { ...decks[1], name: 'The Extremely Long Rival Crew Name' } : decks[1]} online={online}
     selectedInstanceId={selected} setSelectedInstanceId={setSelected} selectedLane={lane} setSelectedLane={setLane}
     squabble={squabble} setSquabble={setSquabble} onPlayCard={play} commit={() => { if (selected && lane !== null) play(selected, lane, squabble); }}
-    endTurn={noop} skipSequence={noop} presentationPhase={phase} phaseMessage={event?.note ?? 'Choose a card and district'}
+    endTurn={noop} skipSequence={() => setPhase('player-ready')} battleSpeed={fast ? 1.5 : 1} onToggleBattleSpeed={() => setFast(value => !value)} presentationPhase={phase} phaseMessage={event?.note ?? 'Choose a card and district'}
     timerSeconds={Number(query.get('timer') ?? 20)} timerEnabled={!effectMode && !query.has('no-timer')} impactLane={event ? 0 : null} activeEffect={effect} activeEffectId={event?.cardInstanceId}
     activeEffectLane={event ? 0 : null} presentationScores={event?.scores.after} setInspect={setInspect} onShowRules={noop} />
     {inspect && <CardInspector card={inspect} match={resolved} onClose={() => setInspect(null)} />}
