@@ -5,11 +5,14 @@ import { Battle, type OnlineBattlePresentation } from '../src/components/Battle'
 import { CardInspector } from '../src/components/CardInspector';
 import { createMatch, createCardInstance, playCard, playTurnCard, getMatchDistricts, getDistrictResults, type CardInstance, type Lane } from '../src/gameEngine';
 import { decks } from '../src/data';
+import { DISTRICT_CATALOG, validateDistrictSnapshot } from '@workspace/squabblemon-engine/districts';
 import '../src/index.css';
 const noop = () => {};
 function App() {
   const [match, setMatch] = useState(() => {
-    const m = createMatch('block', 'combo');
+    const requestedLocations = new URLSearchParams(location.search).get('locations');
+    const snapshot = requestedLocations ? validateDistrictSnapshot({ version: 1, locations: requestedLocations.split(',').map(id => DISTRICT_CATALOG.find(district => district.id === id)) }) : undefined;
+    const m = createMatch('block', 'combo', undefined, undefined, snapshot);
     m.playerMotion = 20;
     m.playerHand = ['barber', 'cornball', 'snow', 'wifey', 'plug', 'hooper', 'roaster'].map((id, i) => createCardInstance(id, 'player', 'hand', i));
     m.boards = ([0, 1, 2] as Lane[]).map(lane => (['cpu', 'player'] as const).flatMap(owner =>

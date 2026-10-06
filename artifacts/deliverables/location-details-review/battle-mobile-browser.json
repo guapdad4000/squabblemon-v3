@@ -1,0 +1,52 @@
+[
+  {
+    "width": 320,
+    "height": 568,
+    "boardCards": 22,
+    "minimumCardWidth": 46,
+    "expandedWidth": 153.59375,
+    "inspect": true,
+    "selectAndPlay": true,
+    "errors": []
+  },
+  {
+    "width": 390,
+    "height": 844,
+    "boardCards": 22,
+    "minimumCardWidth": 54.65625,
+    "expandedWidth": 187.1875,
+    "inspect": true,
+    "selectAndPlay": true,
+    "errors": []
+  },
+  {
+    "width": 430,
+    "height": 932,
+    "boardCards": 22,
+    "minimumCardWidth": 61.328125,
+    "expandedWidth": 190,
+    "inspect": true,
+    "selectAndPlay": true,
+    "errors": []
+  },
+  {
+    "width": 844,
+    "height": 390,
+    "boardCards": 22,
+    "minimumCardWidth": 75.1875,
+    "expandedWidth": 238,
+    "inspect": true,
+    "selectAndPlay": true,
+    "errors": []
+  },
+  {
+    "width": 1440,
+    "height": 1000,
+    "boardCards": 22,
+    "minimumCardWidth": 59.109375,
+    "expandedWidth": 297.4945068359375,
+    "inspect": true,
+    "selectAndPlay": true,
+    "errors": []
+  }
+]
