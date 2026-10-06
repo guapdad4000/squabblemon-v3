@@ -1,7 +1,7 @@
 .john-henry-shortcut {
   position: absolute;
   right: 104px;
-  top: 154px;
+  top: 72px;
   z-index: 20;
   width: 84px;
   border: 0;
@@ -14,7 +14,7 @@
 .john-henry-shortcut img {
   display: block;
   width: 84px;
-  height: 92px;
+  height: 62px;
   object-fit: contain;
 }
 .john-henry-shortcut span {
@@ -321,13 +321,13 @@
 }
 @media (max-width: 440px) {
   .john-henry-shortcut {
-    right: 94px;
-    top: 154px;
+    right: 104px;
+    top: 72px;
     width: 73px;
   }
   .john-henry-shortcut img {
     width: 73px;
-    height: 85px;
+    height: 62px;
   }
 }
 @media (max-width: 600px) {
