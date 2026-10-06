@@ -44,3 +44,17 @@ export function resolveBattleVenue(match: Pick<Match, 'cpuDeck' | 'storyEncounte
     : TRAINING_VENUES[match.cpuDeck] ?? 'corner-store';
   return BATTLE_VENUES[id];
 }
+
+/** Pair the issued venue artwork by asset identity, including activity snapshots
+ * whose encounter id is outside the story venue map. Custom story art stays intact. */
+export function resolveBattleArtwork(match: Pick<Match, 'cpuDeck' | 'storyEncounter'>): { landscapeAssetId: string; portraitAssetId: string } {
+  const venue = resolveBattleVenue(match);
+  const issuedAsset = match.storyEncounter?.battlefieldAssetId;
+  const pair = issuedAsset
+    ? Object.values(BATTLE_VENUES).find(candidate => candidate.assetId === issuedAsset || candidate.portraitAssetId === issuedAsset)
+    : venue;
+  return {
+    landscapeAssetId: pair?.assetId ?? issuedAsset ?? venue.assetId,
+    portraitAssetId: pair?.portraitAssetId ?? venue.portraitAssetId,
+  };
+}

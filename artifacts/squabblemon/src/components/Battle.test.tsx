@@ -12,6 +12,8 @@ import { cards, catalogCardById, decks, districts, getCardImage } from '../data'
 import characterRevisions from '../characterRevisions.json';
 import { createStoryMatch, type StoryEncounterSnapshot } from '@workspace/squabblemon-engine/gameEngine';
 import { getStoryBattle } from '@workspace/squabblemon-engine/story';
+import { makeActivityEncounter } from '@workspace/squabblemon-engine/activities';
+import { rookieEncounter } from '@workspace/squabblemon-engine/rookie';
 import { Battle, createBattleDecisionHandlers, getRecentBattleActions, tryLockInteraction } from './Battle';
 import { ResultScreen } from './ResultScreen';
 import { CardUpgrades } from './CardUpgrades';
@@ -24,7 +26,7 @@ import { trackEvent } from '../lib/analytics';
 import { DISTRICT_CATALOG, type DistrictSnapshot, createDistrictSnapshot, getCharacterDistrictMarks, getMatchDistricts, playTurnCard, createCardInstance, createMatch, playCard, type Lane, type Match } from '../gameEngine';
 import { createAbilityUpgradeSnapshot } from '@workspace/squabblemon-engine/abilityUpgrades';
 import { BattlePowerBreakdown } from './BattlePowerBreakdown';
-import { BATTLE_VENUES, resolveBattleVenue } from '../battleVenues';
+import { BATTLE_VENUES, resolveBattleArtwork, resolveBattleVenue } from '../battleVenues';
 import { RulesModal } from './RulesModal';
 import { MECHANIC_LESSONS, MECHANIC_LESSON_IDS, getTutorialGuidance } from './tutorialGuidance';
 
@@ -83,6 +85,72 @@ test('battle venues map deterministically for training, story, and replay frames
   const html = renderBattle(training);
   assert.match(html, /data-venue="harbor-skyline"/);
   assert.ok(html.includes(BATTLE_VENUES['harbor-skyline'].assetId));
+});
+
+const assertRenderedBattleArtwork = (html: string, landscapeAssetId: string, portraitAssetId: string) => {
+  const picture = html.match(/<picture class="battle-venue__art [^"]*">([\s\S]*?)<\/picture>/)?.[1];
+  assert.ok(picture, 'battle uses one responsive venue picture');
+  const landscape = picture.match(/<img[^>]*src="([^"]+)"/)?.[1];
+  const portrait = picture.match(/<source[^>]*srcSet="([^"]+)"/)?.[1];
+  assert.ok(landscape?.endsWith(landscapeAssetId), `landscape uses ${landscapeAssetId}`);
+  assert.ok(portrait?.endsWith(portraitAssetId), `portrait uses ${portraitAssetId}`);
+  assert.match(picture, /media="\(orientation: portrait\)"/);
+};
+
+test('Wifey story battle renders its issued red court landscape and matching portrait', () => {
+  const encounter = getStoryBattle('red-tapes-side-eye-security')!.encounter;
+  const match = createStoryMatch(encounter, 'block');
+  const venue = BATTLE_VENUES['red-fence-night'];
+  assert.equal(encounter.battlefieldAssetId, venue.portraitAssetId);
+  assert.deepEqual(resolveBattleArtwork(match), {
+    landscapeAssetId: venue.assetId, portraitAssetId: venue.portraitAssetId,
+  });
+  const html = renderBattle(match, { rivalDeck: { ...decks[1], name: encounter.enemy.name, hero: 'wifey' } });
+  assertRenderedBattleArtwork(html, venue.assetId, venue.portraitAssetId);
+});
+
+test('known venue artwork selects its own responsive pair even under another encounter identity', () => {
+  const base = createStoryMatch(getStoryBattle('welcome-to-the-block')!.encounter, 'block');
+  for (const venue of Object.values(BATTLE_VENUES)) {
+    for (const battlefieldAssetId of [venue.assetId, venue.portraitAssetId]) {
+      const match = { ...base, storyEncounter: { ...base.storyEncounter!, id: 'generated-external-encounter', battlefieldAssetId } };
+      assert.deepEqual(resolveBattleArtwork(match), {
+        landscapeAssetId: venue.assetId, portraitAssetId: venue.portraitAssetId,
+      }, `${venue.id}: ${battlefieldAssetId}`);
+      assertRenderedBattleArtwork(renderBattle(match, { rivalDeck: decks[0] }), venue.assetId, venue.portraitAssetId);
+    }
+  }
+});
+
+test('activity and rookie snapshots use their red court in both orientations', () => {
+  const venue = BATTLE_VENUES['red-fence-night'];
+  const encounters = [rookieEncounter(), makeActivityEncounter('control', 'wallpaper-regression', 'block', '2026-10-05')];
+  for (const encounter of encounters) {
+    const match = createStoryMatch(encounter, 'block');
+    assert.deepEqual(resolveBattleArtwork(match), {
+      landscapeAssetId: venue.assetId, portraitAssetId: venue.portraitAssetId,
+    }, encounter.id);
+    assertRenderedBattleArtwork(renderBattle(match, { rivalDeck: decks[0] }), venue.assetId, venue.portraitAssetId);
+  }
+});
+
+test('custom story environments retain their issued art and the existing portrait fallback', () => {
+  const encounter = { ...getStoryBattle('welcome-to-the-block')!.encounter, id: 'custom-story-arena', battlefieldAssetId: 'assets/custom/sunset-warehouse.webp' };
+  const match = createStoryMatch(encounter, 'block');
+  const portraitAssetId = resolveBattleVenue(match).portraitAssetId;
+  assert.deepEqual(resolveBattleArtwork(match), { landscapeAssetId: encounter.battlefieldAssetId, portraitAssetId });
+  assertRenderedBattleArtwork(renderBattle(match, { rivalDeck: decks[0] }), encounter.battlefieldAssetId, portraitAssetId);
+});
+
+test('local and online battles keep location art at the district nodes without full-board scene strips', () => {
+  const ids = ['nail-salon', 'vip-section', 'penthouse'];
+  const match = createMatch('block', 'combo', undefined, undefined, districtSnapshotFor(ids));
+  for (const props of [{}, { online: onlinePresentationFor(match) }]) {
+    const html = renderBattle(match, props);
+    assert.doesNotMatch(html, /class="location-wallpaper"/);
+    assert.equal((html.match(/class="location-node"/g) ?? []).length, 3);
+    for (const id of ids) assert.ok(html.includes(`data-location-art="${id}"`));
+  }
 });
 
 test('battle presentation names an authoritative triggered upgrade', () => {

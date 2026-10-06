@@ -1,6 +1,6 @@
 import { cards, catalogCardById, type Deck } from '../data';
 import type { Match } from '../gameEngine';
-import { resolveBattleVenue } from '../battleVenues';
+import { resolveBattleArtwork, resolveBattleVenue } from '../battleVenues';
 import { getAssetUrl, getCardImage } from './assets';
 import { getLocationArtwork } from '../locationArtwork';
 import { warmImages } from './imageWarmup';
@@ -26,9 +26,11 @@ export function warmDeckArtwork(player: Deck, rival: Deck, variants?: Record<str
 /** The issued match supplies its real fighters and locations, including custom decks. */
 export function warmMatchArtwork(match: Match, variants?: Record<string, string>) {
   const locations = match.districtSnapshot?.locations.map(location => location.id) ?? ['legacy-0', 'legacy-1', 'legacy-2'];
+  const artwork = resolveBattleArtwork(match);
+  const portraitScreen = typeof window !== 'undefined' && window.matchMedia('(orientation: portrait)').matches;
   void warmImages([
     ...match.playerHand.map(card => getCardImage(card.id, variants?.[card.id])),
-    getAssetUrl(match.storyEncounter?.battlefieldAssetId ?? resolveBattleVenue(match).assetId),
+    getAssetUrl(portraitScreen ? artwork.portraitAssetId : artwork.landscapeAssetId),
     ...locations.map(id => getLocationArtwork(id).node),
     ...match.cpuHand.map(card => getCardImage(card.id)),
     ...match.playerCardIds.map(id => portrait(id, variants)),

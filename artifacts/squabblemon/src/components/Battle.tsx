@@ -35,14 +35,14 @@ import { animate, AnimatePresence, motion, useMotionValue, useReducedMotion, use
 import { getEquippedVariant, getVariantKind } from './CardVariantTreatment';
 import { getTurnTimerProgress, getTurnTimerState } from '../turnTimer';
 import { getAuthoredCardUpgrades } from './CardUpgrades';
-import { resolveBattleVenue } from '../battleVenues';
+import { resolveBattleArtwork, resolveBattleVenue } from '../battleVenues';
 import { ArrowRight, Check, ChevronsRight, CircleHelp, Flag, History, LockKeyhole, MoreHorizontal, Shield, Swords, Volume2, VolumeX, X } from 'lucide-react';
 import './battle-hud.css';
 import { PvpPlate, type PvpIdentity } from './PvpPlate';
 import '../styles/pvp-topbar.css';
 import './battle-locations.css';
 import './battle-fx-aaa.css';
-import { LocationNode, LocationWallpaper } from './LocationArtwork';
+import { LocationNode } from './LocationArtwork';
 import type { MechanicLesson, TutorialGuidance } from './tutorialGuidance';
 import { CoachSpotlight } from './CoachSpotlight';
 import { playVoiceLine } from '../lib/sfx';
@@ -432,7 +432,8 @@ export function Battle({
   React.useEffect(() => { squabbleTransitionRef.current = false; }, [squabble]);
   React.useEffect(() => { historyTransitionRef.current = false; }, [showHistory]);
   const venue = resolveBattleVenue(m);
-  const battlefield = getAssetUrl(m.storyEncounter?.battlefieldAssetId ?? venue.assetId);
+  const artwork = resolveBattleArtwork(m);
+  const battlefield = getAssetUrl(artwork.landscapeAssetId);
   const passive = m.storyEncounter?.passive;
   const allVisibleCards = [...m.playerHand, ...m.cpuHand, ...m.boards.flat()];
   const isCovered = (instanceId: string) => online ? online.covered.has(instanceId) : m.timedEffects.some(effect => (effect.kind === 'church-protection' || effect.kind === 'salon-protection') && effect.targetInstanceId === instanceId);
@@ -631,10 +632,9 @@ export function Battle({
     <AnimatePresence>{mechanicLesson && <MechanicLessonOverlay lesson={mechanicLesson as MechanicLesson} onDismiss={onDismissMechanicLesson} />}</AnimatePresence>
     <div className="battle-venue absolute inset-0 z-0 pointer-events-none perspective-1000 overflow-hidden">
       <picture className="battle-venue__art absolute inset-0">
-        <source media="(orientation: portrait)" srcSet={getAssetUrl(venue.portraitAssetId)} />
+        <source media="(orientation: portrait)" srcSet={getAssetUrl(artwork.portraitAssetId)} />
         <img src={battlefield} alt="" decoding="async" draggable={false} />
       </picture>
-      <LocationWallpaper ids={districts.map(d => d.id)} />
       <div className="battle-venue__contrast absolute inset-0" />
       <div className="battle-venue__atmosphere" aria-hidden="true" />
     </div>

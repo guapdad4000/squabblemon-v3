@@ -3,7 +3,8 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { createRoot } from 'react-dom/client';
 import { Battle, type OnlineBattlePresentation } from '../src/components/Battle';
 import { CardInspector } from '../src/components/CardInspector';
-import { createMatch, createCardInstance, playCard, playTurnCard, getMatchDistricts, getDistrictResults, type CardInstance, type Lane } from '../src/gameEngine';
+import { createMatch, createStoryMatch, createCardInstance, playCard, playTurnCard, getMatchDistricts, getDistrictResults, type CardInstance, type Lane } from '../src/gameEngine';
+import { getStoryBattle } from '@workspace/squabblemon-engine/story';
 import { decks } from '../src/data';
 import { DISTRICT_CATALOG, validateDistrictSnapshot } from '@workspace/squabblemon-engine/districts';
 import '../src/index.css';
@@ -11,10 +12,17 @@ const noop = () => {};
 function App() {
   const query = new URLSearchParams(location.search);
   const requestedRival = decks.find(deck => deck.id === query.get('rival'));
+  const requestedEncounter = getStoryBattle(query.get('encounter') ?? '')?.encounter;
+  const fixtureRival = requestedEncounter ? {
+    ...decks[1], id: requestedEncounter.enemy.deckId, name: requestedEncounter.enemy.name,
+    hero: requestedEncounter.enemy.cardIds[0], cards: [...requestedEncounter.enemy.cardIds],
+  } : (requestedRival ?? decks[1]);
   const [match, setMatch] = useState(() => {
     const requestedLocations = new URLSearchParams(location.search).get('locations');
     const snapshot = requestedLocations ? validateDistrictSnapshot({ version: 1, locations: requestedLocations.split(',').map(id => DISTRICT_CATALOG.find(district => district.id === id)) }) : undefined;
-    const m = createMatch('block', requestedRival?.id ?? 'combo', undefined, undefined, snapshot);
+    const m = requestedEncounter
+      ? createStoryMatch(requestedEncounter, 'block', 'story-player', undefined, snapshot)
+      : createMatch('block', requestedRival?.id ?? 'combo', undefined, undefined, snapshot);
     m.playerMotion = 20;
     m.playerHand = ['barber', 'cornball', 'snow', 'wifey', 'plug', 'hooper', 'roaster'].map((id, i) => createCardInstance(id, 'player', 'hand', i));
     m.boards = ([0, 1, 2] as Lane[]).map(lane => (['cpu', 'player'] as const).flatMap(owner =>
@@ -43,7 +51,7 @@ function App() {
   const event = effectMode ? resolved.effectLog.find(e => e.type === 'ability' && e.cardId === 'barber') : null;
   const effect = event ? { ...event, targetIds: event.targets.map(t => t.cardInstanceId), impact: true } : null;
   const play = (id: string, lane: Lane, squabble: boolean) => { setMatch(m => playTurnCard(m, 'player', id, lane, squabble)); setSelected(null); setLane(null); };
-  return <div style={{ height: '100dvh' }}><Battle match={resolved} deck={decks[0]} rivalDeck={query.has('long-name') ? { ...(requestedRival ?? decks[1]), name: 'The Extremely Long Rival Crew Name' } : (requestedRival ?? decks[1])} online={online}
+  return <div style={{ height: '100dvh' }}><Battle match={resolved} deck={decks[0]} rivalDeck={query.has('long-name') ? { ...fixtureRival, name: 'The Extremely Long Rival Crew Name' } : fixtureRival} online={online}
     selectedInstanceId={selected} setSelectedInstanceId={setSelected} selectedLane={lane} setSelectedLane={setLane}
     squabble={squabble} setSquabble={setSquabble} onPlayCard={play} commit={() => { if (selected && lane !== null) play(selected, lane, squabble); }}
     endTurn={noop} skipSequence={() => setPhase('player-ready')} battleSpeed={fast ? 1.5 : 1} onToggleBattleSpeed={() => setFast(value => !value)} presentationPhase={phase} phaseMessage={event?.note ?? 'Choose a card and district'}

@@ -18,6 +18,15 @@ const venues = [
   { rival: 'crashout', id: 'red-fence-night', portrait: 'red-fence-night-court.webp', landscape: 'red-court.webp' },
   { rival: 'vibes', id: 'crown-rooftop', portrait: 'crown-rooftop-court.webp', landscape: 'crown-court.webp' },
 ];
+const desktops = [[1920, 1080], [2560, 1440], [3440, 1440]];
+const storyCases = [
+  // The screenshot's real story encounter issues a portrait red-fence court,
+  // while its venue identity falls back to civic-hill. Assert the asset pair.
+  { encounter: 'red-tapes-side-eye-security', id: 'civic-hill', portrait: 'red-fence-night-court.webp', landscape: 'red-court.webp', locations: 'nail-salon,vip-section,penthouse', viewports: [[1920, 1080], [3440, 1440], [390, 844], [768, 1024], [1024, 768]] },
+  { encounter: 'welcome-to-the-block', id: 'corner-store', portrait: 'corner-store-court.webp', landscape: 'corner-store.webp', viewports: [[1920, 1080]] },
+  // Custom story art stays intact rather than being replaced with a venue.
+  { encounter: 's2-rooftop-demo-table', id: 'civic-hill', portrait: 'civic-hill-climb.webp', landscape: 'rooftop.webp', landscapeRatio: 1, viewports: [[1920, 1080]] },
+];
 const regressions = [
   { width: 390, height: 844, touch: true },
   { width: 490, height: 1000, touch: false },
@@ -47,7 +56,9 @@ async function settleArt(page, viewport, venue) {
   await page.waitForTimeout(250);
 }
 async function load(page, viewport, venue, extra = '') {
-  await page.goto(`${origin}/e2e/battle-mobile.fixture.html?rival=${venue.rival}${extra}`, { waitUntil: 'domcontentloaded' });
+  const query = new URLSearchParams(venue.encounter ? { encounter: venue.encounter } : { rival: venue.rival });
+  if (venue.locations) query.set('locations', venue.locations);
+  await page.goto(`${origin}/e2e/battle-mobile.fixture.html?${query}${extra}`, { waitUntil: 'domcontentloaded' });
   await page.getByTestId('battle-arena').waitFor();
   await settleArt(page, viewport, venue);
 }
@@ -69,6 +80,15 @@ async function artGeometry(page, viewport, venue, expectedFit) {
   assert.equal(art.fit, expectedFit, 'wallpaper uses the intended viewport sizing rule');
   assert.equal(art.transform, 'none', 'wallpaper canvas has no magnifying transform');
   assert.ok(art.naturalWidth > 0 && art.naturalHeight > 0, 'authored wallpaper is decoded');
+  const expectedRatio = viewport.width < viewport.height ? 941 / 1672 : (venue.landscapeRatio ?? 1424 / 800);
+  near(art.naturalWidth / art.naturalHeight, expectedRatio, 'authored source aspect ratio', 0.001);
+  assert.equal(await page.locator('.location-wallpaper').count(), 0, 'no full-height location photographs sit over the battlefield');
+  const locationNodes = await page.locator('.district-target .location-node__scene').evaluateAll(nodes => nodes.map(image => {
+    const box = image.getBoundingClientRect();
+    return { loaded: image.complete && image.naturalWidth > 0, width: box.width, height: box.height };
+  }));
+  assert.equal(locationNodes.length, 3, 'each district retains its floating location artwork');
+  assert.ok(locationNodes.every(node => node.loaded && node.width > 0 && node.height > 0), 'floating location artwork remains loaded and visible');
   const expectedFile = viewport.width < viewport.height ? venue.portrait : venue.landscape;
   assert.ok(new URL(art.source).pathname.endsWith(`/${expectedFile}`), 'picture chooses the authored orientation');
   for (const box of [art.image, art.picture, art.venue]) {
@@ -82,9 +102,9 @@ async function artGeometry(page, viewport, venue, expectedFit) {
   const rendered = { width: art.naturalWidth * scale, height: art.naturalHeight * scale };
   near(rendered.width / rendered.height, art.naturalWidth / art.naturalHeight, 'uniform artwork aspect ratio', 0.00001);
   if (expectedFit === 'cover') {
-    assert.equal(art.position, '50% 50%', 'tablet composition remains centered in either orientation');
+    assert.equal(art.position, '50% 50%', 'filled composition remains centered');
     assert.ok(rendered.width >= art.arena.width - 1 && rendered.height >= art.arena.height - 1,
-      'tablet wallpaper fills the complete battlefield without letterbox gaps');
+      'wallpaper fills the complete battlefield without letterbox gaps');
   } else {
     assert.equal(art.position, viewport.width < viewport.height ? '50% 0%' : '50% 50%', 'non-tablet positioning is preserved');
     assert.ok(rendered.width <= art.arena.width + 1 && rendered.height <= art.arena.height + 1,
@@ -139,7 +159,7 @@ async function matchFingerprint(page) {
 (async () => {
   fs.mkdirSync(output, { recursive: true });
   const browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PATH || '/usr/bin/google-chrome', args: ['--no-sandbox'] });
-  const report = { tabletCases: [], rotations: [], regressions: [], fixtureValidation: [] };
+  const report = { tabletCases: [], rotations: [], desktopCases: [], storyCases: [], regressions: [], fixtureValidation: [] };
   let currentPage;
   const save = () => fs.writeFileSync(path.join(output, 'browser.json'), JSON.stringify(report, null, 2));
   try {
@@ -186,17 +206,53 @@ async function matchFingerprint(page) {
       console.log(`${start.width}x${start.height} ↔ ${rotated.width}x${rotated.height}: selection, match, timer preserved`);
       await page.close(); currentPage = null;
     }
+    for (const [width, height] of desktops) {
+      const viewport = { width, height };
+      const page = currentPage = await browser.newPage({ viewport });
+      const errors = []; page.on('pageerror', error => errors.push(error.message));
+      for (const venue of venues) {
+        await load(page, viewport, venue);
+        const art = await artGeometry(page, viewport, venue, 'cover');
+        const hud = await hudGeometry(page, viewport);
+        report.desktopCases.push({ ...viewport, venue: venue.id, art, hud }); save();
+      }
+      assert.deepEqual(errors, [], 'desktop fixtures report no runtime errors');
+      console.log(`${width}x${height}: all five wide venue compositions fill the board, floating locations and HUD passed`);
+      await page.close(); currentPage = null;
+    }
+    for (const venue of storyCases) {
+      for (const [width, height] of venue.viewports) {
+        const viewport = { width, height };
+        const touch = width < 1400;
+        const page = currentPage = await browser.newPage({ viewport, isMobile: touch, hasTouch: touch });
+        const errors = []; page.on('pageerror', error => errors.push(error.message));
+        await load(page, viewport, venue);
+        const expectedFit = width === 390 ? 'contain' : 'cover';
+        const art = await artGeometry(page, viewport, venue, expectedFit);
+        const hud = await hudGeometry(page, viewport);
+        if (venue.encounter === 'red-tapes-side-eye-security') {
+          assert.equal(await page.locator('.battle-rival-copy').innerText().then(text => /wifey/i.test(text)), true, 'real Wifey encounter is rendered');
+          assert.deepEqual(await page.locator('.district-lane').evaluateAll(nodes => nodes.map(node => node.dataset.location)), ['nail-salon', 'vip-section', 'penthouse'], 'screenshot locations are reproduced');
+          if (width === 1920 || width === 3440) await page.screenshot({ path: path.join(output, `${width}x${height}-wifey-desktop.png`) });
+        }
+        assert.deepEqual(errors, [], 'issued story fixture reports no runtime errors');
+        report.storyCases.push({ ...viewport, encounter: venue.encounter, art, hud, errors }); save();
+        console.log(`${width}x${height}: ${venue.encounter} uses the intended ${expectedFit} artwork`);
+        await page.close(); currentPage = null;
+      }
+    }
     for (const viewport of regressions) {
       const venue = venues.find(venue => venue.rival === 'combo');
       const page = currentPage = await browser.newPage({ viewport: { width: viewport.width, height: viewport.height }, isMobile: viewport.touch, hasTouch: viewport.touch });
       const errors = []; page.on('pageerror', error => errors.push(error.message));
       await load(page, viewport, venue);
-      const art = await artGeometry(page, viewport, venue, 'contain');
+      const expectedFit = viewport.width < viewport.height ? 'contain' : 'cover';
+      const art = await artGeometry(page, viewport, venue, expectedFit);
       const hud = await hudGeometry(page, viewport);
       await page.screenshot({ path: path.join(output, `${viewport.width}x${viewport.height}-regression.png`) });
       assert.deepEqual(errors, [], 'non-tablet fixture reports no runtime errors');
       report.regressions.push({ ...viewport, art, hud, errors }); save();
-      console.log(`${viewport.width}x${viewport.height}: authored contain sizing and HUD preserved`);
+      console.log(`${viewport.width}x${viewport.height}: authored ${expectedFit} sizing and HUD preserved`);
       await page.close(); currentPage = null;
     }
     const page = currentPage = await browser.newPage({ viewport: { width: 768, height: 1024 }, isMobile: true, hasTouch: true });
