@@ -11,7 +11,7 @@ ok 4 - hashed assets are immutable while the HTML manifest revalidates
 # fail 0
 # cancelled 0
 # skipped 0
-# duration_ms 346.068335
+# duration_ms 171.032823
 # Subtest: known-board preview predicts a freeze and leaves the live fade untouched
 ok 1 - known-board preview predicts a freeze and leaves the live fade untouched
 # Subtest: preview cannot disclose which private cards the rival holds
@@ -121,7 +121,7 @@ ok 52 - a Triple OG reveal that moves someone leaves no discontinuous replay fra
 # fail 0
 # cancelled 0
 # skipped 0
-# duration_ms 461.949169
+# duration_ms 409.737171
 # Subtest: all supplied lines have audio assets and alternate cards/costs cannot announce the wrong recording
 ok 1 - all supplied lines have audio assets and alternate cards/costs cannot announce the wrong recording
 # Subtest: expanded recordings match decoded exports and decode completely when tools are available
@@ -147,7 +147,7 @@ ok 10 - every first-sighting mechanic still maps its displayed explanation to a 
 # fail 0
 # cancelled 0
 # skipped 0
-# duration_ms 4940.746524
+# duration_ms 5239.476763
 # Subtest: battle renders after ashlee special and its summons have unique identities
 ok 1 - battle renders after ashlee special and its summons have unique identities
 # Subtest: battle renders after captainjigga special and its summons have unique identities
@@ -171,7 +171,7 @@ ok 9 - stewardesses each remove exactly 2 Hands from distinct unprotected enemie
 # fail 0
 # cancelled 0
 # skipped 0
-# duration_ms 843.816819
+# duration_ms 1040.874396
 # Subtest: Squabble Cook keeps its retaliation at 3 printed Hands for player
 ok 1 - Squabble Cook keeps its retaliation at 3 printed Hands for player
 # Subtest: Squabble Cook keeps its retaliation at 3 printed Hands for cpu
@@ -665,7 +665,7 @@ ok 244 - future earned IDs remain intact while active rewards come from the curr
 # fail 0
 # cancelled 0
 # skipped 0
-# duration_ms 1103.023021
+# duration_ms 1296.093953
 # Subtest: character cosmetics debit only Style Shards, retain badges, and never change card strength
 ok 1 - character cosmetics debit only Style Shards, retain badges, and never change card strength
 # Subtest: purchases reject unowned fighters, insufficient funds, and unfinished character collections
@@ -707,7 +707,7 @@ ok 18 - all ten supplied packs are accounted for: 60 banners, 60 deck covers and
 # fail 0
 # cancelled 0
 # skipped 1
-# duration_ms 6056.908071
+# duration_ms 8374.11919
 # Subtest: compiled tuples exactly preserve the delivered export, without fences or count annotations
 ok 1 - compiled tuples exactly preserve the delivered export, without fences or count annotations
 # Subtest: the rewritten screenplay covers every Season One scene using shipped portraits
@@ -751,7 +751,7 @@ ok 19 - puzzle solutions reject omissions, duplicates, extra pieces and the wron
 # fail 0
 # cancelled 0
 # skipped 0
-# duration_ms 1687.469048
+# duration_ms 1983.839155
 Public entry bundle: 211.2 KiB / 475 KiB across 3 static chunk(s).
-GameApp static JavaScript: 852.1 KiB / 900 KiB.
-Home static JavaScript: 931.1 KiB / 1200 KiB.
+GameApp static JavaScript: 852.5 KiB / 900 KiB.
+Home static JavaScript: 931.5 KiB / 1200 KiB.

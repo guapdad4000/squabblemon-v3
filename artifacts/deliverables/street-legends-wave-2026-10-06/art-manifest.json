@@ -268,16 +268,17 @@
       "height": 1448
     },
     {
-      "id": "nail-tech",
+      "id": "lash-tech",
       "source": "/home/falcon/Downloads/1ccc8864-18df-4a3a-b0fc-20f54ca5cc3e.png",
       "prompt": "Use case: stylized-concept, identity-preserving regeneration from a fighter reference sheet. Asset type: ONE individual full-body Squabblemon fighter portrait PNG with genuine transparency. Recreate the specified fighter as a newly rendered standalone illustration, NOT a rectangular crop of the sheet. Match the exact face, skin tone, hairstyle, clothes, palette, attitude and signature equipment in that fighter's sheet design. Match the sheet's high quality hand-inked urban anime/comic cel shading, rich material detail, confident contours and warm rimlight. Complete missing/occluded body parts accurately, correct limb anatomy and proportion if needed for a coherent full-body card-ready silhouette. Keep the original fighter pose and characteristic meaningful chair/equipment when described. Center ONE fighter with full head and feet visible, portrait 3:4 composition, a little transparent breathing room. Remove all sheet background, floor, nearby fighters, typographic labels, UI, panels, logos, words, watermarks and cast-shadow planes. Background must be real alpha, including gaps between limbs and props. Do not produce a sheet or multiple people.\nSpecified fighter: First fighter labeled Nail Tech: young Black woman with high voluminous dark curly bun with pink hair sticks, face jewelry, huge gold hoop earrings, long pink nails, arm tattoos. Black sleeveless work top/pants with hot-pink accents, pink/white sneakers, seated comfortably in a small black/gold salon chair, hand raised with pink polish brush, other palm held elegantly out. Preserve sheet fighter's actual appearance; include a small neat nail polish tray at chair edge, no entire wall shelves; all background removed.",
       "generatedPath": "/home/falcon/.codex/generated_images/01a0fed0-9461-76a1-bdb2-a885962a8772/exec-4ad0fb61-8fa3-456b-8335-3353ce6f5de7.png",
       "mode": "built-in",
-      "savedPath": "artifacts/squabblemon/public/assets/characters/nail-tech.webp",
+      "savedPath": "artifacts/squabblemon/public/assets/characters/lash-tech.webp",
       "sha256": "b25b2a27cf234d07094d9d9f87c13c7e403f4f112a0562d20a475ab417c4bb0e",
       "bytes": 376614,
       "width": 1086,
-      "height": 1448
+      "height": 1448,
+      "identityCorrection": "The user identified this supplied fighter as Lash Tech; sheet labels are not authoritative. Existing Nail Tech artwork is restored separately."
     },
     {
       "id": "fitness-bro",
@@ -363,5 +364,10 @@
       "width": 1086,
       "height": 1448
     }
-  ]
+  ],
+  "restoredNailTech": {
+    "sourceCommit": "a294d33f^",
+    "sha256": "b1a18cf2a135f801c8f0745ae8ea568226b9b04d3907fb5ce49d0762a99850fd",
+    "savedPath": "artifacts/squabblemon/public/assets/characters/nail-tech.webp"
+  }
 }

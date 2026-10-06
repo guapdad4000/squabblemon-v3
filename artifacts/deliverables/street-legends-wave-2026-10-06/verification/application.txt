@@ -3318,282 +3318,302 @@ ok 1651 - player: uncle-sam uses immutable, deterministic, serializable battle r
 ok 1652 - player: apartment-maintenance-sage uses immutable, deterministic, serializable battle rules
 # Subtest: player: bail-bonds-auntie uses immutable, deterministic, serializable battle rules
 ok 1653 - player: bail-bonds-auntie uses immutable, deterministic, serializable battle rules
+# Subtest: player: lash-tech uses immutable, deterministic, serializable battle rules
+ok 1654 - player: lash-tech uses immutable, deterministic, serializable battle rules
 # Subtest: player: the-opening-act uses immutable, deterministic, serializable battle rules
-ok 1654 - player: the-opening-act uses immutable, deterministic, serializable battle rules
+ok 1655 - player: the-opening-act uses immutable, deterministic, serializable battle rules
 # Subtest: player: the-dj uses immutable, deterministic, serializable battle rules
-ok 1655 - player: the-dj uses immutable, deterministic, serializable battle rules
+ok 1656 - player: the-dj uses immutable, deterministic, serializable battle rules
 # Subtest: player: the-hype-man uses immutable, deterministic, serializable battle rules
-ok 1656 - player: the-hype-man uses immutable, deterministic, serializable battle rules
+ok 1657 - player: the-hype-man uses immutable, deterministic, serializable battle rules
 # Subtest: player: the-manager-nice uses immutable, deterministic, serializable battle rules
-ok 1657 - player: the-manager-nice uses immutable, deterministic, serializable battle rules
+ok 1658 - player: the-manager-nice uses immutable, deterministic, serializable battle rules
 # Subtest: player: the-rapper uses immutable, deterministic, serializable battle rules
-ok 1658 - player: the-rapper uses immutable, deterministic, serializable battle rules
+ok 1659 - player: the-rapper uses immutable, deterministic, serializable battle rules
 # Subtest: player: the-janky-promoter uses immutable, deterministic, serializable battle rules
-ok 1659 - player: the-janky-promoter uses immutable, deterministic, serializable battle rules
+ok 1660 - player: the-janky-promoter uses immutable, deterministic, serializable battle rules
 # Subtest: player: the-local-celebrity uses immutable, deterministic, serializable battle rules
-ok 1660 - player: the-local-celebrity uses immutable, deterministic, serializable battle rules
+ok 1661 - player: the-local-celebrity uses immutable, deterministic, serializable battle rules
 # Subtest: player: the-battle-rapper uses immutable, deterministic, serializable battle rules
-ok 1661 - player: the-battle-rapper uses immutable, deterministic, serializable battle rules
+ok 1662 - player: the-battle-rapper uses immutable, deterministic, serializable battle rules
 # Subtest: player: the-manager-evil uses immutable, deterministic, serializable battle rules
-ok 1662 - player: the-manager-evil uses immutable, deterministic, serializable battle rules
+ok 1663 - player: the-manager-evil uses immutable, deterministic, serializable battle rules
 # Subtest: player: the-og-rap-legend uses immutable, deterministic, serializable battle rules
-ok 1663 - player: the-og-rap-legend uses immutable, deterministic, serializable battle rules
+ok 1664 - player: the-og-rap-legend uses immutable, deterministic, serializable battle rules
 # Subtest: player: fitness-bro uses immutable, deterministic, serializable battle rules
-ok 1664 - player: fitness-bro uses immutable, deterministic, serializable battle rules
+ok 1665 - player: fitness-bro uses immutable, deterministic, serializable battle rules
 # Subtest: player: fitness-girl uses immutable, deterministic, serializable battle rules
-ok 1665 - player: fitness-girl uses immutable, deterministic, serializable battle rules
+ok 1666 - player: fitness-girl uses immutable, deterministic, serializable battle rules
 # Subtest: player: personal-trainer uses immutable, deterministic, serializable battle rules
-ok 1666 - player: personal-trainer uses immutable, deterministic, serializable battle rules
+ok 1667 - player: personal-trainer uses immutable, deterministic, serializable battle rules
 # Subtest: player: demon-trainer uses immutable, deterministic, serializable battle rules
-ok 1667 - player: demon-trainer uses immutable, deterministic, serializable battle rules
+ok 1668 - player: demon-trainer uses immutable, deterministic, serializable battle rules
+# Subtest: player: Lash Out pays a local ally and training only after actual damage
+ok 1669 - player: Lash Out pays a local ally and training only after actual damage
+# Subtest: player: blocked Lash Out does not boost an ally, train, or play a successful special
+ok 1670 - player: blocked Lash Out does not boost an ally, train, or play a successful special
+# Subtest: player: Nail Tech's mitigation can fully absorb Lash Tech's hit without paying support
+ok 1671 - player: Nail Tech's mitigation can fully absorb Lash Tech's hit without paying support
+# Subtest: player: lethal Lash Out earns support while an empty enemy district does not
+ok 1672 - player: lethal Lash Out earns support while an empty enemy district does not
 # Subtest: player: Mr Mc Hands applies separate defenses and upgrades only real successes
-ok 1668 - player: Mr Mc Hands applies separate defenses and upgrades only real successes
+ok 1673 - player: Mr Mc Hands applies separate defenses and upgrades only real successes
 # Subtest: player: Side Chick hits only enemy Baby Momma across districts and respects one shield
-ok 1669 - player: Side Chick hits only enemy Baby Momma across districts and respects one shield
+ok 1674 - player: Side Chick hits only enemy Baby Momma across districts and respects one shield
 # Subtest: player: Name Check withholds a gain without damage or injury
-ok 1670 - player: Name Check withholds a gain without damage or injury
+ok 1675 - player: Name Check withholds a gain without damage or injury
 # Subtest: player: Mary's shared rhythm and Lunch Bond cannot feed themselves
-ok 1671 - player: Mary's shared rhythm and Lunch Bond cannot feed themselves
+ok 1676 - player: Mary's shared rhythm and Lunch Bond cannot feed themselves
 # Subtest: player: Uncle Sam confiscates bonuses without damage and charges exactly one Audit
-ok 1672 - player: Uncle Sam confiscates bonuses without damage and charges exactly one Audit
+ok 1677 - player: Uncle Sam confiscates bonuses without damage and charges exactly one Audit
 # Subtest: player: routes require real arrival; Curfew blocks movement until Sage cleanses it
-ok 1673 - player: routes require real arrival; Curfew blocks movement until Sage cleanses it
+ok 1678 - player: routes require real arrival; Curfew blocks movement until Sage cleanses it
 # Subtest: player: Boo Boo's public trap resolves once and escapes only after damage
-ok 1674 - player: Boo Boo's public trap resolves once and escapes only after damage
+ok 1679 - player: Boo Boo's public trap resolves once and escapes only after damage
 # Subtest: player: Bail redirects once and pays for a real Poison entrance
-ok 1675 - player: Bail redirects once and pays for a real Poison entrance
+ok 1680 - player: Bail redirects once and pays for a real Poison entrance
 # Subtest: player: Evil Manager's expiry transfers bonuses without injury or counter triggers
-ok 1676 - player: Evil Manager's expiry transfers bonuses without injury or counter triggers
+ok 1681 - player: Evil Manager's expiry transfers bonuses without injury or counter triggers
 # Subtest: player: Diss receipt reacts to a genuine gain and never replays
-ok 1677 - player: Diss receipt reacts to a genuine gain and never replays
+ok 1682 - player: Diss receipt reacts to a genuine gain and never replays
 # Subtest: player: Soundcheck, Rider and Rapper react to actual entrances
-ok 1678 - player: Soundcheck, Rider and Rapper react to actual entrances
+ok 1683 - player: Soundcheck, Rider and Rapper react to actual entrances
 # Subtest: player: Personal Trainer completes three distinct districts, not a bounce
-ok 1679 - player: Personal Trainer completes three distinct districts, not a bounce
+ok 1684 - player: Personal Trainer completes three distinct districts, not a bounce
 # Subtest: player: Fitness Girl restores only real injury after movement
-ok 1680 - player: Fitness Girl restores only real injury after movement
+ok 1685 - player: Fitness Girl restores only real injury after movement
 # Subtest: player: Fitness Bro and Demon Trainer have bounded actual triggers
-ok 1681 - player: Fitness Bro and Demon Trainer have bounded actual triggers
+ok 1686 - player: Fitness Bro and Demon Trainer have bounded actual triggers
 # Subtest: cpu: boo-boo-the-fool uses immutable, deterministic, serializable battle rules
-ok 1682 - cpu: boo-boo-the-fool uses immutable, deterministic, serializable battle rules
+ok 1687 - cpu: boo-boo-the-fool uses immutable, deterministic, serializable battle rules
 # Subtest: cpu: mr-mc-hands uses immutable, deterministic, serializable battle rules
-ok 1683 - cpu: mr-mc-hands uses immutable, deterministic, serializable battle rules
+ok 1688 - cpu: mr-mc-hands uses immutable, deterministic, serializable battle rules
 # Subtest: cpu: ms-mary-mack uses immutable, deterministic, serializable battle rules
-ok 1684 - cpu: ms-mary-mack uses immutable, deterministic, serializable battle rules
+ok 1689 - cpu: ms-mary-mack uses immutable, deterministic, serializable battle rules
 # Subtest: cpu: pimp-swookie uses immutable, deterministic, serializable battle rules
-ok 1685 - cpu: pimp-swookie uses immutable, deterministic, serializable battle rules
+ok 1690 - cpu: pimp-swookie uses immutable, deterministic, serializable battle rules
 # Subtest: cpu: og-uncle-harley-davidson uses immutable, deterministic, serializable battle rules
-ok 1686 - cpu: og-uncle-harley-davidson uses immutable, deterministic, serializable battle rules
+ok 1691 - cpu: og-uncle-harley-davidson uses immutable, deterministic, serializable battle rules
 # Subtest: cpu: suga-mama uses immutable, deterministic, serializable battle rules
-ok 1687 - cpu: suga-mama uses immutable, deterministic, serializable battle rules
+ok 1692 - cpu: suga-mama uses immutable, deterministic, serializable battle rules
 # Subtest: cpu: side-chick uses immutable, deterministic, serializable battle rules
-ok 1688 - cpu: side-chick uses immutable, deterministic, serializable battle rules
+ok 1693 - cpu: side-chick uses immutable, deterministic, serializable battle rules
 # Subtest: cpu: gas-station-window-wiper uses immutable, deterministic, serializable battle rules
-ok 1689 - cpu: gas-station-window-wiper uses immutable, deterministic, serializable battle rules
+ok 1694 - cpu: gas-station-window-wiper uses immutable, deterministic, serializable battle rules
 # Subtest: cpu: parole-officer uses immutable, deterministic, serializable battle rules
-ok 1690 - cpu: parole-officer uses immutable, deterministic, serializable battle rules
+ok 1695 - cpu: parole-officer uses immutable, deterministic, serializable battle rules
 # Subtest: cpu: work-hubby uses immutable, deterministic, serializable battle rules
-ok 1691 - cpu: work-hubby uses immutable, deterministic, serializable battle rules
+ok 1696 - cpu: work-hubby uses immutable, deterministic, serializable battle rules
 # Subtest: cpu: he-just-a-friend uses immutable, deterministic, serializable battle rules
-ok 1692 - cpu: he-just-a-friend uses immutable, deterministic, serializable battle rules
+ok 1697 - cpu: he-just-a-friend uses immutable, deterministic, serializable battle rules
 # Subtest: cpu: crazy-ex-boyfriend uses immutable, deterministic, serializable battle rules
-ok 1693 - cpu: crazy-ex-boyfriend uses immutable, deterministic, serializable battle rules
+ok 1698 - cpu: crazy-ex-boyfriend uses immutable, deterministic, serializable battle rules
 # Subtest: cpu: uncle-sam uses immutable, deterministic, serializable battle rules
-ok 1694 - cpu: uncle-sam uses immutable, deterministic, serializable battle rules
+ok 1699 - cpu: uncle-sam uses immutable, deterministic, serializable battle rules
 # Subtest: cpu: apartment-maintenance-sage uses immutable, deterministic, serializable battle rules
-ok 1695 - cpu: apartment-maintenance-sage uses immutable, deterministic, serializable battle rules
+ok 1700 - cpu: apartment-maintenance-sage uses immutable, deterministic, serializable battle rules
 # Subtest: cpu: bail-bonds-auntie uses immutable, deterministic, serializable battle rules
-ok 1696 - cpu: bail-bonds-auntie uses immutable, deterministic, serializable battle rules
+ok 1701 - cpu: bail-bonds-auntie uses immutable, deterministic, serializable battle rules
+# Subtest: cpu: lash-tech uses immutable, deterministic, serializable battle rules
+ok 1702 - cpu: lash-tech uses immutable, deterministic, serializable battle rules
 # Subtest: cpu: the-opening-act uses immutable, deterministic, serializable battle rules
-ok 1697 - cpu: the-opening-act uses immutable, deterministic, serializable battle rules
+ok 1703 - cpu: the-opening-act uses immutable, deterministic, serializable battle rules
 # Subtest: cpu: the-dj uses immutable, deterministic, serializable battle rules
-ok 1698 - cpu: the-dj uses immutable, deterministic, serializable battle rules
+ok 1704 - cpu: the-dj uses immutable, deterministic, serializable battle rules
 # Subtest: cpu: the-hype-man uses immutable, deterministic, serializable battle rules
-ok 1699 - cpu: the-hype-man uses immutable, deterministic, serializable battle rules
+ok 1705 - cpu: the-hype-man uses immutable, deterministic, serializable battle rules
 # Subtest: cpu: the-manager-nice uses immutable, deterministic, serializable battle rules
-ok 1700 - cpu: the-manager-nice uses immutable, deterministic, serializable battle rules
+ok 1706 - cpu: the-manager-nice uses immutable, deterministic, serializable battle rules
 # Subtest: cpu: the-rapper uses immutable, deterministic, serializable battle rules
-ok 1701 - cpu: the-rapper uses immutable, deterministic, serializable battle rules
+ok 1707 - cpu: the-rapper uses immutable, deterministic, serializable battle rules
 # Subtest: cpu: the-janky-promoter uses immutable, deterministic, serializable battle rules
-ok 1702 - cpu: the-janky-promoter uses immutable, deterministic, serializable battle rules
+ok 1708 - cpu: the-janky-promoter uses immutable, deterministic, serializable battle rules
 # Subtest: cpu: the-local-celebrity uses immutable, deterministic, serializable battle rules
-ok 1703 - cpu: the-local-celebrity uses immutable, deterministic, serializable battle rules
+ok 1709 - cpu: the-local-celebrity uses immutable, deterministic, serializable battle rules
 # Subtest: cpu: the-battle-rapper uses immutable, deterministic, serializable battle rules
-ok 1704 - cpu: the-battle-rapper uses immutable, deterministic, serializable battle rules
+ok 1710 - cpu: the-battle-rapper uses immutable, deterministic, serializable battle rules
 # Subtest: cpu: the-manager-evil uses immutable, deterministic, serializable battle rules
-ok 1705 - cpu: the-manager-evil uses immutable, deterministic, serializable battle rules
+ok 1711 - cpu: the-manager-evil uses immutable, deterministic, serializable battle rules
 # Subtest: cpu: the-og-rap-legend uses immutable, deterministic, serializable battle rules
-ok 1706 - cpu: the-og-rap-legend uses immutable, deterministic, serializable battle rules
+ok 1712 - cpu: the-og-rap-legend uses immutable, deterministic, serializable battle rules
 # Subtest: cpu: fitness-bro uses immutable, deterministic, serializable battle rules
-ok 1707 - cpu: fitness-bro uses immutable, deterministic, serializable battle rules
+ok 1713 - cpu: fitness-bro uses immutable, deterministic, serializable battle rules
 # Subtest: cpu: fitness-girl uses immutable, deterministic, serializable battle rules
-ok 1708 - cpu: fitness-girl uses immutable, deterministic, serializable battle rules
+ok 1714 - cpu: fitness-girl uses immutable, deterministic, serializable battle rules
 # Subtest: cpu: personal-trainer uses immutable, deterministic, serializable battle rules
-ok 1709 - cpu: personal-trainer uses immutable, deterministic, serializable battle rules
+ok 1715 - cpu: personal-trainer uses immutable, deterministic, serializable battle rules
 # Subtest: cpu: demon-trainer uses immutable, deterministic, serializable battle rules
-ok 1710 - cpu: demon-trainer uses immutable, deterministic, serializable battle rules
+ok 1716 - cpu: demon-trainer uses immutable, deterministic, serializable battle rules
+# Subtest: cpu: Lash Out pays a local ally and training only after actual damage
+ok 1717 - cpu: Lash Out pays a local ally and training only after actual damage
+# Subtest: cpu: blocked Lash Out does not boost an ally, train, or play a successful special
+ok 1718 - cpu: blocked Lash Out does not boost an ally, train, or play a successful special
+# Subtest: cpu: Nail Tech's mitigation can fully absorb Lash Tech's hit without paying support
+ok 1719 - cpu: Nail Tech's mitigation can fully absorb Lash Tech's hit without paying support
+# Subtest: cpu: lethal Lash Out earns support while an empty enemy district does not
+ok 1720 - cpu: lethal Lash Out earns support while an empty enemy district does not
 # Subtest: cpu: Mr Mc Hands applies separate defenses and upgrades only real successes
-ok 1711 - cpu: Mr Mc Hands applies separate defenses and upgrades only real successes
+ok 1721 - cpu: Mr Mc Hands applies separate defenses and upgrades only real successes
 # Subtest: cpu: Side Chick hits only enemy Baby Momma across districts and respects one shield
-ok 1712 - cpu: Side Chick hits only enemy Baby Momma across districts and respects one shield
+ok 1722 - cpu: Side Chick hits only enemy Baby Momma across districts and respects one shield
 # Subtest: cpu: Name Check withholds a gain without damage or injury
-ok 1713 - cpu: Name Check withholds a gain without damage or injury
+ok 1723 - cpu: Name Check withholds a gain without damage or injury
 # Subtest: cpu: Mary's shared rhythm and Lunch Bond cannot feed themselves
-ok 1714 - cpu: Mary's shared rhythm and Lunch Bond cannot feed themselves
+ok 1724 - cpu: Mary's shared rhythm and Lunch Bond cannot feed themselves
 # Subtest: cpu: Uncle Sam confiscates bonuses without damage and charges exactly one Audit
-ok 1715 - cpu: Uncle Sam confiscates bonuses without damage and charges exactly one Audit
+ok 1725 - cpu: Uncle Sam confiscates bonuses without damage and charges exactly one Audit
 # Subtest: cpu: routes require real arrival; Curfew blocks movement until Sage cleanses it
-ok 1716 - cpu: routes require real arrival; Curfew blocks movement until Sage cleanses it
+ok 1726 - cpu: routes require real arrival; Curfew blocks movement until Sage cleanses it
 # Subtest: cpu: Boo Boo's public trap resolves once and escapes only after damage
-ok 1717 - cpu: Boo Boo's public trap resolves once and escapes only after damage
+ok 1727 - cpu: Boo Boo's public trap resolves once and escapes only after damage
 # Subtest: cpu: Bail redirects once and pays for a real Poison entrance
-ok 1718 - cpu: Bail redirects once and pays for a real Poison entrance
+ok 1728 - cpu: Bail redirects once and pays for a real Poison entrance
 # Subtest: cpu: Evil Manager's expiry transfers bonuses without injury or counter triggers
-ok 1719 - cpu: Evil Manager's expiry transfers bonuses without injury or counter triggers
+ok 1729 - cpu: Evil Manager's expiry transfers bonuses without injury or counter triggers
 # Subtest: cpu: Diss receipt reacts to a genuine gain and never replays
-ok 1720 - cpu: Diss receipt reacts to a genuine gain and never replays
+ok 1730 - cpu: Diss receipt reacts to a genuine gain and never replays
 # Subtest: cpu: Soundcheck, Rider and Rapper react to actual entrances
-ok 1721 - cpu: Soundcheck, Rider and Rapper react to actual entrances
+ok 1731 - cpu: Soundcheck, Rider and Rapper react to actual entrances
 # Subtest: cpu: Personal Trainer completes three distinct districts, not a bounce
-ok 1722 - cpu: Personal Trainer completes three distinct districts, not a bounce
+ok 1732 - cpu: Personal Trainer completes three distinct districts, not a bounce
 # Subtest: cpu: Fitness Girl restores only real injury after movement
-ok 1723 - cpu: Fitness Girl restores only real injury after movement
+ok 1733 - cpu: Fitness Girl restores only real injury after movement
 # Subtest: cpu: Fitness Bro and Demon Trainer have bounded actual triggers
-ok 1724 - cpu: Fitness Bro and Demon Trainer have bounded actual triggers
+ok 1734 - cpu: Fitness Bro and Demon Trainer have bounded actual triggers
 # Subtest: both new complete starter crews reproduce exact replay decision states
-ok 1725 - both new complete starter crews reproduce exact replay decision states
+ok 1735 - both new complete starter crews reproduce exact replay decision states
 # Subtest: player: all wave cards resolve identically online and expose their public marks
-ok 1726 - player: all wave cards resolve identically online and expose their public marks
+ok 1736 - player: all wave cards resolve identically online and expose their public marks
 # Subtest: cpu: all wave cards resolve identically online and expose their public marks
-ok 1727 - cpu: all wave cards resolve identically online and expose their public marks
+ok 1737 - cpu: all wave cards resolve identically online and expose their public marks
 # Subtest: every Street Legends training tier pays once only after a real success
-ok 1728 - every Street Legends training tier pays once only after a real success
-# Subtest: the thirty-entry release adds twenty-nine unique identities while Nail Tech retains ownership and cosmetics
-ok 1729 - the thirty-entry release adds twenty-nine unique identities while Nail Tech retains ownership and cosmetics
+ok 1738 - every Street Legends training tier pays once only after a real success
+# Subtest: the thirty-entry release adds thirty unique identities while Nail Tech retains her original ownership, artwork and cosmetics
+ok 1739 - the thirty-entry release adds thirty unique identities while Nail Tech retains her original ownership, artwork and cosmetics
 # Subtest: all thirty fighter portraits are distinct finished cutouts with valid shared cache revisions
-ok 1730 - all thirty fighter portraits are distinct finished cutouts with valid shared cache revisions
+ok 1740 - all thirty fighter portraits are distinct finished cutouts with valid shared cache revisions
 # Subtest: Music and Fitness crews are discoverable recipes with distinct hero artwork
-ok 1731 - Music and Fitness crews are discoverable recipes with distinct hero artwork
+ok 1741 - Music and Fitness crews are discoverable recipes with distinct hero artwork
 # Subtest: every new offered pack contains three different finished assets, including readable vector signatures and emblems
-ok 1732 - every new offered pack contains three different finished assets, including readable vector signatures and emblems
+ok 1742 - every new offered pack contains three different finished assets, including readable vector signatures and emblems
 # Subtest: unchanged street fighters resolve their printed effects for player
-ok 1733 - unchanged street fighters resolve their printed effects for player
+ok 1743 - unchanged street fighters resolve their printed effects for player
 # Subtest: unchanged street fighters resolve their printed effects for cpu
-ok 1734 - unchanged street fighters resolve their printed effects for cpu
+ok 1744 - unchanged street fighters resolve their printed effects for cpu
 # Subtest: street fighters respect suppression, late-round conditions, and Motion cap
-ok 1735 - street fighters respect suppression, late-round conditions, and Motion cap
+ok 1745 - street fighters respect suppression, late-round conditions, and Motion cap
 # Subtest: Red Pill rewards an already weakened target; STUD intercepts once and escapes with its ally
-ok 1736 - Red Pill rewards an already weakened target; STUD intercepts once and escapes with its ally
+ok 1746 - Red Pill rewards an already weakened target; STUD intercepts once and escapes with its ally
 # Subtest: Sports Prodigy preserves its immediate comeback and arms one serialized delayed comeback for player
-ok 1737 - Sports Prodigy preserves its immediate comeback and arms one serialized delayed comeback for player
+ok 1747 - Sports Prodigy preserves its immediate comeback and arms one serialized delayed comeback for player
 # Subtest: Sports Prodigy's delayed comeback requires an active source and expires for player
-ok 1738 - Sports Prodigy's delayed comeback requires an active source and expires for player
+ok 1748 - Sports Prodigy's delayed comeback requires an active source and expires for player
 # Subtest: Sports Prodigy preserves its immediate comeback and arms one serialized delayed comeback for cpu
-ok 1739 - Sports Prodigy preserves its immediate comeback and arms one serialized delayed comeback for cpu
+ok 1749 - Sports Prodigy preserves its immediate comeback and arms one serialized delayed comeback for cpu
 # Subtest: Sports Prodigy's delayed comeback requires an active source and expires for cpu
-ok 1740 - Sports Prodigy's delayed comeback requires an active source and expires for cpu
+ok 1750 - Sports Prodigy's delayed comeback requires an active source and expires for cpu
 # Subtest: Alchy trained tiers add one bounded round-end Hand each
-ok 1741 - Alchy trained tiers add one bounded round-end Hand each
+ok 1751 - Alchy trained tiers add one bounded round-end Hand each
 # Subtest: street fighters are collectible, trained and use their delivered replaceable special moves
-ok 1742 - street fighters are collectible, trained and use their delivered replaceable special moves
+ok 1752 - street fighters are collectible, trained and use their delivered replaceable special moves
 # Subtest: gangs containing every new fighter replay deterministically
-ok 1743 - gangs containing every new fighter replay deterministically
+ok 1753 - gangs containing every new fighter replay deterministically
 # Subtest: Subway player: lethal rider removal preserves the landed tax, defeat, and legal preview
-ok 1744 - Subway player: lethal rider removal preserves the landed tax, defeat, and legal preview
+ok 1754 - Subway player: lethal rider removal preserves the landed tax, defeat, and legal preview
 # Subtest: Subway player: nonlethal arrival tax keeps the rider and Security's +1
-ok 1745 - Subway player: nonlethal arrival tax keeps the rider and Security's +1
+ok 1755 - Subway player: nonlethal arrival tax keeps the rider and Security's +1
 # Subtest: Subway player: successful rides advance exactly one lane, including 2 -> 0
-ok 1746 - Subway player: successful rides advance exactly one lane, including 2 -> 0
+ok 1756 - Subway player: successful rides advance exactly one lane, including 2 -> 0
 # Subtest: Subway player: blocked rides neither move nor trigger destination Security
-ok 1747 - Subway player: blocked rides neither move nor trigger destination Security
+ok 1757 - Subway player: blocked rides neither move nor trigger destination Security
 # Subtest: Subway player: a defeated first rider uses only that side's ride until next round
-ok 1748 - Subway player: a defeated first rider uses only that side's ride until next round
+ok 1758 - Subway player: a defeated first rider uses only that side's ride until next round
 # Subtest: Subway player: blocked or reversed arrival tax retains defenses and grants no Security reward
-ok 1749 - Subway player: blocked or reversed arrival tax retains defenses and grants no Security reward
+ok 1759 - Subway player: blocked or reversed arrival tax retains defenses and grants no Security reward
 # Subtest: Subway player: lethal tax preserves nested reactions and a neutral aura-loss casualty
-ok 1750 - Subway player: lethal tax preserves nested reactions and a neutral aura-loss casualty
+ok 1760 - Subway player: lethal tax preserves nested reactions and a neutral aura-loss casualty
 # Subtest: Subway cpu: lethal rider removal preserves the landed tax, defeat, and legal preview
-ok 1751 - Subway cpu: lethal rider removal preserves the landed tax, defeat, and legal preview
+ok 1761 - Subway cpu: lethal rider removal preserves the landed tax, defeat, and legal preview
 # Subtest: Subway cpu: nonlethal arrival tax keeps the rider and Security's +1
-ok 1752 - Subway cpu: nonlethal arrival tax keeps the rider and Security's +1
+ok 1762 - Subway cpu: nonlethal arrival tax keeps the rider and Security's +1
 # Subtest: Subway cpu: successful rides advance exactly one lane, including 2 -> 0
-ok 1753 - Subway cpu: successful rides advance exactly one lane, including 2 -> 0
+ok 1763 - Subway cpu: successful rides advance exactly one lane, including 2 -> 0
 # Subtest: Subway cpu: blocked rides neither move nor trigger destination Security
-ok 1754 - Subway cpu: blocked rides neither move nor trigger destination Security
+ok 1764 - Subway cpu: blocked rides neither move nor trigger destination Security
 # Subtest: Subway cpu: a defeated first rider uses only that side's ride until next round
-ok 1755 - Subway cpu: a defeated first rider uses only that side's ride until next round
+ok 1765 - Subway cpu: a defeated first rider uses only that side's ride until next round
 # Subtest: Subway cpu: blocked or reversed arrival tax retains defenses and grants no Security reward
-ok 1756 - Subway cpu: blocked or reversed arrival tax retains defenses and grants no Security reward
+ok 1766 - Subway cpu: blocked or reversed arrival tax retains defenses and grants no Security reward
 # Subtest: Subway cpu: lethal tax preserves nested reactions and a neutral aura-loss casualty
-ok 1757 - Subway cpu: lethal tax preserves nested reactions and a neutral aura-loss casualty
+ok 1767 - Subway cpu: lethal tax preserves nested reactions and a neutral aura-loss casualty
 # Subtest: eight illustrated Super Commons include four support items and have working pack acquisition
-ok 1758 - eight illustrated Super Commons include four support items and have working pack acquisition
+ok 1768 - eight illustrated Super Commons include four support items and have working pack acquisition
 # Subtest: Shiesty YN deterministically repeats its 50% self-summon with an eight-copy cap
-ok 1759 - Shiesty YN deterministically repeats its 50% self-summon with an eight-copy cap
+ok 1769 - Shiesty YN deterministically repeats its 50% self-summon with an eight-copy cap
 # Subtest: Torta restores the Earth hand bond while Concrete keeps only its board kit
-ok 1760 - Torta restores the Earth hand bond while Concrete keeps only its board kit
+ok 1770 - Torta restores the Earth hand bond while Concrete keeps only its board kit
 # Subtest: Torta buffs Earth allies from hand
-ok 1761 - Torta buffs Earth allies from hand
+ok 1771 - Torta buffs Earth allies from hand
 # Subtest: Water Boy restores exactly one Motion for either owner, and needs company
-ok 1762 - Water Boy restores exactly one Motion for either owner, and needs company
+ok 1772 - Water Boy restores exactly one Motion for either owner, and needs company
 # Subtest: Bus Pass and Water Boy allow four plays on the first turn without a draw or turn advance
-ok 1763 - Bus Pass and Water Boy allow four plays on the first turn without a draw or turn advance
+ok 1773 - Bus Pass and Water Boy allow four plays on the first turn without a draw or turn advance
 # Subtest: Cognac and Soul Food support a character, skipping items and enemies
-ok 1764 - Cognac and Soul Food support a character, skipping items and enemies
+ok 1774 - Cognac and Soul Food support a character, skipping items and enemies
 # Subtest: Soul Food cleanses a frozen ally even when another ally ties at 0 Hands
-ok 1765 - Soul Food cleanses a frozen ally even when another ally ties at 0 Hands
+ok 1775 - Soul Food cleanses a frozen ally even when another ally ties at 0 Hands
 # Subtest: Bust-Down Watch protects a character from one hostile ability, then is consumed
-ok 1766 - Bust-Down Watch protects a character from one hostile ability, then is consumed
+ok 1776 - Bust-Down Watch protects a character from one hostile ability, then is consumed
 # Subtest: silenced or frozen new cards do not fire abilities
-ok 1767 - silenced or frozen new cards do not fire abilities
+ok 1777 - silenced or frozen new cards do not fire abilities
 # Subtest: coached Water Boy upgrades require a successful refund; support upgrades boost their target
-ok 1768 - coached Water Boy upgrades require a successful refund; support upgrades boost their target
+ok 1778 - coached Water Boy upgrades require a successful refund; support upgrades boost their target
 # Subtest: new cards can complete a deterministic six-round fade and server replay
-ok 1769 - new cards can complete a deterministic six-round fade and server replay
+ok 1779 - new cards can complete a deterministic six-round fade and server replay
 # Subtest: Rock merges into Earth without changing catalog, rarity, stats or upgrade IDs
-ok 1770 - Rock merges into Earth without changing catalog, rarity, stats or upgrade IDs
+ok 1780 - Rock merges into Earth without changing catalog, rarity, stats or upgrade IDs
 # Subtest: only Torta grants Earth hand growth alongside retired Concrete for player
-ok 1771 - only Torta grants Earth hand growth alongside retired Concrete for player
+ok 1781 - only Torta grants Earth hand growth alongside retired Concrete for player
 # Subtest: only Torta grants Earth hand growth alongside retired Concrete for cpu
-ok 1772 - only Torta grants Earth hand growth alongside retired Concrete for cpu
+ok 1782 - only Torta grants Earth hand growth alongside retired Concrete for cpu
 # Subtest: a legacy Rock snapshot cannot restore the removed Concrete bond
-ok 1773 - a legacy Rock snapshot cannot restore the removed Concrete bond
+ok 1783 - a legacy Rock snapshot cannot restore the removed Concrete bond
 # Subtest: Earth and legacy Rock cannot count as two elements for district diversity
-ok 1774 - Earth and legacy Rock cannot count as two elements for district diversity
+ok 1784 - Earth and legacy Rock cannot count as two elements for district diversity
 # Subtest: John Henry keeps Steel Driver strength as Earth and in legacy snapshots
-ok 1775 - John Henry keeps Steel Driver strength as Earth and in legacy snapshots
+ok 1785 - John Henry keeps Steel Driver strength as Earth and in legacy snapshots
 # Subtest: requested balance pass updates starting Hands, Motion, support strength, and Buttahs display name
-ok 1776 - requested balance pass updates starting Hands, Motion, support strength, and Buttahs display name
+ok 1786 - requested balance pass updates starting Hands, Motion, support strength, and Buttahs display name
 # Subtest: seven support effects respect targets and Motion limits for player
-ok 1777 - seven support effects respect targets and Motion limits for player
+ok 1787 - seven support effects respect targets and Motion limits for player
 # Subtest: seven support effects respect targets and Motion limits for cpu
-ok 1778 - seven support effects respect targets and Motion limits for cpu
+ok 1788 - seven support effects respect targets and Motion limits for cpu
 # Subtest: support conditions and status suppression prevent free effects
-ok 1779 - support conditions and status suppression prevent free effects
+ok 1789 - support conditions and status suppression prevent free effects
 # Subtest: a coached Subway Map cannot award Hands when County Jail blocks its move
-ok 1780 - a coached Subway Map cannot award Hands when County Jail blocks its move
+ok 1790 - a coached Subway Map cannot award Hands when County Jail blocks its move
 # Subtest: ten-card gangs draw all ten by round six and reject seven-card submissions
-ok 1781 - ten-card gangs draw all ten by round six and reject seven-card submissions
+ok 1791 - ten-card gangs draw all ten by round six and reject seven-card submissions
 # Subtest: legacy gang completion preserves order and only uses owned cards
-ok 1782 - legacy gang completion preserves order and only uses owned cards
+ok 1792 - legacy gang completion preserves order and only uses owned cards
 # Subtest: story Motion boosts and starting resources respect the nine-point cap
-ok 1783 - story Motion boosts and starting resources respect the nine-point cap
+ok 1793 - story Motion boosts and starting resources respect the nine-point cap
 # Subtest: discounted Motion refunds cannot exceed nine, and Work Boots blocks exactly one hostile hit
-ok 1784 - discounted Motion refunds cannot exceed nine, and Work Boots blocks exactly one hostile hit
+ok 1794 - discounted Motion refunds cannot exceed nine, and Work Boots blocks exactly one hostile hit
 # Subtest: support gangs complete and replay the same fade; missing videos use the effects fallback
-ok 1785 - support gangs complete and replay the same fade; missing videos use the effects fallback
+ok 1795 - support gangs complete and replay the same fade; missing videos use the effects fallback
 # Subtest: training bands keep developing gangs out of advanced opposition
-ok 1786 - training bands keep developing gangs out of advanced opposition
+ok 1796 - training bands keep developing gangs out of advanced opposition
 # Subtest: training gang level normalizes engine IDs to owned catalog progression
-ok 1787 - training gang level normalizes engine IDs to owned catalog progression
+ok 1797 - training gang level normalizes engine IDs to owned catalog progression
 # Subtest: verified training earns participating card XP and account rewards with no repeat limit
-ok 1788 - verified training earns participating card XP and account rewards with no repeat limit
-# tests 1794
-# pass 1794
+ok 1798 - verified training earns participating card XP and account rewards with no repeat limit
+# tests 1804
+# pass 1804
 # fail 0
 # cancelled 0
 # skipped 0
-# duration_ms 30534.822918
+# duration_ms 30253.792959
 # Subtest: ignores lazy route chunks when measuring the public entry
 ok 1 - ignores lazy route chunks when measuring the public entry
 # Subtest: game budget ignores unvisited routes but catches eager routes in shared dependencies
@@ -3609,7 +3629,7 @@ ok 5 - fails when the static public entry exceeds its budget
 # fail 0
 # cancelled 0
 # skipped 0
-# duration_ms 59.517654
+# duration_ms 59.034649
 # Subtest: Plant setup cards and Kingpin use the same bounded budgets in collection and battle
 ok 1 - Plant setup cards and Kingpin use the same bounded budgets in collection and battle
 # Subtest: Dark and detective setup costs match collection and both battle owners
@@ -3631,4 +3651,4 @@ ok 8 - Wiretap posts one cross-district discount without a solo or crowded refun
 # fail 0
 # cancelled 0
 # skipped 0
-# duration_ms 308.371035
+# duration_ms 293.949472

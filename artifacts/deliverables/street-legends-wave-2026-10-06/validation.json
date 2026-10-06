@@ -1,72 +1,63 @@
 {
-  "generatedAt": "2026-10-06T12:33:16.298Z",
-  "rulesVersion": 47,
-  "balanceVersion": 47,
-  "engineSourceHash": "72711ac6379a9b4b1e29a16db7da0b01a497fd7c749cd5d5e9bbd7f1ab0e4b0f",
+  "generatedAt": "2026-10-06T18:10:23.910Z",
+  "rulesVersion": 48,
+  "balanceVersion": 48,
+  "engineSourceHash": "178b3cc498c0e1c2beabfb94d768fdb96e302109769e8228f81c8c8104fc2827",
+  "identityCorrection": "Lash Tech is a new fighter; Nail Tech is restored byte-for-byte from the pre-wave commit, preserving ownership, kit, upgrades and cosmetic IDs.",
   "checks": [
     {
       "name": "Full application suite",
       "status": "passed",
-      "detail": "1,794 app tests, 5 bundle checks, and 8 balance-patch checks; 1,807 total, zero failures or skips."
+      "detail": "1,817 checks including app, bundle, and balance-patch tests; zero failures or skips."
     },
     {
       "name": "Wave authority and presentation",
       "status": "passed",
-      "detail": "113 checks cover both seats, local/online/replay, JSON persistence, progression, blocked effects, alpha, cache revisions, all 30 portraits, and complete distinct sticker packs."
+      "detail": "123 checks: both owners, immutable/serializable rules, replay/online parity, unique transparent art, cache revisions, original Nail Tech and retained cosmetic IDs, plus real-hit, shield, full mitigation, lethal and empty-district Lash Out cases."
     },
     {
       "name": "Existing online regressions",
       "status": "passed",
-      "detail": "24 checks, zero failures or skips."
+      "detail": "24 checks, zero failures or skips; rules and balance version 48."
     },
     {
-      "name": "Native API database suite",
+      "name": "Focused native API database suite",
       "status": "passed",
-      "detail": "292 checks on a fresh owned loopback PostgreSQL cluster with independent connections, zero failures or skips. Includes every campaign node through HTTP. External databases were not used."
+      "detail": "37 checks on a fresh owned loopback PostgreSQL cluster with independent connections; cosmetics, card progression, collection economy, and bounded story solver cases pass without failures or skips. The original 292-check full API run belongs to parent commit a294d33f; this correction uses the focused suite."
     },
     {
-      "name": "TypeScript",
+      "name": "Staging release gates and TypeScript",
       "status": "passed",
-      "detail": "Application, API server, shared engine, and audit scripts compile. Required workspace declaration projects were built first."
-    },
-    {
-      "name": "Staging release gates",
-      "status": "passed",
-      "detail": "Full build-netlify pipeline with DATABASE_URL unset, staging environment, public origin, and the repository test Clerk publishable key; migration, API function, online, story, media and client bundle gates pass. Its single database-only cosmetics test is covered by the native database run; this does not validate production authentication."
+      "detail": "Full build-netlify pipeline passes with DATABASE_URL unset, staging settings, public origin, and repository test Clerk key. App/API/engine compile; migration, media, online, story, API function and bundle gates pass. The database-only cosmetics check skipped by staging is covered by the focused native run. Production authentication is not exercised by these local checks."
     },
     {
       "name": "Bundle budgets",
       "status": "passed",
-      "detail": "Public 211.2 / 475 KiB; GameApp 852.1 / 900 KiB; Home 931.1 / 1,200 KiB. Existing budgets are unchanged."
+      "detail": "GameApp 852.5 KiB / 900 KiB; Home 931.5 KiB / 1200 KiB; public entry 211.2 / 475 KiB. Existing limits are unchanged."
     },
     {
-      "name": "Browser interactions",
+      "name": "Responsive browser and identity comparison",
       "status": "passed",
-      "detail": "11 checks and nine screenshots. Real play and End Turn retain visible cards on desktop, phone, and both iPad orientations; music settings persist on repeated opening and Escape closes the dialog; zero page errors."
+      "detail": "13 checks and 12 screenshots; distinct Lash Tech/Nail Tech portraits and dossiers show their own moves. Desktop, mobile and both iPad orientations retain visible battle cards after play and End Turn; repeated music controls persist settings. Zero page errors."
     },
     {
-      "name": "Optimization preserves gameplay",
+      "name": "Fresh corrected deck audit",
       "status": "passed",
-      "detail": "All 6,888 post-optimization match summaries equal their pre-optimization counterparts, including winners, district margins, plays, and passes."
-    },
-    {
-      "name": "Deck diagnostic audit",
-      "status": "passed",
-      "detail": "42 legal comparison crews, 6,888 matches, both seats, two policies, base/mastery tiers; all 29 new identities covered, zero engine errors. Scores are fixed-seed bot diagnostics, not human win rates."
+      "detail": "42 legal crews and 6,888 fresh matches, both seats, two bot policies, base/mastery tiers; all 30 new identities covered including Lash Tech. Zero engine errors. Current results reflect the corrected Fitness recipe; older optimization-equivalence evidence remains historical."
     }
   ],
   "evidence": {
     "application": {
       "summary": "verification/application.txt",
-      "sha256": "4eaf75c4bf67e9e7174fd60f8ae5e2b718db9d6f7e5fc7c1c7a448dbfbe5250b",
-      "bytes": 400931,
+      "sha256": "ae22dfd97715c89750b69a7a79eef1227404a7998da9dc545081ae943320b109",
+      "bytes": 403254,
       "tests": [
-        1794,
+        1804,
         5,
         8
       ],
       "passes": [
-        1794,
+        1804,
         5,
         8
       ],
@@ -83,13 +74,13 @@
     },
     "wave": {
       "summary": "verification/wave.txt",
-      "sha256": "37e318b6186a507abf1ed070ce1e3397038e511d1685ead4ca7c3d1ee7026e06",
-      "bytes": 25917,
+      "sha256": "ae3c57ba5f51546bfa6e65ea0629416305d498161a0190b99357f6bbf31ae139",
+      "bytes": 28215,
       "tests": [
-        113
+        123
       ],
       "passes": [
-        113
+        123
       ],
       "failures": [
         0
@@ -100,8 +91,8 @@
     },
     "online": {
       "summary": "verification/online.txt",
-      "sha256": "e1d53ff9cb8f756cc4b60cf45ffe6907a19f78d2daf68e2c0ecff2279299d4e8",
-      "bytes": 5769,
+      "sha256": "9cf74bfe869f06523be2f6f0b7af2248089a623ffd1fee7e2826f8c901cc4be8",
+      "bytes": 5770,
       "tests": [
         24
       ],
@@ -117,13 +108,13 @@
     },
     "api": {
       "summary": "verification/api.txt",
-      "sha256": "e67d00f0d989036e4bcef64d59b1daf6a0b4ae3ccb830011b634ef62b2f42e84",
-      "bytes": 232869,
+      "sha256": "5dc04aaa6d8bb5f6d36b9f29ea441c7d66caf9276ee6ee00e17b8c9818583fac",
+      "bytes": 8418,
       "tests": [
-        292
+        37
       ],
       "passes": [
-        292
+        37
       ],
       "failures": [
         0
@@ -134,8 +125,8 @@
     },
     "release": {
       "summary": "verification/release.txt",
-      "sha256": "055360ff8a4e96d5d120a423583d1960e1ca25f6beb978329e59d1be2de8afe7",
-      "bytes": 98012,
+      "sha256": "c95029a0bd3ba5a35265809a9bb92642774891b909c04898d5bfd48d4db04986",
+      "bytes": 98016,
       "tests": [
         4,
         52,
@@ -175,8 +166,8 @@
     },
     "browser": {
       "summary": "verification/browser.txt",
-      "sha256": "8473fd41911c27dbf6a50e097fc7eb59622b1879adde7239270d38ea1ead3b3f",
-      "bytes": 737,
+      "sha256": "38b2a39daf8999226cfbe46b354ef844336e42b9d042f84ab663aa40e2c9b781",
+      "bytes": 871,
       "tests": [],
       "passes": [],
       "failures": [],
@@ -184,19 +175,16 @@
     }
   },
   "browserEvidence": "browser-verification.json",
+  "historicalFullApiCommit": "a294d33f2ab025104cc79e78a26850a0e99d07d6",
   "limitations": [
-    "One draw rotation and fixed seed, two simple bot policies; not every ten-card combination is covered.",
-    "Fitness sequencing remains difficult for the diagnostic bots; its final score is 30.3%. Older Fire and tempo crews remain weaker than Water and Plant in this pool.",
-    "Load-size budget and interaction verification do not establish an improvement in battle FPS.",
-    "The original wave added overhead to older matches and exceeded a strict campaign solver budget. Stateless adapter reuse and inactive-hook fast exits restore that budget; a direct Soundcheck regression retains the original ceiling.",
-    "Two stale API test expectations were aligned with existing mandatory card rewards and current tester promo grants; production reward code was not changed."
+    "Fixed seed and one draw rotation; diagnostic bot scores are not human win rates or every possible crew combination.",
+    "Bundle and bounded-search verification do not establish an improvement in battle FPS.",
+    "The 292-check full native API suite was run for the parent release; this correction runs the focused native suite and full application/release gates."
   ],
   "reproduce": {
     "app": "cd artifacts/squabblemon && pnpm test",
     "wave": "cd artifacts/squabblemon && pnpm run test:street-legends",
-    "online": "cd artifacts/squabblemon && pnpm run test:online",
-    "api": "env -u DATABASE_URL node artifacts/deliverables/street-legends-wave-2026-10-06/verification/native-api.mjs",
-    "release": "env -u DATABASE_URL APP_ENV=staging PUBLIC_ORIGIN=https://squabble.today VITE_CLERK_PUBLISHABLE_KEY=pk_test_Y2xlcmsuZXhhbXBsZS5jb20k node scripts/build-netlify.mjs",
+    "api": "env -u DATABASE_URL node artifacts/deliverables/street-legends-wave-2026-10-06/verification/native-api.mjs --lash-correction",
     "browser": "cd artifacts/squabblemon && pnpm run test:street-legends-browser"
   }
 }

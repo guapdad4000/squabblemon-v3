@@ -1,6 +1,6 @@
 import type { AbilityUpgradeEffect, Card, CardRarity } from './data';
 
-/** Street people are separate identities; Nail Tech's existing save key is never duplicated. */
+/** Street people and Lash Tech are separate identities; Nail Tech keeps her original save key and art. */
 export const STREET_LEGENDS_WAVE = [
   ['boo-boo-the-fool', 'Boo Boo the Fool', 'Uncommon', 'Air', 2, 2, 'Wrong Address', 'On Reveal: Leave a Decoy here through next round. The next enemy character played or moved here takes 1 damage. If damage lands and Boo Boo is active, he moves to your weakest other open district and gains +1 Hand only if he arrives. One Decoy per side; each Boo Boo sets it once per match.', 'Disruption'],
   ['mr-mc-hands', 'Mr. Mc Hands', 'Epic', 'Normal', 4, 4, 'All These Hands', 'On Reveal: Hit up to two different strongest enemy characters here for 2 damage each. Each strike separately respects defenses.', 'Pressure'],
@@ -17,11 +17,12 @@ export const STREET_LEGENDS_WAVE = [
   ['uncle-sam', 'Uncle Sam', 'Legendary', 'Earth', 4, 4, 'PAY WHAT YOU OWE', 'On Reveal: Confiscate up to 3 removable bonus Hands from the local enemy with the most bonus and gain the amount actually taken. Never takes printed Hands or creates healing credit. If nobody has bonus, Audit here through next round: the next enemy character played here costs +1 Motion. One pending Audit per side.', 'Disruption'],
   ['apartment-maintenance-sage', 'Apartment Maintenance Sage', 'Rare', 'Light', 3, 3, 'I GOT A KEY FOR THAT', 'On Reveal: Cleanse your weakest other ally here and remove its timed movement restriction, then move it to your weakest other open district. Protect it only if it arrives. Capacity, district detention and story closures still apply.', 'Support'],
   ['bail-bonds-auntie', 'The Bail Bonds Auntie', 'Rare', 'Poison', 2, 2, 'Sign Here', 'On Reveal: Give your weakest other local ally a Bail Bond through next round. Redirect its next targeted hostile ability to an active Auntie once. If she takes damage or a new harmful status, arm a credit through next round: your next Poison character played in another district refunds 1 Motion after a successful entrance. One Bond and credit per side.', 'Support'],
+  ['lash-tech', 'Lash Tech', 'Uncommon', 'Poison', 2, 2, 'Lash Out', 'On Reveal: Hit the strongest enemy here for 1 damage. Only if damage lands, give your weakest other ally here +2 Hands. Blocked or fully absorbed hits give no ally boost. Defenses apply.', 'Support'],
 ] as const;
 
 export const streetLegendsUpgradeEffects: Record<string, readonly AbilityUpgradeEffect[]> = Object.fromEntries(STREET_LEGENDS_WAVE.map(([id]) => [id, [0, 1, 2].map(() => ({ kind: 'self-power' as const, amount: 1 as const, trigger: 'base-success' as const }))]));
 export const streetLegendsRarities: Record<string, CardRarity> = Object.fromEntries(STREET_LEGENDS_WAVE.map(([id, , rarity]) => [id, rarity]));
-export const streetLegendsFactions: Record<string, string> = Object.fromEntries(STREET_LEGENDS_WAVE.map(([id]) => [id, 'Street Legends']));
+export const streetLegendsFactions: Record<string, string> = Object.fromEntries(STREET_LEGENDS_WAVE.map(([id]) => [id, id === 'lash-tech' ? 'Beauty' : 'Street Legends']));
 export const streetLegendsCards: Record<string, Card> = Object.fromEntries(STREET_LEGENDS_WAVE.map(([id, name, , type, cost, power, ability, effect, role]) => [id, {
   id, name, type, cost, power, ability, effect, roles: [role], kind: 'character', artworkLayout: 'portrait',
   abilityUpgrades: [2, 5, 8].map((unlockLevel, index) => ({ id: `${id}:upgrade:${index + 1}`, name: `${ability} ${['Practice', 'Confidence', 'Mastery'][index]}`, description: 'The first time the base ability succeeds this match, gain +1 Hand.', unlockLevel, effect: streetLegendsUpgradeEffects[id][index] })),

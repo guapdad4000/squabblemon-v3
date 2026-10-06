@@ -1,0 +1,202 @@
+{
+  "generatedAt": "2026-10-06T12:33:16.298Z",
+  "rulesVersion": 47,
+  "balanceVersion": 47,
+  "engineSourceHash": "72711ac6379a9b4b1e29a16db7da0b01a497fd7c749cd5d5e9bbd7f1ab0e4b0f",
+  "checks": [
+    {
+      "name": "Full application suite",
+      "status": "passed",
+      "detail": "1,794 app tests, 5 bundle checks, and 8 balance-patch checks; 1,807 total, zero failures or skips."
+    },
+    {
+      "name": "Wave authority and presentation",
+      "status": "passed",
+      "detail": "113 checks cover both seats, local/online/replay, JSON persistence, progression, blocked effects, alpha, cache revisions, all 30 portraits, and complete distinct sticker packs."
+    },
+    {
+      "name": "Existing online regressions",
+      "status": "passed",
+      "detail": "24 checks, zero failures or skips."
+    },
+    {
+      "name": "Native API database suite",
+      "status": "passed",
+      "detail": "292 checks on a fresh owned loopback PostgreSQL cluster with independent connections, zero failures or skips. Includes every campaign node through HTTP. External databases were not used."
+    },
+    {
+      "name": "TypeScript",
+      "status": "passed",
+      "detail": "Application, API server, shared engine, and audit scripts compile. Required workspace declaration projects were built first."
+    },
+    {
+      "name": "Staging release gates",
+      "status": "passed",
+      "detail": "Full build-netlify pipeline with DATABASE_URL unset, staging environment, public origin, and the repository test Clerk publishable key; migration, API function, online, story, media and client bundle gates pass. Its single database-only cosmetics test is covered by the native database run; this does not validate production authentication."
+    },
+    {
+      "name": "Bundle budgets",
+      "status": "passed",
+      "detail": "Public 211.2 / 475 KiB; GameApp 852.1 / 900 KiB; Home 931.1 / 1,200 KiB. Existing budgets are unchanged."
+    },
+    {
+      "name": "Browser interactions",
+      "status": "passed",
+      "detail": "11 checks and nine screenshots. Real play and End Turn retain visible cards on desktop, phone, and both iPad orientations; music settings persist on repeated opening and Escape closes the dialog; zero page errors."
+    },
+    {
+      "name": "Optimization preserves gameplay",
+      "status": "passed",
+      "detail": "All 6,888 post-optimization match summaries equal their pre-optimization counterparts, including winners, district margins, plays, and passes."
+    },
+    {
+      "name": "Deck diagnostic audit",
+      "status": "passed",
+      "detail": "42 legal comparison crews, 6,888 matches, both seats, two policies, base/mastery tiers; all 29 new identities covered, zero engine errors. Scores are fixed-seed bot diagnostics, not human win rates."
+    }
+  ],
+  "evidence": {
+    "application": {
+      "summary": "verification/application.txt",
+      "sha256": "4eaf75c4bf67e9e7174fd60f8ae5e2b718db9d6f7e5fc7c1c7a448dbfbe5250b",
+      "bytes": 400931,
+      "tests": [
+        1794,
+        5,
+        8
+      ],
+      "passes": [
+        1794,
+        5,
+        8
+      ],
+      "failures": [
+        0,
+        0,
+        0
+      ],
+      "skips": [
+        0,
+        0,
+        0
+      ]
+    },
+    "wave": {
+      "summary": "verification/wave.txt",
+      "sha256": "37e318b6186a507abf1ed070ce1e3397038e511d1685ead4ca7c3d1ee7026e06",
+      "bytes": 25917,
+      "tests": [
+        113
+      ],
+      "passes": [
+        113
+      ],
+      "failures": [
+        0
+      ],
+      "skips": [
+        0
+      ]
+    },
+    "online": {
+      "summary": "verification/online.txt",
+      "sha256": "e1d53ff9cb8f756cc4b60cf45ffe6907a19f78d2daf68e2c0ecff2279299d4e8",
+      "bytes": 5769,
+      "tests": [
+        24
+      ],
+      "passes": [
+        24
+      ],
+      "failures": [
+        0
+      ],
+      "skips": [
+        0
+      ]
+    },
+    "api": {
+      "summary": "verification/api.txt",
+      "sha256": "e67d00f0d989036e4bcef64d59b1daf6a0b4ae3ccb830011b634ef62b2f42e84",
+      "bytes": 232869,
+      "tests": [
+        292
+      ],
+      "passes": [
+        292
+      ],
+      "failures": [
+        0
+      ],
+      "skips": [
+        0
+      ]
+    },
+    "release": {
+      "summary": "verification/release.txt",
+      "sha256": "055360ff8a4e96d5d120a423583d1960e1ca25f6beb978329e59d1be2de8afe7",
+      "bytes": 98012,
+      "tests": [
+        4,
+        52,
+        10,
+        9,
+        244,
+        18,
+        19
+      ],
+      "passes": [
+        4,
+        52,
+        10,
+        9,
+        244,
+        17,
+        19
+      ],
+      "failures": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "skips": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0
+      ]
+    },
+    "browser": {
+      "summary": "verification/browser.txt",
+      "sha256": "8473fd41911c27dbf6a50e097fc7eb59622b1879adde7239270d38ea1ead3b3f",
+      "bytes": 737,
+      "tests": [],
+      "passes": [],
+      "failures": [],
+      "skips": []
+    }
+  },
+  "browserEvidence": "browser-verification.json",
+  "limitations": [
+    "One draw rotation and fixed seed, two simple bot policies; not every ten-card combination is covered.",
+    "Fitness sequencing remains difficult for the diagnostic bots; its final score is 30.3%. Older Fire and tempo crews remain weaker than Water and Plant in this pool.",
+    "Load-size budget and interaction verification do not establish an improvement in battle FPS.",
+    "The original wave added overhead to older matches and exceeded a strict campaign solver budget. Stateless adapter reuse and inactive-hook fast exits restore that budget; a direct Soundcheck regression retains the original ceiling.",
+    "Two stale API test expectations were aligned with existing mandatory card rewards and current tester promo grants; production reward code was not changed."
+  ],
+  "reproduce": {
+    "app": "cd artifacts/squabblemon && pnpm test",
+    "wave": "cd artifacts/squabblemon && pnpm run test:street-legends",
+    "online": "cd artifacts/squabblemon && pnpm run test:online",
+    "api": "env -u DATABASE_URL node artifacts/deliverables/street-legends-wave-2026-10-06/verification/native-api.mjs",
+    "release": "env -u DATABASE_URL APP_ENV=staging PUBLIC_ORIGIN=https://squabble.today VITE_CLERK_PUBLISHABLE_KEY=pk_test_Y2xlcmsuZXhhbXBsZS5jb20k node scripts/build-netlify.mjs",
+    "browser": "cd artifacts/squabblemon && pnpm run test:street-legends-browser"
+  }
+}

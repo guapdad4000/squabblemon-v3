@@ -324,7 +324,7 @@ export const decks: Deck[] = [
   { id: "compound", name: "COMPOUND INTEREST", archetype: "Growth / Scaling", accent: "GROW", plan: "Invest early in STOCKZ and BUDDY, then freeze a rival threat while follow-up plays build late district value.", cards: ["cornball", "plug", "streamer", "rastamon", "gamer", "stockz", "snow", "buspass", "buddy", "cognac"], hero: "gamer" },
   { id: "voltage", name: "VOLTAGE IN MOTION", archetype: "Electric Tempo", accent: "CHARGE", plan: "Keep an Electric bond in hand, spread plays across districts, and turn clean sequencing into extra tempo.", cards: ["batteryback", "circuitcaptain", "wiretap", "livewire", "stockz", "bossbabe", "plug", "streamer", "techbro", "bikelife"], hero: "circuit-captain" },
   { id: 'music-industry', name: 'WHO GOT THE AUX', archetype: 'Music / Sequencing', accent: 'PERFORM', plan: 'Soundcheck a second stage, perform across districts, protect the artist, Spinback one entrance, and Pass the Torch into the finish.', cards: [...MUSIC_INDUSTRY_IDS], hero: 'the-og-rap-legend' },
-  { id: 'fitness-circuit', name: 'ONE MORE REP', archetype: 'Fitness / Movement', accent: 'TRAIN', plan: 'Train a circuit across three districts, recover actual damage, and earn a bounded comeback after an athlete falls.', cards: ['failedathlete', 'fitness-girl', 'fitness-bro', 'personal-trainer', 'nail', 'apartment-maintenance-sage', 'yn-atv-lord', 'hooper', 'sportsprodigy', 'demon-trainer'], hero: 'demon-trainer' },
+  { id: 'fitness-circuit', name: 'ONE MORE REP', archetype: 'Fitness / Movement', accent: 'TRAIN', plan: 'Train a circuit across three districts, recover actual damage, and earn a bounded comeback after an athlete falls.', cards: ['failedathlete', 'fitness-girl', 'fitness-bro', 'personal-trainer', 'lash-tech', 'apartment-maintenance-sage', 'yn-atv-lord', 'hooper', 'sportsprodigy', 'demon-trainer'], hero: 'demon-trainer' },
   { id: "squabblehouse-shift", name: "SQUABBLEHOUSE SHIFT", archetype: "Staff & Support", accent: "SHIFT", plan: "Bring the diner staff together across all three districts for Waffle Warlord, while Bus Boy clears a lane, Cashier pins a threat, and A Side of Hands serves both sides. Teknician echoes staff reveals and Janitor reverses attacks. Dogs and Triple OGs belong in gang decks.", cards: ["squabble-house-manager", "squabblehouse-bus-boy", "squabblehouse-cashier", "squabblehouse-security", "squabblehouse-teknician", "griddle-master", "inmate-reformed", "janitor", "waffle-warlord", "sideofhands"], hero: "squabblehouse-security" },
 ].map(deck => ({ ...deck, cards: completeEngineCrew(deck.cards) }));
 
@@ -526,7 +526,7 @@ export const cardCatalog: CatalogCard[] = Object.entries(cards).map(
         ['cane-corso-red', 'blue-nose-pit'].includes(engineId) ? ['OG-support'] : [],
         MUSIC_CHARACTER_IDS.includes(engineId) ? ['Music Industry'] : [],
         FITNESS_CHARACTER_IDS.includes(engineId) ? ['Fitness'] : [],
-        Object.hasOwn(streetLegendsCards, engineId) ? ['Street Legends'] : [],
+        Object.hasOwn(streetLegendsCards, engineId) ? [engineId === 'lash-tech' ? 'Beauty' : 'Street Legends'] : [],
         Object.hasOwn(sideOzWaveCards, engineId) ? ['side-oz', sideOzWaveFactions[engineId] === 'Red Side' ? 'red-side'
           : sideOzWaveFactions[engineId] === 'Blue Side' ? 'blue-side' : 'the-wiz'] : []),
     acquisitionSources: sourceByEngineId[engineId] ?? (["barber", "bottle", "sneaker", "church", "landlord", "carmeet", "promoter", "nail", "og", "delivery"].includes(engineId) ? ["City Never Sleeps"] : ["Street Packs"]),

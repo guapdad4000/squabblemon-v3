@@ -16,16 +16,21 @@
       "imageFailures": 0
     },
     {
+      "name": "lash-and-nail-desktop",
+      "cards": 2,
+      "imageFailures": 0
+    },
+    {
+      "name": "separate-lash-and-nail",
+      "distinctPortraits": true,
+      "distinctAbilities": true
+    },
+    {
       "name": "battle-desktop",
       "visibleBoardCards": 6,
       "boardCards": [
         {
-          "card": "fitness-girl",
-          "w": 118.234375,
-          "h": 165.140625
-        },
-        {
-          "card": "nail-tech",
+          "card": "lash-tech",
           "w": 118.234375,
           "h": 165.140625
         },
@@ -48,6 +53,11 @@
           "card": "the-rapper",
           "w": 111.15625,
           "h": 155.265625
+        },
+        {
+          "card": "fitness-girl",
+          "w": 118.234375,
+          "h": 165.140625
         }
       ],
       "remainingMotion": 2
@@ -62,12 +72,7 @@
       "visibleBoardCards": 6,
       "boardCards": [
         {
-          "card": "fitness-girl",
-          "w": 54.65625,
-          "h": 76.34375
-        },
-        {
-          "card": "nail-tech",
+          "card": "lash-tech",
           "w": 54.65625,
           "h": 76.34375
         },
@@ -90,6 +95,11 @@
           "card": "the-rapper",
           "w": 54.65625,
           "h": 76.34375
+        },
+        {
+          "card": "fitness-girl",
+          "w": 54.671875,
+          "h": 76.359375
         }
       ],
       "remainingMotion": 2
@@ -104,14 +114,9 @@
       "visibleBoardCards": 6,
       "boardCards": [
         {
-          "card": "fitness-girl",
-          "w": 107.265625,
-          "h": 149.828125
-        },
-        {
-          "card": "nail-tech",
-          "w": 107.265625,
-          "h": 149.828125
+          "card": "lash-tech",
+          "w": 132,
+          "h": 184.375
         },
         {
           "card": "the-dj",
@@ -130,6 +135,11 @@
         },
         {
           "card": "the-rapper",
+          "w": 132,
+          "h": 184.375
+        },
+        {
+          "card": "fitness-girl",
           "w": 132,
           "h": 184.375
         }
@@ -146,12 +156,7 @@
       "visibleBoardCards": 6,
       "boardCards": [
         {
-          "card": "fitness-girl",
-          "w": 62.71875,
-          "h": 87.59375
-        },
-        {
-          "card": "nail-tech",
+          "card": "lash-tech",
           "w": 62.71875,
           "h": 87.59375
         },
@@ -174,6 +179,11 @@
           "card": "the-rapper",
           "w": 55.65625,
           "h": 77.734375
+        },
+        {
+          "card": "fitness-girl",
+          "w": 62.71875,
+          "h": 87.59375
         }
       ],
       "remainingMotion": 2

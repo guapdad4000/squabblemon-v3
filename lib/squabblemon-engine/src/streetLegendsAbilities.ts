@@ -46,6 +46,23 @@ export function streetLegendsReveal(m: Match, s: CardInstance, t: StreetLegendsT
   } else if (id === 'mr-mc-hands') {
     for (const candidate of sorted(enemies(m, s), t, true).slice(0, 2)) { const live = find(m, candidate.instanceId); if (live) { targets.push(live.instanceId); m = t.hit(m, s, live, -2, 'All These Hands: 2 damage.'); } }
     detail = targets.length ? `Rapid strikes targeted ${targets.length} different enemies; defenses apply.` : detail;
+  } else if (id === 'lash-tech') {
+    const target = sorted(enemies(m, s), t, true)[0];
+    let landed = false;
+    if (target) {
+      targets.push(target.instanceId);
+      m = t.hostile(m, s, target, (state, actual) => {
+        const result = t.damage(state, actual, 1, 'Lash Out: 1 damage.');
+        const survivor = find(result, actual.instanceId);
+        landed = !survivor || survivor.powerModifier < actual.powerModifier;
+        return result;
+      });
+      if (landed) {
+        const client = sorted(allies(m, s), t)[0];
+        if (client) add(client, 2);
+        detail = 'A real hit landed; the weakest other local ally receives +2 Hands.';
+      } else detail = 'The hit was blocked or fully absorbed; no ally boost.';
+    }
   } else if (id === 'ms-mary-mack') {
     detail = 'Rhythm waits for a genuine local ally gain; at most three payouts.';
   } else if (id === 'pimp-swookie') {

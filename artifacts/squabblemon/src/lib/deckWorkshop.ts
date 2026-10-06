@@ -20,7 +20,7 @@ export const recommendedWorkshopCrews = {
   mushroom: ['demario', 'luigion', 'gardener', 'sprout', 'rootnurse', 'canopykeeper', 'gardenwall', 'hair-stylist', 'stylist', 'black-cowboy'],
   counterplay: ['counter', 'gamer', 'gothkid', 'nerd', 'redpill', 'buddy', 'wifey', 'pinaynurse', 'plug', 'bustdown'],
   music: ['the-rapper', 'the-dj', 'the-hype-man', 'the-janky-promoter', 'the-manager-nice', 'the-manager-evil', 'the-opening-act', 'the-local-celebrity', 'the-battle-rapper', 'the-og-rap-legend'],
-  fitness: ['failedathlete', 'fitness-girl', 'fitness-bro', 'personal-trainer', 'nail', 'apartment-maintenance-sage', 'yn-atv-lord', 'hooper', 'sportsprodigy', 'demon-trainer'],
+  fitness: ['failedathlete', 'fitness-girl', 'fitness-bro', 'personal-trainer', 'lash-tech', 'apartment-maintenance-sage', 'yn-atv-lord', 'hooper', 'sportsprodigy', 'demon-trainer'],
   investigations: ['sherlock', 'watson', 'boo-boo-the-fool', 'parole-officer', 'uncle-sam', 'apartment-maintenance-sage', 'bail-bonds-auntie', 'nerd', 'homeless-wiseman', 'counter'],
   relationships: ['work-hubby', 'he-just-a-friend', 'crazy-ex-boyfriend', 'side-chick', 'suga-mama', 'wifey', 'baby', 'ms-mary-mack', 'bblnice', 'barber'],
   streetgrowth: ['mr-mc-hands', 'og-uncle-harley-davidson', 'pimp-swookie', 'gas-station-window-wiper', 'bail-bonds-auntie', 'ms-mary-mack', 'landlord', 'bottle', 'nail', 'manman'],

@@ -51,4 +51,4 @@ ok 24 - only a confirmed close leaves a friendly room; failed or offline attempt
 # fail 0
 # cancelled 0
 # skipped 0
-# duration_ms 380.733467
+# duration_ms 399.375908

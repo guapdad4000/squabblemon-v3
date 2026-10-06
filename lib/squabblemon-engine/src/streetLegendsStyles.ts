@@ -29,5 +29,5 @@ export const STREET_LEGENDS_STYLE_SCENES: Record<string, readonly [string, strin
   'fitness-girl': ['Active Recovery', 'rooftop-garden'],
   'personal-trainer': ['One More Rep', 'underground-ring'],
   'demon-trainer': ['No Pain, No Excuses', 'underground-ring'],
-  'nail-tech': ['Fresh Set', 'nail-salon'],
+  'lash-tech': ['Lash Out', 'nail-salon'],
 };

@@ -9,16 +9,24 @@ import { STREET_LEGENDS_STYLE_SCENES } from '../../../lib/squabblemon-engine/src
 import revisions from './characterRevisions.json';
 
 const waveIds = Object.keys(STREET_LEGENDS_STYLE_SCENES);
-test('the thirty-entry release adds twenty-nine unique identities while Nail Tech retains ownership and cosmetics', () => {
+test('the thirty-entry release adds thirty unique identities while Nail Tech retains her original ownership, artwork and cosmetics', () => {
   assert.equal(waveIds.length, 30);
   assert.equal(new Set(waveIds).size, 30);
-  assert.equal(cardCatalog.length, 266);
-  assert.equal(cardCatalog.filter(card => (card.kind ?? 'character') === 'character').length, 244);
+  assert.equal(cardCatalog.length, 267);
+  assert.equal(cardCatalog.filter(card => (card.kind ?? 'character') === 'character').length, 245);
   assert.equal(cardCatalog.filter(card => card.kind === 'support').length, 12);
   assert.equal(cardCatalog.filter(card => card.kind === 'blockbuster').length, 10);
   assert.equal(catalogCardById['nail-tech'].engineId, 'nail');
   assert.equal(cardCatalog.filter(card => card.engineId === 'nail').length, 1);
   assert.equal(catalogCardById['nail-tech'].ability, 'Fresh Set');
+  assert.equal(catalogCardById['lash-tech'].engineId, 'lash-tech');
+  assert.equal(catalogCardById['lash-tech'].ability, 'Lash Out');
+  assert.equal(catalogCardById['lash-tech'].faction, 'Beauty');
+  assert(!waveIds.includes('nail-tech'));
+  assert(waveIds.includes('lash-tech'));
+  assert.notEqual(getCardImage('nail-tech'), getCardImage('lash-tech'));
+  assert(styleSetFor('nail-tech')!.stickers.some(sticker => sticker.id === 'nail-tech:street-legends-portrait'));
+  assert.equal((revisions as Record<string, string>)['nail-tech'], 'b1a18cf2a135f801');
   for (const id of waveIds) {
     const card = catalogCardById[id];
     assert(card, id);

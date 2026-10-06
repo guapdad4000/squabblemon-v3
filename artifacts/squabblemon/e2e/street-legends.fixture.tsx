@@ -13,20 +13,20 @@ import './street-legends.fixture.css';
 const query = new URLSearchParams(location.search);
 const wave = Object.keys(STREET_LEGENDS_STYLE_SCENES).map(id => catalogCardById[id]);
 const crewKeys = ['music', 'fitness', 'investigations', 'relationships', 'streetgrowth'] as const;
-type Group = 'all' | 'block' | 'music' | 'fitness';
-const initialGroup = ['all', 'block', 'music', 'fitness'].includes(query.get('group') ?? '') ? query.get('group') as Group : 'all';
+type Group = 'all' | 'block' | 'music' | 'fitness' | 'beauty';
+const initialGroup = ['all', 'block', 'music', 'fitness', 'beauty'].includes(query.get('group') ?? '') ? query.get('group') as Group : 'all';
 const crewLabel = { music: 'WHO GOT THE AUX', fitness: 'ONE MORE REP', investigations: 'TAKE THE BAIT', relationships: 'RELATIONSHIP PRESSURE', streetgrowth: 'GROWTH AND ROUTES' };
 
 function Fixture() {
   const [group, setGroup] = useState<Group>(initialGroup);
   const [inspected, setInspected] = useState<CatalogCard | null>(catalogCardById[query.get('card') ?? ''] ?? null);
   const [crew, setCrew] = useState<(typeof crewKeys)[number]>('music');
-  const shown = wave.filter(card => group === 'all' || (group === 'block' ? card.faction === 'Street Legends' : group === 'music' ? card.faction === 'Music Industry' : card.faction === 'Fitness' || card.engineId === 'nail'));
+  const shown = group === 'beauty' ? [catalogCardById['lash-tech'], catalogCardById['nail-tech']] : wave.filter(card => group === 'all' || (group === 'block' ? card.faction === 'Street Legends' : group === 'music' ? card.faction === 'Music Industry' : card.faction === 'Fitness' || card.engineId === 'lash-tech'));
   const deckItems = decks.filter(deck => ['music-industry', 'fitness-circuit'].includes(deck.id)).map(deck => ({ id: deck.id, name: deck.name, heroCardId: deck.hero, cardIds: engineIdsToCatalogIds(deck.cards), subtitle: deck.plan, valid: true }));
   const selectedDeck = crew === 'fitness' ? 'fitness-circuit' : 'music-industry';
-  return <main className="street-legends-review" data-testid="street-legends-review">
-    <header className="street-legends-review__header"><p>SQUABBLEMON · STREET LEGENDS</p><h1>NEW PEOPLE.<br/><em>NEW PROBLEMS.</em></h1><span>29 new fighters. Nail Tech gets a fresh look. 244 characters on the block.</span></header>
-    <nav className="street-legends-review__groups" aria-label="Roster groups">{([['all', 'Full wave · 30'], ['block', 'Street Legends · 15'], ['music', 'Music Industry · 10'], ['fitness', 'Fitness · 5']] as const).map(([id, label]) => <button key={id} type="button" aria-pressed={group === id} onClick={() => setGroup(id)}>{label}</button>)}</nav>
+  return <main className="street-legends-review" data-testid="street-legends-review" data-roster-group={group}>
+    <header className="street-legends-review__header"><p>SQUABBLEMON · STREET LEGENDS</p><h1>NEW PEOPLE.<br/><em>NEW PROBLEMS.</em></h1><span>30 new fighters. Lash Tech and Nail Tech are separate. 245 characters on the block.</span></header>
+    <nav className="street-legends-review__groups" aria-label="Roster groups">{([['all', 'Full wave · 30'], ['block', 'Street Legends · 15'], ['music', 'Music Industry · 10'], ['fitness', 'Fitness & Beauty · 5'], ['beauty', 'Lash Tech / Nail Tech']] as const).map(([id, label]) => <button key={id} type="button" aria-pressed={group === id} onClick={() => setGroup(id)}>{label}</button>)}</nav>
     <section className="street-legends-review__cards" aria-label="Street Legends fighters" data-testid="wave-roster-grid">{shown.map(card => <article key={card.catalogId} data-wave-card={card.catalogId}>
       <div className="street-legends-review__card"><CardView card={card} fillContainer presentationOnly disableLayout onClick={() => setInspected(card)} /></div>
       <div className="street-legends-review__note"><strong>{card.ability}</strong><span>{card.type} · {card.cost} Motion / {card.power} Hands</span><p>{card.effect}</p><button type="button" onClick={() => setInspected(card)} aria-label={'Inspect ' + card.name}>Full fighter dossier ↗</button></div>

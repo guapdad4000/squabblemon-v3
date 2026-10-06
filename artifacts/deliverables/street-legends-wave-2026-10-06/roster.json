@@ -1,13 +1,14 @@
 {
   "counts": {
     "waveEntries": 30,
-    "newCharacters": 29,
-    "refreshedCharacters": 1,
-    "catalog": 266,
-    "characters": 244,
+    "newCharacters": 30,
+    "refreshedCharacters": 0,
+    "catalog": 267,
+    "characters": 245,
     "supports": 12,
     "blockbusters": 10
   },
+  "identityCorrection": "The supplied beauty fighter is Lash Tech. Existing Nail Tech retains her original art, card ID, Fresh Set kit, progression, and purchased cosmetic IDs.",
   "characters": [
     {
       "catalogId": "boo-boo-the-fool",
@@ -940,23 +941,23 @@
       }
     },
     {
-      "catalogId": "the-opening-act",
-      "engineId": "the-opening-act",
-      "name": "The Opening Act",
+      "catalogId": "the-rapper",
+      "engineId": "the-rapper",
+      "name": "The Rapper",
       "faction": "Music Industry",
-      "type": "Air",
-      "rarity": "Common",
-      "motion": 1,
-      "hands": 2,
-      "ability": "Soundcheck",
-      "effect": "On Reveal: Prepare your weakest other unlocked district through next round. Your next different Music character played there refunds 1 Motion after a successful entrance. One pending Soundcheck per side; one refund per side per match.",
-      "role": "Stage setup / earned refund",
-      "gap": "Music gets a cheap opener that prepares a different district. Refund needs a different Music character with a successful real entrance; echoes and failed entrances cannot cash it out.",
+      "type": "Fire",
+      "rarity": "Rare",
+      "motion": 3,
+      "hands": 4,
+      "ability": "Sixteen Bars",
+      "effect": "Ongoing: Once per round, a different Music ally successfully resolving an entrance here makes Rapper hit the strongest local enemy for 1. Separately once per round, a successful Music entrance elsewhere gives the weakest ally there +1 Hand. Echoes do not count; copies share both limits.",
+      "role": "Repeated performance payoff",
+      "gap": "Music has a persistent reason to keep performing: local successful entrances pressure an enemy; remote ones support that stage. Separate shared once-per-round caps prevent a copied Rapper pile from multiplying every play.",
       "newCharacter": true,
       "upgrades": [
         {
-          "id": "the-opening-act:upgrade:1",
-          "name": "Soundcheck Practice",
+          "id": "the-rapper:upgrade:1",
+          "name": "Sixteen Bars Practice",
           "description": "The first time the base ability succeeds this match, gain +1 Hand.",
           "unlockLevel": 2,
           "effect": {
@@ -966,8 +967,8 @@
           }
         },
         {
-          "id": "the-opening-act:upgrade:2",
-          "name": "Soundcheck Confidence",
+          "id": "the-rapper:upgrade:2",
+          "name": "Sixteen Bars Confidence",
           "description": "The first time the base ability succeeds this match, gain +1 Hand.",
           "unlockLevel": 5,
           "effect": {
@@ -977,8 +978,8 @@
           }
         },
         {
-          "id": "the-opening-act:upgrade:3",
-          "name": "Soundcheck Mastery",
+          "id": "the-rapper:upgrade:3",
+          "name": "Sixteen Bars Mastery",
           "description": "The first time the base ability succeeds this match, gain +1 Hand.",
           "unlockLevel": 8,
           "effect": {
@@ -989,14 +990,14 @@
         }
       ],
       "art": {
-        "id": "the-opening-act",
+        "id": "the-rapper",
         "source": "/home/falcon/Downloads/bcd84fd1-f802-4dd2-8dd3-693832035c15.png",
-        "prompt": "Use case: stylized-concept, identity-preserving regeneration from a fighter reference sheet. Asset type: ONE individual full-body Squabblemon fighter portrait PNG with genuine transparency. Recreate the specified fighter as a newly rendered standalone illustration, NOT a rectangular crop of the sheet. Match the exact face, skin tone, hairstyle, clothes, palette, attitude and signature equipment in that fighter's sheet design. Match the sheet's high quality hand-inked urban anime/comic cel shading, rich material detail, confident contours and warm rimlight. Complete missing/occluded body parts accurately, correct limb anatomy and proportion if needed for a coherent full-body card-ready silhouette. Keep the original fighter pose and characteristic meaningful chair/equipment when described. Center ONE fighter with full head and feet visible, portrait 3:4 composition, a little transparent breathing room. Remove all sheet background, floor, nearby fighters, typographic labels, UI, panels, logos, words, watermarks and cast-shadow planes. Background must be real alpha, including gaps between limbs and props. Do not produce a sheet or multiple people.\nSpecified fighter: Bottom row, second fighter labeled The Opening Act: young Black man in a backward tan cap, white oversize hoodie, black baggy trousers, bulky black backpack, white sneakers. Crouched forward sitting on a low small black/silver speaker flight case, handheld microphone close to mouth, serious eager expression. Preserve the full hoodie/backpack/crouching performance design.",
-        "generatedPath": "/home/falcon/.codex/generated_images/01a0fed0-9461-76a1-bdb2-a885962a8772/exec-2a5203f3-f131-43bb-b42d-88d2ce097b0d.png",
+        "prompt": "Use case: stylized-concept, identity-preserving regeneration from a fighter reference sheet. Asset type: ONE individual full-body Squabblemon fighter portrait PNG with genuine transparency. Recreate the specified fighter as a newly rendered standalone illustration, NOT a rectangular crop of the sheet. Match the exact face, skin tone, hairstyle, clothes, palette, attitude and signature equipment in that fighter's sheet design. Match the sheet's high quality hand-inked urban anime/comic cel shading, rich material detail, confident contours and warm rimlight. Complete missing/occluded body parts accurately, correct limb anatomy and proportion if needed for a coherent full-body card-ready silhouette. Keep the original fighter pose and characteristic meaningful chair/equipment when described. Center ONE fighter with full head and feet visible, portrait 3:4 composition, a little transparent breathing room. Remove all sheet background, floor, nearby fighters, typographic labels, UI, panels, logos, words, watermarks and cast-shadow planes. Background must be real alpha, including gaps between limbs and props. Do not produce a sheet or multiple people.\nSpecified fighter: Top row, first fighter labeled The Rapper: young Black male with long locs and arm tattoos, white ribbed tank, layered gold chains, baggy black trousers and white/gray sneakers, seated on a small black/silver road flight case with one hand by his mouth and other relaxed between knees. Preserve his laid-back serious expression and seated silhouette.",
+        "generatedPath": "/home/falcon/.codex/generated_images/01a0fed0-9461-76a1-bdb2-a885962a8772/exec-0f0cae65-966c-4c22-b78e-071b46a6adc6.png",
         "mode": "built-in",
-        "savedPath": "artifacts/squabblemon/public/assets/characters/the-opening-act.webp",
-        "sha256": "7c7776465f37be2cea110cf4d84204184a0dd936957ffc2e60e522b30ff3b737",
-        "bytes": 339742,
+        "savedPath": "artifacts/squabblemon/public/assets/characters/the-rapper.webp",
+        "sha256": "7b6784ca16ec72b92abc36df72651bba392e7004f9f80555b9a3605ededa5b74",
+        "bytes": 346744,
         "width": 1086,
         "height": 1448
       }
@@ -1126,6 +1127,68 @@
       }
     },
     {
+      "catalogId": "the-janky-promoter",
+      "engineId": "the-janky-promoter",
+      "name": "The Janky Promoter",
+      "faction": "Music Industry",
+      "type": "Dark",
+      "rarity": "Rare",
+      "motion": 3,
+      "hands": 3,
+      "ability": "Wrong Address",
+      "effect": "On Reveal: Post a public bogus booking in the enemy’s weakest other unlocked district through next round. Their next character played or moved there takes 1 damage; only if damage lands, it is Weakened. The trap is spent even if blocked. One booking per side.",
+      "role": "Public remote booking trap",
+      "gap": "Music can pressure an opponent’s weakest other district. The booking hits the next played or moved character and weakens only after real damage; Protection can spend it harmlessly.",
+      "newCharacter": true,
+      "upgrades": [
+        {
+          "id": "the-janky-promoter:upgrade:1",
+          "name": "Wrong Address Practice",
+          "description": "The first time the base ability succeeds this match, gain +1 Hand.",
+          "unlockLevel": 2,
+          "effect": {
+            "kind": "self-power",
+            "amount": 1,
+            "trigger": "base-success"
+          }
+        },
+        {
+          "id": "the-janky-promoter:upgrade:2",
+          "name": "Wrong Address Confidence",
+          "description": "The first time the base ability succeeds this match, gain +1 Hand.",
+          "unlockLevel": 5,
+          "effect": {
+            "kind": "self-power",
+            "amount": 1,
+            "trigger": "base-success"
+          }
+        },
+        {
+          "id": "the-janky-promoter:upgrade:3",
+          "name": "Wrong Address Mastery",
+          "description": "The first time the base ability succeeds this match, gain +1 Hand.",
+          "unlockLevel": 8,
+          "effect": {
+            "kind": "self-power",
+            "amount": 1,
+            "trigger": "base-success"
+          }
+        }
+      ],
+      "art": {
+        "id": "the-janky-promoter",
+        "source": "/home/falcon/Downloads/bcd84fd1-f802-4dd2-8dd3-693832035c15.png",
+        "prompt": "Use case: stylized-concept, identity-preserving regeneration from a fighter reference sheet. Asset type: ONE individual full-body Squabblemon fighter portrait PNG with genuine transparency. Recreate the specified fighter as a newly rendered standalone illustration, NOT a rectangular crop of the sheet. Match the exact face, skin tone, hairstyle, clothes, palette, attitude and signature equipment in that fighter's sheet design. Match the sheet's high quality hand-inked urban anime/comic cel shading, rich material detail, confident contours and warm rimlight. Complete missing/occluded body parts accurately, correct limb anatomy and proportion if needed for a coherent full-body card-ready silhouette. Keep the original fighter pose and characteristic meaningful chair/equipment when described. Center ONE fighter with full head and feet visible, portrait 3:4 composition, a little transparent breathing room. Remove all sheet background, floor, nearby fighters, typographic labels, UI, panels, logos, words, watermarks and cast-shadow planes. Background must be real alpha, including gaps between limbs and props. Do not produce a sheet or multiple people.\nSpecified fighter: Top row, fourth fighter labeled The Janky Promoter: bearded Black man in black cap and sunglasses, black jacket with white towel, olive baggy cargo trousers and dark sneakers, phone at his ear in one hand and stack of illustrated paper show flyers in the other. Preserve standing posture, mischievous expression and compact suitcase beside him, make any flyer shapes nonlegible without text.",
+        "generatedPath": "/home/falcon/.codex/generated_images/01a0fed0-9461-76a1-bdb2-a885962a8772/exec-788ab490-b6c6-4cec-90fc-a6782f310f43.png",
+        "mode": "built-in",
+        "savedPath": "artifacts/squabblemon/public/assets/characters/the-janky-promoter.webp",
+        "sha256": "b4c1d69eb31aeba95af0a5500bba2b6d5b7b6e8956fd52b7180ec4771717baef",
+        "bytes": 336232,
+        "width": 1086,
+        "height": 1448
+      }
+    },
+    {
       "catalogId": "the-manager-nice",
       "engineId": "the-manager-nice",
       "name": "The Manager — Nice",
@@ -1188,23 +1251,23 @@
       }
     },
     {
-      "catalogId": "the-rapper",
-      "engineId": "the-rapper",
-      "name": "The Rapper",
+      "catalogId": "the-manager-evil",
+      "engineId": "the-manager-evil",
+      "name": "The Manager — Evil",
       "faction": "Music Industry",
-      "type": "Fire",
-      "rarity": "Rare",
-      "motion": 3,
-      "hands": 4,
-      "ability": "Sixteen Bars",
-      "effect": "Ongoing: Once per round, a different Music ally successfully resolving an entrance here makes Rapper hit the strongest local enemy for 1. Separately once per round, a successful Music entrance elsewhere gives the weakest ally there +1 Hand. Echoes do not count; copies share both limits.",
-      "role": "Repeated performance payoff",
-      "gap": "Music has a persistent reason to keep performing: local successful entrances pressure an enemy; remote ones support that stage. Separate shared once-per-round caps prevent a copied Rapper pile from multiplying every play.",
+      "type": "Dark",
+      "rarity": "Epic",
+      "motion": 4,
+      "hands": 5,
+      "ability": "360 Deal",
+      "effect": "On Reveal: Give your strongest other local Music ally +3 Hands and prevent its movement through next round. At expiry, transfer up to 2 remaining bonus Hands to an active surviving Evil Manager. Cleansing cancels the contract without clearing other Locks. One contract per side; each client signs once per match.",
+      "role": "Timed investment / royalties",
+      "gap": "Music trades a client’s mobility for immediate strength, then transfers only surviving removable bonus into the manager. Cleansing cancels the deal; royalties are a transfer, not damage or injury.",
       "newCharacter": true,
       "upgrades": [
         {
-          "id": "the-rapper:upgrade:1",
-          "name": "Sixteen Bars Practice",
+          "id": "the-manager-evil:upgrade:1",
+          "name": "360 Deal Practice",
           "description": "The first time the base ability succeeds this match, gain +1 Hand.",
           "unlockLevel": 2,
           "effect": {
@@ -1214,8 +1277,8 @@
           }
         },
         {
-          "id": "the-rapper:upgrade:2",
-          "name": "Sixteen Bars Confidence",
+          "id": "the-manager-evil:upgrade:2",
+          "name": "360 Deal Confidence",
           "description": "The first time the base ability succeeds this match, gain +1 Hand.",
           "unlockLevel": 5,
           "effect": {
@@ -1225,8 +1288,8 @@
           }
         },
         {
-          "id": "the-rapper:upgrade:3",
-          "name": "Sixteen Bars Mastery",
+          "id": "the-manager-evil:upgrade:3",
+          "name": "360 Deal Mastery",
           "description": "The first time the base ability succeeds this match, gain +1 Hand.",
           "unlockLevel": 8,
           "effect": {
@@ -1237,36 +1300,36 @@
         }
       ],
       "art": {
-        "id": "the-rapper",
+        "id": "the-manager-evil",
         "source": "/home/falcon/Downloads/bcd84fd1-f802-4dd2-8dd3-693832035c15.png",
-        "prompt": "Use case: stylized-concept, identity-preserving regeneration from a fighter reference sheet. Asset type: ONE individual full-body Squabblemon fighter portrait PNG with genuine transparency. Recreate the specified fighter as a newly rendered standalone illustration, NOT a rectangular crop of the sheet. Match the exact face, skin tone, hairstyle, clothes, palette, attitude and signature equipment in that fighter's sheet design. Match the sheet's high quality hand-inked urban anime/comic cel shading, rich material detail, confident contours and warm rimlight. Complete missing/occluded body parts accurately, correct limb anatomy and proportion if needed for a coherent full-body card-ready silhouette. Keep the original fighter pose and characteristic meaningful chair/equipment when described. Center ONE fighter with full head and feet visible, portrait 3:4 composition, a little transparent breathing room. Remove all sheet background, floor, nearby fighters, typographic labels, UI, panels, logos, words, watermarks and cast-shadow planes. Background must be real alpha, including gaps between limbs and props. Do not produce a sheet or multiple people.\nSpecified fighter: Top row, first fighter labeled The Rapper: young Black male with long locs and arm tattoos, white ribbed tank, layered gold chains, baggy black trousers and white/gray sneakers, seated on a small black/silver road flight case with one hand by his mouth and other relaxed between knees. Preserve his laid-back serious expression and seated silhouette.",
-        "generatedPath": "/home/falcon/.codex/generated_images/01a0fed0-9461-76a1-bdb2-a885962a8772/exec-0f0cae65-966c-4c22-b78e-071b46a6adc6.png",
+        "prompt": "Use case: stylized-concept, identity-preserving regeneration from a fighter reference sheet. Asset type: ONE individual full-body Squabblemon fighter portrait PNG with genuine transparency. Recreate the specified fighter as a newly rendered standalone illustration, NOT a rectangular crop of the sheet. Match the exact face, skin tone, hairstyle, clothes, palette, attitude and signature equipment in that fighter's sheet design. Match the sheet's high quality hand-inked urban anime/comic cel shading, rich material detail, confident contours and warm rimlight. Complete missing/occluded body parts accurately, correct limb anatomy and proportion if needed for a coherent full-body card-ready silhouette. Keep the original fighter pose and characteristic meaningful chair/equipment when described. Center ONE fighter with full head and feet visible, portrait 3:4 composition, a little transparent breathing room. Remove all sheet background, floor, nearby fighters, typographic labels, UI, panels, logos, words, watermarks and cast-shadow planes. Background must be real alpha, including gaps between limbs and props. Do not produce a sheet or multiple people.\nSpecified fighter: Bottom row, first fighter labeled The Manager (Evil): bald Black man, dark sunglasses, tailored black suit and shirt, silver necklace and dark polished shoes. Seated very broadly and comfortably in a black leather armchair with hands steepled in front of his mouth, threatening corporate posture, compact black suitcase/roadcase at side. Recreate the exact face/outfit/chair; proportional full body.",
+        "generatedPath": "/home/falcon/.codex/generated_images/01a0fed0-9461-76a1-bdb2-a885962a8772/exec-0099a412-ce97-4b6f-9606-3bebf58b1ad4.png",
         "mode": "built-in",
-        "savedPath": "artifacts/squabblemon/public/assets/characters/the-rapper.webp",
-        "sha256": "7b6784ca16ec72b92abc36df72651bba392e7004f9f80555b9a3605ededa5b74",
-        "bytes": 346744,
+        "savedPath": "artifacts/squabblemon/public/assets/characters/the-manager-evil.webp",
+        "sha256": "aefdf81777c5af3c8cf0d695c534d861f365e1c97832ad0f74c5b797e4be22c0",
+        "bytes": 243048,
         "width": 1086,
         "height": 1448
       }
     },
     {
-      "catalogId": "the-janky-promoter",
-      "engineId": "the-janky-promoter",
-      "name": "The Janky Promoter",
+      "catalogId": "the-opening-act",
+      "engineId": "the-opening-act",
+      "name": "The Opening Act",
       "faction": "Music Industry",
-      "type": "Dark",
-      "rarity": "Rare",
-      "motion": 3,
-      "hands": 3,
-      "ability": "Wrong Address",
-      "effect": "On Reveal: Post a public bogus booking in the enemy’s weakest other unlocked district through next round. Their next character played or moved there takes 1 damage; only if damage lands, it is Weakened. The trap is spent even if blocked. One booking per side.",
-      "role": "Public remote booking trap",
-      "gap": "Music can pressure an opponent’s weakest other district. The booking hits the next played or moved character and weakens only after real damage; Protection can spend it harmlessly.",
+      "type": "Air",
+      "rarity": "Common",
+      "motion": 1,
+      "hands": 2,
+      "ability": "Soundcheck",
+      "effect": "On Reveal: Prepare your weakest other unlocked district through next round. Your next different Music character played there refunds 1 Motion after a successful entrance. One pending Soundcheck per side; one refund per side per match.",
+      "role": "Stage setup / earned refund",
+      "gap": "Music gets a cheap opener that prepares a different district. Refund needs a different Music character with a successful real entrance; echoes and failed entrances cannot cash it out.",
       "newCharacter": true,
       "upgrades": [
         {
-          "id": "the-janky-promoter:upgrade:1",
-          "name": "Wrong Address Practice",
+          "id": "the-opening-act:upgrade:1",
+          "name": "Soundcheck Practice",
           "description": "The first time the base ability succeeds this match, gain +1 Hand.",
           "unlockLevel": 2,
           "effect": {
@@ -1276,8 +1339,8 @@
           }
         },
         {
-          "id": "the-janky-promoter:upgrade:2",
-          "name": "Wrong Address Confidence",
+          "id": "the-opening-act:upgrade:2",
+          "name": "Soundcheck Confidence",
           "description": "The first time the base ability succeeds this match, gain +1 Hand.",
           "unlockLevel": 5,
           "effect": {
@@ -1287,8 +1350,8 @@
           }
         },
         {
-          "id": "the-janky-promoter:upgrade:3",
-          "name": "Wrong Address Mastery",
+          "id": "the-opening-act:upgrade:3",
+          "name": "Soundcheck Mastery",
           "description": "The first time the base ability succeeds this match, gain +1 Hand.",
           "unlockLevel": 8,
           "effect": {
@@ -1299,14 +1362,14 @@
         }
       ],
       "art": {
-        "id": "the-janky-promoter",
+        "id": "the-opening-act",
         "source": "/home/falcon/Downloads/bcd84fd1-f802-4dd2-8dd3-693832035c15.png",
-        "prompt": "Use case: stylized-concept, identity-preserving regeneration from a fighter reference sheet. Asset type: ONE individual full-body Squabblemon fighter portrait PNG with genuine transparency. Recreate the specified fighter as a newly rendered standalone illustration, NOT a rectangular crop of the sheet. Match the exact face, skin tone, hairstyle, clothes, palette, attitude and signature equipment in that fighter's sheet design. Match the sheet's high quality hand-inked urban anime/comic cel shading, rich material detail, confident contours and warm rimlight. Complete missing/occluded body parts accurately, correct limb anatomy and proportion if needed for a coherent full-body card-ready silhouette. Keep the original fighter pose and characteristic meaningful chair/equipment when described. Center ONE fighter with full head and feet visible, portrait 3:4 composition, a little transparent breathing room. Remove all sheet background, floor, nearby fighters, typographic labels, UI, panels, logos, words, watermarks and cast-shadow planes. Background must be real alpha, including gaps between limbs and props. Do not produce a sheet or multiple people.\nSpecified fighter: Top row, fourth fighter labeled The Janky Promoter: bearded Black man in black cap and sunglasses, black jacket with white towel, olive baggy cargo trousers and dark sneakers, phone at his ear in one hand and stack of illustrated paper show flyers in the other. Preserve standing posture, mischievous expression and compact suitcase beside him, make any flyer shapes nonlegible without text.",
-        "generatedPath": "/home/falcon/.codex/generated_images/01a0fed0-9461-76a1-bdb2-a885962a8772/exec-788ab490-b6c6-4cec-90fc-a6782f310f43.png",
+        "prompt": "Use case: stylized-concept, identity-preserving regeneration from a fighter reference sheet. Asset type: ONE individual full-body Squabblemon fighter portrait PNG with genuine transparency. Recreate the specified fighter as a newly rendered standalone illustration, NOT a rectangular crop of the sheet. Match the exact face, skin tone, hairstyle, clothes, palette, attitude and signature equipment in that fighter's sheet design. Match the sheet's high quality hand-inked urban anime/comic cel shading, rich material detail, confident contours and warm rimlight. Complete missing/occluded body parts accurately, correct limb anatomy and proportion if needed for a coherent full-body card-ready silhouette. Keep the original fighter pose and characteristic meaningful chair/equipment when described. Center ONE fighter with full head and feet visible, portrait 3:4 composition, a little transparent breathing room. Remove all sheet background, floor, nearby fighters, typographic labels, UI, panels, logos, words, watermarks and cast-shadow planes. Background must be real alpha, including gaps between limbs and props. Do not produce a sheet or multiple people.\nSpecified fighter: Bottom row, second fighter labeled The Opening Act: young Black man in a backward tan cap, white oversize hoodie, black baggy trousers, bulky black backpack, white sneakers. Crouched forward sitting on a low small black/silver speaker flight case, handheld microphone close to mouth, serious eager expression. Preserve the full hoodie/backpack/crouching performance design.",
+        "generatedPath": "/home/falcon/.codex/generated_images/01a0fed0-9461-76a1-bdb2-a885962a8772/exec-2a5203f3-f131-43bb-b42d-88d2ce097b0d.png",
         "mode": "built-in",
-        "savedPath": "artifacts/squabblemon/public/assets/characters/the-janky-promoter.webp",
-        "sha256": "b4c1d69eb31aeba95af0a5500bba2b6d5b7b6e8956fd52b7180ec4771717baef",
-        "bytes": 336232,
+        "savedPath": "artifacts/squabblemon/public/assets/characters/the-opening-act.webp",
+        "sha256": "7c7776465f37be2cea110cf4d84204184a0dd936957ffc2e60e522b30ff3b737",
+        "bytes": 339742,
         "width": 1086,
         "height": 1448
       }
@@ -1431,68 +1494,6 @@
         "savedPath": "artifacts/squabblemon/public/assets/characters/the-battle-rapper.webp",
         "sha256": "a669558a145c14d096548b545884944f7bb006da0ff1846b3602c0be58f29315",
         "bytes": 297264,
-        "width": 1086,
-        "height": 1448
-      }
-    },
-    {
-      "catalogId": "the-manager-evil",
-      "engineId": "the-manager-evil",
-      "name": "The Manager — Evil",
-      "faction": "Music Industry",
-      "type": "Dark",
-      "rarity": "Epic",
-      "motion": 4,
-      "hands": 5,
-      "ability": "360 Deal",
-      "effect": "On Reveal: Give your strongest other local Music ally +3 Hands and prevent its movement through next round. At expiry, transfer up to 2 remaining bonus Hands to an active surviving Evil Manager. Cleansing cancels the contract without clearing other Locks. One contract per side; each client signs once per match.",
-      "role": "Timed investment / royalties",
-      "gap": "Music trades a client’s mobility for immediate strength, then transfers only surviving removable bonus into the manager. Cleansing cancels the deal; royalties are a transfer, not damage or injury.",
-      "newCharacter": true,
-      "upgrades": [
-        {
-          "id": "the-manager-evil:upgrade:1",
-          "name": "360 Deal Practice",
-          "description": "The first time the base ability succeeds this match, gain +1 Hand.",
-          "unlockLevel": 2,
-          "effect": {
-            "kind": "self-power",
-            "amount": 1,
-            "trigger": "base-success"
-          }
-        },
-        {
-          "id": "the-manager-evil:upgrade:2",
-          "name": "360 Deal Confidence",
-          "description": "The first time the base ability succeeds this match, gain +1 Hand.",
-          "unlockLevel": 5,
-          "effect": {
-            "kind": "self-power",
-            "amount": 1,
-            "trigger": "base-success"
-          }
-        },
-        {
-          "id": "the-manager-evil:upgrade:3",
-          "name": "360 Deal Mastery",
-          "description": "The first time the base ability succeeds this match, gain +1 Hand.",
-          "unlockLevel": 8,
-          "effect": {
-            "kind": "self-power",
-            "amount": 1,
-            "trigger": "base-success"
-          }
-        }
-      ],
-      "art": {
-        "id": "the-manager-evil",
-        "source": "/home/falcon/Downloads/bcd84fd1-f802-4dd2-8dd3-693832035c15.png",
-        "prompt": "Use case: stylized-concept, identity-preserving regeneration from a fighter reference sheet. Asset type: ONE individual full-body Squabblemon fighter portrait PNG with genuine transparency. Recreate the specified fighter as a newly rendered standalone illustration, NOT a rectangular crop of the sheet. Match the exact face, skin tone, hairstyle, clothes, palette, attitude and signature equipment in that fighter's sheet design. Match the sheet's high quality hand-inked urban anime/comic cel shading, rich material detail, confident contours and warm rimlight. Complete missing/occluded body parts accurately, correct limb anatomy and proportion if needed for a coherent full-body card-ready silhouette. Keep the original fighter pose and characteristic meaningful chair/equipment when described. Center ONE fighter with full head and feet visible, portrait 3:4 composition, a little transparent breathing room. Remove all sheet background, floor, nearby fighters, typographic labels, UI, panels, logos, words, watermarks and cast-shadow planes. Background must be real alpha, including gaps between limbs and props. Do not produce a sheet or multiple people.\nSpecified fighter: Bottom row, first fighter labeled The Manager (Evil): bald Black man, dark sunglasses, tailored black suit and shirt, silver necklace and dark polished shoes. Seated very broadly and comfortably in a black leather armchair with hands steepled in front of his mouth, threatening corporate posture, compact black suitcase/roadcase at side. Recreate the exact face/outfit/chair; proportional full body.",
-        "generatedPath": "/home/falcon/.codex/generated_images/01a0fed0-9461-76a1-bdb2-a885962a8772/exec-0099a412-ce97-4b6f-9606-3bebf58b1ad4.png",
-        "mode": "built-in",
-        "savedPath": "artifacts/squabblemon/public/assets/characters/the-manager-evil.webp",
-        "sha256": "aefdf81777c5af3c8cf0d695c534d861f365e1c97832ad0f74c5b797e4be22c0",
-        "bytes": 243048,
         "width": 1086,
         "height": 1448
       }
@@ -1808,36 +1809,35 @@
       }
     },
     {
-      "catalogId": "nail-tech",
-      "engineId": "nail",
-      "name": "Nail Tech",
-      "faction": "City Never Sleeps",
+      "catalogId": "lash-tech",
+      "engineId": "lash-tech",
+      "name": "Lash Tech",
+      "faction": "Beauty",
       "type": "Poison",
       "rarity": "Uncommon",
       "motion": 2,
-      "hands": 3,
-      "ability": "Fresh Set",
-      "effect": "On Reveal: Give another friendly card here +2 Hands. The next time that card is hit by an enemy Hands reduction, reduce that loss by 1. Ongoing: While Nail Tech is in your hand, your other Poison characters on the board gain +1 Hands at round end.",
-      "role": "Existing protection / Poison-in-hand support",
-      "gap": "Fresh Set keeps the existing save key, abilities, upgrades, and Poison identity. The art refresh matches the supplied Nail Tech; she provides neutral investment protection to Fitness and remains a Poison hand-support option.",
-      "newCharacter": false,
+      "hands": 2,
+      "ability": "Lash Out",
+      "effect": "On Reveal: Hit the strongest enemy here for 1 damage. Only if damage lands, give your weakest other ally here +2 Hands. Blocked or fully absorbed hits give no ally boost. Defenses apply.",
+      "role": "Damage-earned local investment",
+      "gap": "Poison and mixed Fitness crews can convert a real enemy hit into two Hands for their weakest local ally. Protection, immunity, or Nail Tech’s complete mitigation denies the support payout. Lash Tech has her own ownership, progression, and cosmetics; she is a Beauty character, not a Fitness teammate.",
+      "newCharacter": true,
       "upgrades": [
         {
-          "id": "nail:upgrade:1",
-          "name": "Chrome Finish",
-          "description": "Fresh Set grants +1 Hands to its friendly target. After the base ability succeeds, its friendly target gains +1 Hands.",
+          "id": "lash-tech:upgrade:1",
+          "name": "Lash Out Practice",
+          "description": "The first time the base ability succeeds this match, gain +1 Hand.",
           "unlockLevel": 2,
           "effect": {
-            "kind": "target-power",
+            "kind": "self-power",
             "amount": 1,
-            "target": "friendly",
             "trigger": "base-success"
           }
         },
         {
-          "id": "nail:upgrade:2",
-          "name": "Gem Detail",
-          "description": "Fresh Set grants +1 Hands to Nail Tech. After the base ability succeeds, this card gains +1 Hands.",
+          "id": "lash-tech:upgrade:2",
+          "name": "Lash Out Confidence",
+          "description": "The first time the base ability succeeds this match, gain +1 Hand.",
           "unlockLevel": 5,
           "effect": {
             "kind": "self-power",
@@ -1846,29 +1846,29 @@
           }
         },
         {
-          "id": "nail:upgrade:3",
-          "name": "Top Coat",
-          "description": "Fresh Set grants +1 Hands to its friendly target. After the base ability succeeds, its friendly target gains +1 Hands.",
+          "id": "lash-tech:upgrade:3",
+          "name": "Lash Out Mastery",
+          "description": "The first time the base ability succeeds this match, gain +1 Hand.",
           "unlockLevel": 8,
           "effect": {
-            "kind": "target-power",
+            "kind": "self-power",
             "amount": 1,
-            "target": "friendly",
             "trigger": "base-success"
           }
         }
       ],
       "art": {
-        "id": "nail-tech",
+        "id": "lash-tech",
         "source": "/home/falcon/Downloads/1ccc8864-18df-4a3a-b0fc-20f54ca5cc3e.png",
         "prompt": "Use case: stylized-concept, identity-preserving regeneration from a fighter reference sheet. Asset type: ONE individual full-body Squabblemon fighter portrait PNG with genuine transparency. Recreate the specified fighter as a newly rendered standalone illustration, NOT a rectangular crop of the sheet. Match the exact face, skin tone, hairstyle, clothes, palette, attitude and signature equipment in that fighter's sheet design. Match the sheet's high quality hand-inked urban anime/comic cel shading, rich material detail, confident contours and warm rimlight. Complete missing/occluded body parts accurately, correct limb anatomy and proportion if needed for a coherent full-body card-ready silhouette. Keep the original fighter pose and characteristic meaningful chair/equipment when described. Center ONE fighter with full head and feet visible, portrait 3:4 composition, a little transparent breathing room. Remove all sheet background, floor, nearby fighters, typographic labels, UI, panels, logos, words, watermarks and cast-shadow planes. Background must be real alpha, including gaps between limbs and props. Do not produce a sheet or multiple people.\nSpecified fighter: First fighter labeled Nail Tech: young Black woman with high voluminous dark curly bun with pink hair sticks, face jewelry, huge gold hoop earrings, long pink nails, arm tattoos. Black sleeveless work top/pants with hot-pink accents, pink/white sneakers, seated comfortably in a small black/gold salon chair, hand raised with pink polish brush, other palm held elegantly out. Preserve sheet fighter's actual appearance; include a small neat nail polish tray at chair edge, no entire wall shelves; all background removed.",
         "generatedPath": "/home/falcon/.codex/generated_images/01a0fed0-9461-76a1-bdb2-a885962a8772/exec-4ad0fb61-8fa3-456b-8335-3353ce6f5de7.png",
         "mode": "built-in",
-        "savedPath": "artifacts/squabblemon/public/assets/characters/nail-tech.webp",
+        "savedPath": "artifacts/squabblemon/public/assets/characters/lash-tech.webp",
         "sha256": "b25b2a27cf234d07094d9d9f87c13c7e403f4f112a0562d20a475ab417c4bb0e",
         "bytes": 376614,
         "width": 1086,
-        "height": 1448
+        "height": 1448,
+        "identityCorrection": "The user identified this supplied fighter as Lash Tech; sheet labels are not authoritative. Existing Nail Tech artwork is restored separately."
       }
     }
   ]

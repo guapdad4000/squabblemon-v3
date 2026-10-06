@@ -1,15 +1,15 @@
 {
-  "generatedAt": "2026-10-06T12:24:53.047Z",
-  "sourceHash": "72711ac6379a9b4b1e29a16db7da0b01a497fd7c749cd5d5e9bbd7f1ab0e4b0f",
+  "generatedAt": "2026-10-06T18:07:15.273Z",
+  "sourceHash": "178b3cc498c0e1c2beabfb94d768fdb96e302109769e8228f81c8c8104fc2827",
   "scriptHash": "5d541c0a66ad6e934105980040102cb70e7a23ea14c5f8e8a39476cdf6444786",
-  "rulesVersion": 47,
-  "balanceVersion": 47,
+  "rulesVersion": 48,
+  "balanceVersion": 48,
   "counts": {
-    "catalog": 266,
-    "characters": 244,
+    "catalog": 267,
+    "characters": 245,
     "supports": 12,
     "blockbusters": 10,
-    "newCharacters": 29,
+    "newCharacters": 30,
     "wavePortraits": 30
   },
   "games": 6888,
@@ -120,13 +120,13 @@
       ],
       "games": 328,
       "wins": 228,
-      "draws": 24,
-      "losses": 76,
-      "score": 0.7317073170731707,
+      "draws": 25,
+      "losses": 75,
+      "score": 0.7332317073170732,
       "byPolicy": {
         "greedy": {
           "games": 164,
-          "score": 0.7957317073170732
+          "score": 0.7987804878048781
         },
         "seeded-legal": {
           "games": 164,
@@ -208,13 +208,13 @@
       ],
       "games": 328,
       "wins": 218,
-      "draws": 17,
-      "losses": 93,
-      "score": 0.6905487804878049,
+      "draws": 16,
+      "losses": 94,
+      "score": 0.6890243902439024,
       "byPolicy": {
         "greedy": {
           "games": 164,
-          "score": 0.676829268292683
+          "score": 0.6737804878048781
         },
         "seeded-legal": {
           "games": 164,
@@ -295,10 +295,10 @@
         "chessregular"
       ],
       "games": 328,
-      "wins": 202,
-      "draws": 24,
+      "wins": 203,
+      "draws": 23,
       "losses": 102,
-      "score": 0.6524390243902439,
+      "score": 0.6539634146341463,
       "byPolicy": {
         "greedy": {
           "games": 164,
@@ -306,7 +306,7 @@
         },
         "seeded-legal": {
           "games": 164,
-          "score": 0.5579268292682927
+          "score": 0.5609756097560976
         }
       },
       "motionCurve": [
@@ -322,50 +322,6 @@
         3
       ],
       "openingAffordable": 1
-    },
-    {
-      "id": "starter-squabblehouse-shift",
-      "name": "SQUABBLEHOUSE SHIFT",
-      "cardIds": [
-        "squabble-house-manager",
-        "squabblehouse-bus-boy",
-        "squabblehouse-cashier",
-        "squabblehouse-security",
-        "squabblehouse-teknician",
-        "griddle-master",
-        "inmate-reformed",
-        "janitor",
-        "waffle-warlord",
-        "sideofhands"
-      ],
-      "games": 328,
-      "wins": 203,
-      "draws": 15,
-      "losses": 110,
-      "score": 0.6417682926829268,
-      "byPolicy": {
-        "greedy": {
-          "games": 164,
-          "score": 0.6737804878048781
-        },
-        "seeded-legal": {
-          "games": 164,
-          "score": 0.6097560975609756
-        }
-      },
-      "motionCurve": [
-        1,
-        1,
-        2,
-        3,
-        5,
-        3,
-        3,
-        3,
-        5,
-        2
-      ],
-      "openingAffordable": 3
     },
     {
       "id": "focus-earth-tax",
@@ -412,6 +368,50 @@
       "openingAffordable": 3
     },
     {
+      "id": "starter-squabblehouse-shift",
+      "name": "SQUABBLEHOUSE SHIFT",
+      "cardIds": [
+        "squabble-house-manager",
+        "squabblehouse-bus-boy",
+        "squabblehouse-cashier",
+        "squabblehouse-security",
+        "squabblehouse-teknician",
+        "griddle-master",
+        "inmate-reformed",
+        "janitor",
+        "waffle-warlord",
+        "sideofhands"
+      ],
+      "games": 328,
+      "wins": 201,
+      "draws": 16,
+      "losses": 111,
+      "score": 0.6371951219512195,
+      "byPolicy": {
+        "greedy": {
+          "games": 164,
+          "score": 0.6646341463414634
+        },
+        "seeded-legal": {
+          "games": 164,
+          "score": 0.6097560975609756
+        }
+      },
+      "motionCurve": [
+        1,
+        1,
+        2,
+        3,
+        5,
+        3,
+        3,
+        3,
+        5,
+        2
+      ],
+      "openingAffordable": 3
+    },
+    {
       "id": "focus-wave7-legends",
       "name": "Wave 7 Legends",
       "cardIds": [
@@ -428,13 +428,13 @@
       ],
       "games": 328,
       "wins": 191,
-      "draws": 22,
-      "losses": 115,
-      "score": 0.6158536585365854,
+      "draws": 23,
+      "losses": 114,
+      "score": 0.6173780487804879,
       "byPolicy": {
         "greedy": {
           "games": 164,
-          "score": 0.7042682926829268
+          "score": 0.7073170731707317
         },
         "seeded-legal": {
           "games": 164,
@@ -471,14 +471,14 @@
         "stylist"
       ],
       "games": 328,
-      "wins": 187,
+      "wins": 188,
       "draws": 24,
-      "losses": 117,
-      "score": 0.6067073170731707,
+      "losses": 116,
+      "score": 0.6097560975609756,
       "byPolicy": {
         "greedy": {
           "games": 164,
-          "score": 0.5609756097560976
+          "score": 0.5670731707317073
         },
         "seeded-legal": {
           "games": 164,
@@ -515,14 +515,14 @@
         "bustdown"
       ],
       "games": 328,
-      "wins": 185,
+      "wins": 186,
       "draws": 27,
-      "losses": 116,
-      "score": 0.6051829268292683,
+      "losses": 115,
+      "score": 0.6082317073170732,
       "byPolicy": {
         "greedy": {
           "games": 164,
-          "score": 0.7560975609756098
+          "score": 0.7621951219512195
         },
         "seeded-legal": {
           "games": 164,
@@ -603,18 +603,18 @@
         "flyingmonkeys"
       ],
       "games": 328,
-      "wins": 178,
-      "draws": 22,
-      "losses": 128,
+      "wins": 179,
+      "draws": 20,
+      "losses": 129,
       "score": 0.5762195121951219,
       "byPolicy": {
         "greedy": {
           "games": 164,
-          "score": 0.6646341463414634
+          "score": 0.6615853658536586
         },
         "seeded-legal": {
           "games": 164,
-          "score": 0.4878048780487805
+          "score": 0.49085365853658536
         }
       },
       "motionCurve": [
@@ -647,14 +647,14 @@
         "bustdown"
       ],
       "games": 328,
-      "wins": 172,
+      "wins": 171,
       "draws": 30,
-      "losses": 126,
-      "score": 0.5701219512195121,
+      "losses": 127,
+      "score": 0.5670731707317073,
       "byPolicy": {
         "greedy": {
           "games": 164,
-          "score": 0.5457317073170732
+          "score": 0.5396341463414634
         },
         "seeded-legal": {
           "games": 164,
@@ -674,6 +674,50 @@
         1
       ],
       "openingAffordable": 3
+    },
+    {
+      "id": "starter-slide",
+      "name": "SLIDE THRU",
+      "cardIds": [
+        "cornball",
+        "bikelife",
+        "vibe",
+        "plug",
+        "snow",
+        "hooper",
+        "baby",
+        "buspass",
+        "soulfood",
+        "cognac"
+      ],
+      "games": 328,
+      "wins": 171,
+      "draws": 25,
+      "losses": 132,
+      "score": 0.5594512195121951,
+      "byPolicy": {
+        "greedy": {
+          "games": 164,
+          "score": 0.6219512195121951
+        },
+        "seeded-legal": {
+          "games": 164,
+          "score": 0.4969512195121951
+        }
+      },
+      "motionCurve": [
+        1,
+        2,
+        2,
+        1,
+        3,
+        5,
+        4,
+        0,
+        1,
+        1
+      ],
+      "openingAffordable": 4
     },
     {
       "id": "element-plant",
@@ -720,50 +764,6 @@
       "openingAffordable": 3
     },
     {
-      "id": "starter-slide",
-      "name": "SLIDE THRU",
-      "cardIds": [
-        "cornball",
-        "bikelife",
-        "vibe",
-        "plug",
-        "snow",
-        "hooper",
-        "baby",
-        "buspass",
-        "soulfood",
-        "cognac"
-      ],
-      "games": 328,
-      "wins": 169,
-      "draws": 25,
-      "losses": 134,
-      "score": 0.5533536585365854,
-      "byPolicy": {
-        "greedy": {
-          "games": 164,
-          "score": 0.6158536585365854
-        },
-        "seeded-legal": {
-          "games": 164,
-          "score": 0.49085365853658536
-        }
-      },
-      "motionCurve": [
-        1,
-        2,
-        2,
-        1,
-        3,
-        5,
-        4,
-        0,
-        1,
-        1
-      ],
-      "openingAffordable": 4
-    },
-    {
       "id": "focused-blue-set",
       "name": "Crip / Blue Set",
       "cardIds": [
@@ -780,13 +780,13 @@
       ],
       "games": 328,
       "wins": 165,
-      "draws": 21,
-      "losses": 142,
-      "score": 0.5350609756097561,
+      "draws": 22,
+      "losses": 141,
+      "score": 0.5365853658536586,
       "byPolicy": {
         "greedy": {
           "games": 164,
-          "score": 0.43597560975609756
+          "score": 0.43902439024390244
         },
         "seeded-legal": {
           "games": 164,
@@ -867,14 +867,14 @@
         "bustdown"
       ],
       "games": 328,
-      "wins": 167,
+      "wins": 168,
       "draws": 13,
-      "losses": 148,
-      "score": 0.5289634146341463,
+      "losses": 147,
+      "score": 0.5320121951219512,
       "byPolicy": {
         "greedy": {
           "games": 164,
-          "score": 0.43902439024390244
+          "score": 0.4451219512195122
         },
         "seeded-legal": {
           "games": 164,
@@ -911,14 +911,14 @@
         "wifey"
       ],
       "games": 328,
-      "wins": 157,
+      "wins": 158,
       "draws": 23,
-      "losses": 148,
-      "score": 0.5137195121951219,
+      "losses": 147,
+      "score": 0.5167682926829268,
       "byPolicy": {
         "greedy": {
           "games": 164,
-          "score": 0.5701219512195121
+          "score": 0.5762195121951219
         },
         "seeded-legal": {
           "games": 164,
@@ -955,14 +955,14 @@
         "soulfood"
       ],
       "games": 328,
-      "wins": 153,
-      "draws": 29,
+      "wins": 154,
+      "draws": 28,
       "losses": 146,
-      "score": 0.510670731707317,
+      "score": 0.5121951219512195,
       "byPolicy": {
         "greedy": {
           "games": 164,
-          "score": 0.524390243902439
+          "score": 0.5274390243902439
         },
         "seeded-legal": {
           "games": 164,
@@ -1000,13 +1000,13 @@
       ],
       "games": 328,
       "wins": 155,
-      "draws": 23,
-      "losses": 150,
-      "score": 0.5076219512195121,
+      "draws": 22,
+      "losses": 151,
+      "score": 0.5060975609756098,
       "byPolicy": {
         "greedy": {
           "games": 164,
-          "score": 0.5274390243902439
+          "score": 0.524390243902439
         },
         "seeded-legal": {
           "games": 164,
@@ -1087,14 +1087,14 @@
         "manman"
       ],
       "games": 328,
-      "wins": 145,
-      "draws": 22,
+      "wins": 146,
+      "draws": 21,
       "losses": 161,
-      "score": 0.47560975609756095,
+      "score": 0.4771341463414634,
       "byPolicy": {
         "greedy": {
           "games": 164,
-          "score": 0.4451219512195122
+          "score": 0.4481707317073171
         },
         "seeded-legal": {
           "games": 164,
@@ -1131,14 +1131,14 @@
         "roaster"
       ],
       "games": 328,
-      "wins": 137,
+      "wins": 136,
       "draws": 26,
-      "losses": 165,
-      "score": 0.4573170731707317,
+      "losses": 166,
+      "score": 0.45426829268292684,
       "byPolicy": {
         "greedy": {
           "games": 164,
-          "score": 0.3780487804878049
+          "score": 0.3719512195121951
         },
         "seeded-legal": {
           "games": 164,
@@ -1176,9 +1176,9 @@
       ],
       "games": 328,
       "wins": 137,
-      "draws": 20,
-      "losses": 171,
-      "score": 0.4481707317073171,
+      "draws": 21,
+      "losses": 170,
+      "score": 0.4496951219512195,
       "byPolicy": {
         "greedy": {
           "games": 164,
@@ -1186,7 +1186,7 @@
         },
         "seeded-legal": {
           "games": 164,
-          "score": 0.5365853658536586
+          "score": 0.5396341463414634
         }
       },
       "motionCurve": [
@@ -1220,9 +1220,9 @@
       ],
       "games": 328,
       "wins": 132,
-      "draws": 19,
-      "losses": 177,
-      "score": 0.43140243902439024,
+      "draws": 20,
+      "losses": 176,
+      "score": 0.4329268292682927,
       "byPolicy": {
         "greedy": {
           "games": 164,
@@ -1230,7 +1230,7 @@
         },
         "seeded-legal": {
           "games": 164,
-          "score": 0.3445121951219512
+          "score": 0.3475609756097561
         }
       },
       "motionCurve": [
@@ -1395,18 +1395,18 @@
         "counter"
       ],
       "games": 328,
-      "wins": 110,
-      "draws": 24,
+      "wins": 112,
+      "draws": 22,
       "losses": 194,
-      "score": 0.3719512195121951,
+      "score": 0.375,
       "byPolicy": {
         "greedy": {
           "games": 164,
-          "score": 0.3353658536585366
+          "score": 0.3384146341463415
         },
         "seeded-legal": {
           "games": 164,
-          "score": 0.40853658536585363
+          "score": 0.4115853658536585
         }
       },
       "motionCurve": [
@@ -1571,14 +1571,14 @@
         "barber"
       ],
       "games": 328,
-      "wins": 101,
+      "wins": 100,
       "draws": 28,
-      "losses": 199,
-      "score": 0.35060975609756095,
+      "losses": 200,
+      "score": 0.3475609756097561,
       "byPolicy": {
         "greedy": {
           "games": 164,
-          "score": 0.2896341463414634
+          "score": 0.28353658536585363
         },
         "seeded-legal": {
           "games": 164,
@@ -1615,14 +1615,14 @@
         "bustdown"
       ],
       "games": 328,
-      "wins": 97,
-      "draws": 26,
-      "losses": 205,
-      "score": 0.3353658536585366,
+      "wins": 99,
+      "draws": 25,
+      "losses": 204,
+      "score": 0.3399390243902439,
       "byPolicy": {
         "greedy": {
           "games": 164,
-          "score": 0.2896341463414634
+          "score": 0.29878048780487804
         },
         "seeded-legal": {
           "games": 164,
@@ -1660,13 +1660,13 @@
       ],
       "games": 328,
       "wins": 85,
-      "draws": 31,
-      "losses": 212,
-      "score": 0.30640243902439024,
+      "draws": 29,
+      "losses": 214,
+      "score": 0.30335365853658536,
       "byPolicy": {
         "greedy": {
           "games": 164,
-          "score": 0.29878048780487804
+          "score": 0.2926829268292683
         },
         "seeded-legal": {
           "games": 164,
@@ -1695,7 +1695,7 @@
         "fitness-girl",
         "fitness-bro",
         "personal-trainer",
-        "nail",
+        "lash-tech",
         "apartment-maintenance-sage",
         "yn-atv-lord",
         "hooper",
@@ -1703,18 +1703,18 @@
         "demon-trainer"
       ],
       "games": 328,
-      "wins": 86,
-      "draws": 27,
-      "losses": 215,
-      "score": 0.30335365853658536,
+      "wins": 80,
+      "draws": 22,
+      "losses": 226,
+      "score": 0.2774390243902439,
       "byPolicy": {
         "greedy": {
           "games": 164,
-          "score": 0.2621951219512195
+          "score": 0.2347560975609756
         },
         "seeded-legal": {
           "games": 164,
-          "score": 0.3445121951219512
+          "score": 0.3201219512195122
         }
       },
       "motionCurve": [
@@ -1792,13 +1792,13 @@
       ],
       "games": 328,
       "wins": 60,
-      "draws": 20,
-      "losses": 248,
-      "score": 0.21341463414634146,
+      "draws": 22,
+      "losses": 246,
+      "score": 0.21646341463414634,
       "byPolicy": {
         "greedy": {
           "games": 164,
-          "score": 0.08841463414634146
+          "score": 0.09451219512195122
         },
         "seeded-legal": {
           "games": 164,
@@ -1835,18 +1835,18 @@
         "baby"
       ],
       "games": 328,
-      "wins": 48,
-      "draws": 18,
-      "losses": 262,
-      "score": 0.17378048780487804,
+      "wins": 50,
+      "draws": 17,
+      "losses": 261,
+      "score": 0.17835365853658536,
       "byPolicy": {
         "greedy": {
           "games": 164,
-          "score": 0.11280487804878049
+          "score": 0.11890243902439024
         },
         "seeded-legal": {
           "games": 164,
-          "score": 0.2347560975609756
+          "score": 0.23780487804878048
         }
       },
       "motionCurve": [
@@ -1912,6 +1912,9 @@
     "bail-bonds-auntie": [
       "street-legends-growth",
       "street-legends-investigations"
+    ],
+    "lash-tech": [
+      "starter-fitness-circuit"
     ],
     "the-opening-act": [
       "starter-music-industry"

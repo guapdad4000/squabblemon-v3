@@ -42,6 +42,49 @@ for (const owner of ['player', 'cpu'] as const) {
     assert.equal(find(disabled.after, disabled.source)?.waveTrainingUsed, undefined);
   });
 
+  test(`${owner}: Lash Out pays a local ally and training only after actual damage`, () => {
+    const m = train(blank(), 'lash-tech', owner), client = unit('cornball', owner, 0), remote = unit('cornball', owner, 1, 1), victim = { ...unit('og', enemy, 0), basePower: 12 };
+    m.boards = [[client, victim], [remote], []];
+    const result = cast(m, 'lash-tech', owner);
+    assert.equal(find(result.after, victim)?.powerModifier, -1);
+    assert.equal(find(result.after, client)?.powerModifier, 2);
+    assert.equal(find(result.after, remote)?.powerModifier, 0);
+    assert.equal(find(result.after, result.source)?.powerModifier, 3);
+    assert(abilityTookEffect(event(result.after, result.source)));
+  });
+  test(`${owner}: blocked Lash Out does not boost an ally, train, or play a successful special`, () => {
+    const m = train(blank(), 'lash-tech', owner), client = unit('cornball', owner, 0), victim = { ...unit('og', enemy, 0), basePower: 12 };
+    victim.statuses.protected = true; m.boards[0] = [client, victim];
+    m.timedEffects = [{ id: 'lash-shield', kind: 'church-protection', sourceInstanceId: victim.instanceId, targetInstanceId: victim.instanceId, owner: enemy, lane: 0, startsAtRound: 3, expiresAtRound: 5, expiration: 'round-start' }];
+    const result = cast(m, 'lash-tech', owner);
+    assert.equal(find(result.after, victim)?.powerModifier, 0);
+    assert.equal(find(result.after, client)?.powerModifier, 0);
+    assert.equal(find(result.after, result.source)?.powerModifier, 0);
+    assert.equal(find(result.after, result.source)?.waveTrainingUsed, undefined);
+    assert(!abilityTookEffect(event(result.after, result.source)));
+  });
+  test(`${owner}: Nail Tech's mitigation can fully absorb Lash Tech's hit without paying support`, () => {
+    const m = train(blank(), 'lash-tech', owner), client = unit('cornball', owner, 0), victim = { ...unit('og', enemy, 0), basePower: 12 };
+    m.boards[0] = [client, victim];
+    m.timedEffects = [{ id: 'lash-mitigation', kind: 'nail-mitigation', sourceInstanceId: 'existing-nail', targetInstanceId: victim.instanceId, owner: enemy, lane: 0, startsAtRound: 3, expiresAtRound: 7, expiration: 'match-complete' }];
+    const result = cast(m, 'lash-tech', owner);
+    assert.equal(find(result.after, victim)?.powerModifier, 0);
+    assert.equal(find(result.after, client)?.powerModifier, 0);
+    assert.equal(find(result.after, result.source)?.powerModifier, 0);
+    assert(!abilityTookEffect(event(result.after, result.source)));
+  });
+  test(`${owner}: lethal Lash Out earns support while an empty enemy district does not`, () => {
+    const m = blank(), client = unit('cornball', owner, 0), victim = { ...unit('cornball', enemy, 0), basePower: 1 };
+    m.boards[0] = [client, victim];
+    const result = cast(m, 'lash-tech', owner);
+    assert(!find(result.after, victim)); assert.equal(find(result.after, client)?.powerModifier, 2);
+    const empty = blank(); empty.boards[0] = [client];
+    const failed = cast(train(empty, 'lash-tech', owner), 'lash-tech', owner);
+    assert.equal(find(failed.after, client)?.powerModifier, 0);
+    assert.equal(find(failed.after, failed.source)?.powerModifier, 0);
+    assert(!abilityTookEffect(event(failed.after, failed.source)));
+  });
+
   test(`${owner}: Mr Mc Hands applies separate defenses and upgrades only real successes`, () => {
     for (const guarded of [false, true]) {
       const m = train(blank(), 'mr-mc-hands', owner), a = { ...unit('og', enemy, 0), basePower: 12 }, b = { ...unit('hooper', enemy, 0), basePower: 10 };

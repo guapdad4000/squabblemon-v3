@@ -66,167 +66,187 @@ ok 32 - player: uncle-sam uses immutable, deterministic, serializable battle rul
 ok 33 - player: apartment-maintenance-sage uses immutable, deterministic, serializable battle rules
 # Subtest: player: bail-bonds-auntie uses immutable, deterministic, serializable battle rules
 ok 34 - player: bail-bonds-auntie uses immutable, deterministic, serializable battle rules
+# Subtest: player: lash-tech uses immutable, deterministic, serializable battle rules
+ok 35 - player: lash-tech uses immutable, deterministic, serializable battle rules
 # Subtest: player: the-opening-act uses immutable, deterministic, serializable battle rules
-ok 35 - player: the-opening-act uses immutable, deterministic, serializable battle rules
+ok 36 - player: the-opening-act uses immutable, deterministic, serializable battle rules
 # Subtest: player: the-dj uses immutable, deterministic, serializable battle rules
-ok 36 - player: the-dj uses immutable, deterministic, serializable battle rules
+ok 37 - player: the-dj uses immutable, deterministic, serializable battle rules
 # Subtest: player: the-hype-man uses immutable, deterministic, serializable battle rules
-ok 37 - player: the-hype-man uses immutable, deterministic, serializable battle rules
+ok 38 - player: the-hype-man uses immutable, deterministic, serializable battle rules
 # Subtest: player: the-manager-nice uses immutable, deterministic, serializable battle rules
-ok 38 - player: the-manager-nice uses immutable, deterministic, serializable battle rules
+ok 39 - player: the-manager-nice uses immutable, deterministic, serializable battle rules
 # Subtest: player: the-rapper uses immutable, deterministic, serializable battle rules
-ok 39 - player: the-rapper uses immutable, deterministic, serializable battle rules
+ok 40 - player: the-rapper uses immutable, deterministic, serializable battle rules
 # Subtest: player: the-janky-promoter uses immutable, deterministic, serializable battle rules
-ok 40 - player: the-janky-promoter uses immutable, deterministic, serializable battle rules
+ok 41 - player: the-janky-promoter uses immutable, deterministic, serializable battle rules
 # Subtest: player: the-local-celebrity uses immutable, deterministic, serializable battle rules
-ok 41 - player: the-local-celebrity uses immutable, deterministic, serializable battle rules
+ok 42 - player: the-local-celebrity uses immutable, deterministic, serializable battle rules
 # Subtest: player: the-battle-rapper uses immutable, deterministic, serializable battle rules
-ok 42 - player: the-battle-rapper uses immutable, deterministic, serializable battle rules
+ok 43 - player: the-battle-rapper uses immutable, deterministic, serializable battle rules
 # Subtest: player: the-manager-evil uses immutable, deterministic, serializable battle rules
-ok 43 - player: the-manager-evil uses immutable, deterministic, serializable battle rules
+ok 44 - player: the-manager-evil uses immutable, deterministic, serializable battle rules
 # Subtest: player: the-og-rap-legend uses immutable, deterministic, serializable battle rules
-ok 44 - player: the-og-rap-legend uses immutable, deterministic, serializable battle rules
+ok 45 - player: the-og-rap-legend uses immutable, deterministic, serializable battle rules
 # Subtest: player: fitness-bro uses immutable, deterministic, serializable battle rules
-ok 45 - player: fitness-bro uses immutable, deterministic, serializable battle rules
+ok 46 - player: fitness-bro uses immutable, deterministic, serializable battle rules
 # Subtest: player: fitness-girl uses immutable, deterministic, serializable battle rules
-ok 46 - player: fitness-girl uses immutable, deterministic, serializable battle rules
+ok 47 - player: fitness-girl uses immutable, deterministic, serializable battle rules
 # Subtest: player: personal-trainer uses immutable, deterministic, serializable battle rules
-ok 47 - player: personal-trainer uses immutable, deterministic, serializable battle rules
+ok 48 - player: personal-trainer uses immutable, deterministic, serializable battle rules
 # Subtest: player: demon-trainer uses immutable, deterministic, serializable battle rules
-ok 48 - player: demon-trainer uses immutable, deterministic, serializable battle rules
+ok 49 - player: demon-trainer uses immutable, deterministic, serializable battle rules
+# Subtest: player: Lash Out pays a local ally and training only after actual damage
+ok 50 - player: Lash Out pays a local ally and training only after actual damage
+# Subtest: player: blocked Lash Out does not boost an ally, train, or play a successful special
+ok 51 - player: blocked Lash Out does not boost an ally, train, or play a successful special
+# Subtest: player: Nail Tech's mitigation can fully absorb Lash Tech's hit without paying support
+ok 52 - player: Nail Tech's mitigation can fully absorb Lash Tech's hit without paying support
+# Subtest: player: lethal Lash Out earns support while an empty enemy district does not
+ok 53 - player: lethal Lash Out earns support while an empty enemy district does not
 # Subtest: player: Mr Mc Hands applies separate defenses and upgrades only real successes
-ok 49 - player: Mr Mc Hands applies separate defenses and upgrades only real successes
+ok 54 - player: Mr Mc Hands applies separate defenses and upgrades only real successes
 # Subtest: player: Side Chick hits only enemy Baby Momma across districts and respects one shield
-ok 50 - player: Side Chick hits only enemy Baby Momma across districts and respects one shield
+ok 55 - player: Side Chick hits only enemy Baby Momma across districts and respects one shield
 # Subtest: player: Name Check withholds a gain without damage or injury
-ok 51 - player: Name Check withholds a gain without damage or injury
+ok 56 - player: Name Check withholds a gain without damage or injury
 # Subtest: player: Mary's shared rhythm and Lunch Bond cannot feed themselves
-ok 52 - player: Mary's shared rhythm and Lunch Bond cannot feed themselves
+ok 57 - player: Mary's shared rhythm and Lunch Bond cannot feed themselves
 # Subtest: player: Uncle Sam confiscates bonuses without damage and charges exactly one Audit
-ok 53 - player: Uncle Sam confiscates bonuses without damage and charges exactly one Audit
+ok 58 - player: Uncle Sam confiscates bonuses without damage and charges exactly one Audit
 # Subtest: player: routes require real arrival; Curfew blocks movement until Sage cleanses it
-ok 54 - player: routes require real arrival; Curfew blocks movement until Sage cleanses it
+ok 59 - player: routes require real arrival; Curfew blocks movement until Sage cleanses it
 # Subtest: player: Boo Boo's public trap resolves once and escapes only after damage
-ok 55 - player: Boo Boo's public trap resolves once and escapes only after damage
+ok 60 - player: Boo Boo's public trap resolves once and escapes only after damage
 # Subtest: player: Bail redirects once and pays for a real Poison entrance
-ok 56 - player: Bail redirects once and pays for a real Poison entrance
+ok 61 - player: Bail redirects once and pays for a real Poison entrance
 # Subtest: player: Evil Manager's expiry transfers bonuses without injury or counter triggers
-ok 57 - player: Evil Manager's expiry transfers bonuses without injury or counter triggers
+ok 62 - player: Evil Manager's expiry transfers bonuses without injury or counter triggers
 # Subtest: player: Diss receipt reacts to a genuine gain and never replays
-ok 58 - player: Diss receipt reacts to a genuine gain and never replays
+ok 63 - player: Diss receipt reacts to a genuine gain and never replays
 # Subtest: player: Soundcheck, Rider and Rapper react to actual entrances
-ok 59 - player: Soundcheck, Rider and Rapper react to actual entrances
+ok 64 - player: Soundcheck, Rider and Rapper react to actual entrances
 # Subtest: player: Personal Trainer completes three distinct districts, not a bounce
-ok 60 - player: Personal Trainer completes three distinct districts, not a bounce
+ok 65 - player: Personal Trainer completes three distinct districts, not a bounce
 # Subtest: player: Fitness Girl restores only real injury after movement
-ok 61 - player: Fitness Girl restores only real injury after movement
+ok 66 - player: Fitness Girl restores only real injury after movement
 # Subtest: player: Fitness Bro and Demon Trainer have bounded actual triggers
-ok 62 - player: Fitness Bro and Demon Trainer have bounded actual triggers
+ok 67 - player: Fitness Bro and Demon Trainer have bounded actual triggers
 # Subtest: cpu: boo-boo-the-fool uses immutable, deterministic, serializable battle rules
-ok 63 - cpu: boo-boo-the-fool uses immutable, deterministic, serializable battle rules
+ok 68 - cpu: boo-boo-the-fool uses immutable, deterministic, serializable battle rules
 # Subtest: cpu: mr-mc-hands uses immutable, deterministic, serializable battle rules
-ok 64 - cpu: mr-mc-hands uses immutable, deterministic, serializable battle rules
+ok 69 - cpu: mr-mc-hands uses immutable, deterministic, serializable battle rules
 # Subtest: cpu: ms-mary-mack uses immutable, deterministic, serializable battle rules
-ok 65 - cpu: ms-mary-mack uses immutable, deterministic, serializable battle rules
+ok 70 - cpu: ms-mary-mack uses immutable, deterministic, serializable battle rules
 # Subtest: cpu: pimp-swookie uses immutable, deterministic, serializable battle rules
-ok 66 - cpu: pimp-swookie uses immutable, deterministic, serializable battle rules
+ok 71 - cpu: pimp-swookie uses immutable, deterministic, serializable battle rules
 # Subtest: cpu: og-uncle-harley-davidson uses immutable, deterministic, serializable battle rules
-ok 67 - cpu: og-uncle-harley-davidson uses immutable, deterministic, serializable battle rules
+ok 72 - cpu: og-uncle-harley-davidson uses immutable, deterministic, serializable battle rules
 # Subtest: cpu: suga-mama uses immutable, deterministic, serializable battle rules
-ok 68 - cpu: suga-mama uses immutable, deterministic, serializable battle rules
+ok 73 - cpu: suga-mama uses immutable, deterministic, serializable battle rules
 # Subtest: cpu: side-chick uses immutable, deterministic, serializable battle rules
-ok 69 - cpu: side-chick uses immutable, deterministic, serializable battle rules
+ok 74 - cpu: side-chick uses immutable, deterministic, serializable battle rules
 # Subtest: cpu: gas-station-window-wiper uses immutable, deterministic, serializable battle rules
-ok 70 - cpu: gas-station-window-wiper uses immutable, deterministic, serializable battle rules
+ok 75 - cpu: gas-station-window-wiper uses immutable, deterministic, serializable battle rules
 # Subtest: cpu: parole-officer uses immutable, deterministic, serializable battle rules
-ok 71 - cpu: parole-officer uses immutable, deterministic, serializable battle rules
+ok 76 - cpu: parole-officer uses immutable, deterministic, serializable battle rules
 # Subtest: cpu: work-hubby uses immutable, deterministic, serializable battle rules
-ok 72 - cpu: work-hubby uses immutable, deterministic, serializable battle rules
+ok 77 - cpu: work-hubby uses immutable, deterministic, serializable battle rules
 # Subtest: cpu: he-just-a-friend uses immutable, deterministic, serializable battle rules
-ok 73 - cpu: he-just-a-friend uses immutable, deterministic, serializable battle rules
+ok 78 - cpu: he-just-a-friend uses immutable, deterministic, serializable battle rules
 # Subtest: cpu: crazy-ex-boyfriend uses immutable, deterministic, serializable battle rules
-ok 74 - cpu: crazy-ex-boyfriend uses immutable, deterministic, serializable battle rules
+ok 79 - cpu: crazy-ex-boyfriend uses immutable, deterministic, serializable battle rules
 # Subtest: cpu: uncle-sam uses immutable, deterministic, serializable battle rules
-ok 75 - cpu: uncle-sam uses immutable, deterministic, serializable battle rules
+ok 80 - cpu: uncle-sam uses immutable, deterministic, serializable battle rules
 # Subtest: cpu: apartment-maintenance-sage uses immutable, deterministic, serializable battle rules
-ok 76 - cpu: apartment-maintenance-sage uses immutable, deterministic, serializable battle rules
+ok 81 - cpu: apartment-maintenance-sage uses immutable, deterministic, serializable battle rules
 # Subtest: cpu: bail-bonds-auntie uses immutable, deterministic, serializable battle rules
-ok 77 - cpu: bail-bonds-auntie uses immutable, deterministic, serializable battle rules
+ok 82 - cpu: bail-bonds-auntie uses immutable, deterministic, serializable battle rules
+# Subtest: cpu: lash-tech uses immutable, deterministic, serializable battle rules
+ok 83 - cpu: lash-tech uses immutable, deterministic, serializable battle rules
 # Subtest: cpu: the-opening-act uses immutable, deterministic, serializable battle rules
-ok 78 - cpu: the-opening-act uses immutable, deterministic, serializable battle rules
+ok 84 - cpu: the-opening-act uses immutable, deterministic, serializable battle rules
 # Subtest: cpu: the-dj uses immutable, deterministic, serializable battle rules
-ok 79 - cpu: the-dj uses immutable, deterministic, serializable battle rules
+ok 85 - cpu: the-dj uses immutable, deterministic, serializable battle rules
 # Subtest: cpu: the-hype-man uses immutable, deterministic, serializable battle rules
-ok 80 - cpu: the-hype-man uses immutable, deterministic, serializable battle rules
+ok 86 - cpu: the-hype-man uses immutable, deterministic, serializable battle rules
 # Subtest: cpu: the-manager-nice uses immutable, deterministic, serializable battle rules
-ok 81 - cpu: the-manager-nice uses immutable, deterministic, serializable battle rules
+ok 87 - cpu: the-manager-nice uses immutable, deterministic, serializable battle rules
 # Subtest: cpu: the-rapper uses immutable, deterministic, serializable battle rules
-ok 82 - cpu: the-rapper uses immutable, deterministic, serializable battle rules
+ok 88 - cpu: the-rapper uses immutable, deterministic, serializable battle rules
 # Subtest: cpu: the-janky-promoter uses immutable, deterministic, serializable battle rules
-ok 83 - cpu: the-janky-promoter uses immutable, deterministic, serializable battle rules
+ok 89 - cpu: the-janky-promoter uses immutable, deterministic, serializable battle rules
 # Subtest: cpu: the-local-celebrity uses immutable, deterministic, serializable battle rules
-ok 84 - cpu: the-local-celebrity uses immutable, deterministic, serializable battle rules
+ok 90 - cpu: the-local-celebrity uses immutable, deterministic, serializable battle rules
 # Subtest: cpu: the-battle-rapper uses immutable, deterministic, serializable battle rules
-ok 85 - cpu: the-battle-rapper uses immutable, deterministic, serializable battle rules
+ok 91 - cpu: the-battle-rapper uses immutable, deterministic, serializable battle rules
 # Subtest: cpu: the-manager-evil uses immutable, deterministic, serializable battle rules
-ok 86 - cpu: the-manager-evil uses immutable, deterministic, serializable battle rules
+ok 92 - cpu: the-manager-evil uses immutable, deterministic, serializable battle rules
 # Subtest: cpu: the-og-rap-legend uses immutable, deterministic, serializable battle rules
-ok 87 - cpu: the-og-rap-legend uses immutable, deterministic, serializable battle rules
+ok 93 - cpu: the-og-rap-legend uses immutable, deterministic, serializable battle rules
 # Subtest: cpu: fitness-bro uses immutable, deterministic, serializable battle rules
-ok 88 - cpu: fitness-bro uses immutable, deterministic, serializable battle rules
+ok 94 - cpu: fitness-bro uses immutable, deterministic, serializable battle rules
 # Subtest: cpu: fitness-girl uses immutable, deterministic, serializable battle rules
-ok 89 - cpu: fitness-girl uses immutable, deterministic, serializable battle rules
+ok 95 - cpu: fitness-girl uses immutable, deterministic, serializable battle rules
 # Subtest: cpu: personal-trainer uses immutable, deterministic, serializable battle rules
-ok 90 - cpu: personal-trainer uses immutable, deterministic, serializable battle rules
+ok 96 - cpu: personal-trainer uses immutable, deterministic, serializable battle rules
 # Subtest: cpu: demon-trainer uses immutable, deterministic, serializable battle rules
-ok 91 - cpu: demon-trainer uses immutable, deterministic, serializable battle rules
+ok 97 - cpu: demon-trainer uses immutable, deterministic, serializable battle rules
+# Subtest: cpu: Lash Out pays a local ally and training only after actual damage
+ok 98 - cpu: Lash Out pays a local ally and training only after actual damage
+# Subtest: cpu: blocked Lash Out does not boost an ally, train, or play a successful special
+ok 99 - cpu: blocked Lash Out does not boost an ally, train, or play a successful special
+# Subtest: cpu: Nail Tech's mitigation can fully absorb Lash Tech's hit without paying support
+ok 100 - cpu: Nail Tech's mitigation can fully absorb Lash Tech's hit without paying support
+# Subtest: cpu: lethal Lash Out earns support while an empty enemy district does not
+ok 101 - cpu: lethal Lash Out earns support while an empty enemy district does not
 # Subtest: cpu: Mr Mc Hands applies separate defenses and upgrades only real successes
-ok 92 - cpu: Mr Mc Hands applies separate defenses and upgrades only real successes
+ok 102 - cpu: Mr Mc Hands applies separate defenses and upgrades only real successes
 # Subtest: cpu: Side Chick hits only enemy Baby Momma across districts and respects one shield
-ok 93 - cpu: Side Chick hits only enemy Baby Momma across districts and respects one shield
+ok 103 - cpu: Side Chick hits only enemy Baby Momma across districts and respects one shield
 # Subtest: cpu: Name Check withholds a gain without damage or injury
-ok 94 - cpu: Name Check withholds a gain without damage or injury
+ok 104 - cpu: Name Check withholds a gain without damage or injury
 # Subtest: cpu: Mary's shared rhythm and Lunch Bond cannot feed themselves
-ok 95 - cpu: Mary's shared rhythm and Lunch Bond cannot feed themselves
+ok 105 - cpu: Mary's shared rhythm and Lunch Bond cannot feed themselves
 # Subtest: cpu: Uncle Sam confiscates bonuses without damage and charges exactly one Audit
-ok 96 - cpu: Uncle Sam confiscates bonuses without damage and charges exactly one Audit
+ok 106 - cpu: Uncle Sam confiscates bonuses without damage and charges exactly one Audit
 # Subtest: cpu: routes require real arrival; Curfew blocks movement until Sage cleanses it
-ok 97 - cpu: routes require real arrival; Curfew blocks movement until Sage cleanses it
+ok 107 - cpu: routes require real arrival; Curfew blocks movement until Sage cleanses it
 # Subtest: cpu: Boo Boo's public trap resolves once and escapes only after damage
-ok 98 - cpu: Boo Boo's public trap resolves once and escapes only after damage
+ok 108 - cpu: Boo Boo's public trap resolves once and escapes only after damage
 # Subtest: cpu: Bail redirects once and pays for a real Poison entrance
-ok 99 - cpu: Bail redirects once and pays for a real Poison entrance
+ok 109 - cpu: Bail redirects once and pays for a real Poison entrance
 # Subtest: cpu: Evil Manager's expiry transfers bonuses without injury or counter triggers
-ok 100 - cpu: Evil Manager's expiry transfers bonuses without injury or counter triggers
+ok 110 - cpu: Evil Manager's expiry transfers bonuses without injury or counter triggers
 # Subtest: cpu: Diss receipt reacts to a genuine gain and never replays
-ok 101 - cpu: Diss receipt reacts to a genuine gain and never replays
+ok 111 - cpu: Diss receipt reacts to a genuine gain and never replays
 # Subtest: cpu: Soundcheck, Rider and Rapper react to actual entrances
-ok 102 - cpu: Soundcheck, Rider and Rapper react to actual entrances
+ok 112 - cpu: Soundcheck, Rider and Rapper react to actual entrances
 # Subtest: cpu: Personal Trainer completes three distinct districts, not a bounce
-ok 103 - cpu: Personal Trainer completes three distinct districts, not a bounce
+ok 113 - cpu: Personal Trainer completes three distinct districts, not a bounce
 # Subtest: cpu: Fitness Girl restores only real injury after movement
-ok 104 - cpu: Fitness Girl restores only real injury after movement
+ok 114 - cpu: Fitness Girl restores only real injury after movement
 # Subtest: cpu: Fitness Bro and Demon Trainer have bounded actual triggers
-ok 105 - cpu: Fitness Bro and Demon Trainer have bounded actual triggers
+ok 115 - cpu: Fitness Bro and Demon Trainer have bounded actual triggers
 # Subtest: both new complete starter crews reproduce exact replay decision states
-ok 106 - both new complete starter crews reproduce exact replay decision states
+ok 116 - both new complete starter crews reproduce exact replay decision states
 # Subtest: player: all wave cards resolve identically online and expose their public marks
-ok 107 - player: all wave cards resolve identically online and expose their public marks
+ok 117 - player: all wave cards resolve identically online and expose their public marks
 # Subtest: cpu: all wave cards resolve identically online and expose their public marks
-ok 108 - cpu: all wave cards resolve identically online and expose their public marks
+ok 118 - cpu: all wave cards resolve identically online and expose their public marks
 # Subtest: every Street Legends training tier pays once only after a real success
-ok 109 - every Street Legends training tier pays once only after a real success
-# Subtest: the thirty-entry release adds twenty-nine unique identities while Nail Tech retains ownership and cosmetics
-ok 110 - the thirty-entry release adds twenty-nine unique identities while Nail Tech retains ownership and cosmetics
+ok 119 - every Street Legends training tier pays once only after a real success
+# Subtest: the thirty-entry release adds thirty unique identities while Nail Tech retains her original ownership, artwork and cosmetics
+ok 120 - the thirty-entry release adds thirty unique identities while Nail Tech retains her original ownership, artwork and cosmetics
 # Subtest: all thirty fighter portraits are distinct finished cutouts with valid shared cache revisions
-ok 111 - all thirty fighter portraits are distinct finished cutouts with valid shared cache revisions
+ok 121 - all thirty fighter portraits are distinct finished cutouts with valid shared cache revisions
 # Subtest: Music and Fitness crews are discoverable recipes with distinct hero artwork
-ok 112 - Music and Fitness crews are discoverable recipes with distinct hero artwork
+ok 122 - Music and Fitness crews are discoverable recipes with distinct hero artwork
 # Subtest: every new offered pack contains three different finished assets, including readable vector signatures and emblems
-ok 113 - every new offered pack contains three different finished assets, including readable vector signatures and emblems
-# tests 113
-# pass 113
+ok 123 - every new offered pack contains three different finished assets, including readable vector signatures and emblems
+# tests 123
+# pass 123
 # fail 0
 # cancelled 0
 # skipped 0
-# duration_ms 5099.573227
+# duration_ms 4808.338311

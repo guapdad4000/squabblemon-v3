@@ -1,7 +1,7 @@
 {
-  "sourceHash": "72711ac6379a9b4b1e29a16db7da0b01a497fd7c749cd5d5e9bbd7f1ab0e4b0f",
+  "sourceHash": "178b3cc498c0e1c2beabfb94d768fdb96e302109769e8228f81c8c8104fc2827",
   "scriptHash": "5d541c0a66ad6e934105980040102cb70e7a23ea14c5f8e8a39476cdf6444786",
-  "generatedAt": "2026-10-06T12:14:11.274Z",
+  "generatedAt": "2026-10-06T17:57:21.470Z",
   "decks": [
     {
       "id": "starter-block",
@@ -155,7 +155,7 @@
         "fitness-girl",
         "fitness-bro",
         "personal-trainer",
-        "nail",
+        "lash-tech",
         "apartment-maintenance-sage",
         "yn-atv-lord",
         "hooper",
@@ -69558,8 +69558,8 @@
       "key": "street-legends-relationships|street-legends-growth|seeded-legal|3|b-player"
     }
   ],
-  "balanceVersion": 47,
-  "rulesVersion": 47,
+  "balanceVersion": 48,
+  "rulesVersion": 48,
   "excludedCardIds": [
     "guap",
     "folks"

@@ -8,14 +8,25 @@ const origin=(process.env.STREET_LEGENDS_ORIGIN??'http://127.0.0.1:4213').replac
 const require=createRequire(root+'/artifacts/squabblemon/package.json');const {chromium}=require('@playwright/test');
 const out=root+'/artifacts/deliverables/street-legends-wave-2026-10-06/screenshots';mkdirSync(out,{recursive:true});
 const browser=await chromium.launch({headless:true});const results=[],errors=[];
-for(const [name,viewport,group] of [['street-legends-desktop',{width:1440,height:1000},'block'],['music-desktop',{width:1440,height:1000},'music'],['fitness-mobile',{width:390,height:844},'fitness']]) {
+for(const [name,viewport,group] of [['street-legends-desktop',{width:1440,height:1000},'block'],['music-desktop',{width:1440,height:1000},'music'],['fitness-mobile',{width:390,height:844},'fitness'],['lash-and-nail-desktop',{width:960,height:1000},'beauty']]) {
  const page=await browser.newPage({viewport,reducedMotion:'reduce'});page.on('pageerror',e=>errors.push(name+': '+e.message));
  console.log(name+': navigate'); await page.goto(origin+'/e2e/street-legends.fixture.html?group='+group,{waitUntil:'domcontentloaded'});
  await page.locator('[data-wave-card]').first().waitFor(); await page.evaluate(()=>{for(const i of document.images)i.loading='eager';}); console.log(name+': image readiness'); await page.waitForFunction(()=>[...document.images].every(i=>i.complete),null,{timeout:20000}).catch(async e=>{console.log(await page.evaluate(()=>[...document.images].filter(i=>!i.complete).map(i=>({src:i.src,loading:i.loading}))));throw e;}); console.log(name+': ready');
- assert.equal(await page.locator('[data-wave-card]').count(),group==='block'?15:group==='music'?10:5);
+ assert.equal(await page.locator('[data-wave-card]').count(),group==='block'?15:group==='music'?10:group==='beauty'?2:5);
  assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);
  const failed=await page.evaluate(()=>[...document.images].filter(i=>!i.complete||!i.naturalWidth).map(i=>i.src));assert.deepEqual(failed,[]);
  console.log(name+': screenshot'); await page.screenshot({path:out+'/'+name+'.png',fullPage:true,timeout:20000});results.push({name,cards:await page.locator('[data-wave-card]').count(),imageFailures:failed.length});
+ if(group==='beauty') {
+   const portraitPaths=await page.locator('[data-wave-card] .street-legends-review__card img').evaluateAll(images=>images.map(image=>image.src));
+   assert(portraitPaths.some(src=>src.includes('/lash-tech.webp'))); assert(portraitPaths.some(src=>src.includes('/nail-tech.webp')));
+   for(const [name,ability] of [['Lash Tech','Lash Out'],['Nail Tech','Fresh Set']]) {
+     await page.getByRole('button',{name:'Inspect '+name,exact:true}).click();
+     const dialog=page.getByRole('dialog'); await dialog.waitFor(); assert.match(await dialog.innerText(),new RegExp(ability,'i'));
+     await page.screenshot({path:out+'/'+name.toLowerCase().replaceAll(' ','-')+'-dossier.png'});
+     await page.keyboard.press('Escape'); await dialog.waitFor({state:'hidden'});
+   }
+   results.push({name:'separate-lash-and-nail',distinctPortraits:true,distinctAbilities:true});
+ }
  if(group==='fitness') {
    await page.getByRole('button',{name:'Inspect Fitness Girl',exact:true}).click();
    await page.getByRole('dialog').waitFor();await page.locator('.dossier-sticky__title').waitFor();await page.screenshot({path:out+'/fitness-girl-dossier-mobile.png'});

@@ -409,6 +409,22 @@
       "source": "Original vector badge with Flame from the installed Lucide icon library"
     },
     {
+      "cardId": "lash-tech",
+      "kind": "signature",
+      "file": "assets/cosmetics/street-legends/lash-tech-signature.svg",
+      "sha256": "8f053269dab9b8102d35754ada96379b20f5878f80347895d23bd02eaa0e87a0",
+      "source": "Original Lash Tech vector signature typography"
+    },
+    {
+      "cardId": "lash-tech",
+      "kind": "emblem",
+      "file": "assets/cosmetics/street-legends/lash-tech-emblem.svg",
+      "sha256": "0bf56c94ef73e9158e446026792b3aea50bbaf284863a59cc25baeeaca044fc4",
+      "source": "Original eye and lash vector emblem"
+    }
+  ],
+  "retainedNailTechCompanions": [
+    {
       "cardId": "nail-tech",
       "kind": "signature",
       "file": "assets/cosmetics/street-legends/nail-tech-signature.svg",

@@ -116,7 +116,9 @@ try {
     ], "Fresh payment test schema creation");
     console.log("Using fresh owned native PostgreSQL with independent connections; no external database is modified.");
   }
-  const tests=readdirSync(join(root,'artifacts/api-server/src/lib')).filter(n=>n.endsWith('.test.ts')).map(n=>'src/lib/'+n);
+  const tests = process.argv.includes('--lash-correction')
+    ? ['cosmetics.test.ts', 'cardProgression.test.ts', 'collectionEconomy.test.ts', 'storyMoveSolver.test.ts'].map(n => 'src/lib/' + n)
+    : readdirSync(join(root,'artifacts/api-server/src/lib')).filter(n=>n.endsWith('.test.ts')).map(n=>'src/lib/'+n);
   const args=['--filter','@workspace/api-server','exec','tsx','--test','--test-concurrency=1',...tests];
   if (socialOnly) environment.SOCIAL_TEST_OWNED = '1';
   if (socialLoad) environment.SOCIAL_LOAD_OWNED = '1';

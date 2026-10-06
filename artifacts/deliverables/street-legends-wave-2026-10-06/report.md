@@ -1,8 +1,8 @@
 # Street Legends — thirty-entry release
 
-**29 new characters + one Nail Tech art refresh. The complete roster now contains 244 characters, 12 supports, and 10 blockbusters: 266 catalog cards.** The supplied concepts contribute 28 new characters because Nail Tech already exists. The original **Bail Bonds Auntie** fills the thirtieth wave slot with targeted defensive Poison tempo. “The Marked One” was a typo and has no entry.
+**30 new characters. The complete roster now contains 245 characters, 12 supports, and 10 blockbusters: 267 catalog cards.** The supplied beauty fighter is Lash Tech, a separate new identity. Nail Tech keeps her original artwork, ownership key, full Fresh Set kit, upgrades, and purchased cosmetics. The supplied concepts contribute 29 fighters; the original Bail Bonds Auntie completes the thirtieth slot. “The Marked One” was a typo and has no entry.
 
-The wave consists of 15 Street Legends, ten Music Industry fighters, and four new Fitness fighters plus the existing Nail Tech. Every new character has one canonical identity, a unique transparent portrait, its own kit, three progression upgrades, a signature style scene, and catalog/deck workshop support. Nail Tech retains her ownership key and complete existing kit.
+The wave consists of 15 Street Legends, ten Music Industry fighters, and four new Fitness fighters plus Lash Tech in Beauty. Every new character has one canonical identity, a unique transparent portrait, its own kit, three progression upgrades, a signature style scene, and catalog/deck workshop support. Nail Tech retains her ownership key, original art, and complete existing kit.
 
 ## Street Legends — 15
 
@@ -45,7 +45,7 @@ Open with Opening Act in one district and prepare another. Build a Rapper stage 
 
 Existing Failed Rapper, Busker, Pirate DJ, and Promoter also count as Music characters, enabling mixed crews. A copied Music ability does not turn an unrelated body into a Music member. Pass the Torch does not copy passives, refund a repeated Soundcheck, or reset Spinback.
 
-## Fitness — four new fighters and Nail Tech refresh
+## Fitness — four new fighters
 
 | Fighter | Motion / Hands | Move and full rules | Role / gap filled |
 |---|---|---|---|
@@ -53,11 +53,16 @@ Existing Failed Rapper, Busker, Pirate DJ, and Promoter also count as Music char
 | Fitness Girl | 2 / 3 | **Active Recovery.** On Reveal: Move to your weakest other open district. After a successful move, restore up to 2 actual damage and remove Burn from your weakest injured other ally there. If nobody is injured, remove Burn from your weakest burning other ally there instead. A failed move gives no recovery. | **Recovery earned by movement.** Water and Fitness can recover real recorded damage and clear Burn after a successful route. It does not convert bonus removal into healing or indiscriminately cleanse other statuses. |
 | Personal Trainer | 3 / 4 | **Circuit Training.** On Reveal: Train your weakest other ally here through next round. Its first successful move out gains +2 Hands. Its first later visit to the remaining third district gains +2 Hands and Protection. One circuit per side; each character can train once per match. Moving between only two districts never finishes. | **Three-district movement objective.** Movement decks gain a clear circuit objective: a first route pays two Hands and visiting the remaining third district pays two plus Protection. Bouncing between two districts cannot complete it. |
 | Demon Trainer | 4 / 5 | **No Days Off.** Ongoing: The first other friendly Fitness character destroyed by an enemy each round gives Demon +2 Hands and hits the strongest enemy in the fallen athlete’s district for 1. At most two payouts per side per match. Demon must already be active; sacrifices, tokens and friendly damage never count. | **Enemy-defeat comeback.** Fitness and Fire can turn two actual enemy-caused athlete losses into bounded revenge. Demon must already be active, and nonlethal hits, your sacrifices, and tokens do not count. Four Motion lets the comeback engine enter before the final round. |
-| Nail Tech | 2 / 3 | **Fresh Set.** On Reveal: Give another friendly card here +2 Hands. The next time that card is hit by an enemy Hands reduction, reduce that loss by 1. Ongoing: While Nail Tech is in your hand, your other Poison characters on the board gain +1 Hands at round end. | **Existing protection / Poison-in-hand support.** Fresh Set keeps the existing save key, abilities, upgrades, and Poison identity. The art refresh matches the supplied Nail Tech; she provides neutral investment protection to Fitness and remains a Poison hand-support option. |
 
-**ONE MORE REP:** Failed Athlete · Fitness Girl · Fitness Bro · Personal Trainer · Nail Tech · Apartment Maintenance Sage · YN ATV Lord · Hooper · Sports Prodigy · Demon Trainer.
+## Beauty — Lash Tech
 
-Personal Trainer needs real allied movement to finish his circuit. Play a trainee and Trainer in one district, use Maintenance Sage to carry the weakest local trainee into a second district, then use YN ATV Lord from that district to send it into the remaining weak district. Keep the trainee as the weakest eligible target and ensure the third district is the weakest legal destination; capacity and score changes can redirect or prevent this line. Both moves must occur before the next-round contract expires. Fitness Girl supplies self-routing and damage recovery, Fitness Bro grows from distributed plays, Nail Tech protects investment, and Demon Trainer enters at four Motion to be present before enemy-caused athlete defeats. Existing Failed Athlete, Sports Prodigy, and Hooper count as Fitness. Nail Tech remains Poison and supplies neutral support rather than being relabeled as a Fitness member.
+| Fighter | Motion / Hands | Move and full rules | Role / gap filled |
+|---|---|---|---|
+| Lash Tech | 2 / 2 | **Lash Out.** On Reveal: Hit the strongest enemy here for 1 damage. Only if damage lands, give your weakest other ally here +2 Hands. Blocked or fully absorbed hits give no ally boost. Defenses apply. | **Damage-earned local investment.** Poison and mixed Fitness crews can convert a real enemy hit into two Hands for their weakest local ally. Protection, immunity, or Nail Tech’s complete mitigation denies the support payout. Lash Tech has her own ownership, progression, and cosmetics; she is a Beauty character, not a Fitness teammate. |
+
+**ONE MORE REP:** Failed Athlete · Fitness Girl · Fitness Bro · Personal Trainer · Lash Tech · Apartment Maintenance Sage · YN ATV Lord · Hooper · Sports Prodigy · Demon Trainer.
+
+Personal Trainer needs real allied movement to finish his circuit. Play a trainee and Trainer in one district, use Maintenance Sage to carry the weakest local trainee into a second district, then use YN ATV Lord from that district to send it into the remaining weak district. Keep the trainee as the weakest eligible target and ensure the third district is the weakest legal destination; capacity and score changes can redirect or prevent this line. Both moves must occur before the next-round contract expires. Fitness Girl supplies self-routing and damage recovery, Fitness Bro grows from distributed plays, Lash Tech funds a local ally only after real damage, and Demon Trainer enters at four Motion to be present before enemy-caused athlete defeats. Existing Failed Athlete, Sports Prodigy, and Hooper count as Fitness. Lash Tech is a Poison Beauty character and supplies neutral support; she does not count as a Fitness teammate. The separate existing Nail Tech remains available to other investment builds.
 
 ## Existing builds and the blanks this wave fills
 
@@ -84,46 +89,47 @@ Personal Trainer needs real allied movement to finish his circuit. Play a traine
 
 All 30 portraits are finished 1086 × 1448 WebP cutouts with genuine alpha, unique byte hashes, and updated runtime cache revisions. The presentation checks require at least 20% clear pixels, at least 10% visible fighter pixels, and no reused portrait hashes. Each generated sheet extraction was recreated as an individual image using the sheet as reference; no rectangular fighter-sheet crops were shipped. The reference poses, wardrobe, faces, props, and illustrated style were retained, with full figures framed inside the portrait.
 
-Six supplied transparent solo artworks take priority unchanged in composition: Boo Boo, Mr. Mc Hands, Uncle Harley, Suga Mama, Side Chick, and Window Wiper. Uncle Sam, Crazy Ex, and He Just a Friend use their supplied solos with their dark backdrops removed. The remaining 18 supplied-sheet fighters were individually regenerated; Work Hubby, Maintenance Sage, and Bail Bonds Auntie were created in the same visual style. Mr. Mc Hands uses the supplied bald veteran with rapid punch afterimages, not the younger sheet duplicate. Nail Tech is refreshed in place instead of becoming a second fighter. Each full cosmetic pack includes the fighter cutout, a distinct transparent vector move signature, and a themed vector emblem. All three assets are checked separately, and old sticker IDs are retained. These are companion graphics, not alternate fighter poses; provenance is in [style-sticker-manifest.json](style-sticker-manifest.json). The source references, generation prompts, saved file hashes, and origins are recorded in [art-manifest.json](art-manifest.json).
+Six supplied transparent solo artworks take priority unchanged in composition: Boo Boo, Mr. Mc Hands, Uncle Harley, Suga Mama, Side Chick, and Window Wiper. Uncle Sam, Crazy Ex, and He Just a Friend use their supplied solos with their dark backdrops removed. The remaining 18 supplied-sheet fighters were individually regenerated; Work Hubby, Maintenance Sage, and Bail Bonds Auntie were created in the same visual style. Mr. Mc Hands uses the supplied bald veteran with rapid punch afterimages, not the younger sheet duplicate. The supplied seated beauty fighter is Lash Tech, with her own art/cache key and Lash Out kit. Nail Tech’s original pre-wave portrait is restored byte-for-byte. Her existing ownership, upgrades, story appearances and every cosmetic ID remain valid; the briefly introduced Nail Tech companion stickers are also retained with her restored portrait. Each full cosmetic pack includes the fighter cutout, a distinct transparent vector move signature, and a themed vector emblem. All three assets are checked separately, and old sticker IDs are retained. These are companion graphics, not alternate fighter poses; provenance is in [style-sticker-manifest.json](style-sticker-manifest.json). The source references, generation prompts, saved file hashes, and origins are recorded in [art-manifest.json](art-manifest.json).
 
 ## Combat, progression, and performance
 
 The new mechanics run through the shared authoritative engine for local battles, CPU decisions, replay, and online resolution. Board-visible marks expose Curfew, booking, bonds, calls, and circuit progress; internal per-owner ledgers do not appear as location text. Caps survive JSON serialization, copies, and returns. New-kit progression unlocks at levels 2, 5, and 8, each granting one Hand after the first real base-kit success per match. Nail Tech keeps her existing targeted upgrades. Passive kits do not invent a special entrance; failed or fully defended effects do not trigger successful-special presentation or award training. Two-target Mc Hands can still succeed when only one defended strike lands.
 
-The game shell exceeded the existing 900 KiB static JavaScript limit after the roster grew. Music’s heavy settings panel now loads when opened; the compact trigger and playback store remain immediate. The full panel retains every control, its native dialog, saved music and announcer volume, mute, playlist, and both music banks. The measured build fell from 905.9 KiB to 852.1 KiB against the unchanged 900 KiB budget. The new rule hooks also exit before scanning or serializing irrelevant older battles, and their stateless adapters are reused. A Sherlock Soundcheck search that exceeded the unchanged ten-second ceiling completed in 8.9 seconds after the optimization; the final native suite retains that ceiling. These are load-size and bounded-search results, not a measured claim of higher battle frame rate.
+The game shell exceeded the existing 900 KiB static JavaScript limit after the roster grew. Music’s heavy settings panel now loads when opened; the compact trigger and playback store remain immediate. The full panel retains every control, its native dialog, saved music and announcer volume, mute, playlist, and both music banks. The initial wave build fell from 905.9 KiB to 852.1 KiB. The corrected Lash Tech release measures 852.5 KiB / 900 KiB against the unchanged limit. The new rule hooks also exit before scanning or serializing irrelevant older battles, and their stateless adapters are reused. A Sherlock Soundcheck search that exceeded the unchanged ten-second ceiling completed in 8.9 seconds after the optimization; the final native suite retains that ceiling. These are load-size and bounded-search results, not a measured claim of higher battle frame rate.
 
 ## Reproducible audit and release checks
 
-The complete audit runs 42 authored comparison crews against each other: 6,888 fresh games, two policies (greedy and seeded legal), base and fully trained cards, and both player seats. All 29 new identities occur in at least one audited crew. It checks legal ten-card recipes and source-hash consistency; it does not enumerate every possible ten-card combination. GUAP and Folks remain the pre-existing audit-only exclusions, replaced by Redneck Evil and Redside 5 without altering live recipes. This fixed seed and one draw rotation provide diagnostic bot outcomes, not human win rates or a solved meta.
+The complete audit runs 42 authored comparison crews against each other: 6,888 fresh games, two policies (greedy and seeded legal), base and fully trained cards, and both player seats. All 30 new identities occur in at least one audited crew. It checks legal ten-card recipes and source-hash consistency; it does not enumerate every possible ten-card combination. GUAP and Folks remain the pre-existing audit-only exclusions, replaced by Redneck Evil and Redside 5 without altering live recipes. This fixed seed and one draw rotation provide diagnostic bot outcomes, not human win rates or a solved meta.
 
 The first audit exposed underpowered Music and a Fitness recipe without allied route tools. Music’s ten bodies each gained one printed Hand within the existing cost-plus-one limit. Fitness Girl and Personal Trainer gained one printed Hand; Demon Trainer’s cost became four. Fitness Bro keeps its original four printed Hands and three earned Reps paying two Hands each. Personal Trainer’s first new district pays two Hands and the third adds two more plus Protection. Maintenance Sage and YN ATV Lord replaced the Fitness recipe’s unrelated utility slots so Circuit Training can actually finish. Pre-tuning evidence is preserved in [pre-tuning/deck-audit.json](pre-tuning/deck-audit.json).
 
-Final audit: **6,888 games, 0 engine failures**, rules/balance version 47, source hash `72711ac6379a9b4b1e29a16db7da0b01a497fd7c749cd5d5e9bbd7f1ab0e4b0f`.
+Final corrected audit: **6,888 games, 0 engine failures**, rules/balance version 48, source hash `178b3cc498c0e1c2beabfb94d768fdb96e302109769e8228f81c8c8104fc2827`. The previous final results are preserved in [pre-lash-correction/deck-audit.json](pre-lash-correction/deck-audit.json).
 
 | Crew | Before tuning | Final diagnostic score | Opening cards affordable at 2 Motion |
 |---|---:|---:|---:|
 | WHO GOT THE AUX | 17.1% | 36.1% | 4 / 5 |
-| ONE MORE REP | 29.0% | 30.3% | 2 / 5 |
-| Street Legends — Investigations | 38.1% | 37.2% | 3 / 5 |
-| Street Legends — Relationship Pressure | 34.9% | 35.1% | 2 / 5 |
-| Street Legends — Growth and Routes | 47.7% | 47.6% | 2 / 5 |
+| ONE MORE REP | 29.0% | 27.7% | 2 / 5 |
+| Street Legends — Investigations | 38.1% | 37.5% | 3 / 5 |
+| Street Legends — Relationship Pressure | 34.9% | 34.8% | 2 / 5 |
+| Street Legends — Growth and Routes | 47.7% | 47.7% | 2 / 5 |
 
 Scores count a win as one and a draw as half. Each crew has 328 games. The comparison pool still has strong Water/Plant/Air investment builds and weak Fire/older tempo builds; the new slots above fill specific tactical gaps without claiming to have solved those older matchups. See [deck-audit.json](deck-audit.json) for all 42 crew curves, matchup results, and coverage.
 
-Verified release checks:
+Verified corrected release checks:
 
-- Full application suite: **passed** — 1,794 app tests, 5 bundle checks, and 8 balance-patch checks; 1,807 total, zero failures or skips.
-- Wave authority and presentation: **passed** — 113 checks cover both seats, local/online/replay, JSON persistence, progression, blocked effects, alpha, cache revisions, all 30 portraits, and complete distinct sticker packs.
-- Existing online regressions: **passed** — 24 checks, zero failures or skips.
-- Native API database suite: **passed** — 292 checks on a fresh owned loopback PostgreSQL cluster with independent connections, zero failures or skips. Includes every campaign node through HTTP. External databases were not used.
-- TypeScript: **passed** — Application, API server, shared engine, and audit scripts compile. Required workspace declaration projects were built first.
-- Staging release gates: **passed** — Full build-netlify pipeline with DATABASE_URL unset, staging environment, public origin, and the repository test Clerk publishable key; migration, API function, online, story, media and client bundle gates pass. Its single database-only cosmetics test is covered by the native database run; this does not validate production authentication.
-- Bundle budgets: **passed** — Public 211.2 / 475 KiB; GameApp 852.1 / 900 KiB; Home 931.1 / 1,200 KiB. Existing budgets are unchanged.
-- Browser interactions: **passed** — 11 checks and nine screenshots. Real play and End Turn retain visible cards on desktop, phone, and both iPad orientations; music settings persist on repeated opening and Escape closes the dialog; zero page errors.
-- Optimization preserves gameplay: **passed** — All 6,888 post-optimization match summaries equal their pre-optimization counterparts, including winners, district margins, plays, and passes.
-- Deck diagnostic audit: **passed** — 42 legal comparison crews, 6,888 matches, both seats, two policies, base/mastery tiers; all 29 new identities covered, zero engine errors. Scores are fixed-seed bot diagnostics, not human win rates.
+- Full application suite: **passed** — 1,817 checks including app, bundle, and balance-patch tests; zero failures or skips.
+- Wave authority and presentation: **passed** — 123 checks: both owners, immutable/serializable rules, replay/online parity, unique transparent art, cache revisions, original Nail Tech and retained cosmetic IDs, plus real-hit, shield, full mitigation, lethal and empty-district Lash Out cases.
+- Existing online regressions: **passed** — 24 checks, zero failures or skips; rules and balance version 48.
+- Focused native API database suite: **passed** — 37 checks on a fresh owned loopback PostgreSQL cluster with independent connections; cosmetics, card progression, collection economy, and bounded story solver cases pass without failures or skips. The original 292-check full API run belongs to parent commit a294d33f; this correction uses the focused suite.
+- Staging release gates and TypeScript: **passed** — Full build-netlify pipeline passes with DATABASE_URL unset, staging settings, public origin, and repository test Clerk key. App/API/engine compile; migration, media, online, story, API function and bundle gates pass. The database-only cosmetics check skipped by staging is covered by the focused native run. Production authentication is not exercised by these local checks.
+- Bundle budgets: **passed** — GameApp 852.5 KiB / 900 KiB; Home 931.5 KiB / 1200 KiB; public entry 211.2 / 475 KiB. Existing limits are unchanged.
+- Responsive browser and identity comparison: **passed** — 13 checks and 12 screenshots; distinct Lash Tech/Nail Tech portraits and dossiers show their own moves. Desktop, mobile and both iPad orientations retain visible battle cards after play and End Turn; repeated music controls persist settings. Zero page errors.
+- Fresh corrected deck audit: **passed** — 42 legal crews and 6,888 fresh matches, both seats, two bot policies, base/mastery tiers; all 30 new identities covered including Lash Tech. Zero engine errors. Current results reflect the corrected Fitness recipe; older optimization-equivalence evidence remains historical.
 
 ## Screenshots and data
+
+- [Lash Tech beside restored Nail Tech](screenshots/lash-and-nail-desktop.png)
+- [Lash Tech dossier](screenshots/lash-tech-dossier.png) · [Nail Tech dossier](screenshots/nail-tech-dossier.png)
 
 - [Street Legends desktop](screenshots/street-legends-desktop.png)
 - [Music Industry desktop](screenshots/music-desktop.png)

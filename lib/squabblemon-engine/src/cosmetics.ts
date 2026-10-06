@@ -73,7 +73,7 @@ if (shottaStyle) {
 }
 // The new wave uses the finished transparent fighter art itself. Bespoke older
 // imports and every saved cosmetic identifier remain valid.
-for (const [cardId, [sceneName, location]] of Object.entries(STREET_LEGENDS_STYLE_SCENES)) {
+for (const [cardId, [sceneName, location]] of Object.entries({ ...STREET_LEGENDS_STYLE_SCENES, 'nail-tech': ['Fresh Set', 'nail-salon'] as const })) {
   const card = catalogCardById[cardId];
   if (!card) continue;
   const previous = CHARACTER_STYLE_SETS[cardId];
