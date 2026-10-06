@@ -2,7 +2,7 @@
 export const STREET_LEGENDS_STYLE_SCENES: Record<string, readonly [string, string]> = {
   'boo-boo-the-fool': ['Wrong Address', 'night-market'],
   'mr-mc-hands': ['All These Hands', 'underground-ring'],
-  'ms-mary-mack': ['Clap Back Rhythm', 'community-kitchen'],
+  'ms-mary-mack': ['15 Cents', 'night-market'],
   'pimp-swookie': ['Say the Whole Name', 'vip-section'],
   'og-uncle-harley-davidson': ['Old Head, Open Road', 'rush-hour'],
   'suga-mama': ['Auntie Got It', 'penthouse'],

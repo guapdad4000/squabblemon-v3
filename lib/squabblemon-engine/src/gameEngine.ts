@@ -1,4 +1,5 @@
 import { streetLegendsCards } from './streetLegendsWave';
+import { maryMackRoundEnd, maryMackRoundStart } from './maryMack';
 import { streetLegendsReveal, streetLegendsPreventGain, streetLegendsGain, streetLegendsMoved, streetLegendsArrival, streetLegendsAfterPlay, streetLegendsRoundStart, streetLegendsCanMove, streetLegendsCleansed, streetLegendsTax, streetLegendsPaidAudit, streetLegendsIntercept, streetLegendsFinishIntercept, streetLegendsDistrictMarks, type StreetLegendsTools } from './streetLegendsAbilities';
 import { musicIndustryWaveCards } from './musicIndustryWave';
 import { musicReveal, musicResolved, musicAfterPlay, musicMoved, musicDamage, musicGain, musicAfterAction, musicRoundEnd, musicRoundStart, musicCanMove, musicCleansed, musicDistrictMarks, type MusicTools, type MusicEntranceOutcome } from './musicIndustryAbilities';
@@ -139,6 +140,11 @@ export type CardInstance = Card & {
   idolId?: string;
   fanRound?: number;
   waveTrainingUsed?: boolean;
+  /** Mary charges once at round end and transforms once per instance. */
+  maryCents?: number;
+  maryCollectionRound?: number;
+  maryElephant?: boolean;
+  maryTransformUsed?: boolean;
   /** Lil Blue's once-only cover for the next deployed friendly card. */
   blueCoverReady?: boolean;
   /** OG Red Night gets one steal opportunity per round for three rounds total. */
@@ -2140,7 +2146,7 @@ function returnToHand(m: Match, source: CardInstance, target: CardInstance, disc
   const before = m, printed = cards[target.cardId], hand = target.owner === 'player' ? 'playerHand' : 'cpuHand';
   const { continuousPower: _continuousPower, ...returnedTarget } = target;
   const rabbitInHand = m[hand].find(c => c.instanceId !== target.instanceId && abilityCardId(c) === 'mrrabbit' && activeAbility(c));
-  const returned: CardInstance = { ...returnedTarget, ...printed, basePower: printed.power, powerModifier: source.cardId === 'madhatter' ? 1 : 0, lane: null, playedRound: null,
+  const returned: CardInstance = { ...returnedTarget, ...printed, ...(target.maryElephant ? { cost: 4, power: 4 } : {}), basePower: target.maryElephant ? 4 : printed.power, powerModifier: source.cardId === 'madhatter' ? 1 : 0, lane: null, playedRound: null,
     squabblehouseBusBoyPatrolRound: undefined, squabblehouseBusBoyDirection: undefined,
     statuses: emptyStatuses(), copiedAbilityCardId: undefined, recoverableDamage: 0, burnSource: undefined, moved: false,
     rabbitReturnDiscount: !!rabbitInHand,
@@ -5303,7 +5309,7 @@ export function nextRound(match: Match): Match {
   // Resolve persistent statuses and hand bonds before either advancing or scoring.
   const trainedRoundEnd = musicRoundEnd(match, waveTools());
   const ordinaryRoundEnd = settleLeaderReactions(returnAliceAtRoundEnd(applyOngoingRoundEndHandEffects(applyOngoingRoundEndEffects(creativeRoundEnd(homecomingRoundEnd(applyBurntPlates(trainedRoundEnd), homecomingTools()), creativeTools())))));
-  const roundEnded = settleLeaderReactions(musicAfterAction(match, creativeAfterAction(match,ordinaryRoundEnd,creativeTools()), waveTools()));
+  const roundEnded = maryMackRoundEnd(settleLeaderReactions(musicAfterAction(match, creativeAfterAction(match,ordinaryRoundEnd,creativeTools()), waveTools())), waveTools());
   if (match.round >= getMatchRoundLimit(match)) {
     const complete = applyStoryEffects({ ...roundEnded, phase: 'complete' as const });
     return addEvent(match, complete, { type: 'match-complete', owner: 'player', note: 'The match is complete.' });
@@ -5374,6 +5380,7 @@ export function nextRound(match: Match): Match {
   m = resolveBuddyGrowthAtRoundStart(m);
   m = sproutBuddyBuds(m);
   m = resolveSquabblehouseRoundStart(m);
+  m = maryMackRoundStart(m, waveTools());
   for (const lookout of m.boards.flat().filter(card => card.cardId === 'look-out' && activeAbility(card)
     && (card.lookoutCalls ?? 0) < 3 && card.lookoutCallRound !== m.round)) {
     const hasCrew = m.boards.flat().some(card => !card.hazard && card.owner === lookout.owner
@@ -5650,7 +5657,7 @@ export type EventType = 'play' | 'reveal' | 'ability' | 'pass' | 'round-start' |
 export type EventParticipant = {
   cardInstanceId: string; cardId: string; owner: Owner;
   before: CardEventState | null; after: CardEventState | null;
-  departureCause?: 'aura-loss';
+  departureCause?: 'aura-loss' | 'transformation';
 };
 
 const roundState = (m: Match): RoundState => ({
@@ -5680,6 +5687,8 @@ const cardState = (card: CardInstance | undefined): CardEventState | null => car
   power: getEffectiveCardPower(card), basePower: card.basePower, powerModifier: card.powerModifier,
   ...(card.continuousPower ? { continuousPower: card.continuousPower } : {}),
   moved: card.moved, statuses: { ...card.statuses }, lastEffectNote: card.lastEffectNote,
+  ...(card.maryCents !== undefined ? { maryCents: card.maryCents } : {}),
+  ...(card.maryElephant ? { maryElephant: true } : {}),
   ...(card.buddyForm ? { buddyForm: card.buddyForm } : {}),
   ...(card.buddyGrowthAtRound !== undefined ? { buddyGrowthAtRound: card.buddyGrowthAtRound } : {}),
   ...(card.buddyEarthExpiresAtRound !== undefined ? { buddyEarthExpiresAtRound: card.buddyEarthExpiresAtRound } : {}),
@@ -5760,7 +5769,11 @@ const addEvent = (before: Match, after: Match, input: EventInput): Match => {
     return departure
       ? { cardInstanceId: departure.instanceId, cardId: departure.cardId, owner: departure.owner,
         before: cardState(departure), after: null, departureCause: 'aura-loss' }
-      : participant(before, after, id);
+      : (() => {
+        const value = participant(before, after, id);
+        return value?.before && !value.after && (after.creativeMarks ?? []).some(mark => mark.kind === 'sl-mary-return' && mark.source.instanceId === id)
+          ? { ...value, departureCause: 'transformation' as const } : value;
+      })();
   };
   const source = input.sourceId ? eventParticipant(input.sourceId) : null;
   const targetIds = [...new Set([...(input.targetIds ?? []), ...neutralDepartures.map(card => card.instanceId)])]
@@ -5785,7 +5798,7 @@ const addEvent = (before: Match, after: Match, input: EventInput): Match => {
     lane: input.lane ?? sourceCard?.lane ?? 0,
     kind: input.kind ?? 'ability',
     note: input.note
-      + targetIds.filter(id => findCard(before, id) && !findCard(after, id) && !neutralIds.has(id))
+      + targetIds.filter(id => findCard(before, id) && !findCard(after, id) && !neutralIds.has(id) && eventParticipant(id)?.departureCause !== 'transformation')
         .map(id => ` ${findCard(before, id)!.name} was destroyed.`).join('')
       + neutralDepartures.map(card => ` ${card.name} was destroyed when its Manager aura expired.`).join(''),
     ...(input.abilityMetadata ? { abilityMetadata: input.abilityMetadata } : {}),
@@ -5798,6 +5811,8 @@ export type CardEventState = {
   power: number; basePower: number; powerModifier: number; moved: boolean;
   continuousPower?: number;
   statuses: Statuses; lastEffectNote: string;
+  maryCents?: number;
+  maryElephant?: boolean;
   buddyForm?: 'earth' | 'squabble-earth';
   buddyGrowthAtRound?: number;
   buddyEarthExpiresAtRound?: number;
@@ -6038,6 +6053,16 @@ function waveTools(): StreetLegendsTools & MusicTools {
     buff: (m, id, amount, copiedGain = false) => modify(m, id, c => ({ ...c, powerModifier: c.powerModifier + amount }), copiedGain),
     hostile: (m, source, target, apply) => hostileEffect(m, source, target, apply, false, false, true),
     damage: (m, target, amount, note) => reduceHands(m, target, amount, note),
+    maryEvent: (before, after, source, targetIds, note, landing = false) => addEvent(before, after, {
+      type: landing ? 'ability' : 'expiration', sourceId: source.instanceId, owner: source.owner,
+      lane: source.lane ?? 0, targetIds, note, kind: 'ability',
+    }),
+    maryLand: (m, card, lane) => {
+      const arrivalOrder = nextArrivalOrder(m);
+      const landed: Match = { ...m, nextArrivalOrder: arrivalOrder + 1,
+        boards: m.boards.map((cs, index) => index === lane ? [...cs, { ...card, lane, arrivalOrder }] : cs) as Match['boards'] };
+      return streetLegendsArrival(homecomingArrival(applyScentEntry(landed, card.instanceId), card.instanceId, homecomingTools()), card.instanceId, waveTools());
+    },
     unlock: (m, id) => musicCleansed(streetLegendsCleansed(modify(m, id, c => ({ ...c, squabblehouseCannotMoveThroughRound: undefined })), id), id),
     returnAlly: (m, source, target) => returnToHand(m, source, target, true),
     removeBonus: (m, target, amount) => modifyWithoutDamage(m, target, c => ({ ...c, powerModifier: c.powerModifier - Math.min(amount, Math.max(0, c.powerModifier)) })),

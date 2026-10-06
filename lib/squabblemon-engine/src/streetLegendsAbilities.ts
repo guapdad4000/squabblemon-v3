@@ -7,6 +7,8 @@ export type StreetLegendsTools = CreativeTools & {
   hostile(m: Match, source: CardInstance, target: CardInstance, apply: (m: Match, actual: CardInstance) => Match): Match;
   damage(m: Match, target: CardInstance, amount: number, note: string): Match;
   unlock(m: Match, id: string): Match;
+  maryLand(m: Match, card: CardInstance, lane: Lane): Match;
+  maryEvent(before: Match, after: Match, source: CardInstance, targets: string[], note: string, landing?: boolean): Match;
 };
 type StreetMark = CreativeMark & { kind: `sl-${string}` };
 const lanes: Lane[] = [0, 1, 2];
@@ -64,7 +66,7 @@ export function streetLegendsReveal(m: Match, s: CardInstance, t: StreetLegendsT
       } else detail = 'The hit was blocked or fully absorbed; no ally boost.';
     }
   } else if (id === 'ms-mary-mack') {
-    detail = 'Rhythm waits for a genuine local ally gain; at most three payouts.';
+    detail = 'At round end, collect 3¢ per enemy card toward 15¢; no immediate slam.';
   } else if (id === 'pimp-swookie') {
     const target = sorted(enemies(m, s), t, true)[0];
     if (target) { targets.push(target.instanceId); m = t.hostile(m, s, target, (state, actual) => { const changed = t.modify(state, actual.instanceId, c => ({ ...c, statuses: { ...c.statuses, weakened: true }, lastEffectNote: 'Say the Whole Name: Weakened; next gain reduced by up to 2.' })); return replace(t.disruption(state, changed, s, actual.instanceId), mark(s, 'sl-name-check', state, [actual.instanceId], actual.lane!)); }); detail = 'Weaken and one next-gain Name Check targeted the strongest enemy.'; }
@@ -121,20 +123,8 @@ export function streetLegendsPreventGain(m: Match, target: CardInstance, amount:
 }
 
 export function streetLegendsGain(before: Match, m: Match, target: CardInstance, t: StreetLegendsTools, copied = false): Match {
-  if (copied || (!marks(m).some(x => x.kind === 'sl-lunch')
-    && !before.boards.some(cs => cs.some(c => identity(c) === 'ms-mary-mack')))
+  if (copied || !marks(m).some(x => x.kind === 'sl-lunch')
     || !find(m, target.instanceId) || find(m, target.instanceId)!.powerModifier <= target.powerModifier) return m;
-  const mary = sorted(board(before).filter(c => c.owner === target.owner && c.instanceId !== target.instanceId && c.lane === target.lane && identity(c) === 'ms-mary-mack' && active(c) && active(find(m, c.instanceId))), t)[0];
-  const count = ledger(m, target.owner, 'rhythm');
-  if (mary && count?.usedRound !== m.round && (count?.amount ?? 0) < 3) {
-    const start = m;
-    m = replace(m, { id: `sl-ledger:${mary.owner}:rhythm`, kind: 'sl-ledger-rhythm', source: mary, owner: mary.owner, lane: mary.lane!, targets: [], expires: 99, amount: (count?.amount ?? 0) + 1, usedRound: m.round });
-    m = t.buff(m, mary.instanceId, 1, true);
-    const remote = sorted(allies(m, mary, false).filter(c => c.lane !== mary.lane), t)[0];
-    if (remote) m = t.buff(m, remote.instanceId, 1, true);
-    m = t.train(m, mary.instanceId);
-    m = t.event(start, m, mary, [mary.instanceId, ...(remote ? [remote.instanceId] : [])], 'Clap Back Rhythm: shared +1 once this round; shared gains do not repeat.');
-  }
   for (const bond of marks(m).filter(x => x.kind === 'sl-lunch' && x.targets.includes(target.instanceId))) {
     const hubby = find(m, bond.source.instanceId); if (!active(hubby)) continue;
     const start = m; m = remove(m, bond.id); m = t.buff(m, hubby.instanceId, 1, true); m = t.train(m, hubby.instanceId);
@@ -198,5 +188,6 @@ export function streetLegendsFinishIntercept(before: Match, m: Match, auntie: Ca
 }
 export function streetLegendsDistrictMarks(m: Match): CharacterDistrictMark[] {
   const labels: Record<string, string> = { 'sl-decoy': 'Decoy · next enemy arrival: 1 damage', 'sl-name-check': 'Name Check · next Hands gain reduced by up to 2', 'sl-curfew': 'Curfew · target cannot move', 'sl-check-in': 'Check-In · first enemy movement here each round: 2 damage', 'sl-lunch': 'Lunch Bond · next client gain rewards Work Hubby', 'sl-chase': 'You Up? · one chase at next round start', 'sl-audit': 'Audit · next enemy character here: +1 Motion', 'sl-bail': 'Bail Bond · next targeted ability redirected to Auntie', 'sl-bail-credit': 'Bond credit · next Poison in another district: successful entrance refunds 1 Motion' };
-  return marks(m).filter(x => labels[x.kind]).map(x => ({ owner: x.owner, lane: x.lane, artworkId: x.source.id, text: `${labels[x.kind]}${x.kind === 'sl-check-in' && x.usedRound === m.round ? ' · spent this round' : ''} · through R${x.expires}` }));
+  const maryMarks: CharacterDistrictMark[] = marks(m).filter(x => x.kind === 'sl-mary-return').map(x => ({ owner: x.owner, lane: x.lane, artworkId: x.source.id, text: `15¢ · elephant landing from R${x.amount}` }));
+  return [...maryMarks, ...marks(m).filter(x => labels[x.kind]).map(x => ({ owner: x.owner, lane: x.lane, artworkId: x.source.id, text: `${labels[x.kind]}${x.kind === 'sl-check-in' && x.usedRound === m.round ? ' · spent this round' : ''} · through R${x.expires}` }))];
 }

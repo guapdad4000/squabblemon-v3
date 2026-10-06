@@ -1,10 +1,15 @@
-/* Rules stay visible on touch screens; the lane target remains one button. */
+/* A bounded reminder keeps the full rule in the district explainer. */
 .battle-arena.battle-hud .district-marker .district-rule {
-  display: block;
+  display: -webkit-box;
+  width: 100%;
   max-width: 290px;
+  height: 2.7em;
+  flex: none;
+  -webkit-box-orient: vertical;
   margin: 0;
-  overflow: visible;
-  -webkit-line-clamp: unset;
+  overflow: hidden;
+  -webkit-line-clamp: 2;
+  overflow-wrap: anywhere;
   color: #f1e9d9;
   font: 500 11px/1.35 var(--font-sans);
   letter-spacing: 0;

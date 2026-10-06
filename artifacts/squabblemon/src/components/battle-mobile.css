@@ -49,9 +49,10 @@
   .battle-district-hub { position: relative; z-index: 12; display: flex; flex-direction: column; background: transparent; border: 0; box-shadow: none; }
   .mobile-district-open { display: flex; justify-content: center; align-items: center; gap: 5px; width: 100%; min-height: 44px; padding: 4px 2px; color: #e5ded0; font: 700 9px var(--font-display); letter-spacing: .035em; }
   .mobile-district-open > span:last-child { color: #ad9470; font-size: 13px; }
-  .battle-arena.battle-hud .district-lane .district-target { min-height: 68px; height: 68px; padding: 0 2px 8px; border-radius: 0; background: transparent; box-shadow: none; }
+  .battle-arena.battle-hud .district-lane .district-target { min-height: 108px; height: 108px; padding: 0 2px 4px; border-radius: 0; background: transparent; box-shadow: none; }
   .battle-arena.battle-hud .district-marker { padding: 0; gap: 3px; }
-  .battle-arena.battle-hud .district-lane .district-marker h3, .battle-arena.battle-hud .district-marker .district-rule, .battle-arena.battle-hud .district-marker .district-rule-status, .battle-arena.battle-hud .district-marker .district-kicker { display: none; }
+  .battle-arena.battle-hud .district-lane .district-marker h3, .battle-arena.battle-hud .district-marker .district-rule-status, .battle-arena.battle-hud .district-marker .district-kicker { display: none; }
+  .battle-arena.battle-hud .district-marker .district-rule { display: -webkit-box; height: 36px; margin: 1px 0 0; -webkit-line-clamp: 3; color: #f1e9d9; font: 500 10px/12px var(--font-sans); }
   .battle-arena.battle-hud .district-score-row { font-size: 24px; line-height: 1; gap: 7px; }
   .battle-arena.battle-hud .district-score-label { font-size: 6px; letter-spacing: .12em; color: #8396a5; }
   .battle-arena.battle-hud .district-preview { font-size: 8px; line-height: 1.1; color: #9aa9b7; }
@@ -80,7 +81,7 @@
   .battle-arena.battle-hud .battlefield-grid { padding: 2px 5px 5px; gap: 5px; }
   .battle-arena.battle-hud .battle-side { padding: 3px 2px; }
   .battle-arena.battle-hud .battle-card-stack[data-count] { align-content: start; }
-  .battle-arena.battle-hud .district-lane .district-target { min-height: 62px; height: 62px; }
+  .battle-arena.battle-hud .district-lane .district-target { min-height: 108px; height: 108px; }
   .mobile-district-open { min-height: 30px; font-size: 8px; }
   .battle-arena.battle-hud #hand-tray { height: 140px; padding-top: 12px; }
   .battle-arena.battle-hud .battle-hand-card { width: 82px !important; }

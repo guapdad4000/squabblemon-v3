@@ -115,7 +115,8 @@ function CardViewComponent({
       : `Buddy Bud planted in this district${instance?.buddyBud && buddyBudTurns !== null ? `; matures in ${buddyBudTurns} turn${buddyBudTurns === 1 ? '' : 's'} (round ${instance.buddyBud.sproutsAtRound})` : instance?.buddyBud ? `; matures in round ${instance.buddyBud.sproutsAtRound}` : ''}. Gives +3 Hands to the last eligible friendly card summoned here when it sprouts.`
     : '';
 
-  const chargeLabel = instance?.cardId === 'powerhouse' ? 'Overtime ' + (instance.bankedMotion ?? 0) + '/3'
+  const chargeLabel = instance?.cardId === 'ms-mary-mack' ? instance.maryElephant ? 'ELEPHANT · 15¢' : `${instance.maryCents ?? 0}¢ / 15¢`
+    : instance?.cardId === 'powerhouse' ? 'Overtime ' + (instance.bankedMotion ?? 0) + '/3'
     : instance?.aliceReady ? 'Next play: +3 Hands · −1 Motion' : '';
   const isBurntPlate = instance?.cardId === 'burnt-plate';
   const fuseRound = instance?.smileBomb?.detonatesAtRound;
@@ -207,6 +208,7 @@ function CardViewComponent({
       data-card-variant={variantKind ?? 'base'}
       data-card-rarity={rarity}
       data-card-kind={card.kind ?? 'character'}
+      data-mary-form={instance?.cardId === 'ms-mary-mack' ? instance.maryElephant ? 'elephant' : 'human' : undefined}
       data-buddy-form={buddyCue ? (buddyRockForm ? 'squabble' : 'plant') : undefined}
       data-bomb-round={fuseRound}
       data-frozen={isFrozen ? true : undefined}
@@ -269,7 +271,7 @@ function CardViewComponent({
           {card.id === 'dr-fade' && (!isBoard || fillContainer || isInspector)
             ? <DrFadeArt className={'collector-portrait ' + (isSilenced ? 'grayscale' : '')} animated={!isSilenced && !isFrozen} />
             : <img
-                src={isBurntPlate ? getCardImage('burnt-plate') : isBuddyBud ? getCardImage('buddy') : buddyRockForm ? getBuddySquabbleImage() : getCardImage(card.id, variantId)}
+                src={isBurntPlate ? getCardImage('burnt-plate') : isBuddyBud ? getCardImage('buddy') : buddyRockForm ? getBuddySquabbleImage() : instance?.maryElephant ? getCardImage('ms-mary-mack-elephant') : getCardImage(card.id, variantId)}
                 alt=""
                  draggable={false}
                 className={`collector-portrait absolute inset-x-0 bottom-[10%] w-full h-[85%] object-contain object-bottom transition-transform duration-500 z-10 ${isSilenced ? 'grayscale' : ''} ${!isInspector && card.kind !== 'blockbuster' && 'group-hover/inner:scale-[1.03]'} ${isInspector ? 'collector-portrait--inspector' : ''}`}

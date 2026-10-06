@@ -212,3 +212,8 @@
 .attack-hit-shell { position: absolute; pointer-events: none; animation: impact-ripple calc(480ms / var(--presentation-speed, 1)) ease-out both; }
 .attack-hit-shell .attack-hit { overflow: visible; }
 .intensity-squabble .attack-hit-shell { animation-duration: calc(700ms / var(--presentation-speed, 1)); }
+
+/* Mary lands once; the ordinary board impact carries her elephant silhouette. */
+.battle-choreography[data-mary-landing] .attack-caption__fighter { animation: mary-elephant-land calc(380ms / var(--presentation-speed, 1)) cubic-bezier(.2,.8,.2,1) both; }
+@keyframes mary-elephant-land { from { transform: translateY(-55px) scale(1.12); opacity: 0; } 72% { transform: translateY(4px) scale(1); opacity: 1; } to { transform: translateY(0); opacity: 1; } }
+@media(prefers-reduced-motion:reduce) { .battle-choreography[data-mary-landing] .attack-caption__fighter { animation:none; } }

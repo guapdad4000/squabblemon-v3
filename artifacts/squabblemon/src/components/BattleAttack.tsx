@@ -4,7 +4,7 @@ import React, { useLayoutEffect, useMemo, useRef } from 'react';
 import { SpecialMove } from './SpecialMove';
 import { readMoveOverrides, specialMoveForEvent, gateSpecialMoveReplay } from '../specialMoves';
 import { cards, cardEntryAccent, getCardImage, type Card } from '../data';
-import { battleChanges, eventIntensity, isAuraLossDeparture } from '../battleChoreography';
+import { battleChanges, eventIntensity, isNeutralDeparture } from '../battleChoreography';
 import { getCardWallpaper } from '../lib/cardFinish';
 import type { PresentationEffect } from './PlayLoop';
 
@@ -112,7 +112,7 @@ export function BattleAttack({ card, effect, impact, replaying = false, audioEna
   const changes = battleChanges(effect);
   const intensity = eventIntensity(effect);
   const targetIds = effect.targets.length
-    ? effect.targets.filter(target => !isAuraLossDeparture(target)).map(target => target.cardInstanceId)
+    ? effect.targets.filter(target => !isNeutralDeparture(target)).map(target => target.cardInstanceId)
     : [sourceId];
   // Geometry-bearing nodes only mount/unmount when the source, impact, or clip changes.
   useLayoutEffect(() => {
@@ -166,6 +166,7 @@ export function BattleAttack({ card, effect, impact, replaying = false, audioEna
   const chainFrom = effect.chain?.fromId && effect.chain.fromId !== sourceId ? effect.chain.fromId : null;
   const hidden = { display: 'none' } as const;
   return <div ref={root} className={`battle-choreography kind-${effect.kind} intensity-${intensity} ${impact ? 'is-impact' : 'is-winding-up'} ${replaying ? 'is-replay' : ''}`}
+    data-mary-landing={effect.source?.after?.maryElephant && !effect.source?.before ? true : undefined}
     data-testid="character-attack" data-character={card.id} data-owner={effect.owner} data-impact={impact}
     style={{ '--attack-color': cardEntryAccent(card) } as React.CSSProperties} aria-hidden="true">
     {move && <div className="battle-special-move" data-geo="special" data-move-id={move.id} style={hidden}><SpecialMove clip={move} audioEnabled={audioEnabled} speed={speed} /></div>}
@@ -174,7 +175,7 @@ export function BattleAttack({ card, effect, impact, replaying = false, audioEna
         squabble={!!effect.source?.after && effect.source.after.powerModifier >= effect.source.after.basePower} />}
     {showPortrait && card.id !== 'dr-fade' && <div className="attack-caption">
       <img className="attack-caption__scene" src={getCardWallpaper(card.type)} alt="" />
-      <img className="attack-caption__fighter" src={getCardImage(card.id)} alt="" />
+      <img className="attack-caption__fighter" src={getCardImage(effect.source?.after?.maryElephant ? 'ms-mary-mack-elephant' : card.id)} alt="" />
       <div><span>{intensity === 'squabble' ? 'SQUABBLE · DOUBLE HANDS' : card.name}</span>
         <strong>{effect.abilityMetadata?.upgradeName ?? card.ability}</strong></div>
     </div>}
@@ -201,7 +202,7 @@ export function BattleAttack({ card, effect, impact, replaying = false, audioEna
     {impact && changes.map(change => {
       const id = change.cardInstanceId;
       const moved = change.before?.lane !== change.after?.lane && change.before && change.after;
-      const neutralDeparture = isAuraLossDeparture(change);
+      const neutralDeparture = isNeutralDeparture(change);
       const destroyed = !!change.before && !change.after && !neutralDeparture;
       const thawed = !!change.after && change.before?.statuses.frozen && !change.after.statuses.frozen;
       const shieldSpent = !!change.after && change.before?.statuses.protected && !change.after.statuses.protected;
@@ -213,11 +214,11 @@ export function BattleAttack({ card, effect, impact, replaying = false, audioEna
       const powerLost = destroyed || permanentEnemyHit;
       const powerGained = change.permanentDelta > 0;
       return <React.Fragment key={id}>
-        {neutralDeparture && <img className="attack-moving-card" data-testid="neutral-departure" src={getCardImage(cards[change.cardId]?.id ?? change.cardId)} alt="" data-geo-change={id} data-geo-role="moved" style={hidden} />}
-        {destroyed && <div className="attack-destroyed-card" data-testid="destroyed-card" data-geo-change={id} data-geo-role="box" style={hidden}><img className="defeated-portrait" src={getCardImage(cards[change.cardId]?.id ?? change.cardId)} alt="" /><DefeatCross /></div>}
+        {neutralDeparture && <img className="attack-moving-card" data-testid="neutral-departure" src={getCardImage((change.after ?? change.before)?.maryElephant ? 'ms-mary-mack-elephant' : cards[change.cardId]?.id ?? change.cardId)} alt="" data-geo-change={id} data-geo-role="moved" style={hidden} />}
+        {destroyed && <div className="attack-destroyed-card" data-testid="destroyed-card" data-geo-change={id} data-geo-role="box" style={hidden}><img className="defeated-portrait" src={getCardImage((change.after ?? change.before)?.maryElephant ? 'ms-mary-mack-elephant' : cards[change.cardId]?.id ?? change.cardId)} alt="" /><DefeatCross /></div>}
         {(powerLost || powerGained) && <div className="attack-material" data-geo-change={id} data-geo-role="box" style={hidden}><BattleBurst kind={powerLost ? 'burn' : 'charge'} /></div>}
         {(thawed || shieldSpent || restored) && <div data-testid="status-release" className={'status-release ' + (thawed ? 'is-thawing is-unlocking' : shieldSpent ? 'is-shattering' : 'is-restoring is-unlocking')} data-geo-change={id} data-geo-role="box" style={hidden}>{thawed || restored ? <><CombatSprite asset="lock-chain-strand" className="unlock-chain" /><CombatSprite asset="lock-chain-strand" className="unlock-chain" /><CombatSprite asset="lock-padlock" className="unlock-padlock" />{thawed && <CombatSprite asset="freeze-rim" className="unlock-ice" />}</> : Array.from({length:6},(_,index)=><i key={index} style={{'--shard-angle':index*60+'deg'} as React.CSSProperties}/>)}</div>}
-        {moved && <img className="attack-moving-card" src={getCardImage(cards[change.cardId]?.id ?? change.cardId)} alt="" data-geo-change={id} data-geo-role="moved" style={hidden} />}
+        {moved && <img className="attack-moving-card" src={getCardImage((change.after ?? change.before)?.maryElephant ? 'ms-mary-mack-elephant' : cards[change.cardId]?.id ?? change.cardId)} alt="" data-geo-change={id} data-geo-role="moved" style={hidden} />}
         {((change.permanentDelta !== 0 && !neutralDeparture) || change.labels.length > 0) && <div data-testid="battle-power-change" className={`attack-delta ${neutralDeparture ? '' : change.delta < 0 ? 'is-loss' : 'is-gain'}`} data-geo-change={id} data-geo-role="delta" style={neutralDeparture ? { ...hidden, color: '#e5e7eb' } : hidden}>
           {change.delta !== 0 && !neutralDeparture && <strong>{change.delta > 0 ? '+' : '−'}{Math.abs(change.delta)}</strong>}
           {change.labels.map(label => <span key={label}>{label}</span>)}

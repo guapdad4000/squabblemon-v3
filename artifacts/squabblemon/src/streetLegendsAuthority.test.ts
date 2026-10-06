@@ -118,15 +118,13 @@ for (const owner of ['player', 'cpu'] as const) {
     assert.equal(find(after, victim)?.powerModifier, 0); assert.equal(find(after, victim)?.recoverableDamage ?? 0, 0);
     assert(!kinds(after).includes('sl-name-check')); assert(!after.laneDamage?.length);
   });
-  test(`${owner}: Mary's shared rhythm and Lunch Bond cannot feed themselves`, () => {
+  test(`${owner}: Mary no longer copies ally growth; Lunch Bond still pays once`, () => {
     const mary = unit('ms-mary-mack', owner, 0), client = unit('cornball', owner, 0), remote = unit('hooper', owner, 2);
     const m = blank(); m.boards = [[mary, client], [], [remote]];
-    const hubby = cast(m, 'work-hubby', owner); let after = cast(hubby.after, 'nail', owner).after;
-    assert.equal(find(after, mary)?.powerModifier, 1); assert.equal(find(after, remote)?.powerModifier, 1);
+    const hubby = cast(m, 'work-hubby', owner); const after = cast(hubby.after, 'nail', owner).after;
+    assert.equal(find(after, mary)?.powerModifier, 0); assert.equal(find(after, remote)?.powerModifier, 0);
     assert.equal(find(after, hubby.source)?.powerModifier, 1); assert(!kinds(after).includes('sl-lunch'));
-    after = cast(after, 'suga-mama', owner, 1).after;
-    assert.equal(find(after, mary)?.powerModifier, 1); assert.equal(find(after, hubby.source)?.powerModifier, 3, "Auntie gave the weakest Hubby +2, without repeating the Lunch payout");
-    const ledger = after.creativeMarks?.find(x => x.kind === 'sl-ledger-rhythm'); assert.equal(ledger?.amount, 1);
+    assert(!kinds(after).includes('sl-ledger-rhythm'));
   });
   test(`${owner}: Uncle Sam confiscates bonuses without damage and charges exactly one Audit`, () => {
     const m = blank(), rival = { ...unit('og', enemy, 0), basePower: 12, powerModifier: 4 }; m.boards[0] = [rival];

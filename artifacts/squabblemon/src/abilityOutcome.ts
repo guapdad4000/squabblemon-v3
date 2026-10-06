@@ -19,6 +19,7 @@ function participantChanged(participant: EventParticipant, event: OutcomeEvent) 
     powerModifier: value.powerModifier, power: value.power,
     statuses: { ...value.statuses, blocked: false,
       protected: consumedShield && before.statuses.protected && !after.statuses.protected ? false : value.statuses.protected },
+    maryCents: value.maryCents, maryElephant: value.maryElephant,
     buddyForm: value.buddyForm, buddyGrowthAtRound: value.buddyGrowthAtRound,
     buddyEarthExpiresAtRound: value.buddyEarthExpiresAtRound, buddyBud: value.buddyBud,
   });

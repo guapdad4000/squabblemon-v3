@@ -1,6 +1,10 @@
 import type { EffectLogEntry, EventParticipant } from './gameEngine';
 
-type CauseAwareParticipant = EventParticipant & { departureCause?: 'aura-loss' };
+type CauseAwareParticipant = EventParticipant;
+
+export function isNeutralDeparture(participant: EventParticipant) {
+  return !!participant.departureCause && !!participant.before && !participant.after;
+}
 
 export function isAuraLossDeparture(participant: EventParticipant) {
   return (participant as CauseAwareParticipant).departureCause === 'aura-loss'
@@ -26,7 +30,7 @@ export function battleChanges(event: EffectLogEntry) {
     const delta = participantPower(participant.after) - participantPower(participant.before);
     const permanentDelta = permanentParticipantPower(participant.after) - permanentParticipantPower(participant.before);
     const labels: string[] = [];
-    if (participant.before && !participant.after) labels.push(auraLossDeparture ? 'Ongoing aura faded' : 'Destroyed');
+    if (participant.before && !participant.after) labels.push(participant.departureCause === 'transformation' ? '15¢ · Returning next round' : auraLossDeparture ? 'Ongoing aura faded' : 'Destroyed');
     if (participant.before && participant.after) {
       for (const [key, label] of [['frozen', 'Frozen'], ['silenced', 'Silenced'], ['protected', 'Shielded'], ['blocked', 'Blocked']] as const) {
         if (!participant.before.statuses[key] && participant.after.statuses[key]) labels.push(label);

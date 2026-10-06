@@ -185,6 +185,8 @@ test('prepared notes become ordinary drafts with reviewed art and gifts, never p
   }
   expect(publishCalls).toBe(0);
   await page.getByTestId(`button-edit-patch-draft-${PREPARED_PATCHES.length}`).click();
-  await expect(page.getByTestId('select-patch-art')).toHaveValue('inmate-reformed');
-  await expect(page.getByTestId('input-patch-title')).toHaveValue('SquabbleHouse Clocks In');
+  await expect(page.getByTestId('select-patch-art')).toHaveValue('the-og-rap-legend');
+  await expect(page.getByTestId('input-patch-title')).toHaveValue('Them Streets Talkin...');
+  await expect(page.getByTestId('input-patch-tickets')).toHaveValue('10');
+  await expect(page.getByTestId('input-patch-tickets')).toHaveAttribute('max', '10');
 });

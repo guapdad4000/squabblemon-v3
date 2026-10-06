@@ -41,7 +41,7 @@ export const patchDraftsTable = pgTable("patch_drafts", {
 }, table => [
   uniqueIndex("patch_drafts_version_unique").on(table.version),
   check("patch_drafts_status_check", sql`${table.status} IN ('draft', 'published')`),
-  check("patch_drafts_gift_check", sql`${table.softCurrency} BETWEEN 0 AND 100 AND ${table.packTickets} BETWEEN 0 AND 1`),
+  check("patch_drafts_gift_check", sql`${table.softCurrency} BETWEEN 0 AND 100 AND ${table.packTickets} BETWEEN 0 AND 10`),
   check("patch_drafts_counts_check", sql`${table.intendedCount} >= 0 AND ${table.deliveredCount} >= 0 AND ${table.failedCount} >= 0`),
   index("patch_drafts_public_order").on(table.publishedAt.desc()),
 ]);

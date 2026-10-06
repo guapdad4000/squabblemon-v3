@@ -77,7 +77,9 @@ for (const [cardId, [sceneName, location]] of Object.entries({ ...STREET_LEGENDS
   const card = catalogCardById[cardId];
   if (!card) continue;
   const previous = CHARACTER_STYLE_SETS[cardId];
-  const portrait = `assets/characters/${cardId}.webp`;
+  const portrait = `assets/characters/${cardId}.webp${cardId === 'ms-mary-mack' ? '?v=15-cents' : ''}`;
+  // Fresh paths avoid serving the previous signature from immutable asset caches.
+  const stickerArtworkId = cardId === 'ms-mary-mack' ? 'ms-mary-mack-15-cents' : cardId;
   CHARACTER_STYLE_SETS[cardId] = {
     ...(previous ?? {
       cardId, series: String(nextSeries++).padStart(3, '0'),
@@ -90,9 +92,9 @@ for (const [cardId, [sceneName, location]] of Object.entries({ ...STREET_LEGENDS
     stickers: [...(previous?.stickers ?? []), {
       id: `${cardId}:street-legends-portrait`, name: `${card.name} · Fighter`, image: portrait,
     }, {
-      id: `${cardId}:street-legends-signature`, name: `${card.ability} · Signature`, image: `assets/cosmetics/street-legends/${cardId}-signature.svg`,
+      id: `${cardId}:street-legends-signature`, name: `${card.ability} · Signature`, image: `assets/cosmetics/street-legends/${stickerArtworkId}-signature.svg`,
     }, {
-      id: `${cardId}:street-legends-emblem`, name: `${card.name} · Emblem`, image: `assets/cosmetics/street-legends/${cardId}-emblem.svg`,
+      id: `${cardId}:street-legends-emblem`, name: `${card.name} · Emblem`, image: `assets/cosmetics/street-legends/${stickerArtworkId}-emblem.svg`,
     }],
   };
 }

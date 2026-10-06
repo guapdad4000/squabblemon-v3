@@ -140,13 +140,13 @@
       "name": "Ms. Mary Mack",
       "faction": "Street Legends",
       "type": "Normal",
-      "rarity": "Rare",
-      "motion": 3,
-      "hands": 2,
-      "ability": "Clap Back Rhythm",
-      "effect": "Ongoing: The first positive Hands gain on another local ally each round gives Mary +1 Hand and your weakest ally in another district +1 Hand. Three payouts per side per match. Shared gains cannot trigger the rhythm again.",
-      "role": "Bounded cross-district growth",
-      "gap": "Normal investment and relationship builds can turn one genuine local gain into help elsewhere. One payout per round, three total, and copied gains cannot make an infinite chain.",
+      "rarity": "Mythical",
+      "motion": 2,
+      "hands": 3,
+      "ability": "15 Cents",
+      "effect": "Ongoing: At round end, collect 3¢ per enemy card on the board, up to 15¢. At 15¢, disappear and return next round as a 4 Motion / 4 Hands elephant in your weakest district with room, ignoring location locks. Keep invested Hands. All enemies there lose 1 Hand; defenses apply. Once per instance. On the final round, stay on the board.",
+      "role": "Early delayed transformation / lane rescue",
+      "gap": "Normal and investment builds gain an early Mythical which punishes a wide enemy board and reinforces the weakest lane even through a location lock. Elephant is a 4/4 form; it is not a new fighter.",
       "newCharacter": true,
       "upgrades": [
         {
@@ -184,16 +184,14 @@
         }
       ],
       "art": {
-        "id": "ms-mary-mack",
-        "source": "/home/falcon/Downloads/b5739d5d-34ec-44df-ba19-31acf7b2a04e.png",
-        "prompt": "Use case: stylized-concept, identity-preserving regeneration from a fighter reference sheet. Asset type: ONE individual full-body Squabblemon fighter portrait PNG with genuine transparency. Recreate the specified fighter as a newly rendered standalone illustration, NOT a rectangular crop of the sheet. Match the exact face, skin tone, hairstyle, clothes, palette, attitude and signature equipment in that fighter's sheet design. Match the sheet's high quality hand-inked urban anime/comic cel shading, rich material detail, confident contours and warm rimlight. Complete missing/occluded body parts accurately, correct limb anatomy and proportion if needed for a coherent full-body card-ready silhouette. Keep the original fighter pose and characteristic meaningful chair/equipment when described. Center ONE fighter with full head and feet visible, portrait 3:4 composition, a little transparent breathing room. Remove all sheet background, floor, nearby fighters, typographic labels, UI, panels, logos, words, watermarks and cast-shadow planes. Background must be real alpha, including gaps between limbs and props. Do not produce a sheet or multiple people.\nSpecified fighter: Top row, third fighter labeled Ms. Mary Mack: young Black woman with very long dark braids, gold hoop earrings, layered gold necklaces and bracelets, black sleeveless top, voluminous black cargo trousers, gold chain belt, black/white sneakers. Seated on a small dark crate, hands together in a confident clapping/prayer pose at chest height. Preserve her face, stylish black/gold design, long braid silhouette, confident side-eyed expression.",
-        "generatedPath": "/home/falcon/.codex/generated_images/01a0fed0-9461-76a1-bdb2-a885962a8772/exec-707bd190-6b8e-412f-a24f-09a9367561fe.png",
-        "mode": "built-in",
-        "savedPath": "artifacts/squabblemon/public/assets/characters/ms-mary-mack.webp",
-        "sha256": "74d91c00156fc90e1a5dbd40df8a6627747dc79bc9b236575a2761fe5da31dcf",
-        "bytes": 347912,
-        "width": 1086,
-        "height": 1448
+        "artworkId": "ms-mary-mack",
+        "source": "/home/falcon/.codex/generated_images/01a0fed0-9461-76a1-bdb2-a885962a8772/exec-6d3b5092-b9cd-4bcf-b20e-13b846da1aff.png",
+        "sourceSha256": "a8829d0524fc9ad573fe9d2fbe3020e2c6dfbc4b816f8f9607b60b78be95bea4",
+        "file": "artifacts/squabblemon/public/assets/characters/ms-mary-mack.webp",
+        "sha256": "5414ecaa07229e6227cec1df51ff2bb36244e279532e00bd478a7e7b686f7977",
+        "width": 1024,
+        "height": 1536,
+        "alpha": true
       }
     },
     {
@@ -1871,5 +1869,6 @@
         "identityCorrection": "The user identified this supplied fighter as Lash Tech; sheet labels are not authoritative. Existing Nail Tech artwork is restored separately."
       }
     }
-  ]
+  ],
+  "maryRework": "../mary-mack-15-cents/README.md"
 }

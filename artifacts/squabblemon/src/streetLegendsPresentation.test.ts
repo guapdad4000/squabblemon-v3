@@ -35,7 +35,13 @@ test('the thirty-entry release adds thirty unique identities while Nail Tech ret
     assert.equal(card.abilityUpgrades.length, 3);
     const style = styleSetFor(id);
     assert(style && hasCharacterStickers(style), id + ' has a real signature style');
-    assert.equal(style.deckCover, `assets/characters/${id}.webp`);
+    assert.equal(style.deckCover, `assets/characters/${id}.webp${id === 'ms-mary-mack' ? '?v=15-cents' : ''}`);
+    if (id === 'ms-mary-mack') {
+      for (const suffix of ['signature', 'emblem']) assert.equal(
+        style.stickers.find(sticker => sticker.id === `${id}:street-legends-${suffix}`)?.image,
+        `assets/cosmetics/street-legends/ms-mary-mack-15-cents-${suffix}.svg`,
+        'Mary keeps purchased sticker IDs while refreshing immutable artwork URLs');
+    }
     assert(style.stickers.some(sticker => sticker.id === `${id}:street-legends-portrait`));
   }
   assert.equal(new Set(cardCatalog.map(card => card.catalogId)).size, cardCatalog.length);

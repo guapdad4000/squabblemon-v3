@@ -23,8 +23,10 @@ export function PatchArt({ cardId, version, size = 'hero' }: { cardId?: string |
   const useBanner = !!banner && failed !== bannerSrc;
   const src = useBanner ? bannerSrc : card ? getCardImage(card.catalogId) : '';
   if (!card || !src || failed === src) return null;
+  const artStyle: CSSProperties & { '--patch-banner-ratio'?: string; '--patch-art-accent'?: string } = useBanner
+    ? { '--patch-banner-ratio': banner.aspectRatio } : { '--patch-art-accent': cardEntryAccent(card) };
   return <figure className={`patch-art patch-art--${size}${useBanner ? ' patch-art--banner' : card.artworkLayout === 'portrait' ? ' patch-art--portrait' : ''}`}
-    style={useBanner ? undefined : { '--patch-art-accent': cardEntryAccent(card) } as CSSProperties} aria-hidden={size === 'thumb' || undefined} data-testid={size === 'hero' ? 'patch-art' : undefined}>
+    style={artStyle} aria-hidden={size === 'thumb' || undefined} data-testid={size === 'hero' ? 'patch-art' : undefined}>
     <img src={src} alt={size !== 'hero' ? '' : useBanner ? banner.alt : `${card.name} artwork`} draggable={false} decoding="async" loading="lazy" onError={() => setFailed(src)} />
     {size === 'hero' && !useBanner && <figcaption>{card.name}</figcaption>}
   </figure>;

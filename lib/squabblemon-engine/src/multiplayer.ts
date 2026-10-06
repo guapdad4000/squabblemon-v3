@@ -29,13 +29,13 @@ import {
 } from "./gameEngine";
 
 /** Bumped whenever a persisted online room can no longer be replayed safely. */
-export const ONLINE_RULES_VERSION = 48;
+export const ONLINE_RULES_VERSION = 49;
 /**
  * Card values and trigger semantics are part of a reward match's issued
  * snapshot.  Keep this separate from the transport rules version so a
  * cosmetic/network change does not invalidate an in-progress reward fade.
  */
-export const CARD_BALANCE_VERSION = 48;
+export const CARD_BALANCE_VERSION = 49;
 export const TURN_SECONDS = 75;
 export const ROOM_LIFETIME_MS = 30 * 60 * 1000;
 export type Seat = Owner;
@@ -401,6 +401,8 @@ export type PublicCard = {
   /** Public battle form presentation; never changes collection identity. */
   form?: { name: string; ability: string; effect: string };
   /** Buddy's battle-only state; Buddy Buds are tokens, never collectible cards. */
+  maryCents?: number;
+  maryElephant?: boolean;
   buddyForm?: CardInstance['buddyForm'];
   buddyGrowthAtRound?: number;
   buddyBud?: CardInstance['buddyBud'];
@@ -447,11 +449,13 @@ export type PublicEvent = {
   participants?: PublicParticipant[];
   scores?: EffectLogEntry['scores'];
 };
-export type PublicParticipantState = { lane: Lane; power: number; basePower: number; powerModifier: number; continuousPower?: number; moved: boolean; statuses: Statuses };
-export type PublicParticipant = { cardInstanceId: string; cardId: string; owner: Seat; before: PublicParticipantState | null; after: PublicParticipantState | null; departureCause?: 'aura-loss' };
-const publicParticipantState = (state: { lane: Lane | null; power: number; basePower: number; powerModifier: number; continuousPower?: number; moved: boolean; statuses: Statuses } | null): PublicParticipantState | null =>
+export type PublicParticipantState = { lane: Lane; power: number; basePower: number; powerModifier: number; continuousPower?: number; maryCents?: number; maryElephant?: boolean; moved: boolean; statuses: Statuses };
+export type PublicParticipant = { cardInstanceId: string; cardId: string; owner: Seat; before: PublicParticipantState | null; after: PublicParticipantState | null; departureCause?: 'aura-loss' | 'transformation' };
+const publicParticipantState = (state: { lane: Lane | null; power: number; basePower: number; powerModifier: number; continuousPower?: number; maryCents?: number; maryElephant?: boolean; moved: boolean; statuses: Statuses } | null): PublicParticipantState | null =>
   state && state.lane !== null ? { lane: state.lane, power: state.power, basePower: state.basePower, powerModifier: state.powerModifier,
     ...(state.continuousPower ? { continuousPower: state.continuousPower } : {}),
+    ...(state.maryCents !== undefined ? { maryCents: state.maryCents } : {}),
+    ...(state.maryElephant ? { maryElephant: true } : {}),
     moved: state.moved, statuses: state.statuses } : null;
 export type OnlineRoomView = {
   ranked?: { opponent: "player" | "bot" | "searching"; queuedAt: number; botAfter: number; rating: number; result: RankedResult | null };
@@ -510,6 +514,8 @@ export function onlineRoomView(
     artworkId: card.id,
     ...(card.cardId === 'luigion' && card.id === 'luigion-powered'
       ? { form: { name: card.name, ability: card.ability, effect: card.effect } } : {}),
+    ...(card.maryCents !== undefined ? { maryCents: card.maryCents } : {}),
+    ...(card.maryElephant ? { maryElephant: true } : {}),
     ...(card.buddyForm ? { buddyForm: card.buddyForm } : {}),
     ...(card.buddyGrowthAtRound !== undefined ? { buddyGrowthAtRound: card.buddyGrowthAtRound } : {}),
     ...(card.buddyBud ? { buddyBud: { ...card.buddyBud } } : {}),

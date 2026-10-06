@@ -1,0 +1,13 @@
+Use case: ads-marketing
+Asset type: Squabblemon Patch 1.11 in-game release mail and Events banner, final wide 3:1 landscape artwork, approximately 2400 x 800.
+Primary request: Create a premium illustrated street-fighting card-game release mural celebrating 30 new fighters and a 10-ticket gift.
+Input images: Image 1 is the canonical OG Rap Legend; Image 2 is canonical Mr. Mc Hands with rapid punch afterimages; Image 3 is canonical Lash Tech; Image 4 is canonical Pimp Swookie. These are identity and wardrobe references. Preserve all four faces, skin tones, ages, clothing, signature props and the hand-painted comic / anime game-art finish. Compose them together into a fresh unified scene, not four rectangular cutouts or card frames.
+Scene: a lively nighttime city block with an outdoor music stage, speaker stacks, restrained amber spotlights and violet/teal neon. Street pavement, subtle haze, rich black and worn gold framing.
+Composition: Wide editorial mural. On the left 37% reserve a dark textured wall for exceptionally legible bold condensed ivory and warm gold typography. On the right 63%, Mr. Mc Hands throws a powerful foreground punch, with speed afterimages behind him; OG Rap Legend sits confidently on his ornate chair behind him; Lash Tech and Pimp Swookie flank the group. Faces remain large enough for a mobile-width banner. Fit all faces and principal hands inside the canvas, no clipping. Unified perspective and professional lighting; tight hierarchy, restrained detail, no small illegible copy.
+Text, verbatim, on left:
+"THEM STREETS"
+"TALKIN..."
+"30 NEW FIGHTERS"
+"10 TICKETS ON US"
+A small "PATCH 1.11" appears above the headline.
+Constraints: only clenched fist emblems wherever a brand emblem is needed. NEVER draw crowns, including tiny jewelry or hats. No other text, no watermark, no browser or UI controls. Do not add card stats or invented characters. Clean opaque finished background. Banner must read as finished high-quality game key art at both desktop and mobile widths.

@@ -173,15 +173,15 @@
     },
     {
       "id": "ms-mary-mack",
-      "source": "/home/falcon/Downloads/b5739d5d-34ec-44df-ba19-31acf7b2a04e.png",
-      "prompt": "Use case: stylized-concept, identity-preserving regeneration from a fighter reference sheet. Asset type: ONE individual full-body Squabblemon fighter portrait PNG with genuine transparency. Recreate the specified fighter as a newly rendered standalone illustration, NOT a rectangular crop of the sheet. Match the exact face, skin tone, hairstyle, clothes, palette, attitude and signature equipment in that fighter's sheet design. Match the sheet's high quality hand-inked urban anime/comic cel shading, rich material detail, confident contours and warm rimlight. Complete missing/occluded body parts accurately, correct limb anatomy and proportion if needed for a coherent full-body card-ready silhouette. Keep the original fighter pose and characteristic meaningful chair/equipment when described. Center ONE fighter with full head and feet visible, portrait 3:4 composition, a little transparent breathing room. Remove all sheet background, floor, nearby fighters, typographic labels, UI, panels, logos, words, watermarks and cast-shadow planes. Background must be real alpha, including gaps between limbs and props. Do not produce a sheet or multiple people.\nSpecified fighter: Top row, third fighter labeled Ms. Mary Mack: young Black woman with very long dark braids, gold hoop earrings, layered gold necklaces and bracelets, black sleeveless top, voluminous black cargo trousers, gold chain belt, black/white sneakers. Seated on a small dark crate, hands together in a confident clapping/prayer pose at chest height. Preserve her face, stylish black/gold design, long braid silhouette, confident side-eyed expression.",
-      "generatedPath": "/home/falcon/.codex/generated_images/01a0fed0-9461-76a1-bdb2-a885962a8772/exec-707bd190-6b8e-412f-a24f-09a9367561fe.png",
-      "mode": "built-in",
+      "source": "/tmp/codex-clipboard-4750668c-186b-4975-bdfb-7818716478f8.png",
+      "prompt": "Background removal: isolate ONLY the woman in this reference. Erase the entire gray smoky halo and gradient background. Keep the woman’s original black coat, silver buttons, face, hands and boots unchanged. All space outside the exact silhouette and all gaps between the coat tails must be completely transparent alpha=0. No haze, no smoke, no backdrop, no ground shadow. Deliver a clean production transparent character cutout.",
+      "generatedPath": "/home/falcon/.codex/generated_images/01a0fed0-9461-76a1-bdb2-a885962a8772/exec-6d3b5092-b9cd-4bcf-b20e-13b846da1aff.png",
+      "mode": "canonical-rework-background-edit",
       "savedPath": "artifacts/squabblemon/public/assets/characters/ms-mary-mack.webp",
-      "sha256": "74d91c00156fc90e1a5dbd40df8a6627747dc79bc9b236575a2761fe5da31dcf",
-      "bytes": 347912,
-      "width": 1086,
-      "height": 1448
+      "sha256": "5414ecaa07229e6227cec1df51ff2bb36244e279532e00bd478a7e7b686f7977",
+      "bytes": 280966,
+      "width": 1024,
+      "height": 1536
     },
     {
       "id": "pimp-swookie",
@@ -369,5 +369,18 @@
     "sourceCommit": "a294d33f^",
     "sha256": "b1a18cf2a135f801c8f0745ae8ea568226b9b04d3907fb5ce49d0762a99850fd",
     "savedPath": "artifacts/squabblemon/public/assets/characters/nail-tech.webp"
-  }
+  },
+  "battleForms": [
+    {
+      "artworkId": "ms-mary-mack-elephant",
+      "source": "/tmp/codex-clipboard-49413efe-84e8-4bbe-9e97-ebbddc5d6119.png",
+      "sourceSha256": "cc9f5c841f0956d2a9ef5f1516e9543c0ed7435abe5e8599021b1a10d199cab4",
+      "file": "artifacts/squabblemon/public/assets/characters/ms-mary-mack-elephant.webp",
+      "sha256": "4ecc964e742b61a8deb4bc465624ba7a6501225cb125b2747fac942571587fc2",
+      "width": 1086,
+      "height": 1448,
+      "alpha": true
+    }
+  ],
+  "maryRework": "../mary-mack-15-cents/README.md"
 }

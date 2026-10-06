@@ -1038,7 +1038,7 @@ components:
         buffs: { type: array, maxItems: 50, items: { type: string, minLength: 1, maxLength: 500 } }
         changes: { type: array, maxItems: 50, items: { type: string, minLength: 1, maxLength: 500 } }
         softCurrency: { type: integer, minimum: 0, maximum: 100, default: 50 }
-        packTickets: { type: integer, minimum: 0, maximum: 1, default: 0 }
+        packTickets: { type: integer, minimum: 0, maximum: 10, default: 0 }
         artCardId:
           type: [string, 'null']
           minLength: 1
@@ -1097,7 +1097,7 @@ components:
           required: [softCurrency, packTickets, styleShards]
           properties:
             softCurrency: { type: integer, minimum: 0, maximum: 100 }
-            packTickets: { type: integer, minimum: 0, maximum: 1 }
+            packTickets: { type: integer, minimum: 0, maximum: 10 }
             styleShards: { type: integer, const: 0 }
     PatchPreview:
       type: object
