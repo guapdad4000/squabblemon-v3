@@ -1,3 +1,4 @@
+import { ARCADE_RULES, arcadePeriod, arcadeReset, type ArcadeKind } from '@workspace/squabblemon-engine/arcadeGames';
 import type { Page, Request, Route } from '@playwright/test';
 import type { ChallengeRun, MatchCompletion, PlayerBootstrap } from '@workspace/api-client-react';
 import { createAbilityUpgradeSnapshot } from '@workspace/squabblemon-engine/abilityUpgrades';
@@ -137,6 +138,11 @@ export async function installFadecadeApi(page: Page, options: FadecadeApiOptions
     const url = new URL(request.url());
     const path = url.pathname;
     const method = request.method();
+    const arcade = path.match(/\/arcade\/(girl-fade|fade-market|block-takeover)$/);
+    if (method === 'GET' && arcade) {
+      const kind = arcade[1] as ArcadeKind;
+      return route.fulfill({ json: { kind, period: arcadePeriod(kind, new Date()), attemptsRemaining: ARCADE_RULES[kind].limit, resetsAt: arcadeReset(kind, new Date()), serverNow: Date.now(), run: null, earned: { softCurrency: 0, packTickets: 0, styleShards: 0 } } });
+    }
     if (method === 'GET' && path.endsWith('/bootstrap')) {
       return route.fulfill({ json: structuredClone(bootstrap) });
     }

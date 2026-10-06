@@ -178,7 +178,7 @@ test('responsive arcade has one scroll owner, loaded cover art, and reachable fi
   await page.screenshot({ path: `${screenshots}/hub-${testInfo.project.name}.png` });
   await expect(page.getByText('2/2', { exact: true })).toBeVisible();
   await expect(page.getByLabel('Personal best: 0 stops', { exact: true })).toBeVisible();
-  await expect(page.getByText('1 ready to collect', { exact: true })).toHaveCount(2);
+  await expect(page.getByRole('button', { name: /^Open (Girl Fade|Fade Market|Block Takeover)$/ })).toHaveCount(3);
   await expect(page.getByText('Recent Road Log', { exact: true })).toHaveCount(0);
 
   const meaningfulImages = page.locator('main img');
@@ -263,88 +263,20 @@ test('scroll-linked chrome reveals centered stats and honors reduced motion', as
   await assertGeometry(page);
 });
 
-test('cabinet dialogs are modal, geometry-stable, trapped, and restore focus', async ({ page }, testInfo) => {
-  const api = await openFadecade(page);
-  const dailyCabinet = page.getByTestId('fadecade-daily');
-  await dailyCabinet.scrollIntoViewIfNeeded();
-  const dailyOpen = dailyCabinet.getByRole('button', { name: 'Open daily bounties', exact: true });
-  const beforeDaily = await hubLayout(page, dailyCabinet);
-  await dailyOpen.click();
-
-  const dailyDialog = page.getByRole('dialog', { name: 'daily Bounties', exact: true });
-  await assertDialogFits(page, dailyDialog);
-  await expect(dailyDialog.locator('img')).not.toHaveCount(0);
-  await expect(dailyDialog.getByTestId('panel-daily')).toContainText('Clock In');
-  await expect(dailyDialog.getByText('75 Clout', { exact: true })).toBeVisible();
-  await hitTest(dailyDialog.getByRole('button', { name: 'Claim Clock In', exact: true }));
-  expect(await hubLayout(page, dailyCabinet)).toEqual(beforeDaily);
-  expect(api.requests.starts).toHaveLength(0);
-  expect(api.runs()).toHaveLength(0);
-  const dailyShellTop = (await hubLayout(page, dailyCabinet)).shellTop;
-  await page.mouse.move(2, 2);
-  await page.mouse.wheel(0, 600);
-  expect((await hubLayout(page, dailyCabinet)).shellTop, 'the hub must not wheel-scroll behind a modal')
-    .toBe(dailyShellTop);
-  if (testInfo.project.name === 'desktop' || testInfo.project.name === 'phone') {
-    await page.screenshot({ path: `${screenshots}/bounty-popup-${testInfo.project.name}.png` });
-  }
-
-  await page.keyboard.press('Escape');
-  await expect(dailyDialog).toBeHidden();
-  await expect(dailyOpen).toBeFocused();
-  await assertGeometry(page);
-
-  const trainingCabinet = page.getByTestId('fadecade-training');
-  await trainingCabinet.scrollIntoViewIfNeeded();
-  const trainingOpen = trainingCabinet.getByRole('button', { name: 'Open training circuit', exact: true });
-  const beforeTraining = await hubLayout(page, trainingCabinet);
-  await trainingOpen.click();
-
-  const trainingDialog = page.getByRole('dialog', { name: 'Training Circuit', exact: true });
-  await assertDialogFits(page, trainingDialog);
-  await expect(trainingDialog.locator('img')).not.toHaveCount(0);
-  await expect(trainingDialog.getByTestId('panel-training')).toBeVisible();
-  await hitTest(trainingDialog.getByRole('button', { name: 'Practice Open training', exact: true }));
-  const focusables = trainingDialog.locator(
-    'button:not([disabled]), select:not([disabled]), input:not([disabled]), a[href], [tabindex]:not([tabindex="-1"])',
-  );
-  const focusableCount = await focusables.count();
-  expect(focusableCount, 'the training dialog should expose real keyboard actions').toBeGreaterThan(1);
-  const first = focusables.first();
-  const last = focusables.last();
-  await first.focus();
-  await page.keyboard.press('Shift+Tab');
-  await expect(last).toBeFocused();
-  await page.keyboard.press('Tab');
-  await expect(first).toBeFocused();
-  expect(await hubLayout(page, trainingCabinet)).toEqual(beforeTraining);
-  expect(api.requests.starts).toHaveLength(0);
-  expect(api.requests.matches).toHaveLength(0);
-  if (testInfo.project.name === 'desktop' || testInfo.project.name === 'phone') {
-    await page.screenshot({ path: `${screenshots}/training-popup-${testInfo.project.name}.png` });
-  }
-
-  await page.keyboard.press('Escape');
-  await expect(trainingDialog).toBeHidden();
-  await expect(trainingOpen).toBeFocused();
-  await assertGeometry(page);
-
-  for (const cabinet of [
-    { testId: 'fadecade-weekly', openName: 'Open weekly bounties', title: 'weekly Bounties' },
-    { testId: 'fadecade-events', openName: 'Open street events', title: 'Street Events' },
-  ]) {
-    const machine = page.getByTestId(cabinet.testId);
-    await machine.scrollIntoViewIfNeeded();
-    const opener = machine.getByRole('button', { name: cabinet.openName, exact: true });
-    await opener.click();
-    const dialog = page.getByRole('dialog', { name: cabinet.title, exact: true });
-    await assertDialogFits(page, dialog);
-    await expect(dialog.locator('img')).not.toHaveCount(0);
+test('each arcade cabinet opens its own game and a keyboard-dismissable instructions dialog', async ({ page }) => {
+  await openFadecade(page);
+  for (const title of ['Girl Fade', 'Fade Market', 'Block Takeover']) {
+    await page.getByRole('button', { name: `Open ${title}`, exact: true }).click();
+    await expect(page.locator('.arcade-game')).toBeVisible();
+    const help = page.getByRole('button', { name: `How to play ${title}`, exact: true });
+    await help.click();
+    await expect(page.getByRole('dialog')).toBeVisible();
     await page.keyboard.press('Escape');
-    await expect(dialog).toBeHidden();
-    await expect(opener).toBeFocused();
+    await expect(page.getByRole('dialog')).toBeHidden();
+    await expect(help).toBeFocused();
+    await page.getByRole('button', { name: '← FADECADE', exact: true }).click();
+    await expect(page.locator('main.fadecade-hub')).toBeVisible();
   }
-  await assertGeometry(page);
 });
 
 test('leaving an interrupted road preserves it; only explicit End run abandons', async ({ page }, testInfo) => {
@@ -381,42 +313,27 @@ test('leaving an interrupted road preserves it; only explicit End run abandons',
   await expect.poll(() => api.requests.abandons).toBe(1);
 });
 
-test('smaller training cabinet opens setup before its explicit practice launch', async ({ page }, testInfo) => {
+test('training drills remain reachable separately from Girl Fade', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== 'desktop', 'Journey behavior is exercised once.');
   const api = await openFadecade(page);
-  const training = page.getByTestId('fadecade-training');
-  await expect(training).toBeVisible();
-  expect(api.requests.matches).toHaveLength(0);
-  await training.getByRole('button', { name: 'Open training circuit', exact: true }).click();
+  await page.getByRole('link', { name: 'Training drills →', exact: true }).click();
+  await expect(page).toHaveURL(/\/game\/training$/);
   const launch = page.getByTestId('panel-training').getByRole('button', { name: 'Practice Open training', exact: true });
   await hitTest(launch);
   await launch.click();
   await expect.poll(() => api.requests.matches.length).toBe(1);
   expect(api.requests.matches[0]).toMatchObject({ mode: 'practice' });
   expect(api.requests.matches[0]).not.toHaveProperty('challengeRunId');
-  await expect(page).toHaveURL(/\/game\/challenges$/);
 });
 
-test('daily and weekly cabinet dialogs reveal authoritative claims', async ({ page }, testInfo) => {
-  test.skip(testInfo.project.name !== 'desktop', 'Journey behavior is exercised once.');
-  const api = await openFadecade(page);
-  const dailyCabinet = page.getByTestId('fadecade-daily');
-  await dailyCabinet.getByRole('button', { name: 'Open daily bounties', exact: true }).click();
-  const daily = page.getByTestId('panel-daily').getByRole('button', { name: 'Claim Clock In', exact: true });
-  await hitTest(daily);
-  await daily.click();
-  await expect.poll(() => api.requests.claims).toContain('daily-fade');
-  await expect(page.getByText(/715/).first()).toBeVisible();
-  await page.getByRole('button', { name: 'Keep going →', exact: true }).click();
-  const weeklyCabinet = page.getByTestId('fadecade-weekly');
-  await weeklyCabinet.getByRole('button', { name: 'Open weekly bounties', exact: true }).click();
-  const weekly = page.getByTestId('panel-weekly').getByRole('button', { name: 'Claim Road Regular', exact: true });
-  await hitTest(weekly);
-  await weekly.click();
-  await expect.poll(() => api.requests.claims).toEqual(['daily-fade', 'weekly-road']);
-  expect(api.bootstrap().profile.softCurrency).toBe(715);
-  expect(api.bootstrap().profile.packTickets).toBe(2);
-  await expect(page).toHaveURL(/\/game\/challenges$/);
+test('daily and weekly cabinets explain separate rewarded entry cadences', async ({ page }) => {
+  await openFadecade(page);
+  await page.getByRole('button', { name: 'Open Fade Market', exact: true }).click();
+  await expect(page.getByText(/2\/2 ENTRIES LEFT/)).toBeVisible();
+  await page.getByRole('button', { name: '← FADECADE', exact: true }).click();
+  await page.getByRole('button', { name: 'Open Block Takeover', exact: true }).click();
+  await expect(page.getByText(/3\/3 ENTRIES LEFT/)).toBeVisible();
+  await expect(page.getByText(/RESETS MONDAY UTC/)).toBeVisible();
 });
 
 test('missing optional art keeps controls operable', async ({ page }, testInfo) => {

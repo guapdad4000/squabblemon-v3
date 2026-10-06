@@ -27,6 +27,9 @@
     "./accountRewards": "./src/accountRewards.ts",
     "./starterMythic": "./src/starterMythic.ts",
     "./styleShards": "./src/styleShards.ts",
-    "./reactions": "./src/reactions.ts"
+    "./reactions": "./src/reactions.ts",
+    "./waffleRun": "./src/waffleRun.ts",
+    "./johnHenryMythic": "./src/johnHenryMythic.ts",
+    "./arcadeGames": "./src/arcadeGames.ts"
   }
 }

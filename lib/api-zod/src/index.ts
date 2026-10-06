@@ -5,3 +5,7 @@ export * from './generated/types';
 
 // Prefer the request validator over the generated request type with the same name.
 export { ClaimExperimentCardBody } from "./generated/api";
+
+export { waffleRunId, waffleStartInput, waffleActionInput } from './waffleRun';
+
+export {arcadeKind,arcadeRunId,arcadeStartInput,arcadeActionInput} from './arcadeGames';

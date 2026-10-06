@@ -70,7 +70,9 @@
     "test:performance:browser": "playwright test --config e2e/playwright.performance.config.ts",
     "optimize:runtime-art": "node scripts/optimize-runtime-art.mjs",
     "test:diner-on-shift": "node --import ../../scripts/battle-test-css.mjs --import tsx --test src/dinerOnShift.test.ts src/dinerOnShiftAuthority.test.ts src/dinerOnShiftPresentation.test.tsx",
-    "test:squabblehouse": "tsx --test src/squabblehouseCatalog.test.ts src/squabblehouseWave.test.ts"
+    "test:squabblehouse": "tsx --test src/squabblehouseCatalog.test.ts src/squabblehouseWave.test.ts",
+    "test:arcade": "node --import tsx --test src/arcadeGames.test.ts",
+    "test:arcade-browser": "PW_TEST_SCREENSHOT_NO_FONTS_READY=1 node --import tsx e2e/verify-arcade-games.ts"
   },
   "devDependencies": {
     "@clerk/react": "^6.15.1",

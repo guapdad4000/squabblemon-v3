@@ -1,3 +1,4 @@
+import { JohnHenryMythic } from '../../components/JohnHenryMythic';
 import { StarterMythic } from '../../components/StarterMythic';
 import { availableCareerChoices, readCareer } from '@workspace/squabblemon-engine/career';
 import { revealProfileRewards } from '../../lib/rewardReceipts';
@@ -248,7 +249,7 @@ export function Missions({ bootstrap }: { bootstrap: PlayerBootstrap }) {
         </section>
         </div>
       )}
-      {tab === 'bounties' && <StarterMythic bootstrap={bootstrap} placement="banner" />}
+      {tab === 'bounties' && <><StarterMythic bootstrap={bootstrap} placement="banner" /><JohnHenryMythic bootstrap={bootstrap} placement="banner" /></>}
       </div>
       {tab === 'bounties' && (
           <div className="bounty-hunter__pov" data-phase={claimState?.phase || 'idle'} data-testid="bounty-pistol" aria-hidden="true">

@@ -22,6 +22,9 @@ export type CollectionRoadRewardRecord = {
   promoCode?: { code: string; packTickets: number; softCurrency: number; styleShards: number; cardIds?: string[] };
   /** Namespaced shop receipts share the existing immutable, per-player claim ledger. */
   shopPurchase?: { itemId: string; cardId: string | null; cost: number; currency: 'softCurrency' | 'styleShards'; summary: string; shardPayment?: { rarity: string; matching: number; universal: number } };
+  /** Durable minigame run snapshots; profile lock serializes actions and reward banking. */
+  arcadeRun?: { version: 1; runId: string; period: string; kind: string; state: unknown; earned: {softCurrency:number;packTickets:number;styleShards:number}; lastActionId?: string };
+  waffleRun?: { version: 1; runId: string; day: string; state: unknown; earned: {softCurrency:number;packTickets:number;styleShards:number}; lastActionId?: string };
   starterMythic?: { cardId: string; softCurrency: number; packTickets: number; duplicateShards: number };
   cardId?: string;
   softCurrency?: number;

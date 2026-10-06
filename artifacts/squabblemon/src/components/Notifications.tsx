@@ -63,6 +63,7 @@ function PlayerNotifications({ bootstrap, children }: { bootstrap: PlayerBootstr
     retry: 2,
   });
   const account = useQuery({ queryKey: ['account-rewards', p.id], queryFn: () => customFetch<{ date: string; pending: { key: string; title: string }[]; growth: { ready: boolean } }>('/api/player/rewards/account'), refetchInterval: 30000, retry: 1 });
+  const johnHenry = useQuery({ queryKey: ['john-henry-mythic', p.id], queryFn: () => customFetch<{ state: string }>('/api/player/rewards/john-henry'), refetchInterval: 60000, retry: 1 });
   const mythic = useQuery({ queryKey: ['starter-mythic', p.id], queryFn: () => customFetch<{ state: string }>('/api/player/rewards/starter-mythic'), refetchInterval: 60000, retry: 1 });
   useEffect(() => { const timer = setInterval(() => { if (document.visibilityState === 'visible') void client.invalidateQueries({ queryKey: getGetPlayerBootstrapQueryKey() }); }, 60000); return () => clearInterval(timer); }, [client]);
   const applyReceipts = useCallback((ids: NoticeIds) => {
@@ -145,6 +146,7 @@ function PlayerNotifications({ bootstrap, children }: { bootstrap: PlayerBootstr
   }
   for (const reward of account.data?.pending ?? []) notices.push({ id: `reward:${reward.key}`, section: 'growth', title: reward.title, href: '/game?notice=growth', sticky: true });
   if (account.data?.growth?.ready) notices.push({ id: 'growth:water', dismissalKey: `growth:water:${account.data.date}`, section: 'growth', title: 'Your garden is ready to grow', href: '/game?notice=growth', sticky: true });
+  if (johnHenry.data?.state === 'ready') notices.push({id:'mythic:john-henry',section:'missions',title:'Steel Driver · claim John Henry',href:'/game/missions?mythic=john-henry',sticky:true});
   if (mythic.data?.state === 'ready') notices.push({ id: 'mythic:ready', section: 'missions', title: 'Nothing to Lose · claim your Mythical', href: '/game/missions?mythic=open', sticky: true });
   for (const m of bootstrap.missions) if (m.status !== 'claimed') notices.push({ id: `mission:${m.id}:${m.resetAt ?? 'permanent'}`, dismissalKey: `mission:${m.id}:${m.resetAt ?? 'permanent'}:${m.status}`, section: 'missions', title: `${m.status === 'claimable' ? 'Reward ready' : 'Bounty available'} · ${m.title}`, href: `/game/missions?mission=${encodeURIComponent(m.id)}`, sticky: m.status === 'claimable' });
   for (const m of mail.data?.messages ?? []) if (!m.readAt || (!m.claimedAt && Object.values(m.gift).some(n => n > 0))) notices.push({ id: `mail:${m.id}`, section: 'mail', title: m.title, href: `/game?notice=mail&letter=${encodeURIComponent(m.id)}`, sticky: true });

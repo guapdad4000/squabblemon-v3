@@ -1,3 +1,5 @@
+import arcadeGamesRouter from './arcadeGames';
+import waffleRunRouter from './waffleRun';
 import dailyCloutRouter from './dailyClout';
 import { Router, type IRouter } from "express";
 import healthRouter from "./health";
@@ -33,6 +35,8 @@ router.use(challengeRouter);
 router.use(paymentsRouter);
 router.use(accountRewardsRouter);
 router.use(starterMythicRouter);
+router.use(waffleRunRouter);
+router.use(arcadeGamesRouter);
 router.use(mailRouter);
 router.use(notificationsRouter);
 router.use(eventFeedbackRouter);

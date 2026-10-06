@@ -131,7 +131,7 @@ function createBootstrap() {
 
 test("Player, rear-view listening pose and Rae render in the mounted Season One route", async ({ page }, testInfo) => {
   test.setTimeout(90_000);
-  await page.setViewportSize({ width: 375, height: 667 });
+  await page.setViewportSize(testInfo.project.name.includes('phone') ? { width: 375, height: 667 } : { width: 1440, height: 900 });
   const cases = [
     { name: "player-speaking", nodeId: "crown-community-meal", section: "main" as const, portrait: "player.webp" },
     { name: "player-listening", nodeId: "crown-community-meal", section: "main" as const, portrait: "player-rear.webp" },
