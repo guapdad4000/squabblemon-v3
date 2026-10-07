@@ -213,8 +213,23 @@
 }
 
 .collection-card-grid > button {
+  aspect-ratio: 63 / 88;
   border-radius: 5px;
   filter: drop-shadow(0 8px 11px rgb(0 0 0 / 36%));
+}
+
+/* Offscreen shells preserve the exact grid geometry and all inspection targets. */
+.collection-card-grid__deferred {
+  display: flex;
+  align-items: flex-end;
+  width: 100%;
+  height: 100%;
+  padding: 10px;
+  border: 2px solid #3f3f46;
+  background: linear-gradient(155deg, #272522, #09090b 70%);
+  color: #e4ddcd;
+  font: 800 11px var(--font-display);
+  overflow-wrap: anywhere;
 }
 
 .collection-card-grid > button[data-collection-bond="true"] {

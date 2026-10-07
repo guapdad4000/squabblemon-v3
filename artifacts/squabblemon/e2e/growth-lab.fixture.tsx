@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client';
 import { QueryClient, QueryClientProvider, useQuery } from '@tanstack/react-query';
 import { getGetPlayerBootstrapQueryKey, type PlayerBootstrap } from '@workspace/api-client-react';
 import { accountRewardStatus, growthLabStatus, GROWTH_GARDEN_REWARD, type AccountRewardGrant } from '@workspace/squabblemon-engine/accountRewards';
-import { BuddyGrowthLab } from '../src/components/BuddyGrowthLab';
+import { DeferredGrowthLab } from '../src/components/DeferredGrowthLab';
 import '../src/index.css';
 
 const params = new URLSearchParams(location.search), date = new Date().toISOString().slice(0, 10);
@@ -43,6 +43,6 @@ Object.assign(window, { growthFixture: { snapshot: () => ({ status: status(), wa
 function Fixture() {
   const [open, setOpen] = useState(true);
   const query = useQuery({ queryKey: getGetPlayerBootstrapQueryKey(), queryFn: () => bootstrap, initialData: bootstrap, staleTime: Infinity });
-  return <main style={{ minHeight: '100dvh', background: 'radial-gradient(ellipse at 50% 35%,#345244,#0a1813 70%)', padding: 30 }}><button style={{ color: '#efe4bb' }} onClick={() => setOpen(true)}>Open Buddy’s Growth Lab</button><BuddyGrowthLab bootstrap={query.data} open={open} onOpenChange={setOpen} /></main>;
+  return <main style={{ minHeight: '100dvh', background: 'radial-gradient(ellipse at 50% 35%,#345244,#0a1813 70%)', padding: 30 }}><button style={{ color: '#efe4bb' }} onClick={() => setOpen(true)}>Open Buddy’s Growth Lab</button><DeferredGrowthLab bootstrap={query.data} open={open} onOpenChange={setOpen} /></main>;
 }
 createRoot(document.getElementById('root')!).render(<QueryClientProvider client={client}><Fixture /></QueryClientProvider>);

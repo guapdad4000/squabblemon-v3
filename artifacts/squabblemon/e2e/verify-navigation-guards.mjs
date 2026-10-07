@@ -1,13 +1,16 @@
 import assert from 'node:assert/strict';
 import {chromium} from '@playwright/test';
+const origin=process.env.UI_ORIGIN ?? 'http://127.0.0.1:4198';
 const browser=await chromium.launch({executablePath:'/usr/bin/google-chrome',headless:true});
 try{
 const page=await browser.newPage({viewport:{width:390,height:844}});
 await page.addInitScript(()=>localStorage.setItem('squabblemon_e2e_user','signed-in'));
 await page.routeWebSocket('**',()=>{});
 await page.route('**/api/**',r=>r.fulfill({json:{}}));
-await page.goto('http://127.0.0.1:4198/game/collection');
-await page.getByTestId('button-view-collection-road').click();
+await page.goto(origin + '/game/collection');
+// The catalog always has a scrollable roster; an empty Gang Wall does not.
+await page.getByTestId('button-view-catalog').click();
+await page.getByTestId('collection-card-grid').waitFor();
 const body=page.locator('.collection-stage__body');
 await body.evaluate(el=>{el.scrollTop=300;});
 await page.waitForTimeout(200);
@@ -26,7 +29,7 @@ await page.evaluate(()=>{window.clearTestGuard();window.resumeTestNavigation();}
 await page.waitForURL('**/game/collection');
 await page.waitForTimeout(500);
 assert.equal(await body.evaluate(el=>el.scrollTop),offset);
-assert.equal(await page.getByTestId('button-view-collection-road').getAttribute('aria-pressed'),'true');
+assert.equal(await page.getByTestId('button-view-catalog').getAttribute('aria-pressed'),'true');
 await page.goForward();
 await page.waitForURL('**/game/settings');
 console.log('PASS guarded Back, scroll restoration, tab restoration and browser Forward');

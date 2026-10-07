@@ -87,7 +87,7 @@ export function SceneFrame({ kind, frameRef, onMessage, onReady, poster }: {
     if (quality?.tier === 'static') handlers.current.onMessage?.({ type: 'static' });
   }, [quality]);
   return <div className={`venue-scene is-${quality?.tier === 'static' ? 'static' : status}`}>
-    {poster && <img className="venue-scene__poster" src={poster} alt="" />}
+    {poster && <img className="venue-scene__poster" src={poster} alt="" decoding="async" fetchPriority="low" />}
     {quality && quality.tier !== 'static' && status !== 'error' && <iframe key={attempt} ref={frameRef} src={`${publicBase}scenes/${kind}/index.html?gpuTier=${quality.tier}`}
       onLoad={() => sendScene(frameRef, { type: 'ping', quality })}
       title={kind === 'safehouse' ? 'Interactive safehouse' : 'Interactive heavy bag'} className="venue-scene__frame" />}

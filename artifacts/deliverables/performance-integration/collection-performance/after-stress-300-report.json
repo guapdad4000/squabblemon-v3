@@ -1,0 +1,86 @@
+[
+  {
+    "label": "after",
+    "name": "desktop",
+    "initialRequests": 371,
+    "initial": {
+      "total": 300,
+      "mounted": 63,
+      "nodes": 2795,
+      "scrollHeight": 7254,
+      "width": 1440,
+      "scrollWidth": 1440,
+      "visible": 36,
+      "visibleFaces": 36,
+      "nonzero": true,
+      "loaded": true
+    },
+    "deep": {
+      "total": 300,
+      "mounted": 48,
+      "nodes": 2324,
+      "scrollHeight": 7254,
+      "width": 1440,
+      "scrollWidth": 1440,
+      "visible": 21,
+      "visibleFaces": 21,
+      "nonzero": true,
+      "loaded": true
+    },
+    "returnTop": {
+      "total": 300,
+      "mounted": 64,
+      "nodes": 2797,
+      "scrollHeight": 7254,
+      "width": 1440,
+      "scrollWidth": 1440,
+      "visible": 36,
+      "visibleFaces": 36,
+      "nonzero": true,
+      "loaded": true
+    },
+    "checks": "visible geometry, artwork, bounded mounting, stable height, keyboard details/focus, deep scroll/revisit, direct-card link, remembered Gang Wall"
+  },
+  {
+    "label": "after",
+    "name": "phone",
+    "initialRequests": 329,
+    "initial": {
+      "total": 300,
+      "mounted": 21,
+      "nodes": 1535,
+      "scrollHeight": 17916,
+      "width": 390,
+      "scrollWidth": 390,
+      "visible": 9,
+      "visibleFaces": 9,
+      "nonzero": true,
+      "loaded": true
+    },
+    "deep": {
+      "total": 300,
+      "mounted": 21,
+      "nodes": 1521,
+      "scrollHeight": 17916,
+      "width": 390,
+      "scrollWidth": 390,
+      "visible": 9,
+      "visibleFaces": 9,
+      "nonzero": true,
+      "loaded": true
+    },
+    "returnTop": {
+      "total": 300,
+      "mounted": 22,
+      "nodes": 1555,
+      "scrollHeight": 17916,
+      "width": 390,
+      "scrollWidth": 390,
+      "visible": 9,
+      "visibleFaces": 9,
+      "nonzero": true,
+      "loaded": true
+    },
+    "checks": "visible geometry, artwork, bounded mounting, stable height, keyboard details/focus, deep scroll/revisit, direct-card link, remembered Gang Wall"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "name": "desktop",
+    "coldModules": 0,
+    "coldPopupArt": 0,
+    "notificationAccountRequests": 1,
+    "codeOnlyIntent": true,
+    "retainedReopens": true
+  },
+  {
+    "name": "phone",
+    "coldModules": 0,
+    "coldPopupArt": 0,
+    "notificationAccountRequests": 1,
+    "codeOnlyIntent": true,
+    "retainedReopens": true
+  },
+  {
+    "noticeGrowth": true
+  },
+  {
+    "starterAutoIntroAndReady": true,
+    "claimedShortcutRetired": true
+  },
+  {
+    "slowSuccessFocusHandoff": true
+  },
+  {
+    "slowCloseAndLateCompletion": true
+  },
+  {
+    "failedChunkRetry": true,
+    "activePagePreserved": true
+  }
+]

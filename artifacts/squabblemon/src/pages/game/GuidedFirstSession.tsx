@@ -18,7 +18,7 @@ export function RookieHandoff({ onReview, onComplete }: { onReview: () => void; 
   useTutorialVoice('Rookie Road handoff', true, rookieRoadCues('handoff'));
   return <section className="rookie-review" data-testid="rookie-post-fight-handoff" role="region" aria-label="Rookie Road handoff" tabIndex={0}>
     <div>
-      <img src={getAssetUrl('scenes/safehouse/concept.png')} alt="" />
+      <img src={getAssetUrl('scenes/safehouse/concept.webp')} alt="" />
       <span className="venue-kicker">ROOKIE ROAD / FIRST FADE COMPLETE</span>
       <h1>You took your first fight.</h1>
       <p>Your ten-card gang and chosen cover are saved. You can come back to your deck lesson and lineup before another fade.</p>
@@ -48,7 +48,7 @@ export function GuidedFirstSession({ bootstrap, onCollect, onComplete }: { boots
     onExit={() => setStage('deck')} onTutorialComplete={() => setStage('handoff')} />;
   if (stage === 'fight-brief' && playing) return <section className="rookie-review" data-testid="rookie-fight-brief" role="region" aria-label="First fight briefing" tabIndex={0}>
     <div>
-      <img src={getAssetUrl('scenes/safehouse/concept.png')} alt="" />
+      <img src={getAssetUrl('scenes/safehouse/concept.webp')} alt="" />
       <span className="venue-kicker">ROOKIE ROAD / BEFORE THE FADE</span>
       <h1>Your first fight goal.</h1>
       <p>Finish ahead in at least two of the three districts to win; a tied district belongs to neither side. The rival plays at the top of the board, your gang at the bottom. Each district shows Rival and You scores. Total Hands across all three districts alone cannot win the match.</p>
@@ -73,7 +73,7 @@ export function GuidedFirstSession({ bootstrap, onCollect, onComplete }: { boots
         onTarget={!item.next && lesson < homeLessons.length - 1 ? () => setLesson(lesson + 1) : undefined}>{item.body}</CoachSpotlight>
     </div>;
   }
-  return <main className="rookie-tour" style={{ backgroundImage: 'linear-gradient(90deg,#07100eef,#07100e90),url("' + getAssetUrl('scenes/safehouse/concept.png') + '")', backgroundSize: 'cover', backgroundPosition: 'center' }} data-testid="rookie-welcome"><div className="rookie-tour__welcome">
+  return <main className="rookie-tour" style={{ backgroundImage: 'linear-gradient(90deg,#07100eef,#07100e90),url("' + getAssetUrl('scenes/safehouse/concept.webp') + '")', backgroundSize: 'cover', backgroundPosition: 'center' }} data-testid="rookie-welcome"><div className="rookie-tour__welcome">
     <section><span className="fade-eyebrow">ROOKIE ROAD / WELCOME TO THE BLOCK</span><h1>You belong<br />on this block.</h1>
       <p>I’m Dr. Fade. I’ll show you around, help you build your first gang, and stay beside you through your first win. One move at a time.</p>
       <div className="rookie-tour__steps"><span>01 · Find your feet</span><span>02 · Build your gang</span><span>03 · First battle</span></div>

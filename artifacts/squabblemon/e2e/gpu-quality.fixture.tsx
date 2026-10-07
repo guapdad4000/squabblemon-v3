@@ -23,7 +23,7 @@ function Proof() {
     return () => { active = false; dispose?.(); };
   }, []);
   if (scene === 'safehouse' || scene === 'gym') return <main data-gpu-tier={tier} style={{position:'relative',height:'100vh',background:'#314151'}}>
-    <SceneFrame kind={scene} frameRef={frame} poster={scene==='safehouse'?getAssetUrl('scenes/safehouse/concept.png'):undefined}/>
+    <SceneFrame kind={scene} frameRef={frame} poster={scene==='safehouse'?getAssetUrl('scenes/safehouse/concept.webp'):undefined}/>
   </main>;
   return <main data-gpu-tier={tier} style={{ background:'#172128',color:'white',minHeight:'100vh',padding:18 }}>
     <h1>GPU quality: {tier}</h1>

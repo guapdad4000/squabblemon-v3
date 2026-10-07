@@ -18,7 +18,7 @@
 .district-preview small { color:#a7acb5;font-size:8px;font-weight:400; }
 .battle-arena .battle-board-card.preview-target { outline:2px dashed #fde68a;outline-offset:3px;filter:drop-shadow(0 0 6px #facc1544); }
 .battle-arena .battle-board-card.card-reveal-flip { animation:reveal-front calc(400ms / var(--presentation-speed, 1)) cubic-bezier(.2,.7,.2,1) both!important;transform-origin:center;box-shadow:0 10px 16px #0008; }
-.battle-arena .battle-hand-card.portrait-pop { animation:draw-into-hand calc(800ms / var(--presentation-speed, 1)) cubic-bezier(.2,.8,.2,1) both; }
+.battle-arena .battle-hand-card.portrait-pop { animation:draw-into-hand calc(800ms / var(--presentation-speed, 1)) cubic-bezier(.2,.8,.2,1) backwards; }
 .round-recap { display:flex;align-items:center;gap:12px;min-height:42px; }
 .round-recap>span { display:grid;gap:2px;font:700 12px/1.2 var(--font-sans); }
 .round-recap small { font-size:8px;font-weight:500;color:#a7b2c1; }

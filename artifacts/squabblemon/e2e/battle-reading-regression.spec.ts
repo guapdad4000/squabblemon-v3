@@ -120,10 +120,14 @@ for (const vp of viewports) {
       await expect(page.getByTestId('battle-arena')).not.toHaveAttribute('data-reading-cue', /.+/);
     });
 
-    test('rival phase status and final-board review without the finish cinematic', async ({ page }, info) => {
+    test('rival phase status and final-board review without the finish cinematic', async ({ page, context }, info) => {
       await page.goto(fixture('rival'));
       await expect(page.getByTestId('battle-phase-status')).toHaveAttribute('data-phase-status', 'rival-reveal');
       await expect(page.getByTestId('battle-phase-status')).toContainText('Rival reveal');
+      // These fixtures are separate matches. A fresh page avoids Chromium's
+      // cross-document WebGL teardown crash, also reproduced on unmodified HEAD.
+      await page.close();
+      page = await context.newPage();
       await page.goto(fixture('final'));
       await expect(page.getByTestId('battle-arena')).toHaveAttribute('data-presentation-phase', 'match-finish');
       await expect(page.locator('.broadcast-overlay')).toHaveCount(0);

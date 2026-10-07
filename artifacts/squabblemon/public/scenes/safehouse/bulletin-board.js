@@ -30,12 +30,12 @@ export function createBulletinBoard() {
   root.position.set(3.05, 2.55, -4.76);
   const backing = new T.Mesh(new T.BoxGeometry(2.06, 1.78, .15), new T.MeshStandardMaterial({ color: '#063d36', roughness: .55, metalness: .12 }));
   backing.castShadow = backing.receiveShadow = true; root.add(backing);
-  const boardTexture = new T.TextureLoader().load(new URL('../../assets/events/supplied/cork.png', import.meta.url).href);
+  const boardTexture = new T.TextureLoader().load(new URL('../../assets/events/supplied/cork.webp', import.meta.url).href);
   boardTexture.colorSpace = T.SRGBColorSpace; boardTexture.anisotropy = 8;
   const board = new T.Mesh(new T.PlaneGeometry(1.92, 1.6), new T.MeshStandardMaterial({ map: boardTexture, roughness: .72, metalness: .05 }));
   board.position.z = .081; board.castShadow = true; root.add(board);
 
-  const wood = new T.TextureLoader().load(new URL('../../assets/events/supplied/wood-borders.png', import.meta.url).href);
+  const wood = new T.TextureLoader().load(new URL('../../assets/events/supplied/wood-borders.webp', import.meta.url).href);
   wood.colorSpace = T.SRGBColorSpace; wood.repeat.set(.93,.055); wood.offset.set(.035,.902);
   const woodMaterial = new T.MeshStandardMaterial({map:wood,transparent:true,roughness:.86});
   const timber = new T.MeshStandardMaterial({color:'#513018',roughness:.82});
@@ -47,7 +47,7 @@ export function createBulletinBoard() {
   for (const x of [-.97,.97]) for (const y of [-.84,.84]) {
     const screw = new T.Mesh(new T.SphereGeometry(.034,16,8),trim); screw.scale.z=.3; screw.position.set(x,y,.187); root.add(screw);
   }
-  const iconTexture = new T.TextureLoader().load(new URL('../../assets/events/supplied/calendar.png', import.meta.url).href);
+  const iconTexture = new T.TextureLoader().load(new URL('../../assets/events/supplied/calendar.webp', import.meta.url).href);
   iconTexture.colorSpace=T.SRGBColorSpace;
   const icon=new T.Mesh(new T.PlaneGeometry(.3,.3),new T.MeshStandardMaterial({map:iconTexture,transparent:true,roughness:.9}));
   icon.position.set(.73,.47,.13); root.add(icon);
@@ -73,7 +73,7 @@ export function createBulletinBoard() {
 
   const photoMount = new T.Mesh(new T.BoxGeometry(.37,.25,.015),new T.MeshStandardMaterial({color:'#fff7e5',roughness:.9})); photoMount.position.set(-.73,.415,.117); photoMount.rotation.z=-.045; photoMount.castShadow=true; root.add(photoMount);
   function artwork(name,w,h,x,y,z) {
-    const map=new T.TextureLoader().load(new URL(`../../assets/events/supplied/${name}.png`,import.meta.url).href); map.colorSpace=T.SRGBColorSpace; map.anisotropy=8;
+    const map=new T.TextureLoader().load(new URL(`../../assets/events/supplied/${name}.webp`,import.meta.url).href); map.colorSpace=T.SRGBColorSpace; map.anisotropy=8;
     const mesh=new T.Mesh(new T.PlaneGeometry(w,h),new T.MeshStandardMaterial({map,transparent:true,alphaTest:.05,roughness:.8})); mesh.position.set(x,y,z); root.add(mesh); return mesh;
   }
   // Keep decoration in its own column, clear of the readable notices.

@@ -1,0 +1,40 @@
+[
+  {
+    "name": "desktop-ready",
+    "state": "ready",
+    "owns": false,
+    "posts": 1,
+    "decode": true,
+    "centered": true
+  },
+  {
+    "name": "phone-locked",
+    "state": "locked",
+    "owns": false,
+    "posts": 0,
+    "decode": true,
+    "centered": true
+  },
+  {
+    "name": "phone-duplicate",
+    "state": "ready",
+    "owns": true,
+    "posts": 1,
+    "decode": true,
+    "centered": true
+  },
+  {
+    "name": "phone-collected",
+    "state": "claimed",
+    "owns": true,
+    "posts": 0,
+    "decode": true,
+    "centered": true
+  },
+  {
+    "johnStatusRetry": true,
+    "failedClaimRetry": true,
+    "savedClaimRecovery": true,
+    "posts": 2
+  }
+]

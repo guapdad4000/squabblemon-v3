@@ -8,7 +8,7 @@ if(quality.tier==='static'){
     stage.setAttribute('aria-label','Static scene preview');
     if(location.pathname.includes('/safehouse/')){
       const poster=new Image();
-      poster.src='concept.png';
+      poster.src='concept.webp';
       poster.alt='Safehouse concept art';
       Object.assign(poster.style,{width:'100%',height:'100%',objectFit:'cover'});
       stage.append(poster);
@@ -21,5 +21,13 @@ if(quality.tier==='static'){
     }
   }
 }else{
+  if(location.pathname.includes('/safehouse/')){
+    // Fetch the required renderer alongside scene.js, rather than waiting for
+    // its import graph. Static/reduced-motion previews never request it.
+    const rendererHint=document.createElement('link');
+    rendererHint.rel='modulepreload';
+    rendererHint.href=new URL('./three.module.js',import.meta.url).href;
+    document.head.append(rendererHint);
+  }
   await import(location.pathname.includes('/safehouse/')?'../safehouse/scene.js':'../gym/scene.js');
 }

@@ -1,12 +1,20 @@
 import assert from 'node:assert/strict';
 import { chromium } from '@playwright/test';
+import { popupApiResponse } from './popup-test-responses.mjs';
 const origin=process.env.STORY_ENVIRONMENT_ORIGIN||'http://127.0.0.1:4198';
 const browser=await chromium.launch({headless:true,executablePath:process.env.CHROME_PATH||'/usr/bin/google-chrome'});
 const ids=['block-party','red-side-tapes','blue-side-blues','side-show','old-heads-know'];
+async function installOtherApis(page) {
+ // Missions also mounts John Henry. Its query must receive a valid roadmap
+ // instead of the dev server's HTML SPA fallback during this focused fixture.
+ await page.route('**/api/**',route=>route.fulfill({json:popupApiResponse(new URL(route.request().url()).pathname)}));
+ page.on('pageerror',error=>console.log('PAGE ERROR',error.message));
+}
 try {
  for(const [width,height,state,owns,screen] of [[1440,900,'ready',false,'bounties'],[390,844,'locked',false,'bounties'],[375,667,'ready',true,'bounties'],[390,844,'ready',false,'home']]) {
   const page=await browser.newPage({viewport:{width,height},reducedMotion:'reduce'});
   const errors=[];page.on('pageerror',e=>errors.push(e.message));
+  await installOtherApis(page);
   let saved=false,calls=0;
   const status=()=>({state:saved?'claimed':state,ownsCard:saved||owns,chapters:ids.map((id,i)=>({id,reached:state==='ready'||i<2,completed:state==='ready'?i<4:i<1}))});
   await page.route('**/api/player/rewards/starter-mythic**',async route=>{
@@ -25,11 +33,13 @@ try {
    const bounty=await page.locator('.safehouse-bounty-logo').boundingBox(),mythic=await trigger.boundingBox();assert(mythic.y>=bounty.y+bounty.height,'Chibi must sit below Bounties');
   } else {
    assert.equal(await page.locator('.studio-tabs').count(),0);
-   await page.locator('.bounty-mastery-strip').click();await page.getByRole('region',{name:'Experiments and mastery'}).waitFor();
+   await page.locator('.bounty-mastery-strip').click();await page.getByRole('region',{name:'Hall of Hands',exact:true}).waitFor();
    await page.locator('.bounty-mastery-strip').click();
   }
   await trigger.click();const dialog=page.locator('.starter-mythic-dialog');await dialog.waitFor({state:'visible'});
   await page.locator('.starter-mythic-chapters li').last().waitFor();
+  await page.waitForFunction(()=>[...document.querySelectorAll('.starter-mythic-dialog img')].every(img=>img.complete&&img.naturalWidth>0));
+  await dialog.locator('img').evaluateAll(imgs=>Promise.all(imgs.map(img=>img.decode())));
   assert.equal(await dialog.locator('img').evaluateAll(imgs=>imgs.every(img=>img.complete&&img.naturalWidth>0)),true);
   assert(await dialog.evaluate(el=>el.scrollWidth<=el.clientWidth+1),'No horizontal clipping');
   const bounds=await dialog.boundingBox();assert(Math.abs(bounds.x+bounds.width/2-width/2)<2,'Popup must be centered');
@@ -50,6 +60,7 @@ try {
  }
  // Presentation history is independent from authoritative claim state.
  const page=await browser.newPage({viewport:{width:390,height:844}});
+ await installOtherApis(page);
  let phase='locked';
  const status=()=>({state:phase,ownsCard:false,chapters:ids.map((id,i)=>({id,reached:phase==='ready'||i===0,completed:phase==='ready'&&i<4}))});
  await page.route('**/api/player/rewards/starter-mythic',route=>route.fulfill({json:status()}));
@@ -61,6 +72,7 @@ try {
  await page.keyboard.press('Escape');phase='claimed';await page.reload();await page.waitForTimeout(2100);assert.equal(await page.locator('.starter-mythic-shortcut').count(),0);assert.equal(await dialog.isVisible(),false);
  console.log('PASS one-time introduction, eligibility celebration, and retired shortcut');await page.close();
  const retry=await browser.newPage({viewport:{width:390,height:844}});let gets=0,posts=0;
+ await installOtherApis(retry);
  await retry.route('**/api/player/rewards/starter-mythic**',async route=>{
   if(route.request().method()==='POST') {posts++;if(posts===1){await route.fulfill({status:503,json:{error:'Temporary claim failure'}});return;}const bootstrap=await retry.evaluate(()=>window.__mythicBootstrap());await route.fulfill({json:{claimed:false,duplicateShards:0,status:{...status(),state:'claimed'},bootstrap}});}
   else {gets++;await route.fulfill(gets<=2?{status:503,json:{error:'Unavailable'}}:{json:{...status(),state:'ready'}});}

@@ -189,14 +189,27 @@ addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.fov=i
 let sceneReady=false,lastTime=0,contextLost=false;el.addEventListener('webglcontextlost',e=>{e.preventDefault();contextLost=true;emit({type:'error'});const notice=document.createElement('div');notice.id='loading';notice.textContent='The room paused. Refresh to step back inside.';host.append(notice);});
 let lastAnchorUpdate=0,mailOverlay=false,mailPauseAt=0;
 let previousAnchors=null;
+let animationFrame=null,renderPrepared=false;
+function wakeScene(){
+  if(!renderPrepared||contextLost||document.hidden||animationFrame!==null||(mailOverlay&&performance.now()>mailPauseAt))return;
+  animationFrame=requestAnimationFrame(animate);
+}
+function stopScene(){
+  if(animationFrame!==null)cancelAnimationFrame(animationFrame);
+  animationFrame=null;
+}
+addEventListener('visibilitychange',()=>{
+  if(document.hidden)stopScene();
+  else{lastTime=performance.now();wakeScene();}
+});
 const anchorPoint=new T.Vector3();
 function publishAnchors(t){if(parent===window||t-lastAnchorUpdate<100)return;lastAnchorUpdate=t;const anchors=interactive.map(item=>{anchorPoint.set(0,item.key==='mail'?2.5:item.key==='growth'?1.28:item.key==='arcade'?2:item.key==='story'?1.66:item.key==='training'?.45:item.key==='music'?1.24:item.key==='profile'?1.05:.12,0);item.object.localToWorld(anchorPoint);anchorPoint.project(camera);return {id:item.key,x:(anchorPoint.x+1)*50,y:(1-anchorPoint.y)*50,visible:anchorPoint.z>-1&&anchorPoint.z<1&&Math.abs(anchorPoint.x)<.91&&anchorPoint.y<.69&&anchorPoint.y>-.38};});const changed=!previousAnchors||anchors.some((anchor,i)=>{const previous=previousAnchors[i];return anchor.visible!==previous.visible||Math.abs(anchor.x-previous.x)>.015||Math.abs(anchor.y-previous.y)>.015;});if(changed){previousAnchors=anchors;emit({type:'anchors',anchors});}}
-function animate(t){requestAnimationFrame(animate);if(contextLost||document.hidden||(mailOverlay&&t>mailPauseAt)||sceneReady&&t-lastTime<1000/quality.fps)return;const dt=Math.min((t-lastTime)/1000,.05);lastTime=t;const speed=reduced?1:1-Math.exp(-dt*5);clampCameraOrbit(desired,roomPose()[2]);yaw+=(desired.yaw-yaw)*speed;pitch+=(desired.pitch-pitch)*speed;radius+=(desired.radius-radius)*speed;target.lerp(desired.target,speed);positionRoomCamera({yaw,pitch,radius,target},camera.position,innerWidth/innerHeight>=.95);camera.lookAt(target);frameShift+=(desiredFrameShift-frameShift)*speed;if(!camera.view||camera.view.fullWidth!==innerWidth||camera.view.fullHeight!==innerHeight||camera.view.offsetY!==frameShift)camera.setViewOffset(innerWidth,innerHeight,0,frameShift,innerWidth,innerHeight);
+function animate(t){animationFrame=null;if(contextLost||document.hidden||(mailOverlay&&t>mailPauseAt))return;wakeScene();if(sceneReady&&t-lastTime<1000/quality.fps)return;const dt=Math.min((t-lastTime)/1000,.05);lastTime=t;const speed=reduced?1:1-Math.exp(-dt*5);clampCameraOrbit(desired,roomPose()[2]);yaw+=(desired.yaw-yaw)*speed;pitch+=(desired.pitch-pitch)*speed;radius+=(desired.radius-radius)*speed;target.lerp(desired.target,speed);positionRoomCamera({yaw,pitch,radius,target},camera.position,innerWidth/innerHeight>=.95);camera.lookAt(target);frameShift+=(desiredFrameShift-frameShift)*speed;if(!camera.view||camera.view.fullWidth!==innerWidth||camera.view.fullHeight!==innerHeight||camera.view.offsetY!==frameShift)camera.setViewOffset(innerWidth,innerHeight,0,frameShift,innerWidth,innerHeight);
 if(!reduced){dust.position.y=Math.sin(t*.00015)*.09;const age=(t-bagStarted)/1000;bagPivot.rotation.z=Math.sin(age*5.5)*bagImpulse*Math.exp(-age*1.35)+Math.sin(t*.0007)*.004;bagPivot.rotation.x=Math.sin(age*4)*bagImpulse*.3*Math.exp(-age*1.35);}
 if(mailDoor.update(t/1000,dt,reduced))renderer.shadowMap.needsUpdate=true;
 if(roomDetails.update(t/1000,dt,reduced))renderer.shadowMap.needsUpdate=true;bulletinBoard.update(t/1000,reduced);if(bagImpulse>0&&(t-bagStarted)<5000)renderer.shadowMap.needsUpdate=true;renderer.info.reset();art.render();if(!sceneReady){sceneReady=true;document.querySelector('#loading')?.remove();emit({type:'ready',gpuTier:quality.tier});}publishAnchors(t);}
 // Keep the loading state through shader compilation and the first drawn frame.
-void art.prepare().then(()=>{if(!contextLost)requestAnimationFrame(animate);}).catch(()=>emit({type:'error',message:'The room could not be rendered.'}));
+void art.prepare().then(()=>{renderPrepared=true;wakeScene();}).catch(()=>emit({type:'error',message:'The room could not be rendered.'}));
 
 function emit(payload){parent.postMessage({channel:'squabblemon-scene',...payload},location.origin);}
 addEventListener('message',e=>{
@@ -211,14 +224,14 @@ addEventListener('message',e=>{
   if(d.type==='crew')updateCrewCards(d.cards);
   if(d.type==='mail')mailDoor.setUnread(d.unread);
   if(d.type==='bulletin')bulletinBoard.setUnread(d.unread);
-  if(d.type==='mail-overlay'){mailOverlay=Boolean(d.open);mailPauseAt=performance.now()+900;}
+  if(d.type==='mail-overlay'){mailOverlay=Boolean(d.open);mailPauseAt=performance.now()+900;lastTime=performance.now();wakeScene();}
   if(d.type==='profile')roomDetails.setProfile(d);
   if(d.type==='punch')punch();
   if(d.type==='settings')reduced=Boolean(d.reducedMotion)||matchMedia('(prefers-reduced-motion: reduce)').matches;
 });
-window.Squabblemon.getSceneStatus=()=>({view:selected,arcade:arcadeDisplay.status(),mail:mailDoor.status(),bulletin:bulletinBoard.status(),night,reduced,batching,crewCards:crewLoaded,music:roomDetails.status(),camera:{yaw,pitch,radius,position:camera.position.toArray(),target:target.toArray()},drawCalls:renderer.info.render.calls,triangles:renderer.info.render.triangles});
+window.Squabblemon.getSceneStatus=()=>({view:selected,animationPending:animationFrame!==null,arcade:arcadeDisplay.status(),mail:mailDoor.status(),bulletin:bulletinBoard.status(),night,reduced,batching,crewCards:crewLoaded,music:roomDetails.status(),camera:{yaw,pitch,radius,position:camera.position.toArray(),target:target.toArray()},drawCalls:renderer.info.render.calls,triangles:renderer.info.render.triangles});
 renderer.info.autoReset=false;
 addEventListener('error',()=>emit({type:'error'}));
 
 
-addEventListener('pagehide',()=>{contextLost=true;crewGeneration++;roomDetails.dispose();art.dispose();scene.traverse(object=>{object.geometry?.dispose();const materials=Array.isArray(object.material)?object.material:[object.material];for(const material of materials){if(!material)continue;for(const value of Object.values(material))if(value?.isTexture)value.dispose();material.dispose();}});scene.environment?.dispose();renderer.dispose();});
+addEventListener('pagehide',()=>{contextLost=true;stopScene();crewGeneration++;roomDetails.dispose();art.dispose();scene.traverse(object=>{object.geometry?.dispose();const materials=Array.isArray(object.material)?object.material:[object.material];for(const material of materials){if(!material)continue;for(const value of Object.values(material))if(value?.isTexture)value.dispose();material.dispose();}});scene.environment?.dispose();renderer.dispose();});

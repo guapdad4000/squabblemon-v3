@@ -11,7 +11,7 @@ import { Link } from 'wouter';
 import { getGetPlayerStoryQueryKey, useGetPlayerStory, useListChallengeRuns, getListChallengeRunsQueryKey, type PlayerBootstrap } from '@workspace/api-client-react';
 import { Briefcase, ArrowRight, Moon, Sun, Tv, Dumbbell, Layers, Smartphone, Disc3, Move, MousePointer2, Sprout, UserRound, CalendarDays } from 'lucide-react';
 import { getAssetUrl } from '../../lib/assets';
-import { AccountRewards } from '../../components/AccountRewards';
+import { DeferredGrowthLab, preloadGrowthLab } from '../../components/DeferredGrowthLab';
 import { MusicControls } from '../../components/MusicControls';
 import { SafehouseMail, useSafehouseMail } from '../../components/SafehouseMail';
 import { hasUnreadBulletin, SafehouseBulletinBoard } from '../../components/SafehouseBulletinBoard';
@@ -265,13 +265,13 @@ export function Home({ bootstrap, onGuideComplete }: { bootstrap: PlayerBootstra
     <div className="safehouse venue-page studio-page safehouse-stage safehouse-stage--hero world-decor-host"
       data-view={view} data-scene-ready={sceneReady} data-scene-fallback={sceneFallback} data-lighting={night ? 'night' : 'day'}>
       <LobbyDepth />
-      <AccountRewards bootstrap={bootstrap} open={growthOpen} onOpenChange={setGrowthOpen} />
+      <DeferredGrowthLab bootstrap={bootstrap} open={growthOpen} onOpenChange={setGrowthOpen} />
       <SafehouseMail playerId={bootstrap.profile.id} open={mailOpen} onClose={() => { setMailOpen(false); explore('room'); }} />
       <SafehouseBulletinBoard playerId={bootstrap.profile.id} open={bulletinOpen} onViewed={markBulletinViewed} onClose={() => { setBulletinOpen(false); explore('room'); }} />
       <Link className="safehouse-bounty-logo" href="/game/missions" aria-label={`Open bounties${claimed ? ` · ${claimed} ready` : ''}`}><img src={getAssetUrl('assets/bounty-hunter/hero.webp')} alt="" /><span className="sr-only">Bounties</span><Attention section="missions" />{claimed > 0 && <b>{claimed}</b>}</Link>
       <JohnHenryMythic bootstrap={bootstrap} placement="shortcut" />
       <StarterMythic bootstrap={bootstrap} placement="shortcut" autoShow={!onGuideComplete && view === 'room' && !growthOpen && !mailOpen && !bulletinOpen} />
-      <SceneFrame kind="safehouse" frameRef={frame} poster={`${import.meta.env.BASE_URL}scenes/safehouse/concept.png`}
+      <SceneFrame kind="safehouse" frameRef={frame} poster={`${import.meta.env.BASE_URL}scenes/safehouse/concept.webp`}
         onMessage={receive} onReady={() => { setSceneFallback('none'); resetRoomMarkers(markers.current); setMarkersPlaced(false); setSceneReady(true); syncRoom(); sendScene(frame, { type: 'view', view }); }} />
       <div className="safehouse__shade" />
       <header className="safehouse-room-header">
@@ -295,7 +295,7 @@ export function Home({ bootstrap, onGuideComplete }: { bootstrap: PlayerBootstra
           <div className="safehouse-room-detail__body"><div><span className="room-eyebrow">{station.label}</span><h2>{station.id === 'growth' ? <>Buddy’s <em className="buddy-growth-word">Growth</em> Lab</> : station.title}</h2>
             <p>{station.id === 'music' ? `${music.playing ? 'Now playing' : 'On the turntable'}: ${music.track?.title ?? soundtrack[music.trackIndex].title}` : station.id === 'story' && chapter ? chapter.title : station.detail}</p></div>
             <div className="safehouse-room-actions">
-              {station.id === 'growth' ? <div className="room-growth"><img className="room-growth__buddy" src={getAssetUrl('assets/buddy-growth/buddy-welcome.webp')} alt="Buddy welcomes you to his Growth Lab" width="720" height="960" /><button type="button" className="room-action" onClick={() => setGrowthOpen(true)}>Enter Growth Lab<ArrowRight size={15} /></button></div> : station.id === 'events' ? <button type="button" className="room-action" onClick={() => setBulletinOpen(true)}>Read the board<ArrowRight size={15} /></button> : station.id === 'music' ? <MusicControls variant="dj" wrapperClassName="room-dj" /> : onGuideComplete && station.id === 'cards' ? <button className="room-action" onClick={onGuideComplete}>Build your gang<ArrowRight size={15} /></button> : <Link href={station.href} className="room-action">{station.action}<ArrowRight size={15} /></Link>}
+              {station.id === 'growth' ? <div className="room-growth"><img className="room-growth__buddy" src={getAssetUrl('assets/buddy-growth/buddy-welcome.webp')} alt="Buddy welcomes you to his Growth Lab" width="720" height="960" /><button type="button" className="room-action" onPointerEnter={preloadGrowthLab} onFocus={preloadGrowthLab} onPointerDown={preloadGrowthLab} onClick={() => setGrowthOpen(true)}>Enter Growth Lab<ArrowRight size={15} /></button></div> : station.id === 'events' ? <button type="button" className="room-action" onClick={() => setBulletinOpen(true)}>Read the board<ArrowRight size={15} /></button> : station.id === 'music' ? <MusicControls variant="dj" wrapperClassName="room-dj" /> : onGuideComplete && station.id === 'cards' ? <button className="room-action" onClick={onGuideComplete}>Build your gang<ArrowRight size={15} /></button> : <Link href={station.href} className="room-action">{station.action}<ArrowRight size={15} /></Link>}
               {station.id === 'training' && sceneReady && <button type="button" className="room-punch" onClick={() => { sendScene(frame, { type: 'punch' }); }}>Hit the bag</button>}
             </div>
           </div>

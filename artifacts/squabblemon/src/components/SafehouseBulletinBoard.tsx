@@ -7,7 +7,7 @@ import { PatchNotes } from './PatchNotes';
 import { markPatchBoardRead, usePublishedPatches } from '../hooks/use-patches';
 import '../styles/safehouse-bulletin.css';
 
-const supplied = (name: string) => getAssetUrl(`assets/events/supplied/${name}.png`);
+const supplied = (name: string) => getAssetUrl(`assets/events/supplied/${name}.webp`);
 const reducedMotion = () => typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
 
 export function hasUnreadBulletin() {

@@ -1,0 +1,42 @@
+[
+  {
+    "namespace": "BuddyGrowthLab",
+    "exports": [
+      "BuddyGrowthLab",
+      "BuddyPlant"
+    ]
+  },
+  {
+    "namespace": "StarterMythicDialogContent",
+    "exports": [
+      "StarterMythicDialogContent"
+    ]
+  },
+  {
+    "namespace": "JohnHenryDialogContent",
+    "exports": [
+      "JohnHenryDialogContent"
+    ]
+  },
+  {
+    "feature": "BuddyGrowthLab",
+    "compiledRetry": true,
+    "featureRequests": 2,
+    "documents": 1,
+    "preloadErrors": 1
+  },
+  {
+    "feature": "StarterMythicDialogContent",
+    "compiledRetry": true,
+    "featureRequests": 2,
+    "documents": 1,
+    "preloadErrors": 1
+  },
+  {
+    "feature": "JohnHenryDialogContent",
+    "compiledRetry": true,
+    "featureRequests": 2,
+    "documents": 1,
+    "preloadErrors": 1
+  }
+]
