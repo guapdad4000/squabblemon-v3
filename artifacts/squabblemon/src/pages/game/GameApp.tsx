@@ -289,7 +289,7 @@ export default function GameApp() {
   const { isLoaded, isSignedIn } = useAppAuth();
   const [location, setLocation] = useLocation();
   const search = useSearch();
-  const { data: apiBootstrap, isLoading, isFetching, error, refetch } = useGetPlayerBootstrap({
+  const { data: apiBootstrap, isLoading, isFetching, refetch } = useGetPlayerBootstrap({
     query: {
       queryKey: getGetPlayerBootstrapQueryKey(),
       enabled: isLoaded && isSignedIn,
@@ -330,9 +330,11 @@ export default function GameApp() {
     ? apiBootstrapValid
       ? (apiBootstrap as PlayerBootstrap)
       : getE2EBootstrap()
-    : (apiBootstrap as PlayerBootstrap | undefined);
+    : apiBootstrapValid ? (apiBootstrap as PlayerBootstrap) : undefined;
 
-  if ((!e2eAuthEnabled && error) || !bootstrap) {
+  // A failed background refresh must not unmount an active battle or its
+  // unsaved receipt. Auth changes still leave through the account gate above.
+  if (!bootstrap) {
     return (
       <BootstrapError
         onRetry={() => void refetch()}
