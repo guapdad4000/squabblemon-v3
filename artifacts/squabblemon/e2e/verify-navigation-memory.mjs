@@ -7,7 +7,7 @@ try {
     const page = await browser.newPage({ viewport });
     await page.addInitScript(() => localStorage.setItem('squabblemon_e2e_user', 'signed-in'));
     await page.routeWebSocket('**', () => {});
-    await page.route('**/api/**', r => r.fulfill({ json: r.request().url().endsWith('/challenges/runs') ? [] : {} }));
+    await page.route('**/api/**', r => r.fulfill({ json: r.request().url().endsWith('/challenges/runs') ? [] : { chapters: [], nodes: [], pending: [], items: [], messages: [], ids: [], state: "claimed", reward: {} } }));
     page.on('pageerror',e=>console.log('PAGE ERROR',e.message));
     page.setDefaultTimeout(15000);
     const back = page.locator('.city-header .game-back-button');

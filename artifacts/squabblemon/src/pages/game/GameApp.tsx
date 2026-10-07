@@ -2,8 +2,7 @@ import { installInteractionClickSounds } from '../../lib/interactionClickSounds'
 import './gameStyles';
 import { NotificationProvider } from '../../components/Notifications';
 import { useNavigationScroll } from '../../lib/navigationMemory';
-import { warmScreenArt } from '../../lib/screenArtWarmup';
-import { PlayerLevelCelebration } from '../../components/AccountRewards';
+import { PlayerLevelCelebration } from '../../components/PlayerLevelCelebration';
 import { CityHeader } from '../../components/venue/CityHeader';
 import { rewardReceipts } from '../../lib/rewardReceipts';
 import { CosmeticProvider } from '../../components/CosmeticContext';
@@ -94,8 +93,7 @@ function GameRoutes({ bootstrap }: { bootstrap: PlayerBootstrap }) {
       bootstrap.profile.settings.reducedMotion ? 'true' : 'false';
   }, [bootstrap.profile.settings.reducedMotion]);
 
-  useEffect(() => { preloadGameRoute('/game'); warmScreenArt(); }, []);
-
+  // The requested route is prepared while bootstrap loads; other screens warm only on navigation intent.
   useEffect(() => {
     const warmDestination = (event: Event) => {
       if (!(event.target instanceof Element)) return;
