@@ -9,6 +9,7 @@ import { isStreetPackCard } from './collectionEconomy';
 import { findPromoCode, isDevelopmentPromoCodeEnabled, PROMO_CODES } from './promoCodes';
 
 const testerGrants = {
+  DEVMARYMACK: ['ms-mary-mack'],
   DEVBLUEGANG: ['ganger-blue', 'blue-side-1', 'blue-side-2', 'blue-side-3', 'blue-side-4', 'blue-side-5'],
   DEVREDGANG: ['ganger-red', 'red-side-1', 'red-side-2', 'red-side-3', 'red-side-4', 'red-side-5'],
   DEVSQUABBLEHOUSE: ['squabble-house-manager', 'squabblehouse-bus-boy', 'squabblehouse-cashier',
@@ -20,7 +21,7 @@ const testerGrants = {
 
 test('tester codes grant exactly their catalog cards with no currency in development and production', () => {
   const allIds = Object.values(testerGrants).flat();
-  assert.equal(new Set(allIds).size, 31);
+  assert.equal(new Set(allIds).size, 32);
   for (const [code, cardIds] of Object.entries(testerGrants)) {
     const expected = { code, packTickets: 0, softCurrency: 0, styleShards: 0, cardIds: [...cardIds] };
     for (const environment of ['development', 'production']) {
@@ -394,4 +395,10 @@ test('KYLE grants the legendary character, tickets and Clout', () => {
   assert.deepEqual(reward, { code: 'KYLE', packTickets: 25, softCurrency: 20_000, styleShards: 0, cardIds: ['kyle'] });
   assert.equal(catalogCardById.kyle.kind, 'character');
   assert.equal(catalogCardById.kyle.rarity, 'Legendary');
+});
+
+test('DEVMARYMACK unlocks Mythical Mary without granting her runtime elephant form', () => {
+  assert.deepEqual(findPromoCode(' devmarymack ', 'production')?.cardIds, ['ms-mary-mack']);
+  assert.equal(catalogCardById['ms-mary-mack'].rarity, 'Mythical');
+  assert.equal(catalogCardById['ms-mary-mack-elephant'], undefined);
 });

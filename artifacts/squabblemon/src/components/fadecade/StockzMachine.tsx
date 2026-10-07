@@ -16,6 +16,9 @@ import {
 } from "@workspace/squabblemon-engine/accountRewards";
 import { FadecadeDialog } from "./FadecadeDialog";
 import "../../styles/stockz.css";
+import { getAssetUrl } from "../../lib/assets";
+import { AnimatedSprite } from "./AnimatedSprite";
+import { stockzSpriteAnimation, MOTION_ASSET_ROOT } from "./motionSpriteCatalog";
 
 export function StockzMachine({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   const [open, setOpen] = useState(false),
@@ -77,13 +80,17 @@ export function StockzMachine({ bootstrap }: { bootstrap: PlayerBootstrap }) {
       setBusy(false);
     }
   }
+  const latest = query.data?.recent[0];
+  const mood = active ? "waiting" : latest ? latest.payout ? "win" : "miss" : "idle";
+  const banner = getAssetUrl(`${MOTION_ASSET_ROOT}/stockz-exchange-banner.webp`);
   return (
     <div className="fadecade-machine-group stockz-machine">
       <ArcadeCabinet artUrl="assets/fadecade/stockz-screen.webp" aspectRatio={1458 / 1079}
         aperture={{ left: '17%', top: '30%', width: '66%', height: '50%' }}
         testId="fadecade-stockz" className="machine-small stockz-screen">
-        <div className="stockz-attract">
-          <div className="stockz-attract-heading"><span>MARKET PREVIEW</span><strong>UP OR DOWN?</strong></div>
+        <div className="stockz-attract" style={{ backgroundImage: `url(${banner})` }}>
+          <img className="stockz-attract-avatar" src={getAssetUrl("assets/characters/stockz.webp")} alt="" />
+          <div className="stockz-attract-heading"><span>STOCKZ · CLOUT EXCHANGE</span><strong>CALL YOUR SHOT.</strong></div>
           <svg className="stockz-attract-chart" viewBox="0 0 300 85" preserveAspectRatio="none" aria-hidden="true">
             <path className="stockz-chart-grid" d="M0 20H300M0 42H300M0 64H300M40 0V85M95 0V85M150 0V85M205 0V85M260 0V85" />
             <path className="stockz-chart-area" d="M0 72L25 60 49 66 75 36 99 46 125 24 153 40 177 29 202 44 229 17 253 26 277 9 300 18V85H0Z" />
@@ -106,7 +113,14 @@ export function StockzMachine({ bootstrap }: { bootstrap: PlayerBootstrap }) {
         kind="stockz"
       >
         <div className="stockz-panel" id="stockz-setup">
-          <p>
+          <header className="stockz-hero">
+            <img src={banner} alt="Stockz at his neighborhood trading booth" />
+            <div><span>THE CLOUT EXCHANGE</span><h2>BUY<br />MONEY.</h2><p>CALL YOUR SHOT. OWN THE BELL.</p></div>
+          </header>
+          <div className="stockz-ticker-strip" aria-label="Fictional market opening prices">
+            {STOCKZ_TICKERS.map(stock => <span key={stock.id}><b>{stock.id}</b><strong>{stock.price}</strong></span>)}
+          </div>
+          <p className="stockz-rules">
             Pick a fictional stock. Call up or down at the closing bell. A
             correct call returns 2× your stake, including the stake; a miss
             loses it.
@@ -127,11 +141,15 @@ export function StockzMachine({ bootstrap }: { bootstrap: PlayerBootstrap }) {
           {query.data && (
             <>
               <div className="stockz-balance">
-                {bootstrap.profile.softCurrency.toLocaleString()} Clout{" "}
-                <span>
-                  {query.data.roundsToday}/{STOCKZ_DAILY_LIMIT} trades today
-                </span>
+                <div><small>YOUR CLOUT</small><strong>{bootstrap.profile.softCurrency.toLocaleString()}</strong></div>
+                <div><small>TODAY’S CALLS</small><strong>{query.data.roundsToday}<span> / {STOCKZ_DAILY_LIMIT}</span></strong></div>
               </div>
+              <div className="stockz-trading-floor">
+              <div className="stockz-host" data-mood={mood}>
+                <AnimatedSprite animation={stockzSpriteAnimation(mood)} name={`stockz-${mood}`} className="stockz-host-sprite" animationKey={active?.id ?? latest?.id} fallback={getAssetUrl("assets/characters/stockz.webp")} />
+                <div><span>STOCKZ SAYS</span><strong>{active ? "LET IT CLOSE." : latest ? latest.payout ? "GOOD CALL." : "NEXT BELL. NEW CALL." : "CALL YOUR SHOT."}</strong><small>{active ? "Your call is locked in. Come back at the closing bell." : "Pick a company. Pick a direction. Ring the bell."}</small></div>
+              </div>
+              <div className="stockz-trade-controls">
               {active ? (
                 <div className="stockz-active" role="status">
                   <span>TRADE LOCKED</span>
@@ -224,11 +242,13 @@ export function StockzMachine({ bootstrap }: { bootstrap: PlayerBootstrap }) {
                   </button>
                 </>
               )}
+              </div>
+              </div>
               {query.data.recent.length > 0 && (
                 <div className="stockz-history">
                   <h4>Trade receipts</h4>
                   {query.data.recent.map((round) => (
-                    <p key={round.id}>
+                    <p key={round.id} data-result={round.payout ? "win" : "miss"}>
                       <b>
                         {round.ticker} {round.direction} · {round.openPrice} →{" "}
                         {round.closePrice}

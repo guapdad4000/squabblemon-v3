@@ -1,0 +1,30 @@
+.motion-sprite { display:block; pointer-events:none; user-select:none; }
+.motion-sprite > svg, .motion-sprite > img { display:block; width:100%; height:100%; overflow:hidden; object-fit:contain; }
+.motion-sprite__image {
+  animation: minigame-four-frames var(--motion-duration) steps(1,end) infinite;
+  transform:translateX(var(--motion-0));
+}
+.motion-sprite[data-frames="2"] .motion-sprite__image { animation-name:minigame-two-frames; }
+.motion-sprite[data-loop="false"] .motion-sprite__image { animation-iteration-count:1; animation-fill-mode:forwards; }
+.motion-sprite[data-paused="true"] .motion-sprite__image,
+.motion-sprite[data-motion-visible="false"] .motion-sprite__image,
+.motion-sprite[data-motion-hidden="true"] .motion-sprite__image,
+body:has(.fadecade-dialog-content[data-state="open"]) .fadecade-hub .motion-sprite__image,
+[data-motion-paused="true"] .motion-sprite__image { animation-play-state:paused; }
+@keyframes minigame-four-frames {
+  0% { transform:translateX(var(--motion-0)); }
+  25% { transform:translateX(var(--motion-1)); }
+  50% { transform:translateX(var(--motion-2)); }
+  75%,100% { transform:translateX(var(--motion-3)); }
+}
+@keyframes minigame-two-frames {
+  0% { transform:translateX(var(--motion-0)); }
+  50%,100% { transform:translateX(var(--motion-1)); }
+}
+[data-reduce-motion="true"] .motion-sprite__image,
+[data-reduced-motion="true"] .motion-sprite__image {
+  animation:none!important; transform:translateX(var(--motion-still));
+}
+@media (prefers-reduced-motion:reduce) {
+  .motion-sprite__image { animation:none!important; transform:translateX(var(--motion-still)); }
+}

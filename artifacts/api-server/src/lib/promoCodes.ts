@@ -7,9 +7,10 @@ export type PromoCodeReward = {
   cardIds?: string[];
 };
 
-export const PROMO_CODES: Record<'DEVTEST' | 'DEVTEST2' | 'SIMMYFOODZ' | 'CITYLEGENDS' | 'JETSETCABIN' | 'DEVSTOCKZ' | 'KYLE' | 'DEVBLUEGANG' | 'DEVREDGANG' | 'DEVWITCHMONKEY' | 'TRIPLEOGDEV' | 'DEVSQUABBLEHOUSE', PromoCodeReward> = {
+export const PROMO_CODES: Record<'DEVTEST' | 'DEVTEST2' | 'SIMMYFOODZ' | 'CITYLEGENDS' | 'JETSETCABIN' | 'DEVSTOCKZ' | 'KYLE' | 'DEVBLUEGANG' | 'DEVREDGANG' | 'DEVWITCHMONKEY' | 'TRIPLEOGDEV' | 'DEVSQUABBLEHOUSE' | 'DEVMARYMACK', PromoCodeReward> = {
   DEVSTOCKZ: { code: 'DEVSTOCKZ', packTickets: 0, softCurrency: 0, styleShards: 0, cardIds: ['stockz'] },
   // Possession-based tester codes: intentionally available in production.
+  DEVMARYMACK: { code: 'DEVMARYMACK', packTickets: 0, softCurrency: 0, styleShards: 0, cardIds: ['ms-mary-mack'] },
   DEVBLUEGANG: { code: 'DEVBLUEGANG', packTickets: 0, softCurrency: 0, styleShards: 0,
     cardIds: ['ganger-blue', 'blue-side-1', 'blue-side-2', 'blue-side-3', 'blue-side-4', 'blue-side-5'] },
   DEVREDGANG: { code: 'DEVREDGANG', packTickets: 0, softCurrency: 0, styleShards: 0,

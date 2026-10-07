@@ -1089,3 +1089,17 @@
     top: 47%;
   }
 }
+
+/* Articulated atlas frames provide idle movement; keep the character camera fixed. */
+.wr-battle:not(.wr-battle--attack) .wr-staff-sprite.motion-sprite, .wr-battle:not(.wr-battle--attack) .wr-battle-bird.motion-sprite { animation:none; }
+
+.wr-intro-bird > .motion-sprite { width:100%; height:100%; }
+.wr-intro-bird:has(.motion-sprite){animation:none;}
+
+/* The rear-view pigeon is bottom-registered; its HP panel sits below the visible bird. */
+.wr-battle-bird.motion-sprite { top:33%; }
+.wr-battle-health { top:65%; bottom:auto; }
+@media(max-width:650px) {
+  .wr-battle-bird.motion-sprite { top:28%; width:40%; height:25%; }
+  .wr-battle-health, .waffle-run[data-phase="learning"] .wr-battle-health { top:54%; bottom:auto; }
+}

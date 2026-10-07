@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { assertSpriteArt } from "./motion-sprite-proof";
 import { chromium } from "@playwright/test";
 import { mkdir } from "node:fs/promises";
 import {
@@ -26,7 +27,7 @@ import {
 } from "@workspace/squabblemon-engine/arcadeGames";
 process.env.PW_TEST_SCREENSHOT_NO_FONTS_READY = "1";
 async function verify(width: number, height: number) {
-  const browser = await chromium.launch({ headless: true });
+  const browser = await chromium.launch({ headless: true, executablePath: process.env.PLAYWRIGHT_EXECUTABLE_PATH });
   const page = await browser.newPage({ viewport: { width, height } });
   page.setDefaultTimeout(30000);
   const errors: string[] = [];
@@ -232,6 +233,7 @@ async function verify(width: number, height: number) {
   await mkdir("../../screenshots/arcade-games", { recursive: true });
   async function shot(name: string) {
     await page.waitForTimeout(100);
+    await assertSpriteArt(page);
     assert.equal(
       await page.evaluate(
         () => document.documentElement.scrollWidth > innerWidth,
@@ -288,53 +290,24 @@ async function verify(width: number, height: number) {
       name.startsWith("market-") &&
       (await page.locator(".market-doctor").count())
     ) {
-      const scale = await page.locator(".market-doctor").evaluate((doctor) => {
-        const enemy = document.querySelector<HTMLImageElement>(
-          ".market-enemy > img",
-        );
-        const images = [doctor as HTMLImageElement];
-        if (enemy) images.push(enemy);
+      const scale = await page.locator(".market-doctor").evaluate(async (doctor) => {
+        const enemy = document.querySelector(".market-enemy > .motion-sprite");
         const measurements: { height: number; bottom: number }[] = [];
-        for (const image of images) {
-          const rect = image.getBoundingClientRect();
-          const canvas = document.createElement("canvas");
-          canvas.width = image.naturalWidth;
-          canvas.height = image.naturalHeight;
+        for (const actor of [doctor, ...(enemy ? [enemy] : [])]) {
+          const rect = actor.getBoundingClientRect();
+          const sheet = actor.querySelector("image")!;
+          const svg = actor.querySelector("svg")!.viewBox.baseVal;
+          const image = new Image(); image.src = sheet.getAttribute("href")!; await image.decode();
+          const canvas = document.createElement("canvas"); canvas.width = svg.width; canvas.height = svg.height;
           const context = canvas.getContext("2d")!;
-          context.drawImage(image, 0, 0);
-          const pixels = context.getImageData(
-            0,
-            0,
-            canvas.width,
-            canvas.height,
-          ).data;
-          let top = canvas.height,
-            bottom = 0;
-          for (let y = 0; y < canvas.height; y++)
-            for (let x = 0; x < canvas.width; x++)
-              if (pixels[(y * canvas.width + x) * 4 + 3] > 32) {
-                top = Math.min(top, y);
-                bottom = Math.max(bottom, y);
-              }
-          const fitHeight = Math.min(
-            rect.height,
-            (rect.width * canvas.height) / canvas.width,
-          );
-          measurements.push({
-            height: ((bottom - top + 1) / canvas.height) * fitHeight,
-            bottom:
-              rect.top +
-              (rect.height - fitHeight) / 2 +
-              (bottom / canvas.height) * fitHeight,
-          });
+          context.drawImage(image, 0, -Number(sheet.getAttribute("y")), svg.width, svg.height, 0, 0, svg.width, svg.height);
+          const pixels = context.getImageData(0,0,canvas.width,canvas.height).data;
+          let top = canvas.height, bottom = 0;
+          for (let y=0;y<canvas.height;y++) for(let x=0;x<canvas.width;x++) if(pixels[(y*canvas.width+x)*4+3]>32){top=Math.min(top,y);bottom=Math.max(bottom,y);}
+          const fitHeight=Math.min(rect.height,rect.width*svg.height/svg.width);
+          measurements.push({height:(bottom-top+1)/svg.height*fitHeight,bottom:rect.top+(rect.height-fitHeight)/2+bottom/svg.height*fitHeight});
         }
-        return {
-          doctor: measurements[0],
-          enemy: measurements[1] ?? null,
-          controls: document
-            .querySelector(".market-restock-controls")!
-            .getBoundingClientRect().top,
-        };
+        return {doctor:measurements[0],enemy:measurements[1]??null,controls:document.querySelector(".market-restock-controls")!.getBoundingClientRect().top};
       });
       if (scale.enemy)
         assert.ok(
@@ -364,7 +337,7 @@ async function verify(width: number, height: number) {
     await page.locator(".arcade-game").waitFor();
   }
   try {
-    await page.goto("http://127.0.0.1:4195/game/challenges", {
+    await page.goto(`${process.env.ARCADE_BASE_URL ?? "http://127.0.0.1:4195"}/game/challenges`, {
       waitUntil: "domcontentloaded",
     });
     await page
@@ -412,9 +385,7 @@ async function verify(width: number, height: number) {
         .getByRole("button", { name: "Box " + direction, exact: true })
         .click();
       assert.ok(
-        (await page.locator(".girl-player").getAttribute("src"))!.endsWith(
-          `back-${move}.webp`,
-        ),
+        (await page.locator(".girl-player").getAttribute("data-sprite"))!.endsWith(`back-${move}`),
       );
       if (width === 1440) await shot(`girl-${move}`);
       await page.getByRole("button", { name: "UNDO", exact: true }).click();
@@ -454,9 +425,7 @@ async function verify(width: number, height: number) {
     assert.ok((runs["fade-market"] as MarketRun).market.power > 4);
     await shot("market-shift");
     assert.ok(
-      (await page.locator(".market-doctor").getAttribute("src"))!.includes(
-        "north.webp",
-      ),
+      (await page.locator(".market-doctor").getAttribute("data-sprite"))!.endsWith("north"),
     );
     const targetLane =
       (runs["fade-market"] as MarketRun).market.enemies[0]?.lane ?? 2;
@@ -468,9 +437,7 @@ async function verify(width: number, height: number) {
       .click();
     await page.locator(".market-doctor.is-punching").waitFor();
     assert.ok(
-      (await page.locator(".market-doctor").getAttribute("src"))!.endsWith(
-        "market-punch-north.webp",
-      ),
+      (await page.locator(".market-doctor").getAttribute("data-sprite")) === "market-punch-north",
     );
     await page.waitForTimeout(220);
     await shot("market-punch");
@@ -479,7 +446,9 @@ async function verify(width: number, height: number) {
       .click();
     await page.getByText("SHIFT PAUSED", { exact: true }).waitFor();
     const ticks = (runs["fade-market"] as MarketRun).market.tick;
+    const pose = await page.locator(".market-doctor image").evaluate(el => getComputedStyle(el).transform);
     await page.waitForTimeout(1500);
+    assert.equal(await page.locator(".market-doctor image").evaluate(el => getComputedStyle(el).transform), pose, "paused market holds sprite pose");
     assert.equal((runs["fade-market"] as MarketRun).market.tick, ticks);
     await shot("market-paused");
     await page
@@ -517,6 +486,12 @@ async function verify(width: number, height: number) {
     await page.getByRole("button", { name: /^Safehouse ·/ }).click();
     await page.getByRole("button", { name: /^FORTIFY/ }).click();
     await page.waitForTimeout(250);
+    const tokenOverlaps = await page.locator('.block-district:has(.block-crew-token)').evaluateAll(tiles => tiles.filter(tile => {
+      const fighter = tile.querySelector('.block-crew-token')!.getBoundingClientRect();
+      const defense = tile.querySelector('.block-flag')!.getBoundingClientRect();
+      return fighter.left < defense.right && fighter.right > defense.left && fighter.top < defense.bottom && fighter.bottom > defense.top;
+    }).map(tile => tile.getAttribute('aria-label')));
+    assert.deepEqual(tokenOverlaps, [], 'Every crew sprite has space beside its defense marker');
     await shot("block-turf");
     await page.getByRole("button", { name: /^GET SUPPLIES/ }).click();
     await page.waitForTimeout(250);

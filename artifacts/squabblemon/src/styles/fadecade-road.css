@@ -69,3 +69,7 @@
 @keyframes fadecade-fall{0%{opacity:0;transform:translateY(-55px) rotate(-24deg) scale(1.15)}65%{opacity:1;transform:translateY(7px) rotate(5deg)}85%{transform:translateY(-3px) rotate(-2deg)}100%{opacity:1;transform:translateY(0) rotate(0)}}
 @keyframes fadecade-breathe{50%{transform:translateY(-3px)}}
 @keyframes fadecade-celebrate{from{opacity:0;transform:scale(1.3)}to{opacity:1;transform:scale(1)}}
+.fadecade-sprite.motion-sprite{height:auto;aspect-ratio:2/3;animation:none;}
+.fadecade-sprite--defeat.motion-sprite{width:90px;}
+
+.fadecade-road-view[data-motion-visible=false] *,.fadecade-road-view[data-motion-hidden=true] *,body:has(.fadecade-dialog-content[data-state=open]) .fadecade-hub .fadecade-road-view *{animation-play-state:paused!important;}

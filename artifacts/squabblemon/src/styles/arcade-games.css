@@ -1658,3 +1658,34 @@
   justify-content: center;
   gap: 10px;
 }
+
+/* One fixed camera for all guard/action frames; only the arena's outer edges crop. */
+.girl-player.motion-sprite, .girl-player.motion-sprite.is-idle {
+  width:380px; height:380px; left:calc(50% - 340px); bottom:-22px; max-width:none;
+}
+.girl-opponent.motion-sprite, .girl-opponent.motion-sprite.is-idle {
+  width:355px; height:355px; right:calc(50% - 310px); bottom:-25px; top:auto; max-width:none;
+}
+.block-crew-token { position:absolute; width:64px; height:64px; left:6%; bottom:30%; filter:drop-shadow(0 4px 2px #0009); }
+.block-flag, .block-district strong, .block-district small { position:relative; z-index:1; }
+@media(max-width:600px) {
+  .girl-player.motion-sprite, .girl-player.motion-sprite.is-idle { width:285px; height:285px; left:-45px; bottom:-22px; }
+  .girl-opponent.motion-sprite, .girl-opponent.motion-sprite.is-idle { width:270px; height:270px; right:-25px; bottom:-25px; }
+  .block-crew-token { width:46px; height:46px; bottom:32%; }
+}
+
+.arc-choices .motion-sprite { width:100%; height:205px; mask-image:linear-gradient(#000 85%,transparent); }
+.market-enemy > .motion-sprite { width:100%; height:100%; filter:drop-shadow(2px 5px #16162150); }
+@media(max-width:600px){.arc-choices .motion-sprite{height:130px;}}
+
+.new-arcade-preview__fighter { position:absolute; right:-6%; bottom:11%; width:48%; height:72%; z-index:0; filter:drop-shadow(0 3px 2px #0009); }
+.new-arcade-preview > small,.new-arcade-preview > strong,.new-arcade-preview > span:not(.motion-sprite),.new-arcade-preview > button{position:relative;z-index:1;}
+
+/* Give each owned tile's fighter and defense marker their own space. */
+.block-district .block-crew-token { left:calc(50% - 74px); right:auto; bottom:42%; }
+.block-district .block-crew-token > svg { width:100%; height:100%; }
+.block-district:is([data-owner="player"],[data-owner="rival"]) .block-flag { margin-left:64px; }
+@media(max-width:600px) {
+  .block-district .block-crew-token { left:calc(50% - 58px); bottom:36%; }
+  .block-district:is([data-owner="player"],[data-owner="rival"]) .block-flag { margin-left:40px; }
+}

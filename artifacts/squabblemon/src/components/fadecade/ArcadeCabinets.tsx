@@ -1,5 +1,7 @@
 import { Link } from "wouter";
 import type { ArcadeKind } from "@workspace/squabblemon-engine/arcadeGames";
+import { AnimatedSprite } from "./AnimatedSprite";
+import { arcadeSpriteAnimation, blockSpriteAnimation } from "./motionSpriteCatalog";
 import { ArcadeCabinet } from "./MachineScreen";
 import { getAssetUrl } from "../../lib/assets";
 const cabinets = {
@@ -56,6 +58,7 @@ export function ArcadeGameCabinet({
             src={getAssetUrl(`assets/arcade-games/${c.scene}.webp`)}
             alt=""
           />
+          <AnimatedSprite defer name={`${kind}-preview`} animation={kind === "girl-fade" ? arcadeSpriteAnimation("girl-0-front")! : blockSpriteAnimation(0)} className="new-arcade-preview__fighter" />
           <small>{c.tag}</small>
           <strong>{c.title}</strong>
           <span>{c.line}</span>

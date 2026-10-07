@@ -74,7 +74,11 @@
     "test:street-legends-browser": "PW_TEST_SCREENSHOT_NO_FONTS_READY=1 node e2e/verify-street-legends.mjs",
     "test:squabblehouse": "tsx --test src/squabblehouseCatalog.test.ts src/squabblehouseWave.test.ts",
     "test:arcade": "node --import tsx --test src/arcadeGames.test.ts",
-    "test:arcade-browser": "PW_TEST_SCREENSHOT_NO_FONTS_READY=1 node --import tsx e2e/verify-arcade-games.ts"
+    "test:arcade-browser": "PW_TEST_SCREENSHOT_NO_FONTS_READY=1 node --import tsx e2e/verify-arcade-games.ts",
+    "test:waffle-browser": "PW_TEST_SCREENSHOT_NO_FONTS_READY=1 node --import tsx e2e/verify-waffle-run.ts",
+    "test:minigame-motion-browser": "PW_TEST_SCREENSHOT_NO_FONTS_READY=1 node --import tsx e2e/verify-minigame-motion.ts",
+    "test:stockz-motion-browser": "PW_TEST_SCREENSHOT_NO_FONTS_READY=1 node --import tsx e2e/verify-stockz-motion.ts",
+    "test:road-motion-browser": "PW_TEST_SCREENSHOT_NO_FONTS_READY=1 node --import tsx e2e/verify-road-motion.mjs"
   },
   "devDependencies": {
     "@clerk/react": "^6.15.1",

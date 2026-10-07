@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { assertSpriteArt } from "./motion-sprite-proof";
 import { chromium } from "@playwright/test";
 import {
   cardCatalog,
@@ -20,9 +21,9 @@ import {
 import { JOHN_HENRY_CHAPTERS } from "@workspace/squabblemon-engine/johnHenryMythic";
 import { mkdir } from "node:fs/promises";
 process.env.PW_TEST_SCREENSHOT_NO_FONTS_READY = "1";
-const origin = "http://127.0.0.1:4195/game";
+const origin = `${process.env.ARCADE_BASE_URL ?? "http://127.0.0.1:4195"}/game`;
 async function verify(width: number, height: number) {
-  const browser = await chromium.launch({ headless: true });
+  const browser = await chromium.launch({ headless: true, executablePath: process.env.PLAYWRIGHT_EXECUTABLE_PATH });
   const page = await browser.newPage({ viewport: { width, height } });
   page.setDefaultTimeout(20000);
   const errors: string[] = [];
@@ -270,6 +271,7 @@ async function verify(width: number, height: number) {
       false,
       name + " broken art",
     );
+    await assertSpriteArt(page);
     await page.screenshot({
       path: `../../screenshots/waffle-run/${name}-${width}.png`,
       fullPage: true,

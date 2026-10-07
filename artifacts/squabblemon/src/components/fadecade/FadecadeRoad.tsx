@@ -1,6 +1,8 @@
-import { useEffect, useState, type CSSProperties } from 'react';
+import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import { getAssetUrl } from '../../lib/assets';
 import type { RoadReturn } from './FlagshipMachine';
+import { AnimatedSprite, observeMotionElement } from './AnimatedSprite';
+import { roadSpriteAnimation } from './motionSpriteCatalog';
 
 type Phase = 'idle' | 'fight' | 'clear' | 'walk' | 'defeat';
 
@@ -9,6 +11,8 @@ export function FadecadeRoad({ index, active, fighting, defeated, compact = fals
   index: number; active: boolean; fighting: boolean; defeated?: boolean; compact?: boolean;
   returnState?: RoadReturn | null; reducedMotion: boolean;
 }) {
+  const view = useRef<HTMLDivElement>(null);
+  useEffect(() => view.current ? observeMotionElement(view.current) : undefined, []);
   const resting: Phase = defeated ? 'defeat' : fighting ? 'fight' : compact ? 'walk' : 'idle';
   const [phase, setPhase] = useState<Phase>(resting);
   const [failed, setFailed] = useState(false);
@@ -30,7 +34,7 @@ export function FadecadeRoad({ index, active, fighting, defeated, compact = fals
   const asset = phase === 'defeat' ? 'fighter-defeat' : phase === 'fight' ? 'fight' : phase === 'clear' ? 'clear' : phase === 'walk' ? 'runner' : 'idle';
   const image = getAssetUrl(`assets/fadecade/${asset}.webp`);
   useEffect(() => setFailed(false), [image]);
-  return <div className={`fadecade-road-view ${compact ? 'is-compact' : ''}`} data-phase={phase} data-reduced-motion={reducedMotion} aria-label={compact ? undefined : `Road at stop ${index + 1}`}>
+  return <div ref={view} className={`fadecade-road-view ${compact ? 'is-compact' : ''}`} data-phase={phase} data-reduced-motion={reducedMotion} aria-label={compact ? undefined : `Road at stop ${index + 1}`}>
     <div className="fadecade-road-asphalt" style={{ backgroundImage: `url(${getAssetUrl('assets/fadecade/road.webp')})` }} aria-hidden="true" />
     <div className="fadecade-road-shoulder" style={{ backgroundImage: `url(${getAssetUrl('assets/fadecade/sidewalk.webp')})` }} aria-hidden="true" />
     {!compact && <div className="fadecade-road-milestones" style={{ '--road-offset': `${(index - start) * 86 + 43}px` } as CSSProperties}>
@@ -42,7 +46,7 @@ export function FadecadeRoad({ index, active, fighting, defeated, compact = fals
     <div className="fadecade-road-actor" aria-hidden="true">
       {/* A loader gives CSS sprites a real error path without duplicating frames. */}
       <img src={image} alt="" className="fadecade-sprite-loader" onError={() => setFailed(true)} />
-      {failed ? <span className="fadecade-sprite-fallback">YOU</span> : <div className={`fadecade-sprite fadecade-sprite--${phase}`} style={{ backgroundImage: `url(${image})` }} />}
+      {phase === 'idle' || phase === 'defeat' ? <AnimatedSprite animation={roadSpriteAnimation(phase === 'defeat')} name={`road-${phase}`} className={`fadecade-sprite fadecade-sprite--${phase}`} animationKey={returnState?.key} fallback={image} /> : failed ? <span className="fadecade-sprite-fallback">YOU</span> : <div className={`fadecade-sprite fadecade-sprite--${phase}`} style={{ backgroundImage: `url(${image})` }} />}
     </div>
     {!compact && <div className="fadecade-road-callout" role="status">{phase === 'clear' ? 'STOP CLEARED!' : phase === 'walk' ? 'ON TO THE NEXT BLOCK' : phase === 'defeat' ? 'RUN OVER' : fighting ? 'FIGHT IN PROGRESS' : active ? 'NEXT RIVAL READY' : 'MAKE YOUR RUN'}</div>}
     {!compact && <div className="fadecade-road-overlay"><span>STOP {index + 1}</span><span>{(index + 1) % 5 === 0 ? 'BOSS BLOCK' : 'STRAIGHT TO THE BACK'}</span></div>}

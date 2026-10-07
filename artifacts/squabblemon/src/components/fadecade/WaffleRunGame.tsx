@@ -19,6 +19,8 @@ import {
 import { getAssetUrl } from "../../lib/assets";
 import { setBattleActive } from "../../lib/imageWarmup";
 import "../../styles/waffle-run.css";
+import { AnimatedSprite } from "./AnimatedSprite";
+import { waffleSpriteAnimation } from "./motionSpriteCatalog";
 export type WaffleRunStatus = {
   date: string;
   attemptsRemaining: number;
@@ -97,11 +99,17 @@ function Sprite({
   name,
   className = "",
   style,
+  animationKey,
+  defer = false,
 }: {
   name: string;
   className?: string;
   style?: CSSProperties;
+  animationKey?: string | number;
+  defer?: boolean;
 }) {
+  const animation = waffleSpriteAnimation(name);
+  if (animation) return <AnimatedSprite animation={animation} name={name} className={`wr-sprite ${className}`} style={style} animationKey={animationKey} defer={defer} fallback={art(name.startsWith("staff-") ? name.replace(/-attack$/, "") : name)} />;
   return (
     <img
       src={art(name)}
@@ -329,6 +337,7 @@ export function WaffleRunGame({
       className="waffle-run"
       data-phase={run?.phase ?? "intro"}
       data-reduce-motion={bootstrap.profile.settings.reducedMotion}
+      data-motion-paused={confirmRetire}
       aria-label="Squabblehouse Waffle Run"
     >
       <header className="wr-top">
@@ -535,7 +544,8 @@ export function WaffleRunGame({
                   </span>
                 </div>
                 <Sprite
-                  name={`staff-${run.enemy}`}
+                  name={`staff-${run.enemy}${!effect && run.enemyIntent === "wind-up" ? "-attack" : ""}`}
+                  animationKey={run.phaseStartedAt}
                   className="wr-staff-sprite"
                 />
                 <Sprite
@@ -547,6 +557,7 @@ export function WaffleRunGame({
                         : "pigeon-back"
                   }
                   className="wr-battle-bird"
+                  animationKey={effect}
                 />
                 <div className="wr-battle-health">
                   <HP hp={run.hp} max={run.maxHp} label="INNERCITY PIGEON" />
@@ -724,11 +735,7 @@ export function WaffleMachine({ onOpen }: { onOpen: () => void }) {
         />
         <span className="waffle-machine__preview">
           <img className="waffle-machine__diner" src={art("diner")} alt="" />
-          <img
-            className="waffle-machine__bird"
-            src={art("pigeon-idle")}
-            alt=""
-          />
+          <Sprite defer className="waffle-machine__bird" name="pigeon-idle" />
           <small>2 DAILY RUNS</small>
           <strong>STEAL. FIGHT. SURVIVE.</strong>
           <span className="waffle-machine__play">PLAY WAFFLE RUN →</span>

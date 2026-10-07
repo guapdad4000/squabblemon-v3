@@ -106,7 +106,7 @@
   display: block;
   font-size: 12px;
 }
-.stockz-panel > .cabinet-btn {
+.stockz-trade-controls > .cabinet-btn {
   margin-top: 15px;
 }
 .stockz-active {
@@ -157,3 +157,68 @@
 @keyframes stockz-glow { 50% { opacity:.5; } }
 @media(prefers-reduced-motion:reduce) { .stockz-chart-line,.stockz-chart-dot { animation:none; stroke-dashoffset:0; } }
 .fadecade-hub[data-reduce-motion=true] .stockz-chart-line,.fadecade-hub[data-reduce-motion=true] .stockz-chart-dot { animation:none; stroke-dashoffset:0; }
+
+/* Stockz's booth, live controls and paper receipts share the arcade's green/gold art. */
+.stockz-panel { --exchange-gold:#f5d17a; --exchange-green:#73ee9a; padding:0 4px 12px; color:#f7edce; }
+.stockz-hero { position:relative; isolation:isolate; min-height:175px; overflow:hidden; margin:0 -4px 0; border-bottom:2px solid #b28d39; }
+.stockz-hero > img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:66% center; z-index:-2; }
+.stockz-hero:after { content:""; position:absolute; inset:0; z-index:-1; background:linear-gradient(90deg,#04120bed,transparent 72%),linear-gradient(0deg,#06110adb,transparent 45%); }
+.stockz-hero > div { padding:17px 23px; width:65%; }
+.stockz-hero span { font:800 9px var(--font-mono); letter-spacing:.14em; color:var(--exchange-green); }
+.stockz-hero h2 { margin:9px 0; font:950 italic 43px/.85 var(--font-display); letter-spacing:-.03em; color:var(--exchange-gold); text-shadow:2px 3px #032611; }
+.stockz-hero p { margin:0; font:800 8px var(--font-mono); letter-spacing:.04em; color:#fbefd0; }
+.stockz-ticker-strip { display:flex; justify-content:space-around; gap:8px; padding:10px 4px; border-block:1px solid #c2a24c66; background:#07160c; }
+.stockz-ticker-strip > span { display:flex; gap:10px; font:700 11px var(--font-mono); }
+.stockz-ticker-strip b { color:var(--exchange-gold); }.stockz-ticker-strip strong{color:var(--exchange-green)}
+.stockz-panel > p.stockz-rules { margin:12px 0 4px; font-size:12px; line-height:1.5; color:#dfdfc5; }
+.stockz-panel > small { display:block; color:#acbea9; font-size:10px; line-height:1.5; }
+.stockz-balance { margin:15px 0 4px; padding:13px 16px; background:linear-gradient(100deg,#192b16,#07120b); border-block:1px solid #9d813e; box-shadow:inset 0 1px #f6df8344; gap:12px; }
+.stockz-balance > div { display:flex; flex-direction:column; gap:3px; }
+.stockz-balance > div:last-child { text-align:right; }
+.stockz-balance small { font:700 9px var(--font-mono); letter-spacing:.1em; color:#becdad; }
+.stockz-balance strong { font:900 29px var(--font-display); color:var(--exchange-gold); }
+.stockz-balance strong span { font:700 15px var(--font-mono); color:#adbc9e; }
+.stockz-trading-floor { display:grid; grid-template-columns:170px minmax(0,1fr); align-items:start; gap:20px; margin-top:16px; }
+.stockz-trade-controls { min-width:0; }
+.stockz-host { display:flex; flex-direction:column; text-align:center; align-items:center; gap:12px; min-height:130px; padding:6px 8px; background:radial-gradient(ellipse at 12% 90%,#6feb7920,transparent 45%); }
+.stockz-host-sprite { flex:0 0 164px; width:152px; height:164px; filter:drop-shadow(0 4px 2px #0009); }
+.stockz-host > div { display:flex; flex-direction:column; gap:6px; min-width:0; }
+.stockz-host > div > span { color:var(--exchange-green); font:800 9px var(--font-mono); letter-spacing:.13em; }
+.stockz-host strong { font:900 italic 20px/1.05 var(--font-display); color:var(--exchange-gold); }
+.stockz-host small { color:#b6cbb5; font-size:11px; line-height:1.4; }
+.stockz-host[data-mood="miss"] strong { color:#f5b384; }
+.stockz-panel fieldset { margin:6px 0 14px; padding:0; }
+.stockz-panel legend { margin-bottom:8px; font:800 10px var(--font-mono); color:#e8d794; letter-spacing:.08em; }
+.stockz-companies { gap:8px; }
+.stockz-companies button { min-height:82px; padding:12px 8px; background:linear-gradient(#172c1e,#0b180f); border:1px solid #5b7950; border-radius:3px; box-shadow:inset 0 1px #bce2a51c,0 3px #020903; }
+.stockz-companies strong { color:var(--exchange-gold); font:900 17px var(--font-display); }
+.stockz-companies b { color:var(--exchange-green); font:800 13px var(--font-mono); }
+.stockz-companies span { color:#d4ddc2; font-size:10px; line-height:1.2; }
+.stockz-companies small { color:#8ef4a1; font-size:11px; }
+.stockz-panel button[aria-pressed="true"] { outline:2px solid var(--exchange-gold); outline-offset:1px; background:linear-gradient(#24472b,#13271a); }
+.stockz-choices { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:10px 0 15px; }
+.stockz-choices button { min-height:55px; border-radius:4px; border:1px solid #6ba174; box-shadow:0 4px #020a05,inset 0 1px #b5e2a833; font:900 19px var(--font-display); background:linear-gradient(#1e5631,#0c2b19); color:#a9efb5; }
+.stockz-choices button:last-child { border-color:#b78356; color:#ffd4a5; background:linear-gradient(#613e25,#301d12); }
+.stockz-trade-controls > .cabinet-btn { width:100%; min-height:49px; border:1px solid #fff0b3; color:#172410; background:linear-gradient(#fff0ac,#c5a344); border-radius:3px; box-shadow:0 4px #362806; font:900 15px var(--font-display); margin:14px 0 10px; }
+.stockz-active { margin:8px 0 12px; padding:21px 15px; background:radial-gradient(ellipse at 50% 0,#75d36923,transparent 70%),#08170c; border-block:1px solid #ba9740; }
+.stockz-active > span { color:var(--exchange-green); font:800 10px var(--font-mono); letter-spacing:.16em; }
+.stockz-active h3 { font:900 26px var(--font-display); color:var(--exchange-gold); margin:7px 0; }
+.stockz-active > strong { color:var(--exchange-gold); display:block; margin:9px 0 14px; font:900 48px var(--font-display); }
+.stockz-active .cabinet-btn { min-height:48px; }
+.stockz-history { background:linear-gradient(105deg,#e7d19e,#b7a575); padding:13px 14px; border:1px solid #efe3ac; color:#20281a; margin-top:18px; box-shadow:0 4px #030a0566; transform:rotate(-.3deg); }
+.stockz-history h4 { margin:0 0 9px; font:900 13px var(--font-display); text-transform:uppercase; letter-spacing:.04em; }
+.stockz-history p { border-bottom:1px dashed #635e3c; padding:9px 0; margin:0; gap:8px; font-size:11px; }
+.stockz-history p:last-child { border-bottom:0; }.stockz-history p span{color:#304c23;white-space:nowrap}
+.stockz-history p[data-result="miss"] span{color:#7d3023}
+.stockz-attract { background-size:cover; background-position:62% center; isolation:isolate; }
+.stockz-attract:before { content:""; position:absolute; inset:0; z-index:-1; background:linear-gradient(90deg,#031508ed,#03150880); }
+.stockz-attract-avatar { position:absolute; right:-5%; top:-3%; height:100%; width:46%; object-fit:cover; object-position:64% 6%; opacity:.9; z-index:-1; mask-image:linear-gradient(90deg,transparent,#000 25%); }
+.stockz-attract-heading { position:relative; width:75%; align-self:flex-start; text-align:left; }.stockz-attract-heading strong{font-size:18px;line-height:1.1}
+.stockz-attract-chart { width:76%; align-self:flex-start; }.stockz-attract > .cabinet-btn{position:relative;z-index:1}
+@media(max-width:600px) {
+  .stockz-hero { min-height:145px; }.stockz-hero > div{padding:14px 15px;width:65%}.stockz-hero h2{font-size:35px}.stockz-hero p{font-size:7px;max-width:150px;line-height:1.5}
+  .stockz-trading-floor{grid-template-columns:minmax(0,1fr);gap:5px;margin-top:9px}
+  .stockz-host{flex-direction:row;min-height:90px;gap:9px;padding:0;text-align:left}.stockz-host-sprite{flex-basis:76px;width:76px;height:88px}.stockz-host strong{font-size:18px}
+  .stockz-companies{gap:6px}.stockz-companies button{padding:10px 5px}.stockz-history p{flex-wrap:wrap}.stockz-history p span{margin-left:auto}
+  .stockz-attract-heading strong{font-size:clamp(11px,3.5vw,16px)}
+}

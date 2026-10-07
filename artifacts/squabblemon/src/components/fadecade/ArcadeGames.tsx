@@ -26,6 +26,8 @@ import {
 import { getAssetUrl } from "../../lib/assets";
 import { setBattleActive } from "../../lib/imageWarmup";
 import "../../styles/arcade-games.css";
+import { AnimatedSprite, motionSpriteUrl } from "./AnimatedSprite";
+import { arcadeSpriteAnimation, blockSpriteAnimation } from "./motionSpriteCatalog";
 export type ArcadeGameStatus = {
   kind: ArcadeKind;
   period: string;
@@ -67,11 +69,17 @@ function Sprite({
   name,
   className = "",
   style,
+  paused = false,
+  animationKey,
 }: {
   name: string;
   className?: string;
   style?: CSSProperties;
+  paused?: boolean;
+  animationKey?: string | number;
 }) {
+  const animation = arcadeSpriteAnimation(name);
+  if (animation) return <AnimatedSprite animation={animation} name={name} className={`arc-sprite ${className}`} style={style} paused={paused} animationKey={animationKey} fallback={art(name)} />;
   return (
     <img
       className={`arc-sprite ${className}`}
@@ -357,6 +365,7 @@ export default function ArcadeGame({
       className="arcade-game"
       data-kind={kind}
       data-reduce-motion={bootstrap.profile.settings.reducedMotion}
+      data-motion-paused={paused}
       aria-label={names[kind]}
     >
       <header className="arc-top">
@@ -698,11 +707,7 @@ function GirlFight({
     const urls = [
       [run.box.fighter, "back"],
       [run.box.opponent, "front"],
-    ].flatMap(([i, view]) =>
-      Object.values(moveSprites).map((move) =>
-        art(`girl-${i}-${view}-${move}`),
-      ),
-    );
+    ].map(([i, view]) => motionSpriteUrl(arcadeSpriteAnimation(`girl-${i}-${view}`)!));
     for (const url of urls) {
       const img = new Image();
       img.src = url;
@@ -798,6 +803,7 @@ function GirlFight({
               : `girl-${b.opponent}-front`
           }
           className={`girl-opponent ${opponentMove ? "" : "is-idle"}`}
+          animationKey={`${run.revision}-${watchIndex}-${beat?.damage ?? 0}`}
           style={{
             transform: `translate(${beat?.attack === "left" ? -22 : beat?.attack === "right" ? 22 : 0}px,${beat?.attack === "down" ? 15 : 0}px)`,
           }}
@@ -809,6 +815,7 @@ function GirlFight({
               : `girl-${b.fighter}-back`
           }
           className={`girl-player ${direction ? "" : "is-idle"}`}
+          animationKey={`${run.revision}-${queue.length}-${beat?.damage ?? 0}`}
           style={{ transform: `translate(${dx}px,${dy}px)` }}
         />
         {beat && (
@@ -996,7 +1003,7 @@ function MarketDefense({
     return () => window.removeEventListener("keydown", key);
   }, []);
   return (
-    <div className="market-defense" data-frozen={m.freeze > 0}>
+    <div className="market-defense" data-frozen={m.freeze > 0} data-motion-paused={paused}>
       <div className="market-health">
         <Health value={run.health} max={100} label="STORE INTEGRITY" />
         <button
@@ -1032,7 +1039,7 @@ function MarketDefense({
           }}
           data-hit={m.firing.includes(e.id)}
         >
-          <Sprite name={`market-yn-${e.variant}`} />
+          <Sprite name={`market-yn-${e.variant}`} paused={m.freeze > 0} />
           {m.firing.includes(e.id) && (
             <Sprite name="callout-hit" className="market-hit-callout" />
           )}
@@ -1047,6 +1054,7 @@ function MarketDefense({
       <Sprite
         name={m.firing.length ? "market-punch-north" : "market-doctor-north"}
         className={`market-doctor ${m.firing.length ? "is-punching" : ""}`}
+        animationKey={m.firing.length ? m.tick : undefined}
         style={{ left: `${laneX(m.aim)}%` }}
       />
       {m.firing.length > 0 && (
@@ -1163,6 +1171,7 @@ function BlockTakeover({
             onClick={() => setSelected(i)}
             aria-label={`${DISTRICTS[i]} · ${t.owner} · ${Math.max(0, t.defense)} defense${b.threat === i ? " · incoming raid" : ""}`}
           >
+            {t.owner !== "neutral" && <AnimatedSprite animation={blockSpriteAnimation(t.owner === "player" ? b.crew : (b.crew + 1) % BLOCK_CREWS.length)} name={`block-${t.owner}-crew`} className="block-crew-token" paused={disabled} />}
             <span className="block-flag">
               <Fist />
               <b>{Math.max(0, t.defense)}</b>
