@@ -444,11 +444,10 @@ export function selectedMoved(
     old = find(before, id);
   if (!c || !old || c.lane === old.lane) return m;
   if (isFitnessCharacter(c)) {
-    const start = m;
     m = put(m, c, `route:${id}`, {
       seen: [...new Set([...routes(before, old), String(c.lane)])],
     });
-    m = t.event(start, m, c, [id], 'Circuit route recorded.');
+    m = t.event(before, m, c, [id], 'Circuit route recorded.');
   }
   for (const w of (m.creativeMarks ?? []).filter(
     (x) =>

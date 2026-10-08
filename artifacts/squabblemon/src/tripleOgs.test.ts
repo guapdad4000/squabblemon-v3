@@ -338,7 +338,8 @@ test('a Triple OG reveal that moves someone leaves no discontinuous replay frame
   m.boards[2] = [unit('hooper', 'player', 2, 1), unit('oink', 'cpu', 2, 2)];
   m.boards[2][0].statuses.protected = true;
   const after = cast(m, 'triple-og-red', 2);
-  const frames = after.effectLog.filter(entry => entry.cardId === 'triple-og-red');
+  // Arrival reactions may be attributed to the moved character. Check all frames.
+  const frames = after.effectLog.filter(entry => entry.replay);
   assert(frames.length >= 2, 'the forced move and the roll call are separate frames');
   for (let i = 1; i < frames.length; i += 1) {
     assert.deepEqual(frames[i].replay.before, frames[i - 1].replay.after,
