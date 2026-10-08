@@ -1,0 +1,10 @@
+{
+  "check": "production build plus check-entry-bundle.mjs",
+  "passed": true,
+  "entryKiB": 212.5,
+  "entryBudgetKiB": 475,
+  "gameAppKiB": 864.7,
+  "gameAppBudgetKiB": 900,
+  "homeKiB": 934.3,
+  "homeBudgetKiB": 1200
+}

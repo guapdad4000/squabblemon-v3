@@ -209,6 +209,23 @@ for (const owner of ['player', 'cpu'] as const) {
     assert.equal(find(girl.after, girl.source)?.lane, 1); assert.equal(find(girl.after, client)?.recoverableDamage, 0);
     assert.equal(find(girl.after, client)?.powerModifier, 0);
   });
+  test(`${owner}: recovery fallback helps a healthy ally only after a successful move`, () => {
+    const m = blank(), client = unit('cornball', owner, 1);
+    m.boards[1] = [client]; m.boards[2] = [{ ...unit('og', owner, 2), basePower: 30 }];
+    const result = cast(m, 'fitness-girl', owner);
+    assert.equal(find(result.after, result.source)?.lane, 1);
+    assert.equal(find(result.after, client)?.powerModifier, 1);
+    assert.equal(find(result.after, client)?.recoverableDamage ?? 0, 0);
+  });
+  test(`${owner}: circuit remains available two rounds later`, () => {
+    const m = blank(), client = unit('cornball', owner, 0); m.boards[0] = [client];
+    let after = cast(m, 'personal-trainer', owner).after;
+    assert.equal(after.creativeMarks?.find(x => x.kind === 'mi-circuit')?.expires, 5);
+    after = { ...after, round: 5 };
+    after = cast(after, 'apartment-maintenance-sage', owner).after;
+    assert.equal(find(after, client)?.lane, 1);
+    assert.equal(find(after, client)?.powerModifier, 2);
+  });
   test(`${owner}: Fitness Bro and Demon Trainer have bounded actual triggers`, () => {
     let m = blank(), bro = unit('fitness-bro', owner, 0); m.boards[0] = [bro];
     m = cast(m, 'cornball', owner, 1).after; m = end(m); assert.equal(find(m, bro)?.powerModifier, 2);

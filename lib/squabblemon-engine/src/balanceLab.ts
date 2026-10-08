@@ -533,7 +533,7 @@ export function listLegalBalancePlays(match: Match, owner: Owner, allowSquabble 
         squabble: false,
         preview: playTurnCard(match, owner, card.instanceId, targetLane, false),
       });
-      if (allowSquabble && card.kind !== 'support' && ownerSquabbleAvailable(match, owner)) result.push({
+      if (allowSquabble && card.kind !== 'support' && card.kind !== 'blockbuster' && ownerSquabbleAvailable(match, owner)) result.push({
         instanceId: card.instanceId,
         cardId: card.cardId,
         lane: targetLane,

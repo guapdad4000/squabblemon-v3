@@ -289,6 +289,7 @@ test('Simmy has no opaque black matte, while Foodz retains the supplied portrait
     'church-auntie',
     'simmy',
     'captain-jigga',
+    'og-calisthenics',
     'hair-stylist',
     'stylist',
     'demario',

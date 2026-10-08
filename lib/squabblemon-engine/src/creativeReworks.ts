@@ -109,7 +109,7 @@ export const CREATIVE_KITS: Record<string, readonly [string, string]> = {
   ],
   dancecaptain: [
     "Follow My Lead",
-    "Ongoing: Once per round, the first friendly dancer move sets a destination. The next different friendly character moving there gains +2 Hands and Protection. Dancers: Break, Bboy, Dance Circle Captain.",
+    "Ongoing: Once per round, the first friendly character move sets a destination. The next different friendly character moving there gains +2 Hands and Protection.",
   ],
   break: [
     "Floor Sweep",
@@ -145,7 +145,7 @@ export const CREATIVE_KITS: Record<string, readonly [string, string]> = {
   ],
   cornercoach: [
     "Run It Back",
-    "On Reveal: Coach your weakest eligible ally here through next round. Later friendly placements retry its failed entrance until one succeeds. Coachable: Edgar, Nguyen, Man-Man, Transplant, Bodega Cat, Dog Walker, Sports Prodigy, Homeless YN, Dragonfly Jones, OG Uncle, Barber Bro, Night Shift Medic, Squabble House Worker — Female, The Feds. No other kits qualify.",
+    "On Reveal: Coach your weakest eligible ally here through next round. Later friendly placements retry its failed entrance until one succeeds. Coachable: Edgar, Nguyen, Man-Man, Transplant, Bodega Cat, Dog Walker, Sports Prodigy, Homeless YN, Dragonfly Jones, OG Uncle, Barber Bro, Night Shift Medic, Squabble House Worker — Female, The Feds. If nobody qualifies, give your weakest other ally here +1 Hand instead.",
   ],
   midnightmayor: [
     "Keys to the City",
@@ -884,7 +884,7 @@ export function creativeReveal(
       if (trainee) {
         const ready = trainee.creativeEntranceSucceeded === false;
         put("coach", [trainee], l, { ready });
-      }
+      } else give(a[0], 1);
       break;
     }
     case "midnightmayor":
@@ -1341,7 +1341,7 @@ export function creativeMoved(
     if (
       identity(watcher) === "dancecaptain"
     ) {
-      if (watcher.creativeRound !== m.round && ["break", "bboy", "dancecaptain"].includes(identity(current)))
+      if (watcher.creativeRound !== m.round)
         m = t.modify(m, watcher.instanceId, (c) => ({
           ...c,
           creativeRound: m.round,

@@ -1,3 +1,4 @@
+import { SELECTED_FITNESS_IDS, SELECTED_MUSIC_IDS } from './selectedWave';
 import type { AbilityUpgradeEffect, Card, CardRarity } from './data';
 
 /** Canonical IDs are shared by collection, combat, art and saved progression. */
@@ -13,15 +14,15 @@ export const MUSIC_INDUSTRY_WAVE = [
   ['the-manager-evil', 'The Manager — Evil', 'Epic', 'Dark', 4, 5, '360 Deal', 'On Reveal: Give your strongest other local Music ally +3 Hands and prevent its movement through next round. At expiry, transfer up to 2 remaining bonus Hands to an active surviving Evil Manager. Cleansing cancels the contract without clearing other Locks. One contract per side; each client signs once per match.', 'Investment'],
   ['the-og-rap-legend', 'The OG Rap Legend', 'Legendary', 'Light', 5, 6, 'Pass the Torch', 'On Reveal: Repeat the weakest other active Music ally’s successful entrance, printed cost 3 or less, at its current district, then Protect it. Give the weakest Music ally in each other district +1 Hand. One Torch per side per match; once-only limits stay spent and passives are never repeated.', 'Finisher'],
   ['fitness-bro', 'Fitness Bro', 'Uncommon', 'Normal', 3, 4, 'One More Rep', 'Ongoing: At round end, if you played another character in a different district this round, gain +2 Hands and record one Rep. At three Reps, gain Protection and stop. One Rep per round, up to three per match; copies share progress. Supports, tokens and echoes do not count.', 'Growth'],
-  ['fitness-girl', 'Fitness Girl', 'Uncommon', 'Water', 2, 3, 'Active Recovery', 'On Reveal: Move to your weakest other open district. After a successful move, restore up to 2 actual damage and remove Burn from your weakest injured other ally there. If nobody is injured, remove Burn from your weakest burning other ally there instead. A failed move gives no recovery.', 'Sustain'],
-  ['personal-trainer', 'Personal Trainer', 'Rare', 'Normal', 3, 4, 'Circuit Training', 'On Reveal: Train your weakest other ally here through next round. Its first successful move out gains +2 Hands. Its first later visit to the remaining third district gains +2 Hands and Protection. One circuit per side; each character can train once per match. Moving between only two districts never finishes.', 'Movement'],
+  ['fitness-girl', 'Fitness Girl', 'Uncommon', 'Water', 2, 3, 'Active Recovery', 'On Reveal: Move to your weakest other open district. After a successful move, restore up to 2 actual damage and remove Burn from your weakest injured other ally there. If nobody is injured, remove Burn from your weakest burning other ally there instead. If nobody needs either recovery, give your weakest other ally there +1 Hand instead. A failed move gives no recovery or bonus.', 'Sustain'],
+  ['personal-trainer', 'Personal Trainer', 'Rare', 'Normal', 3, 4, 'Circuit Training', 'On Reveal: Train your weakest other ally here through the next two rounds. Its first successful move out gains +2 Hands. Its first later visit to the remaining third district gains +2 Hands and Protection. One circuit per side; each character can train once per match. Moving between only two districts never finishes.', 'Movement'],
   ['demon-trainer', 'Demon Trainer', 'Epic', 'Fire', 4, 5, 'No Days Off', 'Ongoing: The first other friendly Fitness character destroyed by an enemy each round gives Demon +2 Hands and hits the strongest enemy in the fallen athlete’s district for 1. At most two payouts per side per match. Demon must already be active; sacrifices, tokens and friendly damage never count.', 'Comeback'],
 ] as const;
 
 export const MUSIC_INDUSTRY_IDS = MUSIC_INDUSTRY_WAVE.slice(0, 10).map(([id]) => id);
 export const FITNESS_WAVE_IDS = MUSIC_INDUSTRY_WAVE.slice(10).map(([id]) => id);
-export const MUSIC_CHARACTER_IDS: readonly string[] = [...MUSIC_INDUSTRY_IDS, 'failedrapper', 'busker', 'piratedj', 'promoter'];
-export const FITNESS_CHARACTER_IDS: readonly string[] = [...FITNESS_WAVE_IDS, 'failedathlete', 'sportsprodigy', 'hooper'];
+export const MUSIC_CHARACTER_IDS: readonly string[] = [...MUSIC_INDUSTRY_IDS, ...SELECTED_MUSIC_IDS, 'failedrapper', 'busker', 'piratedj', 'promoter'];
+export const FITNESS_CHARACTER_IDS: readonly string[] = [...FITNESS_WAVE_IDS, ...SELECTED_FITNESS_IDS, 'failedathlete', 'sportsprodigy', 'hooper'];
 export const musicIndustryRarities: Record<string, CardRarity> = Object.fromEntries(MUSIC_INDUSTRY_WAVE.map(([id, , rarity]) => [id, rarity]));
 export const musicIndustryFactions: Record<string, string> = Object.fromEntries(MUSIC_INDUSTRY_WAVE.map(([id], index) => [id, index < 10 ? 'Music Industry' : 'Fitness']));
 export const musicIndustryUpgradeEffects: Record<string, readonly AbilityUpgradeEffect[]> = Object.fromEntries(MUSIC_INDUSTRY_WAVE.map(([id]) => [id, [0, 1, 2].map(() => ({ kind: 'self-power' as const, amount: 1 as const, trigger: 'base-success' as const }))]));

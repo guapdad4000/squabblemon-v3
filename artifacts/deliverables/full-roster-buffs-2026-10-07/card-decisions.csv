@@ -1,0 +1,268 @@
+engine_id,name,decision,before_motion,before_hands,after_motion,after_hands,benchmark_before,benchmark_after,played_before,played_after,context,reason
+abuela,Abuela,hold,4,4,4,4,0.75,0.75,30,30,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+ahki,Ahki,hold,2,2,2,2,0.5625,0.5625,32,32,injected,No authored shell; diagnostic insertion alone is insufficient evidence for a buff.
+alchy,Alchy,hold,2,2,2,2,0.375,0.375,32,32,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+alice,Alice,hold,2,3,2,3,0.53125,0.53125,30,30,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+apartment-maintenance-sage,Apartment Maintenance Sage,body buff,3,3,3,4,0.40625,0.5,8,14,authored,One extra printed Hand improves setup or narrow utility without changing ability caps.
+ashlee,Ashlee,hold,5,3,5,3,0.53125,0.53125,32,32,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+asphaltapostle,The Asphalt Apostle,hold,3,4,3,4,0.484375,0.484375,26,26,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+atl-scammer,ATL Scammer,hold,2,2,2,2,0.765625,0.765625,32,32,injected,No authored shell; diagnostic insertion alone is insufficient evidence for a buff.
+baby,Baby Momma,hold,4,5,4,5,0.421875,0.421875,24,24,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+bail-bonds-auntie,The Bail Bonds Auntie,hold,2,2,2,2,0.515625,0.484375,25,25,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+barber,Barber Bro,hold,4,4,4,4,0.34375,0.53125,21,15,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+batteryback,Game Developer,hold,1,2,1,2,0.71875,0.71875,32,32,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+bbldemon,BBL Demon,body buff,4,4,4,5,0.25,0.265625,4,6,authored,One extra printed Hand improves setup or narrow utility without changing ability caps.
+bblnice,BBL Nice,body buff,3,2,3,3,0.34375,0.53125,19,21,authored,One extra printed Hand improves setup or narrow utility without changing ability caps.
+bboy,Bboy,hold,2,2,2,2,0.75,0.75,33,33,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+bigzoey,Big Zoey,hold,3,3,3,3,0.484375,0.484375,30,30,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+bikelife,Bikelife YN,hold,2,2,2,2,0.53125,0.53125,32,32,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+black-cowboy,Black Cowboy,hold,3,3,3,3,0.390625,0.390625,32,32,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+block-spinner,BLOCK SPINNER,hold,1,2,1,2,0.546875,0.546875,32,32,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+blue-nose-pit,Blue-Nose Pit,hold,2,2,2,2,0.578125,0.578125,32,32,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+blueside1,OG Blue,hold,1,2,1,2,0.578125,0.578125,32,32,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+blueside2,lil Blue,hold,1,2,1,2,0.578125,0.578125,32,32,injected,No authored shell; diagnostic insertion alone is insufficient evidence for a buff.
+blueside3,Blue Scarf crashout,hold,2,3,2,3,0.71875,0.71875,25,25,injected,No authored shell; diagnostic insertion alone is insufficient evidence for a buff.
+blueside4,Blue loco,hold,3,4,3,4,0.75,0.75,32,32,injected,No authored shell; diagnostic insertion alone is insufficient evidence for a buff.
+blueside5,Blue Big Trippin,hold,3,4,3,4,0.671875,0.671875,31,31,injected,No authored shell; diagnostic insertion alone is insufficient evidence for a buff.
+bodegacat,Bodega Cat,hold,1,1,1,1,0.65625,0.65625,32,32,injected,No authored shell; diagnostic insertion alone is insufficient evidence for a buff.
+bonnetgirl,Bonnet Girl,hold,1,1,1,1,0.65625,0.65625,32,32,injected,No authored shell; diagnostic insertion alone is insufficient evidence for a buff.
+boo-boo-the-fool,Boo Boo the Fool,hold,2,2,2,2,0.515625,0.484375,16,16,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+boombox,Boombox,hold,2,0,2,0,0.640625,0.640625,23,23,injected,No authored shell; diagnostic insertion alone is insufficient evidence for a buff.
+bossbabe,Boss Bae,hold,3,3,3,3,0.59375,0.59375,30,30,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+bottle,Bottle Girl,hold,2,3,2,3,0.453125,0.59375,30,30,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+bouncer,Bouncer,hold,4,5,4,5,0.40625,0.40625,29,29,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+break,Break,hold,2,2,2,2,0.75,0.75,20,20,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+buddy,BUDDY,hold,3,4,3,4,0.515625,0.515625,32,32,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+busker,Corner Busker,hold,2,1,2,1,0.53125,0.53125,21,21,injected,No authored shell; diagnostic insertion alone is insufficient evidence for a buff.
+buspass,Bus Pass,hold,0,0,0,0,0.421875,0.421875,32,32,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+bustdown,Bust-Down Watch,hold,1,0,1,0,0.53125,0.53125,32,32,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+cane-corso-red,Cane Corso (Red),hold,2,3,2,3,0.546875,0.546875,32,32,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+canopykeeper,Performative Male,hold,3,4,3,4,0.578125,0.578125,26,26,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+captainjigga,Captain Jigga,hold,5,4,5,4,0.53125,0.53125,32,32,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+carmeet,Car Meet Kid,hold,2,2,2,2,0.578125,0.578125,32,32,injected,No authored shell; diagnostic insertion alone is insufficient evidence for a buff.
+charger,Phone Charger,hold,1,0,1,0,0.5625,0.5625,32,32,injected,No authored shell; diagnostic insertion alone is insufficient evidence for a buff.
+cheshire,Cheshire,hold,2,3,2,3,0.53125,0.53125,39,39,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+chessregular,Chess Regular,hold,3,3,3,3,0.703125,0.71875,9,10,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+church,Church Auntie,hold,3,4,3,4,0.75,0.75,26,26,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+circuitcaptain,Electrician Foreman,hold,4,4,4,4,0.71875,0.71875,32,32,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+cloudbreak,Airheaded Model,hold,4,4,4,4,0.6875,0.6875,25,25,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+cognac,Cognac Bottle,hold,1,0,1,0,0.421875,0.421875,32,32,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+colognecriminal,Cologne Criminal,hold,3,3,3,3,0.453125,0.59375,26,24,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+concrete,Balikbayan Box Bot,hold,1,1,1,1,0.484375,0.484375,32,32,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+conductor,Last Train Conductor,hold,4,3,4,3,0.859375,0.859375,32,32,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+cornball,Cornball,hold,1,1,1,1,0.421875,0.421875,32,32,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+cornercoach,Corner Coach,body buff,3,3,3,4,0.25,0.265625,31,31,authored,One extra printed Hand improves setup or narrow utility without changing ability caps.
+corruptpastor,Corrupt Pastor,hold,3,3,3,3,0.578125,0.65625,22,23,injected,No authored shell; diagnostic insertion alone is insufficient evidence for a buff.
+counter,Shotta,hold,3,3,3,3,0.53125,0.53125,32,32,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+cracked-head,Cracked Head,hold,5,5,5,5,0.4375,0.4375,8,8,injected,No authored shell; diagnostic insertion alone is insufficient evidence for a buff.
+crazy-ex-boyfriend,Crazy Ex-Boyfriend,body buff,3,3,3,4,0.34375,0.53125,14,19,authored,One extra printed Hand improves setup or narrow utility without changing ability caps.
+crossingguard,Crossing Guard,hold,2,3,2,3,0.515625,0.515625,25,25,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+crosswind,Baby Crying on an Airplane,hold,2,2,2,2,0.6875,0.6875,32,32,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+dancecaptain,Dance Circle Captain,body buff,3,3,3,4,0.25,0.265625,10,10,authored,One extra printed Hand improves setup or narrow utility without changing ability caps.
+delivery,Delivery Demon,hold,1,1,1,1,0.625,0.625,29,29,injected,No authored shell; diagnostic insertion alone is insufficient evidence for a buff.
+demario,Demario,hold,2,3,2,3,0.390625,0.390625,32,32,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+demon-trainer,Demon Trainer,hold,4,5,4,5,0.40625,0.5,20,17,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+divorceddad,Divorced Dad,hold,3,3,3,3,0.484375,0.484375,22,22,injected,No authored shell; diagnostic insertion alone is insufficient evidence for a buff.
+dmvworker,DMV Worker,hold,2,2,2,2,0.453125,0.453125,32,32,injected,No authored shell; diagnostic insertion alone is insufficient evidence for a buff.
+dogwalker,Dog Walker,hold,2,2,2,2,0.40625,0.40625,32,32,injected,No authored shell; diagnostic insertion alone is insufficient evidence for a buff.
+dorothy,Dorothy,hold,2,3,2,3,0.75,0.75,19,19,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+dr-umah,Dr. Umah,hold,3,3,3,3,0.46875,0.5,9,9,injected,No authored shell; diagnostic insertion alone is insufficient evidence for a buff.
+dragonflyjones,Dragonfly Jones,hold,2,3,2,3,0.65625,0.65625,32,32,injected,No authored shell; diagnostic insertion alone is insufficient evidence for a buff.
+drfade,Dr. Fade,hold,4,6,4,6,0.75,0.75,29,29,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+earthy,Earthy Sugar Foot,hold,1,1,1,1,0.46875,0.46875,32,32,injected,No authored shell; diagnostic insertion alone is insufficient evidence for a buff.
+edgar,Edgar,hold,2,2,2,2,0.4375,0.4375,31,31,injected,No authored shell; diagnostic insertion alone is insufficient evidence for a buff.
+energydrink,Energy Drink,hold,1,0,1,0,0.265625,0.46875,32,32,injected,No authored shell; diagnostic insertion alone is insufficient evidence for a buff.
+failedathlete,Failed Athlete,hold,3,3,3,3,0.40625,0.5,12,12,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+failedrapper,Failed Rapper,hold,2,1,2,1,0.703125,0.703125,21,21,injected,No authored shell; diagnostic insertion alone is insufficient evidence for a buff.
+fangirl,Fangirl,hold,1,1,1,1,0.53125,0.53125,18,18,injected,No authored shell; diagnostic insertion alone is insufficient evidence for a buff.
+fein,Fein,body buff,1,1,1,2,0.265625,0.34375,32,32,authored,One extra printed Hand improves setup or narrow utility without changing ability caps.
+firstaid,First Aid Kit,hold,2,0,2,0,0.5,0.53125,11,12,injected,No authored shell; diagnostic insertion alone is insufficient evidence for a buff.
+fitness-bro,Fitness Bro,hold,3,4,3,4,0.40625,0.5,18,20,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+fitness-girl,Fitness Girl,hold,2,3,2,3,0.40625,0.5,24,26,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+flyingmonkeys,Flying Monkeys,hold,4,5,4,5,0.75,0.75,27,27,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+folks,FOLKS,hold,4,3,4,3,0.75,0.75,30,30,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+foodz,Foodz,body buff,3,2,3,3,0.265625,0.34375,32,32,authored,One extra printed Hand improves setup or narrow utility without changing ability caps.
+gamer,Gamer,hold,3,3,3,3,0.59375,0.59375,32,32,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+ganger-blue,Ganger Blue,hold,2,3,2,3,0.578125,0.578125,32,32,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+ganger-red,Ganger Red,hold,3,4,3,4,0.546875,0.546875,29,29,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+gardener,Rooftop Gardener,hold,1,2,1,2,0.578125,0.578125,27,27,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+gardenwall,A Spare Gus,hold,4,4,4,4,0.578125,0.578125,27,27,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+gas-station-window-wiper,Gas Station Window Wiper,hold,1,2,1,2,0.703125,0.703125,32,32,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+godofhookah,God of Hookah,hold,4,4,4,4,0.515625,0.609375,29,29,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+gothkid,Goth Kid,hold,2,3,2,3,0.203125,0.203125,32,32,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+griddle-master,SquabbleHouse Griddle Master,hold,3,3,3,3,0.578125,0.578125,24,24,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+grownfanboy,Grown-Man Fanboy,hold,3,4,3,4,0.40625,0.40625,16,16,injected,No authored shell; diagnostic insertion alone is insufficient evidence for a buff.
+gust,Big City Pigeon,hold,1,2,1,2,0.6875,0.6875,32,32,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+hair-stylist,Hair Stylist,hold,2,2,2,2,0.390625,0.390625,32,32,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+hater,Hater,hold,1,2,1,2,0.671875,0.640625,32,32,injected,No authored shell; diagnostic insertion alone is insufficient evidence for a buff.
+he-just-a-friend,The Guy She Told You Not to Worry About,hold,3,3,3,3,0.34375,0.53125,28,24,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+homeless-wiseman,Homeless Wiseman,hold,4,4,4,4,0.75,0.75,2,2,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+homelessguy,Homeless Guy,hold,3,4,3,4,0.546875,0.546875,26,26,injected,No authored shell; diagnostic insertion alone is insufficient evidence for a buff.
+homelesslegend,Homeless Legend,hold,4,5,4,5,0.578125,0.578125,23,23,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+homelessyn,Homeless YN,hold,2,2,2,2,0.625,0.625,27,27,injected,No authored shell; diagnostic insertion alone is insufficient evidence for a buff.
+honestthot,Honest Thot,hold,1,2,1,2,0.53125,0.53125,32,32,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+hooper,Hooper,hold,5,5,5,5,0.53125,0.53125,32,32,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+icecream,Ice Cream Truck,hold,3,3,3,3,0.375,0.375,32,32,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+incel,Incel,hold,2,3,2,3,0.625,0.640625,30,27,injected,No authored shell; diagnostic insertion alone is insufficient evidence for a buff.
+initiation,INITIATION,hold,1,0,1,0,0.546875,0.546875,32,32,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+inmate-boyfriend,Inmate Boyfriend,hold,3,4,3,4,0.546875,0.546875,29,29,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+inmate-contraband,Inmate Contraband,hold,2,3,2,3,0.546875,0.546875,32,32,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+inmate-crafty,Inmate Crafty,hold,2,3,2,3,0.546875,0.546875,32,32,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+inmate-informant,Inmate Informant,hold,3,4,3,4,0.546875,0.546875,32,32,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+inmate-kingpin,Inmate Kingpin,hold,1,2,1,2,0.546875,0.546875,32,32,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+inmate-reformed,SquabbleHouse Inmate Reformed,hold,3,3,3,3,0.578125,0.578125,18,18,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+janitor,SquabbleHouse Janitor,hold,3,3,3,3,0.578125,0.578125,1,1,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+johnhenry,John Henry,hold,5,6,5,6,0.484375,0.484375,25,25,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+juneteenth-chair-guy,Juneteenth Chair Guy,hold,4,4,4,4,0.34375,0.359375,7,7,injected,No authored shell; diagnostic insertion alone is insufficient evidence for a buff.
+krump,Krump,body buff,3,3,3,4,0.25,0.265625,30,30,authored,One extra printed Hand improves setup or narrow utility without changing ability caps.
+kyle,KYLE,hold,4,4,4,4,0.203125,0.3125,7,7,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+landlord,Landlord,hold,2,3,2,3,0.484375,0.484375,15,15,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+lash-tech,Lash Tech,body buff,2,2,2,3,0.40625,0.5,32,32,authored,One extra printed Hand improves setup or narrow utility without changing ability caps.
+laundry,Laundromat Regular,hold,2,3,2,3,0.375,0.375,32,32,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+lawlessyn,Lawless YN,hold,2,2,2,2,0.671875,0.640625,32,32,injected,No authored shell; diagnostic insertion alone is insufficient evidence for a buff.
+lawyer,Lawyer,hold,3,3,3,3,0.65625,0.640625,17,16,injected,No authored shell; diagnostic insertion alone is insufficient evidence for a buff.
+lebron-james,Regular guy named LeBron James,hold,4,5,4,5,0.546875,0.546875,29,29,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+leroy,Leroy,hold,3,4,3,4,0.75,0.75,16,16,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+lion,Lion,hold,3,4,3,4,0.75,0.75,30,30,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+live-streamer-male,Live Streamer — Male,hold,2,2,2,2,0.578125,0.578125,28,28,injected,No authored shell; diagnostic insertion alone is insufficient evidence for a buff.
+livewire,Dominican Phone Salesman,hold,3,3,3,3,0.71875,0.71875,32,32,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+lola,Lola,hold,3,3,3,3,0.578125,0.578125,22,22,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+look-out,LOOK OUT,hold,1,2,1,2,0.578125,0.578125,32,32,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+luigion,Luigion,hold,2,3,2,3,0.390625,0.390625,32,32,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+madhatter,Mad Hatter,hold,2,3,2,3,0.53125,0.53125,32,32,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+mailman,The Mailman,hold,3,3,3,3,0.546875,0.546875,28,28,injected,No authored shell; diagnostic insertion alone is insufficient evidence for a buff.
+manman,Man-Man,hold,3,3,3,3,0.703125,0.703125,30,30,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+mansamusa,Mansa Musa,hold,4,4,4,4,0.484375,0.484375,24,24,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+miami-surgeon,Miami Surgeon,hold,3,3,3,3,0.625,0.625,32,32,injected,No authored shell; diagnostic insertion alone is insufficient evidence for a buff.
+midnightmayor,Midnight Mayor,hold,3,2,3,2,0.609375,0.609375,8,8,injected,No authored shell; diagnostic insertion alone is insufficient evidence for a buff.
+monsoonanchor,Gas Station Sushi Chef,hold,3,2,3,2,0.859375,0.859375,31,31,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+mr-mc-hands,Mr. Mc Hands,hold,4,4,4,4,0.703125,0.703125,27,27,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+mr-trick,Mr. Trick,hold,3,3,3,3,0.734375,0.78125,10,10,injected,No authored shell; diagnostic insertion alone is insufficient evidence for a buff.
+mrrabbit,Mr Rabbit,hold,2,2,2,2,0.53125,0.53125,27,27,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+ms-mary-mack,Ms. Mary Mack,hold,2,3,2,3,0.34375,0.53125,25,24,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+mural,Mural Apprentice,hold,2,2,2,2,0.453125,0.59375,19,21,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+nail,Nail Tech,hold,2,3,2,3,0.453125,0.59375,29,29,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+nerd,Closet Nerd,hold,3,3,3,3,0.375,0.375,30,30,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+nguyen,Nguyen,hold,2,2,2,2,0.609375,0.609375,32,32,injected,No authored shell; diagnostic insertion alone is insufficient evidence for a buff.
+nigerian-father,Nigerian Father,hold,4,4,4,4,0.640625,0.640625,12,12,injected,No authored shell; diagnostic insertion alone is insufficient evidence for a buff.
+nightcashier,Night Cashier,hold,2,2,2,2,0.609375,0.609375,26,26,injected,No authored shell; diagnostic insertion alone is insufficient evidence for a buff.
+nightmedic,Night Shift Medic,hold,3,4,3,4,0.515625,0.515625,31,31,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+og,OG Uncle,hold,4,5,4,5,0.25,0.265625,27,27,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+og-skater,OG Skater,hold,3,3,3,3,0.5625,0.5625,7,7,injected,No authored shell; diagnostic insertion alone is insufficient evidence for a buff.
+og-uncle-harley-davidson,OG Uncle Harley Davidson,hold,4,5,4,5,0.703125,0.703125,28,28,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+ogdominican,OG Dominican,hold,3,4,3,4,0.6875,0.6875,30,30,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+oink,Officer Oink,hold,5,6,5,6,0.421875,0.421875,30,30,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+oz,Oz,hold,4,5,4,5,0.515625,0.515625,27,27,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+parole-officer,Parole Officer,hold,3,3,3,3,0.515625,0.484375,18,17,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+partytitan,Block Party Titan,hold,6,7,6,7,0.484375,0.484375,17,17,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+passportbro,Passport Bro,hold,3,3,3,3,0.75,0.75,22,22,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+personal-trainer,Personal Trainer,hold,3,4,3,4,0.40625,0.5,24,22,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+pimp-swookie,Pimp Swookie,hold,3,3,3,3,0.703125,0.703125,29,29,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+pinaynurse,Pinay Nurse,hold,2,3,2,3,0.203125,0.203125,32,32,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+piratedj,Pirate Radio DJ,hold,3,2,3,2,0.78125,0.78125,31,31,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+plug,Plug,hold,1,2,1,2,0.53125,0.53125,32,32,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+powerhouse,Powerhouse,hold,4,3,4,3,0.484375,0.484375,19,19,injected,No authored shell; diagnostic insertion alone is insufficient evidence for a buff.
+promoter,Promoter,hold,3,3,3,3,0.6875,0.6875,20,20,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+ptang,P. Tang,hold,3,4,3,4,0.6875,0.6875,9,9,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+queenofhearts,Queen of Hearts,hold,3,4,3,4,0.53125,0.53125,24,24,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+rainmaker,Energy Drink Freak,hold,4,4,4,4,0.453125,0.453125,23,23,injected,No authored shell; diagnostic insertion alone is insufficient evidence for a buff.
+rastamon,Rastamon,hold,2,2,2,2,0.421875,0.421875,17,17,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+redneck,Redneck,hold,2,3,2,3,0.484375,0.484375,24,24,injected,No authored shell; diagnostic insertion alone is insufficient evidence for a buff.
+redneck-evil,Redneck Evil,hold,5,5,5,5,0.53125,0.53125,29,29,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+redpill,Red Pill,body buff,3,3,3,4,0.265625,0.34375,32,32,authored,One extra printed Hand improves setup or narrow utility without changing ability caps.
+redside1,Red Plaid Petey,hold,1,2,1,2,0.546875,0.546875,32,32,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+redside2,OG Red Night,hold,2,3,2,3,0.265625,0.40625,32,32,injected,No authored shell; diagnostic insertion alone is insufficient evidence for a buff.
+redside3,Red Robber,hold,2,3,2,3,0.609375,0.609375,24,24,injected,No authored shell; diagnostic insertion alone is insufficient evidence for a buff.
+redside4,Red Hexer,hold,3,4,3,4,0.5625,0.5625,26,18,injected,No authored shell; diagnostic insertion alone is insufficient evidence for a buff.
+redside5,Ruby Shades,hold,3,4,3,4,0.25,0.265625,21,21,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+rent-a-cop,Rent-a-Cop,hold,2,2,2,2,0.5625,0.5625,25,25,injected,No authored shell; diagnostic insertion alone is insufficient evidence for a buff.
+repoman,Repo Man,hold,4,4,4,4,0.703125,0.71875,28,27,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+riptidebruiser,Gator Boy,hold,1,2,1,2,0.859375,0.859375,32,32,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+roaster,All Jokes Roaster,hold,3,3,3,3,0.421875,0.421875,30,30,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+ronald,Revolutionary Ronald,hold,3,4,3,4,0.4375,0.4375,20,20,injected,No authored shell; diagnostic insertion alone is insufficient evidence for a buff.
+roommate,Roommate,hold,1,2,1,2,0.640625,0.640625,32,32,injected,No authored shell; diagnostic insertion alone is insufficient evidence for a buff.
+rootnurse,Matcha Freak,hold,2,3,2,3,0.578125,0.578125,32,32,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+scammer,Scammer,hold,3,3,3,3,0.671875,0.75,4,4,injected,No authored shell; diagnostic insertion alone is insufficient evidence for a buff.
+scarecrow,Scarecrow,hold,2,3,2,3,0.75,0.75,16,16,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+seafoodassassin,Seafood Assassin,hold,4,3,4,3,0.515625,0.609375,29,29,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+sherlock,Sherlock,hold,2,3,2,3,0.515625,0.515625,32,32,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+shiesty,Shiesty YN,hold,1,1,1,1,0.6875,0.6875,32,32,injected,No authored shell; diagnostic insertion alone is insufficient evidence for a buff.
+shonuff,Sho'Nuff,hold,3,4,3,4,0.703125,0.71875,27,27,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+side-chick,Side Chick,body buff,2,2,2,3,0.34375,0.53125,32,32,authored,One extra printed Hand improves setup or narrow utility without changing ability caps.
+sideofhands,SquabbleHouse A Side of Hands,hold,2,0,2,0,0.578125,0.578125,32,32,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+simmy,Simmy,hold,4,4,4,4,0.265625,0.34375,32,32,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+slipstream,The Flight Plug,hold,3,3,3,3,0.6875,0.6875,23,23,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+sneaker,Sneaker Reseller,hold,3,3,3,3,0.59375,0.59375,32,32,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+snitch,Snitch,hold,3,3,3,3,0.6875,0.671875,21,12,injected,No authored shell; diagnostic insertion alone is insufficient evidence for a buff.
+snow,Snow Bunny,hold,3,2,3,2,0.421875,0.421875,32,32,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+soulfood,Soul Food,hold,1,0,1,0,0.421875,0.421875,32,32,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+sportsprodigy,Sports Prodigy,hold,3,3,3,3,0.40625,0.5,27,26,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+sprout,OG Vegan,hold,1,1,1,1,0.578125,0.578125,32,32,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+squabble-house-manager,SquabbleHouse Manager,hold,1,2,1,2,0.578125,0.578125,32,32,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+squabblecook,SquabbleHouse Cook,hold,2,3,2,3,0.328125,0.40625,32,32,injected,No authored shell; diagnostic insertion alone is insufficient evidence for a buff.
+squabblehouse-bus-boy,SquabbleHouse Bus Boy,hold,1,2,1,2,0.578125,0.578125,32,32,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+squabblehouse-cashier,SquabbleHouse Cashier,hold,2,3,2,3,0.578125,0.578125,32,32,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+squabblehouse-security,SquabbleHouse Security,hold,3,4,3,4,0.578125,0.578125,19,19,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+squabblehouse-teknician,SquabbleHouse Teknician,hold,5,5,5,5,0.578125,0.578125,28,28,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+squabbleserver,SquabbleHouse Server,hold,1,2,1,2,0.4375,0.4375,32,32,injected,No authored shell; diagnostic insertion alone is insufficient evidence for a buff.
+stillwatermedic,Hot Tub Hottie,hold,2,3,2,3,0.859375,0.859375,32,32,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+stockz,STOCKZ,hold,3,3,3,3,0.59375,0.59375,32,32,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+stonerjr,Stoner Jr.,hold,1,2,1,2,0.578125,0.578125,32,32,injected,No authored shell; diagnostic insertion alone is insufficient evidence for a buff.
+stonersr,Stoner Sr.,body buff,3,2,3,3,0.375,0.375,32,32,authored,One extra printed Hand improves setup or narrow utility without changing ability caps.
+streamer,Live Streamer,hold,2,3,2,3,0.59375,0.59375,32,32,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+streetapostle,The Street Apostle,hold,3,3,3,3,0.578125,0.578125,15,15,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+stud,STUD,hold,3,4,3,4,0.203125,0.203125,32,32,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+stylist,Stylist,hold,2,2,2,2,0.390625,0.390625,32,32,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+subwaymagician,Subway Magician,hold,3,3,3,3,0.609375,0.6875,26,23,injected,No authored shell; diagnostic insertion alone is insufficient evidence for a buff.
+subwaymap,Subway Map,hold,0,0,0,0,0.6875,0.6875,32,32,injected,No authored shell; diagnostic insertion alone is insufficient evidence for a buff.
+suga-mama,Suga Mama,body buff,3,3,3,4,0.34375,0.53125,30,30,authored,One extra printed Hand improves setup or narrow utility without changing ability caps.
+sugarfoot,Sugarfoot,hold,2,2,2,2,0.578125,0.578125,32,32,injected,No authored shell; diagnostic insertion alone is insufficient evidence for a buff.
+tattoo-artist,Tattoo Artist,hold,3,3,3,3,0.25,0.328125,19,19,injected,No authored shell; diagnostic insertion alone is insufficient evidence for a buff.
+tayaty,Bad Lil Cousin Tayaty,hold,1,1,1,1,0.53125,0.53125,32,32,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+teacher,Teacher Who Never Believed in Rappers,hold,3,3,3,3,0.5,0.5,23,23,injected,No authored shell; diagnostic insertion alone is insufficient evidence for a buff.
+techbro,Techbro Rich,hold,3,4,3,4,0.59375,0.59375,32,32,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+the-after-party,The After Party,hold,3,0,3,0,0.40625,0.40625,19,19,injected,No authored shell; diagnostic insertion alone is insufficient evidence for a buff.
+the-babyshower,The Baby Shower,hold,2,0,2,0,0.53125,0.546875,28,28,injected,No authored shell; diagnostic insertion alone is insufficient evidence for a buff.
+the-battle-rapper,The Battle Rapper,hold,3,4,3,4,0.34375,0.5,20,21,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+the-block-spin,The Block Spin,hold,4,0,4,0,0.640625,0.65625,3,3,injected,No authored shell; diagnostic insertion alone is insufficient evidence for a buff.
+the-concert,The Concert,hold,2,0,2,0,0.59375,0.59375,22,22,injected,No authored shell; diagnostic insertion alone is insufficient evidence for a buff.
+the-cookout,The Cookout,hold,3,0,3,0,0.25,0.375,8,8,injected,No authored shell; diagnostic insertion alone is insufficient evidence for a buff.
+the-dice-game,The Dice Game,hold,0,0,0,0,0.453125,0.453125,21,21,injected,No authored shell; diagnostic insertion alone is insufficient evidence for a buff.
+the-dj,The DJ,hold,2,3,2,3,0.34375,0.5,22,21,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+the-hype-man,The Hype Man,hold,2,3,2,3,0.34375,0.5,25,28,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+the-janky-promoter,The Janky Promoter,body buff,3,3,3,4,0.34375,0.5,21,32,authored,One extra printed Hand improves setup or narrow utility without changing ability caps.
+the-kickback,The Kickback,hold,3,0,3,0,0.46875,0.46875,27,27,injected,No authored shell; diagnostic insertion alone is insufficient evidence for a buff.
+the-local-celebrity,The Local Celebrity,hold,3,4,3,4,0.34375,0.5,33,30,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+the-manager-evil,The Manager — Evil,hold,4,5,4,5,0.34375,0.5,25,28,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+the-manager-nice,The Manager — Nice,hold,2,3,2,3,0.34375,0.5,16,19,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+the-og-rap-legend,The OG Rap Legend,tempo buff,5,6,4,5,0.34375,0.5,23,29,authored,Earlier Music deployment; one fewer printed Hand preserves budget.
+the-opening-act,The Opening Act,hold,1,2,1,2,0.34375,0.5,34,34,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+the-rapper,The Rapper,tempo buff,3,4,2,3,0.34375,0.5,27,24,authored,Earlier Music deployment; one fewer printed Hand preserves budget.
+the-setup,The Setup,hold,2,0,2,0,0.703125,0.703125,27,26,injected,No authored shell; diagnostic insertion alone is insufficient evidence for a buff.
+the-shootout,The Shootout,hold,3,0,3,0,0.1875,0.34375,25,25,injected,No authored shell; diagnostic insertion alone is insufficient evidence for a buff.
+the-sideshow,The Sideshow,hold,3,0,3,0,0.609375,0.609375,17,17,injected,No authored shell; diagnostic insertion alone is insufficient evidence for a buff.
+thefeds,The Feds,hold,4,4,4,4,0.703125,0.71875,23,16,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+tinman,Tin Man,hold,2,3,2,3,0.515625,0.515625,29,29,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+torta,Torta,hold,2,2,2,2,0.484375,0.484375,26,26,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+transplant,Racially Ambiguous Transplant,hold,1,1,1,1,0.765625,0.765625,32,32,injected,No authored shell; diagnostic insertion alone is insufficient evidence for a buff.
+trapvamp,Trap Vamp,hold,3,3,3,3,0.765625,0.734375,16,16,injected,No authored shell; diagnostic insertion alone is insufficient evidence for a buff.
+triple-og-blue,CLUE COOKY,hold,4,6,4,6,0.578125,0.578125,32,32,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+triple-og-red,RED PUNCH,hold,4,3,4,3,0.546875,0.546875,21,21,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+tron,TRON,hold,3,2,3,2,0.78125,0.78125,31,31,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+uncle-sam,Uncle Sam,hold,4,4,4,4,0.515625,0.484375,29,29,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+undercova,Undercova Brotha,hold,2,2,2,2,0.671875,0.6875,18,14,injected,No authored shell; diagnostic insertion alone is insufficient evidence for a buff.
+vibe,Cool Vibe YN,hold,2,2,2,2,0.53125,0.53125,32,32,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+waffle-warlord,SquabbleHouse Waffle Warlord,hold,5,5,5,5,0.578125,0.578125,28,28,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+waterboy,Water Boy,hold,1,2,1,2,0.375,0.375,32,32,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+watson,Watson,hold,2,3,2,3,0.515625,0.515625,30,30,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+wickedwitch,Wicked Witch,hold,4,5,4,5,0.75,0.75,26,26,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+wifey,Wifey,hold,4,4,4,4,0.421875,0.421875,27,27,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+wiretap,E.V. Enthusiast,hold,2,2,2,2,0.71875,0.71875,32,32,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+work-hubby,The Work Hubby,body buff,2,2,2,3,0.34375,0.53125,32,32,authored,One extra printed Hand improves setup or narrow utility without changing ability caps.
+workboots,Buttahs,hold,1,0,1,0,0.390625,0.390625,32,32,injected,No authored shell; diagnostic insertion alone is insufficient evidence for a buff.
+yasuke,Yasuke,hold,2,4,2,4,0.75,0.75,29,29,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+yn-atv-lord,YN ATV Lord,hold,3,4,3,4,0.40625,0.5,26,25,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+yn-gokarter,YN Gokarter,hold,2,2,2,2,0.8125,0.8125,32,32,injected,No authored shell; diagnostic insertion alone is insufficient evidence for a buff.
+youngbull,Young Bull,hold,2,2,2,2,0.53125,0.53125,32,32,authored,Existing ability value or printed budget warrants holding; weak deck score alone does not justify a stat increase.
+yunghustle,Yung Hustle,hold,1,1,1,1,0.53125,0.53125,32,32,injected,No authored shell; diagnostic insertion alone is insufficient evidence for a buff.
+guap,GUAP,excluded,,,,,,,,,excluded,Explicitly excluded; full definition verified unchanged.

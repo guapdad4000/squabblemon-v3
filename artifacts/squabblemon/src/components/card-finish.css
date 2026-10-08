@@ -274,3 +274,30 @@ html[data-reduce-motion='true'] .card-touch-hint {display:none}
    containment does not clip overflowing glows, bursts or tilt. */
 .collector-card { contain: layout style; }
 .battle-card-stack, .battle-hand-row { contain: layout style; }
+
+/* Landscape cutouts sit above the caption so props and full-body poses remain readable. */
+.collector-card[data-card-id="black-air-fade-1s"] .collector-portrait {
+  bottom: 40%;
+  height: 56%;
+  object-position: center;
+}
+
+/* Preserve the supplied full OG Calisthenics illustration, including its wind and papers. */
+.collector-card[data-card-id="og-calisthenics"] .collector-portrait {
+  bottom: 0;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 48%;
+}
+
+/* Frame the supplied tall poses at card width so faces and raised props stay prominent. */
+.collector-card[data-card-id="last-set-og"] .collector-portrait,
+.collector-card[data-card-id="merch-table-hustler"] .collector-portrait {
+  bottom: 0;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+}
+.collector-card[data-card-id="merch-table-hustler"] .collector-portrait {
+  object-position: center 20%;
+}

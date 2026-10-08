@@ -239,9 +239,9 @@ test('a custom side-neutral policy hook drives both owners to a complete match',
   assert.equal(calls.cpu > 0, true);
 });
 
-test('support cards stay available as normal plays but are never offered SQUABBLE to either owner', () => {
+test('support and Blockbuster cards stay available as normal plays but are never offered SQUABBLE to either owner', () => {
   const match = createMatch('vibes', 'vibes');
-  const supportCards = ['sideofhands', 'energydrink', 'boombox'].map((cardId, index) =>
+  const supportCards = ['sideofhands', 'energydrink', 'the-shootout'].map((cardId, index) =>
     createCardInstance(cardId, 'player', 'balance-support-test', index));
   const character = createCardInstance('counter', 'player', 'balance-support-test', 3);
   const playerHand = [...supportCards, character];
@@ -260,7 +260,7 @@ test('support cards stay available as normal plays but are never offered SQUABBL
     const legalPlays = listLegalBalancePlays({
       ...ready, phase: owner === 'player' ? 'player' : 'cpu-reveal',
     }, owner);
-    for (const support of hand.filter(card => card.kind === 'support')) {
+    for (const support of hand.filter(card => card.kind === 'support' || card.kind === 'blockbuster')) {
       const plays = legalPlays.filter(option => option.instanceId === support.instanceId);
       assert.ok(plays.some(option => !option.squabble), `${support.cardId} remains playable normally for ${owner}`);
       assert.equal(plays.some(option => option.squabble), false, `${support.cardId} is never offered SQUABBLE for ${owner}`);

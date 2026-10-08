@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { FULL_ROSTER_BUFFS } from '../../../lib/squabblemon-engine/src/fullRosterBuffs';
 import { readFileSync } from 'node:fs';
 import test from 'node:test';
 import { cards, ELEMENTAL_HAND_BONUS_CARDS } from './data';
@@ -52,13 +53,13 @@ function cover(m: Match, c: CardInstance) {
 const traps = (m: Match, kind: string) => (m.districtTraps ?? []).filter(t => t.kind === kind);
 
 test('crew parity rules 45 preserves other stats outside approved rivalry and Combo buffs', () => {
-  assert.equal(CARD_BALANCE_VERSION, 49);
-  assert.equal(ONLINE_RULES_VERSION, 49);
+  assert.equal(CARD_BALANCE_VERSION, 50);
+  assert.equal(ONLINE_RULES_VERSION, 50);
   assert.equal(frozen.balanceVersion, 35);
   for (const [id, old] of Object.entries(frozen.cards) as [string, { cost: number; power: number }][]) {
     const discounted: Record<string, number> = { 'ganger-blue': 2, 'techbro': 3 };
     assert.equal(cards[id].cost, discounted[id] ?? old.cost, `${id} Motion`);
-    assert.equal(cards[id].power, id === 'techbro' ? 4 : ['cane-corso-red', 'streamer'].includes(id) ? 3 : old.power, `${id} printed Hands`);
+    assert.equal(cards[id].power, FULL_ROSTER_BUFFS[id] ?? (id === 'techbro' ? 4 : ['cane-corso-red', 'streamer'].includes(id) ? 3 : old.power), `${id} printed Hands`);
   }
 });
 

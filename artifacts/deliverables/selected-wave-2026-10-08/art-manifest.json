@@ -1,0 +1,285 @@
+[
+  {
+    "id": "gym-spotter-yn",
+    "prompt": "Production Squabblemon collectible game art, one complete transparent cutout. Edit the second reference preserving EXACT character face, clothes, pose and identity. First reference is the REQUIRED rendering style. Gym Spotter YN, muscular young Black man blue gray tank and navy shorts, bare feet, raised knee fighting stance. Match bold black clean ink contours, angular warm anime/comic cel shading and expressive anatomy of first reference. No painterly realism. Full silhouette with 4% safe margin, clear readable features. Genuine transparent alpha background, no white/gray background, no floor, no scenery, no aura, no drop shadow, no labels or card frame. Only clenched FIST emblems, NEVER crowns. Preserve all limbs and prop silhouettes.",
+    "source": "/home/falcon/.codex/generated_images/01a100f0-8534-7ca0-aba4-dd3d544227ef/exec-ae8fe958-ed8b-4296-aae8-4ee885cca92b.png",
+    "width": 968,
+    "height": 1625,
+    "transparentPixels": 1031714,
+    "webp": "webp/gym-spotter-yn.webp",
+    "png": "png/gym-spotter-yn.png",
+    "cornerAlphaMaximum": 0
+  },
+  {
+    "id": "calisthenics-yn",
+    "prompt": "Production Squabblemon collectible game art, one complete transparent cutout. Edit the second reference preserving EXACT character face, clothes, pose and identity. First reference is the REQUIRED rendering style. Calisthenics YN, black ski mask, black tank and shorts, barefoot with knee raised doing pullup on a short portable straight bar. Match bold black clean ink contours, angular warm anime/comic cel shading and expressive anatomy of first reference. No painterly realism. Full silhouette with 4% safe margin, clear readable features. Genuine transparent alpha background, no white/gray background, no floor, no scenery, no aura, no drop shadow, no labels or card frame. Only clenched FIST emblems, NEVER crowns. Preserve all limbs and prop silhouettes.",
+    "source": "/home/falcon/.codex/generated_images/01a100f0-8534-7ca0-aba4-dd3d544227ef/exec-c8a006d8-767b-433f-9991-e0b417c57e03.png",
+    "width": 941,
+    "height": 1672,
+    "transparentPixels": 1024911,
+    "webp": "webp/calisthenics-yn.webp",
+    "png": "png/calisthenics-yn.png",
+    "cornerAlphaMaximum": 0
+  },
+  {
+    "id": "og-calisthenics",
+    "prompt": "User supplied original preserved: one-finger planche, swirling newspapers, leaves and wind. Full portrait with original background; no redraw.",
+    "source": "/tmp/codex-clipboard-2f7d7bda-b88c-4fc3-afce-d09d2b305a8b.png",
+    "width": 1008,
+    "height": 1792,
+    "transparentPixels": 0,
+    "webp": "webp/og-calisthenics.webp",
+    "png": "png/og-calisthenics-original.png",
+    "cornerAlphaMaximum": 0,
+    "artworkLayout": "portrait"
+  },
+  {
+    "id": "night-bus-driver",
+    "source": "/home/falcon/.codex/generated_images/01a100f0-8534-7ca0-aba4-dd3d544227ef/exec-e7fcf55e-45e0-48fc-a0b3-ffd3f242fe12.png",
+    "width": 1086,
+    "height": 1448,
+    "transparentPixels": 424496,
+    "bounds": [
+      8,
+      0,
+      1078,
+      1443
+    ],
+    "png": "png/night-bus-driver.png",
+    "webp": "webp/night-bus-driver.webp",
+    "revision": "0f54e1a9d3eb8ccb"
+  },
+  {
+    "id": "community-cook",
+    "source": "/home/falcon/.codex/generated_images/01a100f0-8534-7ca0-aba4-dd3d544227ef/exec-de883719-9cd7-4d2f-9495-f2e4afe6cab3.png",
+    "width": 1086,
+    "height": 1448,
+    "transparentPixels": 829393,
+    "bounds": [
+      18,
+      3,
+      1075,
+      1445
+    ],
+    "png": "png/community-cook.png",
+    "webp": "webp/community-cook.webp",
+    "revision": "795ef058fea60cb9"
+  },
+  {
+    "id": "jump-rope-menace",
+    "prompt": "Production Squabblemon collectible game art, one complete transparent cutout. Edit the second reference preserving EXACT character face, clothes, pose and identity. First reference is the REQUIRED rendering style. Jump Rope Menace black tank gray shorts gray sneakers, muscular young Black man, rope jump, shadowed eyes. Keep whole rope visible. Remove ground marks. Match bold black clean ink contours, angular warm anime/comic cel shading and expressive anatomy of first reference. No painterly realism. Full silhouette with 4% safe margin, clear readable features. Genuine transparent alpha background, no white/gray background, no floor, no scenery, no aura, no drop shadow, no labels or card frame. Only clenched FIST emblems, NEVER crowns. Preserve all limbs and prop silhouettes.",
+    "source": "/home/falcon/.codex/generated_images/01a100f0-8534-7ca0-aba4-dd3d544227ef/exec-6591b104-6983-4a4b-b4fe-289ce009371e.png",
+    "width": 941,
+    "height": 1672,
+    "transparentPixels": 952336,
+    "webp": "webp/jump-rope-menace.webp",
+    "png": "png/jump-rope-menace.png",
+    "cornerAlphaMaximum": 0
+  },
+  {
+    "id": "delivery-app-cyclist",
+    "prompt": "Edit this existing Squabblemon Delivery App Cyclist transparent character cutout. Preserve this EXACT character, uniform, helmet, face, pose, fist emblems, yellow bag and bicycle, matching black ink angular cel shading. Repair the framing: SHRINK the complete rider and bicycle together enough that the WHOLE rear wheel, WHOLE front wheel, pedals, shoes, hand, backpack and flag fit fully inside the image with at least 7% transparent safe margin on EVERY edge. Draw the missing edge of the front wheel and remaining cropped bottom where needed. Both tires must be complete closed round shapes, no clipped spokes or limbs. NO background, NO floor, NO shadow, genuine alpha transparent. Fists only, no crowns.",
+    "source": "/home/falcon/.codex/generated_images/01a100f0-8534-7ca0-aba4-dd3d544227ef/exec-b79ef96f-f563-47aa-ac0e-8c55c3911466.png",
+    "width": 1086,
+    "height": 1448,
+    "transparentPixels": 890940,
+    "webp": "webp/delivery-app-cyclist.webp",
+    "png": "png/delivery-app-cyclist-v2.png",
+    "cornerAlphaMaximum": 1
+  },
+  {
+    "id": "studio-couch-yn",
+    "prompt": "Production Squabblemon collectible game art, one complete transparent cutout. Edit the second reference preserving EXACT character face, clothes, pose and identity. First reference is the REQUIRED rendering style. Studio Couch YN camo hoodie, black pants white chunky sneakers jumping up from a small couch. Keep couch as compact character prop, remove floor, loose socks and headphones. Fist sleeve emblem. Match bold black clean ink contours, angular warm anime/comic cel shading and expressive anatomy of first reference. No painterly realism. Full silhouette with 4% safe margin, clear readable features. Genuine transparent alpha background, no white/gray background, no floor, no scenery, no aura, no drop shadow, no labels or card frame. Only clenched FIST emblems, NEVER crowns. Preserve all limbs and prop silhouettes.",
+    "source": "/home/falcon/.codex/generated_images/01a100f0-8534-7ca0-aba4-dd3d544227ef/exec-65e6d4aa-3cf6-40af-859a-c189fa2144a3.png",
+    "width": 1086,
+    "height": 1448,
+    "transparentPixels": 705039,
+    "webp": "webp/studio-couch-yn.webp",
+    "png": "png/studio-couch-yn.png",
+    "cornerAlphaMaximum": 0
+  },
+  {
+    "id": "barbershop-heckler",
+    "prompt": "Production Squabblemon collectible game art, one complete transparent cutout. Edit the second reference preserving EXACT character face, clothes, pose and identity. First reference is the REQUIRED rendering style. Barbershop Heckler shouting young Black man spiky locs redwhiteblue barber cape dark pants brown shoes. Remove shadow. Match bold black clean ink contours, angular warm anime/comic cel shading and expressive anatomy of first reference. No painterly realism. Full silhouette with 4% safe margin, clear readable features. Genuine transparent alpha background, no white/gray background, no floor, no scenery, no aura, no drop shadow, no labels or card frame. Only clenched FIST emblems, NEVER crowns. Preserve all limbs and prop silhouettes.",
+    "source": "/home/falcon/.codex/generated_images/01a100f0-8534-7ca0-aba4-dd3d544227ef/exec-ba1416cb-486b-493e-9ec7-2eb6a5db9a1e.png",
+    "width": 941,
+    "height": 1672,
+    "transparentPixels": 811067,
+    "webp": "webp/barbershop-heckler.webp",
+    "png": "png/barbershop-heckler.png",
+    "cornerAlphaMaximum": 0
+  },
+  {
+    "id": "group-chat-instigator",
+    "prompt": "Production Squabblemon collectible game art, one complete transparent cutout. Edit the second reference preserving EXACT character face, clothes, pose and identity. First reference is the REQUIRED rendering style. Group Chat Instigator Black woman purple blouse and skirt, locs obscure eyes mischievous grin running holding smartphone combatboots. Remove ground lines. Match bold black clean ink contours, angular warm anime/comic cel shading and expressive anatomy of first reference. No painterly realism. Full silhouette with 4% safe margin, clear readable features. Genuine transparent alpha background, no white/gray background, no floor, no scenery, no aura, no drop shadow, no labels or card frame. Only clenched FIST emblems, NEVER crowns. Preserve all limbs and prop silhouettes.",
+    "source": "/home/falcon/.codex/generated_images/01a100f0-8534-7ca0-aba4-dd3d544227ef/exec-f18232c3-22a6-4f84-84e1-3c1446b7d336.png",
+    "width": 941,
+    "height": 1672,
+    "transparentPixels": 911359,
+    "webp": "webp/group-chat-instigator.webp",
+    "png": "png/group-chat-instigator.png",
+    "cornerAlphaMaximum": 0
+  },
+  {
+    "id": "bluetooth-unc",
+    "prompt": "Production Squabblemon collectible game art, one complete transparent cutout. Edit the second reference preserving EXACT character face, clothes, pose and identity. First reference is the REQUIRED rendering style. Bluetooth Unc elderly Black man short whitehair whitepolo navy pants black boots bluetooth earpiece silver drink can angry talking gesturing. Remove shadow. Match bold black clean ink contours, angular warm anime/comic cel shading and expressive anatomy of first reference. No painterly realism. Full silhouette with 4% safe margin, clear readable features. Genuine transparent alpha background, no white/gray background, no floor, no scenery, no aura, no drop shadow, no labels or card frame. Only clenched FIST emblems, NEVER crowns. Preserve all limbs and prop silhouettes.",
+    "source": "/home/falcon/.codex/generated_images/01a100f0-8534-7ca0-aba4-dd3d544227ef/exec-e987625a-8d9d-4542-9f86-c5db3f2f8255.png",
+    "width": 941,
+    "height": 1672,
+    "transparentPixels": 962688,
+    "webp": "webp/bluetooth-unc.webp",
+    "png": "png/bluetooth-unc.png",
+    "cornerAlphaMaximum": 0
+  },
+  {
+    "id": "one-man-band",
+    "prompt": "Production Squabblemon collectible game art, one complete transparent cutout. Edit the second reference preserving EXACT character face, clothes, pose and identity. First reference is the REQUIRED rendering style. One-Man Band young Black man gray sleeveless shirt darkpants boots with bass drum strapped back harmonica neck guitar front pointing hand. Preserve complete instruments. Remove shadow. Match bold black clean ink contours, angular warm anime/comic cel shading and expressive anatomy of first reference. No painterly realism. Full silhouette with 4% safe margin, clear readable features. Genuine transparent alpha background, no white/gray background, no floor, no scenery, no aura, no drop shadow, no labels or card frame. Only clenched FIST emblems, NEVER crowns. Preserve all limbs and prop silhouettes.",
+    "source": "/home/falcon/.codex/generated_images/01a100f0-8534-7ca0-aba4-dd3d544227ef/exec-880e7cae-6159-4a06-a11a-4dd0a612d267.png",
+    "width": 941,
+    "height": 1672,
+    "transparentPixels": 890968,
+    "webp": "webp/one-man-band.webp",
+    "png": "png/one-man-band.png",
+    "cornerAlphaMaximum": 0
+  },
+  {
+    "id": "booster",
+    "prompt": "Production Squabblemon collectible game art, one complete transparent cutout. Edit the second reference preserving EXACT character face, clothes, pose and identity. First reference is the REQUIRED rendering style. Booster young woman messy bun scarf coversmouth navy tank blackshorts sneakers running with multiple shoppingbags. Remove ground. Match bold black clean ink contours, angular warm anime/comic cel shading and expressive anatomy of first reference. No painterly realism. Full silhouette with 4% safe margin, clear readable features. Genuine transparent alpha background, no white/gray background, no floor, no scenery, no aura, no drop shadow, no labels or card frame. Only clenched FIST emblems, NEVER crowns. Preserve all limbs and prop silhouettes.",
+    "source": "/home/falcon/.codex/generated_images/01a100f0-8534-7ca0-aba4-dd3d544227ef/exec-6adecc83-860b-4c78-a781-a2f23e26e79e.png",
+    "width": 968,
+    "height": 1624,
+    "transparentPixels": 819271,
+    "webp": "webp/booster.webp",
+    "png": "png/booster.png",
+    "cornerAlphaMaximum": 0
+  },
+  {
+    "id": "naija-scammer",
+    "prompt": "Production Squabblemon collectible game art, one complete transparent cutout. Edit the second reference preserving EXACT character face, clothes, pose and identity. First reference is the REQUIRED rendering style. Naija Scammer young Black man navy suit gold trim redtie Nigerian flag pin brown shoes confident extendedhand. Change gold medallion to fist. Remove backdrop. Match bold black clean ink contours, angular warm anime/comic cel shading and expressive anatomy of first reference. No painterly realism. Full silhouette with 4% safe margin, clear readable features. Genuine transparent alpha background, no white/gray background, no floor, no scenery, no aura, no drop shadow, no labels or card frame. Only clenched FIST emblems, NEVER crowns. Preserve all limbs and prop silhouettes.",
+    "source": "/home/falcon/.codex/generated_images/01a100f0-8534-7ca0-aba4-dd3d544227ef/exec-a14c4b8a-a056-4e76-aca2-d6535af56338.png",
+    "width": 941,
+    "height": 1672,
+    "transparentPixels": 1058175,
+    "webp": "webp/naija-scammer.webp",
+    "png": "png/naija-scammer.png",
+    "cornerAlphaMaximum": 0
+  },
+  {
+    "id": "fake-marriage",
+    "prompt": "Production Squabblemon collectible game art, one complete transparent cutout. Edit the second reference preserving EXACT character face, clothes, pose and identity. First reference is the REQUIRED rendering style. Fake Marriage same man navygold suit redtie Nigerian flag pin kneeling holding goldring concerned expression. Fist medallion. Remove backdrop. Match bold black clean ink contours, angular warm anime/comic cel shading and expressive anatomy of first reference. No painterly realism. Full silhouette with 4% safe margin, clear readable features. Genuine transparent alpha background, no white/gray background, no floor, no scenery, no aura, no drop shadow, no labels or card frame. Only clenched FIST emblems, NEVER crowns. Preserve all limbs and prop silhouettes.",
+    "source": "/home/falcon/.codex/generated_images/01a100f0-8534-7ca0-aba4-dd3d544227ef/exec-3c39fba8-1989-4bc7-86cb-da59a851821c.png",
+    "width": 941,
+    "height": 1672,
+    "transparentPixels": 650614,
+    "webp": "webp/fake-marriage.webp",
+    "png": "png/fake-marriage.png",
+    "cornerAlphaMaximum": 0
+  },
+  {
+    "id": "black-air-fade-1s",
+    "prompt": "Edit this exact pair of Black Air Fade 1's sneakers into a production transparent game support-card cutout. OUTPUT ONLY THE TWO SHOES IN THE REFERENCE, no person, no human character, no legs or hands. Preserve black leather lowtop silhouettes, white cupsoles with FADE lettering, embossed clenched fist side logos, black laces, toe perforations. Preserve bold black ink and angular anime/comic cel shading. Remove white paper background and floor shadow completely; genuine transparent alpha. Center the whole pair, useful near-square composition with 5% margin. No crowns, no brand swooshes, no scenery, no card border.",
+    "source": "/home/falcon/.codex/generated_images/01a100f0-8534-7ca0-aba4-dd3d544227ef/exec-d0df24d2-ff91-4cfe-ba4c-db2af73c068a.png",
+    "width": 1374,
+    "height": 1145,
+    "transparentPixels": 815608,
+    "webp": "webp/black-air-fade-1s.webp",
+    "png": "png/black-air-fade-1s-v2.png",
+    "cornerAlphaMaximum": 0
+  },
+  {
+    "id": "indian-scammer",
+    "source": "/home/falcon/.codex/generated_images/01a100f0-8534-7ca0-aba4-dd3d544227ef/exec-9a8da4c8-6022-4f5f-b695-b258fe5ac60a.png",
+    "width": 1086,
+    "height": 1448,
+    "transparentPixels": 791229,
+    "bounds": [
+      22,
+      7,
+      1065,
+      1424
+    ],
+    "png": "png/indian-scammer.png",
+    "webp": "webp/indian-scammer.webp",
+    "revision": "c4cfaaf931c10362"
+  },
+  {
+    "id": "stairwell-sprinter",
+    "source": "/home/falcon/.codex/generated_images/01a100f0-8534-7ca0-aba4-dd3d544227ef/exec-f289940e-a939-45ab-a885-15170536f58e.png",
+    "width": 1086,
+    "height": 1448,
+    "transparentPixels": 1039626,
+    "bounds": [
+      54,
+      9,
+      1029,
+      1416
+    ],
+    "png": "png/stairwell-sprinter.png",
+    "webp": "webp/stairwell-sprinter.webp",
+    "revision": "5067f3cd0f136fc5"
+  },
+  {
+    "id": "mixtape-cousin",
+    "source": "/home/falcon/.codex/generated_images/01a100f0-8534-7ca0-aba4-dd3d544227ef/exec-1925c7e3-f37a-4981-92c0-e41f53e1b7e7.png",
+    "width": 1086,
+    "height": 1448,
+    "transparentPixels": 628035,
+    "bounds": [
+      4,
+      5,
+      1082,
+      1441
+    ],
+    "png": "png/mixtape-cousin.png",
+    "webp": "webp/mixtape-cousin.webp",
+    "revision": "fcead946c84cd9ef"
+  },
+  {
+    "id": "tour-van-driver",
+    "source": "/home/falcon/.codex/generated_images/01a100f0-8534-7ca0-aba4-dd3d544227ef/exec-490fe668-aba8-44f6-8c96-77ecd3e2dce4.png",
+    "width": 1086,
+    "height": 1448,
+    "transparentPixels": 610081,
+    "bounds": [
+      2,
+      143,
+      1085,
+      1349
+    ],
+    "png": "png/tour-van-driver.png",
+    "webp": "webp/tour-van-driver.webp",
+    "revision": "f92b71d70d454c16"
+  },
+  {
+    "id": "last-set-og",
+    "source": "/home/falcon/.codex/generated_images/01a100f0-8534-7ca0-aba4-dd3d544227ef/exec-feafcb21-9649-450a-a9ac-3924ecad5807.png",
+    "width": 941,
+    "height": 1672,
+    "transparentPixels": 878615,
+    "bounds": [
+      17,
+      34,
+      921,
+      1641
+    ],
+    "png": "png/last-set-og.png",
+    "webp": "webp/last-set-og.webp",
+    "revision": "4d3e28d8685d1e3f"
+  },
+  {
+    "id": "merch-table-hustler",
+    "source": "/home/falcon/.codex/generated_images/01a100f0-8534-7ca0-aba4-dd3d544227ef/exec-014f8ce2-f2ac-4678-a118-3face32ae8eb.png",
+    "width": 941,
+    "height": 1672,
+    "transparentPixels": 1033340,
+    "bounds": [
+      99,
+      10,
+      865,
+      1649
+    ],
+    "png": "png/merch-table-hustler.png",
+    "webp": "webp/merch-table-hustler.webp",
+    "revision": "27e3d5d2c9f9a812"
+  }
+]

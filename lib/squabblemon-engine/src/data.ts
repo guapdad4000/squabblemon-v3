@@ -1,7 +1,9 @@
+import { selectedCards, selectedRarities, selectedFactions, selectedUpgradeEffects } from './selectedWave';
 import { streetLegendsCards, streetLegendsRarities, streetLegendsUpgradeEffects, streetLegendsFactions } from './streetLegendsWave';
 import { musicIndustryWaveCards, musicIndustryRarities, musicIndustryUpgradeEffects, musicIndustryFactions, MUSIC_INDUSTRY_IDS, FITNESS_WAVE_IDS, MUSIC_CHARACTER_IDS, FITNESS_CHARACTER_IDS } from './musicIndustryWave';
 import { homecomingCards, homecomingRarities, homecomingUpgradeEffects } from './homecomingWave';
 import { applyRosterBalance } from './rosterBalance';
+import { applyFullRosterBuffs } from './fullRosterBuffs';
 import { applyCreativeCardKits } from './creativeReworks';
 import { applyElementalHandBonuses } from './elementalHandBonuses';
 export { ELEMENTAL_HAND_BONUS_CARDS } from './elementalHandBonuses';
@@ -114,6 +116,7 @@ const upgradeEffects: Record<string, readonly AbilityUpgradeEffect[]> = {
   ...mythicLegendUpgradeEffects,
   ...characterWaveUpgradeEffects,
   ...homecomingUpgradeEffects,
+  ...selectedUpgradeEffects,
   ...neighborhoodWaveUpgradeEffects,
   ...cellblockWaveUpgradeEffects,
   ...fairytaleUpgradeEffects,
@@ -271,6 +274,7 @@ export const cards: Record<string, Card> = {
   ...mythicLegendCards,
   ...characterWaveCards,
   ...homecomingCards,
+  ...selectedCards,
   ...neighborhoodWaveCards,
   ...cellblockWaveCards,
   ...fairytaleCards,
@@ -289,6 +293,7 @@ export const cards: Record<string, Card> = {
 
 applyCreativeCardKits(cards);
 applyRosterBalance(cards);
+applyFullRosterBuffs(cards);
 applyElementalHandBonuses(cards);
 
 /** Complete authored crews without changing their existing draw order. Never use for submitted decks. */
@@ -323,6 +328,10 @@ export const decks: Deck[] = [
   { id: "vibes", name: "GOOD VIBES ONLY", archetype: "Sustain", accent: "CLEANSE", plan: "Cleanse, Protect, suppress hostile rules, and keep scaling pieces alive.", cards: ["rastamon", "wifey", "snow", "vibe", "hooper", "oink", "plug"], hero: "rastamon" },
   { id: "compound", name: "COMPOUND INTEREST", archetype: "Growth / Scaling", accent: "GROW", plan: "Invest early in STOCKZ and BUDDY, then freeze a rival threat while follow-up plays build late district value.", cards: ["cornball", "plug", "streamer", "rastamon", "gamer", "stockz", "snow", "buspass", "buddy", "cognac"], hero: "gamer" },
   { id: "voltage", name: "VOLTAGE IN MOTION", archetype: "Electric Tempo", accent: "CHARGE", plan: "Keep an Electric bond in hand, spread plays across districts, and turn clean sequencing into extra tempo.", cards: ["batteryback", "circuitcaptain", "wiretap", "livewire", "stockz", "bossbabe", "plug", "streamer", "techbro", "bikelife"], hero: "circuit-captain" },
+  { id:'sunday-dinner',name:'FIX YOU A PLATE',archetype:'Fire / Family Movement',accent:'FAMILY',plan:'Move the family between districts, serve real recovery, and convert arrivals and Burn into a bounded dinner finish.',cards:['the-favorite-grandchild','cousin-back-from-college','plate-auntie','church-aunties-rival','big-sister','second-plate-cousin','grill-uncle','grandma-said-sit-down','group-chat-instigator','black-air-fade-1s'],hero:'grandma-said-sit-down' },
+  { id:'fitness-routes',name:'NO EQUIPMENT NEEDED',archetype:'Fitness / Circuit',accent:'ROUTE',plan:'Cheap runners establish a three-district circuit. Spotter protects the first leg; Last Set and OG Calisthenics convert complete routes into crew value.',cards:['track-suit-auntie','gym-bag-yn','stairwell-sprinter','gym-spotter-yn','calisthenics-yn','jump-rope-menace','personal-trainer','fitness-girl','last-set-og','og-calisthenics'],hero:'og-calisthenics' },
+  { id:'music-tour',name:'TOUR MONEY',archetype:'Music / Movement',accent:'TOUR',plan:'Wake up the couch, establish a second stage, bring the tour together, then cash a bounded Merch discount and One-Man Band finish.',cards:['studio-couch-yn','the-opening-act','mixtape-cousin','the-rapper','the-hype-man','tour-van-driver','merch-table-hustler','the-manager-nice','the-dj','one-man-band'],hero:'one-man-band' },
+  { id:'community-table',name:'EVERYBODY EATS',archetype:'Homeless / Recovery',accent:'COMMUNITY',plan:'Cook feeds injured allies and protects the Homeless crew. Bus and Cyclist establish routes while Unc restores voices and bonus thieves answer enemy growth.',cards:['homelessguy','homelessyn','homelesslegend','community-cook','night-bus-driver','delivery-app-cyclist','bluetooth-unc','booster','barbershop-heckler','rastamon'],hero:'community-cook' },
   { id: 'music-industry', name: 'WHO GOT THE AUX', archetype: 'Music / Sequencing', accent: 'PERFORM', plan: 'Soundcheck a second stage, perform across districts, protect the artist, Spinback one entrance, and Pass the Torch into the finish.', cards: [...MUSIC_INDUSTRY_IDS], hero: 'the-og-rap-legend' },
   { id: 'fitness-circuit', name: 'ONE MORE REP', archetype: 'Fitness / Movement', accent: 'TRAIN', plan: 'Train a circuit across three districts, recover actual damage, and earn a bounded comeback after an athlete falls.', cards: ['failedathlete', 'fitness-girl', 'fitness-bro', 'personal-trainer', 'lash-tech', 'apartment-maintenance-sage', 'yn-atv-lord', 'hooper', 'sportsprodigy', 'demon-trainer'], hero: 'demon-trainer' },
   { id: "squabblehouse-shift", name: "SQUABBLEHOUSE SHIFT", archetype: "Staff & Support", accent: "SHIFT", plan: "Bring the diner staff together across all three districts for Waffle Warlord, while Bus Boy clears a lane, Cashier pins a threat, and A Side of Hands serves both sides. Teknician echoes staff reveals and Janitor reverses attacks. Dogs and Triple OGs belong in gang decks.", cards: ["squabble-house-manager", "squabblehouse-bus-boy", "squabblehouse-cashier", "squabblehouse-security", "squabblehouse-teknician", "griddle-master", "inmate-reformed", "janitor", "waffle-warlord", "sideofhands"], hero: "squabblehouse-security" },
@@ -336,6 +345,7 @@ export const rarityByEngineId = {
   ...mythicLegendRarities,
   ...characterWaveRarities,
   ...homecomingRarities,
+  ...selectedRarities,
   ...fairytaleRarities,
   ...neighborhoodWaveRarities,
   ...cellblockWaveRarities,
@@ -425,6 +435,7 @@ const factionByEngineId: Record<string, string> = {
   ...squabblehouseFactionById,
   ...streetLegendsFactions,
   ...musicIndustryFactions,
+  ...selectedFactions,
   ...Object.fromEntries(Object.keys(afterHoursWaveCards).map(id => [id, 'After Hours'])),
   ...Object.fromEntries(Object.keys(elementalBondWaveCards).map(id => [id, 'Elemental Bonds'])),
   ...sideOzWaveFactions,
@@ -526,6 +537,7 @@ export const cardCatalog: CatalogCard[] = Object.entries(cards).map(
         ['cane-corso-red', 'blue-nose-pit'].includes(engineId) ? ['OG-support'] : [],
         MUSIC_CHARACTER_IDS.includes(engineId) ? ['Music Industry'] : [],
         FITNESS_CHARACTER_IDS.includes(engineId) ? ['Fitness'] : [],
+        selectedFactions[engineId] ? [selectedFactions[engineId]] : [],
         Object.hasOwn(streetLegendsCards, engineId) ? [engineId === 'lash-tech' ? 'Beauty' : 'Street Legends'] : [],
         Object.hasOwn(sideOzWaveCards, engineId) ? ['side-oz', sideOzWaveFactions[engineId] === 'Red Side' ? 'red-side'
           : sideOzWaveFactions[engineId] === 'Blue Side' ? 'blue-side' : 'the-wiz'] : []),

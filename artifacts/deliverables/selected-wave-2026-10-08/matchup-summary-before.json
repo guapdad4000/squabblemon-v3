@@ -1,0 +1,22 @@
+[
+  {
+    "deck": "sunday-dinner",
+    "games": 80,
+    "botScore": 0.04375
+  },
+  {
+    "deck": "fitness-routes",
+    "games": 80,
+    "botScore": 0.10625
+  },
+  {
+    "deck": "music-tour",
+    "games": 80,
+    "botScore": 0.21875
+  },
+  {
+    "deck": "community-table",
+    "games": 80,
+    "botScore": 0.11875
+  }
+]

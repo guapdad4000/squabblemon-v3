@@ -1,0 +1,3602 @@
+[
+  {
+    "seed": 0,
+    "a": "starter-fitness-circuit",
+    "b": "element-water",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "starter-fitness-circuit",
+    "b": "element-water",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "starter-fitness-circuit",
+    "b": "element-water",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "starter-fitness-circuit",
+    "b": "element-water",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "starter-fitness-circuit",
+    "b": "element-water",
+    "tier": 3,
+    "seat": "a-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "starter-fitness-circuit",
+    "b": "element-water",
+    "tier": 3,
+    "seat": "a-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "starter-fitness-circuit",
+    "b": "element-water",
+    "tier": 3,
+    "seat": "b-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "starter-fitness-circuit",
+    "b": "element-water",
+    "tier": 3,
+    "seat": "b-player",
+    "policy": "seeded",
+    "score": 1,
+    "winner": "a"
+  },
+  {
+    "seed": 0,
+    "a": "starter-fitness-circuit",
+    "b": "mushroom-plant",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "starter-fitness-circuit",
+    "b": "mushroom-plant",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "seeded",
+    "score": 0.5,
+    "winner": "draw"
+  },
+  {
+    "seed": 0,
+    "a": "starter-fitness-circuit",
+    "b": "mushroom-plant",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "starter-fitness-circuit",
+    "b": "mushroom-plant",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "starter-fitness-circuit",
+    "b": "mushroom-plant",
+    "tier": 3,
+    "seat": "a-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "starter-fitness-circuit",
+    "b": "mushroom-plant",
+    "tier": 3,
+    "seat": "a-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "starter-fitness-circuit",
+    "b": "mushroom-plant",
+    "tier": 3,
+    "seat": "b-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "starter-fitness-circuit",
+    "b": "mushroom-plant",
+    "tier": 3,
+    "seat": "b-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "starter-fitness-circuit",
+    "b": "element-air",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "starter-fitness-circuit",
+    "b": "element-air",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "starter-fitness-circuit",
+    "b": "element-air",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "starter-fitness-circuit",
+    "b": "element-air",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "starter-fitness-circuit",
+    "b": "element-air",
+    "tier": 3,
+    "seat": "a-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "starter-fitness-circuit",
+    "b": "element-air",
+    "tier": 3,
+    "seat": "a-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "starter-fitness-circuit",
+    "b": "element-air",
+    "tier": 3,
+    "seat": "b-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "starter-fitness-circuit",
+    "b": "element-air",
+    "tier": 3,
+    "seat": "b-player",
+    "policy": "seeded",
+    "score": 0.5,
+    "winner": "draw"
+  },
+  {
+    "seed": 0,
+    "a": "starter-fitness-circuit",
+    "b": "element-light",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "starter-fitness-circuit",
+    "b": "element-light",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "starter-fitness-circuit",
+    "b": "element-light",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "starter-fitness-circuit",
+    "b": "element-light",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "seeded",
+    "score": 1,
+    "winner": "a"
+  },
+  {
+    "seed": 0,
+    "a": "starter-fitness-circuit",
+    "b": "element-light",
+    "tier": 3,
+    "seat": "a-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "starter-fitness-circuit",
+    "b": "element-light",
+    "tier": 3,
+    "seat": "a-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "starter-fitness-circuit",
+    "b": "element-light",
+    "tier": 3,
+    "seat": "b-player",
+    "policy": "greedy",
+    "score": 0.5,
+    "winner": "draw"
+  },
+  {
+    "seed": 0,
+    "a": "starter-fitness-circuit",
+    "b": "element-light",
+    "tier": 3,
+    "seat": "b-player",
+    "policy": "seeded",
+    "score": 1,
+    "winner": "a"
+  },
+  {
+    "seed": 0,
+    "a": "starter-fitness-circuit",
+    "b": "element-dark",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "starter-fitness-circuit",
+    "b": "element-dark",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "starter-fitness-circuit",
+    "b": "element-dark",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "starter-fitness-circuit",
+    "b": "element-dark",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "starter-fitness-circuit",
+    "b": "element-dark",
+    "tier": 3,
+    "seat": "a-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "starter-fitness-circuit",
+    "b": "element-dark",
+    "tier": 3,
+    "seat": "a-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "starter-fitness-circuit",
+    "b": "element-dark",
+    "tier": 3,
+    "seat": "b-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "starter-fitness-circuit",
+    "b": "element-dark",
+    "tier": 3,
+    "seat": "b-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "element-fire",
+    "b": "element-water",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "element-fire",
+    "b": "element-water",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "element-fire",
+    "b": "element-water",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "element-fire",
+    "b": "element-water",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "element-fire",
+    "b": "element-water",
+    "tier": 3,
+    "seat": "a-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "element-fire",
+    "b": "element-water",
+    "tier": 3,
+    "seat": "a-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "element-fire",
+    "b": "element-water",
+    "tier": 3,
+    "seat": "b-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "element-fire",
+    "b": "element-water",
+    "tier": 3,
+    "seat": "b-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "element-fire",
+    "b": "mushroom-plant",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "element-fire",
+    "b": "mushroom-plant",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "element-fire",
+    "b": "mushroom-plant",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "element-fire",
+    "b": "mushroom-plant",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "element-fire",
+    "b": "mushroom-plant",
+    "tier": 3,
+    "seat": "a-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "element-fire",
+    "b": "mushroom-plant",
+    "tier": 3,
+    "seat": "a-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "element-fire",
+    "b": "mushroom-plant",
+    "tier": 3,
+    "seat": "b-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "element-fire",
+    "b": "mushroom-plant",
+    "tier": 3,
+    "seat": "b-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "element-fire",
+    "b": "element-air",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "element-fire",
+    "b": "element-air",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "element-fire",
+    "b": "element-air",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "greedy",
+    "score": 0.5,
+    "winner": "draw"
+  },
+  {
+    "seed": 0,
+    "a": "element-fire",
+    "b": "element-air",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "seeded",
+    "score": 1,
+    "winner": "a"
+  },
+  {
+    "seed": 0,
+    "a": "element-fire",
+    "b": "element-air",
+    "tier": 3,
+    "seat": "a-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "element-fire",
+    "b": "element-air",
+    "tier": 3,
+    "seat": "a-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "element-fire",
+    "b": "element-air",
+    "tier": 3,
+    "seat": "b-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "element-fire",
+    "b": "element-air",
+    "tier": 3,
+    "seat": "b-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "element-fire",
+    "b": "element-light",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "element-fire",
+    "b": "element-light",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "seeded",
+    "score": 1,
+    "winner": "a"
+  },
+  {
+    "seed": 0,
+    "a": "element-fire",
+    "b": "element-light",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "element-fire",
+    "b": "element-light",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "element-fire",
+    "b": "element-light",
+    "tier": 3,
+    "seat": "a-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "element-fire",
+    "b": "element-light",
+    "tier": 3,
+    "seat": "a-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "element-fire",
+    "b": "element-light",
+    "tier": 3,
+    "seat": "b-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "element-fire",
+    "b": "element-light",
+    "tier": 3,
+    "seat": "b-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "element-fire",
+    "b": "element-dark",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "element-fire",
+    "b": "element-dark",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "seeded",
+    "score": 1,
+    "winner": "a"
+  },
+  {
+    "seed": 0,
+    "a": "element-fire",
+    "b": "element-dark",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "element-fire",
+    "b": "element-dark",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "element-fire",
+    "b": "element-dark",
+    "tier": 3,
+    "seat": "a-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "element-fire",
+    "b": "element-dark",
+    "tier": 3,
+    "seat": "a-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "element-fire",
+    "b": "element-dark",
+    "tier": 3,
+    "seat": "b-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "element-fire",
+    "b": "element-dark",
+    "tier": 3,
+    "seat": "b-player",
+    "policy": "seeded",
+    "score": 0.5,
+    "winner": "draw"
+  },
+  {
+    "seed": 0,
+    "a": "focus-wave7-tempo",
+    "b": "element-water",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "focus-wave7-tempo",
+    "b": "element-water",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "focus-wave7-tempo",
+    "b": "element-water",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "focus-wave7-tempo",
+    "b": "element-water",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "focus-wave7-tempo",
+    "b": "element-water",
+    "tier": 3,
+    "seat": "a-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "focus-wave7-tempo",
+    "b": "element-water",
+    "tier": 3,
+    "seat": "a-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "focus-wave7-tempo",
+    "b": "element-water",
+    "tier": 3,
+    "seat": "b-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "focus-wave7-tempo",
+    "b": "element-water",
+    "tier": 3,
+    "seat": "b-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "focus-wave7-tempo",
+    "b": "mushroom-plant",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "focus-wave7-tempo",
+    "b": "mushroom-plant",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "focus-wave7-tempo",
+    "b": "mushroom-plant",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "focus-wave7-tempo",
+    "b": "mushroom-plant",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "focus-wave7-tempo",
+    "b": "mushroom-plant",
+    "tier": 3,
+    "seat": "a-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "focus-wave7-tempo",
+    "b": "mushroom-plant",
+    "tier": 3,
+    "seat": "a-player",
+    "policy": "seeded",
+    "score": 1,
+    "winner": "a"
+  },
+  {
+    "seed": 0,
+    "a": "focus-wave7-tempo",
+    "b": "mushroom-plant",
+    "tier": 3,
+    "seat": "b-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "focus-wave7-tempo",
+    "b": "mushroom-plant",
+    "tier": 3,
+    "seat": "b-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "focus-wave7-tempo",
+    "b": "element-air",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "focus-wave7-tempo",
+    "b": "element-air",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "focus-wave7-tempo",
+    "b": "element-air",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "focus-wave7-tempo",
+    "b": "element-air",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "focus-wave7-tempo",
+    "b": "element-air",
+    "tier": 3,
+    "seat": "a-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "focus-wave7-tempo",
+    "b": "element-air",
+    "tier": 3,
+    "seat": "a-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "focus-wave7-tempo",
+    "b": "element-air",
+    "tier": 3,
+    "seat": "b-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "focus-wave7-tempo",
+    "b": "element-air",
+    "tier": 3,
+    "seat": "b-player",
+    "policy": "seeded",
+    "score": 1,
+    "winner": "a"
+  },
+  {
+    "seed": 0,
+    "a": "focus-wave7-tempo",
+    "b": "element-light",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "focus-wave7-tempo",
+    "b": "element-light",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "focus-wave7-tempo",
+    "b": "element-light",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "focus-wave7-tempo",
+    "b": "element-light",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "focus-wave7-tempo",
+    "b": "element-light",
+    "tier": 3,
+    "seat": "a-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "focus-wave7-tempo",
+    "b": "element-light",
+    "tier": 3,
+    "seat": "a-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "focus-wave7-tempo",
+    "b": "element-light",
+    "tier": 3,
+    "seat": "b-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "focus-wave7-tempo",
+    "b": "element-light",
+    "tier": 3,
+    "seat": "b-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "focus-wave7-tempo",
+    "b": "element-dark",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "focus-wave7-tempo",
+    "b": "element-dark",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "focus-wave7-tempo",
+    "b": "element-dark",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "focus-wave7-tempo",
+    "b": "element-dark",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "focus-wave7-tempo",
+    "b": "element-dark",
+    "tier": 3,
+    "seat": "a-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "focus-wave7-tempo",
+    "b": "element-dark",
+    "tier": 3,
+    "seat": "a-player",
+    "policy": "seeded",
+    "score": 1,
+    "winner": "a"
+  },
+  {
+    "seed": 0,
+    "a": "focus-wave7-tempo",
+    "b": "element-dark",
+    "tier": 3,
+    "seat": "b-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 0,
+    "a": "focus-wave7-tempo",
+    "b": "element-dark",
+    "tier": 3,
+    "seat": "b-player",
+    "policy": "seeded",
+    "score": 1,
+    "winner": "a"
+  },
+  {
+    "seed": 1,
+    "a": "starter-fitness-circuit",
+    "b": "element-water",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "greedy",
+    "score": 0.5,
+    "winner": "draw"
+  },
+  {
+    "seed": 1,
+    "a": "starter-fitness-circuit",
+    "b": "element-water",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 1,
+    "a": "starter-fitness-circuit",
+    "b": "element-water",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "greedy",
+    "score": 1,
+    "winner": "a"
+  },
+  {
+    "seed": 1,
+    "a": "starter-fitness-circuit",
+    "b": "element-water",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "seeded",
+    "score": 1,
+    "winner": "a"
+  },
+  {
+    "seed": 1,
+    "a": "starter-fitness-circuit",
+    "b": "element-water",
+    "tier": 3,
+    "seat": "a-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 1,
+    "a": "starter-fitness-circuit",
+    "b": "element-water",
+    "tier": 3,
+    "seat": "a-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 1,
+    "a": "starter-fitness-circuit",
+    "b": "element-water",
+    "tier": 3,
+    "seat": "b-player",
+    "policy": "greedy",
+    "score": 1,
+    "winner": "a"
+  },
+  {
+    "seed": 1,
+    "a": "starter-fitness-circuit",
+    "b": "element-water",
+    "tier": 3,
+    "seat": "b-player",
+    "policy": "seeded",
+    "score": 0.5,
+    "winner": "draw"
+  },
+  {
+    "seed": 1,
+    "a": "starter-fitness-circuit",
+    "b": "mushroom-plant",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 1,
+    "a": "starter-fitness-circuit",
+    "b": "mushroom-plant",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 1,
+    "a": "starter-fitness-circuit",
+    "b": "mushroom-plant",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 1,
+    "a": "starter-fitness-circuit",
+    "b": "mushroom-plant",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 1,
+    "a": "starter-fitness-circuit",
+    "b": "mushroom-plant",
+    "tier": 3,
+    "seat": "a-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 1,
+    "a": "starter-fitness-circuit",
+    "b": "mushroom-plant",
+    "tier": 3,
+    "seat": "a-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 1,
+    "a": "starter-fitness-circuit",
+    "b": "mushroom-plant",
+    "tier": 3,
+    "seat": "b-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 1,
+    "a": "starter-fitness-circuit",
+    "b": "mushroom-plant",
+    "tier": 3,
+    "seat": "b-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 1,
+    "a": "starter-fitness-circuit",
+    "b": "element-air",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 1,
+    "a": "starter-fitness-circuit",
+    "b": "element-air",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 1,
+    "a": "starter-fitness-circuit",
+    "b": "element-air",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 1,
+    "a": "starter-fitness-circuit",
+    "b": "element-air",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 1,
+    "a": "starter-fitness-circuit",
+    "b": "element-air",
+    "tier": 3,
+    "seat": "a-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 1,
+    "a": "starter-fitness-circuit",
+    "b": "element-air",
+    "tier": 3,
+    "seat": "a-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 1,
+    "a": "starter-fitness-circuit",
+    "b": "element-air",
+    "tier": 3,
+    "seat": "b-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 1,
+    "a": "starter-fitness-circuit",
+    "b": "element-air",
+    "tier": 3,
+    "seat": "b-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 1,
+    "a": "starter-fitness-circuit",
+    "b": "element-light",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 1,
+    "a": "starter-fitness-circuit",
+    "b": "element-light",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 1,
+    "a": "starter-fitness-circuit",
+    "b": "element-light",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "greedy",
+    "score": 1,
+    "winner": "a"
+  },
+  {
+    "seed": 1,
+    "a": "starter-fitness-circuit",
+    "b": "element-light",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 1,
+    "a": "starter-fitness-circuit",
+    "b": "element-light",
+    "tier": 3,
+    "seat": "a-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 1,
+    "a": "starter-fitness-circuit",
+    "b": "element-light",
+    "tier": 3,
+    "seat": "a-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 1,
+    "a": "starter-fitness-circuit",
+    "b": "element-light",
+    "tier": 3,
+    "seat": "b-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 1,
+    "a": "starter-fitness-circuit",
+    "b": "element-light",
+    "tier": 3,
+    "seat": "b-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 1,
+    "a": "starter-fitness-circuit",
+    "b": "element-dark",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 1,
+    "a": "starter-fitness-circuit",
+    "b": "element-dark",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 1,
+    "a": "starter-fitness-circuit",
+    "b": "element-dark",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "greedy",
+    "score": 1,
+    "winner": "a"
+  },
+  {
+    "seed": 1,
+    "a": "starter-fitness-circuit",
+    "b": "element-dark",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 1,
+    "a": "starter-fitness-circuit",
+    "b": "element-dark",
+    "tier": 3,
+    "seat": "a-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 1,
+    "a": "starter-fitness-circuit",
+    "b": "element-dark",
+    "tier": 3,
+    "seat": "a-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 1,
+    "a": "starter-fitness-circuit",
+    "b": "element-dark",
+    "tier": 3,
+    "seat": "b-player",
+    "policy": "greedy",
+    "score": 1,
+    "winner": "a"
+  },
+  {
+    "seed": 1,
+    "a": "starter-fitness-circuit",
+    "b": "element-dark",
+    "tier": 3,
+    "seat": "b-player",
+    "policy": "seeded",
+    "score": 0.5,
+    "winner": "draw"
+  },
+  {
+    "seed": 1,
+    "a": "element-fire",
+    "b": "element-water",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 1,
+    "a": "element-fire",
+    "b": "element-water",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 1,
+    "a": "element-fire",
+    "b": "element-water",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 1,
+    "a": "element-fire",
+    "b": "element-water",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 1,
+    "a": "element-fire",
+    "b": "element-water",
+    "tier": 3,
+    "seat": "a-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 1,
+    "a": "element-fire",
+    "b": "element-water",
+    "tier": 3,
+    "seat": "a-player",
+    "policy": "seeded",
+    "score": 1,
+    "winner": "a"
+  },
+  {
+    "seed": 1,
+    "a": "element-fire",
+    "b": "element-water",
+    "tier": 3,
+    "seat": "b-player",
+    "policy": "greedy",
+    "score": 0.5,
+    "winner": "draw"
+  },
+  {
+    "seed": 1,
+    "a": "element-fire",
+    "b": "element-water",
+    "tier": 3,
+    "seat": "b-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 1,
+    "a": "element-fire",
+    "b": "mushroom-plant",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 1,
+    "a": "element-fire",
+    "b": "mushroom-plant",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 1,
+    "a": "element-fire",
+    "b": "mushroom-plant",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 1,
+    "a": "element-fire",
+    "b": "mushroom-plant",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "seeded",
+    "score": 1,
+    "winner": "a"
+  },
+  {
+    "seed": 1,
+    "a": "element-fire",
+    "b": "mushroom-plant",
+    "tier": 3,
+    "seat": "a-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 1,
+    "a": "element-fire",
+    "b": "mushroom-plant",
+    "tier": 3,
+    "seat": "a-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 1,
+    "a": "element-fire",
+    "b": "mushroom-plant",
+    "tier": 3,
+    "seat": "b-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 1,
+    "a": "element-fire",
+    "b": "mushroom-plant",
+    "tier": 3,
+    "seat": "b-player",
+    "policy": "seeded",
+    "score": 0.5,
+    "winner": "draw"
+  },
+  {
+    "seed": 1,
+    "a": "element-fire",
+    "b": "element-air",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 1,
+    "a": "element-fire",
+    "b": "element-air",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 1,
+    "a": "element-fire",
+    "b": "element-air",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 1,
+    "a": "element-fire",
+    "b": "element-air",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 1,
+    "a": "element-fire",
+    "b": "element-air",
+    "tier": 3,
+    "seat": "a-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 1,
+    "a": "element-fire",
+    "b": "element-air",
+    "tier": 3,
+    "seat": "a-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 1,
+    "a": "element-fire",
+    "b": "element-air",
+    "tier": 3,
+    "seat": "b-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 1,
+    "a": "element-fire",
+    "b": "element-air",
+    "tier": 3,
+    "seat": "b-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 1,
+    "a": "element-fire",
+    "b": "element-light",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 1,
+    "a": "element-fire",
+    "b": "element-light",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 1,
+    "a": "element-fire",
+    "b": "element-light",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 1,
+    "a": "element-fire",
+    "b": "element-light",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 1,
+    "a": "element-fire",
+    "b": "element-light",
+    "tier": 3,
+    "seat": "a-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 1,
+    "a": "element-fire",
+    "b": "element-light",
+    "tier": 3,
+    "seat": "a-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 1,
+    "a": "element-fire",
+    "b": "element-light",
+    "tier": 3,
+    "seat": "b-player",
+    "policy": "greedy",
+    "score": 0.5,
+    "winner": "draw"
+  },
+  {
+    "seed": 1,
+    "a": "element-fire",
+    "b": "element-light",
+    "tier": 3,
+    "seat": "b-player",
+    "policy": "seeded",
+    "score": 0.5,
+    "winner": "draw"
+  },
+  {
+    "seed": 1,
+    "a": "element-fire",
+    "b": "element-dark",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 1,
+    "a": "element-fire",
+    "b": "element-dark",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 1,
+    "a": "element-fire",
+    "b": "element-dark",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "greedy",
+    "score": 1,
+    "winner": "a"
+  },
+  {
+    "seed": 1,
+    "a": "element-fire",
+    "b": "element-dark",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 1,
+    "a": "element-fire",
+    "b": "element-dark",
+    "tier": 3,
+    "seat": "a-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 1,
+    "a": "element-fire",
+    "b": "element-dark",
+    "tier": 3,
+    "seat": "a-player",
+    "policy": "seeded",
+    "score": 0.5,
+    "winner": "draw"
+  },
+  {
+    "seed": 1,
+    "a": "element-fire",
+    "b": "element-dark",
+    "tier": 3,
+    "seat": "b-player",
+    "policy": "greedy",
+    "score": 1,
+    "winner": "a"
+  },
+  {
+    "seed": 1,
+    "a": "element-fire",
+    "b": "element-dark",
+    "tier": 3,
+    "seat": "b-player",
+    "policy": "seeded",
+    "score": 1,
+    "winner": "a"
+  },
+  {
+    "seed": 1,
+    "a": "focus-wave7-tempo",
+    "b": "element-water",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 1,
+    "a": "focus-wave7-tempo",
+    "b": "element-water",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 1,
+    "a": "focus-wave7-tempo",
+    "b": "element-water",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 1,
+    "a": "focus-wave7-tempo",
+    "b": "element-water",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 1,
+    "a": "focus-wave7-tempo",
+    "b": "element-water",
+    "tier": 3,
+    "seat": "a-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 1,
+    "a": "focus-wave7-tempo",
+    "b": "element-water",
+    "tier": 3,
+    "seat": "a-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 1,
+    "a": "focus-wave7-tempo",
+    "b": "element-water",
+    "tier": 3,
+    "seat": "b-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 1,
+    "a": "focus-wave7-tempo",
+    "b": "element-water",
+    "tier": 3,
+    "seat": "b-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 1,
+    "a": "focus-wave7-tempo",
+    "b": "mushroom-plant",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 1,
+    "a": "focus-wave7-tempo",
+    "b": "mushroom-plant",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 1,
+    "a": "focus-wave7-tempo",
+    "b": "mushroom-plant",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 1,
+    "a": "focus-wave7-tempo",
+    "b": "mushroom-plant",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 1,
+    "a": "focus-wave7-tempo",
+    "b": "mushroom-plant",
+    "tier": 3,
+    "seat": "a-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 1,
+    "a": "focus-wave7-tempo",
+    "b": "mushroom-plant",
+    "tier": 3,
+    "seat": "a-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 1,
+    "a": "focus-wave7-tempo",
+    "b": "mushroom-plant",
+    "tier": 3,
+    "seat": "b-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 1,
+    "a": "focus-wave7-tempo",
+    "b": "mushroom-plant",
+    "tier": 3,
+    "seat": "b-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 1,
+    "a": "focus-wave7-tempo",
+    "b": "element-air",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 1,
+    "a": "focus-wave7-tempo",
+    "b": "element-air",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 1,
+    "a": "focus-wave7-tempo",
+    "b": "element-air",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 1,
+    "a": "focus-wave7-tempo",
+    "b": "element-air",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 1,
+    "a": "focus-wave7-tempo",
+    "b": "element-air",
+    "tier": 3,
+    "seat": "a-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 1,
+    "a": "focus-wave7-tempo",
+    "b": "element-air",
+    "tier": 3,
+    "seat": "a-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 1,
+    "a": "focus-wave7-tempo",
+    "b": "element-air",
+    "tier": 3,
+    "seat": "b-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 1,
+    "a": "focus-wave7-tempo",
+    "b": "element-air",
+    "tier": 3,
+    "seat": "b-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 1,
+    "a": "focus-wave7-tempo",
+    "b": "element-light",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 1,
+    "a": "focus-wave7-tempo",
+    "b": "element-light",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 1,
+    "a": "focus-wave7-tempo",
+    "b": "element-light",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 1,
+    "a": "focus-wave7-tempo",
+    "b": "element-light",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 1,
+    "a": "focus-wave7-tempo",
+    "b": "element-light",
+    "tier": 3,
+    "seat": "a-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 1,
+    "a": "focus-wave7-tempo",
+    "b": "element-light",
+    "tier": 3,
+    "seat": "a-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 1,
+    "a": "focus-wave7-tempo",
+    "b": "element-light",
+    "tier": 3,
+    "seat": "b-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 1,
+    "a": "focus-wave7-tempo",
+    "b": "element-light",
+    "tier": 3,
+    "seat": "b-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 1,
+    "a": "focus-wave7-tempo",
+    "b": "element-dark",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 1,
+    "a": "focus-wave7-tempo",
+    "b": "element-dark",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 1,
+    "a": "focus-wave7-tempo",
+    "b": "element-dark",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 1,
+    "a": "focus-wave7-tempo",
+    "b": "element-dark",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 1,
+    "a": "focus-wave7-tempo",
+    "b": "element-dark",
+    "tier": 3,
+    "seat": "a-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 1,
+    "a": "focus-wave7-tempo",
+    "b": "element-dark",
+    "tier": 3,
+    "seat": "a-player",
+    "policy": "seeded",
+    "score": 0.5,
+    "winner": "draw"
+  },
+  {
+    "seed": 1,
+    "a": "focus-wave7-tempo",
+    "b": "element-dark",
+    "tier": 3,
+    "seat": "b-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 1,
+    "a": "focus-wave7-tempo",
+    "b": "element-dark",
+    "tier": 3,
+    "seat": "b-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "starter-fitness-circuit",
+    "b": "element-water",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "starter-fitness-circuit",
+    "b": "element-water",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "starter-fitness-circuit",
+    "b": "element-water",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "starter-fitness-circuit",
+    "b": "element-water",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "starter-fitness-circuit",
+    "b": "element-water",
+    "tier": 3,
+    "seat": "a-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "starter-fitness-circuit",
+    "b": "element-water",
+    "tier": 3,
+    "seat": "a-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "starter-fitness-circuit",
+    "b": "element-water",
+    "tier": 3,
+    "seat": "b-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "starter-fitness-circuit",
+    "b": "element-water",
+    "tier": 3,
+    "seat": "b-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "starter-fitness-circuit",
+    "b": "mushroom-plant",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "starter-fitness-circuit",
+    "b": "mushroom-plant",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "starter-fitness-circuit",
+    "b": "mushroom-plant",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "starter-fitness-circuit",
+    "b": "mushroom-plant",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "starter-fitness-circuit",
+    "b": "mushroom-plant",
+    "tier": 3,
+    "seat": "a-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "starter-fitness-circuit",
+    "b": "mushroom-plant",
+    "tier": 3,
+    "seat": "a-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "starter-fitness-circuit",
+    "b": "mushroom-plant",
+    "tier": 3,
+    "seat": "b-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "starter-fitness-circuit",
+    "b": "mushroom-plant",
+    "tier": 3,
+    "seat": "b-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "starter-fitness-circuit",
+    "b": "element-air",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "starter-fitness-circuit",
+    "b": "element-air",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "starter-fitness-circuit",
+    "b": "element-air",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "starter-fitness-circuit",
+    "b": "element-air",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "starter-fitness-circuit",
+    "b": "element-air",
+    "tier": 3,
+    "seat": "a-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "starter-fitness-circuit",
+    "b": "element-air",
+    "tier": 3,
+    "seat": "a-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "starter-fitness-circuit",
+    "b": "element-air",
+    "tier": 3,
+    "seat": "b-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "starter-fitness-circuit",
+    "b": "element-air",
+    "tier": 3,
+    "seat": "b-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "starter-fitness-circuit",
+    "b": "element-light",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "starter-fitness-circuit",
+    "b": "element-light",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "starter-fitness-circuit",
+    "b": "element-light",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "starter-fitness-circuit",
+    "b": "element-light",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "starter-fitness-circuit",
+    "b": "element-light",
+    "tier": 3,
+    "seat": "a-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "starter-fitness-circuit",
+    "b": "element-light",
+    "tier": 3,
+    "seat": "a-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "starter-fitness-circuit",
+    "b": "element-light",
+    "tier": 3,
+    "seat": "b-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "starter-fitness-circuit",
+    "b": "element-light",
+    "tier": 3,
+    "seat": "b-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "starter-fitness-circuit",
+    "b": "element-dark",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "starter-fitness-circuit",
+    "b": "element-dark",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "starter-fitness-circuit",
+    "b": "element-dark",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "greedy",
+    "score": 1,
+    "winner": "a"
+  },
+  {
+    "seed": 2,
+    "a": "starter-fitness-circuit",
+    "b": "element-dark",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "starter-fitness-circuit",
+    "b": "element-dark",
+    "tier": 3,
+    "seat": "a-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "starter-fitness-circuit",
+    "b": "element-dark",
+    "tier": 3,
+    "seat": "a-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "starter-fitness-circuit",
+    "b": "element-dark",
+    "tier": 3,
+    "seat": "b-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "starter-fitness-circuit",
+    "b": "element-dark",
+    "tier": 3,
+    "seat": "b-player",
+    "policy": "seeded",
+    "score": 1,
+    "winner": "a"
+  },
+  {
+    "seed": 2,
+    "a": "element-fire",
+    "b": "element-water",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "element-fire",
+    "b": "element-water",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "element-fire",
+    "b": "element-water",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "element-fire",
+    "b": "element-water",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "element-fire",
+    "b": "element-water",
+    "tier": 3,
+    "seat": "a-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "element-fire",
+    "b": "element-water",
+    "tier": 3,
+    "seat": "a-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "element-fire",
+    "b": "element-water",
+    "tier": 3,
+    "seat": "b-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "element-fire",
+    "b": "element-water",
+    "tier": 3,
+    "seat": "b-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "element-fire",
+    "b": "mushroom-plant",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "element-fire",
+    "b": "mushroom-plant",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "element-fire",
+    "b": "mushroom-plant",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "element-fire",
+    "b": "mushroom-plant",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "element-fire",
+    "b": "mushroom-plant",
+    "tier": 3,
+    "seat": "a-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "element-fire",
+    "b": "mushroom-plant",
+    "tier": 3,
+    "seat": "a-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "element-fire",
+    "b": "mushroom-plant",
+    "tier": 3,
+    "seat": "b-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "element-fire",
+    "b": "mushroom-plant",
+    "tier": 3,
+    "seat": "b-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "element-fire",
+    "b": "element-air",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "element-fire",
+    "b": "element-air",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "element-fire",
+    "b": "element-air",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "element-fire",
+    "b": "element-air",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "element-fire",
+    "b": "element-air",
+    "tier": 3,
+    "seat": "a-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "element-fire",
+    "b": "element-air",
+    "tier": 3,
+    "seat": "a-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "element-fire",
+    "b": "element-air",
+    "tier": 3,
+    "seat": "b-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "element-fire",
+    "b": "element-air",
+    "tier": 3,
+    "seat": "b-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "element-fire",
+    "b": "element-light",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "element-fire",
+    "b": "element-light",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "element-fire",
+    "b": "element-light",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "element-fire",
+    "b": "element-light",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "element-fire",
+    "b": "element-light",
+    "tier": 3,
+    "seat": "a-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "element-fire",
+    "b": "element-light",
+    "tier": 3,
+    "seat": "a-player",
+    "policy": "seeded",
+    "score": 1,
+    "winner": "a"
+  },
+  {
+    "seed": 2,
+    "a": "element-fire",
+    "b": "element-light",
+    "tier": 3,
+    "seat": "b-player",
+    "policy": "greedy",
+    "score": 0.5,
+    "winner": "draw"
+  },
+  {
+    "seed": 2,
+    "a": "element-fire",
+    "b": "element-light",
+    "tier": 3,
+    "seat": "b-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "element-fire",
+    "b": "element-dark",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "element-fire",
+    "b": "element-dark",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "element-fire",
+    "b": "element-dark",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "element-fire",
+    "b": "element-dark",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "element-fire",
+    "b": "element-dark",
+    "tier": 3,
+    "seat": "a-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "element-fire",
+    "b": "element-dark",
+    "tier": 3,
+    "seat": "a-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "element-fire",
+    "b": "element-dark",
+    "tier": 3,
+    "seat": "b-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "element-fire",
+    "b": "element-dark",
+    "tier": 3,
+    "seat": "b-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "focus-wave7-tempo",
+    "b": "element-water",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "focus-wave7-tempo",
+    "b": "element-water",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "focus-wave7-tempo",
+    "b": "element-water",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "focus-wave7-tempo",
+    "b": "element-water",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "focus-wave7-tempo",
+    "b": "element-water",
+    "tier": 3,
+    "seat": "a-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "focus-wave7-tempo",
+    "b": "element-water",
+    "tier": 3,
+    "seat": "a-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "focus-wave7-tempo",
+    "b": "element-water",
+    "tier": 3,
+    "seat": "b-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "focus-wave7-tempo",
+    "b": "element-water",
+    "tier": 3,
+    "seat": "b-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "focus-wave7-tempo",
+    "b": "mushroom-plant",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "focus-wave7-tempo",
+    "b": "mushroom-plant",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "focus-wave7-tempo",
+    "b": "mushroom-plant",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "focus-wave7-tempo",
+    "b": "mushroom-plant",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "focus-wave7-tempo",
+    "b": "mushroom-plant",
+    "tier": 3,
+    "seat": "a-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "focus-wave7-tempo",
+    "b": "mushroom-plant",
+    "tier": 3,
+    "seat": "a-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "focus-wave7-tempo",
+    "b": "mushroom-plant",
+    "tier": 3,
+    "seat": "b-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "focus-wave7-tempo",
+    "b": "mushroom-plant",
+    "tier": 3,
+    "seat": "b-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "focus-wave7-tempo",
+    "b": "element-air",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "focus-wave7-tempo",
+    "b": "element-air",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "seeded",
+    "score": 0.5,
+    "winner": "draw"
+  },
+  {
+    "seed": 2,
+    "a": "focus-wave7-tempo",
+    "b": "element-air",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "focus-wave7-tempo",
+    "b": "element-air",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "focus-wave7-tempo",
+    "b": "element-air",
+    "tier": 3,
+    "seat": "a-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "focus-wave7-tempo",
+    "b": "element-air",
+    "tier": 3,
+    "seat": "a-player",
+    "policy": "seeded",
+    "score": 1,
+    "winner": "a"
+  },
+  {
+    "seed": 2,
+    "a": "focus-wave7-tempo",
+    "b": "element-air",
+    "tier": 3,
+    "seat": "b-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "focus-wave7-tempo",
+    "b": "element-air",
+    "tier": 3,
+    "seat": "b-player",
+    "policy": "seeded",
+    "score": 0.5,
+    "winner": "draw"
+  },
+  {
+    "seed": 2,
+    "a": "focus-wave7-tempo",
+    "b": "element-light",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "focus-wave7-tempo",
+    "b": "element-light",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "focus-wave7-tempo",
+    "b": "element-light",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "focus-wave7-tempo",
+    "b": "element-light",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "seeded",
+    "score": 1,
+    "winner": "a"
+  },
+  {
+    "seed": 2,
+    "a": "focus-wave7-tempo",
+    "b": "element-light",
+    "tier": 3,
+    "seat": "a-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "focus-wave7-tempo",
+    "b": "element-light",
+    "tier": 3,
+    "seat": "a-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "focus-wave7-tempo",
+    "b": "element-light",
+    "tier": 3,
+    "seat": "b-player",
+    "policy": "greedy",
+    "score": 1,
+    "winner": "a"
+  },
+  {
+    "seed": 2,
+    "a": "focus-wave7-tempo",
+    "b": "element-light",
+    "tier": 3,
+    "seat": "b-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "focus-wave7-tempo",
+    "b": "element-dark",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "focus-wave7-tempo",
+    "b": "element-dark",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "focus-wave7-tempo",
+    "b": "element-dark",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "focus-wave7-tempo",
+    "b": "element-dark",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "seeded",
+    "score": 1,
+    "winner": "a"
+  },
+  {
+    "seed": 2,
+    "a": "focus-wave7-tempo",
+    "b": "element-dark",
+    "tier": 3,
+    "seat": "a-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "focus-wave7-tempo",
+    "b": "element-dark",
+    "tier": 3,
+    "seat": "a-player",
+    "policy": "seeded",
+    "score": 1,
+    "winner": "a"
+  },
+  {
+    "seed": 2,
+    "a": "focus-wave7-tempo",
+    "b": "element-dark",
+    "tier": 3,
+    "seat": "b-player",
+    "policy": "greedy",
+    "score": 0,
+    "winner": "b"
+  },
+  {
+    "seed": 2,
+    "a": "focus-wave7-tempo",
+    "b": "element-dark",
+    "tier": 3,
+    "seat": "b-player",
+    "policy": "seeded",
+    "score": 0,
+    "winner": "b"
+  }
+]

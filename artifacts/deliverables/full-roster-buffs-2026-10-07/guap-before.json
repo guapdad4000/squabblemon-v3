@@ -1,0 +1,53 @@
+{
+  "id": "guap",
+  "name": "GUAP",
+  "type": "Fire",
+  "cost": 6,
+  "power": 6,
+  "ability": "FINNAM!",
+  "effect": "On Reveal: Gain +1 Hands for each other friendly character across the board, up to +5. Give every enemy across the board -1 Hands. Once per round. Ongoing: While GUAP is in your hand, your other Fire characters gain +1 Hands at round end.",
+  "roles": [
+    "Pressure",
+    "Disruption"
+  ],
+  "elementalBond": "Fire",
+  "abilityUpgrades": [
+    {
+      "id": "guap:upgrade:1",
+      "name": "Golden Charge",
+      "description": "FINNAM! gathers golden energy. After the base ability succeeds, this card gains +1 Hands.",
+      "unlockLevel": 2,
+      "effect": {
+        "kind": "self-power",
+        "amount": 1,
+        "trigger": "base-success"
+      }
+    },
+    {
+      "id": "guap:upgrade:2",
+      "name": "Falcon Ascendant",
+      "description": "FINNAM! spreads its burning wings. After the base ability succeeds, this card gains +1 Hands.",
+      "unlockLevel": 5,
+      "effect": {
+        "kind": "self-power",
+        "amount": 1,
+        "trigger": "base-success"
+      }
+    },
+    {
+      "id": "guap:upgrade:3",
+      "name": "Phoenix Supernova",
+      "description": "FINNAM! erupts in a golden supernova. After the base ability succeeds, this card gains +1 Hands.",
+      "unlockLevel": 8,
+      "effect": {
+        "kind": "self-power",
+        "amount": 1,
+        "trigger": "base-success"
+      }
+    }
+  ],
+  "entryVfx": {
+    "accent": "#f5c542"
+  },
+  "portraitAccent": "#f5c542"
+}

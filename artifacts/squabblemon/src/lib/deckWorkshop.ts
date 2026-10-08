@@ -20,6 +20,8 @@ export const recommendedWorkshopCrews = {
   mushroom: ['demario', 'luigion', 'gardener', 'sprout', 'rootnurse', 'canopykeeper', 'gardenwall', 'hair-stylist', 'stylist', 'black-cowboy'],
   counterplay: ['counter', 'gamer', 'gothkid', 'nerd', 'redpill', 'buddy', 'wifey', 'pinaynurse', 'plug', 'bustdown'],
   music: ['the-rapper', 'the-dj', 'the-hype-man', 'the-janky-promoter', 'the-manager-nice', 'the-manager-evil', 'the-opening-act', 'the-local-celebrity', 'the-battle-rapper', 'the-og-rap-legend'],
+  family: ['the-favorite-grandchild','cousin-back-from-college','plate-auntie','church-aunties-rival','big-sister','second-plate-cousin','grill-uncle','grandma-said-sit-down','group-chat-instigator','black-air-fade-1s'],
+  community: ['homelessguy','homelessyn','homelesslegend','community-cook','night-bus-driver','delivery-app-cyclist','bluetooth-unc','booster','barbershop-heckler','rastamon'],
   fitness: ['failedathlete', 'fitness-girl', 'fitness-bro', 'personal-trainer', 'lash-tech', 'apartment-maintenance-sage', 'yn-atv-lord', 'hooper', 'sportsprodigy', 'demon-trainer'],
   investigations: ['sherlock', 'watson', 'boo-boo-the-fool', 'parole-officer', 'uncle-sam', 'apartment-maintenance-sage', 'bail-bonds-auntie', 'nerd', 'homeless-wiseman', 'counter'],
   relationships: ['work-hubby', 'he-just-a-friend', 'crazy-ex-boyfriend', 'side-chick', 'suga-mama', 'wifey', 'baby', 'ms-mary-mack', 'bblnice', 'barber'],
@@ -68,7 +70,9 @@ export function autoBuildDeck(draft: DeckDraft, ownedIds: readonly string[]): De
   // Authored crews give these new factions a coherent starting point. Partial
   // player lineups still keep their chosen cards; only open slots are filled.
   const preferredCrew = anchor?.faction === 'Music Industry' ? recommendedWorkshopCrews.music
-    : anchor?.faction === 'Fitness' ? recommendedWorkshopCrews.fitness : [];
+    : anchor?.faction === 'Fitness' ? recommendedWorkshopCrews.fitness
+    : anchor?.faction === 'Family' ? recommendedWorkshopCrews.family
+    : anchor?.faction === 'Community' || anchor?.artworkId?.startsWith('homeless-') ? recommendedWorkshopCrews.community : [];
   const preferred = new Set(catalogCrew(preferredCrew));
   while (chosen.length < 10) {
     const supports = chosen.filter(id => catalogCardById[id].kind === 'support').length;

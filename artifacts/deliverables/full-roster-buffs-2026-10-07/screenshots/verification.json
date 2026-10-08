@@ -1,0 +1,10 @@
+[
+  {
+    "name": "desktop",
+    "checks": "Updated shared Hands values, decoded inspector, no page exceptions"
+  },
+  {
+    "name": "phone",
+    "checks": "Updated shared Hands values, decoded inspector, no page exceptions"
+  }
+]

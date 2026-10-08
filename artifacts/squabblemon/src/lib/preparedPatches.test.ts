@@ -16,8 +16,8 @@ test('prepared patch notes fit the publication contract', () => {
     for (const line of [...patch.buffs, ...patch.changes]) assert.ok(line.trim() && line.length <= 500, line);
     const letter = [patch.version, patch.title, patch.overview, ...patch.buffs, ...patch.changes].join('\n');
     assert.ok(letter.length < 5500, `${patch.version} letter too long`);
-    assert.equal(patch.softCurrency, ['1.9', '1.10', '1.11'].includes(patch.version) ? 0 : patch.version === '1.8' ? 50 : 100);
-    assert.equal(patch.packTickets, patch.version === '1.11' ? 10 : ['1.8', '1.9', '1.10'].includes(patch.version) ? 0 : 1);
+    assert.equal(patch.softCurrency, ['1.9', '1.10', '1.11', '1.12'].includes(patch.version) ? 0 : patch.version === '1.8' ? 50 : 100);
+    assert.equal(patch.packTickets, ['1.11', '1.12'].includes(patch.version) ? 10 : ['1.8', '1.9', '1.10'].includes(patch.version) ? 0 : 1);
   }
   const versionParts = (version: string) => version.split('.').map(Number);
   assert.deepEqual([...versions], [...versions].sort((a, b) => {

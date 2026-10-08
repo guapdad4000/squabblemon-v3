@@ -1,0 +1,2494 @@
+[
+  {
+    "id": "track-suit-auntie",
+    "name": "Track Suit Auntie",
+    "type": "Normal",
+    "cost": 1,
+    "power": 1,
+    "ability": "First Lap",
+    "effect": "On Reveal: Move to your weakest legal other district.",
+    "kind": "character",
+    "roles": [
+      "Movement"
+    ],
+    "abilityUpgrades": [
+      {
+        "id": "track-suit-auntie:upgrade:1",
+        "name": "First Lap Practice",
+        "description": "The first successful base ability this match grants +1 Hand.",
+        "unlockLevel": 2,
+        "effect": {
+          "kind": "self-power",
+          "amount": 1,
+          "trigger": "base-success"
+        }
+      },
+      {
+        "id": "track-suit-auntie:upgrade:2",
+        "name": "First Lap Confidence",
+        "description": "The first successful base ability this match grants +1 Hand.",
+        "unlockLevel": 5,
+        "effect": {
+          "kind": "self-power",
+          "amount": 1,
+          "trigger": "base-success"
+        }
+      },
+      {
+        "id": "track-suit-auntie:upgrade:3",
+        "name": "First Lap Mastery",
+        "description": "The first successful base ability this match grants +1 Hand.",
+        "unlockLevel": 8,
+        "effect": {
+          "kind": "self-power",
+          "amount": 1,
+          "trigger": "base-success"
+        }
+      }
+    ],
+    "catalogId": "track-suit-auntie",
+    "engineId": "track-suit-auntie",
+    "artworkId": "track-suit-auntie",
+    "rarity": "Common",
+    "faction": "Fitness",
+    "crewTags": [
+      "fitness-routes",
+      "Fitness",
+      "Fitness"
+    ],
+    "acquisitionSources": [
+      "Street Packs"
+    ],
+    "variantSlots": [
+      {
+        "id": "track-suit-auntie:tagged",
+        "name": "Tagged",
+        "description": "Raised gold ink, vermilion tags and a lacquered frame over the original foil.",
+        "shardCost": 80
+      },
+      {
+        "id": "track-suit-auntie:chrome",
+        "name": "Chrome",
+        "description": "Reflective showcase frame for your favorite gang.",
+        "shardCost": 140
+      },
+      {
+        "id": "track-suit-auntie:prismatic",
+        "name": "Prismatic Reverse Holo",
+        "description": "Ultimate spectral foil across the card stock and frame, with the character art kept sharp and matte.",
+        "shardCost": 300
+      }
+    ]
+  },
+  {
+    "id": "gym-bag-yn",
+    "name": "Gym Bag YN",
+    "type": "Dark",
+    "cost": 2,
+    "power": 2,
+    "ability": "Bag Check",
+    "effect": "On Reveal: Move your weakest other local Fitness ally to your weakest legal other district. One successful Bag Check per side per round.",
+    "kind": "character",
+    "roles": [
+      "Movement"
+    ],
+    "abilityUpgrades": [
+      {
+        "id": "gym-bag-yn:upgrade:1",
+        "name": "Bag Check Practice",
+        "description": "The first successful base ability this match grants +1 Hand.",
+        "unlockLevel": 2,
+        "effect": {
+          "kind": "self-power",
+          "amount": 1,
+          "trigger": "base-success"
+        }
+      },
+      {
+        "id": "gym-bag-yn:upgrade:2",
+        "name": "Bag Check Confidence",
+        "description": "The first successful base ability this match grants +1 Hand.",
+        "unlockLevel": 5,
+        "effect": {
+          "kind": "self-power",
+          "amount": 1,
+          "trigger": "base-success"
+        }
+      },
+      {
+        "id": "gym-bag-yn:upgrade:3",
+        "name": "Bag Check Mastery",
+        "description": "The first successful base ability this match grants +1 Hand.",
+        "unlockLevel": 8,
+        "effect": {
+          "kind": "self-power",
+          "amount": 1,
+          "trigger": "base-success"
+        }
+      }
+    ],
+    "catalogId": "gym-bag-yn",
+    "engineId": "gym-bag-yn",
+    "artworkId": "gym-bag-yn",
+    "rarity": "Uncommon",
+    "faction": "Fitness",
+    "crewTags": [
+      "fitness-routes",
+      "Fitness",
+      "Fitness"
+    ],
+    "acquisitionSources": [
+      "Street Packs"
+    ],
+    "variantSlots": [
+      {
+        "id": "gym-bag-yn:tagged",
+        "name": "Tagged",
+        "description": "Raised gold ink, vermilion tags and a lacquered frame over the original foil.",
+        "shardCost": 80
+      },
+      {
+        "id": "gym-bag-yn:chrome",
+        "name": "Chrome",
+        "description": "Reflective showcase frame for your favorite gang.",
+        "shardCost": 140
+      },
+      {
+        "id": "gym-bag-yn:prismatic",
+        "name": "Prismatic Reverse Holo",
+        "description": "Ultimate spectral foil across the card stock and frame, with the character art kept sharp and matte.",
+        "shardCost": 300
+      }
+    ]
+  },
+  {
+    "id": "stairwell-sprinter",
+    "name": "Stairwell Sprinter",
+    "type": "Air",
+    "cost": 2,
+    "power": 2,
+    "ability": "Take the Stairs",
+    "effect": "On Reveal: Move to an unvisited legal district. Gain +1 Hand after arrival once per instance per match.",
+    "kind": "character",
+    "roles": [
+      "Movement"
+    ],
+    "abilityUpgrades": [
+      {
+        "id": "stairwell-sprinter:upgrade:1",
+        "name": "Take the Stairs Practice",
+        "description": "The first successful base ability this match grants +1 Hand.",
+        "unlockLevel": 2,
+        "effect": {
+          "kind": "self-power",
+          "amount": 1,
+          "trigger": "base-success"
+        }
+      },
+      {
+        "id": "stairwell-sprinter:upgrade:2",
+        "name": "Take the Stairs Confidence",
+        "description": "The first successful base ability this match grants +1 Hand.",
+        "unlockLevel": 5,
+        "effect": {
+          "kind": "self-power",
+          "amount": 1,
+          "trigger": "base-success"
+        }
+      },
+      {
+        "id": "stairwell-sprinter:upgrade:3",
+        "name": "Take the Stairs Mastery",
+        "description": "The first successful base ability this match grants +1 Hand.",
+        "unlockLevel": 8,
+        "effect": {
+          "kind": "self-power",
+          "amount": 1,
+          "trigger": "base-success"
+        }
+      }
+    ],
+    "catalogId": "stairwell-sprinter",
+    "engineId": "stairwell-sprinter",
+    "artworkId": "stairwell-sprinter",
+    "rarity": "Common",
+    "faction": "Fitness",
+    "crewTags": [
+      "fitness-routes",
+      "Fitness",
+      "Fitness"
+    ],
+    "acquisitionSources": [
+      "Street Packs"
+    ],
+    "variantSlots": [
+      {
+        "id": "stairwell-sprinter:tagged",
+        "name": "Tagged",
+        "description": "Raised gold ink, vermilion tags and a lacquered frame over the original foil.",
+        "shardCost": 80
+      },
+      {
+        "id": "stairwell-sprinter:chrome",
+        "name": "Chrome",
+        "description": "Reflective showcase frame for your favorite gang.",
+        "shardCost": 140
+      },
+      {
+        "id": "stairwell-sprinter:prismatic",
+        "name": "Prismatic Reverse Holo",
+        "description": "Ultimate spectral foil across the card stock and frame, with the character art kept sharp and matte.",
+        "shardCost": 300
+      }
+    ]
+  },
+  {
+    "id": "last-set-og",
+    "name": "Last Set OG",
+    "type": "Fire",
+    "cost": 4,
+    "power": 4,
+    "ability": "Finish the Circuit",
+    "effect": "On Reveal: If a friendly Fitness character has visited all three districts, give your weakest Fitness ally in each occupied district +1 Hand. Otherwise Protect your weakest other local Fitness ally. One circuit finish per side per match.",
+    "kind": "character",
+    "roles": [
+      "Support"
+    ],
+    "abilityUpgrades": [
+      {
+        "id": "last-set-og:upgrade:1",
+        "name": "Finish the Circuit Practice",
+        "description": "The first successful base ability this match grants +1 Hand.",
+        "unlockLevel": 2,
+        "effect": {
+          "kind": "self-power",
+          "amount": 1,
+          "trigger": "base-success"
+        }
+      },
+      {
+        "id": "last-set-og:upgrade:2",
+        "name": "Finish the Circuit Confidence",
+        "description": "The first successful base ability this match grants +1 Hand.",
+        "unlockLevel": 5,
+        "effect": {
+          "kind": "self-power",
+          "amount": 1,
+          "trigger": "base-success"
+        }
+      },
+      {
+        "id": "last-set-og:upgrade:3",
+        "name": "Finish the Circuit Mastery",
+        "description": "The first successful base ability this match grants +1 Hand.",
+        "unlockLevel": 8,
+        "effect": {
+          "kind": "self-power",
+          "amount": 1,
+          "trigger": "base-success"
+        }
+      }
+    ],
+    "catalogId": "last-set-og",
+    "engineId": "last-set-og",
+    "artworkId": "last-set-og",
+    "rarity": "Rare",
+    "faction": "Fitness",
+    "crewTags": [
+      "fitness-routes",
+      "Fitness",
+      "Fitness"
+    ],
+    "acquisitionSources": [
+      "Street Packs"
+    ],
+    "variantSlots": [
+      {
+        "id": "last-set-og:tagged",
+        "name": "Tagged",
+        "description": "Raised gold ink, vermilion tags and a lacquered frame over the original foil.",
+        "shardCost": 80
+      },
+      {
+        "id": "last-set-og:chrome",
+        "name": "Chrome",
+        "description": "Reflective showcase frame for your favorite gang.",
+        "shardCost": 140
+      },
+      {
+        "id": "last-set-og:prismatic",
+        "name": "Prismatic Reverse Holo",
+        "description": "Ultimate spectral foil across the card stock and frame, with the character art kept sharp and matte.",
+        "shardCost": 300
+      }
+    ]
+  },
+  {
+    "id": "tour-van-driver",
+    "name": "Tour Van Driver",
+    "type": "Earth",
+    "cost": 3,
+    "power": 3,
+    "ability": "Next Stop",
+    "effect": "On Reveal: Bring your weakest movable Music ally from another district here. Both gain +1 Hand after arrival. Once per side per round.",
+    "kind": "character",
+    "roles": [
+      "Movement"
+    ],
+    "abilityUpgrades": [
+      {
+        "id": "tour-van-driver:upgrade:1",
+        "name": "Next Stop Practice",
+        "description": "The first successful base ability this match grants +1 Hand.",
+        "unlockLevel": 2,
+        "effect": {
+          "kind": "self-power",
+          "amount": 1,
+          "trigger": "base-success"
+        }
+      },
+      {
+        "id": "tour-van-driver:upgrade:2",
+        "name": "Next Stop Confidence",
+        "description": "The first successful base ability this match grants +1 Hand.",
+        "unlockLevel": 5,
+        "effect": {
+          "kind": "self-power",
+          "amount": 1,
+          "trigger": "base-success"
+        }
+      },
+      {
+        "id": "tour-van-driver:upgrade:3",
+        "name": "Next Stop Mastery",
+        "description": "The first successful base ability this match grants +1 Hand.",
+        "unlockLevel": 8,
+        "effect": {
+          "kind": "self-power",
+          "amount": 1,
+          "trigger": "base-success"
+        }
+      }
+    ],
+    "catalogId": "tour-van-driver",
+    "engineId": "tour-van-driver",
+    "artworkId": "tour-van-driver",
+    "rarity": "Uncommon",
+    "faction": "Music Industry",
+    "crewTags": [
+      "music-tour",
+      "Music Industry",
+      "Music Industry"
+    ],
+    "acquisitionSources": [
+      "Street Packs"
+    ],
+    "variantSlots": [
+      {
+        "id": "tour-van-driver:tagged",
+        "name": "Tagged",
+        "description": "Raised gold ink, vermilion tags and a lacquered frame over the original foil.",
+        "shardCost": 80
+      },
+      {
+        "id": "tour-van-driver:chrome",
+        "name": "Chrome",
+        "description": "Reflective showcase frame for your favorite gang.",
+        "shardCost": 140
+      },
+      {
+        "id": "tour-van-driver:prismatic",
+        "name": "Prismatic Reverse Holo",
+        "description": "Ultimate spectral foil across the card stock and frame, with the character art kept sharp and matte.",
+        "shardCost": 300
+      }
+    ]
+  },
+  {
+    "id": "mixtape-cousin",
+    "name": "Mixtape Cousin",
+    "type": "Air",
+    "cost": 2,
+    "power": 2,
+    "ability": "Second Stage",
+    "effect": "On Reveal: Move your weakest other local Music ally to your weakest legal other district.",
+    "kind": "character",
+    "roles": [
+      "Movement"
+    ],
+    "abilityUpgrades": [
+      {
+        "id": "mixtape-cousin:upgrade:1",
+        "name": "Second Stage Practice",
+        "description": "The first successful base ability this match grants +1 Hand.",
+        "unlockLevel": 2,
+        "effect": {
+          "kind": "self-power",
+          "amount": 1,
+          "trigger": "base-success"
+        }
+      },
+      {
+        "id": "mixtape-cousin:upgrade:2",
+        "name": "Second Stage Confidence",
+        "description": "The first successful base ability this match grants +1 Hand.",
+        "unlockLevel": 5,
+        "effect": {
+          "kind": "self-power",
+          "amount": 1,
+          "trigger": "base-success"
+        }
+      },
+      {
+        "id": "mixtape-cousin:upgrade:3",
+        "name": "Second Stage Mastery",
+        "description": "The first successful base ability this match grants +1 Hand.",
+        "unlockLevel": 8,
+        "effect": {
+          "kind": "self-power",
+          "amount": 1,
+          "trigger": "base-success"
+        }
+      }
+    ],
+    "catalogId": "mixtape-cousin",
+    "engineId": "mixtape-cousin",
+    "artworkId": "mixtape-cousin",
+    "rarity": "Common",
+    "faction": "Music Industry",
+    "crewTags": [
+      "music-tour",
+      "Music Industry",
+      "Music Industry"
+    ],
+    "acquisitionSources": [
+      "Street Packs"
+    ],
+    "variantSlots": [
+      {
+        "id": "mixtape-cousin:tagged",
+        "name": "Tagged",
+        "description": "Raised gold ink, vermilion tags and a lacquered frame over the original foil.",
+        "shardCost": 80
+      },
+      {
+        "id": "mixtape-cousin:chrome",
+        "name": "Chrome",
+        "description": "Reflective showcase frame for your favorite gang.",
+        "shardCost": 140
+      },
+      {
+        "id": "mixtape-cousin:prismatic",
+        "name": "Prismatic Reverse Holo",
+        "description": "Ultimate spectral foil across the card stock and frame, with the character art kept sharp and matte.",
+        "shardCost": 300
+      }
+    ]
+  },
+  {
+    "id": "merch-table-hustler",
+    "name": "Merch Table Hustler",
+    "type": "Electric",
+    "cost": 3,
+    "power": 3,
+    "ability": "Tour Money",
+    "effect": "Ongoing: The first different Music character successfully resolving an entrance here each round earns one local Music discount of 1 Motion through that round, minimum 1. Two discounts per side per match. Echoes do not count.",
+    "kind": "character",
+    "roles": [
+      "Tempo"
+    ],
+    "abilityUpgrades": [
+      {
+        "id": "merch-table-hustler:upgrade:1",
+        "name": "Tour Money Practice",
+        "description": "The first successful base ability this match grants +1 Hand.",
+        "unlockLevel": 2,
+        "effect": {
+          "kind": "self-power",
+          "amount": 1,
+          "trigger": "base-success"
+        }
+      },
+      {
+        "id": "merch-table-hustler:upgrade:2",
+        "name": "Tour Money Confidence",
+        "description": "The first successful base ability this match grants +1 Hand.",
+        "unlockLevel": 5,
+        "effect": {
+          "kind": "self-power",
+          "amount": 1,
+          "trigger": "base-success"
+        }
+      },
+      {
+        "id": "merch-table-hustler:upgrade:3",
+        "name": "Tour Money Mastery",
+        "description": "The first successful base ability this match grants +1 Hand.",
+        "unlockLevel": 8,
+        "effect": {
+          "kind": "self-power",
+          "amount": 1,
+          "trigger": "base-success"
+        }
+      }
+    ],
+    "catalogId": "merch-table-hustler",
+    "engineId": "merch-table-hustler",
+    "artworkId": "merch-table-hustler",
+    "rarity": "Rare",
+    "faction": "Music Industry",
+    "crewTags": [
+      "music-tour",
+      "Music Industry",
+      "Music Industry"
+    ],
+    "acquisitionSources": [
+      "Street Packs"
+    ],
+    "variantSlots": [
+      {
+        "id": "merch-table-hustler:tagged",
+        "name": "Tagged",
+        "description": "Raised gold ink, vermilion tags and a lacquered frame over the original foil.",
+        "shardCost": 80
+      },
+      {
+        "id": "merch-table-hustler:chrome",
+        "name": "Chrome",
+        "description": "Reflective showcase frame for your favorite gang.",
+        "shardCost": 140
+      },
+      {
+        "id": "merch-table-hustler:prismatic",
+        "name": "Prismatic Reverse Holo",
+        "description": "Ultimate spectral foil across the card stock and frame, with the character art kept sharp and matte.",
+        "shardCost": 300
+      }
+    ]
+  },
+  {
+    "id": "the-favorite-grandchild",
+    "name": "The Favorite Grandchild",
+    "type": "Fire",
+    "cost": 1,
+    "power": 2,
+    "ability": "Everybody Loves Me",
+    "effect": "On Reveal: Move to your weakest legal other district.",
+    "kind": "character",
+    "roles": [
+      "Movement"
+    ],
+    "abilityUpgrades": [
+      {
+        "id": "the-favorite-grandchild:upgrade:1",
+        "name": "Everybody Loves Me Practice",
+        "description": "The first successful base ability this match grants +1 Hand.",
+        "unlockLevel": 2,
+        "effect": {
+          "kind": "self-power",
+          "amount": 1,
+          "trigger": "base-success"
+        }
+      },
+      {
+        "id": "the-favorite-grandchild:upgrade:2",
+        "name": "Everybody Loves Me Confidence",
+        "description": "The first successful base ability this match grants +1 Hand.",
+        "unlockLevel": 5,
+        "effect": {
+          "kind": "self-power",
+          "amount": 1,
+          "trigger": "base-success"
+        }
+      },
+      {
+        "id": "the-favorite-grandchild:upgrade:3",
+        "name": "Everybody Loves Me Mastery",
+        "description": "The first successful base ability this match grants +1 Hand.",
+        "unlockLevel": 8,
+        "effect": {
+          "kind": "self-power",
+          "amount": 1,
+          "trigger": "base-success"
+        }
+      }
+    ],
+    "catalogId": "the-favorite-grandchild",
+    "engineId": "the-favorite-grandchild",
+    "artworkId": "the-favorite-grandchild",
+    "rarity": "Common",
+    "faction": "Family",
+    "crewTags": [
+      "sunday-dinner",
+      "Family"
+    ],
+    "acquisitionSources": [
+      "Street Packs"
+    ],
+    "variantSlots": [
+      {
+        "id": "the-favorite-grandchild:tagged",
+        "name": "Tagged",
+        "description": "Raised gold ink, vermilion tags and a lacquered frame over the original foil.",
+        "shardCost": 80
+      },
+      {
+        "id": "the-favorite-grandchild:chrome",
+        "name": "Chrome",
+        "description": "Reflective showcase frame for your favorite gang.",
+        "shardCost": 140
+      },
+      {
+        "id": "the-favorite-grandchild:prismatic",
+        "name": "Prismatic Reverse Holo",
+        "description": "Ultimate spectral foil across the card stock and frame, with the character art kept sharp and matte.",
+        "shardCost": 300
+      }
+    ]
+  },
+  {
+    "id": "cousin-back-from-college",
+    "name": "Cousin Back From College",
+    "type": "Fire",
+    "cost": 2,
+    "power": 3,
+    "ability": "Back on the Block",
+    "effect": "On Reveal: Move your weakest other local Fire or Family ally to your weakest legal other district.",
+    "kind": "character",
+    "roles": [
+      "Movement"
+    ],
+    "abilityUpgrades": [
+      {
+        "id": "cousin-back-from-college:upgrade:1",
+        "name": "Back on the Block Practice",
+        "description": "The first successful base ability this match grants +1 Hand.",
+        "unlockLevel": 2,
+        "effect": {
+          "kind": "self-power",
+          "amount": 1,
+          "trigger": "base-success"
+        }
+      },
+      {
+        "id": "cousin-back-from-college:upgrade:2",
+        "name": "Back on the Block Confidence",
+        "description": "The first successful base ability this match grants +1 Hand.",
+        "unlockLevel": 5,
+        "effect": {
+          "kind": "self-power",
+          "amount": 1,
+          "trigger": "base-success"
+        }
+      },
+      {
+        "id": "cousin-back-from-college:upgrade:3",
+        "name": "Back on the Block Mastery",
+        "description": "The first successful base ability this match grants +1 Hand.",
+        "unlockLevel": 8,
+        "effect": {
+          "kind": "self-power",
+          "amount": 1,
+          "trigger": "base-success"
+        }
+      }
+    ],
+    "catalogId": "cousin-back-from-college",
+    "engineId": "cousin-back-from-college",
+    "artworkId": "cousin-back-from-college",
+    "rarity": "Common",
+    "faction": "Family",
+    "crewTags": [
+      "sunday-dinner",
+      "Family"
+    ],
+    "acquisitionSources": [
+      "Street Packs"
+    ],
+    "variantSlots": [
+      {
+        "id": "cousin-back-from-college:tagged",
+        "name": "Tagged",
+        "description": "Raised gold ink, vermilion tags and a lacquered frame over the original foil.",
+        "shardCost": 80
+      },
+      {
+        "id": "cousin-back-from-college:chrome",
+        "name": "Chrome",
+        "description": "Reflective showcase frame for your favorite gang.",
+        "shardCost": 140
+      },
+      {
+        "id": "cousin-back-from-college:prismatic",
+        "name": "Prismatic Reverse Holo",
+        "description": "Ultimate spectral foil across the card stock and frame, with the character art kept sharp and matte.",
+        "shardCost": 300
+      }
+    ]
+  },
+  {
+    "id": "plate-auntie",
+    "name": "Plate Auntie",
+    "type": "Fire",
+    "cost": 2,
+    "power": 3,
+    "ability": "Fix You a Plate",
+    "effect": "On Reveal: Recover up to 2 lost Hands and remove Burn from your weakest injured other local Fire or Family ally. If nobody is injured, remove one eligible ally\u2019s Burn; if nobody needs either, give your weakest eligible ally +1 Hand instead.",
+    "kind": "character",
+    "roles": [
+      "Sustain"
+    ],
+    "abilityUpgrades": [
+      {
+        "id": "plate-auntie:upgrade:1",
+        "name": "Fix You a Plate Practice",
+        "description": "The first successful base ability this match grants +1 Hand.",
+        "unlockLevel": 2,
+        "effect": {
+          "kind": "self-power",
+          "amount": 1,
+          "trigger": "base-success"
+        }
+      },
+      {
+        "id": "plate-auntie:upgrade:2",
+        "name": "Fix You a Plate Confidence",
+        "description": "The first successful base ability this match grants +1 Hand.",
+        "unlockLevel": 5,
+        "effect": {
+          "kind": "self-power",
+          "amount": 1,
+          "trigger": "base-success"
+        }
+      },
+      {
+        "id": "plate-auntie:upgrade:3",
+        "name": "Fix You a Plate Mastery",
+        "description": "The first successful base ability this match grants +1 Hand.",
+        "unlockLevel": 8,
+        "effect": {
+          "kind": "self-power",
+          "amount": 1,
+          "trigger": "base-success"
+        }
+      }
+    ],
+    "catalogId": "plate-auntie",
+    "engineId": "plate-auntie",
+    "artworkId": "plate-auntie",
+    "rarity": "Uncommon",
+    "faction": "Family",
+    "crewTags": [
+      "sunday-dinner",
+      "Family"
+    ],
+    "acquisitionSources": [
+      "Street Packs"
+    ],
+    "variantSlots": [
+      {
+        "id": "plate-auntie:tagged",
+        "name": "Tagged",
+        "description": "Raised gold ink, vermilion tags and a lacquered frame over the original foil.",
+        "shardCost": 80
+      },
+      {
+        "id": "plate-auntie:chrome",
+        "name": "Chrome",
+        "description": "Reflective showcase frame for your favorite gang.",
+        "shardCost": 140
+      },
+      {
+        "id": "plate-auntie:prismatic",
+        "name": "Prismatic Reverse Holo",
+        "description": "Ultimate spectral foil across the card stock and frame, with the character art kept sharp and matte.",
+        "shardCost": 300
+      }
+    ]
+  },
+  {
+    "id": "church-aunties-rival",
+    "name": "Church Auntie\u2019s Rival",
+    "type": "Fire",
+    "cost": 2,
+    "power": 3,
+    "ability": "Not My Baby",
+    "effect": "On Reveal: Protect your weakest other local Fire or Family ally.",
+    "kind": "character",
+    "roles": [
+      "Protection"
+    ],
+    "abilityUpgrades": [
+      {
+        "id": "church-aunties-rival:upgrade:1",
+        "name": "Not My Baby Practice",
+        "description": "The first successful base ability this match grants +1 Hand.",
+        "unlockLevel": 2,
+        "effect": {
+          "kind": "self-power",
+          "amount": 1,
+          "trigger": "base-success"
+        }
+      },
+      {
+        "id": "church-aunties-rival:upgrade:2",
+        "name": "Not My Baby Confidence",
+        "description": "The first successful base ability this match grants +1 Hand.",
+        "unlockLevel": 5,
+        "effect": {
+          "kind": "self-power",
+          "amount": 1,
+          "trigger": "base-success"
+        }
+      },
+      {
+        "id": "church-aunties-rival:upgrade:3",
+        "name": "Not My Baby Mastery",
+        "description": "The first successful base ability this match grants +1 Hand.",
+        "unlockLevel": 8,
+        "effect": {
+          "kind": "self-power",
+          "amount": 1,
+          "trigger": "base-success"
+        }
+      }
+    ],
+    "catalogId": "church-aunties-rival",
+    "engineId": "church-aunties-rival",
+    "artworkId": "church-aunties-rival",
+    "rarity": "Common",
+    "faction": "Family",
+    "crewTags": [
+      "sunday-dinner",
+      "Family"
+    ],
+    "acquisitionSources": [
+      "Street Packs"
+    ],
+    "variantSlots": [
+      {
+        "id": "church-aunties-rival:tagged",
+        "name": "Tagged",
+        "description": "Raised gold ink, vermilion tags and a lacquered frame over the original foil.",
+        "shardCost": 80
+      },
+      {
+        "id": "church-aunties-rival:chrome",
+        "name": "Chrome",
+        "description": "Reflective showcase frame for your favorite gang.",
+        "shardCost": 140
+      },
+      {
+        "id": "church-aunties-rival:prismatic",
+        "name": "Prismatic Reverse Holo",
+        "description": "Ultimate spectral foil across the card stock and frame, with the character art kept sharp and matte.",
+        "shardCost": 300
+      }
+    ]
+  },
+  {
+    "id": "big-sister",
+    "name": "Big Sister",
+    "type": "Fire",
+    "cost": 3,
+    "power": 4,
+    "ability": "Everybody Inside",
+    "effect": "Ongoing: The first different Fire or Family ally moving here each round gains +1 Hand. Three payouts per side per match.",
+    "kind": "character",
+    "roles": [
+      "Support"
+    ],
+    "abilityUpgrades": [
+      {
+        "id": "big-sister:upgrade:1",
+        "name": "Everybody Inside Practice",
+        "description": "The first successful base ability this match grants +1 Hand.",
+        "unlockLevel": 2,
+        "effect": {
+          "kind": "self-power",
+          "amount": 1,
+          "trigger": "base-success"
+        }
+      },
+      {
+        "id": "big-sister:upgrade:2",
+        "name": "Everybody Inside Confidence",
+        "description": "The first successful base ability this match grants +1 Hand.",
+        "unlockLevel": 5,
+        "effect": {
+          "kind": "self-power",
+          "amount": 1,
+          "trigger": "base-success"
+        }
+      },
+      {
+        "id": "big-sister:upgrade:3",
+        "name": "Everybody Inside Mastery",
+        "description": "The first successful base ability this match grants +1 Hand.",
+        "unlockLevel": 8,
+        "effect": {
+          "kind": "self-power",
+          "amount": 1,
+          "trigger": "base-success"
+        }
+      }
+    ],
+    "catalogId": "big-sister",
+    "engineId": "big-sister",
+    "artworkId": "big-sister",
+    "rarity": "Uncommon",
+    "faction": "Family",
+    "crewTags": [
+      "sunday-dinner",
+      "Family"
+    ],
+    "acquisitionSources": [
+      "Street Packs"
+    ],
+    "variantSlots": [
+      {
+        "id": "big-sister:tagged",
+        "name": "Tagged",
+        "description": "Raised gold ink, vermilion tags and a lacquered frame over the original foil.",
+        "shardCost": 80
+      },
+      {
+        "id": "big-sister:chrome",
+        "name": "Chrome",
+        "description": "Reflective showcase frame for your favorite gang.",
+        "shardCost": 140
+      },
+      {
+        "id": "big-sister:prismatic",
+        "name": "Prismatic Reverse Holo",
+        "description": "Ultimate spectral foil across the card stock and frame, with the character art kept sharp and matte.",
+        "shardCost": 300
+      }
+    ]
+  },
+  {
+    "id": "second-plate-cousin",
+    "name": "Second Plate Cousin",
+    "type": "Fire",
+    "cost": 3,
+    "power": 4,
+    "ability": "Save Me Some",
+    "effect": "Ongoing: When another local Fire or Family ally genuinely gains Hands, gain +1 Hand. Once per round, three payouts per side per match. Copied gains cannot trigger sharing.",
+    "kind": "character",
+    "roles": [
+      "Growth"
+    ],
+    "abilityUpgrades": [
+      {
+        "id": "second-plate-cousin:upgrade:1",
+        "name": "Save Me Some Practice",
+        "description": "The first successful base ability this match grants +1 Hand.",
+        "unlockLevel": 2,
+        "effect": {
+          "kind": "self-power",
+          "amount": 1,
+          "trigger": "base-success"
+        }
+      },
+      {
+        "id": "second-plate-cousin:upgrade:2",
+        "name": "Save Me Some Confidence",
+        "description": "The first successful base ability this match grants +1 Hand.",
+        "unlockLevel": 5,
+        "effect": {
+          "kind": "self-power",
+          "amount": 1,
+          "trigger": "base-success"
+        }
+      },
+      {
+        "id": "second-plate-cousin:upgrade:3",
+        "name": "Save Me Some Mastery",
+        "description": "The first successful base ability this match grants +1 Hand.",
+        "unlockLevel": 8,
+        "effect": {
+          "kind": "self-power",
+          "amount": 1,
+          "trigger": "base-success"
+        }
+      }
+    ],
+    "catalogId": "second-plate-cousin",
+    "engineId": "second-plate-cousin",
+    "artworkId": "second-plate-cousin",
+    "rarity": "Uncommon",
+    "faction": "Family",
+    "crewTags": [
+      "sunday-dinner",
+      "Family"
+    ],
+    "acquisitionSources": [
+      "Street Packs"
+    ],
+    "variantSlots": [
+      {
+        "id": "second-plate-cousin:tagged",
+        "name": "Tagged",
+        "description": "Raised gold ink, vermilion tags and a lacquered frame over the original foil.",
+        "shardCost": 80
+      },
+      {
+        "id": "second-plate-cousin:chrome",
+        "name": "Chrome",
+        "description": "Reflective showcase frame for your favorite gang.",
+        "shardCost": 140
+      },
+      {
+        "id": "second-plate-cousin:prismatic",
+        "name": "Prismatic Reverse Holo",
+        "description": "Ultimate spectral foil across the card stock and frame, with the character art kept sharp and matte.",
+        "shardCost": 300
+      }
+    ]
+  },
+  {
+    "id": "grill-uncle",
+    "name": "Grill Uncle",
+    "type": "Fire",
+    "cost": 3,
+    "power": 4,
+    "ability": "Still Hot",
+    "effect": "On Reveal: Apply 1 Burn to the strongest enemy here. Ongoing: Actual enemy Burn damage here grants +1 Hand once per round, twice per side per match.",
+    "kind": "character",
+    "roles": [
+      "Disruption"
+    ],
+    "abilityUpgrades": [
+      {
+        "id": "grill-uncle:upgrade:1",
+        "name": "Still Hot Practice",
+        "description": "The first successful base ability this match grants +1 Hand.",
+        "unlockLevel": 2,
+        "effect": {
+          "kind": "self-power",
+          "amount": 1,
+          "trigger": "base-success"
+        }
+      },
+      {
+        "id": "grill-uncle:upgrade:2",
+        "name": "Still Hot Confidence",
+        "description": "The first successful base ability this match grants +1 Hand.",
+        "unlockLevel": 5,
+        "effect": {
+          "kind": "self-power",
+          "amount": 1,
+          "trigger": "base-success"
+        }
+      },
+      {
+        "id": "grill-uncle:upgrade:3",
+        "name": "Still Hot Mastery",
+        "description": "The first successful base ability this match grants +1 Hand.",
+        "unlockLevel": 8,
+        "effect": {
+          "kind": "self-power",
+          "amount": 1,
+          "trigger": "base-success"
+        }
+      }
+    ],
+    "catalogId": "grill-uncle",
+    "engineId": "grill-uncle",
+    "artworkId": "grill-uncle",
+    "rarity": "Rare",
+    "faction": "Family",
+    "crewTags": [
+      "sunday-dinner",
+      "Family"
+    ],
+    "acquisitionSources": [
+      "Street Packs"
+    ],
+    "variantSlots": [
+      {
+        "id": "grill-uncle:tagged",
+        "name": "Tagged",
+        "description": "Raised gold ink, vermilion tags and a lacquered frame over the original foil.",
+        "shardCost": 80
+      },
+      {
+        "id": "grill-uncle:chrome",
+        "name": "Chrome",
+        "description": "Reflective showcase frame for your favorite gang.",
+        "shardCost": 140
+      },
+      {
+        "id": "grill-uncle:prismatic",
+        "name": "Prismatic Reverse Holo",
+        "description": "Ultimate spectral foil across the card stock and frame, with the character art kept sharp and matte.",
+        "shardCost": 300
+      }
+    ]
+  },
+  {
+    "id": "grandma-said-sit-down",
+    "name": "Grandma Said Sit Down",
+    "type": "Fire",
+    "cost": 4,
+    "power": 5,
+    "ability": "Dinner\u2019s Ready",
+    "effect": "On Reveal: Hit the strongest enemy here for 1 Hand, or 2 if two distinct friendly characters moved this round. One successful entrance per instance per match.",
+    "kind": "character",
+    "roles": [
+      "Pressure"
+    ],
+    "abilityUpgrades": [
+      {
+        "id": "grandma-said-sit-down:upgrade:1",
+        "name": "Dinner\u2019s Ready Practice",
+        "description": "The first successful base ability this match grants +1 Hand.",
+        "unlockLevel": 2,
+        "effect": {
+          "kind": "self-power",
+          "amount": 1,
+          "trigger": "base-success"
+        }
+      },
+      {
+        "id": "grandma-said-sit-down:upgrade:2",
+        "name": "Dinner\u2019s Ready Confidence",
+        "description": "The first successful base ability this match grants +1 Hand.",
+        "unlockLevel": 5,
+        "effect": {
+          "kind": "self-power",
+          "amount": 1,
+          "trigger": "base-success"
+        }
+      },
+      {
+        "id": "grandma-said-sit-down:upgrade:3",
+        "name": "Dinner\u2019s Ready Mastery",
+        "description": "The first successful base ability this match grants +1 Hand.",
+        "unlockLevel": 8,
+        "effect": {
+          "kind": "self-power",
+          "amount": 1,
+          "trigger": "base-success"
+        }
+      }
+    ],
+    "catalogId": "grandma-said-sit-down",
+    "engineId": "grandma-said-sit-down",
+    "artworkId": "grandma-said-sit-down",
+    "rarity": "Rare",
+    "faction": "Family",
+    "crewTags": [
+      "sunday-dinner",
+      "Family"
+    ],
+    "acquisitionSources": [
+      "Street Packs"
+    ],
+    "variantSlots": [
+      {
+        "id": "grandma-said-sit-down:tagged",
+        "name": "Tagged",
+        "description": "Raised gold ink, vermilion tags and a lacquered frame over the original foil.",
+        "shardCost": 80
+      },
+      {
+        "id": "grandma-said-sit-down:chrome",
+        "name": "Chrome",
+        "description": "Reflective showcase frame for your favorite gang.",
+        "shardCost": 140
+      },
+      {
+        "id": "grandma-said-sit-down:prismatic",
+        "name": "Prismatic Reverse Holo",
+        "description": "Ultimate spectral foil across the card stock and frame, with the character art kept sharp and matte.",
+        "shardCost": 300
+      }
+    ]
+  },
+  {
+    "id": "gym-spotter-yn",
+    "name": "Gym Spotter YN",
+    "type": "Normal",
+    "cost": 2,
+    "power": 3,
+    "ability": "I Got You",
+    "effect": "On Reveal: Protect your weakest other local Fitness ally. If it successfully moves this round, it gains +1 Hand once.",
+    "kind": "character",
+    "roles": [
+      "Protection"
+    ],
+    "abilityUpgrades": [
+      {
+        "id": "gym-spotter-yn:upgrade:1",
+        "name": "I Got You Practice",
+        "description": "The first successful base ability this match grants +1 Hand.",
+        "unlockLevel": 2,
+        "effect": {
+          "kind": "self-power",
+          "amount": 1,
+          "trigger": "base-success"
+        }
+      },
+      {
+        "id": "gym-spotter-yn:upgrade:2",
+        "name": "I Got You Confidence",
+        "description": "The first successful base ability this match grants +1 Hand.",
+        "unlockLevel": 5,
+        "effect": {
+          "kind": "self-power",
+          "amount": 1,
+          "trigger": "base-success"
+        }
+      },
+      {
+        "id": "gym-spotter-yn:upgrade:3",
+        "name": "I Got You Mastery",
+        "description": "The first successful base ability this match grants +1 Hand.",
+        "unlockLevel": 8,
+        "effect": {
+          "kind": "self-power",
+          "amount": 1,
+          "trigger": "base-success"
+        }
+      }
+    ],
+    "catalogId": "gym-spotter-yn",
+    "engineId": "gym-spotter-yn",
+    "artworkId": "gym-spotter-yn",
+    "rarity": "Common",
+    "faction": "Fitness",
+    "crewTags": [
+      "fitness-routes",
+      "Fitness",
+      "Fitness"
+    ],
+    "acquisitionSources": [
+      "Street Packs"
+    ],
+    "variantSlots": [
+      {
+        "id": "gym-spotter-yn:tagged",
+        "name": "Tagged",
+        "description": "Raised gold ink, vermilion tags and a lacquered frame over the original foil.",
+        "shardCost": 80
+      },
+      {
+        "id": "gym-spotter-yn:chrome",
+        "name": "Chrome",
+        "description": "Reflective showcase frame for your favorite gang.",
+        "shardCost": 140
+      },
+      {
+        "id": "gym-spotter-yn:prismatic",
+        "name": "Prismatic Reverse Holo",
+        "description": "Ultimate spectral foil across the card stock and frame, with the character art kept sharp and matte.",
+        "shardCost": 300
+      }
+    ]
+  },
+  {
+    "id": "calisthenics-yn",
+    "name": "Calisthenics YN",
+    "type": "Earth",
+    "cost": 2,
+    "power": 3,
+    "ability": "Bodyweight",
+    "effect": "Ongoing: Your first successful move each round gains +1 Hand. Two payouts per instance per match.",
+    "kind": "character",
+    "roles": [
+      "Growth"
+    ],
+    "abilityUpgrades": [
+      {
+        "id": "calisthenics-yn:upgrade:1",
+        "name": "Bodyweight Practice",
+        "description": "The first successful base ability this match grants +1 Hand.",
+        "unlockLevel": 2,
+        "effect": {
+          "kind": "self-power",
+          "amount": 1,
+          "trigger": "base-success"
+        }
+      },
+      {
+        "id": "calisthenics-yn:upgrade:2",
+        "name": "Bodyweight Confidence",
+        "description": "The first successful base ability this match grants +1 Hand.",
+        "unlockLevel": 5,
+        "effect": {
+          "kind": "self-power",
+          "amount": 1,
+          "trigger": "base-success"
+        }
+      },
+      {
+        "id": "calisthenics-yn:upgrade:3",
+        "name": "Bodyweight Mastery",
+        "description": "The first successful base ability this match grants +1 Hand.",
+        "unlockLevel": 8,
+        "effect": {
+          "kind": "self-power",
+          "amount": 1,
+          "trigger": "base-success"
+        }
+      }
+    ],
+    "catalogId": "calisthenics-yn",
+    "engineId": "calisthenics-yn",
+    "artworkId": "calisthenics-yn",
+    "rarity": "Uncommon",
+    "faction": "Fitness",
+    "crewTags": [
+      "fitness-routes",
+      "Fitness",
+      "Fitness"
+    ],
+    "acquisitionSources": [
+      "Street Packs"
+    ],
+    "variantSlots": [
+      {
+        "id": "calisthenics-yn:tagged",
+        "name": "Tagged",
+        "description": "Raised gold ink, vermilion tags and a lacquered frame over the original foil.",
+        "shardCost": 80
+      },
+      {
+        "id": "calisthenics-yn:chrome",
+        "name": "Chrome",
+        "description": "Reflective showcase frame for your favorite gang.",
+        "shardCost": 140
+      },
+      {
+        "id": "calisthenics-yn:prismatic",
+        "name": "Prismatic Reverse Holo",
+        "description": "Ultimate spectral foil across the card stock and frame, with the character art kept sharp and matte.",
+        "shardCost": 300
+      }
+    ]
+  },
+  {
+    "id": "og-calisthenics",
+    "name": "OG Calisthenics",
+    "type": "Earth",
+    "cost": 4,
+    "power": 5,
+    "ability": "No Equipment Needed",
+    "effect": "On Reveal: If Fitness allies occupy all three districts, give your weakest Fitness ally in each district +1 Hand. Otherwise give your weakest other local Fitness ally +1 Hand and Protection. Once per side per match.",
+    "kind": "character",
+    "roles": [
+      "Support"
+    ],
+    "abilityUpgrades": [
+      {
+        "id": "og-calisthenics:upgrade:1",
+        "name": "No Equipment Needed Practice",
+        "description": "The first successful base ability this match grants +1 Hand.",
+        "unlockLevel": 2,
+        "effect": {
+          "kind": "self-power",
+          "amount": 1,
+          "trigger": "base-success"
+        }
+      },
+      {
+        "id": "og-calisthenics:upgrade:2",
+        "name": "No Equipment Needed Confidence",
+        "description": "The first successful base ability this match grants +1 Hand.",
+        "unlockLevel": 5,
+        "effect": {
+          "kind": "self-power",
+          "amount": 1,
+          "trigger": "base-success"
+        }
+      },
+      {
+        "id": "og-calisthenics:upgrade:3",
+        "name": "No Equipment Needed Mastery",
+        "description": "The first successful base ability this match grants +1 Hand.",
+        "unlockLevel": 8,
+        "effect": {
+          "kind": "self-power",
+          "amount": 1,
+          "trigger": "base-success"
+        }
+      }
+    ],
+    "catalogId": "og-calisthenics",
+    "engineId": "og-calisthenics",
+    "artworkId": "og-calisthenics",
+    "rarity": "Rare",
+    "faction": "Fitness",
+    "crewTags": [
+      "fitness-routes",
+      "Fitness",
+      "Fitness"
+    ],
+    "acquisitionSources": [
+      "Street Packs"
+    ],
+    "variantSlots": [
+      {
+        "id": "og-calisthenics:tagged",
+        "name": "Tagged",
+        "description": "Raised gold ink, vermilion tags and a lacquered frame over the original foil.",
+        "shardCost": 80
+      },
+      {
+        "id": "og-calisthenics:chrome",
+        "name": "Chrome",
+        "description": "Reflective showcase frame for your favorite gang.",
+        "shardCost": 140
+      },
+      {
+        "id": "og-calisthenics:prismatic",
+        "name": "Prismatic Reverse Holo",
+        "description": "Ultimate spectral foil across the card stock and frame, with the character art kept sharp and matte.",
+        "shardCost": 300
+      }
+    ],
+    "artworkLayout": "portrait"
+  },
+  {
+    "id": "night-bus-driver",
+    "name": "Night Bus Driver",
+    "type": "Dark",
+    "cost": 2,
+    "power": 3,
+    "ability": "Last Bus",
+    "effect": "On Reveal: Bring your weakest movable ally from another district here if there is space.",
+    "kind": "character",
+    "roles": [
+      "Movement"
+    ],
+    "abilityUpgrades": [
+      {
+        "id": "night-bus-driver:upgrade:1",
+        "name": "Last Bus Practice",
+        "description": "The first successful base ability this match grants +1 Hand.",
+        "unlockLevel": 2,
+        "effect": {
+          "kind": "self-power",
+          "amount": 1,
+          "trigger": "base-success"
+        }
+      },
+      {
+        "id": "night-bus-driver:upgrade:2",
+        "name": "Last Bus Confidence",
+        "description": "The first successful base ability this match grants +1 Hand.",
+        "unlockLevel": 5,
+        "effect": {
+          "kind": "self-power",
+          "amount": 1,
+          "trigger": "base-success"
+        }
+      },
+      {
+        "id": "night-bus-driver:upgrade:3",
+        "name": "Last Bus Mastery",
+        "description": "The first successful base ability this match grants +1 Hand.",
+        "unlockLevel": 8,
+        "effect": {
+          "kind": "self-power",
+          "amount": 1,
+          "trigger": "base-success"
+        }
+      }
+    ],
+    "catalogId": "night-bus-driver",
+    "engineId": "night-bus-driver",
+    "artworkId": "night-bus-driver",
+    "rarity": "Common",
+    "faction": "Around the Block",
+    "crewTags": [
+      "community-table",
+      "Around the Block"
+    ],
+    "acquisitionSources": [
+      "Street Packs"
+    ],
+    "variantSlots": [
+      {
+        "id": "night-bus-driver:tagged",
+        "name": "Tagged",
+        "description": "Raised gold ink, vermilion tags and a lacquered frame over the original foil.",
+        "shardCost": 80
+      },
+      {
+        "id": "night-bus-driver:chrome",
+        "name": "Chrome",
+        "description": "Reflective showcase frame for your favorite gang.",
+        "shardCost": 140
+      },
+      {
+        "id": "night-bus-driver:prismatic",
+        "name": "Prismatic Reverse Holo",
+        "description": "Ultimate spectral foil across the card stock and frame, with the character art kept sharp and matte.",
+        "shardCost": 300
+      }
+    ]
+  },
+  {
+    "id": "community-cook",
+    "name": "Community Cook",
+    "type": "Plant",
+    "cost": 2,
+    "power": 3,
+    "ability": "Everybody Eats",
+    "effect": "On Reveal: Recover up to 2 lost Hands on your weakest injured other ally here; otherwise give your weakest other ally here +1 Hand. A Homeless recipient also gains Protection. One meal per recipient per match.",
+    "kind": "character",
+    "roles": [
+      "Sustain"
+    ],
+    "abilityUpgrades": [
+      {
+        "id": "community-cook:upgrade:1",
+        "name": "Everybody Eats Practice",
+        "description": "The first successful base ability this match grants +1 Hand.",
+        "unlockLevel": 2,
+        "effect": {
+          "kind": "self-power",
+          "amount": 1,
+          "trigger": "base-success"
+        }
+      },
+      {
+        "id": "community-cook:upgrade:2",
+        "name": "Everybody Eats Confidence",
+        "description": "The first successful base ability this match grants +1 Hand.",
+        "unlockLevel": 5,
+        "effect": {
+          "kind": "self-power",
+          "amount": 1,
+          "trigger": "base-success"
+        }
+      },
+      {
+        "id": "community-cook:upgrade:3",
+        "name": "Everybody Eats Mastery",
+        "description": "The first successful base ability this match grants +1 Hand.",
+        "unlockLevel": 8,
+        "effect": {
+          "kind": "self-power",
+          "amount": 1,
+          "trigger": "base-success"
+        }
+      }
+    ],
+    "catalogId": "community-cook",
+    "engineId": "community-cook",
+    "artworkId": "community-cook",
+    "rarity": "Uncommon",
+    "faction": "Community",
+    "crewTags": [
+      "community-table",
+      "Community"
+    ],
+    "acquisitionSources": [
+      "Street Packs"
+    ],
+    "variantSlots": [
+      {
+        "id": "community-cook:tagged",
+        "name": "Tagged",
+        "description": "Raised gold ink, vermilion tags and a lacquered frame over the original foil.",
+        "shardCost": 80
+      },
+      {
+        "id": "community-cook:chrome",
+        "name": "Chrome",
+        "description": "Reflective showcase frame for your favorite gang.",
+        "shardCost": 140
+      },
+      {
+        "id": "community-cook:prismatic",
+        "name": "Prismatic Reverse Holo",
+        "description": "Ultimate spectral foil across the card stock and frame, with the character art kept sharp and matte.",
+        "shardCost": 300
+      }
+    ]
+  },
+  {
+    "id": "jump-rope-menace",
+    "name": "Jump Rope Menace",
+    "type": "Electric",
+    "cost": 3,
+    "power": 4,
+    "ability": "Double Dutch",
+    "effect": "Ongoing: After two distinct Fitness allies successfully move in the same round, gain +2 Hands. One payout per side per round, twice per match.",
+    "kind": "character",
+    "roles": [
+      "Growth"
+    ],
+    "abilityUpgrades": [
+      {
+        "id": "jump-rope-menace:upgrade:1",
+        "name": "Double Dutch Practice",
+        "description": "The first successful base ability this match grants +1 Hand.",
+        "unlockLevel": 2,
+        "effect": {
+          "kind": "self-power",
+          "amount": 1,
+          "trigger": "base-success"
+        }
+      },
+      {
+        "id": "jump-rope-menace:upgrade:2",
+        "name": "Double Dutch Confidence",
+        "description": "The first successful base ability this match grants +1 Hand.",
+        "unlockLevel": 5,
+        "effect": {
+          "kind": "self-power",
+          "amount": 1,
+          "trigger": "base-success"
+        }
+      },
+      {
+        "id": "jump-rope-menace:upgrade:3",
+        "name": "Double Dutch Mastery",
+        "description": "The first successful base ability this match grants +1 Hand.",
+        "unlockLevel": 8,
+        "effect": {
+          "kind": "self-power",
+          "amount": 1,
+          "trigger": "base-success"
+        }
+      }
+    ],
+    "catalogId": "jump-rope-menace",
+    "engineId": "jump-rope-menace",
+    "artworkId": "jump-rope-menace",
+    "rarity": "Uncommon",
+    "faction": "Fitness",
+    "crewTags": [
+      "fitness-routes",
+      "Fitness",
+      "Fitness"
+    ],
+    "acquisitionSources": [
+      "Street Packs"
+    ],
+    "variantSlots": [
+      {
+        "id": "jump-rope-menace:tagged",
+        "name": "Tagged",
+        "description": "Raised gold ink, vermilion tags and a lacquered frame over the original foil.",
+        "shardCost": 80
+      },
+      {
+        "id": "jump-rope-menace:chrome",
+        "name": "Chrome",
+        "description": "Reflective showcase frame for your favorite gang.",
+        "shardCost": 140
+      },
+      {
+        "id": "jump-rope-menace:prismatic",
+        "name": "Prismatic Reverse Holo",
+        "description": "Ultimate spectral foil across the card stock and frame, with the character art kept sharp and matte.",
+        "shardCost": 300
+      }
+    ]
+  },
+  {
+    "id": "delivery-app-cyclist",
+    "name": "Delivery App Cyclist",
+    "type": "Electric",
+    "cost": 2,
+    "power": 3,
+    "ability": "Contactless",
+    "effect": "On Reveal: Move to your weakest legal other district. Give your weakest other ally there +1 Hand after arrival, once per instance per match.",
+    "kind": "character",
+    "roles": [
+      "Movement"
+    ],
+    "abilityUpgrades": [
+      {
+        "id": "delivery-app-cyclist:upgrade:1",
+        "name": "Contactless Practice",
+        "description": "The first successful base ability this match grants +1 Hand.",
+        "unlockLevel": 2,
+        "effect": {
+          "kind": "self-power",
+          "amount": 1,
+          "trigger": "base-success"
+        }
+      },
+      {
+        "id": "delivery-app-cyclist:upgrade:2",
+        "name": "Contactless Confidence",
+        "description": "The first successful base ability this match grants +1 Hand.",
+        "unlockLevel": 5,
+        "effect": {
+          "kind": "self-power",
+          "amount": 1,
+          "trigger": "base-success"
+        }
+      },
+      {
+        "id": "delivery-app-cyclist:upgrade:3",
+        "name": "Contactless Mastery",
+        "description": "The first successful base ability this match grants +1 Hand.",
+        "unlockLevel": 8,
+        "effect": {
+          "kind": "self-power",
+          "amount": 1,
+          "trigger": "base-success"
+        }
+      }
+    ],
+    "catalogId": "delivery-app-cyclist",
+    "engineId": "delivery-app-cyclist",
+    "artworkId": "delivery-app-cyclist",
+    "rarity": "Common",
+    "faction": "Around the Block",
+    "crewTags": [
+      "community-table",
+      "Around the Block"
+    ],
+    "acquisitionSources": [
+      "Street Packs"
+    ],
+    "variantSlots": [
+      {
+        "id": "delivery-app-cyclist:tagged",
+        "name": "Tagged",
+        "description": "Raised gold ink, vermilion tags and a lacquered frame over the original foil.",
+        "shardCost": 80
+      },
+      {
+        "id": "delivery-app-cyclist:chrome",
+        "name": "Chrome",
+        "description": "Reflective showcase frame for your favorite gang.",
+        "shardCost": 140
+      },
+      {
+        "id": "delivery-app-cyclist:prismatic",
+        "name": "Prismatic Reverse Holo",
+        "description": "Ultimate spectral foil across the card stock and frame, with the character art kept sharp and matte.",
+        "shardCost": 300
+      }
+    ]
+  },
+  {
+    "id": "studio-couch-yn",
+    "name": "Studio Couch YN",
+    "type": "Air",
+    "cost": 1,
+    "power": 2,
+    "ability": "Wake Up Bro",
+    "effect": "On Reveal: Give your weakest other local Music ally +1 Hand.",
+    "kind": "character",
+    "roles": [
+      "Support"
+    ],
+    "abilityUpgrades": [
+      {
+        "id": "studio-couch-yn:upgrade:1",
+        "name": "Wake Up Bro Practice",
+        "description": "The first successful base ability this match grants +1 Hand.",
+        "unlockLevel": 2,
+        "effect": {
+          "kind": "self-power",
+          "amount": 1,
+          "trigger": "base-success"
+        }
+      },
+      {
+        "id": "studio-couch-yn:upgrade:2",
+        "name": "Wake Up Bro Confidence",
+        "description": "The first successful base ability this match grants +1 Hand.",
+        "unlockLevel": 5,
+        "effect": {
+          "kind": "self-power",
+          "amount": 1,
+          "trigger": "base-success"
+        }
+      },
+      {
+        "id": "studio-couch-yn:upgrade:3",
+        "name": "Wake Up Bro Mastery",
+        "description": "The first successful base ability this match grants +1 Hand.",
+        "unlockLevel": 8,
+        "effect": {
+          "kind": "self-power",
+          "amount": 1,
+          "trigger": "base-success"
+        }
+      }
+    ],
+    "catalogId": "studio-couch-yn",
+    "engineId": "studio-couch-yn",
+    "artworkId": "studio-couch-yn",
+    "rarity": "Common",
+    "faction": "Music Industry",
+    "crewTags": [
+      "music-tour",
+      "Music Industry",
+      "Music Industry"
+    ],
+    "acquisitionSources": [
+      "Street Packs"
+    ],
+    "variantSlots": [
+      {
+        "id": "studio-couch-yn:tagged",
+        "name": "Tagged",
+        "description": "Raised gold ink, vermilion tags and a lacquered frame over the original foil.",
+        "shardCost": 80
+      },
+      {
+        "id": "studio-couch-yn:chrome",
+        "name": "Chrome",
+        "description": "Reflective showcase frame for your favorite gang.",
+        "shardCost": 140
+      },
+      {
+        "id": "studio-couch-yn:prismatic",
+        "name": "Prismatic Reverse Holo",
+        "description": "Ultimate spectral foil across the card stock and frame, with the character art kept sharp and matte.",
+        "shardCost": 300
+      }
+    ]
+  },
+  {
+    "id": "barbershop-heckler",
+    "name": "Barbershop Heckler",
+    "type": "Air",
+    "cost": 2,
+    "power": 3,
+    "ability": "That Ain\u2019t It",
+    "effect": "On Reveal: Trim up to 2 bonus Hands from the strongest enemy here. If any bonus was removed, your weakest other ally here gains +1 Hand.",
+    "kind": "character",
+    "roles": [
+      "Disruption"
+    ],
+    "abilityUpgrades": [
+      {
+        "id": "barbershop-heckler:upgrade:1",
+        "name": "That Ain\u2019t It Practice",
+        "description": "The first successful base ability this match grants +1 Hand.",
+        "unlockLevel": 2,
+        "effect": {
+          "kind": "self-power",
+          "amount": 1,
+          "trigger": "base-success"
+        }
+      },
+      {
+        "id": "barbershop-heckler:upgrade:2",
+        "name": "That Ain\u2019t It Confidence",
+        "description": "The first successful base ability this match grants +1 Hand.",
+        "unlockLevel": 5,
+        "effect": {
+          "kind": "self-power",
+          "amount": 1,
+          "trigger": "base-success"
+        }
+      },
+      {
+        "id": "barbershop-heckler:upgrade:3",
+        "name": "That Ain\u2019t It Mastery",
+        "description": "The first successful base ability this match grants +1 Hand.",
+        "unlockLevel": 8,
+        "effect": {
+          "kind": "self-power",
+          "amount": 1,
+          "trigger": "base-success"
+        }
+      }
+    ],
+    "catalogId": "barbershop-heckler",
+    "engineId": "barbershop-heckler",
+    "artworkId": "barbershop-heckler",
+    "rarity": "Uncommon",
+    "faction": "The Cypher",
+    "crewTags": [
+      "community-table",
+      "The Cypher"
+    ],
+    "acquisitionSources": [
+      "Street Packs"
+    ],
+    "variantSlots": [
+      {
+        "id": "barbershop-heckler:tagged",
+        "name": "Tagged",
+        "description": "Raised gold ink, vermilion tags and a lacquered frame over the original foil.",
+        "shardCost": 80
+      },
+      {
+        "id": "barbershop-heckler:chrome",
+        "name": "Chrome",
+        "description": "Reflective showcase frame for your favorite gang.",
+        "shardCost": 140
+      },
+      {
+        "id": "barbershop-heckler:prismatic",
+        "name": "Prismatic Reverse Holo",
+        "description": "Ultimate spectral foil across the card stock and frame, with the character art kept sharp and matte.",
+        "shardCost": 300
+      }
+    ]
+  },
+  {
+    "id": "group-chat-instigator",
+    "name": "Group Chat Instigator",
+    "type": "Air",
+    "cost": 3,
+    "power": 4,
+    "ability": "Come Outside",
+    "effect": "On Reveal: Hit the strongest enemy here for 1 Hand. If damage lands and two different friendly characters moved this round, hit the strongest enemy in another district for 1.",
+    "kind": "character",
+    "roles": [
+      "Pressure"
+    ],
+    "abilityUpgrades": [
+      {
+        "id": "group-chat-instigator:upgrade:1",
+        "name": "Come Outside Practice",
+        "description": "The first successful base ability this match grants +1 Hand.",
+        "unlockLevel": 2,
+        "effect": {
+          "kind": "self-power",
+          "amount": 1,
+          "trigger": "base-success"
+        }
+      },
+      {
+        "id": "group-chat-instigator:upgrade:2",
+        "name": "Come Outside Confidence",
+        "description": "The first successful base ability this match grants +1 Hand.",
+        "unlockLevel": 5,
+        "effect": {
+          "kind": "self-power",
+          "amount": 1,
+          "trigger": "base-success"
+        }
+      },
+      {
+        "id": "group-chat-instigator:upgrade:3",
+        "name": "Come Outside Mastery",
+        "description": "The first successful base ability this match grants +1 Hand.",
+        "unlockLevel": 8,
+        "effect": {
+          "kind": "self-power",
+          "amount": 1,
+          "trigger": "base-success"
+        }
+      }
+    ],
+    "catalogId": "group-chat-instigator",
+    "engineId": "group-chat-instigator",
+    "artworkId": "group-chat-instigator",
+    "rarity": "Rare",
+    "faction": "The Cypher",
+    "crewTags": [
+      "sunday-dinner",
+      "The Cypher"
+    ],
+    "acquisitionSources": [
+      "Street Packs"
+    ],
+    "variantSlots": [
+      {
+        "id": "group-chat-instigator:tagged",
+        "name": "Tagged",
+        "description": "Raised gold ink, vermilion tags and a lacquered frame over the original foil.",
+        "shardCost": 80
+      },
+      {
+        "id": "group-chat-instigator:chrome",
+        "name": "Chrome",
+        "description": "Reflective showcase frame for your favorite gang.",
+        "shardCost": 140
+      },
+      {
+        "id": "group-chat-instigator:prismatic",
+        "name": "Prismatic Reverse Holo",
+        "description": "Ultimate spectral foil across the card stock and frame, with the character art kept sharp and matte.",
+        "shardCost": 300
+      }
+    ]
+  },
+  {
+    "id": "bluetooth-unc",
+    "name": "Bluetooth Unc",
+    "type": "Air",
+    "cost": 2,
+    "power": 3,
+    "ability": "You Hear Me",
+    "effect": "On Reveal: Remove Silence from your weakest silenced other ally here. If none is silenced, Protect your weakest other ally here instead.",
+    "kind": "character",
+    "roles": [
+      "Protection"
+    ],
+    "abilityUpgrades": [
+      {
+        "id": "bluetooth-unc:upgrade:1",
+        "name": "You Hear Me Practice",
+        "description": "The first successful base ability this match grants +1 Hand.",
+        "unlockLevel": 2,
+        "effect": {
+          "kind": "self-power",
+          "amount": 1,
+          "trigger": "base-success"
+        }
+      },
+      {
+        "id": "bluetooth-unc:upgrade:2",
+        "name": "You Hear Me Confidence",
+        "description": "The first successful base ability this match grants +1 Hand.",
+        "unlockLevel": 5,
+        "effect": {
+          "kind": "self-power",
+          "amount": 1,
+          "trigger": "base-success"
+        }
+      },
+      {
+        "id": "bluetooth-unc:upgrade:3",
+        "name": "You Hear Me Mastery",
+        "description": "The first successful base ability this match grants +1 Hand.",
+        "unlockLevel": 8,
+        "effect": {
+          "kind": "self-power",
+          "amount": 1,
+          "trigger": "base-success"
+        }
+      }
+    ],
+    "catalogId": "bluetooth-unc",
+    "engineId": "bluetooth-unc",
+    "artworkId": "bluetooth-unc",
+    "rarity": "Common",
+    "faction": "Around the Block",
+    "crewTags": [
+      "community-table",
+      "Around the Block"
+    ],
+    "acquisitionSources": [
+      "Street Packs"
+    ],
+    "variantSlots": [
+      {
+        "id": "bluetooth-unc:tagged",
+        "name": "Tagged",
+        "description": "Raised gold ink, vermilion tags and a lacquered frame over the original foil.",
+        "shardCost": 80
+      },
+      {
+        "id": "bluetooth-unc:chrome",
+        "name": "Chrome",
+        "description": "Reflective showcase frame for your favorite gang.",
+        "shardCost": 140
+      },
+      {
+        "id": "bluetooth-unc:prismatic",
+        "name": "Prismatic Reverse Holo",
+        "description": "Ultimate spectral foil across the card stock and frame, with the character art kept sharp and matte.",
+        "shardCost": 300
+      }
+    ]
+  },
+  {
+    "id": "one-man-band",
+    "name": "One-Man Band",
+    "type": "Electric",
+    "cost": 4,
+    "power": 5,
+    "ability": "Whole Set",
+    "effect": "On Reveal: If Music allies occupy all three districts, give your weakest Music ally in each district +1 Hand; otherwise give your weakest other local Music ally +2 Hands. Once per side per match.",
+    "kind": "character",
+    "roles": [
+      "Support"
+    ],
+    "abilityUpgrades": [
+      {
+        "id": "one-man-band:upgrade:1",
+        "name": "Whole Set Practice",
+        "description": "The first successful base ability this match grants +1 Hand.",
+        "unlockLevel": 2,
+        "effect": {
+          "kind": "self-power",
+          "amount": 1,
+          "trigger": "base-success"
+        }
+      },
+      {
+        "id": "one-man-band:upgrade:2",
+        "name": "Whole Set Confidence",
+        "description": "The first successful base ability this match grants +1 Hand.",
+        "unlockLevel": 5,
+        "effect": {
+          "kind": "self-power",
+          "amount": 1,
+          "trigger": "base-success"
+        }
+      },
+      {
+        "id": "one-man-band:upgrade:3",
+        "name": "Whole Set Mastery",
+        "description": "The first successful base ability this match grants +1 Hand.",
+        "unlockLevel": 8,
+        "effect": {
+          "kind": "self-power",
+          "amount": 1,
+          "trigger": "base-success"
+        }
+      }
+    ],
+    "catalogId": "one-man-band",
+    "engineId": "one-man-band",
+    "artworkId": "one-man-band",
+    "rarity": "Rare",
+    "faction": "Music Industry",
+    "crewTags": [
+      "music-tour",
+      "Music Industry",
+      "Music Industry"
+    ],
+    "acquisitionSources": [
+      "Street Packs"
+    ],
+    "variantSlots": [
+      {
+        "id": "one-man-band:tagged",
+        "name": "Tagged",
+        "description": "Raised gold ink, vermilion tags and a lacquered frame over the original foil.",
+        "shardCost": 80
+      },
+      {
+        "id": "one-man-band:chrome",
+        "name": "Chrome",
+        "description": "Reflective showcase frame for your favorite gang.",
+        "shardCost": 140
+      },
+      {
+        "id": "one-man-band:prismatic",
+        "name": "Prismatic Reverse Holo",
+        "description": "Ultimate spectral foil across the card stock and frame, with the character art kept sharp and matte.",
+        "shardCost": 300
+      }
+    ]
+  },
+  {
+    "id": "booster",
+    "name": "Booster",
+    "type": "Dark",
+    "cost": 2,
+    "power": 3,
+    "ability": "Five Finger Discount",
+    "effect": "On Reveal: Trim up to 1 bonus Hand from the strongest enemy here and gain that amount. One successful steal per instance per match.",
+    "kind": "character",
+    "roles": [
+      "Disruption"
+    ],
+    "abilityUpgrades": [
+      {
+        "id": "booster:upgrade:1",
+        "name": "Five Finger Discount Practice",
+        "description": "The first successful base ability this match grants +1 Hand.",
+        "unlockLevel": 2,
+        "effect": {
+          "kind": "self-power",
+          "amount": 1,
+          "trigger": "base-success"
+        }
+      },
+      {
+        "id": "booster:upgrade:2",
+        "name": "Five Finger Discount Confidence",
+        "description": "The first successful base ability this match grants +1 Hand.",
+        "unlockLevel": 5,
+        "effect": {
+          "kind": "self-power",
+          "amount": 1,
+          "trigger": "base-success"
+        }
+      },
+      {
+        "id": "booster:upgrade:3",
+        "name": "Five Finger Discount Mastery",
+        "description": "The first successful base ability this match grants +1 Hand.",
+        "unlockLevel": 8,
+        "effect": {
+          "kind": "self-power",
+          "amount": 1,
+          "trigger": "base-success"
+        }
+      }
+    ],
+    "catalogId": "booster",
+    "engineId": "booster",
+    "artworkId": "booster",
+    "rarity": "Uncommon",
+    "faction": "Around the Block",
+    "crewTags": [
+      "community-table",
+      "Around the Block"
+    ],
+    "acquisitionSources": [
+      "Street Packs"
+    ],
+    "variantSlots": [
+      {
+        "id": "booster:tagged",
+        "name": "Tagged",
+        "description": "Raised gold ink, vermilion tags and a lacquered frame over the original foil.",
+        "shardCost": 80
+      },
+      {
+        "id": "booster:chrome",
+        "name": "Chrome",
+        "description": "Reflective showcase frame for your favorite gang.",
+        "shardCost": 140
+      },
+      {
+        "id": "booster:prismatic",
+        "name": "Prismatic Reverse Holo",
+        "description": "Ultimate spectral foil across the card stock and frame, with the character art kept sharp and matte.",
+        "shardCost": 300
+      }
+    ]
+  },
+  {
+    "id": "indian-scammer",
+    "name": "Indian Scammer",
+    "type": "Dark",
+    "cost": 3,
+    "power": 4,
+    "ability": "Refund Department",
+    "effect": "On Reveal: Trim up to 2 bonus Hands from the strongest enemy here. If bonus Hands were removed, give your weakest other local ally +1 Hand and Protection. Once per instance per match.",
+    "kind": "character",
+    "roles": [
+      "Disruption"
+    ],
+    "abilityUpgrades": [
+      {
+        "id": "indian-scammer:upgrade:1",
+        "name": "Refund Department Practice",
+        "description": "The first successful base ability this match grants +1 Hand.",
+        "unlockLevel": 2,
+        "effect": {
+          "kind": "self-power",
+          "amount": 1,
+          "trigger": "base-success"
+        }
+      },
+      {
+        "id": "indian-scammer:upgrade:2",
+        "name": "Refund Department Confidence",
+        "description": "The first successful base ability this match grants +1 Hand.",
+        "unlockLevel": 5,
+        "effect": {
+          "kind": "self-power",
+          "amount": 1,
+          "trigger": "base-success"
+        }
+      },
+      {
+        "id": "indian-scammer:upgrade:3",
+        "name": "Refund Department Mastery",
+        "description": "The first successful base ability this match grants +1 Hand.",
+        "unlockLevel": 8,
+        "effect": {
+          "kind": "self-power",
+          "amount": 1,
+          "trigger": "base-success"
+        }
+      }
+    ],
+    "catalogId": "indian-scammer",
+    "engineId": "indian-scammer",
+    "artworkId": "indian-scammer",
+    "rarity": "Uncommon",
+    "faction": "Around the Block",
+    "crewTags": [
+      "Around the Block"
+    ],
+    "acquisitionSources": [
+      "Street Packs"
+    ],
+    "variantSlots": [
+      {
+        "id": "indian-scammer:tagged",
+        "name": "Tagged",
+        "description": "Raised gold ink, vermilion tags and a lacquered frame over the original foil.",
+        "shardCost": 80
+      },
+      {
+        "id": "indian-scammer:chrome",
+        "name": "Chrome",
+        "description": "Reflective showcase frame for your favorite gang.",
+        "shardCost": 140
+      },
+      {
+        "id": "indian-scammer:prismatic",
+        "name": "Prismatic Reverse Holo",
+        "description": "Ultimate spectral foil across the card stock and frame, with the character art kept sharp and matte.",
+        "shardCost": 300
+      }
+    ]
+  },
+  {
+    "id": "naija-scammer",
+    "name": "Naija Scammer",
+    "type": "Dark",
+    "cost": 3,
+    "power": 4,
+    "ability": "Till Debt Do Us Part",
+    "effect": "On Reveal: Summon a 0-Motion / 1-Hand Fake Marriage token here if there is space, then Protect your weakest other character here. One summon per side per match. The token earns +1 Hand when a different ally moves here, once per round, twice per match.",
+    "kind": "character",
+    "roles": [
+      "Token"
+    ],
+    "abilityUpgrades": [
+      {
+        "id": "naija-scammer:upgrade:1",
+        "name": "Till Debt Do Us Part Practice",
+        "description": "The first successful base ability this match grants +1 Hand.",
+        "unlockLevel": 2,
+        "effect": {
+          "kind": "self-power",
+          "amount": 1,
+          "trigger": "base-success"
+        }
+      },
+      {
+        "id": "naija-scammer:upgrade:2",
+        "name": "Till Debt Do Us Part Confidence",
+        "description": "The first successful base ability this match grants +1 Hand.",
+        "unlockLevel": 5,
+        "effect": {
+          "kind": "self-power",
+          "amount": 1,
+          "trigger": "base-success"
+        }
+      },
+      {
+        "id": "naija-scammer:upgrade:3",
+        "name": "Till Debt Do Us Part Mastery",
+        "description": "The first successful base ability this match grants +1 Hand.",
+        "unlockLevel": 8,
+        "effect": {
+          "kind": "self-power",
+          "amount": 1,
+          "trigger": "base-success"
+        }
+      }
+    ],
+    "catalogId": "naija-scammer",
+    "engineId": "naija-scammer",
+    "artworkId": "naija-scammer",
+    "rarity": "Rare",
+    "faction": "Around the Block",
+    "crewTags": [
+      "Around the Block"
+    ],
+    "acquisitionSources": [
+      "Street Packs"
+    ],
+    "variantSlots": [
+      {
+        "id": "naija-scammer:tagged",
+        "name": "Tagged",
+        "description": "Raised gold ink, vermilion tags and a lacquered frame over the original foil.",
+        "shardCost": 80
+      },
+      {
+        "id": "naija-scammer:chrome",
+        "name": "Chrome",
+        "description": "Reflective showcase frame for your favorite gang.",
+        "shardCost": 140
+      },
+      {
+        "id": "naija-scammer:prismatic",
+        "name": "Prismatic Reverse Holo",
+        "description": "Ultimate spectral foil across the card stock and frame, with the character art kept sharp and matte.",
+        "shardCost": 300
+      }
+    ]
+  },
+  {
+    "id": "black-air-fade-1s",
+    "name": "Black Air Fade 1\u2019s",
+    "type": "Dark",
+    "cost": 1,
+    "power": 0,
+    "ability": "Bad Intentions",
+    "effect": "On Reveal: Give your weakest other character here +1 Hand and Protection. Its next successful move this round grants +1 Hand once. One fitting per target per match.",
+    "kind": "support",
+    "roles": [
+      "Support"
+    ],
+    "abilityUpgrades": [
+      {
+        "id": "black-air-fade-1s:upgrade:1",
+        "name": "Bad Intentions Practice",
+        "description": "The first successful base ability this match grants +1 Hand.",
+        "unlockLevel": 2,
+        "effect": {
+          "kind": "self-power",
+          "amount": 1,
+          "trigger": "base-success"
+        }
+      },
+      {
+        "id": "black-air-fade-1s:upgrade:2",
+        "name": "Bad Intentions Confidence",
+        "description": "The first successful base ability this match grants +1 Hand.",
+        "unlockLevel": 5,
+        "effect": {
+          "kind": "self-power",
+          "amount": 1,
+          "trigger": "base-success"
+        }
+      },
+      {
+        "id": "black-air-fade-1s:upgrade:3",
+        "name": "Bad Intentions Mastery",
+        "description": "The first successful base ability this match grants +1 Hand.",
+        "unlockLevel": 8,
+        "effect": {
+          "kind": "self-power",
+          "amount": 1,
+          "trigger": "base-success"
+        }
+      }
+    ],
+    "catalogId": "black-air-fade-1s",
+    "engineId": "black-air-fade-1s",
+    "artworkId": "black-air-fade-1s",
+    "rarity": "Uncommon",
+    "faction": "Everyday Essentials",
+    "crewTags": [
+      "sunday-dinner",
+      "Everyday Essentials"
+    ],
+    "acquisitionSources": [
+      "Street Packs"
+    ],
+    "variantSlots": [
+      {
+        "id": "black-air-fade-1s:tagged",
+        "name": "Tagged",
+        "description": "Raised gold ink, vermilion tags and a lacquered frame over the original foil.",
+        "shardCost": 80
+      },
+      {
+        "id": "black-air-fade-1s:chrome",
+        "name": "Chrome",
+        "description": "Reflective showcase frame for your favorite gang.",
+        "shardCost": 140
+      },
+      {
+        "id": "black-air-fade-1s:prismatic",
+        "name": "Prismatic Reverse Holo",
+        "description": "Ultimate spectral foil across the card stock and frame, with the character art kept sharp and matte.",
+        "shardCost": 300
+      }
+    ]
+  }
+]

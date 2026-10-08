@@ -1,4 +1,5 @@
 import type { PatchInput } from '@workspace/api-client-react';
+import selectedWaveRelease from './selectedWaveRelease.json' with { type: 'json' };
 import streetLegendsRelease from './streetLegendsRelease.json' with { type: 'json' };
 
 /**
@@ -222,4 +223,5 @@ export const PREPARED_PATCHES: readonly PreparedPatch[] = [
     packTickets: 0,
   },
   streetLegendsRelease satisfies PreparedPatch,
+  selectedWaveRelease satisfies PreparedPatch,
 ];

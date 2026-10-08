@@ -888,6 +888,26 @@ for (const owner of ["player", "cpu"] as const) {
   });
 }
 for (const owner of ["player", "cpu"] as const) {
+  test(`${owner}: Captain coordinates non-dancers`, () => {
+    let m = blank();
+    const captain = { ...unit("dancecaptain", owner, 2), basePower: 30 }, first = unit("cornball", owner, 0), second = unit("cornball", owner, 0, 1), local = { ...unit("cornball", owner, 1, 2), basePower: 0 };
+    m.boards = [[first, second], [local], [captain]];
+    m = cast(m, "apartment-maintenance-sage", owner, 0).after;
+    assert.equal(find(m, first)?.lane, 1);
+    assert.equal(find(m, captain)?.creativeTarget, first.instanceId);
+    assert.equal(find(m, first)?.powerModifier, 0);
+    m = cast(m, "apartment-maintenance-sage", owner, 0).after;
+    assert.equal(find(m, second)?.lane, 1);
+    assert.equal(find(m, second)?.powerModifier, 2);
+    assert(find(m, second)?.statuses.protected);
+    assert.equal(find(m, captain)?.creativeCount, 1);
+  });
+  test(`${owner}: Coach fallback does not open an unsafe retry`, () => {
+    let m = blank(); const client = unit("cornball", owner, 0); m.boards[0] = [client];
+    m = cast(m, "cornercoach", owner).after;
+    assert.equal(find(m, client)?.powerModifier, 1);
+    assert(!kinds(m).includes("coach"));
+  });
   test(`${owner}: Dance Captain pays a different dancer following the first destination once`, () => {
     let m = blank();
     const captain = unit("dancecaptain", owner, 2),

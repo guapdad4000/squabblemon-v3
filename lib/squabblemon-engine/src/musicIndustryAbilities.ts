@@ -160,6 +160,10 @@ export function musicReveal(m: Match, s: CardInstance, t: MusicTools, echoed = f
           if (healed) m = buff(m, target.instanceId, healed, t);
           targets.push(target.instanceId); succeeded = healed > 0 || burnt;
         }
+        if (!target) {
+          const fresh = sorted(local, t)[0];
+          if (fresh) { m = buff(m, fresh.instanceId, 1, t); targets.push(fresh.instanceId); }
+        }
         // Relocating is itself a real effect, even when there is nobody to recover.
         succeeded = true;
       }
@@ -169,7 +173,7 @@ export function musicReveal(m: Match, s: CardInstance, t: MusicTools, echoed = f
     const target = sorted(otherAllies(m, s).filter(c => !trained.includes(c.instanceId)), t)[0];
     if (target && target.lane !== null) {
       m = spend(m, s, 'trainees', { targets: [...trained, target.instanceId] });
-      m = put(m, s, 'circuit', [target.instanceId], target.lane, { origin: target.lane, seen: [String(target.lane)], amount: 0 });
+      m = put(m, s, 'circuit', [target.instanceId], target.lane, { origin: target.lane, seen: [String(target.lane)], amount: 0, expires: m.round + 2 });
       targets.push(target.instanceId); succeeded = true;
     }
   } else {

@@ -1,0 +1,52 @@
+{
+  "considered": 266,
+  "excluded": [
+    "guap"
+  ],
+  "changed": 18,
+  "bodyBuffs": 16,
+  "tempoBuffs": 2,
+  "confirmation": [
+    {
+      "deck": "element-dark",
+      "pairedCases": 40,
+      "before": 0.4875,
+      "after": 0.5125
+    },
+    {
+      "deck": "element-fire",
+      "pairedCases": 40,
+      "before": 0.1375,
+      "after": 0.1625
+    },
+    {
+      "deck": "focus-wave7-tempo",
+      "pairedCases": 40,
+      "before": 0.0,
+      "after": 0.0125
+    },
+    {
+      "deck": "starter-fitness-circuit",
+      "pairedCases": 40,
+      "before": 0.25,
+      "after": 0.25
+    },
+    {
+      "deck": "starter-music-industry",
+      "pairedCases": 40,
+      "before": 0.25,
+      "after": 0.3625
+    },
+    {
+      "deck": "street-legends-relationships",
+      "pairedCases": 40,
+      "before": 0.075,
+      "after": 0.2875
+    }
+  ],
+  "limitations": [
+    "Bot diagnostic outcomes only",
+    "Fitness/Fire/Wave 7 remain weak against strong opponents",
+    "One historical LFS-backed telemetry report test unverified"
+  ]
+}

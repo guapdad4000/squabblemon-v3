@@ -1,0 +1,902 @@
+[
+  {
+    "a": "starter-music-industry",
+    "b": "mushroom-plant",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "seeded",
+    "before": {
+      "score": 0,
+      "winner": "b"
+    },
+    "after": {
+      "score": 0,
+      "winner": "b"
+    }
+  },
+  {
+    "a": "starter-music-industry",
+    "b": "element-light",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "seeded",
+    "before": {
+      "score": 1,
+      "winner": "a"
+    },
+    "after": {
+      "score": 1,
+      "winner": "a"
+    }
+  },
+  {
+    "a": "street-legends-relationships",
+    "b": "element-water",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "seeded",
+    "before": {
+      "score": 0,
+      "winner": "b"
+    },
+    "after": {
+      "score": 0,
+      "winner": "b"
+    }
+  },
+  {
+    "a": "street-legends-relationships",
+    "b": "element-air",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "seeded",
+    "before": {
+      "score": 0,
+      "winner": "b"
+    },
+    "after": {
+      "score": 0,
+      "winner": "b"
+    }
+  },
+  {
+    "a": "street-legends-relationships",
+    "b": "element-dark",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "seeded",
+    "before": {
+      "score": 0,
+      "winner": "b"
+    },
+    "after": {
+      "score": 0.5,
+      "winner": "draw"
+    }
+  },
+  {
+    "a": "focus-wave7-tempo",
+    "b": "mushroom-plant",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "seeded",
+    "before": {
+      "score": 0,
+      "winner": "b"
+    },
+    "after": {
+      "score": 0,
+      "winner": "b"
+    }
+  },
+  {
+    "a": "focus-wave7-tempo",
+    "b": "element-light",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "seeded",
+    "before": {
+      "score": 0,
+      "winner": "b"
+    },
+    "after": {
+      "score": 0,
+      "winner": "b"
+    }
+  },
+  {
+    "a": "element-fire",
+    "b": "element-water",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "seeded",
+    "before": {
+      "score": 0,
+      "winner": "b"
+    },
+    "after": {
+      "score": 0,
+      "winner": "b"
+    }
+  },
+  {
+    "a": "element-fire",
+    "b": "element-air",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "seeded",
+    "before": {
+      "score": 0,
+      "winner": "b"
+    },
+    "after": {
+      "score": 0,
+      "winner": "b"
+    }
+  },
+  {
+    "a": "element-fire",
+    "b": "element-dark",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "seeded",
+    "before": {
+      "score": 0.5,
+      "winner": "draw"
+    },
+    "after": {
+      "score": 0.5,
+      "winner": "draw"
+    }
+  },
+  {
+    "a": "element-dark",
+    "b": "mushroom-plant",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "seeded",
+    "before": {
+      "score": 0.5,
+      "winner": "draw"
+    },
+    "after": {
+      "score": 0.5,
+      "winner": "draw"
+    }
+  },
+  {
+    "a": "element-dark",
+    "b": "element-light",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "seeded",
+    "before": {
+      "score": 0,
+      "winner": "b"
+    },
+    "after": {
+      "score": 1,
+      "winner": "a"
+    }
+  },
+  {
+    "a": "starter-music-industry",
+    "b": "element-water",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "seeded",
+    "before": {
+      "score": 1,
+      "winner": "a"
+    },
+    "after": {
+      "score": 0.5,
+      "winner": "draw"
+    }
+  },
+  {
+    "a": "starter-music-industry",
+    "b": "element-air",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "seeded",
+    "before": {
+      "score": 1,
+      "winner": "a"
+    },
+    "after": {
+      "score": 1,
+      "winner": "a"
+    }
+  },
+  {
+    "a": "starter-music-industry",
+    "b": "element-dark",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "seeded",
+    "before": {
+      "score": 0,
+      "winner": "b"
+    },
+    "after": {
+      "score": 1,
+      "winner": "a"
+    }
+  },
+  {
+    "a": "street-legends-relationships",
+    "b": "mushroom-plant",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "seeded",
+    "before": {
+      "score": 0,
+      "winner": "b"
+    },
+    "after": {
+      "score": 0,
+      "winner": "b"
+    }
+  },
+  {
+    "a": "street-legends-relationships",
+    "b": "element-light",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "seeded",
+    "before": {
+      "score": 0,
+      "winner": "b"
+    },
+    "after": {
+      "score": 0,
+      "winner": "b"
+    }
+  },
+  {
+    "a": "focus-wave7-tempo",
+    "b": "element-water",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "seeded",
+    "before": {
+      "score": 0,
+      "winner": "b"
+    },
+    "after": {
+      "score": 0,
+      "winner": "b"
+    }
+  },
+  {
+    "a": "focus-wave7-tempo",
+    "b": "element-air",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "seeded",
+    "before": {
+      "score": 0,
+      "winner": "b"
+    },
+    "after": {
+      "score": 0,
+      "winner": "b"
+    }
+  },
+  {
+    "a": "focus-wave7-tempo",
+    "b": "element-dark",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "seeded",
+    "before": {
+      "score": 0,
+      "winner": "b"
+    },
+    "after": {
+      "score": 0.5,
+      "winner": "draw"
+    }
+  },
+  {
+    "a": "element-fire",
+    "b": "mushroom-plant",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "seeded",
+    "before": {
+      "score": 0,
+      "winner": "b"
+    },
+    "after": {
+      "score": 0,
+      "winner": "b"
+    }
+  },
+  {
+    "a": "element-fire",
+    "b": "element-light",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "seeded",
+    "before": {
+      "score": 0.5,
+      "winner": "draw"
+    },
+    "after": {
+      "score": 0.5,
+      "winner": "draw"
+    }
+  },
+  {
+    "a": "element-dark",
+    "b": "element-water",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "seeded",
+    "before": {
+      "score": 1,
+      "winner": "a"
+    },
+    "after": {
+      "score": 1,
+      "winner": "a"
+    }
+  },
+  {
+    "a": "element-dark",
+    "b": "element-air",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "seeded",
+    "before": {
+      "score": 1,
+      "winner": "a"
+    },
+    "after": {
+      "score": 1,
+      "winner": "a"
+    }
+  },
+  {
+    "a": "element-dark",
+    "b": "element-dark",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "seeded",
+    "before": {
+      "score": 0.5,
+      "winner": "draw"
+    },
+    "after": {
+      "score": 0.5,
+      "winner": "draw"
+    }
+  },
+  {
+    "a": "starter-music-industry",
+    "b": "mushroom-plant",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "greedy",
+    "before": {
+      "score": 0,
+      "winner": "b"
+    },
+    "after": {
+      "score": 0,
+      "winner": "b"
+    }
+  },
+  {
+    "a": "starter-music-industry",
+    "b": "element-light",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "greedy",
+    "before": {
+      "score": 0,
+      "winner": "b"
+    },
+    "after": {
+      "score": 1,
+      "winner": "a"
+    }
+  },
+  {
+    "a": "street-legends-relationships",
+    "b": "element-water",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "greedy",
+    "before": {
+      "score": 0,
+      "winner": "b"
+    },
+    "after": {
+      "score": 0,
+      "winner": "b"
+    }
+  },
+  {
+    "a": "street-legends-relationships",
+    "b": "element-air",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "greedy",
+    "before": {
+      "score": 0,
+      "winner": "b"
+    },
+    "after": {
+      "score": 0,
+      "winner": "b"
+    }
+  },
+  {
+    "a": "street-legends-relationships",
+    "b": "element-dark",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "greedy",
+    "before": {
+      "score": 0,
+      "winner": "b"
+    },
+    "after": {
+      "score": 0.5,
+      "winner": "draw"
+    }
+  },
+  {
+    "a": "focus-wave7-tempo",
+    "b": "mushroom-plant",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "greedy",
+    "before": {
+      "score": 0,
+      "winner": "b"
+    },
+    "after": {
+      "score": 0,
+      "winner": "b"
+    }
+  },
+  {
+    "a": "focus-wave7-tempo",
+    "b": "element-light",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "greedy",
+    "before": {
+      "score": 0,
+      "winner": "b"
+    },
+    "after": {
+      "score": 0,
+      "winner": "b"
+    }
+  },
+  {
+    "a": "element-fire",
+    "b": "element-water",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "greedy",
+    "before": {
+      "score": 0,
+      "winner": "b"
+    },
+    "after": {
+      "score": 0,
+      "winner": "b"
+    }
+  },
+  {
+    "a": "element-fire",
+    "b": "element-air",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "greedy",
+    "before": {
+      "score": 0,
+      "winner": "b"
+    },
+    "after": {
+      "score": 0,
+      "winner": "b"
+    }
+  },
+  {
+    "a": "element-fire",
+    "b": "element-dark",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "greedy",
+    "before": {
+      "score": 0,
+      "winner": "b"
+    },
+    "after": {
+      "score": 0,
+      "winner": "b"
+    }
+  },
+  {
+    "a": "element-dark",
+    "b": "mushroom-plant",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "greedy",
+    "before": {
+      "score": 1,
+      "winner": "a"
+    },
+    "after": {
+      "score": 0.5,
+      "winner": "draw"
+    }
+  },
+  {
+    "a": "element-dark",
+    "b": "element-light",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "greedy",
+    "before": {
+      "score": 0,
+      "winner": "b"
+    },
+    "after": {
+      "score": 0,
+      "winner": "b"
+    }
+  },
+  {
+    "a": "starter-music-industry",
+    "b": "element-water",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "greedy",
+    "before": {
+      "score": 0,
+      "winner": "b"
+    },
+    "after": {
+      "score": 0,
+      "winner": "b"
+    }
+  },
+  {
+    "a": "starter-music-industry",
+    "b": "element-air",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "greedy",
+    "before": {
+      "score": 1,
+      "winner": "a"
+    },
+    "after": {
+      "score": 0,
+      "winner": "b"
+    }
+  },
+  {
+    "a": "starter-music-industry",
+    "b": "element-dark",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "greedy",
+    "before": {
+      "score": 0,
+      "winner": "b"
+    },
+    "after": {
+      "score": 0.5,
+      "winner": "draw"
+    }
+  },
+  {
+    "a": "street-legends-relationships",
+    "b": "mushroom-plant",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "greedy",
+    "before": {
+      "score": 0,
+      "winner": "b"
+    },
+    "after": {
+      "score": 0,
+      "winner": "b"
+    }
+  },
+  {
+    "a": "street-legends-relationships",
+    "b": "element-light",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "greedy",
+    "before": {
+      "score": 0,
+      "winner": "b"
+    },
+    "after": {
+      "score": 0,
+      "winner": "b"
+    }
+  },
+  {
+    "a": "focus-wave7-tempo",
+    "b": "element-water",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "greedy",
+    "before": {
+      "score": 0,
+      "winner": "b"
+    },
+    "after": {
+      "score": 0,
+      "winner": "b"
+    }
+  },
+  {
+    "a": "focus-wave7-tempo",
+    "b": "element-air",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "greedy",
+    "before": {
+      "score": 0,
+      "winner": "b"
+    },
+    "after": {
+      "score": 0,
+      "winner": "b"
+    }
+  },
+  {
+    "a": "focus-wave7-tempo",
+    "b": "element-dark",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "greedy",
+    "before": {
+      "score": 0,
+      "winner": "b"
+    },
+    "after": {
+      "score": 0,
+      "winner": "b"
+    }
+  },
+  {
+    "a": "element-fire",
+    "b": "mushroom-plant",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "greedy",
+    "before": {
+      "score": 0,
+      "winner": "b"
+    },
+    "after": {
+      "score": 0,
+      "winner": "b"
+    }
+  },
+  {
+    "a": "element-fire",
+    "b": "element-light",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "greedy",
+    "before": {
+      "score": 0,
+      "winner": "b"
+    },
+    "after": {
+      "score": 0.5,
+      "winner": "draw"
+    }
+  },
+  {
+    "a": "element-dark",
+    "b": "element-water",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "greedy",
+    "before": {
+      "score": 1,
+      "winner": "a"
+    },
+    "after": {
+      "score": 1,
+      "winner": "a"
+    }
+  },
+  {
+    "a": "element-dark",
+    "b": "element-air",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "greedy",
+    "before": {
+      "score": 1,
+      "winner": "a"
+    },
+    "after": {
+      "score": 1,
+      "winner": "a"
+    }
+  },
+  {
+    "a": "element-dark",
+    "b": "element-dark",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "greedy",
+    "before": {
+      "score": 1,
+      "winner": "a"
+    },
+    "after": {
+      "score": 1,
+      "winner": "a"
+    }
+  },
+  {
+    "a": "starter-fitness-circuit",
+    "b": "mushroom-plant",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "greedy",
+    "before": {
+      "score": 0,
+      "winner": "b"
+    },
+    "after": {
+      "score": 0.5,
+      "winner": "draw"
+    }
+  },
+  {
+    "a": "starter-fitness-circuit",
+    "b": "element-light",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "greedy",
+    "before": {
+      "score": 0,
+      "winner": "b"
+    },
+    "after": {
+      "score": 0,
+      "winner": "b"
+    }
+  },
+  {
+    "a": "starter-fitness-circuit",
+    "b": "element-water",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "seeded",
+    "before": {
+      "score": 0,
+      "winner": "b"
+    },
+    "after": {
+      "score": 0,
+      "winner": "b"
+    }
+  },
+  {
+    "a": "starter-fitness-circuit",
+    "b": "element-air",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "seeded",
+    "before": {
+      "score": 0,
+      "winner": "b"
+    },
+    "after": {
+      "score": 0,
+      "winner": "b"
+    }
+  },
+  {
+    "a": "starter-fitness-circuit",
+    "b": "element-dark",
+    "tier": 0,
+    "seat": "a-player",
+    "policy": "seeded",
+    "before": {
+      "score": 1,
+      "winner": "a"
+    },
+    "after": {
+      "score": 1,
+      "winner": "a"
+    }
+  },
+  {
+    "a": "starter-fitness-circuit",
+    "b": "mushroom-plant",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "greedy",
+    "before": {
+      "score": 1,
+      "winner": "a"
+    },
+    "after": {
+      "score": 0,
+      "winner": "b"
+    }
+  },
+  {
+    "a": "starter-fitness-circuit",
+    "b": "element-light",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "greedy",
+    "before": {
+      "score": 0,
+      "winner": "b"
+    },
+    "after": {
+      "score": 0,
+      "winner": "b"
+    }
+  },
+  {
+    "a": "starter-fitness-circuit",
+    "b": "element-water",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "seeded",
+    "before": {
+      "score": 0,
+      "winner": "b"
+    },
+    "after": {
+      "score": 1,
+      "winner": "a"
+    }
+  },
+  {
+    "a": "starter-fitness-circuit",
+    "b": "element-air",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "seeded",
+    "before": {
+      "score": 0,
+      "winner": "b"
+    },
+    "after": {
+      "score": 0.5,
+      "winner": "draw"
+    }
+  },
+  {
+    "a": "starter-fitness-circuit",
+    "b": "element-dark",
+    "tier": 0,
+    "seat": "b-player",
+    "policy": "seeded",
+    "before": {
+      "score": 0,
+      "winner": "b"
+    },
+    "after": {
+      "score": 0,
+      "winner": "b"
+    }
+  }
+]

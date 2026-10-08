@@ -1,7 +1,9 @@
+import { selectedCards, fakeMarriage } from './selectedWave';
+import { selectedReveal, selectedMoved, selectedGain, selectedDamage, selectedResolved, type SelectedTools } from './selectedAbilities';
 import { streetLegendsCards } from './streetLegendsWave';
 import { maryMackRoundEnd, maryMackRoundStart } from './maryMack';
 import { streetLegendsReveal, streetLegendsPreventGain, streetLegendsGain, streetLegendsMoved, streetLegendsArrival, streetLegendsAfterPlay, streetLegendsRoundStart, streetLegendsCanMove, streetLegendsCleansed, streetLegendsTax, streetLegendsPaidAudit, streetLegendsIntercept, streetLegendsFinishIntercept, streetLegendsDistrictMarks, type StreetLegendsTools } from './streetLegendsAbilities';
-import { musicIndustryWaveCards } from './musicIndustryWave';
+import { MUSIC_CHARACTER_IDS, musicIndustryWaveCards } from './musicIndustryWave';
 import { musicReveal, musicResolved, musicAfterPlay, musicMoved, musicDamage, musicGain, musicAfterAction, musicRoundEnd, musicRoundStart, musicCanMove, musicCleansed, musicDistrictMarks, type MusicTools, type MusicEntranceOutcome } from './musicIndustryAbilities';
 import { HOMECOMING_KIT_IDS, homecomingReveal, homecomingArrival, homecomingAfterPlay, homecomingRoundEnd, type HomecomingTools } from './homecomingAbilities';
 import { homecomingCards } from './homecomingWave';
@@ -234,7 +236,7 @@ export type TimedEffect = {
 };
 export type DiscountToken = {
   startsAtRound?: number;
-  id: string; owner: Owner; sourceInstanceId: string; eligibility: 'any' | 'red-side' | 'printed-two-cost' | 'printed-four-plus' | 'another-district' | 'livewire-cross-district' | 'electric-delivery' | 'homecoming' | 'poison-character' | 'wiseman-prediction' | 'creative-local' | 'lookout-watch';
+  id: string; owner: Owner; sourceInstanceId: string; eligibility: 'selected-music' | 'any' | 'red-side' | 'printed-two-cost' | 'printed-four-plus' | 'another-district' | 'livewire-cross-district' | 'electric-delivery' | 'homecoming' | 'poison-character' | 'wiseman-prediction' | 'creative-local' | 'lookout-watch';
   targetLane?: Lane;
   targetInstanceId?: string;
   bonusHandsOnUse?: number;
@@ -637,6 +639,7 @@ const activeLandlord = (match: Match, owner: Owner, targetLane: Lane) =>
     .some((card) => abilityCardId(card) === "landlord" && activeAbility(card));
 const tokenEligible = (token: DiscountToken, card: CardInstance, targetLane: Lane) =>
   (token.eligibility === "homecoming" && token.targetInstanceId === card.instanceId)
+  || (token.eligibility === 'selected-music' && token.sourceLane === targetLane && MUSIC_CHARACTER_IDS.includes(card.cardId))
   || token.eligibility === "any"
   || (token.eligibility === 'red-side' && sideOzWaveFactions[card.cardId] === 'Red Side')
   || (token.eligibility === "printed-two-cost" && card.cost === 2)
@@ -676,7 +679,7 @@ export function getLegalCardCost(match: Match, owner: Owner, card: CardInstance,
   const taxed = activeLandlord(match, owner, targetLane) && !(match.landlordTaxUsed?.[owner]?.[targetLane] ?? false);
   const ignoresLocationMotionPenalty = isMythicalTripleOg(card.cardId) && TRIPLE_OG_LANE[card.cardId] === targetLane;
   const aliceReturnDiscount = card.cardId === 'alice' && !!card.aliceReady;
-  const minimum = aliceReturnDiscount || card.rabbitReturnDiscount || token?.eligibility === 'homecoming' || token?.eligibility === 'wiseman-prediction' || token?.eligibility === 'creative-local' ? 1 : 0;
+  const minimum = aliceReturnDiscount || card.rabbitReturnDiscount || token?.eligibility === 'homecoming' || token?.eligibility === 'selected-music' || token?.eligibility === 'wiseman-prediction' || token?.eligibility === 'creative-local' ? 1 : 0;
   const reduction = discount ? (token?.eligibility === 'wiseman-prediction' ? 2 : 1)
     : districtDiscount(match, owner, card, targetLane);
   return Math.max(minimum, card.cost - reduction - (aliceReturnDiscount ? 1 : 0) - (card.rabbitReturnDiscount ? 1 : 0))
@@ -816,7 +819,7 @@ const modify = (m: Match, id: string, change: (c: CardInstance) => CardInstance,
       pendingLeaderReactions: [...(result.pendingLeaderReactions ?? []), { kind: 'streetapostle', owner: before.owner,
         sourceInstanceId: leader.instanceId, targetInstanceId: id, amount: Math.min(2, delta), triggerLane: before.lane }] };
   }
-  return streetLegendsGain(m, musicGain(m, result, before, waveTools()), before, waveTools(), copiedGain);
+  return selectedGain(m, streetLegendsGain(m, musicGain(m, result, before, waveTools()), before, waveTools(), copiedGain), before, waveTools(), copiedGain);
 };
 
 const findCard = (m: Match, id: string): CardInstance | undefined =>
@@ -945,7 +948,7 @@ const move = (
   moved = fairytaleArrival(moved, card.instanceId, true);
   moved = homecomingArrival(creativeMoved(m, applyScentEntry(moved, card.instanceId), card.instanceId, creativeTools()), card.instanceId, homecomingTools());
   moved = streetLegendsMoved(m, moved, card.instanceId, waveTools());
-  return musicMoved(m, moved, card.instanceId, waveTools());
+  return selectedMoved(m, musicMoved(m, moved, card.instanceId, waveTools()), card.instanceId, waveTools());
 };
 const lowestFriendlyLane = (m: Match, owner: Owner, except: Lane): Lane => ([0, 1, 2] as Lane[]).filter((x) => x !== except).sort((a, b) => getLaneScoreForMatch(m, inLane(m, owner, a), a, owner) - getLaneScoreForMatch(m, inLane(m, owner, b), b, owner) || a - b)[0];
 
@@ -1578,7 +1581,7 @@ const trainWaveAbility = (m: Match, id: string): Match => {
   const card = m.boards.flat().find(c => c.instanceId === id)
     ?? [...m.playerHand, ...m.cpuHand].find(c => c.instanceId === id && c.cardId === 'cheshire');
   // Initiation has recipient upgrades and uses its own delayed-payoff ledger.
-  if (!card || !(HOMECOMING_KIT_IDS.has(card.cardId) || ['triple-og-blue', 'triple-og-red', 'block-spinner', 'look-out'].includes(card.cardId) || Object.hasOwn(characterWaveCards, card.cardId) || Object.hasOwn(fairytaleCards, card.cardId) || Object.hasOwn(neighborhoodWaveCards, card.cardId) || Object.hasOwn(cellblockWaveCards, card.cardId) || Object.hasOwn(afterHoursWaveCards, card.cardId) || Object.hasOwn(sideOzWaveCards, card.cardId) || Object.hasOwn(storyCharacterWaveCards, card.cardId) || Object.hasOwn(squabblehouseWaveCards, card.cardId) || Object.hasOwn(streetLegendsCards, card.cardId) || Object.hasOwn(musicIndustryWaveCards, card.cardId)) || card.waveTrainingUsed) return m;
+  if (!card || !(Object.hasOwn(selectedCards, card.cardId) || HOMECOMING_KIT_IDS.has(card.cardId) || ['triple-og-blue', 'triple-og-red', 'block-spinner', 'look-out'].includes(card.cardId) || Object.hasOwn(characterWaveCards, card.cardId) || Object.hasOwn(fairytaleCards, card.cardId) || Object.hasOwn(neighborhoodWaveCards, card.cardId) || Object.hasOwn(cellblockWaveCards, card.cardId) || Object.hasOwn(afterHoursWaveCards, card.cardId) || Object.hasOwn(sideOzWaveCards, card.cardId) || Object.hasOwn(storyCharacterWaveCards, card.cardId) || Object.hasOwn(squabblehouseWaveCards, card.cardId) || Object.hasOwn(streetLegendsCards, card.cardId) || Object.hasOwn(musicIndustryWaveCards, card.cardId)) || card.waveTrainingUsed) return m;
   const update = (state: Match, change: (c: CardInstance) => CardInstance, copiedGain = false): Match => {
     if (card.lane !== null) return modify(state, id, change, copiedGain);
     const hand = card.owner === 'player' ? 'playerHand' : 'cpuHand';
@@ -2131,7 +2134,7 @@ function recordDamage(before: Match, after: Match, source: Pick<CardInstance, 'i
     ? { ...victim, continuousPower: current.continuousPower ?? 0 }
     : { ...victim, basePower: amount, powerModifier: 0, continuousPower: 0 };
   m = creativeDamage(before, m, source, creativeVictim, { ...creativeTools(), power: rawCombatPower }, burn);
-  return musicDamage(before, m, source, victim, waveTools(), burn);
+  return selectedDamage(before, musicDamage(before, m, source, victim, waveTools(), burn), victim, waveTools(), burn);
 }
 function returnToHand(m: Match, source: CardInstance, target: CardInstance, discount = false): Match {
   if (target.lane === null || (target.kind ?? 'character') !== 'character' || !m.boards.flat().some(c => c.instanceId === target.instanceId)) return m;
@@ -2789,7 +2792,7 @@ export function getStoryModifierSummaries(value: Match | StoryEncounterSnapshot)
 function resolveAbility(match: Match, source: CardInstance, options: {echoed?:boolean} = {}): Match {
   const result=resolveAbilityBase(match,source,options);
   const settled = activeAbility(source) ? creativeAbilityResolved(match, result, source, creativeTools()) : result;
-  return musicResolved(match, settled, source, waveTools(), options.echoed ?? false);
+  return selectedResolved(match, musicResolved(match, settled, source, waveTools(), options.echoed ?? false), source, waveTools(), options.echoed ?? false);
 }
 function resolveAbilityBase(match: Match, source: CardInstance, { echoed = false }: { echoed?: boolean } = {}): Match {
   const before = match;
@@ -2820,6 +2823,8 @@ function resolveAbilityBase(match: Match, source: CardInstance, { echoed = false
   };
   if ((source.statuses.silenced || source.statuses.frozen || source.statuses.weakened)
     && !(UNSILENCEABLE_CARD_IDS as readonly string[]).includes(source.cardId)) { note('Ability did not fire (silenced, frozen, or weakened).'); return m; }
+  const selected = selectedReveal(m, source, waveTools(), echoed);
+  if (selected) return !echoed && source.effect.includes('On Reveal:') ? {...selected,lastRevealedCardId:source.cardId,entranceHistory:[...(selected.entranceHistory??[]).filter(id=>id!==source.instanceId),source.instanceId]} : selected;
   const wave = streetLegendsReveal(m, source, waveTools(), echoed) ?? musicReveal(m, source, waveTools(), echoed);
   if (wave) return !echoed && source.effect.includes('On Reveal:') ? { ...wave, lastRevealedCardId: source.cardId, entranceHistory: [...(wave.entranceHistory ?? []).filter(id => id !== source.instanceId), source.instanceId] } : wave;
   const homecoming = homecomingReveal(m, source, homecomingTools(), echoed);
@@ -6019,7 +6024,7 @@ function creativeMovePair(
     m = fairytaleArrival(m, original.instanceId, findCard(m, original.instanceId)?.lane === destination);
     m = applyScentEntry(m, original.instanceId);
     m = homecomingArrival(creativeMoved(before, m, original.instanceId, creativeTools()), original.instanceId, homecomingTools());
-    m = musicMoved(before, streetLegendsMoved(before, m, original.instanceId, waveTools()), original.instanceId, waveTools());
+    m = selectedMoved(before, musicMoved(before, streetLegendsMoved(before, m, original.instanceId, waveTools()), original.instanceId, waveTools()), original.instanceId, waveTools());
   }
   return m;
 }
@@ -6047,9 +6052,10 @@ function homecomingTools(): HomecomingTools {
 
 
 /** These stateless adapters are shared; every operation receives its match. */
-let sharedWaveTools: (StreetLegendsTools & MusicTools) | undefined;
-function waveTools(): StreetLegendsTools & MusicTools {
+let sharedWaveTools: (StreetLegendsTools & MusicTools & SelectedTools) | undefined;
+function waveTools(): StreetLegendsTools & MusicTools & SelectedTools {
   return sharedWaveTools ??= { ...creativeTools(), train: trainWaveAbility,
+    marriage: (m, s) => summonCard(m,s.owner,s.lane!,fakeMarriage,'fake-marriage',s),
     buff: (m, id, amount, copiedGain = false) => modify(m, id, c => ({ ...c, powerModifier: c.powerModifier + amount }), copiedGain),
     hostile: (m, source, target, apply) => hostileEffect(m, source, target, apply, false, false, true),
     damage: (m, target, amount, note) => reduceHands(m, target, amount, note),

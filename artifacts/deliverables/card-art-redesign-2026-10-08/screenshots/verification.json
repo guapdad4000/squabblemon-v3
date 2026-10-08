@@ -1,0 +1,10 @@
+[
+  {
+    "name": "desktop",
+    "checks": "Selected card stats, decoded inspector, no page exceptions"
+  },
+  {
+    "name": "phone",
+    "checks": "Selected card stats, decoded inspector, no page exceptions"
+  }
+]

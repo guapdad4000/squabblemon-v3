@@ -12,9 +12,9 @@ const waveIds = Object.keys(STREET_LEGENDS_STYLE_SCENES);
 test('the thirty-entry release adds thirty unique identities while Nail Tech retains her original ownership, artwork and cosmetics', () => {
   assert.equal(waveIds.length, 30);
   assert.equal(new Set(waveIds).size, 30);
-  assert.equal(cardCatalog.length, 267);
-  assert.equal(cardCatalog.filter(card => (card.kind ?? 'character') === 'character').length, 245);
-  assert.equal(cardCatalog.filter(card => card.kind === 'support').length, 12);
+  assert.equal(cardCatalog.length, 298);
+  assert.equal(cardCatalog.filter(card => (card.kind ?? 'character') === 'character').length, 275);
+  assert.equal(cardCatalog.filter(card => card.kind === 'support').length, 13);
   assert.equal(cardCatalog.filter(card => card.kind === 'blockbuster').length, 10);
   assert.equal(catalogCardById['nail-tech'].engineId, 'nail');
   assert.equal(cardCatalog.filter(card => card.engineId === 'nail').length, 1);

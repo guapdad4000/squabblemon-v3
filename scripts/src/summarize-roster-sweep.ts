@@ -1,0 +1,15 @@
+import assert from 'node:assert/strict';
+import { readFileSync, writeFileSync } from 'node:fs';
+import { cardCatalog } from '@workspace/squabblemon-engine/data';
+const directory=process.argv[2];
+const prefix=process.argv[3]??'before';
+const shards=[0,1,2,3].map(i=>JSON.parse(readFileSync(`${directory}/${prefix}-${i}/sweep.json`,'utf8')));
+assert(shards.every(s=>s.balanceVersion===shards[0].balanceVersion));
+const rows=shards.flatMap(s=>s.cards);
+const expected=cardCatalog.filter(c=>c.engineId!=='guap'&&c.kind!=='token'&&!c.hazard).map(c=>c.engineId).sort();
+assert.deepEqual(rows.map(r=>r.id).sort(),expected,'Each eligible engine ID must appear exactly once');
+assert(rows.every(r=>r.games===32&&r.played>=0));
+const failures=shards.flatMap(s=>s.failures);assert.equal(failures.length,0);
+const report={balanceVersion:shards[0].balanceVersion,excluded:['guap'],cards:rows,uniqueSimulations:shards.reduce((n,s)=>n+s.uniqueSimulations,0),cardScenarioObservations:rows.reduce((n,c)=>n+c.games,0),failures};
+writeFileSync(`${directory}/${prefix}.json`,JSON.stringify(report,null,2));
+console.log(JSON.stringify({considered:rows.length,observations:report.cardScenarioObservations,simulations:report.uniqueSimulations,lowest:rows.filter(r=>r.kind==='character').sort((a,b)=>a.score-b.score).slice(0,35).map(r=>({id:r.id,cost:r.cost,power:r.power,score:r.score,played:r.played,authored:!r.injected,direct:r.directEvents,nested:r.nestedEvents}))},null,2));
