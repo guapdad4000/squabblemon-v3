@@ -106,19 +106,19 @@ test("lane events leave no scoring body and cannot spend Squabble", () => {
     /SQUABBLE/,
   );
 });
-test("Shootout deals two to every local enemy and one to the strongest ally", () => {
+test("Shootout deals three to every local enemy and one to the strongest ally", () => {
   const m = blank();
   m.boards[0] = Array.from({ length: 6 }, (_, i) =>
     unit(i % 2 ? "cpu" : "player", 0, i),
   );
   m.boards[1] = [unit("cpu", 1, 10)];
   const a = cast(m, "the-shootout");
-  assert.equal(a.boards[0].filter((c) => c.owner === "cpu" && c.powerModifier === -2).length, 3);
+  assert.equal(a.boards[0].filter((c) => c.owner === "cpu" && c.powerModifier === -3).length, 3);
   assert.equal(a.boards[0].filter((c) => c.owner === "player" && c.powerModifier === -1).length, 1);
   assert.equal(a.boards[0].filter((c) => c.owner === "player" && c.powerModifier === 0).length, 2);
   assert.equal(a.boards[1][0].powerModifier, 0);
 });
-test("Block Spin repeats prior reductions twice without recording its own repeats", () => {
+test("Block Spin repeats prior reductions three times without recording its own repeats", () => {
   const m = blank();
   m.boards[0] = [unit("player", 0), unit("cpu", 0)];
   let a = cast(m, "the-concert", 0, 1);
@@ -126,7 +126,7 @@ test("Block Spin repeats prior reductions twice without recording its own repeat
   a = cast({ ...a, playerMotion: 9 }, "the-block-spin");
   assert.deepEqual(
     a.boards[0].map((c) => c.powerModifier),
-    [-3, -3],
+    [-4],
   );
   assert.equal(a.laneDamage?.length, 2);
   assert.equal(end(a).laneDamage?.length, 0);
@@ -136,15 +136,15 @@ test("Concert mode is validated and affects both crews", () => {
   m.boards[0] = [unit("player", 0), unit("cpu", 0)];
   assert.deepEqual(
     cast(m, "the-concert", 0, 0).boards[0].map((c) => c.powerModifier),
-    [1, 1],
+    [3, 1],
   );
   assert.deepEqual(
     cast(m, "the-concert", 0, 1).boards[0].map((c) => c.powerModifier),
-    [-1, -1],
+    [-1, -3],
   );
   assert.throws(() => cast(m, "the-concert", 0, 2), /investment/);
 });
-test("Setup transfers current Hands plus two without targeting the enemy", () => {
+test("Setup transfers current Hands plus four and Protection without targeting the enemy", () => {
   const m = blank();
   m.boards[0] = [
     unit("player", 0),
@@ -153,7 +153,8 @@ test("Setup transfers current Hands plus two without targeting the enemy", () =>
   ];
   const a = cast(m, "the-setup");
   assert.equal(a.boards[0].length, 2);
-  assert.equal(a.boards[0][0].powerModifier, 5);
+  assert.equal(a.boards[0][0].powerModifier, 7);
+  assert.equal(a.boards[0][0].statuses.protected, true);
   assert.equal(a.boards[0][1].powerModifier, 0);
 });
 test("Sideshow empties the lane and Kickback gathers both crews; locked cards stay", () => {
@@ -208,7 +209,7 @@ test("After Party ends exactly at seven, survives replay frames, and never stack
   m = end(m);
   assert.equal(m.phase, "complete");
 });
-test("Cookout serves two foods and a single-use Burnt Plate", () => {
+test("Cookout serves three foods and a single-use Burnt Plate", () => {
   let m = blank();
   m.boards = ([0, 1, 2] as Lane[]).map((l) => [
     unit("player", l, l),
@@ -216,7 +217,7 @@ test("Cookout serves two foods and a single-use Burnt Plate", () => {
   m = cast(m, "the-cookout");
   assert.equal(
     m.boards.flat().filter((c) => c.cardId === "soulfood").length,
-    2,
+    3,
   );
   const plate = m.boards.flat().find((c) => c.cardId === "burnt-plate")!;
   assert(plate.hazard);
@@ -389,3 +390,54 @@ test("Tattoo Artist and Lawyer store distinct one-use protection contracts", () 
     assert(!after.timedEffects.some(x=>x.kind==='church-protection'));
   }
 });
+
+for (const owner of ['player', 'cpu'] as const) {
+  const rival: Owner = owner === 'player' ? 'cpu' : 'player';
+  test(`${owner}: boosted movement events reward only successful friendly travelers`, () => {
+    for (const id of ['the-sideshow', 'the-kickback']) {
+      const m = blank();
+      const origin: Lane = id === 'the-sideshow' ? 0 : 1;
+      const ally = unit(owner, origin, 100), enemy = unit(rival, origin, 101), locked = unit(owner, origin, 102);
+      locked.statuses.locked = true;
+      m.boards[origin] = [ally, enemy, locked];
+      const a = cast(m, id, 0, 0, owner);
+      const live = (c: typeof ally) => a.boards.flat().find(x => x.instanceId === c.instanceId)!;
+      assert.notEqual(live(ally).lane, origin);
+      assert.equal(live(ally).powerModifier, 2);
+      assert.equal(live(enemy).powerModifier, 0);
+      assert.equal(live(locked).lane, origin);
+      assert.equal(live(locked).powerModifier, 0);
+    }
+  });
+  test(`${owner}: After Party grants crew-wide power only on the first extension`, () => {
+    const m = blank(), ally = unit(owner, 1, 100), enemy = unit(rival, 1, 101);
+    m.boards[1] = [ally, enemy];
+    const first = cast(m, 'the-after-party', 0, 0, owner);
+    const second = cast({...first, playerMotion: 9, cpuMotion: 9}, 'the-after-party', 0, 0, owner);
+    assert.equal(second.boards[1].find(c => c.instanceId === ally.instanceId)?.powerModifier, 2);
+    assert.equal(second.boards[1].find(c => c.instanceId === enemy.instanceId)?.powerModifier, 0);
+    assert.equal(getMatchRoundLimit(second), 7);
+  });
+  test(`${owner}: Baby Shower gives three Hands and draws only the remaining cards`, () => {
+    for (const remaining of [0, 1, 2, 3]) {
+      const m = blank(), ally = unit(owner, 0, 100), enemy = unit(rival, 0, 101);
+      m.boards[0] = [ally, enemy];
+      const index = owner === 'player' ? 'playerDrawIndex' : 'cpuDrawIndex';
+      const ids = owner === 'player' ? 'playerCardIds' : 'cpuCardIds';
+      const hand = owner === 'player' ? 'playerHand' : 'cpuHand';
+      const a = cast({...m, [ids]: ['buddy', 'cornball', 'hooper'].slice(0, remaining), [index]: 0}, 'the-babyshower', 0, 0, owner);
+      assert.equal(a.boards[0].find(c => c.instanceId === ally.instanceId)?.powerModifier, 3);
+      assert.equal(a.boards[0].find(c => c.instanceId === enemy.instanceId)?.powerModifier, 0);
+      assert.equal(a[hand].length, Math.min(2, remaining));
+      assert.equal(a[index], Math.min(2, remaining));
+    }
+  });
+}
+for (const owner of ['player','cpu'] as const) {
+  test(`${owner}: Dice Game grants its three-Hand bonus to the actual winner only`, () => {
+    const m = blank(), a = unit('player', 0, 100), b = unit('cpu', 0, 101);
+    m.boards[0] = [a,b];
+    const result = cast(m, 'the-dice-game', 0, 1, owner), winner = result.diceResult!.winner;
+    for (const c of [a,b]) assert.equal(result.boards[0].find(x => x.instanceId === c.instanceId)?.powerModifier, c.owner === winner ? 3 : 0);
+  });
+}

@@ -7,7 +7,10 @@ const ids=['block-party','red-side-tapes','blue-side-blues','side-show','old-hea
 async function installOtherApis(page) {
  // Missions also mounts John Henry. Its query must receive a valid roadmap
  // instead of the dev server's HTML SPA fallback during this focused fixture.
- await page.route('**/api/**',route=>route.fulfill({json:popupApiResponse(new URL(route.request().url()).pathname)}));
+ await page.route('**/api/**',route=>{
+  const path=new URL(route.request().url()).pathname;
+  return route.fulfill({json:path.endsWith('/legend-bounties')?[]:popupApiResponse(path)});
+ });
  page.on('pageerror',error=>console.log('PAGE ERROR',error.message));
 }
 try {
@@ -27,6 +30,7 @@ try {
    } else await route.fulfill({json:status()});
   });
   await page.goto(`${origin}/e2e/starter-mythic.fixture.html?screen=${screen}`);
+  const startingWallet=await page.evaluate(()=>window.__mythicBootstrap().profile);
   const trigger=page.locator(screen==='home'?'.starter-mythic-shortcut':'.starter-mythic-banner');
   await trigger.waitFor();
   if(screen==='home'){
@@ -49,10 +53,20 @@ try {
   if(state==='locked'){assert.equal(await page.getByRole('button',{name:'Claim your Mythic'}).count(),0);await page.getByRole('link',{name:'Continue story'}).scrollIntoViewIfNeeded();}
   else {
    await page.getByRole('button',{name:'Claim your Mythic'}).click();
-   await page.getByRole('link',{name:'Meet your crew'}).waitFor();assert.equal(calls,1);
-   assert(await dialog.getByRole('status').innerText().then(t=>t.includes(owns?'25 Style Shards':'joined your crew')));
+   const celebration=page.locator('.character-recruitment[data-character="homeless-guy"]');
+   await celebration.waitFor({state:'visible'});await dialog.waitFor({state:'hidden'});assert.equal(calls,1);
+   await celebration.getByRole('heading',{name:'Homeless Guy',exact:true}).waitFor();
+   await celebration.getByRole('link',{name:'Meet your crew →',exact:true}).waitFor();
+   assert.match(await celebration.locator('.bounty-node-rewards').innerText(),/\+1000\s*Clout/);
+   assert.match(await celebration.locator('.bounty-node-rewards').innerText(),/\+3\s*Tickets/);
+   if(owns)assert.match(await celebration.locator('.bounty-node-rewards').innerText(),/\+25\s*Style Shards/);
+   await page.waitForFunction(()=>[...document.querySelectorAll('.character-recruitment img')].every(img=>img.complete&&img.naturalWidth>0));
+   assert(await celebration.evaluate(el=>el.scrollWidth<=el.clientWidth+1),'Recruitment celebration has no horizontal clipping');
    const cached=await page.evaluate(()=>window.__mythicBootstrap());assert.equal(cached.profile.softCurrency,1250);assert.equal(cached.profile.packTickets,3);
+   if(owns)assert.equal(cached.profile.styleShards,startingWallet.styleShards+25,'Duplicate reward grants actual saved shards');
+   else assert(cached.profile.ownedCardIds.includes('homeless-guy'),'Fresh claim saves the character');
    if(screen==='home')assert.equal(await trigger.count(),0);
+   await page.keyboard.press('Escape');await celebration.waitFor({state:'hidden'});
   }
   await page.keyboard.press('Escape');await dialog.waitFor({state:'hidden'});
   if(screen==='bounties')assert(await trigger.evaluate(el=>document.activeElement===el),'Focus returns to banner');

@@ -956,8 +956,8 @@ for (const owner of ["player", "cpu"] as const) {
     assert.equal(find(m, a)?.powerModifier, 1);
     assert.equal(find(m, b)?.powerModifier, 1);
     const concert = cast(m, "the-concert", owner, 0).after;
-    assert.equal(find(concert, a)?.powerModifier, 2);
-    assert.equal(find(concert, b)?.powerModifier, 3);
+    assert.equal(find(concert, a)?.powerModifier, 4);
+    assert.equal(find(concert, b)?.powerModifier, 6);
   });
 }
 for (const owner of ["player", "cpu"] as const) {

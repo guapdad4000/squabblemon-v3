@@ -1,3 +1,4 @@
+import { applyCrewMatchupBalance } from './crewMatchupBalance';
 import { selectedCards, selectedRarities, selectedFactions, selectedUpgradeEffects } from './selectedWave';
 import { streetLegendsCards, streetLegendsRarities, streetLegendsUpgradeEffects, streetLegendsFactions } from './streetLegendsWave';
 import { musicIndustryWaveCards, musicIndustryRarities, musicIndustryUpgradeEffects, musicIndustryFactions, MUSIC_INDUSTRY_IDS, FITNESS_WAVE_IDS, MUSIC_CHARACTER_IDS, FITNESS_CHARACTER_IDS } from './musicIndustryWave';
@@ -294,6 +295,7 @@ export const cards: Record<string, Card> = {
 applyCreativeCardKits(cards);
 applyRosterBalance(cards);
 applyFullRosterBuffs(cards);
+applyCrewMatchupBalance(cards);
 applyElementalHandBonuses(cards);
 
 /** Complete authored crews without changing their existing draw order. Never use for submitted decks. */

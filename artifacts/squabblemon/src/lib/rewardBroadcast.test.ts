@@ -72,3 +72,10 @@ test('optional broadcasts request no media for accessibility, hidden tabs or con
     }
   }
 });
+test('reward receipts rotate anime action clips instead of bandana or live inserts', () => {
+ for (let i = 0; i < 80; i++) {
+  const clip = selectRewardClip('reward')!;
+  assert.equal(clip.style, 'anime');
+  assert.ok(!clip.id.includes('bandana'));
+ }
+});

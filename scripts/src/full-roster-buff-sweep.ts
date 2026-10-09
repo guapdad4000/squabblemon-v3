@@ -14,7 +14,7 @@ const eligible = cardCatalog.filter(c => c.engineId !== 'guap' && c.kind !== 'to
 const previous = process.env.SWEEP_REUSE ? JSON.parse(readFileSync(process.env.SWEEP_REUSE, 'utf8')) : null;
 const baselineById = new Map(previous?.cards.map((c: any) => [c.id,c]) ?? []);
 const baselineCatalog = process.env.SWEEP_REUSE ? JSON.parse(readFileSync(new URL('../../artifacts/deliverables/full-roster-buffs-2026-10-07/catalog-before.json', import.meta.url), 'utf8')) : [];
-const changed = baselineCatalog.filter((c:any) => JSON.stringify(cards[c.engineId]) !== JSON.stringify({ ...cards[c.engineId], power:c.power, cost:c.cost })).map((c:any)=>c.engineId);
+const changed = process.env.SWEEP_CHANGED ? process.env.SWEEP_CHANGED.split(',') : baselineCatalog.filter((c:any) => JSON.stringify(cards[c.engineId]) !== JSON.stringify({ ...cards[c.engineId], power:c.power, cost:c.cost })).map((c:any)=>c.engineId);
 const cache = new Map<string, ReturnType<typeof simulateBalanceMatch>>();
 const report: any = { balanceVersion: CARD_BALANCE_VERSION, excluded: ['guap'], catalog: cardCatalog.length, cards: [], failures: [] };
 const opponents = ['starter-block', 'starter-combo', 'focused-red-set', 'focused-blue-set'].map(id => decks.find(d => d.id === id)).filter(Boolean) as BalanceDeck[];

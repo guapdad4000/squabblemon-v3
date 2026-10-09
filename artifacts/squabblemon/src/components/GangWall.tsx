@@ -1,4 +1,5 @@
-import { useRef, useState, type CSSProperties } from "react";
+import { useRef, type CSSProperties } from "react";
+import { useViewMemory } from "../lib/navigationMemory";
 import type { PlayerBootstrap } from "@workspace/api-client-react";
 import {
   cardCatalog,
@@ -44,9 +45,9 @@ export function GangWall({
   busy: boolean;
   error: string;
 }) {
-  const [mode, setMode] = useState<WallMode>("elements");
-  const [groupIndex, setGroupIndex] = useState(0);
-  const [cardId, setCardId] = useState<string | null>(null);
+  const [mode, setMode] = useViewMemory<WallMode>(`gang-wall:${bootstrap.profile.id}:mode`, "elements");
+  const [groupIndex, setGroupIndex] = useViewMemory(`gang-wall:${bootstrap.profile.id}:group`, 0);
+  const [cardId, setCardId] = useViewMemory<string | null>(`gang-wall:${bootstrap.profile.id}:card`, null);
   const tags = useRef<HTMLElement>(null);
   const swipe = useRef<{ x: number; y: number } | null>(null);
   const members = useRef<HTMLElement>(null);

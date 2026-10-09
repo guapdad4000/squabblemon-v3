@@ -1,3 +1,4 @@
+import {CharacterRecruitment} from './CharacterRecruitment';
 import { motion, useReducedMotion } from 'framer-motion';
 import { AnimatedNumber } from './AnimatedNumber';
 import '../styles/ui-polish.css';
@@ -118,6 +119,7 @@ export function RewardReveal() {
     if (rewardReceipts.beginStinger(receipt.id)) setStingerOwner(receipt.id);
   }, [receipt, clip, stingerOwner]);
   if (!receipt) return null;
+  if (receipt.characterId) return <CharacterRecruitment key={receipt.id} id={receipt.characterId} items={receipt.items} reduced={Boolean(reduced)} onClose={() => rewardReceipts.dismiss(receipt.id)} />;
   const showReceipt = () => receipt.story ? <StoryReceipt key={receipt.id} receipt={receipt} reduced={Boolean(reduced)} />
     : <div className="reward-reveal__stage">
       <img className="reward-reveal__backdrop" src={getAssetUrl('assets/results/win-scene-wide.webp')} alt="" />

@@ -29,11 +29,11 @@ test('the Triple OG set ships as a complete, pullable catalog wave', () => {
   assert.equal(isMythicalTripleOg('redside2'), false);
   validateCardAbilityUpgrades();
   const expected: Record<string, [string, string, number, number]> = {
-    'triple-og-blue': ['CLUE COOKY', 'Mythical', 4, 6],
+    'triple-og-blue': ['CLUE COOKY', 'Mythical', 4, 8],
     'triple-og-red': ['RED PUNCH', 'Mythical', 4, 3],
     initiation: ['INITIATION', 'Legendary', 1, 0],
     'block-spinner': ['BLOCK SPINNER', 'Epic', 1, 2],
-    'look-out': ['LOOK OUT', 'Epic', 1, 2],
+    'look-out': ['LOOK OUT', 'Epic', 1, 3],
   };
   for (const [id, [name, rarity, cost, power]] of Object.entries(expected)) {
     const card = catalogCardById[id];
@@ -102,7 +102,7 @@ test('home-side Triple OG reveals resolve in story-scheduled, runtime-locked, an
       const after = playTurnCard(match, 'player', source.instanceId, homeLane);
       assert.equal(find(after, id).lane, homeLane);
       if (id === 'triple-og-blue') {
-        assert.equal(getEffectiveCardPower(find(after, 'triple-og-blue')), 7,
+        assert.equal(getEffectiveCardPower(find(after, 'triple-og-blue')), cards['triple-og-blue'].power + 1,
           `CLUE COOKY still receives homage in its ${lockKind}-locked home`);
         assert.equal(getEffectiveCardPower(after.boards[homeLane].find(card => card.cardId === 'hooper')!), 4);
       } else {
@@ -132,7 +132,7 @@ test('home-side Triple OG reveals resolve in story-scheduled, runtime-locked, an
     lanePowerBonuses: [], laneLocks: [{ owner: 'player', lanes: [0] }] } };
   const entrant = createCardInstance('triple-og-blue', 'player', 'locked-mark', 1);
   const initiated = playTurnCard({ ...lockedMark, playerHand: [entrant] }, 'player', entrant.instanceId, 0);
-  assert.equal(getEffectiveCardPower(find(initiated, entrant.cardId)), 8,
+  assert.equal(getEffectiveCardPower(find(initiated, entrant.cardId)), cards['triple-og-blue'].power + 2,
     'a legal home-lane OG entering a locked district still consumes INITIATION');
   assert(!getCharacterDistrictMarks(initiated).some(mark => mark.lane === 0 && /Marked Territory/.test(mark.text)));
 });
@@ -233,7 +233,7 @@ test('CLUE COOKY collects homage only while losing, and never loses Hands', () =
   held.boards[0] = [unit('hooper', 'player', 0, 1)];
   held.boards[1] = [unit('hooper', 'player', 1, 2)];
   const notLosing = cast(held, 'triple-og-blue', 0);
-  assert.equal(getEffectiveCardPower(find(notLosing, 'triple-og-blue')), 6, 'no homage is owed when the district is held');
+  assert.equal(getEffectiveCardPower(find(notLosing, 'triple-og-blue')), cards['triple-og-blue'].power, 'no homage is owed when the district is held');
   assert.equal(getEffectiveCardPower(notLosing.boards[1][0]), 5);
 
   const losing = blank();
@@ -242,7 +242,7 @@ test('CLUE COOKY collects homage only while losing, and never loses Hands', () =
   losing.boards[0][1].powerModifier = 20;
   const paid = cast(losing, 'triple-og-blue', 0);
   const cooky = find(paid, 'triple-og-blue');
-  assert.equal(getEffectiveCardPower(cooky), 8, 'both allies paid 1 Hand each');
+  assert.equal(getEffectiveCardPower(cooky), cards['triple-og-blue'].power + 2, 'both allies paid 1 Hand each');
   assert.equal(getEffectiveCardPower(paid.boards.flat().find(c => c.owner === 'player' && c.cardId === 'hooper' && c.lane === 1)!), 4);
   // The weakest enemy is pushed into the district the player is strongest in, with -1 Hand.
   const pushed = paid.boards.flat().find(c => c.cardId === 'snow')!;
@@ -251,7 +251,7 @@ test('CLUE COOKY collects homage only while losing, and never loses Hands', () =
 
   const hit = { ...paid, boards: paid.boards.map(l => [...l]) as Match['boards'] };
   const after = cast(hit, 'roaster', 0, 'cpu');
-  assert.equal(getEffectiveCardPower(find(after, 'triple-og-blue')), 8, 'CLUE COOKY cannot lose Hands');
+  assert.equal(getEffectiveCardPower(find(after, 'triple-og-blue')), cards['triple-og-blue'].power + 2, 'CLUE COOKY cannot lose Hands');
 });
 
 test('RED PUNCH taxes his own district and moves anyone he cannot touch', () => {

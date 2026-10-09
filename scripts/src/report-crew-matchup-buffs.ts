@@ -1,0 +1,11 @@
+import assert from 'node:assert/strict';
+import {readFileSync,writeFileSync,mkdirSync} from 'node:fs';
+import {cards} from '@workspace/squabblemon-engine/data';
+import {CREW_MATCHUP_PATCH} from '../../lib/squabblemon-engine/src/crewMatchupBalance';
+const path='artifacts/deliverables/direct-crew-matchups';
+const baseline=JSON.parse(readFileSync('artifacts/deliverables/roster-balance-2026-10-08/release-baseline.json','utf8')).cards;
+const preserved=['guap','track-suit-auntie','gym-bag-yn','stairwell-sprinter','last-set-og','tour-van-driver','mixtape-cousin','merch-table-hustler'];
+for(const id of preserved)assert.deepEqual(cards[id],baseline[id],`${id} approved kit stays unchanged`);
+const changes=Object.keys(CREW_MATCHUP_PATCH).map(id=>({id,name:cards[id].name,before:{cost:baseline[id].cost,power:baseline[id].power,effect:baseline[id].effect},after:{cost:cards[id].cost,power:cards[id].power,effect:cards[id].effect}}));
+mkdirSync(path,{recursive:true});writeFileSync(`${path}/buffed-card-changes.json`,JSON.stringify({preserved,changes},null,2));
+console.log(`${changes.length} crew cards reviewed; ${preserved.length} protected kits unchanged.`);

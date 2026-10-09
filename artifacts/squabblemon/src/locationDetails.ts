@@ -112,6 +112,9 @@ export const LOCATION_DETAILS = {
     category: 'Traffic crossroads',
     description: 'Headlights stack up beneath the signals while horns bounce between the buildings. Everybody has somewhere to be, all at once.',
   },
+  'raid-checkpoint': { category: 'Police perimeter', description: 'Floodlights search the checkpoint. Silence or freeze officers to dismantle their armor.' },
+  'raid-barricade': { category: 'Precinct barricade', description: 'The department blocks the street. Every surviving unarmored Hand powers your shot at Oink.' },
+  'raid-evidence': { category: 'Evidence lockup', description: 'Confiscated gear fills the yard. Guard your crew and traps from the crooked precinct.' },
   'legacy-0': {
     category: 'Hometown turf',
     description: 'Familiar corners and warm windows stretch across the neighborhood. Every block has a story, and somebody here knows yours.',

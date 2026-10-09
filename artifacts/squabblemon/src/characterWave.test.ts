@@ -1,3 +1,4 @@
+import { CREW_MATCHUP_PATCH } from '../../../lib/squabblemon-engine/src/crewMatchupBalance';
 import assert from 'node:assert/strict';
 import { existsSync } from 'node:fs';
 import path from 'node:path';
@@ -32,7 +33,7 @@ test('all twelve retain collection, rarity, artwork, cosmetics and training IDs 
   assert.equal(CHARACTER_WAVE.length, 12);
   assert.equal(cardCatalog.filter(c => (c.kind ?? 'character') === 'character').length, 275);
   CHARACTER_WAVE.forEach(([id, art, name, rarity], index) => {
-    assert.equal(cards[id].name, name); assert.equal(cards[id].cost, costs[index]);
+    assert.equal(cards[id].name, name); assert.equal(cards[id].cost, CREW_MATCHUP_PATCH[id]?.cost ?? costs[index]);
     assert.equal(catalogCardById[art].engineId, id); assert.equal(catalogCardById[art].rarity, rarity);
     assert(existsSync(path.resolve('public/assets/characters', art + '.webp')));
     assert.equal(cards[id].abilityUpgrades.length, 3); validateCardAbilityUpgrades({ [id]: cards[id] });
@@ -54,21 +55,21 @@ for (const owner of ['player', 'cpu'] as const) {
   });
   test('Nothing to Lose spends a chosen amount; spending extra cannot activate the steal for ' + owner, () => {
     const m = blank(), enemy = unit('hooper', owner === 'player' ? 'cpu' : 'player', 0);
-    m.boards[0] = [enemy]; m[owner === 'player' ? 'playerMotion' : 'cpuMotion'] = 5;
+    m.boards[0] = [enemy]; m[owner === 'player' ? 'playerMotion' : 'cpuMotion'] = cards.homelessguy.cost + 2;
     const { source, after } = cast(m, 'homelessguy', owner, 0, 2);
-    assert.equal(getEffectiveCardPower(find(after, source)), 7);
+    assert.equal(getEffectiveCardPower(find(after, source)), source.basePower + 3);
     assert.equal(find(after, enemy).powerModifier, 0);
     assert.equal(after[owner === 'player' ? 'playerMotion' : 'cpuMotion'], 0);
-    m[owner === 'player' ? 'playerMotion' : 'cpuMotion'] = 3;
+    m[owner === 'player' ? 'playerMotion' : 'cpuMotion'] = cards.homelessguy.cost;
     const stolen = cast(m, 'homelessguy', owner);
     assert.equal(find(stolen.after, enemy).powerModifier, -2);
-    assert.equal(getEffectiveCardPower(find(stolen.after, stolen.source)), 6);
+    assert.equal(getEffectiveCardPower(find(stolen.after, stolen.source)), stolen.source.basePower + 2);
   });
 }
 test('investment rejects fractions, negatives, overspend and other cards; shields stop a steal', () => {
   for (const amount of [-1, 1.5, 5, NaN]) assert.throws(() => cast(blank(), 'homelessguy', 'player', 0, amount), /investment/);
   assert.throws(() => cast(blank(), 'hooper', 'player', 0, 1), /investment/);
-  const m = blank(); m.playerMotion = 3;
+  const m = blank(); m.playerMotion = cards.homelessguy.cost;
   assert.throws(() => cast(m, 'homelessguy', 'player', 0, 1), /investment/);
   const target = unit('hooper', 'cpu', 0); shield(m, target); m.boards[0] = [target];
   const { source, after } = cast(m, 'homelessguy');
@@ -209,12 +210,14 @@ test('Built Different survives overkill once, heals only damage and cannot manuf
   const m = blank(), legend = unit('homelesslegend', 'cpu', 0); legend.statuses.burnStacks = 8; m.boards[0] = [legend];
   const hit = cast(m, 'seafoodassassin').after;
   assert.equal(find(hit, legend).legendSaved, true);
-  assert.equal(getEffectiveCardPower(find(hit, legend)), 1); assert.equal(find(hit, legend).recoverableDamage, 4);
+  assert.equal(getEffectiveCardPower(find(hit, legend)), 1); assert.equal(find(hit, legend).recoverableDamage, legend.basePower - 1);
   const healed = advance(hit);
   assert.equal(getEffectiveCardPower(find(healed, legend)), 3);
-  const whole = advance(healed);
-  assert.equal(getEffectiveCardPower(find(whole, legend)), 5);
-  assert.equal(getEffectiveCardPower(find(advance(whole), legend)), 5);
+  const intermediate = advance(healed);
+  assert.equal(getEffectiveCardPower(find(intermediate, legend)), 5);
+  const whole = advance(intermediate);
+  assert.equal(getEffectiveCardPower(find(whole, legend)), legend.basePower);
+  assert.equal(getEffectiveCardPower(find(advance(whole), legend)), legend.basePower);
   assert.equal(find(cast(hit, 'seafoodassassin').after, legend), undefined);
 });
 
@@ -269,7 +272,7 @@ for (const seat of ['player', 'cpu'] as const) test('online commands and public 
   const hand = seat === 'player' ? room.match.playerHand : room.match.cpuHand, source = hand.find(c => c.cardId === 'homelessguy')!;
   room = applyOnlineCommand(room, seat, { type: 'play', instanceId: source.instanceId, lane: 0, squabble: false, investment: 3 }, 3);
   assert.equal(find(room.match!, source).powerModifier, 4);
-  assert.equal(room.match![seat === 'player' ? 'playerMotion' : 'cpuMotion'], 2);
+  assert.equal(room.match![seat === 'player' ? 'playerMotion' : 'cpuMotion'], 8 - source.cost - 3);
   const view = onlineRoomView(room, 'ABC123', seat === 'player' ? 'a' : 'b', 4);
   assert.equal(view.hand.some(c => c.owner !== seat), false);
   assert.equal(view.boards[0].find(c => c.cardId === 'homelessguy')?.powerModifier, 4);
@@ -330,7 +333,7 @@ test('Scent replay starts with no mark and shows the newly created mark after re
 for (const owner of ['player', 'cpu'] as const) test('Nothing to Lose investment bonus is flat and requires spending for ' + owner, () => {
   for (const amount of [0, 1, 4]) {
     const {source, after} = cast(blank(), 'homelessguy', owner, 0, amount);
-    assert.equal(getEffectiveCardPower(find(after, source)), 4 + amount + (amount > 0 ? 1 : 0));
-    assert.equal(after[owner === 'player' ? 'playerMotion' : 'cpuMotion'], 6 - amount);
+    assert.equal(getEffectiveCardPower(find(after, source)), source.basePower + amount + (amount > 0 ? 1 : 0));
+    assert.equal(after[owner === 'player' ? 'playerMotion' : 'cpuMotion'], 9 - source.cost - amount);
   }
 });

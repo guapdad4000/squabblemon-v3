@@ -16,7 +16,7 @@ const printedBudgets: Record<string, [number, number]> = {
   'griddle-master': [3, 3],
   'inmate-reformed': [3, 3],
   'cane-corso-red': [2, 3],
-  'blue-nose-pit': [2, 2],
+  'blue-nose-pit': [2, 4],
   'squabblehouse-bus-boy': [1, 2],
   'squabblehouse-cashier': [2, 3],
   'waffle-warlord': [5, 5],

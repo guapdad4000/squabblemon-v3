@@ -176,7 +176,7 @@ for (const owner of ['player', 'cpu'] as const) {
     const roleOnly = blank(); roleOnly.boards[0] = [unit('lebron-james', owner)];
     assert.equal(find(cast(roleOnly, 'inmate-crafty', owner, 3), 'inmate-crafty').powerModifier, 0);
     assert.equal(cards['inmate-crafty'].cost, 2);
-    assert.equal(cards['inmate-crafty'].power, 3);
+    assert.equal(cards['inmate-crafty'].power, 5);
   });
 }
 for (const owner of ['player', 'cpu'] as const) test(`${owner}: Crafty requires a local friendly inmate or support`, () => {

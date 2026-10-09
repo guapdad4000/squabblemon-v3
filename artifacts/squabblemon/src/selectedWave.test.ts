@@ -202,9 +202,9 @@ for (const o of ['player', 'cpu'] as const) {
       c = unit('mixtape-cousin', o, 2);
     m.boards = [[a], [b], [c]];
     const first = cast(m, 'one-man-band', o);
-    assert.equal(find(first.m, a)?.powerModifier, 1);
+    assert.equal(find(first.m, a)?.powerModifier, 4);
     const second = cast(first.m, 'one-man-band', o, 1);
-    assert.equal(find(second.m, a)?.powerModifier, 1);
+    assert.equal(find(second.m, a)?.powerModifier, 4);
   });
   test(`${o}: fit new Music and Fitness cards into existing tribe triggers`, () => {
     const m = blank();
@@ -263,7 +263,7 @@ for (const owner of ['player', 'cpu'] as const) {
     assert(
       (find(a.m, first)?.powerModifier ?? 0) +
         (find(a.m, second)?.powerModifier ?? 0) <=
-        2,
+        4,
     );
   });
   test(`${owner}: complete Fitness route activates Last Set without return resetting it`, () => {
@@ -438,3 +438,166 @@ for (const owner of ['player', 'cpu'] as const)
       );
     }
   });
+
+for (const owner of ['player', 'cpu'] as const) {
+  const rival: Owner = owner === 'player' ? 'cpu' : 'player';
+  test(`${owner}: bonus thieves select a boosted enemy rather than an unboosted larger body`, () => {
+    for (const id of ['booster', 'barbershop-heckler', 'indian-scammer']) {
+      const m = blank();
+      const plain = unit('og', rival, 0);
+      const boosted = {...unit('cornball', rival, 0, 1), powerModifier: 2};
+      m.boards[0] = [plain, boosted];
+      const result = cast(m, id, owner).m;
+      assert.equal(find(result, plain)?.powerModifier, 0);
+      assert.equal(find(result, boosted)?.powerModifier, id === 'booster' ? 1 : 0);
+    }
+  });
+  test(`${owner}: spotter pays immediate setup and preserves the next-round route ward`, () => {
+    const m = blank(), athlete = unit('calisthenics-yn', owner, 0);
+    m.boards[0] = [athlete];
+    const result = cast(m, 'gym-spotter-yn', owner).m;
+    assert.equal(find(result, athlete)?.powerModifier, 1);
+    assert.equal(find(result, athlete)?.statuses.protected, true);
+    const ward = result.creativeMarks?.find(x => x.kind === 'sw-ward');
+    assert.equal(ward?.expires, m.round + 1);
+    result.round += 1;
+    // Keep the ward recipient the weakest athlete when the route starts.
+    result.boards[0] = result.boards[0].map(c => c.cardId === 'gym-spotter-yn' ? {...c, powerModifier: 4} : c);
+    const moved = cast(result, 'gym-bag-yn', owner).m;
+    assert.notEqual(find(moved, athlete)?.lane, 0);
+    // +1 spotter arrival and +2 Bodyweight, each paid once.
+    assert.equal(find(moved, athlete)?.powerModifier, 4);
+    assert(!moved.creativeMarks?.some(x => x.kind === 'sw-ward'));
+  });
+  test(`${owner}: cook heals only real loss, feeds uninjured allies and keeps per-recipient cap`, () => {
+    const m = blank(), injured = {...unit('homelesslegend', owner, 0), powerModifier: -4};
+    m.boards[0] = [injured];
+    const first = cast(m, 'community-cook', owner).m;
+    assert.equal(find(first, injured)?.powerModifier, -1);
+    assert.equal(find(cast(first, 'community-cook', owner).m, injured)?.powerModifier, -1);
+    const healthy = blank(), ally = unit('cornball', owner, 0);
+    healthy.boards[0] = [ally];
+    assert.equal(find(cast(healthy, 'community-cook', owner).m, ally)?.powerModifier, 2);
+  });
+  test(`${owner}: Grandma retains the one-entrance cap and both sides of route payoff`, () => {
+    for (const routed of [false, true]) {
+      const m = blank(), target = {...unit('og', rival, 0), powerModifier: 4};
+      m.boards[0] = [target];
+      if (routed) m.roundMovedIds = {...m.roundMovedIds, [owner]: ['route-a', 'route-b']};
+      const result = cast(m, 'grandma-said-sit-down', owner).m;
+      assert.equal(find(result, target)?.powerModifier, 4 - (routed ? 3 : 2));
+    }
+  });
+}
+
+for (const owner of ['player', 'cpu'] as const) {
+  test(`${owner}: Jump Rope pays distinct first and second legs with a six-Hand shared match cap`, () => {
+    let m = blank();
+    const menace = unit('jump-rope-menace', owner, 0);
+    m.boards[0] = [menace];
+    for (let lap = 0; lap < 3; lap++) {
+      m.round = 3 + lap;
+      m.roundMovedIds = {...m.roundMovedIds, [owner]: []};
+      m.boards = [[find(m, menace)!], [], []];
+      const first = cast(m, 'track-suit-auntie', owner).m;
+      assert.equal(find(first, menace)?.powerModifier, Math.min(6, lap * 3 + 2));
+      const second = cast(first, 'stairwell-sprinter', owner).m;
+      assert.equal(find(second, menace)?.powerModifier, Math.min(6, lap * 3 + 3));
+      m = second;
+    }
+  });
+}
+
+for (const owner of ['player', 'cpu'] as const) {
+  for (const [heldId, entrantId] of [['og-calisthenics', 'track-suit-auntie'], ['one-man-band', 'the-manager-nice']] as const) {
+    test(`${owner}: held ${heldId} pays once per round, shares a two-payout match cap and stops when absent`, () => {
+      const key = owner === 'player' ? 'playerHand' : 'cpuHand';
+      let m = blank();
+      const held = createCardInstance(heldId, owner, 'held', 1);
+      const duplicate = createCardInstance(heldId, owner, 'held', 2);
+      m = {...m, [key]: [held, duplicate]};
+      for (let round = 3; round <= 5; round++) {
+        m = {...m, round, boards: [[], [], []]};
+        for (let entrance = 0; entrance < 2; entrance++) {
+          const c = createCardInstance(entrantId, owner, 'hand-trigger', round * 10 + entrance);
+          m = playTurnCard({...m, phase: owner === 'player' ? 'player' : 'cpu-reveal', playerMotion: 9, cpuMotion: 9, [key]: [...m[key], c]}, owner, c.instanceId, 0);
+          assert.equal(find(m, c)?.powerModifier, entrance === 0 && round < 5 ? 2 : 0);
+          assert.equal(m[key].filter(x => x.cardId === heldId).length, 2);
+        }
+      }
+      const ledger = m.creativeMarks?.find(x => x.id === `sw:${owner}:${heldId}:hand`);
+      assert.equal(ledger?.amount, 2);
+      assert.equal(held.powerModifier, 0);
+      const fresh = createCardInstance(entrantId, owner, 'unheld', 99);
+      m = playTurnCard({...blank(), [key]: [fresh], phase: owner === 'player' ? 'player' : 'cpu-reveal'}, owner, fresh.instanceId, 0);
+      assert.equal(find(m, fresh)?.powerModifier, 0);
+    });
+    test(`${owner}: disabled held ${heldId} cannot coach`, () => {
+      const key = owner === 'player' ? 'playerHand' : 'cpuHand';
+      const held = createCardInstance(heldId, owner, 'disabled', 1);
+      held.statuses.silenced = true;
+      const c = createCardInstance(entrantId, owner, 'disabled', 2);
+      const m = playTurnCard({...blank(), [key]: [held, c], phase: owner === 'player' ? 'player' : 'cpu-reveal'}, owner, c.instanceId, 0);
+      assert.equal(find(m, c)?.powerModifier, 0);
+    });
+  }
+}
+
+for (const owner of ['player', 'cpu'] as const) {
+  test(`${owner}: held-hand coaching matches online authority and keeps the rival hand private`, () => {
+    const member = (userId: string) => { const d = decks.find(x => x.id === 'music-tour')!; return {userId, name:userId, ready:false, deck:{...d, cards:[...d.cards]}}; };
+    let room = joinOnlineRoom(createOnlineRoom(member('a'), 'player', 0), member('b'), 0);
+    room = applyOnlineCommand(room, 'player', {type:'ready'}, 1);
+    room = applyOnlineCommand(room, 'cpu', {type:'ready'}, 2);
+    for (const [heldId, entrantId] of [['og-calisthenics','track-suit-auntie'],['one-man-band','the-manager-nice']] as const) {
+      const key = owner === 'player' ? 'playerHand' : 'cpuHand';
+      const held = createCardInstance(heldId, owner, 'online-held', 1), entrant = createCardInstance(entrantId, owner, 'online-held', 2);
+      const initial: Match = {...blank(), phase:owner === 'player' ? 'player' : 'cpu-reveal', [key]:[held, entrant]};
+      const expected = playTurnCard(structuredClone(initial), owner, entrant.instanceId, 0);
+      const actual = applyOnlineCommand({...room, match:initial, activeSeat:owner, turnsEnded:0}, owner, {type:'play',instanceId:entrant.instanceId,lane:0,squabble:false}, 10);
+      assert.deepEqual(actual.match, expected);
+      assert(actual.match!.effectLog.some(e => e.note?.includes('(In Hand)')));
+      const rivalView = onlineRoomView(actual, 'HELD', owner === 'player' ? 'b' : 'a', 11);
+      assert.equal(rivalView.rivalHandCount, 1);
+      assert(!rivalView.hand.some(c => c.cardId === heldId));
+    }
+  });
+}
+
+for (const owner of ['player', 'cpu'] as const) {
+  test(`${owner}: Fitness recovery clears destination athletes only after a legal move`, () => {
+    const m = blank();
+    const athlete = {...unit('calisthenics-yn', owner, 1), powerModifier:-3, recoverableDamage:3};
+    athlete.statuses.burnStacks=3; athlete.statuses.silenced=true;
+    const otherAthlete=unit('jump-rope-menace',owner,1,2); otherAthlete.statuses.burnStacks=2;
+    const elsewhere=unit('fitness-bro',owner,2); elsewhere.statuses.burnStacks=2;
+    const foe=unit('calisthenics-yn',owner==='player'?'cpu':'player',1,3); foe.statuses.burnStacks=2;
+    m.boards=[[ ],[athlete,otherAthlete,foe],[{...elsewhere,basePower:99}]];
+    const result=cast(m,'fitness-girl',owner,0).m;
+    assert.equal(find(result,athlete)?.statuses.burnStacks,0);
+    assert.equal(find(result,otherAthlete)?.statuses.burnStacks,0);
+    assert.equal(find(result,athlete)?.recoverableDamage,0);
+    assert.equal(find(result,athlete)?.statuses.silenced,true);
+    assert.equal(find(result,elsewhere)?.statuses.burnStacks,2);
+    assert.equal(find(result,foe)?.statuses.burnStacks,2);
+    const blocked=cast(m,'fitness-girl',owner,0,{statuses:{...createCardInstance('fitness-girl',owner).statuses,locked:true}}).m;
+    assert.equal(find(blocked,athlete)?.statuses.burnStacks,3);
+    assert.equal(find(blocked,athlete)?.recoverableDamage,3);
+  });
+  test(`${owner}: OG Calisthenics rewards all three districts once across copies`, () => {
+    const m=blank(); const athletes=[unit('gym-bag-yn',owner,0),unit('calisthenics-yn',owner,1),unit('stairwell-sprinter',owner,2)];
+    m.boards=athletes.map(c=>[c]) as Match['boards'];
+    const first=cast(m,'og-calisthenics',owner,0).m;
+    for(const c of athletes) assert.equal(find(first,c)?.powerModifier,5);
+    const second=cast(first,'og-calisthenics',owner,1).m;
+    for(const c of athletes) assert.equal(find(second,c)?.powerModifier,5);
+  });
+  test(`${owner}: OG Rap Legend's distributed bonus stays shared and finite`, () => {
+    const m=blank(); const a=unit('the-rapper',owner,1), b=unit('the-local-celebrity',owner,2);
+    m.boards=[[],[a],[b]];
+    const first=cast(m,'the-og-rap-legend',owner,0).m;
+    assert.equal(find(first,a)?.powerModifier,3);assert.equal(find(first,b)?.powerModifier,3);
+    const second=cast(first,'the-og-rap-legend',owner,0).m;
+    assert.equal(find(second,a)?.powerModifier,3);assert.equal(find(second,b)?.powerModifier,3);
+  });
+}

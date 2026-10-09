@@ -1,6 +1,7 @@
 import { styleShardLabel } from '@workspace/squabblemon-engine/styleShards';
 import { playTutorialSequence } from '../../lib/tutorialVoice';
 import { WELCOME_PULL_KEY, WELCOME_PULL_LINES } from '../../lib/welcomePull';
+import { rewardReceipts } from '../../lib/rewardReceipts';
 import { LayeredVenue } from '../../components/venue/LayeredVenue';
 import { CornerStore } from './CornerStore';
 import '../../styles/ui-polish.css';
@@ -485,6 +486,14 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
     }
   };
   function finish() {
+    if (opening?.rewards.some(reward => reward.cardId === 'john-henry' && reward.kind === 'card' && reward.isNew)) {
+      rewardReceipts.show({
+        id: `john-henry:${opening.id}`,
+        title: 'John Henry joins your crew',
+        characterId: 'john-henry',
+        items: [{ label: 'John Henry' }],
+      });
+    }
     finishPackOpening(sessionStorage, bootstrap.profile.id);
     setOpening(null);
     setPhase('idle');
@@ -1203,7 +1212,7 @@ export function Shop({ bootstrap }: { bootstrap: PlayerBootstrap }) {
       ? 'market'
       : 'packs';
   function selectTab(next: 'market' | 'packs' | 'corner') {
-    const query = new URLSearchParams(search);
+    const query = new URLSearchParams();
     query.set('view', next === 'market' ? 'training' : next);
     navigate(`/game/shop?${query}`);
   }
@@ -1221,7 +1230,7 @@ export function Shop({ bootstrap }: { bootstrap: PlayerBootstrap }) {
         <button aria-pressed={tab === 'corner'} onClick={() => selectTab('corner')}><GameGlyph name="cloutBag" />Fade Market</button>
       </nav>
       {tab === 'corner' ? <CornerStore key={bootstrap.profile.id} bootstrap={bootstrap} /> : tab === 'market' ? (
-        <Market bootstrap={bootstrap} openPacks={() => selectTab('packs')} />
+        <Market key="training" bootstrap={bootstrap} openPacks={() => selectTab('packs')} />
       ) : (
         <PackGym bootstrap={bootstrap} />
       )}

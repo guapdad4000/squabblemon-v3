@@ -1,5 +1,6 @@
 import { selectedCards, fakeMarriage } from './selectedWave';
 import { selectedReveal, selectedMoved, selectedGain, selectedDamage, selectedResolved, type SelectedTools } from './selectedAbilities';
+import { bossNpcCards } from './bossNpcCards';
 import { streetLegendsCards } from './streetLegendsWave';
 import { maryMackRoundEnd, maryMackRoundStart } from './maryMack';
 import { streetLegendsReveal, streetLegendsPreventGain, streetLegendsGain, streetLegendsMoved, streetLegendsArrival, streetLegendsAfterPlay, streetLegendsRoundStart, streetLegendsCanMove, streetLegendsCleansed, streetLegendsTax, streetLegendsPaidAudit, streetLegendsIntercept, streetLegendsFinishIntercept, streetLegendsDistrictMarks, type StreetLegendsTools } from './streetLegendsAbilities';
@@ -334,7 +335,7 @@ const lane = (n: number): Lane => n as Lane;
 const emptyStatuses = (): Statuses => ({ frozen: false, silenced: false, protected: false, blocked: false, uncounterable: false, weakened: false, locked: false, boosted: false, burnStacks: 0 });
 const abilityCardId = (card: CardInstance) => card.copiedAbilityCardId ?? card.cardId;
 export const createCardInstance = (cardId: string, owner: Owner, deck = 'custom', index = 0): CardInstance => {
-  const card = cards[cardId];
+  const card = cards[cardId] ?? (owner === 'cpu' ? bossNpcCards[cardId] : undefined);
   if (!card) throw new Error(`Unknown card ${cardId}`);
   return { ...card, cardId, instanceId: `${owner}:${deck}:${index}:${cardId}`, owner, deck, lane: null, playedRound: null, basePower: card.power, powerModifier: 0, moved: false, statuses: emptyStatuses(), lastEffectNote: 'Ready in hand.' };
 };
@@ -2146,10 +2147,10 @@ function returnToHand(m: Match, source: CardInstance, target: CardInstance, disc
     const reversed = reverseWithJanitor(m, findCard(m, target.instanceId) ?? target, source.owner, 'staff');
     if (reversed) return reversed;
   }
-  const before = m, printed = cards[target.cardId], hand = target.owner === 'player' ? 'playerHand' : 'cpuHand';
+  const before = m, printed = cards[target.cardId] ?? bossNpcCards[target.cardId] ?? target, hand = target.owner === 'player' ? 'playerHand' : 'cpuHand';
   const { continuousPower: _continuousPower, ...returnedTarget } = target;
   const rabbitInHand = m[hand].find(c => c.instanceId !== target.instanceId && abilityCardId(c) === 'mrrabbit' && activeAbility(c));
-  const returned: CardInstance = { ...returnedTarget, ...printed, ...(target.maryElephant ? { cost: 4, power: 4 } : {}), basePower: target.maryElephant ? 4 : printed.power, powerModifier: source.cardId === 'madhatter' ? 1 : 0, lane: null, playedRound: null,
+  const returned: CardInstance = { ...returnedTarget, ...printed, ...(target.maryElephant ? { cost: 4, power: 4 } : {}), basePower: target.maryElephant ? 4 : printed.power, powerModifier: Math.max(0, target.powerModifier) + (source.cardId === 'madhatter' ? 1 : 0), lane: null, playedRound: null,
     squabblehouseBusBoyPatrolRound: undefined, squabblehouseBusBoyDirection: undefined,
     statuses: emptyStatuses(), copiedAbilityCardId: undefined, recoverableDamage: 0, burnSource: undefined, moved: false,
     rabbitReturnDiscount: !!rabbitInHand,
@@ -5309,12 +5310,14 @@ function detonateSmileBombs(match: Match): Match {
   return m;
 }
 
-export function nextRound(match: Match): Match {
+export function nextRound(match: Match, onRoundSettled?: (settled: Match) => Match | void): Match {
   if (match.phase !== 'resolved') throw new Error('Round is not resolved');
   // Resolve persistent statuses and hand bonds before either advancing or scoring.
   const trainedRoundEnd = musicRoundEnd(match, waveTools());
   const ordinaryRoundEnd = settleLeaderReactions(returnAliceAtRoundEnd(applyOngoingRoundEndHandEffects(applyOngoingRoundEndEffects(creativeRoundEnd(homecomingRoundEnd(applyBurntPlates(trainedRoundEnd), homecomingTools()), creativeTools())))));
-  const roundEnded = maryMackRoundEnd(settleLeaderReactions(musicAfterAction(match, creativeAfterAction(match,ordinaryRoundEnd,creativeTools()), waveTools())), waveTools());
+  let roundEnded = maryMackRoundEnd(settleLeaderReactions(musicAfterAction(match, creativeAfterAction(match,ordinaryRoundEnd,creativeTools()), waveTools())), waveTools());
+  const boundaryUpdate = onRoundSettled?.(roundEnded);
+  if (boundaryUpdate) roundEnded = boundaryUpdate;
   if (match.round >= getMatchRoundLimit(match)) {
     const complete = applyStoryEffects({ ...roundEnded, phase: 'complete' as const });
     return addEvent(match, complete, { type: 'match-complete', owner: 'player', note: 'The match is complete.' });

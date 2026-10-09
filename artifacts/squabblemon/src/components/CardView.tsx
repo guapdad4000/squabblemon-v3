@@ -120,13 +120,13 @@ function CardViewComponent({
     : instance?.aliceReady ? 'Next play: +3 Hands · −1 Motion' : '';
   const isBurntPlate = instance?.cardId === 'burnt-plate';
   const fuseRound = instance?.smileBomb?.detonatesAtRound;
-  const fuseDescription = isBurntPlate ? ' At each round end, gives a random friendly character here 1 Burn. Persists and adds no lane Hands.' : isBuddyBud ? ` ${buddyBudDescription}` : card.hazard ? ` Explodes ${fuseRound ? `at the start of round ${fuseRound}` : "next round"}: -1 Hand to one random enemy here. Adds no lane Hands.` : "";
+  const fuseDescription = isBurntPlate ? ' At this round end, gives a random friendly character here 1 Burn, then clears. Adds no lane Hands.' : isBuddyBud ? ` ${buddyBudDescription}` : card.hazard ? ` Explodes ${fuseRound ? `at the start of round ${fuseRound}` : "next round"}: -1 Hand to one random enemy here. Adds no lane Hands.` : "";
   const ongoingHands = instance?.continuousPower ?? 0;
   const displayPower = card.hazard ? 0 : effectivePower ?? (instance
     ? instance.statuses.frozen ? 0 : Math.max(0, instance.basePower + instance.powerModifier + ongoingHands)
     : card.power);
   const displayCost = cost ?? card.cost;
-  const motionLabel = isBurntPlate ? 'Each round' : isBuddyBud ? 'Matures' : card.hazard ? 'Explodes' : 'Motion';
+  const motionLabel = isBurntPlate ? 'This round' : isBuddyBud ? 'Matures' : card.hazard ? 'Explodes' : 'Motion';
   const motionValue = isBuddyBud && instance?.buddyBud
     ? `R${instance.buddyBud.sproutsAtRound}`
     : isBurntPlate ? 'Burn' : card.hazard ? fuseRound ? `R${fuseRound}` : 'Next' : displayCost;

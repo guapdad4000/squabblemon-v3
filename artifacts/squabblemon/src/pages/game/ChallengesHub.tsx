@@ -1,8 +1,8 @@
 import { lazy, Suspense, useMemo, useState } from "react";
+import { BossRaidCabinet } from "../../components/fadecade/BossRaidCabinet";
 import type { ArcadeKind } from "@workspace/squabblemon-engine/arcadeGames";
 import { ArcadeGameCabinet } from "../../components/fadecade/ArcadeCabinets";
 import "../../styles/arcade-games.css";
-const ArcadeGame = lazy(() => import("../../components/fadecade/ArcadeGames"));
 import type { PlayerBootstrap } from "@workspace/api-client-react";
 import { useListChallengeRuns } from "@workspace/api-client-react";
 import { starterRecipes, validateSavedDeck, type Deck } from "../../data";
@@ -27,6 +27,9 @@ import "../../styles/challenges-hub.css";
 import { type ActivityId } from "@workspace/squabblemon-engine/activities";
 import { isTrainingCircuitActivity } from "../../lib/resultBroadcastEligibility";
 
+const BossRaidGame = lazy(() => import("../../components/fadecade/BossRaidGame"));
+const ArcadeGame = lazy(() => import("../../components/fadecade/ArcadeGames"));
+
 export type BattleConfig = {
   mode: "practice" | "guest";
   challengeRunId?: string;
@@ -39,15 +42,16 @@ export type BattleConfig = {
 
 export function ChallengesHub({
   bootstrap,
-  trainingOnly = false,
+  openTraining = false,
 }: {
   bootstrap: PlayerBootstrap;
-  trainingOnly?: boolean;
+  openTraining?: boolean;
 }) {
   const [arcadeKind, setArcadeKind] = useState<ArcadeKind | null>(null);
+  const [bossOpen, setBossOpen] = useState(false);
   const [waffleOpen, setWaffleOpen] = useState(false);
   const [battleConfig, setBattleConfig] = useState<BattleConfig | null>(null);
-  useFadecadeMusic(!battleConfig && !waffleOpen && !arcadeKind);
+  useFadecadeMusic(!battleConfig && !waffleOpen && !arcadeKind && !bossOpen);
   const [roadReturn, setRoadReturn] = useState<RoadReturn | undefined>();
   const runsQuery = useListChallengeRuns();
   function launchBattle(config: BattleConfig) {
@@ -103,6 +107,22 @@ export function ChallengesHub({
 
     return saved.length ? saved : fallback;
   }, [bootstrap]);
+
+  if (bossOpen)
+    return (
+      <Suspense
+        fallback={
+          <main className="boss-raid raid-loading">CALLING THE BLOCK…</main>
+        }
+      >
+        <BossRaidGame
+          key={bootstrap.profile.id}
+          bootstrap={bootstrap}
+          crews={legalCrews}
+          onExit={() => setBossOpen(false)}
+        />
+      </Suspense>
+    );
 
   if (arcadeKind)
     return (
@@ -203,47 +223,43 @@ export function ChallengesHub({
         />
 
         <div className="fadecade-layout">
-          {!trainingOnly && (
-            <FlagshipMachine
-              bootstrap={bootstrap}
-              legalCrews={legalCrews}
-              runsQuery={runsQuery}
-              onBattle={launchBattle}
-              roadReturn={roadReturn}
-            />
-          )}
+          <FlagshipMachine
+            bootstrap={bootstrap}
+            legalCrews={legalCrews}
+            runsQuery={runsQuery}
+            onBattle={launchBattle}
+            roadReturn={roadReturn}
+          />
 
           <div className="fadecade-row">
-            {!trainingOnly && (
-              <ArcadeGameCabinet
-                kind="fade-market"
-                onOpen={() => setArcadeKind("fade-market")}
-              />
-            )}
-            {!trainingOnly && (
-              <ArcadeGameCabinet
-                kind="block-takeover"
-                onOpen={() => setArcadeKind("block-takeover")}
-              />
-            )}
-            {trainingOnly ? (
+            <ArcadeGameCabinet
+              kind="fade-market"
+              onOpen={() => setArcadeKind("fade-market")}
+            />
+            <ArcadeGameCabinet
+              kind="block-takeover"
+              onOpen={() => setArcadeKind("block-takeover")}
+            />
+            {openTraining && (
               <TrainingMachine
                 playerId={bootstrap.profile.id}
                 legalCrews={legalCrews}
                 onBattle={launchBattle}
                 initiallyOpen
               />
-            ) : (
-              <ArcadeGameCabinet
-                kind="girl-fade"
-                onOpen={() => setArcadeKind("girl-fade")}
-              />
             )}
-            {!trainingOnly && <StockzMachine bootstrap={bootstrap} />}
-            {!trainingOnly && <EventsMachine playerId={bootstrap.profile.id} legalCrews={legalCrews} onBattle={launchBattle} />}
-            {!trainingOnly && (
-              <WaffleMachine onOpen={() => setWaffleOpen(true)} />
-            )}
+            <ArcadeGameCabinet
+              kind="girl-fade"
+              onOpen={() => setArcadeKind("girl-fade")}
+            />
+            <BossRaidCabinet onOpen={() => setBossOpen(true)} />
+            <StockzMachine bootstrap={bootstrap} />
+            <EventsMachine
+              playerId={bootstrap.profile.id}
+              legalCrews={legalCrews}
+              onBattle={launchBattle}
+            />
+            <WaffleMachine onOpen={() => setWaffleOpen(true)} />
           </div>
         </div>
 

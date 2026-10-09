@@ -28,6 +28,7 @@ export const LEVEL_MILESTONE_REWARD: AccountReward = {
 export type AccountRewardGrant = AccountReward & {
   key: string;
   title: string;
+  cardId?: string;
   streak?: number;
   date?: string;
 };
@@ -46,9 +47,24 @@ export const GROWTH_TASKS = [
   { key: 'daily-show-up', title: 'Put down roots', detail: 'Finish one fade today.', action: 'Play a fade' },
   { key: 'daily-take-room', title: 'Find your sunshine', detail: 'Win one fade today.', action: 'Play a fade' },
 ] as const;
+export const GROWTH_BUDDY_CYCLES = 3;
+export const GROWTH_ROTATING_TASKS = [
+ {key:'training',title:'Practice makes roots',detail:'Finish a training fade.',action:'Train',href:'/game/training',goal:1},
+ {key:'training-win',title:'Soak up the sunshine',detail:'Win a training fade.',action:'Train',href:'/game/training',goal:1},
+ {key:'story-win',title:'Branch into the story',detail:'Win a story fade.',action:'Story',href:'/game/story',goal:1},
+ {key:'fire-win',title:'Warm the greenhouse',detail:'Win after playing a Fire card.',action:'Train',href:'/game/training',goal:1},
+ {key:'support-win',title:'Help the garden thrive',detail:'Win after playing a Support card.',action:'Train',href:'/game/training',goal:1},
+ {key:'sweep-win',title:'Room to bloom',detail:'Win all three districts.',action:'Train',href:'/game/training',goal:1},
+] as const;
+export function growthTasksForDate(now=new Date()){
+ const day=Math.floor(now.getTime()/86400000);
+ const base=GROWTH_TASKS.map(t=>({...t,href:t.key==='login'?'':'/game/play',goal:1}));
+ const plans=[base,[base[0],GROWTH_ROTATING_TASKS[0],GROWTH_ROTATING_TASKS[1]],[base[0],GROWTH_ROTATING_TASKS[2],GROWTH_ROTATING_TASKS[4]],[base[0],GROWTH_ROTATING_TASKS[0],GROWTH_ROTATING_TASKS[3]],[base[0],GROWTH_ROTATING_TASKS[1],GROWTH_ROTATING_TASKS[5]]];
+ return plans[day%plans.length];
+}
 export type GrowthLabMission = { missionKey: string; progress: number; goal: number; resetAt: Date | string | null };
 export type GrowthLabStatus = {
-  tasks: { key: string; progress: number; goal: number; complete: boolean }[];
+  tasks: { key: string; title: string; detail: string; action: string; href: string; progress: number; goal: number; complete: boolean }[];
   water: number;
   ready: boolean;
   wateredToday: boolean;
@@ -58,16 +74,17 @@ export type GrowthLabStatus = {
   completedGardens: number;
 };
 /** Only server receipts and unexpired, verified mission progress grow the garden. */
-export function growthLabStatus(receipts: AccountRewardGrant[], missions: GrowthLabMission[], now = new Date()): GrowthLabStatus {
+export function growthLabStatus(receipts: AccountRewardGrant[], missions: GrowthLabMission[], now = new Date(), daily:unknown={}): GrowthLabStatus {
   const date = now.toISOString().slice(0, 10);
   const keys = new Set(receipts.filter(r => !r.date || r.date <= date).map(r => r.key));
   const wateredToday = keys.has(`growth:water:${date}`);
-  const tasks = GROWTH_TASKS.map(task => {
+  const counters=daily&&typeof daily==='object'&&'date' in daily&&daily.date===date&&'counters' in daily?daily.counters as Record<string,number>:{};
+  const tasks = growthTasksForDate(now).map(task => {
     const mission = missions.find(m => m.missionKey === task.key);
-    const goal = Math.max(1, mission?.goal ?? 1);
+    const goal = Math.max(1, mission?.goal ?? task.goal);
     const current = mission?.resetAt && new Date(mission.resetAt).getTime() > now.getTime();
-    const progress = task.key === 'login' ? Number(keys.has(`login:${date}`)) : current ? Math.max(0, Math.min(goal, mission.progress)) : 0;
-    return { key: task.key, progress, goal, complete: progress >= goal };
+    const progress = task.key === 'login' ? Number(keys.has(`login:${date}`)) : mission ? current ? Math.max(0, Math.min(goal, mission.progress)) : 0 : Math.max(0,Math.min(goal,Number(counters?.[task.key])||0));
+    return { ...task, progress, goal, complete: progress >= goal };
   });
   const totalPlants = [...keys].filter(key => key.startsWith('growth:water:')).length;
   return {
@@ -85,6 +102,7 @@ export function accountRewardStatus(
   receipts: AccountRewardGrant[],
   now = new Date(),
   missions: GrowthLabMission[] = [],
+  growthDaily:unknown={},
 ): AccountRewardStatus {
   const date = now.toISOString().slice(0, 10);
   const yesterday = new Date(now.getTime() - 86400000)
@@ -134,6 +152,7 @@ export function accountRewardStatus(
         ...LEVEL_MILESTONE_REWARD,
       });
   }
+  if(growthLabStatus(receipts,missions,now,growthDaily).completedGardens>=GROWTH_BUDDY_CYCLES&&!keys.has('growth:buddy'))pending.push({key:'growth:buddy',title:'Buddy joins your crew',cardId:'buddy',softCurrency:0,packTickets:0,styleShards:0});
   const nextResetAt = new Date(`${date}T00:00:00Z`);
   nextResetAt.setUTCDate(nextResetAt.getUTCDate() + 1);
   return {
@@ -142,7 +161,7 @@ export function accountRewardStatus(
     claimedToday,
     nextResetAt: nextResetAt.toISOString(),
     pending,
-    growth: growthLabStatus(receipts, missions, now),
+    growth: growthLabStatus(receipts, missions, now,growthDaily),
   };
 }
 export const STOCKZ_TICKERS = [

@@ -1,8 +1,9 @@
+import {CharacterRecruitment,type RecruitmentCharacter} from '../src/components/CharacterRecruitment';
 import React, { useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { QueryClient, QueryClientProvider, useQuery } from '@tanstack/react-query';
 import { getGetPlayerBootstrapQueryKey, type PlayerBootstrap } from '@workspace/api-client-react';
-import { accountRewardStatus, growthLabStatus, GROWTH_GARDEN_REWARD, type AccountRewardGrant } from '@workspace/squabblemon-engine/accountRewards';
+import { accountRewardStatus, growthLabStatus, GROWTH_GARDEN_REWARD, growthTasksForDate, type AccountRewardGrant } from '@workspace/squabblemon-engine/accountRewards';
 import { DeferredGrowthLab } from '../src/components/DeferredGrowthLab';
 import '../src/index.css';
 
@@ -14,11 +15,12 @@ let receipts: AccountRewardGrant[] = JSON.parse(localStorage.getItem(storageKey)
   { key: 'first-login', title: 'First', softCurrency: 100, packTickets: 1, styleShards: 0 },
   ...Array.from({ length: total }, (_, i) => { const day = new Date(now.getTime() - (total - i) * 86400000).toISOString().slice(0, 10);return { key: `growth:water:${day}`, date: day, title: 'Plant', softCurrency: 0, packTickets: 0, styleShards: 0 }; }),
 ];
+const daily={date,counters:Object.fromEntries(growthTasksForDate(now).filter(t=>t.key!=='login').map((t,i)=>[t.key,completed>i?1:0]))};
 const missions = ['daily-show-up', 'daily-take-room'].map((missionKey, i) => ({ missionKey, progress: completed > i ? 1 : 0, goal: 1, resetAt: new Date(now.getTime() + 86400000) }));
-const initialBootstrap = { profile: { id: 'e2e-player', level: 1, softCurrency: 500, packTickets: 3, styleShards: 0, settings: { reducedMotion: params.get('motion') === 'reduce' } }, missions: [] } as unknown as PlayerBootstrap;
+const initialBootstrap = { profile: { id: 'e2e-player', level: 1, softCurrency: 500, packTickets: 3, styleShards: 0, ownedCardIds:[],discoveredCardIds:[],settings: { reducedMotion: params.get('motion') === 'reduce' } }, missions: [] } as unknown as PlayerBootstrap;
 let bootstrap = initialBootstrap, waterCalls = 0, failOnce = params.get('failure') === 'water';
 const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
-const status = () => accountRewardStatus(1, created, receipts, now, missions);
+const status = () => accountRewardStatus(1, created, receipts, now, missions,daily);
 const nativeFetch = window.fetch;
 window.fetch = async (input, init) => {
   const url = typeof input === 'string' ? input : input instanceof URL ? input.href : input.url;
@@ -29,20 +31,22 @@ window.fetch = async (input, init) => {
   if (url.endsWith('/growth/water')) {
     waterCalls++;
     if (failOnce) { failOnce = false; return Response.json({ error: 'Fixture failure' }, { status: 503 }); }
-    const growth = growthLabStatus(receipts, missions, now);
+    const growth = growthLabStatus(receipts, missions, now,daily);
     if (growth.ready) {
       rewards = [{ key: `growth:water:${date}`, date, title: 'Plant', softCurrency: 0, packTickets: 0, styleShards: 0 }];
       if ((growth.totalPlants + 1) % 7 === 0) rewards.push({ key: `growth:garden:${(growth.totalPlants + 1) / 7}`, date, title: 'Harvest', ...GROWTH_GARDEN_REWARD });
+      if(growth.totalPlants+1>=21&&!receipts.some(r=>r.key==='growth:buddy'))rewards.push({key:'growth:buddy',title:'Buddy joins your crew',cardId:'buddy',softCurrency:0,packTickets:0,styleShards:0});
     }
   }
   receipts.push(...rewards);localStorage.setItem(storageKey, JSON.stringify(receipts));
-  bootstrap = { ...bootstrap, profile: { ...bootstrap.profile, softCurrency: bootstrap.profile.softCurrency + rewards.reduce((n, r) => n + r.softCurrency, 0), packTickets: bootstrap.profile.packTickets + rewards.reduce((n, r) => n + r.packTickets, 0), styleShards: bootstrap.profile.styleShards + rewards.reduce((n, r) => n + r.styleShards, 0) } };
+  bootstrap = { ...bootstrap, profile: { ...bootstrap.profile, ownedCardIds:rewards.some(r=>r.cardId==='buddy')?['buddy']:bootstrap.profile.ownedCardIds, softCurrency: bootstrap.profile.softCurrency + rewards.reduce((n, r) => n + r.softCurrency, 0), packTickets: bootstrap.profile.packTickets + rewards.reduce((n, r) => n + r.packTickets, 0), styleShards: bootstrap.profile.styleShards + rewards.reduce((n, r) => n + r.styleShards, 0) } };
   return Response.json(init?.method === 'POST' ? { rewards, status: status(), bootstrap } : status());
 };
-Object.assign(window, { growthFixture: { snapshot: () => ({ status: status(), waterCalls, receipts, bootstrap }), completeTasks: async () => { missions.forEach(m => m.progress = 1);await client.invalidateQueries({ queryKey: ['account-rewards'] }); } } });
+Object.assign(window, { growthFixture: { snapshot: () => ({ status: status(), waterCalls, receipts, bootstrap }), completeTasks: async () => { missions.forEach(m => m.progress = 1);Object.keys(daily.counters).forEach(k=>daily.counters[k]=1);await client.invalidateQueries({ queryKey: ['account-rewards'] }); } } });
 function Fixture() {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(!params.has('recruit'));
   const query = useQuery({ queryKey: getGetPlayerBootstrapQueryKey(), queryFn: () => bootstrap, initialData: bootstrap, staleTime: Infinity });
-  return <main style={{ minHeight: '100dvh', background: 'radial-gradient(ellipse at 50% 35%,#345244,#0a1813 70%)', padding: 30 }}><button style={{ color: '#efe4bb' }} onClick={() => setOpen(true)}>Open Buddy’s Growth Lab</button><DeferredGrowthLab bootstrap={query.data} open={open} onOpenChange={setOpen} /></main>;
+  const [recruit,setRecruit]=useState(params.get('recruit') as RecruitmentCharacter|null);
+  return <main style={{ minHeight: '100dvh', background: 'radial-gradient(ellipse at 50% 35%,#345244,#0a1813 70%)', padding: 30 }}>{recruit&&<CharacterRecruitment id={recruit} reduced={params.get('motion')==='reduce'} onClose={()=>setRecruit(null)}/>}<button style={{ color: '#efe4bb' }} onClick={() => setOpen(true)}>Open Buddy’s Growth Lab</button><DeferredGrowthLab bootstrap={query.data} open={open} onOpenChange={setOpen} /></main>;
 }
 createRoot(document.getElementById('root')!).render(<QueryClientProvider client={client}><Fixture /></QueryClientProvider>);

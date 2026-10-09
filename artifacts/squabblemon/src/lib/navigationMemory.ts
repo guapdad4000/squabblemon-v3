@@ -13,6 +13,14 @@ export function rememberHistoryLocation(index: number) {
   writeMemory('route:' + index, location.pathname + location.search + location.hash);
 }
 export function routeFallback(path: string): string {
+  if (/\/game\/shop\?/.test(path)) {
+    const query = new URLSearchParams(path.split('?')[1]?.split('#')[0]);
+    if (['item', 'card', 'order', 'payment'].some(key => query.has(key))) {
+      const view = query.get('view');
+      return view ? `/game/shop?view=${encodeURIComponent(view)}` : '/game/shop';
+    }
+  }
+  if (/\/game\/collection\?/.test(path) && new URLSearchParams(path.split('?')[1]).has('card')) return '/game/collection';
   if (/\/game\/story[?#]/.test(path)) return '/game/story';
   if (/\/game\/decks\/[^/]+\/test/.test(path)) return path.replace(/\/test.*$/, '');
   if (/\/game\/decks\//.test(path)) return '/game/decks';
@@ -25,8 +33,9 @@ export function previousGameLocation(): string | null {
   const index = history.state?.[INDEX];
   if (!Number.isInteger(index) || index < 1) return null;
   const previous = readMemory<string | null>('route:' + (index - 1), null);
+  if (typeof previous !== 'string') return null;
   const base = (import.meta.env?.BASE_URL ?? '/').replace(/\/$/, '');
-  return previous && (previous === base + '/game' || previous.startsWith(base + '/game/') || previous.startsWith(base + '/game?')) ? previous : null;
+  return previous && previous !== location.pathname + location.search + location.hash && (previous === base + '/game' || previous.startsWith(base + '/game/') || previous.startsWith(base + '/game?') || previous.startsWith(base + '/game#')) ? previous : null;
 }
 /** Small view choices survive route unmounts and refresh, scoped to the player. */
 export function useViewMemory<T>(key: string, initial: T): [T, Dispatch<SetStateAction<T>>] {
@@ -38,7 +47,7 @@ export function useViewMemory<T>(key: string, initial: T): [T, Dispatch<SetState
   });
   return [value, update];
 }
-const owners = '.game-shell__content,.game-route-stage,.immersive-shell,.collection-stage__body,.arsenal-body,.arsenal-grid,.inventory-room,.character-styles,.bounty-hunter__scroll,.market,.corner-store__scroll,.story-atlas__viewport';
+const owners = '.game-shell__content,.game-route-stage,.immersive-shell,.collection-stage__body,.arsenal-body,.arsenal-grid,.inventory-room,.character-styles,.bounty-hunter__scroll,.market,.corner-store__scroll,.story-atlas__viewport,.gang-mural__tags,.gang-mural__members,.gang-mural__skill,.fighter-panel';
 /** Restore the entry's own scroll positions, including query-string navigation. */
 export function useNavigationScroll() {
   const [path] = useLocation();

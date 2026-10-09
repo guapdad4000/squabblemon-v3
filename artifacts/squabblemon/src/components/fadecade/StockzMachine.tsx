@@ -29,6 +29,8 @@ export function StockzMachine({ bootstrap }: { bootstrap: PlayerBootstrap }) {
     [error, setError] = useState(""),
     [clock, setClock] = useState(Date.now());
   const requestId = useRef<string | null>(null);
+  const tradeLock = useRef(false);
+  const pendingTrade = useRef<{ action: "start" | "settle"; body: unknown } | null>(null);
   const client = useQueryClient();
   const query = useQuery({
     queryKey: ["stockz", bootstrap.profile.id],
@@ -41,30 +43,43 @@ export function StockzMachine({ bootstrap }: { bootstrap: PlayerBootstrap }) {
     const timer = setInterval(() => setClock(Date.now()), 250);
     return () => clearInterval(timer);
   }, [open]);
+  useEffect(() => {
+    const pending = pendingTrade.current;
+    const id = (pending?.body as { id?: string } | undefined)?.id;
+    if (!pending || !id || !query.data) return;
+    const confirmed = query.data.recent.some(round => round.id === id)
+      || (pending.action === "start" && query.data.active?.id === id);
+    if (confirmed) {
+      pendingTrade.current = null;
+      requestId.current = null;
+    }
+  }, [query.data]);
   const active = query.data?.active;
   const seconds = active
     ? Math.max(0, Math.ceil((Date.parse(active.closesAt) - clock) / 1000))
     : 0;
   async function trade(action: "start" | "settle") {
-    if (busy) return;
+    if (tradeLock.current) return;
+    tradeLock.current = true;
     setBusy(true);
     setError("");
     requestId.current ??= crypto.randomUUID();
+    // Preserve the exact request after a lost response, even if controls change.
+    pendingTrade.current ??= { action, body: action === "start"
+      ? { id: requestId.current, ticker, direction, stake } : { id: active?.id } };
+    const pending = pendingTrade.current;
     try {
       const result = await customFetch<StockzState>(
-        `/api/player/stockz/${action}`,
+        `/api/player/stockz/${pending.action}`,
         {
           method: "POST",
           headers: { "content-type": "application/json" },
-          body: JSON.stringify(
-            action === "start"
-              ? { id: requestId.current, ticker, direction, stake }
-              : { id: active?.id },
-          ),
+          body: JSON.stringify(pending.body),
         },
       );
       client.setQueryData(["stockz", bootstrap.profile.id], result);
       requestId.current = null;
+      pendingTrade.current = null;
       void client.invalidateQueries({
         queryKey: getGetPlayerBootstrapQueryKey(),
       });
@@ -77,6 +92,7 @@ export function StockzMachine({ bootstrap }: { bootstrap: PlayerBootstrap }) {
       );
       void query.refetch();
     } finally {
+      tradeLock.current = false;
       setBusy(false);
     }
   }

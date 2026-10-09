@@ -1,3 +1,4 @@
+import bossRaidRouter from './bossRaid';
 import arcadeGamesRouter from './arcadeGames';
 import waffleRunRouter from './waffleRun';
 import dailyCloutRouter from './dailyClout';
@@ -14,6 +15,7 @@ import paymentsRouter from './payments';
 
 import stockzRouter from './stockz';
 import accountRewardsRouter from './accountRewards';
+import legendBountiesRouter from './legendBounties';
 import starterMythicRouter from './starterMythic';
 import mailRouter from './mail';
 import notificationsRouter from './notifications';
@@ -37,6 +39,8 @@ router.use(accountRewardsRouter);
 router.use(starterMythicRouter);
 router.use(waffleRunRouter);
 router.use(arcadeGamesRouter);
+router.use(bossRaidRouter);
+router.use(legendBountiesRouter);
 router.use(mailRouter);
 router.use(notificationsRouter);
 router.use(eventFeedbackRouter);

@@ -1,3 +1,4 @@
+import { CREW_MATCHUP_PATCH } from '../../../lib/squabblemon-engine/src/crewMatchupBalance';
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { cardCatalog, cards } from './data';
@@ -14,15 +15,15 @@ const totalHands = (match: Match, owner: Owner) => match.boards.flat()
   .reduce((total, card) => total + getEffectiveCardPower(card), 0);
 
 test('Mythicals span early and late Motion without inflated printed Hands', () => {
-  assert.equal(CARD_BALANCE_VERSION, 50);
-  assert.equal(ONLINE_RULES_VERSION, 50);
+  assert.equal(CARD_BALANCE_VERSION, 51);
+  assert.equal(ONLINE_RULES_VERSION, 51);
   assert.equal(mythicals.length, 25);
   const costs = mythicals.map(card => card.cost);
   assert(costs.filter(cost => cost <= 3).length >= 3, 'early-round Mythicals need more than one cost option');
   assert(costs.filter(cost => cost === 6).length >= 2, 'late finishers should still require six Motion');
   for (const card of mythicals) {
     assert(card.cost >= 2 && card.cost <= 6, `${card.name} Motion is outside the intended range`);
-    const printedBudget = card.engineId === 'yasuke' ? 4 : ['landlord', 'drfade', 'triple-og-blue'].includes(card.engineId) ? 6 : card.cost + 1;
+    const printedBudget = CREW_MATCHUP_PATCH[card.engineId]?.power ?? (card.engineId === 'alice' ? 3 : card.engineId === 'yasuke' ? 4 : ['landlord', 'drfade', 'triple-og-blue'].includes(card.engineId) ? 6 : card.cost + 1);
     assert(card.power <= printedBudget, `${card.name} has too much unconditional Hands for its Motion`);
   }
 });
@@ -37,7 +38,7 @@ test('every character fits the six-round Motion curve without an oversized free 
   }
   for (const card of characters) {
     assert(card.cost >= 1 && card.cost <= 6, `${card.name} cannot fit the six-round Motion curve`);
-    const printedBudget = card.engineId === 'yasuke' ? 4 : ['landlord', 'drfade', 'triple-og-blue'].includes(card.engineId) ? 6 : card.cost + 1;
+    const printedBudget = CREW_MATCHUP_PATCH[card.engineId]?.power ?? (card.engineId === 'alice' ? 3 : card.engineId === 'yasuke' ? 4 : ['landlord', 'drfade', 'triple-og-blue'].includes(card.engineId) ? 6 : card.cost + 1);
     assert(card.power >= 1 && card.power <= printedBudget, `${card.name} has excessive unconditional Hands`);
   }
 });

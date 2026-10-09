@@ -51,14 +51,18 @@ try {
     } else if (state === 'ready') {
       const claim = dialog.getByRole('button', { name: 'Claim John Henry →', exact: true });
       await claim.evaluate(button => { button.click(); button.click(); });
-      await dialog.getByRole('link', { name: 'Meet John Henry →', exact: true }).waitFor();
+      await page.locator('.character-recruitment[data-character="john-henry"]').waitFor();
       assert.equal(posts, 1, 'Repeated input submits one claim');
       const bootstrap = await page.evaluate(() => window.deferredPopupFixture.bootstrap());
       assert.equal(bootstrap.profile.softCurrency, 1750);
       assert.equal(bootstrap.profile.packTickets, 5);
       assert.equal(bootstrap.profile.styleShards, owns ? 350 : 300);
       if (!owns) assert.ok(bootstrap.profile.ownedCardIds.includes('john-henry'));
-      assert.ok((await dialog.locator('.john-henry-roadmap__success').innerText()).includes(owns ? '50 Style Shards' : 'joined your crew'));
+      const celebration=page.locator('.character-recruitment');
+      await celebration.waitFor({state:'visible'});
+      assert.equal((await celebration.locator('h2').textContent()).trim(),'John Henry');
+      if(owns)assert.ok((await celebration.innerText()).includes('+50'));
+      await celebration.getByRole('button',{name:'Keep going',exact:true}).click();
     } else await dialog.getByRole('link', { name: 'Meet John Henry →', exact: true }).waitFor();
     await page.keyboard.press('Escape');
     await dialog.waitFor({ state: 'hidden' });

@@ -70,6 +70,8 @@ function Fixture() {
         data-testid="blockbuster-state"
         data-after-party={String(match.afterParty ?? false)}
         data-motion={match.playerMotion}
+        data-enemy-hands-modifier={match.boards.flat().find(c => c.owner === "cpu" && c.cardId === "cornball")?.powerModifier ?? "destroyed"}
+        data-last-effect={match.effectLog.at(-1)?.note}
         data-count={
           match.boards.flat().filter((card) => ids.includes(card.cardId)).length
         }

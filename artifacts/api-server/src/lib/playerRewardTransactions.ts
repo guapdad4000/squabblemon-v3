@@ -1,3 +1,4 @@
+import { progressBountyEvent, standardBountyTasks } from './legendBountyProgress';
 import { advanceCareer, availableCareerChoices, readCareer } from "@workspace/squabblemon-engine/career";
 import { battleAchievements } from "@workspace/squabblemon-engine/insights";
 import { cardCatalog } from "@workspace/squabblemon-engine/data";
@@ -231,6 +232,7 @@ export async function completeStandardMatchReward(input: {
     const [storedMatch] = await tx
       .select({
         playerDeckId: playerMatchesTable.playerDeckId,
+        mode: playerMatchesTable.mode,
         snapshot: playerMatchesTable.playerCardProgressionSnapshot,
       })
       .from(playerMatchesTable)
@@ -364,6 +366,8 @@ export async function completeStandardMatchReward(input: {
           }).where(eq(challengeRunsTable.id, run.id));
         }
       }
+      const bountyStory = await progressBountyEvent(tx, profile, `match:${input.matchId}`,
+        standardBountyTasks(input.verifiedMatch, storedMatch.mode, input.outcome, input.districtsWon, Boolean(input.challengeRunId)));
       await tx
         .update(playerProfilesTable)
         .set({
@@ -373,7 +377,7 @@ export async function completeStandardMatchReward(input: {
           softCurrency: sql`${playerProfilesTable.softCurrency} + ${amounts.softCurrency}`,
           packTickets: sql`${playerProfilesTable.packTickets} + ${amounts.packTickets}`,
           cardProgression: cardXp.progression,
-          storyProgress: { ...profile.storyProgress, gameplay: career.progress },
+          storyProgress: { ...bountyStory, gameplay: career.progress },
           unlockedCosmeticIds: career.cosmetics,
         })
         .where(eq(playerProfilesTable.clerkUserId, input.clerkUserId));

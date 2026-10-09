@@ -46,13 +46,13 @@ if (typeof window !== 'undefined') {
       const { delta } = restoring;
       restoring = null;
       currentIndex = nextIndex;
-      activeGuard?.(
-        () => {
-          bypassNextTraversal = true;
-          history.go(delta);
-        },
-        () => {},
-      );
+      event.stopImmediatePropagation();
+      const proceed = () => {
+        bypassNextTraversal = true;
+        history.go(delta);
+      };
+      if (activeGuard) activeGuard(proceed, () => {});
+      else proceed();
       return;
     }
     if (!activeGuard) {

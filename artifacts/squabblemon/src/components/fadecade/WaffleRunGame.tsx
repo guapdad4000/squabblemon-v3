@@ -281,7 +281,12 @@ export function WaffleRunGame({
         headers: { "content-type": "application/json" },
         body: JSON.stringify(body),
       });
-      if (!active.current) return;
+      // A save may finish after leaving the cabinet. Refresh the wallet even
+      // then; never drop confirmed rewards just because its screen unmounted.
+      if (!active.current) {
+        void client.invalidateQueries({ queryKey: getGetPlayerBootstrapQueryKey() });
+        return;
+      }
       client.setQueryData(key, next);
       retry.current = null;
       setAnimatedPlate(null);

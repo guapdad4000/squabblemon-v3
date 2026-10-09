@@ -616,3 +616,24 @@ test("concurrent HTTP mission claims return the same single-applied profile", as
     assert.ok(mission?.claimedAt);
   });
 });
+
+
+test("completed legacy story fades return saved rewards without revalidating missing snapshots", async (t) => {
+ const clerkUserId = `route-legacy-story-${randomUUID()}`;
+ cleanup(t, clerkUserId);
+ await db.insert(playerProfilesTable).values({clerkUserId, onboardingStep: "complete"});
+ const [match] = await db.insert(playerMatchesTable).values({
+  clerkUserId, mode: "story", playerDeckId: "block", rivalDeckId: "slide",
+  storyNodeId: "welcome-to-the-block", completedAt: new Date(), outcome: "win",
+  rewardXp: 15, rewardSoftCurrency: 25, storyStars: 3, storyFirstClear: true,
+ }).returning();
+ await withPlayerApi(clerkUserId, async baseUrl => {
+  const result = await postJson(`${baseUrl}/player/matches/${match.id}/complete`, {moves: Array.from({length: 6}, () => ({cardInstanceId: null, lane: null, squabble: false}))});
+  assert.equal(result.alreadyCompleted, true);
+  assert.equal(result.reward.xp, 15);
+  assert.equal(result.reward.softCurrency, 25);
+  assert.equal(result.story.nodeId, "welcome-to-the-block");
+  const profile = await profileFor(clerkUserId);
+  assert.equal(profile.xp, 0, "recovery must not issue the rewards again");
+ });
+});

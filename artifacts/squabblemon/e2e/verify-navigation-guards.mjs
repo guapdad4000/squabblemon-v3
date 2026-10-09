@@ -6,12 +6,14 @@ try{
 const page=await browser.newPage({viewport:{width:390,height:844}});
 await page.addInitScript(()=>localStorage.setItem('squabblemon_e2e_user','signed-in'));
 await page.routeWebSocket('**',()=>{});
-await page.route('**/api/**',r=>r.fulfill({json:{}}));
+await page.route('**/api/**',r=>r.fulfill({json:r.request().url().endsWith('/legend-bounties')?[]:r.request().url().includes('/starter-mythic')?{state:'claimed',chapters:[]}:{}}));
 await page.goto(origin + '/game/collection');
 // The catalog always has a scrollable roster; an empty Gang Wall does not.
 await page.getByTestId('button-view-catalog').click();
 await page.getByTestId('collection-card-grid').waitFor();
 const body=page.locator('.collection-stage__body');
+await page.getByTestId('collection-card-grid').waitFor();
+await page.waitForFunction(()=>document.querySelector('.collection-stage__body').scrollHeight > document.querySelector('.collection-stage__body').clientHeight);
 await body.evaluate(el=>{el.scrollTop=300;});
 await page.waitForTimeout(200);
 const offset=await body.evaluate(el=>el.scrollTop);
@@ -32,5 +34,18 @@ assert.equal(await body.evaluate(el=>el.scrollTop),offset);
 assert.equal(await page.getByTestId('button-view-catalog').getAttribute('aria-pressed'),'true');
 await page.goForward();
 await page.waitForURL('**/game/settings');
-console.log('PASS guarded Back, scroll restoration, tab restoration and browser Forward');
+await page.evaluate(async()=>{
+ const {setDeckExitGuard}=await import('/src/lib/deckExitGuard.ts');
+ const clear=setDeckExitGuard(()=>{throw Error('Removed guard must not leave traversal pending');});
+ const originalGo=history.go.bind(history);
+ history.go=delta=>{
+   if(delta>0){clear();history.go=originalGo;}
+   originalGo(delta);
+ };
+ history.back();
+});
+await page.waitForURL('**/game/collection');
+await page.goForward();
+await page.waitForURL('**/game/settings');
+console.log('PASS guarded Back, scroll restoration, tab restoration, browser Forward and guard removal during traversal');
 }finally{await browser.close();}

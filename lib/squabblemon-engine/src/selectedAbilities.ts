@@ -261,16 +261,16 @@ export function selectedReveal(
               all.filter((c) => c.lane === l),
               t,
             ),
-            1,
+            id === 'one-man-band' ? 4 : 5,
           );
       } else {
         const c = local(eligible);
-        grant(c, id === 'one-man-band' ? 2 : 1);
+        grant(c, 5);
         if (id === 'og-calisthenics') shield(c);
       }
       if (success) m = consume(m, s, id);
     }
-  } else if (id === 'studio-couch-yn') grant(local(isMusicCharacter), 1);
+  } else if (id === 'studio-couch-yn') grant(local(isMusicCharacter), 2);
   else if (id === 'plate-auntie') {
     const c =
       local((c) => family(c) && c.powerModifier < 0) ??
@@ -278,14 +278,14 @@ export function selectedReveal(
       local(family);
     if (c) {
       if (c.powerModifier < 0 || c.statuses.burnStacks) {
-        m = recovery(m, c, 2, t);
+        m = recovery(m, c, 3, t);
         m = t.modify(m, c.instanceId, (x) => ({
           ...x,
           statuses: { ...x.statuses, burnStacks: 0 },
         }));
         success = true;
         targets.push(c.instanceId);
-      } else grant(c, 1);
+      } else grant(c, 2);
     }
   } else if (id === 'community-cook') {
     const eligible = (c: CardInstance) => !spent(m, s, `meal:${c.instanceId}`);
@@ -293,13 +293,17 @@ export function selectedReveal(
       local((c) => eligible(c) && c.powerModifier < 0) ?? local(eligible);
     if (c) {
       m = consume(m, s, `meal:${c.instanceId}`);
-      if (c.powerModifier < 0) m = recovery(m, c, 2, t);
-      else grant(c, 1);
+      if (c.powerModifier < 0) m = recovery(m, c, 3, t);
+      else grant(c, 2);
       if (homeless(c)) shield(find(m, c.instanceId));
       targets.push(c.instanceId);
       success = true;
     }
-  } else if (id === 'church-aunties-rival') shield(local(family));
+  } else if (id === 'church-aunties-rival') {
+    const c = local(family);
+    grant(c, 1);
+    shield(c);
+  }
   else if (['gym-spotter-yn', 'black-air-fade-1s'].includes(id)) {
     const c = local(
       (c) =>
@@ -307,15 +311,15 @@ export function selectedReveal(
         (id !== 'black-air-fade-1s' || !spent(m, s, `shoes:${c.instanceId}`)),
     );
     if (c) {
+      grant(c, 1);
       if (id === 'black-air-fade-1s') {
-        grant(c, 1);
         m = consume(m, s, `shoes:${c.instanceId}`);
       }
       shield(c);
       m = put(m, s, `ward:${c.instanceId}`, {
         kind: 'sw-ward',
         targets: [c.instanceId],
-        expires: m.round,
+        expires: m.round + (id === 'gym-spotter-yn' ? 1 : 0),
       });
       success = true;
     }
@@ -323,7 +327,7 @@ export function selectedReveal(
     const c = enemy();
     if (c) {
       const old = m;
-      m = t.burn(m, s, c, 1, s.ability);
+      m = t.burn(m, s, c, 2, s.ability);
       success =
         (find(m, c.instanceId)?.statuses.burnStacks ?? 0) >
         (c.statuses.burnStacks ?? 0);
@@ -341,8 +345,8 @@ export function selectedReveal(
           c,
           id === 'grandma-said-sit-down' &&
             (m.roundMovedIds?.[s.owner]?.length ?? 0) >= 2
-            ? 2
-            : 1,
+            ? 3
+            : id === 'grandma-said-sit-down' ? 2 : 1,
           s.ability,
         );
         success =
@@ -377,7 +381,7 @@ export function selectedReveal(
   } else if (['barbershop-heckler', 'booster', 'indian-scammer'].includes(id)) {
     const key = `${id}:${s.instanceId}`;
     if (id === 'barbershop-heckler' || !spent(m, s, key)) {
-      const c = enemy();
+      const c = strong(enemies(m, s).filter(c => c.powerModifier > 0), t);
       if (c) {
         const old = c.powerModifier;
         m = t.trim(m, s, c, id === 'booster' ? 1 : 2);
@@ -431,7 +435,7 @@ function payout(
     m,
     s,
     [target.instanceId],
-    `${s.ability}: +${n} Hand${n === 1 ? '' : 's'}.`,
+    `${s.ability}${key.endsWith(':hand') ? ' (In Hand)' : ''}: +${n} Hand${n === 1 ? '' : 's'}.`,
   );
 }
 export function selectedMoved(
@@ -448,6 +452,10 @@ export function selectedMoved(
       seen: [...new Set([...routes(before, old), String(c.lane)])],
     });
     m = t.event(before, m, c, [id], 'Circuit route recorded.');
+  }
+  if (isFitnessCharacter(c)) {
+    const coach = (c.owner === 'player' ? m.playerHand : m.cpuHand).find(x => x.cardId === 'og-calisthenics' && active(x));
+    if (coach) m = payout(m, coach, 'og-calisthenics:hand', c, 2, 2, t);
   }
   for (const w of (m.creativeMarks ?? []).filter(
     (x) =>
@@ -472,9 +480,9 @@ export function selectedMoved(
       s.instanceId !== id &&
       family(c)
     )
-      m = payout(m, s, kit, c, 1, 3, t);
+      m = payout(m, s, kit, c, 2, 3, t);
     if (kit === 'calisthenics-yn' && s.instanceId === id)
-      m = payout(m, s, `${kit}:${id}`, s, 1, 2, t);
+      m = payout(m, s, `${kit}:${id}`, s, 2, 2, t);
     if (kit === 'fake-marriage' && s.lane === c.lane && s.instanceId !== id)
       m = payout(m, s, `${kit}:${s.instanceId}`, s, 1, 2, t);
     if (kit === 'jump-rope-menace') {
@@ -482,7 +490,9 @@ export function selectedMoved(
         const x = find(m, id);
         return x && isFitnessCharacter(x);
       });
-      if (new Set(fitnessMoves).size >= 2) m = payout(m, s, kit, s, 2, 2, t);
+      const count = new Set(fitnessMoves).size;
+      if (count >= 1) m = payout(m, s, `${kit}:first`, s, 2, 2, t);
+      if (count >= 2) m = payout(m, s, `${kit}:second`, s, 1, 2, t);
     }
   }
   return m;
@@ -504,7 +514,7 @@ export function selectedGain(
       active(s) &&
       identity(s) === 'second-plate-cousin',
   ))
-    if (family(c)) m = payout(m, s, 'second-plate-cousin', s, 1, 3, t, true);
+    if (family(c)) m = payout(m, s, 'second-plate-cousin', s, 2, 2, t, true);
   return m;
 }
 export function selectedDamage(
@@ -542,6 +552,9 @@ export function selectedResolved(
     !isMusicCharacter(c)
   )
     return m;
+  const conductor = (c.owner === 'player' ? m.playerHand : m.cpuHand).find(x => x.cardId === 'one-man-band' && active(x));
+  const artist = find(m, c.instanceId);
+  if (conductor && artist) m = payout(m, conductor, 'one-man-band:hand', artist, 2, 2, t);
   for (const s of board(m).filter(
     (s) =>
       s.owner === c.owner &&

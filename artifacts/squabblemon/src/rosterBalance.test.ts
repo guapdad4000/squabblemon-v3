@@ -30,11 +30,11 @@ function unprotect(m: Match, target: CardInstance): Match {
 }
 
 test('40 revisions preserve collectible identities and instantiate their new budgets', () => {
-  assert.equal(CARD_BALANCE_VERSION, 50);
-  assert.equal(ONLINE_RULES_VERSION, 50);
+  assert.equal(CARD_BALANCE_VERSION, 51);
+  assert.equal(ONLINE_RULES_VERSION, 51);
   assert.equal(new Set(ROSTER_REVISION_IDS).size, 40);
   assert.equal(cardCatalog.length, 298);
-  const budgets: Record<string, [number, number]> = { 'atl-scammer': [2, 2], failedathlete: [3, 3], lawyer: [3, 3], 'tattoo-artist': [3, 3], 'inmate-kingpin': [1, 2], 'juneteenth-chair-guy': [4, 4], livewire: [3, 3], subwaymagician: [3, 3], squabbleserver: [1, 2], stylist: [2, 2] };
+  const budgets: Record<string, [number, number]> = { 'atl-scammer': [2, 2], failedathlete: [3, 6], lawyer: [3, 3], 'tattoo-artist': [3, 3], 'inmate-kingpin': [1, 3], 'juneteenth-chair-guy': [4, 4], livewire: [3, 3], subwaymagician: [3, 3], squabbleserver: [1, 2], stylist: [2, 2] };
   for (const [id, pair] of Object.entries(budgets)) {
     const c = createCardInstance(id, 'player');
     assert.deepEqual([c.cost, c.basePower], pair, id);
@@ -43,7 +43,7 @@ test('40 revisions preserve collectible identities and instantiate their new bud
   assert.equal(cards['the-concert'].cost, 2);
 });
 
-test('Inmate Kingpin can be played for one Motion with two printed Hands', () => {
+test('Inmate Kingpin can be played for one Motion with three printed Hands', () => {
   for (const owner of ['player', 'cpu'] as const) {
     const source = createCardInstance('inmate-kingpin', owner, 'budget', 0);
     const hand = owner === 'player' ? 'playerHand' : 'cpuHand';
@@ -51,7 +51,7 @@ test('Inmate Kingpin can be played for one Motion with two printed Hands', () =>
     const match = { ...blank(), phase: owner === 'player' ? 'player' as const : 'cpu-reveal' as const, [hand]: [source], [motion]: 1 };
     const after = playTurnCard(match, owner, source.instanceId, 0);
     assert.equal(after[motion], 0, owner);
-    assert.equal(find(after, source).basePower, 2, owner);
+    assert.equal(find(after, source).basePower, 3, owner);
   }
 });
 
@@ -151,7 +151,7 @@ for (const owner of ['player', 'cpu'] as const) {
       assert.equal(find(m, ally).lane, 2); assert.equal(find(m, ally).powerModifier, 4);
       assert(mark(m, 'loyalty'));
       m = cast(m, 'the-kickback', owner, 0).after;
-      assert.equal(find(m, ally).lane, 0); assert.equal(find(m, ally).powerModifier, 5);
+      assert.equal(find(m, ally).lane, 0); assert.equal(find(m, ally).powerModifier, 7);
       assert(!mark(m, 'loyalty'));
     }
   });
@@ -225,13 +225,13 @@ for (const owner of ['player', 'cpu'] as const) {
     assert.equal(find(m, hookah).powerModifier, 1);
     assert(foes.every(c => find(m, c).powerModifier === -1));
   });
-  test(`${owner}: Cookout sends both meals to an occupied lane and its plate cannot burn twice`, () => {
+  test(`${owner}: Cookout sends three meals to an occupied lane and its plate cannot burn twice`, () => {
     const ally = unit('og', owner, 2);
     let m = cast({ ...blank(), boards: [[], [], [ally]] }, 'the-cookout', owner).after;
-    assert.equal(find(m, ally).powerModifier, 2);
+    assert.equal(find(m, ally).powerModifier, 6);
     assert(m.boards.flat().filter(c => c.cardId === 'soulfood').every(c => c.lane === 2));
-    m = end(m); assert.equal(find(m, ally).powerModifier, 1);
-    m = end(m); assert.equal(find(m, ally).powerModifier, 1);
+    m = end(m); assert.equal(find(m, ally).powerModifier, 5);
+    m = end(m); assert.equal(find(m, ally).powerModifier, 5);
     assert(!m.boards.flat().some(c => c.cardId === 'burnt-plate'));
   });
   test(`${owner}: Cloudbreak rewards the ally left behind only after a successful move`, () => {

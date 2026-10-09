@@ -1,3 +1,4 @@
+import { BOSS_NPCS } from "@workspace/squabblemon-engine/bossNpcCards";
 import { quoteStyleShards } from '@workspace/squabblemon-engine/styleShards';
 import { StyleShardCost } from './StyleShardWallet';
 import { DrFadeReferee } from './DrFadeReferee';
@@ -102,9 +103,10 @@ export function CardInspector({ card, onClose, bootstrap, variantId, initialPrev
   };
 
   const effectivePower = instance ? getEffectiveCardPower(instance) : card.power;
-  const rarityLabel = catalogCard ? CARD_RARITY_DEFINITIONS[catalogCard.rarity].label : 'Standard';
+  const bossOnly = Object.hasOwn(BOSS_NPCS, card.cardId ?? card.id);
+  const rarityLabel = bossOnly ? 'Boss deck only' : catalogCard ? CARD_RARITY_DEFINITIONS[catalogCard.rarity].label : 'Standard';
   const finishLabel = catalogCard ? cardFinishLabel(catalogCard.rarity, previewKind) : 'Collector edition';
-  const faction = catalogCard?.faction ?? 'Independent';
+  const faction = bossOnly ? 'Precinct' : catalogCard?.faction ?? 'Independent';
   const crewTags = catalogCard?.crewTags ?? [];
   const usedDecks = catalogCard
     ? bootstrap?.profile?.savedDecks?.filter((d: any) => d.cardIds.includes(catalogCard.catalogId)) ?? []

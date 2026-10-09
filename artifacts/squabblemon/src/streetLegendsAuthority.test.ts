@@ -177,17 +177,17 @@ for (const owner of ['player', 'cpu'] as const) {
   });
   test(`${owner}: Diss receipt reacts to a genuine gain and never replays`, () => {
     const m = blank(), rival = { ...unit('og', enemy, 0), basePower: 12, powerModifier: 3 }; m.boards[0] = [rival];
-    let after = cast(m, 'the-battle-rapper', owner).after; assert.equal(find(after, rival)?.powerModifier, 1);
+    let after = cast(m, 'the-battle-rapper', owner).after; assert.equal(find(after, rival)?.powerModifier, 0);
     assert.equal(find(after, rival)?.recoverableDamage ?? 0, 0);
     after = cast(after, 'nail', enemy).after;
-    assert.equal(find(after, rival)?.powerModifier, 3); assert(find(after, rival)?.statuses.silenced); assert(!kinds(after).includes('mi-diss'));
+    assert.equal(find(after, rival)?.powerModifier, 2); assert(find(after, rival)?.statuses.silenced); assert(!kinds(after).includes('mi-diss'));
   });
   test(`${owner}: Soundcheck, Rider and Rapper react to actual entrances`, () => {
     let m = cast(blank(), 'the-opening-act', owner).after;
     const rapper = unit('the-rapper', owner, 0); m.boards[0].push(rapper);
     const performer = cast(m, 'the-manager-nice', owner, 1);
     assert.equal(owner === 'player' ? performer.after.playerMotion : performer.after.cpuMotion, 8);
-    assert.equal(find(performer.after, performer.source)?.powerModifier, 1); assert(!kinds(performer.after).includes('mi-soundcheck'));
+    assert.equal(find(performer.after, performer.source)?.powerModifier, 2); assert(!kinds(performer.after).includes('mi-soundcheck'));
     const response = cast(performer.after, 'the-hype-man', owner, 2);
     assert(find(response.after, response.source)?.statuses.protected); assert(!kinds(response.after).includes('mi-rider'));
     assert(getCharacterDistrictMarks(response.after).every(x => !x.text.includes('ledger')));
@@ -196,9 +196,9 @@ for (const owner of ['player', 'cpu'] as const) {
     const m = blank(), client = unit('cornball', owner, 0); m.boards[0] = [client];
     let after = cast(m, 'personal-trainer', owner).after;
     after = cast(after, 'apartment-maintenance-sage', owner).after;
-    assert.equal(find(after, client)?.lane, 1); assert.equal(find(after, client)?.powerModifier, 2);
+    assert.equal(find(after, client)?.lane, 1); assert.equal(find(after, client)?.powerModifier, 3);
     after = cast(after, 'apartment-maintenance-sage', owner, 1).after;
-    assert.equal(find(after, client)?.lane, 2); assert.equal(find(after, client)?.powerModifier, 4);
+    assert.equal(find(after, client)?.lane, 2); assert.equal(find(after, client)?.powerModifier, 6);
     assert(find(after, client)?.statuses.protected); assert(!kinds(after).includes('mi-circuit'));
   });
   test(`${owner}: Fitness Girl restores only real injury after movement`, () => {
@@ -224,11 +224,11 @@ for (const owner of ['player', 'cpu'] as const) {
     after = { ...after, round: 5 };
     after = cast(after, 'apartment-maintenance-sage', owner).after;
     assert.equal(find(after, client)?.lane, 1);
-    assert.equal(find(after, client)?.powerModifier, 2);
+    assert.equal(find(after, client)?.powerModifier, 3);
   });
   test(`${owner}: Fitness Bro and Demon Trainer have bounded actual triggers`, () => {
     let m = blank(), bro = unit('fitness-bro', owner, 0); m.boards[0] = [bro];
-    m = cast(m, 'cornball', owner, 1).after; m = end(m); assert.equal(find(m, bro)?.powerModifier, 2);
+    m = cast(m, 'cornball', owner, 1).after; m = end(m); assert.equal(find(m, bro)?.powerModifier, 3);
     const demon = unit('demon-trainer', owner, 0), victim = { ...unit('fitness-bro', owner, 1), basePower: 1 }; m = blank(); m.boards = [[demon], [victim], []];
     m = cast(m, 'mr-mc-hands', enemy, 1).after;
     assert(!find(m, victim)); assert.equal(find(m, demon)?.powerModifier, 2);

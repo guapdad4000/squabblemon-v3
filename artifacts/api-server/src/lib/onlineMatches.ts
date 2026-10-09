@@ -1,4 +1,6 @@
 import { addReaction, ownedReactions, resolveReactionTray, ReactionError } from '@workspace/squabblemon-engine/reactions';
+import { progressBountyEvent } from './legendBountyProgress';
+import type { BountyTask } from '@workspace/squabblemon-engine/legendBounties';
 import { randomBytes, randomInt } from "node:crypto";
 import { and, asc, desc, eq, gt, ne, or, sql } from "drizzle-orm";
 import {
@@ -311,7 +313,7 @@ async function accessFriendRoomOperation(code: string, userId: string, mutation?
       if (!(error instanceof OnlineError)) throw error;
       failure = error;
     }
-    room = await settleRankedRoom(tx, room, now);
+    room = await settleRankedRoom(tx, room, now, row.id);
     room = await syncRoomInvitation(tx, row.id, room);
     // Persist expired turns even when rejecting a late/stale action.
     if (room.revision !== restore(row.state).revision)
@@ -350,7 +352,20 @@ async function saveRoom(tx: Tx, row: RoomRow, room: OnlineRoom, now: number) {
 }
 
 /** Room lock + profile locks make the result and both rating changes a single receipt. */
-async function settleRankedRoom(tx: Tx, room: OnlineRoom, now: number): Promise<OnlineRoom> {
+async function settleRankedRoom(tx: Tx, room: OnlineRoom, now: number, roomId: string): Promise<OnlineRoom> {
+  // Full human battles only. Timeouts, concessions and ranked bot matches never advance these tasks.
+  if (room.status === 'complete' && room.reason === 'districts' && !room.ranked?.bot && room.members.cpu) {
+    const seats = (['player','cpu'] as const).slice().sort((a,b)=>room.members[a]!.userId.localeCompare(room.members[b]!.userId));
+    for (const seat of seats) {
+      const userId = room.members[seat]!.userId;
+      const [profile] = await tx.select().from(playerProfilesTable).where(eq(playerProfilesTable.clerkUserId,userId)).for('update');
+      if (!profile) continue;
+      const tasks: BountyTask[] = [room.ranked ? 'pvp' : 'friendly'];
+      if (room.winner === seat) tasks.push(room.ranked ? 'pvp-win' : 'friendly-win');
+      const storyProgress = await progressBountyEvent(tx,profile,`online:${roomId}:${room.gameNumber}`,tasks);
+      if(storyProgress!==profile.storyProgress)await tx.update(playerProfilesTable).set({storyProgress}).where(eq(playerProfilesTable.clerkUserId,userId));
+    }
+  }
   if (!room.ranked || room.status !== 'complete' || room.ranked.settlement) return room;
   const settlement: NonNullable<OnlineRoom['ranked']>['settlement'] = {};
   const seats = room.ranked.bot ? ['player'] as const : ['player', 'cpu'] as const;
@@ -395,7 +410,7 @@ async function refreshRankedRoom(tx: Tx, row: RoomRow, now: number) {
   let room = restore(row.state);
   if (room.status === 'waiting' && room.ranked && now - room.ranked.heartbeatAt > RANKED_QUEUE_IDLE_MS)
     room = { ...room, status: 'closed', revision: room.revision + 1, reason: 'expired' };
-  room = await settleRankedRoom(tx, expireOnlineRoom(advanceRankedBot(room, now), now), now);
+  room = await settleRankedRoom(tx, expireOnlineRoom(advanceRankedBot(room, now), now), now, row.id);
   await saveRoom(tx, row, room, now);
   return room;
 }

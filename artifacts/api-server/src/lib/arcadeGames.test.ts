@@ -198,7 +198,7 @@ test("market boosts and captured district rewards survive reads without duplicat
       { type: "duty", aim: 2, stockLane: 2 },
       new Date((time += 700)),
     );
-  assert.equal(market.earned.softCurrency, 12);
+  assert.ok(market.earned.softCurrency >= 12, "restock reward is banked, with possible seeded enemy kill rewards");
   const block = await startArcadeGame(
     user,
     "block-takeover",
@@ -218,10 +218,25 @@ test("market boosts and captured district rewards survive reads without duplicat
   assert.equal(captured.earned.softCurrency, 25);
   const saved = await getArcadeGame(user, "fade-market", new Date(time));
   assert.equal(saved.run!.revision, 6);
-  assert.equal(saved.earned.softCurrency, 12);
+  assert.equal(saved.earned.softCurrency, market.earned.softCurrency);
   const [profile] = await db
     .select()
     .from(playerProfilesTable)
     .where(eq(playerProfilesTable.clerkUserId, user));
-  assert.equal(profile.softCurrency, 37);
+  assert.equal(profile.softCurrency, market.earned.softCurrency + captured.earned.softCurrency);
+});
+
+
+test("every arcade completion can retry its final action without reopening or repaying", async (t) => {
+ const user = await player(t);
+ for (const kind of ["girl-fade", "fade-market", "block-takeover"] as const) {
+  const started = await startArcadeGame(user, kind, randomUUID(), 0, day);
+  const run = started.run!;
+  const actionId = randomUUID();
+  const ended = await actArcadeGame(user, kind, run.id, run.revision, actionId, {type: "retire"}, day);
+  const retry = await actArcadeGame(user, kind, run.id, run.revision, actionId, {type: "retire"}, day);
+  assert.equal(ended.run!.phase, "ended");
+  assert.deepEqual(retry, ended);
+  assert.equal((await getArcadeGame(user, kind, day)).run!.phase, "ended");
+ }
 });

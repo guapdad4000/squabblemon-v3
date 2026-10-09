@@ -1,8 +1,10 @@
+import {BOSS_DISTRICTS} from './bossDistricts';
 /** Versioned location rules. Issued matches keep their complete definitions. */
-export type DistrictId = 'bodega' | 'the-trap' | 'waff-l-house' | 'vip-section' | 'county-jail' | 'penthouse' | 'time-square' | 'magic-city'
+export type DistrictId = 'raid-checkpoint' | 'raid-barricade' | 'raid-evidence' | 'bodega' | 'the-trap' | 'waff-l-house' | 'vip-section' | 'county-jail' | 'penthouse' | 'time-square' | 'magic-city'
   | 'the-subway' | 'o-block' | 'hollywood-strip' | 'dive-bar' | 'acorn-projects' | 'corrupt-church' | 'nail-salon' | 'barbershop'
   | 'underground-ring' | 'rooftop-garden' | 'pawn-shop' | 'pirate-radio' | 'blackout-block' | 'flood-channel' | 'construction-site' | 'night-market' | 'mirror-arcade' | 'community-kitchen' | 'rush-hour';
 export type DistrictEffect =
+  | {kind:'raid-neutral'}
   | { kind: 'first-discount'; amount: number; minimum: number }
   | { kind: 'move-bonus'; amount: number }
   | { kind: 'comeback'; amount: number }
@@ -86,7 +88,7 @@ export function validateDistrictSnapshot(value: unknown): DistrictSnapshot {
   if (snapshot?.version !== 1 || !Array.isArray(snapshot.locations) || snapshot.locations.length !== 3
     || new Set(snapshot.locations.map(item => item?.id)).size !== 3) throw new Error('District snapshot is missing or outdated. Start a new fade.');
   for (const location of snapshot.locations) {
-    const definition = DISTRICT_CATALOG.find(item => item.id === location?.id);
+    const definition = DISTRICT_CATALOG.find(item => item.id === location?.id) ?? BOSS_DISTRICTS.find(item => item.id === location?.id);
     // Never silently reinterpret an issued snapshot after a content deployment.
     // PostgreSQL JSONB changes key order. Compare the complete set of effect
     // fields and their values, rather than the order they serialize in.

@@ -10,11 +10,14 @@ if (process.env.CAMPAIGN_DATABASE_TESTS !== "1") {
 }
 assertCampaignDatabaseTarget(process.env);
 const testDirectory = join(root, "artifacts", "api-server", "src", "lib");
+const dedicatedNativeTests = new Set(["social.test.ts", "patches.test.ts"]);
 const tests = readdirSync(testDirectory)
-  .filter(name => name.endsWith(".test.ts"))
+  .filter(name => name.endsWith(".test.ts") && !name.endsWith(".native.test.ts") && !dedicatedNativeTests.has(name))
   .map(name => `src/lib/${name}`);
-// Payment database regressions require independent native PostgreSQL connections.
-// Run them separately with scripts/test-payments-database.mjs, never PGlite.
+// Native suites need fresh owned PostgreSQL clusters and independent leases:
+//   pnpm --filter @workspace/api-server test:social (Homies + native diagnostics)
+//   pnpm --filter @workspace/api-server test:events-feedback (feedback + patches)
+// Payment tests live below lib/payments and run with test:payments separately.
 if (!tests.some(name => name.endsWith("newAccountCampaignRoutes.test.ts"))) {
   throw new Error("The full campaign database suite is missing.");
 }
@@ -35,4 +38,3 @@ const skipped = [...summary.matchAll(/(?:^|\s)skipped\s+([0-9]+)/gim)]
 if (skipped > 0) {
   throw new Error(`Database test command rejected ${skipped} skipped test(s).`);
 }
-

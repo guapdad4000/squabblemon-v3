@@ -1,3 +1,4 @@
+import {CharacterRecruitment} from './CharacterRecruitment';
 import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import { useSearch } from 'wouter';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
@@ -20,13 +21,14 @@ export function StarterMythic({ bootstrap, placement, autoShow = false }: { boot
   const status = query.data;
   const [open, setOpen] = useState(false), [busy, setBusy] = useState(false), [error, setError] = useState('');
   const { Component: DialogContent, failed: dialogFailed, preload: preloadDialog } = useDeferredPopup(starterDialog, open);
+  const [celebrating, setCelebrating] = useState(false);
   const [receipt, setReceipt] = useState<ClaimResult | null>(null);
   const dialog = useRef<HTMLDialogElement>(null), opener = useRef<HTMLElement | null>(null), lock = useRef(false);
   const activePlayer = useRef(bootstrap.profile.id);
   activePlayer.current = bootstrap.profile.id;
   useEffect(() => {
     activePlayer.current = bootstrap.profile.id;
-    setOpen(false); setReceipt(null); setError('');
+    setOpen(false); setCelebrating(false); setReceipt(null); setError('');
     return () => { activePlayer.current = ''; };
   }, [bootstrap.profile.id]);
   const search = useSearch();
@@ -62,7 +64,9 @@ export function StarterMythic({ bootstrap, placement, autoShow = false }: { boot
       if (activePlayer.current !== player) return;
       client.setQueryData(getGetPlayerBootstrapQueryKey(), result.bootstrap);
       client.setQueryData(key, result.status);
+      void client.invalidateQueries({queryKey:['legend-bounties',bootstrap.profile.id]});
       setReceipt(result);
+      if(result.claimed){setOpen(false);setCelebrating(true);}
     } catch (reason) {
       if (activePlayer.current === player) setError(reason instanceof Error ? reason.message : 'Could not confirm your reward. Try again.');
     } finally { lock.current = false; if (activePlayer.current === player) setBusy(false); }
@@ -71,6 +75,7 @@ export function StarterMythic({ bootstrap, placement, autoShow = false }: { boot
   const stateText = claimed ? 'Collected · Permanent milestone' : ready ? 'Your Mythical is ready' : 'Reach Season 1, Chapter 5';
   const progress = status?.chapters.filter(chapter => chapter.reached).length ?? 0;
   return <>
+    {celebrating && <CharacterRecruitment id="homeless-guy" returnFocus={opener.current} reduced={bootstrap.profile.settings.reducedMotion} items={[{ label: 'Clout', amount: 1000, glyph: 'cloutStack' }, { label: 'Tickets', amount: 3, glyph: 'ticket' }, ...(receipt?.duplicateShards ? [{ label: 'Style Shards', amount: receipt.duplicateShards, glyph: 'shards' as const }] : [])]} onClose={() => setCelebrating(false)} />}
     {placement === 'shortcut' ? !claimed && <button type="button" className="starter-mythic-shortcut" data-ready={ready} onPointerEnter={preloadDialog} onFocus={preloadDialog} onPointerDown={preloadDialog} onClick={() => setOpen(true)} aria-label={`Nothing to Lose · ${stateText}`}>
       <img src={art('chibi')} alt="" draggable={false} /><span>{ready ? 'CLAIM MYTHIC' : 'FREE MYTHIC'}</span>{ready && <b aria-hidden="true">!</b>}
     </button> : <button type="button" className="starter-mythic-banner" style={{ backgroundImage: `url("${art('banner')}")` }} onPointerEnter={preloadDialog} onFocus={preloadDialog} onPointerDown={preloadDialog} onClick={() => setOpen(true)}>

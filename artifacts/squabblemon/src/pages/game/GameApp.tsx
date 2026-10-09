@@ -128,7 +128,7 @@ function GameRoutes({ bootstrap }: { bootstrap: PlayerBootstrap }) {
         <Onboarding bootstrap={bootstrap} />
       </Route>
       <Route path="/game/play"><Redirect to="/game/training" /></Route>
-      <Route path="/game/training"><ImmersiveGameRoute bootstrap={bootstrap}><ChallengesHub bootstrap={bootstrap} trainingOnly /></ImmersiveGameRoute></Route>
+      <Route path="/game/training"><ImmersiveGameRoute bootstrap={bootstrap}><ChallengesHub bootstrap={bootstrap} openTraining /></ImmersiveGameRoute></Route>
       <Route path="/game/challenges"><ImmersiveGameRoute bootstrap={bootstrap}><ChallengesHub bootstrap={bootstrap} /></ImmersiveGameRoute></Route>
       <Route path="/game/online/:code">{params => <ImmersiveGameRoute bootstrap={bootstrap}><Multiplayer key={params.code} code={params.code.toUpperCase()} bootstrap={bootstrap} /></ImmersiveGameRoute>}</Route>
       <Route path="/game/online"><ImmersiveGameRoute bootstrap={bootstrap}><Multiplayer bootstrap={bootstrap} /></ImmersiveGameRoute></Route>

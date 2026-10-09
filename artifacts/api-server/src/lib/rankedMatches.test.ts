@@ -15,7 +15,7 @@ test('ranked points use reduced bot rewards, floor at zero and preserve records'
 
 test('ranked routes: human pairing, retries, cancellation race, bot completion, reconnect and exactly-once ranks', { skip: !process.env.DATABASE_URL }, async t => {
   const { default: express } = await import('express');
-  const { db, pool, playerProfilesTable: profiles, onlineRoomsTable: rooms } = await import('@workspace/db');
+  const { db, pool, playerProfilesTable: profiles, onlineRoomsTable: rooms, playerCollectionClaimsTable } = await import('@workspace/db');
   const { and, eq, inArray } = await import('drizzle-orm');
   const { default: router } = await import('../routes/multiplayer');
   const users = Array.from({ length: 8 }, () => `park-test-${randomUUID()}`);
@@ -24,6 +24,8 @@ test('ranked routes: human pairing, retries, cancellation race, bot completion, 
     storyProgress: { treasuredStoryProgress: { cleared: true } },
     savedDecks: [{ id: 'custom', name: 'Rookie gang', heroCardId: 'hooper', cardIds: [...ROOKIE_CORE_IDS] }],
   })));
+  await db.insert(playerCollectionClaimsTable).values(users.flatMap(clerkUserId=>['starter-mythic:nothing-to-lose:v1','legend-bar:block-party-titan:node:soundcheck:v2','legend-bar:block-party-titan:node:invite-the-block:v2'].map(milestoneKey=>({clerkUserId,milestoneKey,reward:{}}))));
+  const {getLegendBounties}=await import('./legendBounties');
   const app = express(); app.use(express.json());
   app.use((req, _res, next) => {
     const userId = req.header('x-test-user') || null;
@@ -70,6 +72,8 @@ test('ranked routes: human pairing, retries, cancellation race, bot completion, 
   const win = await ok(users[1], `/${a.code}`); assert.equal(win.ranked.result.delta, 25);
   await action(users[0], a, { type: 'surrender' }, surrenderId);
   assert.equal((await search(users[1], requestIds[1])).room.status, 'complete', 'lost search acknowledgement cannot create a second match');
+  assert.equal((await getLegendBounties(users[0]))[0].nodes[2].progress,0,'surrender is not a full PvP fade');
+  assert.equal((await getLegendBounties(users[1]))[0].nodes[2].progress,0,'a surrendered opponent does not advance PvP');
   const rank = await ok(users[1], '/ranked'); assert.equal(rank.stats.games, 1); assert.equal(rank.stats.points, 25);
   assert.equal((await request(users[1], `/${a.code}/actions`, { expectedRevision: win.revision, requestId: randomUUID(), command: { type: 'rematch' } })).status, 409);
   const preserved = (await db.select().from(profiles).where(eq(profiles.clerkUserId, users[1])))[0];
@@ -112,6 +116,7 @@ test('ranked routes: human pairing, retries, cancellation race, bot completion, 
   await Promise.all([ok(users[4], `/${botView.code}`), ok(users[4], `/${botView.code}`)]);
   assert.deepEqual((await ok(users[4], '/ranked')).stats, earned);
   assert.equal(earned.games, 1);
+  assert.equal((await getLegendBounties(users[4]))[0].nodes[2].progress,0,'completed ranked bots do not count as human PvP');
 
   // A sleeping server catches up the bot turn, rather than granting a timeout win.
   const asleep = (await search(users[5])).room;

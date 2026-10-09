@@ -67,7 +67,7 @@ test('Squabblehouse wave definitions expose all nine playable identities, budget
     'squabblehouse-cashier': ['Rare', 2, 3, 'Earth'],
     'waffle-warlord': ['Legendary', 5, 5, 'Fire'],
     'cane-corso-red': ['Rare', 2, 3, 'Fire'],
-    'blue-nose-pit': ['Rare', 2, 2, 'Water'],
+    'blue-nose-pit': ['Rare', 2, 4, 'Water'],
   };
   for (const id of IDS) {
     const card = squabblehouseWaveCards[id];

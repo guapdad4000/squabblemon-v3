@@ -14,7 +14,7 @@ export const guapRankingReplacement = 'redneck-evil';
 export const folksRankingReplacement = 'redside5';
 
 /** Authored recipes and established comparison builds, not arbitrary card combinations. */
-export function allRankingDecks(): BalanceDeck[] {
+export function authoredRankingDecks(): BalanceDeck[] {
   const candidates: BalanceDeck[] = [
     ...createDefaultBalanceDecks(),
     ...elementDecks,
@@ -46,6 +46,11 @@ export function allRankingDecks(): BalanceDeck[] {
       assert.equal(existing.orderKey, deck.orderKey, `${deck.id}: conflicting order keys`);
     } else unique.set(deck.id, { ...deck, cardIds: [...deck.cardIds] });
   }
+  return [...unique.values()];
+}
+
+export function allRankingDecks(): BalanceDeck[] {
+  const unique = new Map(authoredRankingDecks().map(deck => [deck.id, deck]));
   // Audit-only substitutions: preserve slot, engine ID and draw-order key.
   // Never edit the live card or shared authored recipes to change a test roster.
   const result = [...unique.values()].map(deck => ({

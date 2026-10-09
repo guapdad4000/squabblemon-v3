@@ -60,19 +60,19 @@ const rewardClipDefinitions: readonly Omit<RewardClip, "video" | "poster">[] = [
     id: "anime-first-impact",
     duration: 1,
     style: "anime",
-    tags: ["victory"],
+    tags: ["victory", "reward"],
   },
   {
     id: "anime-second-impact",
     duration: 1.041667,
     style: "anime",
-    tags: ["victory"],
+    tags: ["victory", "reward"],
   },
   {
     id: "anime-uppercut-safe-edit",
     duration: 1.041667,
     style: "anime",
-    tags: ["victory"],
+    tags: ["victory", "reward"],
   },
   {
     id: "anime-car-launch",
@@ -90,13 +90,13 @@ const rewardClipDefinitions: readonly Omit<RewardClip, "video" | "poster">[] = [
     id: "anime-chef-forward-punch",
     duration: 1.5,
     style: "anime",
-    tags: ["victory"],
+    tags: ["victory", "reward"],
   },
   {
     id: "anime-falling-bandana",
     duration: 1.166667,
     style: "anime",
-    tags: ["reward"],
+    tags: ["defeat"],
   },
   {
     id: "anime-street-aftermath",

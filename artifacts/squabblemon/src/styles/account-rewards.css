@@ -60,3 +60,62 @@
  .growth-plant--2{left:-19px;--plant-angle:-2deg}.growth-plant--3{right:-18px;--plant-angle:3deg}
  .growth-plant--4,.growth-plant--5{bottom:-22px}.growth-plant--6{top:-30px}
 }
+/* Condensed care sheet, retaining Buddy's original clipboard composition. */
+.growth-dialog--compact .growth-heading h2{margin-bottom:8px}
+.growth-dialog--compact .growth-heading>p{display:none}
+.growth-dialog--compact .growth-hero__note>p{font-size:29px;margin:8px 0}
+.growth-dialog--compact .growth-tasks li{min-height:52px;padding:7px 0}
+.growth-dialog--compact .growth-tasks p{font-size:10px;margin-top:2px;line-height:1.35}
+.growth-dialog--compact .growth-task-heading{padding:6px 0}
+.growth-roadmap{margin-top:12px;border:1px solid #728c5740;border-radius:6px;padding:10px;background:#d6dfbf}
+.growth-roadmap>header{display:flex;justify-content:space-between;font-size:11px;color:#3e5b35}
+.growth-roadmap>header span{font-size:10px}
+.growth-roadmap ol{display:grid;grid-template-columns:repeat(3,1fr);padding:0;list-style:none;margin:10px 0;gap:8px}
+.growth-roadmap li{display:flex;flex-direction:column;gap:4px;font-size:10px}
+.growth-roadmap li>span{display:grid;place-items:center;width:24px;height:24px;border:1px solid #7a9263;border-radius:50%}
+.growth-roadmap li[data-complete=true]>span{background:#456e38;color:#f4f5df}
+.growth-roadmap small{font-size:8px;line-height:1.4}
+.growth-roadmap p{font-size:9px;line-height:1.5;margin:0;color:#546c46}
+.growth-roadmap button{margin-top:10px;padding:9px 16px;border:0;background:#3f6536;color:#f9f3df;font-weight:800;border-radius:5px}
+.growth-dialog--compact .growth-checkins{margin:8px 0;padding-top:6px}
+.growth-dialog--compact .growth-live{font-size:10px}
+.growth-dialog--compact .growth-bonus{padding:9px;font-size:10px;margin-top:8px}
+/* Plants fan beyond the clipboard edges; the original watering-can rules stay intact. */
+.growth-dialog--compact .growth-plant--0{left:-48px;top:2%;width:33%;--plant-angle:-14deg}
+.growth-dialog--compact .growth-plant--1{right:-44px;top:0;width:25%;--plant-angle:13deg}
+.growth-dialog--compact .growth-plant--2{left:-49px;top:34%;width:28%;--plant-angle:-12deg}
+.growth-dialog--compact .growth-plant--3{right:-47px;top:35%;width:36%;--plant-angle:12deg}
+.growth-dialog--compact .growth-plant--4{left:5%;bottom:-43px;width:31%;--plant-angle:174deg}
+.growth-dialog--compact .growth-plant--5{right:5%;bottom:-43px;width:35%;--plant-angle:186deg}
+.growth-dialog--compact .growth-plant--6{left:35%;top:-46px;width:31%;--plant-angle:-4deg}
+@media(max-width:480px){
+ .growth-dialog--compact .growth-hero__note>p{font-size:18px}
+ .growth-dialog--compact .growth-tasks li{min-height:53px}
+ .growth-dialog--compact .growth-tasks p{font-size:9px}
+ .growth-dialog--compact .growth-plant--0{left:-23px;width:33%;--plant-angle:-8deg}
+ .growth-dialog--compact .growth-plant--1{right:-22px;width:25%;--plant-angle:8deg}
+ .growth-dialog--compact .growth-plant--2{left:-24px;width:28%;--plant-angle:-6deg}
+ .growth-dialog--compact .growth-plant--3{right:-23px;width:36%;--plant-angle:7deg}
+ .growth-dialog--compact .growth-plant--4,.growth-dialog--compact .growth-plant--5{bottom:-27px}
+ .growth-dialog--compact .growth-plant--6{top:-27px}
+}
+/* Safe perimeter for the visible plant fan. Watering-can rules remain unchanged. */
+.growth-dialog--compact{width:min(1100px,100vw);padding:100px 150px 115px;overflow-x:hidden}
+.growth-dialog--compact .growth-plant--0{left:-105px;top:0;width:33%;--plant-angle:-12deg}
+.growth-dialog--compact .growth-plant--1{right:-100px;top:0;width:25%;--plant-angle:12deg}
+.growth-dialog--compact .growth-plant--2{left:-105px;top:35%;width:28%;--plant-angle:-10deg}
+.growth-dialog--compact .growth-plant--3{right:-100px;top:36%;width:33%;--plant-angle:10deg}
+.growth-dialog--compact .growth-plant--4{left:5%;bottom:-95px;width:31%;--plant-angle:174deg}
+.growth-dialog--compact .growth-plant--5{right:5%;bottom:-95px;width:33%;--plant-angle:186deg}
+.growth-dialog--compact .growth-plant--6{left:35%;top:-90px;width:29%;--plant-angle:-4deg}
+@media(max-width:850px){
+ .growth-dialog--compact{width:min(848px,100vw);padding:110px 28px 115px}
+ .growth-dialog--compact .growth-plant--0{left:0;top:-90px;width:34%;--plant-angle:-10deg}
+ .growth-dialog--compact .growth-plant--1{right:0;top:-90px;width:25%;--plant-angle:10deg}
+ .growth-dialog--compact .growth-plant--2{left:-12px;top:30%;width:22%;--plant-angle:-6deg}
+ .growth-dialog--compact .growth-plant--3{right:-12px;top:36%;width:25%;--plant-angle:6deg}
+ .growth-dialog--compact .growth-plant--4,.growth-dialog--compact .growth-plant--5{bottom:-85px;width:31%}
+ .growth-dialog--compact .growth-plant--6{left:37%;top:-85px;width:24%}
+}
+@media(max-width:480px){.growth-dialog--compact{padding-inline:23px}}
+@media(max-width:350px){.growth-dialog--compact{padding-inline:17px}.growth-dialog--compact .growth-plant--2{left:-7px}.growth-dialog--compact .growth-plant--3{right:-7px}}

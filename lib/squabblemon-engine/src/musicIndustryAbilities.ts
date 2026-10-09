@@ -107,7 +107,7 @@ export function musicReveal(m: Match, s: CardInstance, t: MusicTools, echoed = f
     const target = sorted(enemies(m, s), t, true)[0];
     if (target) {
       const original = target.powerModifier;
-      m = original > 0 ? t.trim(m, s, target, 2) : t.hit(m, s, target, -2, 'Diss Track');
+      m = original > 0 ? t.trim(m, s, target, 4) : t.hit(m, s, target, -4, 'Diss Track');
       const actual = find(m, target.instanceId);
       succeeded = actual ? actual.powerModifier < original : damaged(before, m, target, t);
       if (succeeded && actual) {
@@ -141,7 +141,7 @@ export function musicReveal(m: Match, s: CardInstance, t: MusicTools, echoed = f
       }
       for (const lane of lanes.filter(x => x !== s.lane)) {
         const target = sorted(musical(m, s).filter(c => c.lane === lane), t)[0];
-        if (target) { m = buff(m, target.instanceId, 1, t); targets.push(target.instanceId); succeeded = true; }
+        if (target) { m = buff(m, target.instanceId, 3, t); targets.push(target.instanceId); succeeded = true; }
       }
       if (!succeeded) m = remove(m, ledger(m, s, 'torch')!.id);
     }
@@ -152,9 +152,13 @@ export function musicReveal(m: Match, s: CardInstance, t: MusicTools, echoed = f
       const live = find(m, s.instanceId);
       if (live?.lane === destination) {
         const local = otherAllies(m, live);
+        for (const athlete of [live, ...local].filter(c => isFitnessCharacter(c) && c.statuses.burnStacks > 0)) {
+          m = t.modify(m, athlete.instanceId, c => ({ ...c, statuses: { ...c.statuses, burnStacks: 0 }, burnSource: undefined }));
+          targets.push(athlete.instanceId);
+        }
         const target = sorted(local.filter(c => (c.recoverableDamage ?? 0) > 0), t)[0] ?? sorted(local.filter(c => c.statuses.burnStacks > 0), t)[0];
         if (target) {
-          const healed = Math.min(2, target.recoverableDamage ?? 0);
+          const healed = Math.min(3, target.recoverableDamage ?? 0);
           const burnt = target.statuses.burnStacks > 0;
           m = t.modify(m, target.instanceId, c => ({ ...c, recoverableDamage: Math.max(0, (c.recoverableDamage ?? 0) - healed), statuses: { ...c.statuses, burnStacks: 0 }, burnSource: undefined }));
           if (healed) m = buff(m, target.instanceId, healed, t);
@@ -211,9 +215,9 @@ export function musicResolved(before: Match, m: Match, source: CardInstance, t: 
     if (!target) continue;
     const start = m;
     m = spend(m, rapper, kit, { usedRound: m.round });
-    if (local) m = t.hit(m, rapper, target, -1, 'Sixteen Bars'); else m = buff(m, target.instanceId, 1, t);
+    if (local) m = t.hit(m, rapper, target, -2, 'Sixteen Bars'); else m = buff(m, target.instanceId, 2, t);
     if (!local || damaged(start, m, target, t)) m = t.train(m, rapper.instanceId);
-    m = t.event(start, m, rapper, [target.instanceId], local ? 'Sixteen Bars: local diss attempted (one per round).' : 'Sixteen Bars: another stage earned +1 Hand (one per round).');
+    m = t.event(start, m, rapper, [target.instanceId], local ? 'Sixteen Bars: local diss attempted (one per round).' : 'Sixteen Bars: another stage earned +2 Hands (one per round).');
   }
   return musicAfterAction(before, m, t);
 }
@@ -250,9 +254,9 @@ export function musicAfterPlay(before: Match, m: Match, id: string, t: MusicTool
       const caller = find(m, x.targets[0]), hypeman = find(m, x.source.instanceId), responder = find(m, id);
       if (!active(caller) || !active(hypeman) || !responder) continue;
       const start = m; m = remove(m, x.id);
-      m = buff(m, caller.instanceId, 1, t); m = buff(m, responder.instanceId, 1, t); m = t.protect(m, hypeman, caller.instanceId);
+      m = buff(m, caller.instanceId, 2, t); m = buff(m, responder.instanceId, 2, t); m = t.protect(m, hypeman, caller.instanceId);
       m = t.train(m, hypeman.instanceId);
-      m = t.event(start, m, hypeman, [caller.instanceId, id], 'Say It Back: caller and responder gained +1 each; caller Protected.');
+      m = t.event(start, m, hypeman, [caller.instanceId, id], 'Say It Back: caller and responder gained +2 each; caller Protected.');
     }
   }
   m = bookingArrival(before, m, entrant, t);
@@ -288,10 +292,10 @@ export function musicMoved(before: Match, m: Match, id: string, t: MusicTools): 
     const start = m;
     const next = [...seen, String(moved.lane)];
     if (next.length >= 3) {
-      m = remove(m, x.id); m = buff(m, id, 2, t); m = t.protect(m, trainer, id);
-    } else { m = update(m, x.id, { seen: next, amount: 1, lane: moved.lane }); m = buff(m, id, 2, t); }
+      m = remove(m, x.id); m = buff(m, id, 3, t); m = t.protect(m, trainer, id);
+    } else { m = update(m, x.id, { seen: next, amount: 1, lane: moved.lane }); m = buff(m, id, 3, t); }
     m = t.train(m, trainer.instanceId);
-    m = t.event(start, m, trainer, [id], next.length >= 3 ? 'Circuit Training: third district reached; +2 Hands and Protection.' : 'Circuit Training: first new district; +2 Hands.');
+    m = t.event(start, m, trainer, [id], next.length >= 3 ? 'Circuit Training: third district reached; +3 Hands and Protection.' : 'Circuit Training: first new district; +3 Hands.');
   }
   return musicAfterAction(before, bookingArrival(before, m, moved, t), t);
 }
@@ -380,10 +384,10 @@ export function musicRoundEnd(m: Match, t: MusicTools): Match {
     const progress = ledger(m, bro, 'reps');
     if ((progress?.amount ?? 0) >= 3 || progress?.usedRound === m.round || ledger(m, bro, 'rep-ready')?.usedRound !== m.round) continue;
     const start = m, reps = (progress?.amount ?? 0) + 1;
-    m = spend(m, bro, 'reps', { amount: reps, usedRound: m.round }); m = buff(m, bro.instanceId, 2, t);
+    m = spend(m, bro, 'reps', { amount: reps, usedRound: m.round }); m = buff(m, bro.instanceId, 3, t);
     if (reps === 3) m = t.protect(m, bro, bro.instanceId);
     m = t.train(m, bro.instanceId);
-    m = t.event(start, m, bro, [bro.instanceId], `One More Rep: ${reps}/3 earned; +2 Hands${reps === 3 ? ' and Protection' : ''}.`);
+    m = t.event(start, m, bro, [bro.instanceId], `One More Rep: ${reps}/3 earned; +3 Hands${reps === 3 ? ' and Protection' : ''}.`);
   }
   return musicAfterAction(beforeRoundEnd, m, t);
 }
@@ -393,7 +397,7 @@ export function musicRoundStart(m: Match, _t?: MusicTools): Match {
 }
 
 export function musicDistrictMarks(m: Match): CharacterDistrictMark[] {
-  const labels: Record<string, string> = { 'mi-soundcheck': 'next different Music deployment with a successful entrance refunds 1 Motion', 'mi-call': 'different Music deployment elsewhere: +1 to caller and responder; Protect caller', 'mi-rider': 'next Music deployment: denial refund or Protection', 'mi-booking': 'next enemy play or move here: 1 damage, then Weaken only if hit lands', 'mi-diss': 'target’s next positive Hands gain: one Silence attempt', 'mi-contract': 'client cannot move; up to 2 bonus Hands become royalties at expiry', 'mi-circuit': 'visit all three districts: first new district +2; third +2 and Protection' };
+  const labels: Record<string, string> = { 'mi-soundcheck': 'next different Music deployment with a successful entrance refunds 1 Motion', 'mi-call': 'different Music deployment elsewhere: +2 to caller and responder; Protect caller', 'mi-rider': 'next Music deployment: denial refund or Protection', 'mi-booking': 'next enemy play or move here: 1 damage, then Weaken only if hit lands', 'mi-diss': 'target’s next positive Hands gain: one Silence attempt', 'mi-contract': 'client cannot move; up to 2 bonus Hands become royalties at expiry', 'mi-circuit': 'visit all three districts: first new district +3; third +3 and Protection' };
   const visible = marks(m).filter(x => labels[x.kind]).map(x => ({ owner: x.owner, lane: x.lane, text: `${x.source.ability} · ${labels[x.kind]} · through R${x.expires}${x.targets.length ? ': ' + x.targets.map(id => find(m, id)?.name ?? 'departed character').join(', ') : ''}` }));
   for (const bro of board(m).filter(c => identity(c) === 'fitness-bro')) visible.push({ owner: bro.owner, lane: bro.lane!, text: `One More Rep · ${ledger(m, bro, 'reps')?.amount ?? 0}/3${active(bro) ? '' : ' · disabled'}` });
   return visible;

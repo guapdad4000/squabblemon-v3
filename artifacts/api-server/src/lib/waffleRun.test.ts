@@ -237,3 +237,16 @@ test("minigame schemas reject forged scores, invalid actions, revisions and requ
     false,
   );
 });
+
+
+test("the final diner action retries as the same saved completion", async (t) => {
+ const user = await player(t);
+ const started = await startWaffleRun(user, randomUUID(), day);
+ const run = started.run!;
+ const actionId = randomUUID();
+ const ended = await actWaffleRun(user, run.id, run.revision, actionId, {type: "retire"}, day);
+ const retry = await actWaffleRun(user, run.id, run.revision, actionId, {type: "retire"}, day);
+ assert.equal(ended.run!.phase, "ended");
+ assert.deepEqual(retry, ended);
+ assert.equal((await getWaffleRun(user, day)).run!.phase, "ended");
+});

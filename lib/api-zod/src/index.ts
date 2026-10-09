@@ -9,3 +9,5 @@ export { ClaimExperimentCardBody } from "./generated/api";
 export { waffleRunId, waffleStartInput, waffleActionInput } from './waffleRun';
 
 export {arcadeKind,arcadeRunId,arcadeStartInput,arcadeActionInput} from './arcadeGames';
+
+export {bossRaidRunId,bossRaidStartInput,bossRaidActionInput} from './bossRaid';

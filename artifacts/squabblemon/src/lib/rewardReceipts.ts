@@ -5,7 +5,7 @@ import { catalogCardById, catalogCardByEngineId, getCardImage } from '../data';
 import { getAssetUrl } from './assets';
 export type RewardItem = { label: string; amount?: number; glyph?: GameGlyphName; shardRarity?: StyleShardRarity; image?: string };
 export type RewardPresentationContext = 'mission' | 'collection' | 'recruit' | 'promo' | 'shop' | 'story';
-export type RewardReceipt = { id: string; title: string; items: RewardItem[]; preview?: boolean; level?: number; achievement?: boolean; presentation?: RewardPresentationContext; story?: { chapterTitle: string; backgroundAssetId: string; portraitAssetId?: string; catchUp?: boolean; cloutBalance?: { from: number; to: number } } };
+export type RewardReceipt = { id: string; title: string; items: RewardItem[]; preview?: boolean; level?: number; achievement?: boolean; characterId?: 'homeless-guy' | 'john-henry' | 'buddy'; presentation?: RewardPresentationContext; story?: { chapterTitle: string; backgroundAssetId: string; portraitAssetId?: string; catchUp?: boolean; cloutBalance?: { from: number; to: number } } };
 const listeners = new Set<() => void>();
 let queue: RewardReceipt[] = [];
 const seen = new Set<string>();
@@ -76,7 +76,7 @@ export const rewardReceipts = {
   stingerWasConsumed(receiptId: string) { return stingersConsumed.has(receiptId); },
 };
 export function canPresentRewardStinger(receipt: RewardReceipt, reducedMotion = false): boolean {
-  return Boolean(receipt.presentation && !receipt.level && !receipt.preview && !reducedMotion
+  return Boolean(receipt.presentation && !receipt.level && !receipt.characterId && !receipt.preview && !reducedMotion
     && !receipt.story?.catchUp && !receipt.story?.cloutBalance);
 }
 /** Only call after a successful server action, using its returned profile. */
@@ -94,7 +94,8 @@ export function revealProfileRewards(before: PlayerBootstrap, after: PlayerBoots
   }
   for (const cardId of after.profile.ownedCardIds.filter(id => !before.profile.ownedCardIds.includes(id))) items.push({ label: catalogCardById[cardId]?.name ?? cardId, image: getCardImage(cardId) });
   for (const cosmetic of after.profile.unlockedCosmeticIds.filter(id => !before.profile.unlockedCosmeticIds.includes(id))) items.push({ label: cosmetic.replace(/[:_-]/g,' '), glyph: 'mastery' });
-  rewardReceipts.show({ id: `${after.profile.id}:${id}`, title, items, preview: after.profile.id === 'e2e-player', presentation });
+  const characterId = after.profile.ownedCardIds.find(cardId => ['john-henry', 'homeless-guy', 'buddy'].includes(cardId) && !before.profile.ownedCardIds.includes(cardId)) as RewardReceipt['characterId'];
+  rewardReceipts.show({ id: `${after.profile.id}:${id}`, title, items, characterId, preview: after.profile.id === 'e2e-player', presentation });
 }
 
 /** A completion response contains only newly issued grants. Its returned wallet,

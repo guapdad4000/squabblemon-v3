@@ -1,0 +1,305 @@
+{
+  "method": "Generated separately using imagegen. Shared union bounds and scale across frames preserve authored animation. Transparent padding only; originals preserved.",
+  "assets": [
+    {
+      "name": "oink-tier-1",
+      "source": "/home/falcon/.codex/generated_images/01a0fed0-9461-76a1-bdb2-a885962a8772/exec-a2caf64e-143d-4791-bc68-e46de6658012.png",
+      "sourceSha256": "974e4cebd8ad15c5b47cc54228897ae31725362ff7ed3d0ebc3055d7b38782f2",
+      "sourceSize": [
+        1774,
+        887
+      ],
+      "cropUnion": {
+        "x0": 0,
+        "y0": 113,
+        "w": 443,
+        "h": 713
+      },
+      "runtimeSize": [
+        1280,
+        480
+      ],
+      "frames": 4,
+      "distinctFrames": 4,
+      "runtimeBytes": 189528,
+      "runtimeSha256": "d05a94004e2a26a94b9deca13c70855814f0f13fc5022e65d222173a122e2fbb",
+      "reference": "public/assets/characters/officer-oink.webp",
+      "generation": "One character per image generation call. Four distinct idle frames, transparent, fixed camera and baseline; original Oink identity retained. No crowns."
+    },
+    {
+      "name": "oink-tier-2",
+      "source": "/home/falcon/.codex/generated_images/01a0fed0-9461-76a1-bdb2-a885962a8772/exec-6b4ebf26-9579-4636-ac20-74d018365ed6.png",
+      "sourceSha256": "f9ebb3b8af50668789db14ea018e74c5228528c169bb2c12d39971b23b35b876",
+      "sourceSize": [
+        1774,
+        887
+      ],
+      "cropUnion": {
+        "x0": 0,
+        "y0": 92,
+        "w": 443,
+        "h": 741
+      },
+      "runtimeSize": [
+        1280,
+        480
+      ],
+      "frames": 4,
+      "distinctFrames": 4,
+      "runtimeBytes": 197836,
+      "runtimeSha256": "6374e3333249aaabd66a7dbb81ad0be097cec1f8b71575d133fdcbf5a30b5a48",
+      "reference": "public/assets/characters/officer-oink.webp",
+      "generation": "One character per image generation call. Four distinct idle frames, transparent, fixed camera and baseline; original Oink identity retained. No crowns."
+    },
+    {
+      "name": "oink-tier-3",
+      "source": "/home/falcon/.codex/generated_images/01a0fed0-9461-76a1-bdb2-a885962a8772/exec-0719dc68-d1e1-4318-944e-fa97796ee8cc.png",
+      "sourceSha256": "3453b94f5a1b82049c12f6ccb0e506af03e3bac4ebcc237b490ae7784a7ebeb6",
+      "sourceSize": [
+        1774,
+        887
+      ],
+      "cropUnion": {
+        "x0": 0,
+        "y0": 31,
+        "w": 443,
+        "h": 830
+      },
+      "runtimeSize": [
+        1280,
+        480
+      ],
+      "frames": 4,
+      "distinctFrames": 4,
+      "runtimeBytes": 219194,
+      "runtimeSha256": "b4f0fbd041c52ff13b1667a3145c6901fee0ba5b4ce259ad48a54fb8ca87ad91",
+      "reference": "public/assets/characters/officer-oink.webp",
+      "generation": "One character per image generation call. Four distinct idle frames, transparent, fixed camera and baseline; original Oink identity retained. No crowns."
+    },
+    {
+      "name": "oink-tier-4",
+      "source": "/home/falcon/.codex/generated_images/01a0fed0-9461-76a1-bdb2-a885962a8772/exec-f6f2022a-8d6c-4199-a02d-c510f32e1ece.png",
+      "sourceSha256": "09a7bc6e54c1b16306f94be52a45553f806d989aad3a1a0096317923d3cee5e3",
+      "sourceSize": [
+        1774,
+        887
+      ],
+      "cropUnion": {
+        "x0": 0,
+        "y0": 80,
+        "w": 443,
+        "h": 744
+      },
+      "runtimeSize": [
+        1280,
+        480
+      ],
+      "frames": 4,
+      "distinctFrames": 4,
+      "runtimeBytes": 198528,
+      "runtimeSha256": "1797f0498bc27e79e0cfaf92854e52dc7feaf4b9ffde52481c304776ccd9edfc",
+      "reference": "public/assets/characters/officer-oink.webp",
+      "generation": "One character per image generation call. Four distinct idle frames, transparent, fixed camera and baseline; original Oink identity retained. No crowns."
+    },
+    {
+      "name": "oink-tier-5",
+      "source": "/home/falcon/.codex/generated_images/01a0fed0-9461-76a1-bdb2-a885962a8772/exec-49f86342-cca1-413a-93d0-2cc2022325bc.png",
+      "sourceSha256": "72953c18d991029ef6259d3f89017da42ee58f153235d7d465b2455601c71ca7",
+      "sourceSize": [
+        1774,
+        887
+      ],
+      "cropUnion": {
+        "x0": 0,
+        "y0": 84,
+        "w": 443,
+        "h": 731
+      },
+      "runtimeSize": [
+        1280,
+        480
+      ],
+      "frames": 4,
+      "distinctFrames": 4,
+      "runtimeBytes": 258988,
+      "runtimeSha256": "5dbbbd7ec46ff75e8dfc49de8a7aa2e1c0c3f11b2c95f1c415f0daf9852dbd83",
+      "reference": "public/assets/characters/officer-oink.webp",
+      "generation": "One character per image generation call. Four distinct idle frames, transparent, fixed camera and baseline; original Oink identity retained. No crowns."
+    },
+    {
+      "name": "hound",
+      "source": "/home/falcon/.codex/generated_images/01a0fed0-9461-76a1-bdb2-a885962a8772/exec-6f1111cb-ab92-41cc-af47-e23927750744.png",
+      "sourceSha256": "15b08955ff4a06e196e21266db97f781079a5e9ff5d4baea55d48004c900e15f",
+      "sourceSize": [
+        1774,
+        887
+      ],
+      "cropUnion": {
+        "x0": 0,
+        "y0": 120,
+        "w": 443,
+        "h": 683
+      },
+      "runtimeSize": [
+        1280,
+        480
+      ],
+      "frames": 4,
+      "distinctFrames": 4,
+      "runtimeBytes": 184800,
+      "runtimeSha256": "7123295414df94de0e5377b1e51f49eea30e5d2596d3a39f63dc3b1f8689e3e4",
+      "reference": "User supplied police character art",
+      "generation": "One character per image generation call. Four distinct idle frames, transparent, fixed camera and baseline; original Oink identity retained. No crowns."
+    },
+    {
+      "name": "drone",
+      "source": "/home/falcon/.codex/generated_images/01a0fed0-9461-76a1-bdb2-a885962a8772/exec-eefde505-a1e7-479d-b9c7-86fd96b905da.png",
+      "sourceSha256": "66c0375d13a745da274c70c458207e68e4e933b865f579b1b079458f898f7eaa",
+      "sourceSize": [
+        1774,
+        887
+      ],
+      "cropUnion": {
+        "x0": 0,
+        "y0": 272,
+        "w": 443,
+        "h": 350
+      },
+      "runtimeSize": [
+        1280,
+        480
+      ],
+      "frames": 4,
+      "distinctFrames": 4,
+      "runtimeBytes": 93924,
+      "runtimeSha256": "aa880733b1707938867b712bf69d587f6d592612d2e054d20c7656753865a27f",
+      "reference": "User supplied police character art",
+      "generation": "One character per image generation call. Four distinct idle frames, transparent, fixed camera and baseline; original Oink identity retained. No crowns."
+    },
+    {
+      "name": "operator",
+      "source": "/home/falcon/.codex/generated_images/01a0fed0-9461-76a1-bdb2-a885962a8772/exec-0139233f-0179-42d2-b405-071f6b1f3c8f.png",
+      "sourceSha256": "946439e45761d9e737893a549628be276e3485bcef35e1bab55de3d94abcc593",
+      "sourceSize": [
+        1774,
+        887
+      ],
+      "cropUnion": {
+        "x0": 13,
+        "y0": 67,
+        "w": 422,
+        "h": 786
+      },
+      "runtimeSize": [
+        1280,
+        480
+      ],
+      "frames": 4,
+      "distinctFrames": 4,
+      "runtimeBytes": 133664,
+      "runtimeSha256": "83789226257eae064e4929e31302c73d320844e7970b41b4f82efd94a2f7ace8",
+      "reference": "User supplied police character art",
+      "generation": "One character per image generation call. Four distinct idle frames, transparent, fixed camera and baseline; original Oink identity retained. No crowns."
+    },
+    {
+      "name": "hog",
+      "source": "/home/falcon/.codex/generated_images/01a0fed0-9461-76a1-bdb2-a885962a8772/exec-be38e626-45e8-4681-873c-ee031d3b28eb.png",
+      "sourceSha256": "d892d0f78c0ed79c92f5a0d08d9c52b7ec47ebfaed07b3c48f328313fab9e166",
+      "sourceSize": [
+        1774,
+        887
+      ],
+      "cropUnion": {
+        "x0": 0,
+        "y0": 71,
+        "w": 443,
+        "h": 783
+      },
+      "runtimeSize": [
+        1280,
+        480
+      ],
+      "frames": 4,
+      "distinctFrames": 4,
+      "runtimeBytes": 172674,
+      "runtimeSha256": "f276a25570eb2194935ddf440d7fc3edad500223c4aeeae1bb8a65e4be10b583",
+      "reference": "User supplied police character art",
+      "generation": "One character per image generation call. Four distinct idle frames, transparent, fixed camera and baseline; original Oink identity retained. No crowns."
+    },
+    {
+      "name": "ham",
+      "source": "/home/falcon/.codex/generated_images/01a0fed0-9461-76a1-bdb2-a885962a8772/exec-2c4ccb5f-f422-4a18-a36d-24b5e2001faa.png",
+      "sourceSha256": "351afbf83f2c7e22d556f9642e383e609b50f4e1196dd6b4d999abd826a438df",
+      "sourceSize": [
+        1774,
+        887
+      ],
+      "cropUnion": {
+        "x0": 35,
+        "y0": 11,
+        "w": 384,
+        "h": 866
+      },
+      "runtimeSize": [
+        1280,
+        480
+      ],
+      "frames": 4,
+      "distinctFrames": 4,
+      "runtimeBytes": 109004,
+      "runtimeSha256": "50035a38e4a5a7bf808ee6f1b1a1daec180ec77bb86390b14509ab88106ba8bd",
+      "reference": "User supplied police character art",
+      "generation": "One character per image generation call. Four distinct idle frames, transparent, fixed camera and baseline; original Oink identity retained. No crowns."
+    },
+    {
+      "name": "judge",
+      "source": "/home/falcon/.codex/generated_images/01a0fed0-9461-76a1-bdb2-a885962a8772/exec-29937b84-04c0-4986-aebe-67787c8f7b40.png",
+      "sourceSha256": "3fae38a761b998f12c619abc07c76242190b37725d01f808c381221a94dd2217",
+      "sourceSize": [
+        1774,
+        887
+      ],
+      "cropUnion": {
+        "x0": 0,
+        "y0": 31,
+        "w": 443,
+        "h": 832
+      },
+      "runtimeSize": [
+        1280,
+        480
+      ],
+      "frames": 4,
+      "distinctFrames": 4,
+      "runtimeBytes": 102734,
+      "runtimeSha256": "82489c7bbfdc8f664334fc99383d5851c46d24282ea00ce039b4320378b8fd0e",
+      "reference": "User supplied police character art",
+      "generation": "One character per image generation call. Four distinct idle frames, transparent, fixed camera and baseline; original Oink identity retained. No crowns."
+    },
+    {
+      "name": "protester",
+      "source": "/home/falcon/.codex/generated_images/01a0fed0-9461-76a1-bdb2-a885962a8772/exec-278e4561-87ce-4c29-ad2a-ca944a52e55c.png",
+      "sourceSha256": "c0910c2e1a71c96d3f3baf1f749de897f30373e489e1208cdba02ed495e83747",
+      "sourceSize": [
+        1774,
+        887
+      ],
+      "cropUnion": {
+        "x0": 0,
+        "y0": 25,
+        "w": 443,
+        "h": 835
+      },
+      "runtimeSize": [
+        1280,
+        480
+      ],
+      "frames": 4,
+      "distinctFrames": 4,
+      "runtimeBytes": 131712,
+      "runtimeSha256": "d15da771b53cd1375774854a1b27cbd498486ab62cce191ed546eebdd6a93cc2",
+      "reference": "User supplied police character art",
+      "generation": "One character per image generation call. Four distinct idle frames, transparent, fixed camera and baseline; original Oink identity retained. No crowns."
+    }
+  ]
+}

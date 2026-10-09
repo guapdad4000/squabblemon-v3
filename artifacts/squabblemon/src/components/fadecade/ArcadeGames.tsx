@@ -280,7 +280,13 @@ export default function ArcadeGame({
         headers: { "content-type": "application/json" },
         body: JSON.stringify(body),
       });
-      if (!active.current || player.current !== bootstrap.profile.id) return;
+      // A save may finish after leaving the cabinet. Refresh the wallet even
+      // then; never drop confirmed rewards just because its screen unmounted.
+      if (!active.current) {
+        void client.invalidateQueries({ queryKey: getGetPlayerBootstrapQueryKey() });
+        return;
+      }
+      if (player.current !== bootstrap.profile.id) return;
       retry.current = null;
       client.setQueryData(key, next);
       const delta = {

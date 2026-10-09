@@ -1,15 +1,19 @@
 import { JohnHenryMythic } from '../../components/JohnHenryMythic';
+import { BountyPayout, type BountyPayoutData } from '../../components/LegendBountyJourney';
+import { LegendBountyBar } from '../../components/LegendBountyBar';
+import type { LegendBountyStatus } from '@workspace/squabblemon-engine/legendBounties';
 import { StarterMythic } from '../../components/StarterMythic';
 import { availableCareerChoices, readCareer } from '@workspace/squabblemon-engine/career';
 import { revealProfileRewards } from '../../lib/rewardReceipts';
 import { GameGlyph } from '../../components/venue/GameGlyph';
 import { CareerBoard } from './CareerBoard';
 import {
+  customFetch,
   type PlayerBootstrap,
   useClaimPlayerMission,
   getGetPlayerBootstrapQueryKey,
 } from '@workspace/api-client-react';
-import { useQueryClient } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRef, useState, useEffect } from 'react';
 import { ArrowRight, Check } from 'lucide-react';
 import { Link, useSearch } from 'wouter';
@@ -18,6 +22,7 @@ import { ProgressRing } from '../../components/venue/ProgressRing';
 import '../../styles/studio.css';
 import '../../styles/hustle-stage.css';
 import '../../styles/bounty-hunter.css';
+import '../../styles/bounty-premium.css';
 
 type BountyPhase = 'idle' | 'loading' | 'firing' | 'impact';
 
@@ -32,12 +37,16 @@ export function Missions({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   useEffect(() => { const params = new URLSearchParams(search); if (params.get('view') === 'mastery') setTab('mastery'); else if (params.has('mission') || params.has('mythic')) setTab('bounties'); }, [search]);
   const [claimState, setClaimState] = useState<{ id: string; phase: BountyPhase } | null>(null);
 
+  const [payout,setPayout]=useState<BountyPayoutData|null>(null);
+  const [openJourney,setOpenJourney]=useState<string>();
   const claimLock = useRef(false);
   const timerRef = useRef<number | null>(null);
   const mountedRef = useRef(false);
   const finishRef = useRef<(() => void) | null>(null);
   const boardRef = useRef<HTMLElement>(null);
   const lastClaimRef = useRef<string | null>(null);
+  const legendsKey = ['legend-bounties', bootstrap.profile.id];
+  const legends = useQuery({queryKey:legendsKey,queryFn:()=>customFetch<LegendBountyStatus[]>('/api/player/rewards/legend-bounties'),retry:1});
   const profileReducedMotion = bootstrap.profile.settings.reducedMotion;
 
   useEffect(() => {
@@ -119,8 +128,55 @@ export function Missions({ bootstrap }: { bootstrap: PlayerBootstrap }) {
     }
   }
 
+  async function collectAll(legendId?: string) {
+    if (claimLock.current) return;
+    const tasks = legendId ? (legends.data??[]).filter(b=>b.id===legendId&&b.state==='ready').map(b=>({kind:'legend',id:b.id,nodeId:b.currentNodeId})) : [
+      ...bootstrap.missions.filter(m=>m.status==='claimable').map(m=>({kind:'mission',id:m.id,nodeId:null})),
+      ...(legends.data??[]).filter(b=>b.state==='ready').map(b=>({kind:'legend',id:b.id,nodeId:b.currentNodeId})),
+    ];
+    if (!tasks.length) return;
+    claimLock.current=true;setError(null);
+    let latest=bootstrap, collected=0, lastId=tasks[0].id;
+    let savedPayout:BountyPayoutData|null=null;
+    setClaimState({id:lastId,phase:'loading'});
+    try {
+      for (const task of tasks) {
+        if (!mountedRef.current) break;
+        if(task.kind==='mission') latest=await claimMission.mutateAsync({missionId:task.id});
+        else {
+          const result=await customFetch<BountyPayoutData & {claimed:boolean;bootstrap:PlayerBootstrap;statuses:LegendBountyStatus[]}>('/api/player/rewards/legend-bounties/'+encodeURIComponent(task.id)+'/nodes/'+encodeURIComponent(task.nodeId! )+'/claim',{method:'POST'});
+          if(result.claimed)savedPayout={...result,id:task.id};
+          latest=result.bootstrap;queryClient.setQueryData(legendsKey,result.statuses);
+        }
+        queryClient.setQueryData(getGetPlayerBootstrapQueryKey(),latest);
+        collected++;lastId=task.id;
+        if(mountedRef.current){
+          setClaimState({id:task.id,phase:'firing'});
+          boardRef.current?.querySelector<HTMLElement>(`[data-mission-id="${CSS.escape(task.id)}"]`)?.scrollIntoView({block:'center',behavior:'auto'});
+          if(!profileReducedMotion&&!document.hidden&&!window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+            await new Promise(resolve=>window.setTimeout(resolve,220));
+            if(mountedRef.current)setClaimState({id:task.id,phase:'impact'});
+            await new Promise(resolve=>window.setTimeout(resolve,160));
+          }
+        }
+      }
+    } catch {
+      if(mountedRef.current)setError(`${collected?`${collected} rewards saved. `:''}Could not confirm the remaining reward. Retry to check your saved claim.`);
+    }
+    const finish=()=>{
+      if(timerRef.current!==null)window.clearTimeout(timerRef.current);
+      timerRef.current=null;finishRef.current=null;claimLock.current=false;
+      if(mountedRef.current){setClaimState(null);if(savedPayout)setPayout({...savedPayout,reward:{softCurrency:latest.profile.softCurrency-bootstrap.profile.softCurrency,packTickets:latest.profile.packTickets-bootstrap.profile.packTickets,styleShards:latest.profile.styleShards-bootstrap.profile.styleShards}});else if(collected)revealProfileRewards(bootstrap,latest,'bounty-sweep:'+tasks.map(t=>t.id).join(','),'Bounties collected', 'mission');}
+    };
+    if(!mountedRef.current){claimLock.current=false;return;}
+    finishRef.current=finish;
+    if(!collected||profileReducedMotion||document.hidden||window.matchMedia('(prefers-reduced-motion: reduce)').matches)finish();
+    else {setClaimState({id:lastId,phase:'impact'});timerRef.current=window.setTimeout(finish,850);}
+  }
+
   const ready = bootstrap.missions.filter((m) => m.status === 'claimable').length;
 
+  const legendReady=(legends.data??[]).filter(b=>b.state==='ready').length;
   return (
     <section ref={boardRef} className="bounty-hunter-page world-decor-host" data-tab={tab} data-reduced-motion={profileReducedMotion} aria-label="Bounties" aria-busy={!!claimState} data-testid="bounty-board">
       {tab === 'bounties' && (
@@ -143,6 +199,7 @@ export function Missions({ bootstrap }: { bootstrap: PlayerBootstrap }) {
         </div>
       </header>}
 
+      {tab === 'bounties' && <div className="bounty-collect-toolbar"><div><span>THE PAYOUT DESK</span><h2>Put in work. Cash out.</h2><p>Every confirmed reward goes straight into your bag.</p></div><button type="button" disabled={!!claimState || ready+legendReady===0} onClick={()=>void collectAll()}>{claimState ? 'Collecting…' : `Collect all · ${ready+legendReady}`}</button></div>}
       <button type="button" className="bounty-mastery-strip" aria-expanded={tab === 'mastery'} onClick={() => { if (!claimLock.current) setTab(tab === 'mastery' ? 'bounties' : 'mastery'); }} disabled={!!claimState}>
         <GameGlyph name="mastery" /><b>{tab === 'mastery' ? 'Back to Bounties' : 'Hall of Hands'}</b>
         <small>{availableCareerChoices(readCareer(bootstrap.profile.storyProgress.gameplay))} rewards ready</small><span>{tab === 'mastery' ? '←' : 'View →'}</span>
@@ -247,8 +304,10 @@ export function Missions({ bootstrap }: { bootstrap: PlayerBootstrap }) {
             })}
           </div>
         </section>
+        <aside className="bounty-award-case" aria-label="Your trophy cabinet"><img src={getAssetUrl('assets/bounty-hunter/v3/award-case.webp')} alt=""/><div><img src={getAssetUrl('assets/progression/raised-fist.webp')} alt="Fist trophy"/><h2>Hall of Hands</h2><b>{bootstrap.profile.unlockedCosmeticIds.filter(id=>/^(badge|mastery):/.test(id)).length}</b><p>Achievements earned</p><small>Master characters and conquer the block.</small></div></aside>
         </div>
       )}
+      {tab === 'bounties' && <LegendBountyBar openJourney={openJourney} statuses={legends.data ?? []} busy={!!claimState} onClaim={id => void collectAll(id)} loading={legends.isPending} error={legends.isError} onRetry={() => void legends.refetch()} />}
       {tab === 'bounties' && <><StarterMythic bootstrap={bootstrap} placement="banner" /><JohnHenryMythic bootstrap={bootstrap} placement="banner" /></>}
       </div>
       {tab === 'bounties' && (
@@ -256,17 +315,18 @@ export function Missions({ bootstrap }: { bootstrap: PlayerBootstrap }) {
             <div className="bounty-hunter__pov-inner">
               <img
                 className="bounty-hunter__pistol bounty-hunter__pistol--idle"
-                src={getAssetUrl('assets/bounty-hunter/pistol-idle.webp')}
+                src={getAssetUrl('assets/bounty-hunter/v3/minigun-idle.webp')}
                 alt=""
               />
               <img
                 className="bounty-hunter__pistol bounty-hunter__pistol--fired"
-                src={getAssetUrl('assets/bounty-hunter/pistol-fired.webp')}
+                src={getAssetUrl('assets/bounty-hunter/v3/minigun-fired.webp')}
                 alt=""
               />
             </div>
           </div>
       )}
+      {payout&&<BountyPayout payout={payout} reducedMotion={profileReducedMotion} onClose={()=>setPayout(null)} onContinue={id=>{setPayout(null);setOpenJourney(undefined);window.setTimeout(()=>setOpenJourney(id),0);}}/>}
     </section>
   );
 }

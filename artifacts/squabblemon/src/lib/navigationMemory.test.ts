@@ -10,6 +10,12 @@ test('direct entries return to their logical parent without leaving the app', ()
   assert.equal(routeFallback('/game/story/play/chapter-one'), '/game/story');
   assert.equal(routeFallback('/game/story?season=one'), '/game/story');
   assert.equal(routeFallback('/game/challenges'), '/game');
+  assert.equal(routeFallback('/game/shop?view=corner&order=receipt&payment=success'), '/game/shop?view=corner');
+  assert.equal(routeFallback('/game/shop?view=corner'), '/game');
+  assert.equal(routeFallback('/game/shop?view=packs'), '/game');
+  assert.equal(routeFallback('/game/collection?card=guap&variant=gold'), '/game/collection');
+  assert.equal(routeFallback('/game/settings#style'), '/game');
+  assert.equal(routeFallback('/game/online?tab=friends'), '/game');
 });
 
 test('view memory tolerates blocked and corrupt session storage', () => {

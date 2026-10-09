@@ -101,7 +101,7 @@ for (const owner of ['player', 'cpu'] as const) {
       assert.equal(armedSource.sportsComebackUntilRound, 3);
 
       const serialized = JSON.parse(JSON.stringify(armed)) as Match;
-      const arrival = unit('hooper', opponent, 72);
+      const arrival = {...unit('hooper', opponent, 72), basePower: source.basePower + 1};
       const handKey = opponent === 'player' ? 'playerHand' : 'cpuHand';
       const nextPlacement = {
         ...serialized,

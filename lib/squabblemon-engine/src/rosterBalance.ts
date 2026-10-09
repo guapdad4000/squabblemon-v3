@@ -1,4 +1,5 @@
 import type { Card } from './data';
+import { blockbusterWaveCards } from './blockbusterWave';
 import type { CardInstance } from './gameEngine';
 
 /** Printed-value changes; collection and upgrade identities stay stable. */
@@ -20,9 +21,9 @@ export const ROSTER_BALANCE_PATCH: Record<string, Partial<Pick<Card, 'cost' | 'p
   thefeds: { effect: 'On Reveal: Remove up to 4 bonus Hands from the enemy here with the most removable bonus and Lock it. If none has bonus Hands, Lock the strongest enemy. Cannot reduce below printed Hands.' },
   bouncer: { effect: 'On Reveal: Move the strongest active Ongoing enemy here to another open enemy district. If none exists, move the strongest enemy here. Protection, capacity and movement restrictions apply.' },
   godofhookah: { effect: 'Ongoing: At round end, the first enemy damaged by Burn in each district passes 1 Burn to the weakest unburned enemy in the next district. New Burn waits until next round. If that district has enemies but all were already burning, gain +1 Hand, at most once per round.' },
-  'the-shootout': { effect: 'Deal 2 damage to every enemy character here, then 1 damage to your strongest friendly character here. Enemy Protection and defenses apply.' },
-  'the-setup': { effect: 'Sacrifice your weakest character here. Your strongest remaining character here inherits its current Hands plus 2. Requires two friendly characters.' },
-  'the-cookout': { effect: 'Deliver two Soul Food meals to occupied friendly districts, cleansing and granting +1 Hand to the weakest character in each chosen district. Leave a Burnt Plate: at this round end, give one local friendly character 1 Burn, then remove the plate.' },
+  'the-shootout': { effect: blockbusterWaveCards['the-shootout'].effect },
+  'the-setup': { effect: blockbusterWaveCards['the-setup'].effect },
+  'the-cookout': { effect: blockbusterWaveCards['the-cookout'].effect },
 };
 
 export const ROSTER_REVISION_IDS = [

@@ -33,7 +33,7 @@ const stations = [
   { id: 'arcade', label: 'The arcade machine', short: 'Fadecade', icon: Tv, title: 'Got next?', detail: 'Straight to the Back, Stockz, and a whole room of challenges.', action: 'Enter the Fadecade', href: '/game/challenges' },
   { id: 'inventory', label: 'Your inventory bag', short: 'Bag', icon: Briefcase, title: 'Keep it in the bag.', detail: 'Your Clout, tickets, Style Shards, and collection. All accounted for.', action: 'Open your bag', href: '/game/inventory' },
   { id: 'story', label: 'The television', short: 'Story', icon: Tv, title: 'The block is waiting.', detail: 'Pick up your story where you left it.', action: 'Hit the streets', href: '/game/story' },
-  { id: 'training', label: 'The heavy bag', short: 'Train', icon: Dumbbell, title: 'Stay ready.', detail: 'Get your reps in. Then put your gang to work.', action: 'Start training', href: '/game/training' },
+  { id: 'training', label: 'The heavy bag', short: 'Recruit', icon: Dumbbell, title: 'Recruit your gang.', detail: 'Open packs at the heavy bag and bring new fighters to your block.', action: 'Open packs', href: '/game/shop?view=packs' },
   { id: 'cards', label: 'Your gang cards', short: 'Gang', icon: Layers, title: 'Every legend starts here.', detail: 'Build the lineup that runs your block.', action: 'Build your gang', href: '/game/decks' },
   { id: 'phone', label: 'The phone', short: 'Fight', icon: Smartphone, title: 'Call somebody out.', detail: 'Your friend. Your gang. A score to settle.', action: 'Challenge a friend', href: '/game/online' },
   { id: 'music', label: 'The turntable', short: 'Records', icon: Disc3, title: 'Fade Tunes.', detail: 'Music for the room. Made for the block.', action: '', href: '' },

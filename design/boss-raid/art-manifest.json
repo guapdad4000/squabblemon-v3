@@ -1,0 +1,102 @@
+{
+  "tool": "built-in imagegen, one background-removal edit per supplied image",
+  "promptPolicy": "Remove background and floor shadow ONLY. Preserve original pose, character, details, proportions, linework and color. No redesign, redraw, additions or cropped subject.",
+  "assets": [
+    {
+      "name": "oink",
+      "source": "grok-image-604bd7b3-4a5c-488c-b516-8a2f5693732d.jpg",
+      "sourceSha256": "6c9233aa63a60c250d9f9aebcb53fe2a7738f45fefc5c9f73a0efdc2703c2a29",
+      "runtime": "artifacts/squabblemon/public/assets/boss-raid/oink.webp",
+      "sha256": "f2716ecacc9d7d5fcd25a8ef624aca2c335681350d322395f0f84d8f8c5e1739",
+      "bytes": 195314,
+      "width": 720,
+      "height": 1280,
+      "hasAlpha": true,
+      "transparentFraction": 0.4087369791666667
+    },
+    {
+      "name": "hound",
+      "source": "grok-image-dd0c990f-631d-4be4-9abf-718459b3c725.png",
+      "sourceSha256": "5af53c85c00e5d8da7e785529d112dda7459129c1629ef31f6e66b2402508131",
+      "runtime": "artifacts/squabblemon/public/assets/boss-raid/hound.webp",
+      "sha256": "c2911a38898245fef719278130cd46024ead86a30ac25f115373697bd9495775",
+      "bytes": 175160,
+      "width": 853,
+      "height": 1280,
+      "hasAlpha": true,
+      "transparentFraction": 0.631424934056272
+    },
+    {
+      "name": "drone",
+      "source": "grok-image-77d5807c-326b-499c-8bbc-51ecbc9b6ffb.png",
+      "sourceSha256": "1b13df9f515918b2d0c7e80efc63bfca1064c5a6db126bad6c087edf2f1cb96c",
+      "runtime": "artifacts/squabblemon/public/assets/boss-raid/drone.webp",
+      "sha256": "fe57698da90cf41ea0357c0743e7b682951f86a7a3a0685e8259d28d0e4b93d0",
+      "bytes": 69526,
+      "width": 720,
+      "height": 1280,
+      "hasAlpha": true,
+      "transparentFraction": 0.8522081163194445
+    },
+    {
+      "name": "operator",
+      "source": "grok-image-20cdc76e-3c8d-4e60-9caa-880ea69a7a7b.png",
+      "sourceSha256": "77a0b00d5312494d47c4bfaff1a605f4a35957122c02b149614195cf5a066f08",
+      "runtime": "artifacts/squabblemon/public/assets/boss-raid/operator.webp",
+      "sha256": "8e98ecf93a3499cb6dfacd1704326ffc06df30d2c26ff876337eebd90a833911",
+      "bytes": 128094,
+      "width": 720,
+      "height": 1280,
+      "hasAlpha": true,
+      "transparentFraction": 0.6451193576388888
+    },
+    {
+      "name": "hog",
+      "source": "grok-image-596fb964-2055-4b32-925b-c81e48c16f44.png",
+      "sourceSha256": "4e632c8077ce06497480213f6a567a3e2d560ace57a8100a2a7f48b484cbd70d",
+      "runtime": "artifacts/squabblemon/public/assets/boss-raid/hog.webp",
+      "sha256": "ead28010b0b8a1dcb46ed8a31ce2dc3be69dd2729c0e7b108573b56c3ba55ab2",
+      "bytes": 207214,
+      "width": 853,
+      "height": 1280,
+      "hasAlpha": true,
+      "transparentFraction": 0.4733761356975381
+    },
+    {
+      "name": "ham",
+      "source": "grok-image-ccc91174-b080-415f-81ac-f5230a082bf8.png",
+      "sourceSha256": "0ce7d53e7cffd3b1cbea2a21fbd4675c7484809dfc6cff408f264c245410c33b",
+      "runtime": "artifacts/squabblemon/public/assets/boss-raid/ham.webp",
+      "sha256": "95c62970e0033267e3b93917473f4847473e56973f83089c0a1ab055594de7a9",
+      "bytes": 111698,
+      "width": 720,
+      "height": 1280,
+      "hasAlpha": true,
+      "transparentFraction": 0.6309678819444444
+    },
+    {
+      "name": "judge",
+      "source": "grok-image-c8c12be7-8599-4db8-b4d3-1425b11d6835.png",
+      "sourceSha256": "2ac44c30e37b0ca7749bb4e9af4e430574ade7a50f65f923fd0c428b4cdcc89b",
+      "runtime": "artifacts/squabblemon/public/assets/boss-raid/judge.webp",
+      "sha256": "8653c38087deeca7615ae98ef472fb2f92f6bbfe83b4614a73afa6cb2d80f2af",
+      "bytes": 114860,
+      "width": 720,
+      "height": 1280,
+      "hasAlpha": true,
+      "transparentFraction": 0.4230414496527778
+    },
+    {
+      "name": "protester",
+      "source": "grok-image-ee66c078-c1b1-4b6a-9be1-a240d1e358a5.png",
+      "sourceSha256": "740f0fe65ab0dd8b7cc7e67a58d2eb5576f0d1e35b1dfe0637d227579bedc9f6",
+      "runtime": "artifacts/squabblemon/public/assets/boss-raid/protester.webp",
+      "sha256": "ba27a1a1569a50894fd5510b0316116172ee97f4baf1185e73f38c71093b4f43",
+      "bytes": 126324,
+      "width": 720,
+      "height": 1280,
+      "hasAlpha": true,
+      "transparentFraction": 0.6737131076388889
+    }
+  ]
+}

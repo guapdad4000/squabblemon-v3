@@ -698,7 +698,8 @@ router.post(
     let storyProgression: StoryMatchProgressionSnapshot | null = null;
     let verifiedProgression: CardProgressionSnapshot | null = null;
 
-    if (match.mode === "story") {
+    // Completed results use their stored receipt, even if legacy encounter snapshots are missing.
+    if (match.mode === "story" && !alreadyCompleted) {
       try {
         storyProgression = parseStoryMatchProgressionSnapshot(
           match.storyProgressionSnapshot,

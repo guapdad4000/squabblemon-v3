@@ -32,6 +32,9 @@
     "./musicIndustryWave": "./src/musicIndustryWave.ts",
     "./waffleRun": "./src/waffleRun.ts",
     "./johnHenryMythic": "./src/johnHenryMythic.ts",
-    "./arcadeGames": "./src/arcadeGames.ts"
+    "./arcadeGames": "./src/arcadeGames.ts",
+    "./bossNpcCards": "./src/bossNpcCards.ts",
+    "./bossRaid": "./src/bossRaid.ts",
+    "./legendBounties": "./src/legendBounties.ts"
   }
 }

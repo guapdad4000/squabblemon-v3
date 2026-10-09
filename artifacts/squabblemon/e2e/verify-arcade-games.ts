@@ -409,6 +409,13 @@ async function verify(width: number, height: number) {
     await back();
     await open("Girl Fade");
     assert.equal(runs["girl-fade"]!.id, girlId);
+    await page.getByRole("button", { name: "END RUN", exact: true }).click();
+    await page.getByRole("dialog", { name: "End arcade run" })
+      .getByRole("button", { name: "END RUN", exact: true }).click();
+    await page.getByText("CLOCKED OUT", { exact: true }).waitFor();
+    assert.equal(runs["girl-fade"]!.phase, "ended");
+    await shot("girl-results");
+
     await back();
     console.log("Girl Fade passed " + width);
     await open("Fade Market");
@@ -468,9 +475,13 @@ async function verify(width: number, height: number) {
     await back();
     await open("Fade Market");
     assert.equal(runs["fade-market"]!.id, marketId);
-    await page
-      .getByRole("button", { name: "PAUSE SHIFT", exact: true })
-      .click();
+    await page.getByRole("button", { name: "END RUN", exact: true }).click();
+    await page.getByRole("dialog", { name: "End arcade run" })
+      .getByRole("button", { name: "END RUN", exact: true }).click();
+    await page.getByText("CLOCKED OUT", { exact: true }).waitFor();
+    assert.equal(runs["fade-market"]!.phase, "ended");
+    await shot("market-results");
+
     await back();
     console.log("Fade Market passed " + width);
     await open("Block Takeover");

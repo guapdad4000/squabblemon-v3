@@ -22,6 +22,7 @@ test(
       playerProfilesTable,
       onlineRoomsTable,
       onlineCommandsTable,
+      playerCollectionClaimsTable,
     } = await import("@workspace/db");
     const { eq, inArray } = await import("drizzle-orm");
     const { default: router } = await import("../routes/multiplayer");
@@ -47,6 +48,11 @@ test(
         cardProgression: { cornball: { xp: 2800, level: 8 } },
       })),
     );
+    // Start both human players on Titan's friendly-fade node.
+    await db.insert(playerCollectionClaimsTable).values(users.slice(0,2).flatMap(clerkUserId=>[
+      {clerkUserId,milestoneKey:'starter-mythic:nothing-to-lose:v1',reward:{}},
+      {clerkUserId,milestoneKey:'legend-bar:block-party-titan:node:soundcheck:v2',reward:{}},
+    ]));
     const app = express();
     app.use(express.json());
     // Auth is injected ONLY in this isolated test server, never in production routes.
@@ -267,6 +273,11 @@ test(
     assert.deepEqual(finalA.scores, finalB.scores);
     assert.equal(finalA.winner, finalB.winner);
     assert(finalA.revealedDecks);
+    const {getLegendBounties}=await import('./legendBounties');
+    for(const user of users.slice(0,2))assert.equal((await getLegendBounties(user))[0].nodes[1].progress,1);
+    await request(users[0], `/${code}`);
+    assert.equal((await getLegendBounties(users[0]))[0].nodes[1].progress,1,'reconnecting cannot replay a completed fade');
+
     const rematchA = await action(users[0], finalA, { type: "rematch" });
     const rematchB = await action(users[1], finalA, { type: "rematch" });
     assert.equal(rematchB.body.status, "waiting");

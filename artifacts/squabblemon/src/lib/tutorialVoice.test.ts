@@ -184,13 +184,19 @@ test('failed clips advance without trapping the lesson or leaving music quiet', 
 });
 
 
-test('every tour stop and revised card prompt has its exact recording', () => {
-  for (const cue of [...tour.filter(step => step.id !== 'home-5').map(step => ({ id: step.id, text: step.body })), ...pickups]) {
+test('recorded tour and card prompts match exactly; revised navigation never plays obsolete narration', () => {
+  // These revised prompts stay written-only until their matching takes exist.
+  const writtenOnly = new Set(['home-5', 'home-training']);
+  for (const cue of [...tour.filter(step => !writtenOnly.has(step.id)).map(step => ({ id: step.id, text: step.body })), ...pickups]) {
     assert.deepEqual(tutorialClipsForText(cue.text), [cue.id]);
     assert.match(clips.find(clip => clip.id === cue.id)!.revision, /^[a-f0-9]{12}$/);
   }
   assert.ok(clips.every(clip => !/Alice|Tin Man|Scarecrow/.test(clip.text)));
   assert.deepEqual(tutorialClipsForText(tour.find(step => step.id === 'home-5')!.body), [], 'revised draw order must not play the older Gang take');
+  const recruitment = tour.find(step => step.id === 'home-training')!;
+  assert.match(recruitment.body, /heavy bag opens packs/);
+  assert.match(recruitment.body, /Fadecade Training Circuit/);
+  assert.deepEqual(tutorialClipsForText(recruitment.body), [], 'the pack-opening bag must never announce the obsolete Training destination');
 });
 
 test('every first-sighting mechanic still maps its displayed explanation to a dedicated recording', () => {

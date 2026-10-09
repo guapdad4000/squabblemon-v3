@@ -3,6 +3,9 @@ import { DISTRICT_CATALOG, type DistrictId } from '@workspace/squabblemon-engine
 // Board reminders use the issued rule as their key. A changed or older match
 // keeps its own text instead of receiving a reminder for a different rule.
 const reminders = {
+  'raid-checkpoint': 'Unarmored Hands ×3 = boss damage.',
+  'raid-barricade': 'Unarmored Hands ×3 = boss damage.',
+  'raid-evidence': 'Unarmored Hands ×3 = boss damage.',
   'bodega': 'First play: −1 Motion (min 1).',
   'the-trap': 'First move in: +2 Hands.',
   'waff-l-house': 'Behind at round start? First play: +2 Hands.',

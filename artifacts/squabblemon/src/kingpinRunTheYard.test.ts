@@ -54,5 +54,5 @@ test('card text promises the hold-for-next behaviour', async () => {
   const { cards } = await import('./data');
   assert.match(cards['inmate-kingpin'].effect, /if none, Kingpin holds it/);
   assert.equal(cards['inmate-kingpin'].cost, 1);
-  assert.equal(cards['inmate-kingpin'].power, 2);
+  assert.equal(cards['inmate-kingpin'].power, 3);
 });

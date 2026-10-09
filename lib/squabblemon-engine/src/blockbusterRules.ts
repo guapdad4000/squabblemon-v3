@@ -287,9 +287,9 @@ export function resolveBlockbusterWave(
       break;
     }
     case "the-shootout": {
-      for (const target of enemies()) hit(target, 2);
+      for (const target of enemies()) hit(target, 3);
       hit(strongest(allies(), t), 1);
-      note = "Crossfire: 2 damage to every local enemy; 1 to your strongest local character.";
+      note = "Crossfire: 3 damage to every local enemy; 1 to your strongest local character.";
       break;
     }
     case "the-block-spin": {
@@ -297,30 +297,34 @@ export function resolveBlockbusterWave(
         (d) => d.round === m.round && d.lane === l,
       );
       m = { ...m, repeatingLaneDamage: true };
-      for (let repeat = 0; repeat < 2; repeat++)
+      for (let repeat = 0; repeat < 3; repeat++)
         for (const d of history) {
           const c = fighters(m, l).find((c) => c.instanceId === d.instanceId);
           if (c) hit(c, d.amount);
         }
       m = { ...m, repeatingLaneDamage: false };
-      note = `Block Spin: replayed ${history.length} previous hits twice; departed or destroyed cards are skipped.`;
+      note = `Block Spin: replayed ${history.length} previous hits three times; departed or destroyed cards are skipped.`;
       break;
     }
     case "the-sideshow":
       for (const c of fighters(m, l)) {
         const to = destination(c);
-        if (to !== undefined) travel(c, to);
+        if (to !== undefined) {
+          travel(c, to);
+          const moved = fighters(m, to).find(x => x.instanceId === c.instanceId);
+          if (moved && c.owner === owner && c.lane !== moved.lane) buff(moved, 2);
+        }
       }
       break;
     case "the-concert":
       for (const c of fighters(m, l)) {
-        if (choice === 1) hit(c, 1);
-        else buff(c, 1);
+        if (choice === 1) hit(c, c.owner === owner ? 1 : 3);
+        else buff(c, c.owner === owner ? 3 : 1);
       }
       note =
         choice === 1
-          ? "Concert: -1 Hand to everyone in this lane."
-          : "Concert: +1 Hand to everyone in this lane.";
+          ? "Concert: enemies take 3 damage; allies take 1."
+          : "Concert: allies gain +3 Hands; enemies gain +1.";
       break;
     case "the-setup": {
       const crew = allies(),
@@ -330,7 +334,7 @@ export function resolveBlockbusterWave(
           t,
         );
       if (sacrifice && recipient) {
-        const amount = t.rawPower(sacrifice) + 2;
+        const amount = t.rawPower(sacrifice) + 4;
         targets.add(sacrifice.instanceId);
         m = t.sync({
           ...m,
@@ -344,6 +348,7 @@ export function resolveBlockbusterWave(
           ),
         });
         buff(recipient, amount);
+        m = t.protect(m, source, recipient.instanceId);
         note = `The Setup sacrificed ${sacrifice.name}; ${recipient.name} inherited ${amount} Hands.`;
       } else note = "The Setup needs two friendly characters in this lane.";
       break;
@@ -392,21 +397,29 @@ export function resolveBlockbusterWave(
           winner,
         },
       };
+      if (winner !== "draw") buff(weakest(fighters(m, l).filter(c => c.owner === winner), t), 3);
       note = `Dice Game: player [${p.join(", ")}] = ${score(p)}; rival [${c.join(", ")}] = ${score(c)}. ${winner === "draw" ? "Tie: wagers refunded." : winner + " wins the " + wager * 2 + "-Motion pot (cap 9)."}`;
       succeeded = true;
       break;
     }
     case "the-after-party":
-      m = { ...m, afterParty: true };
-      note = "After Party: this fight now ends after round 7. It cannot stack.";
-      succeeded = true;
+      if (!m.afterParty) {
+        m = { ...m, afterParty: true };
+        for (const c of fighters(m).filter(c => c.owner === owner)) buff(c, 2);
+        succeeded = true;
+      }
+      note = "After Party: seven rounds and +2 Hands to your crew on the first extension only.";
       break;
     case "the-kickback":
-      for (const c of fighters(m).filter((c) => c.lane !== l)) travel(c, l);
+      for (const c of fighters(m).filter((c) => c.lane !== l)) {
+        travel(c, l);
+        const moved = fighters(m, l).find(x => x.instanceId === c.instanceId);
+        if (moved && c.owner === owner) buff(moved, 2);
+      }
       break;
     case "the-cookout": {
       const occupied = lanes.filter(lane => fighters(m, lane).some(c => c.owner === owner));
-      for (let i = 0; i < 2 && occupied.length; i++) {
+      for (let i = 0; i < 3 && occupied.length; i++) {
         const to = occupied[t.random(seed + ":food:" + i, occupied.length)];
         const food = {
           ...t.create("soulfood", owner, "cookout", m.nextEventSequence + i),
@@ -428,7 +441,7 @@ export function resolveBlockbusterWave(
           t,
         );
         restore(recipient);
-        buff(recipient, 1);
+        buff(recipient, 2);
       }
       const to = occupied.length ? occupied[t.random(seed + ":burnt", occupied.length)] : l;
       const plate: CardInstance = {
@@ -463,11 +476,11 @@ export function resolveBlockbusterWave(
       break;
     }
     case "the-babyshower": {
-      for (const c of allies()) buff(c, 1);
+      for (const c of allies()) buff(c, 3);
       const key = owner === "player" ? "playerHand" : "cpuHand",
         index = owner === "player" ? "playerDrawIndex" : "cpuDrawIndex";
       const ids = owner === "player" ? m.playerCardIds : m.cpuCardIds;
-      if (ids[m[index]]) {
+      for (let draw = 0; draw < 2 && ids[m[index]]; draw++) {
         m = {
           ...m,
           [key]: [

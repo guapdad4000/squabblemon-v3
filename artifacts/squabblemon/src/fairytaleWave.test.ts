@@ -1,3 +1,4 @@
+import { CREW_MATCHUP_PATCH } from '../../../lib/squabblemon-engine/src/crewMatchupBalance';
 import assert from 'node:assert/strict';
 import { existsSync } from 'node:fs';
 import path from 'node:path';
@@ -85,7 +86,7 @@ test('all 22 identities, approved costs, artwork, eight alternate pairs and trai
   assert.equal(catalogCardById['mr-rabbit'].faction, 'Wonderland');
   assert.equal(catalogCardById['mr-rabbit'].rarity, 'Rare');
   for (const [id, art, name, rarity, , cost, power] of FAIRYTALE_WAVE) {
-    assert.equal(cards[id].name, name); assert.equal(cards[id].cost, cost); assert.equal(cards[id].power, id === 'squabbleserver' ? 2 : power);
+    assert.equal(cards[id].name, name); assert.equal(cards[id].cost, CREW_MATCHUP_PATCH[id]?.cost ?? cost); assert.equal(cards[id].power, CREW_MATCHUP_PATCH[id]?.power ?? (id === 'squabbleserver' ? 2 : power));
     assert.equal(catalogCardById[art].rarity, rarity);
     assert(catalogCardById[art].acquisitionSources.includes('Street Packs'));
     assert(existsSync(path.resolve('public/assets/characters', art + '.webp')));
@@ -121,14 +122,14 @@ for (const owner of ['player','cpu'] as const) {
     const m=blank(), ally=unit('bonnetgirl',owner,0);
     ally.waveOnce={bonnetgirl:true}; ally.powerModifier=5; ally.statuses.frozen=true; m.boards[0]=[ally];
     const {after}=cast(m,'dorothy',owner), returned=find(after,ally);
-    assert.equal(returned.lane,null); assert.equal(returned.powerModifier,0); assert.equal(returned.statuses.frozen,false);
+    assert.equal(returned.lane,null); assert.equal(returned.powerModifier,5); assert.equal(returned.statuses.frozen,false);
     assert.equal(returned.waveOnce?.bonnetgirl,true); assert.equal(getLegalCardCost(after,owner,returned,0),1);
     assert.equal(after.discountTokens.find(t=>t.targetInstanceId===ally.instanceId)?.bonusHandsOnUse,1);
     assert.equal(after.playerDrawIndex,m.playerDrawIndex); assert.equal(after.cpuDrawIndex,m.cpuDrawIndex);
     const played=play(after,returned);
     assert(!played.discountTokens.some(t=>t.targetInstanceId===ally.instanceId));
     assert.equal(played.boards.flat().filter(c=>c.instanceId===ally.instanceId).length,1);
-    assert.equal(find(played,ally).powerModifier,1,'the discounted redeployment also gains +1 Hand');
+    assert.equal(find(played,ally).powerModifier,6,'the discounted redeployment adds +1 to the retained +5 Hands');
   });
   test(`Dorothy can return a cheap ally from another district but not an enemy or token for ${owner}`, () => {
     const m=blank(), distant=unit('bonnetgirl',owner,2,101), enemy=unit('bonnetgirl',owner==='player'?'cpu':'player',0,102);
@@ -245,7 +246,7 @@ test('Alice returns once, leaves a capped Grin and receives +3 on her next deplo
   assert.equal(getLegalCardCost(returned,'player',hand,0),1);
   assert.match(getCardCostExplanation(returned,'player',hand,0),/Drink Me \/ Eat Me/);
   const back=play(returned,hand,0);assert.equal(find(back,alice).powerModifier,3);assert(!find(back,alice).aliceReady);
-  assert.equal(getLegalCardCost(back,'player',find(back,alice),0),2,'Alice’s discount is consumed on replay');
+  assert.equal(getLegalCardCost(back,'player',find(back,alice),0),cards.alice.cost,'Alice’s discount is consumed on replay');
   assert.equal(find(advance(back),alice).lane,0);
   const final=blank();final.round=6;final.boards[0]=[unit('alice','player',0)];
   assert.equal(advance(final).boards[0][0].cardId,'alice');
@@ -253,7 +254,7 @@ test('Alice returns once, leaves a capped Grin and receives +3 on her next deplo
 for (const owner of ['player', 'cpu'] as const) {
   test(`Cheshire in ${owner}'s hand leaves one six-Hand Grin on an ally's return`, () => {
     assert.equal(cards.cheshire.cost, 2);
-    assert.equal(cards.cheshire.power, 3, 'base Hands remain within the cost-plus-one budget');
+    assert.equal(cards.cheshire.power, 4, 'approved Wonderland body');
     const hand = owner === 'player' ? 'playerHand' : 'cpuHand';
     const alice = unit('alice', owner, 0);
     const cheshire = createCardInstance('cheshire', owner, 'hand-grin', 2);
@@ -303,7 +304,7 @@ for (const owner of ['player', 'cpu'] as const) {
 
     const charged = blank();
     const initiallyDrawn = createCardInstance('alice', owner, 'initial-alice', 1);
-    assert.equal(getLegalCardCost(charged, owner, initiallyDrawn, 1), 2);
+    assert.equal(getLegalCardCost(charged, owner, initiallyDrawn, 1), cards.alice.cost);
     const silenced = blank();
     silenced.boards[0] = [{ ...alice, statuses: { ...alice.statuses, silenced: true } }];
     assert.equal(find(advance(silenced), alice).lane, 0, 'suppressed Alice does not return or receive a credit');
@@ -708,4 +709,63 @@ for (const owner of ['player', 'cpu'] as const) test('Heart Starter gives one Ha
     assert.equal(find(result.after, result.source).powerModifier, 0);
     assert(!find(result.after, result.source).statuses.protected);
   }
+});
+
+for (const owner of ['player', 'cpu'] as const) {
+  test(`${owner}: repeated returns retain earned Hands without baking board auras or duplicating bonuses`, () => {
+    const m=blank(), ally=unit('bonnetgirl',owner,0,701);
+    ally.powerModifier=5; ally.continuousPower=20; ally.statuses.burnStacks=2;
+    m.boards[0]=[ally]; const before=JSON.stringify(m);
+    const first=cast(m,'dorothy',owner).after, returned=find(first,ally);
+    assert.equal(JSON.stringify(m),before,'return never mutates the input');
+    assert.equal(returned.powerModifier,5,'earned +Hands survive');
+    assert.equal(returned.continuousPower ?? 0,0,'departed aura is not permanent growth');
+    assert.equal(returned.statuses.burnStacks,0);
+    assert.equal(returned.recoverableDamage,0);
+    const deployed=play(first,returned,1);
+    assert.equal(find(deployed,ally).powerModifier,6,'one Dorothy credit, exactly once');
+    const clean={...deployed,playerMotion:9,cpuMotion:9,boards:deployed.boards.map(lane=>lane.filter(c=>c.cardId!=='dorothy')) as Match['boards']};
+    const second=cast(clean,'dorothy',owner).after;
+    assert.equal(find(second,ally).powerModifier,6,'a second return keeps the updated total');
+    const replayed=play(second,find(second,ally),2);
+    assert.equal(find(replayed,ally).powerModifier,7,'second paid deployment adds only its new credit');
+    assert.equal(replayed.boards.flat().filter(c=>c.instanceId===ally.instanceId).length,1);
+    assert.equal([...replayed.playerHand,...replayed.cpuHand].filter(c=>c.instanceId===ally.instanceId).length,0);
+    assert.deepEqual(cast(JSON.parse(before),'dorothy',owner).after,first,'return is deterministic');
+  });
+  test(`${owner}: Alice carries growth through her once-only return and adds her deployment bonus`, () => {
+    const m=blank(), alice=unit('alice',owner,0,702); alice.powerModifier=5;
+    m.boards[0]=[alice];const returned=advance(m);
+    assert.equal(find(returned,alice).powerModifier,5);
+    const replayed=play(returned,find(returned,alice),1);
+    assert.equal(find(replayed,alice).powerModifier,8);
+    assert.equal(find(advance(replayed),alice).lane,1,'growth retention does not reset the return limit');
+  });
+  test(`${owner}: Mad Hatter adds to a returned card's existing Hands`, () => {
+    const m=blank(), guest=unit('cornball',owner,0,703), other=unit('hooper',owner,1,704);
+    guest.powerModifier=5;other.powerModifier=20;m.boards=[[guest],[other],[]];
+    const after=cast(m,'madhatter',owner).after, returned=find(after,guest);
+    assert.equal(returned.lane,null);
+    assert.equal(returned.powerModifier,9,'retain +5, add +1 return and +3 cheaper-guest reward');
+    assert.equal(find(play(after,returned,2),guest).powerModifier,9,'replay does not award the return bonuses twice');
+  });
+}
+
+for (const owner of ['player','cpu'] as const) test(`${owner}: online return preserves earned Hands in the owner's hand projection`, () => {
+  const member=(userId:string)=>({userId,name:userId,ready:false,deck:decks[0]});
+  let room=joinOnlineRoom(createOnlineRoom(member('a'),owner,0),member('b'),0);
+  room=applyOnlineCommand(applyOnlineCommand(room,'player',{type:'ready'},1),'cpu',{type:'ready'},2);
+  const ally=unit('bonnetgirl',owner,0,801), source=createCardInstance('dorothy',owner,'online-return',802);
+  ally.powerModifier=5;
+  room.match={...blank(),phase:owner==='player'?'player':'cpu-reveal',boards:[[ally],[],[]],[owner==='player'?'playerHand':'cpuHand']:[source]};
+  const before=JSON.stringify(room.match);
+  const returned=applyOnlineCommand(room,owner,{type:'play',instanceId:source.instanceId,lane:1,squabble:false},3);
+  assert.equal(JSON.stringify(room.match),before);
+  const view=onlineRoomView(returned,'RETURN',owner==='player'?'a':'b',4);
+  const handCard=view.hand.find(c=>c.instanceId===ally.instanceId)!;
+  assert(handCard);
+  assert.equal(handCard.powerModifier,5);
+  assert.equal(handCard.power,ally.basePower+5);
+  assert.equal(returned.match!.boards.flat().some(c=>c.instanceId===ally.instanceId),false);
+  assert.deepEqual(applyOnlineCommand(JSON.parse(JSON.stringify(room)),owner,{type:'play',instanceId:source.instanceId,lane:1,squabble:false},3),returned);
 });

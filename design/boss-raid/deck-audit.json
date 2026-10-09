@@ -1,0 +1,497 @@
+[
+  {
+    "deck": "block",
+    "day": "2026-10-08",
+    "score": 120,
+    "tier": {
+      "softCurrency": 175,
+      "packTickets": 2,
+      "styleShards": 15
+    },
+    "actions": 9
+  },
+  {
+    "deck": "block",
+    "day": "2026-10-09",
+    "score": 114,
+    "tier": {
+      "softCurrency": 175,
+      "packTickets": 2,
+      "styleShards": 15
+    },
+    "actions": 9
+  },
+  {
+    "deck": "block",
+    "day": "2026-10-10",
+    "score": 141,
+    "tier": {
+      "softCurrency": 250,
+      "packTickets": 3,
+      "styleShards": 25
+    },
+    "actions": 9
+  },
+  {
+    "deck": "slide",
+    "day": "2026-10-08",
+    "score": 114,
+    "tier": {
+      "softCurrency": 175,
+      "packTickets": 2,
+      "styleShards": 15
+    },
+    "actions": 10
+  },
+  {
+    "deck": "slide",
+    "day": "2026-10-09",
+    "score": 117,
+    "tier": {
+      "softCurrency": 175,
+      "packTickets": 2,
+      "styleShards": 15
+    },
+    "actions": 10
+  },
+  {
+    "deck": "slide",
+    "day": "2026-10-10",
+    "score": 96,
+    "tier": {
+      "softCurrency": 175,
+      "packTickets": 2,
+      "styleShards": 15
+    },
+    "actions": 10
+  },
+  {
+    "deck": "combo",
+    "day": "2026-10-08",
+    "score": 160,
+    "tier": {
+      "softCurrency": 350,
+      "packTickets": 5,
+      "styleShards": 50
+    },
+    "actions": 9
+  },
+  {
+    "deck": "combo",
+    "day": "2026-10-09",
+    "score": 160,
+    "tier": {
+      "softCurrency": 350,
+      "packTickets": 5,
+      "styleShards": 50
+    },
+    "actions": 8
+  },
+  {
+    "deck": "combo",
+    "day": "2026-10-10",
+    "score": 160,
+    "tier": {
+      "softCurrency": 350,
+      "packTickets": 5,
+      "styleShards": 50
+    },
+    "actions": 10
+  },
+  {
+    "deck": "receipts",
+    "day": "2026-10-08",
+    "score": 150,
+    "tier": {
+      "softCurrency": 250,
+      "packTickets": 3,
+      "styleShards": 25
+    },
+    "actions": 10
+  },
+  {
+    "deck": "receipts",
+    "day": "2026-10-09",
+    "score": 126,
+    "tier": {
+      "softCurrency": 175,
+      "packTickets": 2,
+      "styleShards": 15
+    },
+    "actions": 10
+  },
+  {
+    "deck": "receipts",
+    "day": "2026-10-10",
+    "score": 160,
+    "tier": {
+      "softCurrency": 350,
+      "packTickets": 5,
+      "styleShards": 50
+    },
+    "actions": 10
+  },
+  {
+    "deck": "crashout",
+    "day": "2026-10-08",
+    "score": 129,
+    "tier": {
+      "softCurrency": 175,
+      "packTickets": 2,
+      "styleShards": 15
+    },
+    "actions": 8
+  },
+  {
+    "deck": "crashout",
+    "day": "2026-10-09",
+    "score": 63,
+    "tier": {
+      "softCurrency": 100,
+      "packTickets": 1,
+      "styleShards": 0
+    },
+    "actions": 9
+  },
+  {
+    "deck": "crashout",
+    "day": "2026-10-10",
+    "score": 153,
+    "tier": {
+      "softCurrency": 250,
+      "packTickets": 3,
+      "styleShards": 25
+    },
+    "actions": 9
+  },
+  {
+    "deck": "vibes",
+    "day": "2026-10-08",
+    "score": 160,
+    "tier": {
+      "softCurrency": 350,
+      "packTickets": 5,
+      "styleShards": 50
+    },
+    "actions": 10
+  },
+  {
+    "deck": "vibes",
+    "day": "2026-10-09",
+    "score": 87,
+    "tier": {
+      "softCurrency": 100,
+      "packTickets": 1,
+      "styleShards": 0
+    },
+    "actions": 9
+  },
+  {
+    "deck": "vibes",
+    "day": "2026-10-10",
+    "score": 156,
+    "tier": {
+      "softCurrency": 250,
+      "packTickets": 3,
+      "styleShards": 25
+    },
+    "actions": 10
+  },
+  {
+    "deck": "compound",
+    "day": "2026-10-08",
+    "score": 160,
+    "tier": {
+      "softCurrency": 350,
+      "packTickets": 5,
+      "styleShards": 50
+    },
+    "actions": 9
+  },
+  {
+    "deck": "compound",
+    "day": "2026-10-09",
+    "score": 160,
+    "tier": {
+      "softCurrency": 350,
+      "packTickets": 5,
+      "styleShards": 50
+    },
+    "actions": 9
+  },
+  {
+    "deck": "compound",
+    "day": "2026-10-10",
+    "score": 156,
+    "tier": {
+      "softCurrency": 250,
+      "packTickets": 3,
+      "styleShards": 25
+    },
+    "actions": 10
+  },
+  {
+    "deck": "voltage",
+    "day": "2026-10-08",
+    "score": 160,
+    "tier": {
+      "softCurrency": 350,
+      "packTickets": 5,
+      "styleShards": 50
+    },
+    "actions": 6
+  },
+  {
+    "deck": "voltage",
+    "day": "2026-10-09",
+    "score": 160,
+    "tier": {
+      "softCurrency": 350,
+      "packTickets": 5,
+      "styleShards": 50
+    },
+    "actions": 8
+  },
+  {
+    "deck": "voltage",
+    "day": "2026-10-10",
+    "score": 156,
+    "tier": {
+      "softCurrency": 250,
+      "packTickets": 3,
+      "styleShards": 25
+    },
+    "actions": 10
+  },
+  {
+    "deck": "sunday-dinner",
+    "day": "2026-10-08",
+    "score": 160,
+    "tier": {
+      "softCurrency": 350,
+      "packTickets": 5,
+      "styleShards": 50
+    },
+    "actions": 8
+  },
+  {
+    "deck": "sunday-dinner",
+    "day": "2026-10-09",
+    "score": 150,
+    "tier": {
+      "softCurrency": 250,
+      "packTickets": 3,
+      "styleShards": 25
+    },
+    "actions": 8
+  },
+  {
+    "deck": "sunday-dinner",
+    "day": "2026-10-10",
+    "score": 160,
+    "tier": {
+      "softCurrency": 350,
+      "packTickets": 5,
+      "styleShards": 50
+    },
+    "actions": 8
+  },
+  {
+    "deck": "fitness-routes",
+    "day": "2026-10-08",
+    "score": 147,
+    "tier": {
+      "softCurrency": 250,
+      "packTickets": 3,
+      "styleShards": 25
+    },
+    "actions": 8
+  },
+  {
+    "deck": "fitness-routes",
+    "day": "2026-10-09",
+    "score": 99,
+    "tier": {
+      "softCurrency": 175,
+      "packTickets": 2,
+      "styleShards": 15
+    },
+    "actions": 8
+  },
+  {
+    "deck": "fitness-routes",
+    "day": "2026-10-10",
+    "score": 156,
+    "tier": {
+      "softCurrency": 250,
+      "packTickets": 3,
+      "styleShards": 25
+    },
+    "actions": 9
+  },
+  {
+    "deck": "music-tour",
+    "day": "2026-10-08",
+    "score": 159,
+    "tier": {
+      "softCurrency": 250,
+      "packTickets": 3,
+      "styleShards": 25
+    },
+    "actions": 9
+  },
+  {
+    "deck": "music-tour",
+    "day": "2026-10-09",
+    "score": 153,
+    "tier": {
+      "softCurrency": 250,
+      "packTickets": 3,
+      "styleShards": 25
+    },
+    "actions": 10
+  },
+  {
+    "deck": "music-tour",
+    "day": "2026-10-10",
+    "score": 160,
+    "tier": {
+      "softCurrency": 350,
+      "packTickets": 5,
+      "styleShards": 50
+    },
+    "actions": 10
+  },
+  {
+    "deck": "community-table",
+    "day": "2026-10-08",
+    "score": 160,
+    "tier": {
+      "softCurrency": 350,
+      "packTickets": 5,
+      "styleShards": 50
+    },
+    "actions": 8
+  },
+  {
+    "deck": "community-table",
+    "day": "2026-10-09",
+    "score": 160,
+    "tier": {
+      "softCurrency": 350,
+      "packTickets": 5,
+      "styleShards": 50
+    },
+    "actions": 8
+  },
+  {
+    "deck": "community-table",
+    "day": "2026-10-10",
+    "score": 160,
+    "tier": {
+      "softCurrency": 350,
+      "packTickets": 5,
+      "styleShards": 50
+    },
+    "actions": 9
+  },
+  {
+    "deck": "music-industry",
+    "day": "2026-10-08",
+    "score": 153,
+    "tier": {
+      "softCurrency": 250,
+      "packTickets": 3,
+      "styleShards": 25
+    },
+    "actions": 7
+  },
+  {
+    "deck": "music-industry",
+    "day": "2026-10-09",
+    "score": 160,
+    "tier": {
+      "softCurrency": 350,
+      "packTickets": 5,
+      "styleShards": 50
+    },
+    "actions": 8
+  },
+  {
+    "deck": "music-industry",
+    "day": "2026-10-10",
+    "score": 160,
+    "tier": {
+      "softCurrency": 350,
+      "packTickets": 5,
+      "styleShards": 50
+    },
+    "actions": 6
+  },
+  {
+    "deck": "fitness-circuit",
+    "day": "2026-10-08",
+    "score": 111,
+    "tier": {
+      "softCurrency": 175,
+      "packTickets": 2,
+      "styleShards": 15
+    },
+    "actions": 6
+  },
+  {
+    "deck": "fitness-circuit",
+    "day": "2026-10-09",
+    "score": 111,
+    "tier": {
+      "softCurrency": 175,
+      "packTickets": 2,
+      "styleShards": 15
+    },
+    "actions": 6
+  },
+  {
+    "deck": "fitness-circuit",
+    "day": "2026-10-10",
+    "score": 126,
+    "tier": {
+      "softCurrency": 175,
+      "packTickets": 2,
+      "styleShards": 15
+    },
+    "actions": 7
+  },
+  {
+    "deck": "squabblehouse-shift",
+    "day": "2026-10-08",
+    "score": 160,
+    "tier": {
+      "softCurrency": 350,
+      "packTickets": 5,
+      "styleShards": 50
+    },
+    "actions": 7
+  },
+  {
+    "deck": "squabblehouse-shift",
+    "day": "2026-10-09",
+    "score": 160,
+    "tier": {
+      "softCurrency": 350,
+      "packTickets": 5,
+      "styleShards": 50
+    },
+    "actions": 7
+  },
+  {
+    "deck": "squabblehouse-shift",
+    "day": "2026-10-10",
+    "score": 160,
+    "tier": {
+      "softCurrency": 350,
+      "packTickets": 5,
+      "styleShards": 50
+    },
+    "actions": 8
+  }
+]

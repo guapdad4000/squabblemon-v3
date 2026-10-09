@@ -31,7 +31,7 @@ test('revised recommendations remain legal collectibles, not new starters or bat
     assert.ok(!ids.includes('demario-mushroom') && !ids.includes('luigion-powered'));
   }
   assert.equal(cards['inmate-crafty'].cost, 2);
-  assert.equal(cards['inmate-crafty'].power, 3);
+  assert.equal(cards['inmate-crafty'].power, 5);
   assert.equal(cards.watson.cost, 2);
   assert.equal(cards.watson.power, 3);
   assert.equal(cards.demario.cost, 2);
@@ -39,8 +39,8 @@ test('revised recommendations remain legal collectibles, not new starters or bat
   assert.equal(cards.luigion.cost, 2);
   assert.equal(cards.luigion.power, 3);
   assert.equal(MAX_MOTION, 9);
-  assert.equal(CARD_BALANCE_VERSION, 50);
-  assert.equal(ONLINE_RULES_VERSION, 50);
+  assert.equal(CARD_BALANCE_VERSION, 51);
+  assert.equal(ONLINE_RULES_VERSION, 51);
 });
 
 for (const crewId of crewIds) for (let tier = 0; tier <= 3; tier++) {

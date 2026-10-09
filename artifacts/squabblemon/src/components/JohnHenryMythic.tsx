@@ -1,3 +1,5 @@
+import { CharacterRecruitment } from './CharacterRecruitment';
+import type { RewardItem } from '../lib/rewardReceipts';
 import { useEffect, useRef, useState } from "react";
 import { useSearch } from "wouter";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -35,6 +37,7 @@ export function JohnHenryMythic({
     [busy, setBusy] = useState(false),
     [error, setError] = useState(""),
     [receipt, setReceipt] = useState("");
+  const [celebrationItems, setCelebrationItems] = useState<RewardItem[] | null>(null);
   const { Component: DialogContent, failed: dialogFailed, preload: preloadDialog } = useDeferredPopup(johnHenryDialog, open);
   const dialog = useRef<HTMLDialogElement>(null),
     lock = useRef(false),
@@ -45,6 +48,7 @@ export function JohnHenryMythic({
     setOpen(false);
     setError("");
     setReceipt("");
+    setCelebrationItems(null);
     return () => {
       activePlayer.current = "";
     };
@@ -96,6 +100,15 @@ export function JohnHenryMythic({
             : "John Henry joined your crew. 1,500 Clout and 5 tickets are in your bag."
           : "Already collected. Your saved reward is safe.",
       );
+      if (result.claimed) {
+        const items: RewardItem[] = [
+          { label: "Clout", amount: result.bootstrap.profile.softCurrency - bootstrap.profile.softCurrency, glyph: "cloutStack" },
+          { label: "Tickets", amount: result.bootstrap.profile.packTickets - bootstrap.profile.packTickets, glyph: "ticket" },
+        ];
+        if (result.duplicateShards) items.push({ label: "Style Shards", amount: result.duplicateShards, glyph: "shards" });
+        setOpen(false);
+        setCelebrationItems(items);
+      }
     } catch (reason) {
       if (activePlayer.current === profileId)
         setError(
@@ -111,6 +124,7 @@ export function JohnHenryMythic({
   const art = getAssetUrl("assets/john-henry-mythic/roadmap.webp");
   return (
     <>
+      {celebrationItems && <CharacterRecruitment id="john-henry" items={celebrationItems} reduced={bootstrap.profile.settings.reducedMotion} returnFocus={opener.current} onClose={() => setCelebrationItems(null)} />}
       {placement === "shortcut" ? (
         !claimed && (
           <button

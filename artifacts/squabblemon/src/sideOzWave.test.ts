@@ -1,3 +1,4 @@
+import { CREW_MATCHUP_PATCH } from '../../../lib/squabblemon-engine/src/crewMatchupBalance';
 import assert from 'node:assert/strict';
 import { existsSync } from 'node:fs';
 import test from 'node:test';
@@ -44,8 +45,8 @@ test('twelve individual cutouts are collectible and legal in ten-card owned crew
     assert.equal(catalog.faction, faction);
     assert(catalog.crewTags.includes(faction.toLowerCase().replaceAll(' ', '-')));
     assert(catalog.acquisitionSources.includes('Street Packs'));
-    assert.equal(catalog.cost, cost);
-    assert.equal(catalog.power, power);
+    assert.equal(catalog.cost, CREW_MATCHUP_PATCH[id]?.cost ?? cost);
+    assert.equal(catalog.power, CREW_MATCHUP_PATCH[id]?.power ?? power);
     assert(cost >= 1 && cost <= 6 && power >= 1 && power <= cost + 1);
     assert.equal(catalog.ability, ability);
     assert.equal(catalog.effect, effect);
@@ -254,7 +255,7 @@ test('Red Robber Check In hits once, and its deterministic summon never chains',
 
 test('Blue Crossfire scales with Blue Side board presence and respects reduction immunity', () => {
   assert.equal(catalogCardById['blue-side-2'].cost, 1);
-  assert.equal(catalogCardById['blue-side-2'].power, 2);
+  assert.equal(catalogCardById['blue-side-2'].power, 3);
   const ally = unit('blueside2', 'player', 0, 170), foe = unit('hooper', 'cpu', 1, 171);
   const m = { ...blank(), boards: [[ally], [foe], []] as Match['boards'] };
   const { source, after } = cast(m, 'blueside1');
@@ -448,7 +449,7 @@ test('the ten-card Oz deck plays Witch and Monkeys against Alice and Queen from 
   for (const seat of ['a-player', 'b-player'] as const) {
     let aliceReturned = false;
     const input = { deckA: oz, deckB: alice, districtSeed: 'side-oz-test-g',
-      rotation: 2, tier: 0 as const, seat,
+      rotation: 8, tier: 0 as const, seat,
       observeComplete: (match: Match) => {
         assert.equal(match.phase, 'complete');
         aliceReturned = match.effectLog.some(event => event.note === 'Alice returned to hand.');

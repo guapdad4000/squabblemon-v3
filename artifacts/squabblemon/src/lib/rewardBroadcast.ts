@@ -6,7 +6,7 @@ const last = new Map<RewardBroadcastTag, string>();
 
 /** Call once per match/receipt and retain that choice in its presentation owner. */
 export function selectRewardClip(tag: RewardBroadcastTag): RewardClip | null {
-  const compatible = rewardClips.filter(clip => clip.tags.includes(tag));
+  const compatible = rewardClips.filter(clip => clip.tags.includes(tag) && (tag !== 'reward' || clip.style === 'anime'));
   if (!compatible.length) return null;
   let previous = last.get(tag);
   try { previous ??= sessionStorage.getItem(`sq:broadcast:last:${tag}`) ?? undefined; } catch { /* Storage is optional. */ }
