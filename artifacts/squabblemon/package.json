@@ -24,7 +24,7 @@
     "test:local-practice": "node e2e/verify-local-practice.mjs",
     "test:super-common": "node e2e/verify-super-common.mjs",
     "test:player-journey": "node --import tsx e2e/verify-player-journey.ts",
-    "test:online": "node --import ../../scripts/battle-test-css.mjs --import tsx --test src/multiplayer.test.ts src/components/social/roomActivity.test.tsx",
+    "test:online": "node --import ../../scripts/battle-test-css.mjs --import tsx --test src/multiplayer.test.ts src/lib/multiplayerTransport.test.ts src/lib/rankedLobbyRecovery.test.ts src/components/social/roomActivity.test.tsx",
     "test:online-browser": "pnpm -w run test:fade-park",
     "test:events-browser": "node scripts/check-events-browser.mjs",
     "test:special-moves": "tsx --test src/specialMoves.test.ts",

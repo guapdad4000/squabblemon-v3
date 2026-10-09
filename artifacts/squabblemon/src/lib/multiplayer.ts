@@ -19,15 +19,41 @@ export type RoomSummary = {
   /** Seat-relative series record for the games played in this room. */
   series: { you: number; rival: number; draws: number };
 };
+// Database connection acquisition can take up to 10s on a cold server. Give a
+// write enough time to return its acknowledgement, without leaving polls hung.
+export const ONLINE_READ_TIMEOUT_MS = 12_000;
+export const ONLINE_WRITE_TIMEOUT_MS = 15_000;
+const ONLINE_FRESH_MS = 10_000;
+
+export function isTransientOnlineError(error: unknown): boolean {
+  if (error instanceof ApiError) return error.status >= 500;
+  return error instanceof TypeError ||
+    (error instanceof Error && error.name === "TimeoutError");
+}
+
+export function isOnlineConnectionFresh({ online, hasData, dataUpdatedAt, now, error }: {
+  online: boolean;
+  hasData: boolean;
+  dataUpdatedAt: number;
+  now: number;
+  error?: unknown;
+}): boolean {
+  // One missed poll must not block play on an otherwise current board. Auth,
+  // access and missing-room errors still invalidate the connection immediately.
+  return online && hasData && (!error || isTransientOnlineError(error)) &&
+    now - dataUpdatedAt < ONLINE_FRESH_MS;
+}
+
 // A stalled mobile request must release the poll/mutation so reconnection can recover.
 export const request = async <T>(
   path: string,
   body?: unknown,
   signal?: AbortSignal,
 ): Promise<T> => {
+  signal?.throwIfAborted();
+  const hasBody = body !== undefined;
   const controller = new AbortController();
   const cancel = () => controller.abort(signal?.reason);
-  if (signal?.aborted) cancel();
   signal?.addEventListener("abort", cancel, { once: true });
   const timeout = setTimeout(
     () =>
@@ -37,17 +63,22 @@ export const request = async <T>(
           "TimeoutError",
         ),
       ),
-    8000,
+    hasBody ? ONLINE_WRITE_TIMEOUT_MS : ONLINE_READ_TIMEOUT_MS,
   );
   try {
     return await customFetch<T>(`/api/multiplayer${path}`, {
-      method: body ? "POST" : "GET",
-      body: body ? JSON.stringify(body) : undefined,
+      method: hasBody ? "POST" : "GET",
+      body: hasBody ? JSON.stringify(body) : undefined,
       credentials: "same-origin",
       cache: "no-store",
       responseType: "json",
       signal: controller.signal,
     });
+  } catch (error) {
+    // Some fetch runtimes throw AbortError even when the controller timed out.
+    // Keep the timeout/caller distinction so only safe timeouts are retried.
+    if (controller.signal.aborted) throw controller.signal.reason;
+    throw error;
   } finally {
     clearTimeout(timeout);
     signal?.removeEventListener("abort", cancel);
@@ -84,10 +115,8 @@ export function useFriendMatch(accountId: string, code?: string) {
     enabled: !!code,
     queryFn: async ({ signal }) =>
       newer(await request<OnlineRoomView>(`/${code}`, undefined, signal)),
-    retry: (attempt, error) =>
-      !(
-        error instanceof ApiError && [400, 401, 403, 404].includes(error.status)
-      ) && attempt < 1,
+    retry: (attempt, error) => isTransientOnlineError(error) && attempt < 1,
+    retryDelay: 250,
     refetchInterval: (state) => {
       const error = state.state.error;
       if (
@@ -110,8 +139,8 @@ export function useFriendMatch(accountId: string, code?: string) {
     }) => request<OnlineRoomView>(`/${code}/actions`, input),
     // Retry the identical request ID if an acknowledgement is lost; never double-play.
     networkMode: "always",
-    retry: (count, error) =>
-      (!(error instanceof ApiError) || error.status >= 500) && count < 1,
+    retry: (count, error) => isTransientOnlineError(error) && count < 1,
+    retryDelay: 250,
     onSuccess: (data) => {
       client.setQueryData(key, newer(data));
     },
@@ -145,11 +174,10 @@ export function useFriendMatch(accountId: string, code?: string) {
     };
   }, [accountId, code, client]);
   return {
-    connected:
-      online &&
-      !query.isError &&
-      !!query.data &&
-      now - query.dataUpdatedAt < 10000,
+    connected: isOnlineConnectionFresh({
+      online, hasData: !!query.data, dataUpdatedAt: query.dataUpdatedAt, now,
+      error: query.error,
+    }),
     query,
     mutation,
     accept: (view: OnlineRoomView) =>
@@ -163,5 +191,15 @@ export type RankedLobby = {
   room: OnlineRoomView | null;
 };
 export const getRankedLobby = (signal?: AbortSignal) => request<RankedLobby>('/ranked', undefined, signal);
-export const searchRanked = (deckId: string, requestId: string) => request<RankedLobby>('/ranked/search', { deckId, requestId });
+export async function searchRanked(deckId: string, requestId: string): Promise<RankedLobby> {
+  const input = { deckId, requestId };
+  try {
+    return await request<RankedLobby>("/ranked/search", input);
+  } catch (error) {
+    if (!isTransientOnlineError(error)) throw error;
+    // The server deduplicates this search ID, including when the first attempt
+    // matched successfully but its response was lost. Never mint a new ID here.
+    return request<RankedLobby>("/ranked/search", input);
+  }
+}
 export const cancelRanked = (code: string) => request<OnlineRoomView>('/ranked/cancel', { code });

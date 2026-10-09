@@ -54,6 +54,30 @@ test('ranked routes: human pairing, retries, cancellation race, bot completion, 
   assert.equal((await request(users[0], '/ranked/search', { deckId: 'bad', requestId: randomUUID() })).status, 400);
   assert.equal((await request(users[0], '/ranked/search', { deckId: 'custom', requestId: randomUUID(), points: 5000 })).status, 400);
 
+  const within = async <T>(promise: Promise<T>, label: string): Promise<T> => {
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    try {
+      return await Promise.race([promise, new Promise<never>((_, reject) => {
+        timer = setTimeout(() => reject(new Error(`${label} waited on unrelated matchmaking work`)), 1500);
+      })]);
+    } finally { if (timer) clearTimeout(timer); }
+  };
+  const nativeLocks = process.env.SOCIAL_TEST_OWNED === '1';
+  if (nativeLocks) await t.test('empty lobby reads do not acquire the global matchmaking lock', async () => {
+    const owner = await pool.connect();
+    let pending: ReturnType<typeof ok> | undefined;
+    try {
+      await owner.query('begin');
+      await owner.query('select pg_advisory_xact_lock(72613401)');
+      pending = ok(users[6], '/ranked');
+      assert.equal((await within(pending, 'Empty lobby')).room, null);
+    } finally {
+      await owner.query('rollback');
+      owner.release();
+      await pending;
+    }
+  });
+
   const requestIds = [randomUUID(), randomUUID()];
   await Promise.all([search(users[0], requestIds[0]), search(users[1], requestIds[1])]);
   const a = (await ok(users[0], '/ranked')).room as OnlineRoomView;
@@ -66,6 +90,44 @@ test('ranked routes: human pairing, retries, cancellation race, bot completion, 
   assert.equal((await request(users[2], `/${a.code}`)).status, 404);
   assert.equal((await request(users[2], `/${a.code}/join`, { deckId: 'custom' })).status, 403);
   assert(!JSON.stringify(a).includes('cpuHand')); assert(!JSON.stringify(a).includes(users[1]));
+  if (nativeLocks) await t.test('an active lobby blocked by its room does not stop independent searches', async () => {
+    const owner = await pool.connect(), observer = await pool.connect();
+    let activeRead: ReturnType<typeof ok> | undefined;
+    let independentSearch: ReturnType<typeof search> | undefined;
+    try {
+      await owner.query('begin');
+      await owner.query('select id from online_rooms where code = $1 for update', [a.code]);
+      activeRead = ok(users[0], '/ranked');
+      await within((async () => {
+        for (;;) {
+          const waiting = await observer.query("select 1 from pg_stat_activity where wait_event_type = 'Lock' and query like '%online_rooms%' and pid <> pg_backend_pid()");
+          if (waiting.rowCount) return;
+          await new Promise(resolve => setTimeout(resolve, 15));
+        }
+      })(), 'Active lobby lock observation');
+      independentSearch = search(users[6]);
+      const queued = (await within(independentSearch, 'Independent search')).room;
+      assert.equal(queued.status, 'waiting');
+      assert.equal((await within(ok(users[6], '/ranked/cancel', { code: queued.code }), 'Independent cancellation')).status, 'closed');
+    } finally {
+      await owner.query('rollback');
+      owner.release(); observer.release();
+      await activeRead;
+      const recovered = await independentSearch;
+      if (recovered?.room?.status === 'waiting') await ok(users[6], '/ranked/cancel', { code: recovered.room.code });
+    }
+  });
+
+  await t.test('unchanged active lobby polling does not rewrite the battle snapshot', async () => {
+    const before = await state(a.code);
+    const savedAt = new Date('2026-01-01T00:00:00Z');
+    await db.update(rooms).set({ updatedAt: savedAt }).where(eq(rooms.id, before.id));
+    const unchanged = (await ok(users[0], '/ranked')).room;
+    assert.equal(unchanged.code, a.code);
+    assert.equal(unchanged.revision, a.revision);
+    assert.equal((await state(a.code)).updatedAt.getTime(), savedAt.getTime());
+  });
+
   const surrenderId = randomUUID();
   const loss = await action(users[0], a, { type: 'surrender' }, surrenderId);
   assert.equal(loss.ranked.result.outcome, 'loss'); assert.equal(loss.ranked.result.after, 0);

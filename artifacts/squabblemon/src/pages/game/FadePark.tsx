@@ -9,7 +9,8 @@ import { type PlayerBootstrap } from '@workspace/api-client-react';
 import { getAssetUrl, starterRecipes, validateSavedDeck } from '../../data';
 import { DeckCarousel } from '../../components/DeckCarousel';
 import { rankedStats, rankProgress, type OnlineRoomView } from '@workspace/squabblemon-engine/multiplayer';
-import { cancelRanked, getRankedLobby, onlineErrorMessage, searchRanked, type RankedLobby } from '../../lib/multiplayer';
+import { cancelRanked, getRankedLobby, isOnlineConnectionFresh, isTransientOnlineError, onlineErrorMessage, searchRanked, type RankedLobby } from '../../lib/multiplayer';
+import { rankedLobbyPollInterval, rankedRecoveryResolved, type RankedRecovery } from '../../lib/rankedLobbyRecovery';
 import '../../styles/fade-park.css';
 import { usePersistentDeckSelection } from '../../lib/deckSelection';
 import { loadFeedbackPreferences } from '../../battleFeedback';
@@ -29,9 +30,11 @@ export function FadePark({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   const client = useQueryClient();
   const [, navigate] = useLocation();
   const key = ['fade-park', profile.id];
+  const [recovery, setRecovery] = useState<RankedRecovery | null>(null);
   const query = useQuery({ queryKey: key, queryFn: ({ signal }) => getRankedLobby(signal),
-    refetchInterval: state => state.state.data?.room?.status === 'waiting' ? 1500 : false,
-    staleTime: 0, refetchOnMount: 'always', refetchOnWindowFocus: 'always', refetchOnReconnect: 'always', retry: 1 });
+    refetchInterval: state => rankedLobbyPollInterval(state.state.data?.room, state.state.error, recovery),
+    staleTime: 0, refetchOnMount: 'always', refetchOnWindowFocus: 'always', refetchOnReconnect: 'always',
+    retry: (count, reason) => count < 1 && isTransientOnlineError(reason), retryDelay: 250 });
   const saved = profile.savedDecks.filter(d => validateSavedDeck(d.cardIds, profile.ownedCardIds, d.heroCardId).valid);
   const crews = [...saved.map(d => ({ id: d.id, name: d.name, hero: d.heroCardId!, cards: d.cardIds })),
     ...starterRecipes.filter(d => !saved.some(s => s.id === d.id) && validateSavedDeck(d.catalogCardIds, profile.ownedCardIds, d.hero).valid)
@@ -41,9 +44,11 @@ export function FadePark({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   const [busy, setBusy] = useState(false), [error, setError] = useState<string | null>(null);
   const [clock, setClock] = useState(Date.now());
   const operation = useRef(false), retry = useRef<{ deckId: string; id: string } | null>(null);
+  const mounted = useRef(true);
   const welcomeVoice = useRef<HTMLAudioElement | null>(null);
   const markerVoice = useRef<HTMLAudioElement | null>(null);
   useEffect(() => {
+    mounted.current = true;
     // Fade Park always owns battle music. Clear any result override left by the
     // previous match before the route soundtrack chooses its playlist.
     setBattleMusicMode(null);
@@ -53,6 +58,7 @@ export function FadePark({ bootstrap }: { bootstrap: PlayerBootstrap }) {
       welcomeVoice.current = playVoiceLine('fade-park-welcome', loadFeedbackPreferences().audioEnabled);
     }, 250);
     return () => {
+      mounted.current = false;
       window.clearTimeout(timer);
       stopSoundEffect(welcomeVoice.current);
       // The fight marker belongs to the transition into the match. Its detached
@@ -71,14 +77,31 @@ export function FadePark({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   const searching = room?.status === 'waiting';
   const stats = query.data?.stats ?? rankedStats(null), progress = query.data?.progress ?? rankProgress(stats.points);
   const elapsed = Math.max(0, Math.floor((clock - (room?.ranked?.queuedAt ?? clock)) / 1000));
-  const connected = !query.isError && navigator.onLine;
+  const connected = query.isError
+    ? isOnlineConnectionFresh({ online: navigator.onLine, hasData: !!query.data, dataUpdatedAt: query.dataUpdatedAt, now: clock, error: query.error })
+    : navigator.onLine;
   function enter(view: OnlineRoomView) {
     client.setQueryData(['friend-match', profile.id, view.code], view);
     client.setQueryData<RankedLobby>(key, data => data ? { ...data, room: null } : data);
     navigate(`/game/online/${view.code}`);
   }
   useEffect(() => { if (query.isFetchedAfterMount && !query.isFetching && !query.isError && (room?.status === 'active' || room?.status === 'complete')) enter(room); }, [room?.code, room?.status, query.isFetchedAfterMount, query.isFetching, query.isError]);
-  useEffect(() => { if (!searching) return; const timer = setInterval(() => setClock(Date.now()), 1000); return () => clearInterval(timer); }, [searching]);
+  useEffect(() => {
+    if (!searching && !recovery && !query.isError) return;
+    const timer = setInterval(() => setClock(Date.now()), 1000);
+    return () => clearInterval(timer);
+  }, [searching, recovery, query.isError]);
+  useEffect(() => {
+    if (!recovery) return;
+    if (!query.isFetching && !query.isError && query.data && rankedRecoveryResolved(recovery, query.data.room)) {
+      setRecovery(null); setError(null); retry.current = null;
+    } else if (clock >= recovery.until) setRecovery(null);
+  }, [recovery, room, query.dataUpdatedAt, query.isFetching, query.isError, clock]);
+  function recover(kind: RankedRecovery['kind']) {
+    setRecovery({ kind, until: Date.now() + 30000 });
+    // The server may already have queued, paired, or cancelled this player.
+    void query.refetch();
+  }
   async function search() {
     if (!chosen || operation.current) return;
     operation.current = true; setBusy(true); setError(null);
@@ -91,10 +114,15 @@ export function FadePark({ bootstrap }: { bootstrap: PlayerBootstrap }) {
       await client.cancelQueries({ queryKey: key });
       if (!retry.current || retry.current.deckId !== chosen.id) retry.current = { deckId: chosen.id, id: crypto.randomUUID() };
       const data = await searchRanked(chosen.id, retry.current.id);
-      client.setQueryData<RankedLobby>(key, data); retry.current = null;
+      if (!mounted.current) return;
+      client.setQueryData<RankedLobby>(key, data); retry.current = null; setRecovery(null);
       if (data.room?.status === 'active' || data.room?.status === 'complete') enter(data.room);
-    } catch (e) { setError(onlineErrorMessage(e)); }
-    finally { operation.current = false; setBusy(false); }
+    } catch (e) {
+      if (mounted.current) {
+        setError(onlineErrorMessage(e));
+        if (isTransientOnlineError(e)) recover('search');
+      }
+    } finally { operation.current = false; if (mounted.current) setBusy(false); }
   }
   async function cancel() {
     if (!room || operation.current) return;
@@ -102,10 +130,16 @@ export function FadePark({ bootstrap }: { bootstrap: PlayerBootstrap }) {
     try {
       await client.cancelQueries({ queryKey: key });
       const view = await cancelRanked(room.code);
+      if (!mounted.current) return;
+      setRecovery(null);
       if (view.status === 'active' || view.status === 'complete') enter(view);
       else { client.setQueryData<RankedLobby>(key, data => data ? { ...data, room: null } : data); retry.current = null; }
-    } catch (e) { setError(onlineErrorMessage(e)); }
-    finally { operation.current = false; setBusy(false); }
+    } catch (e) {
+      if (mounted.current) {
+        setError(onlineErrorMessage(e));
+        if (isTransientOnlineError(e)) recover('cancel');
+      }
+    } finally { operation.current = false; if (mounted.current) setBusy(false); }
   }
   return <main className="fade-park" aria-label="Fade Park ranked lobby" data-testid="fade-park" onPointerMove={handlePointerMove}>
     <div className="park-environment" aria-hidden="true">

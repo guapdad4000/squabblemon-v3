@@ -411,7 +411,8 @@ async function refreshRankedRoom(tx: Tx, row: RoomRow, now: number) {
   if (room.status === 'waiting' && room.ranked && now - room.ranked.heartbeatAt > RANKED_QUEUE_IDLE_MS)
     room = { ...room, status: 'closed', revision: room.revision + 1, reason: 'expired' };
   room = await settleRankedRoom(tx, expireOnlineRoom(advanceRankedBot(room, now), now), now, row.id);
-  await saveRoom(tx, row, room, now);
+  // Polling unchanged active rooms must not rewrite the full battle snapshot.
+  if (room.revision !== restore(row.state).revision) await saveRoom(tx, row, room, now);
   return room;
 }
 
@@ -462,12 +463,42 @@ async function matchWaitingRoom(tx: Tx, own: RoomRow, input: OnlineRoom, now: nu
 }
 
 async function rankProfile(tx: Tx, userId: string) {
-  const [profile] = await tx.select().from(playerProfilesTable).where(eq(playerProfilesTable.clerkUserId, userId));
+  const [profile] = await tx.select({ storyProgress: playerProfilesTable.storyProgress, onboardingStep: playerProfilesTable.onboardingStep }).from(playerProfilesTable).where(eq(playerProfilesTable.clerkUserId, userId));
   if (!profile || profile.onboardingStep !== 'complete') throw new OnlineError('Finish your first gang lesson before entering Fade Park.', 403);
   return rankedStats(profile.storyProgress.fadePark);
 }
 
 export async function rankedLobby(userId: string, search?: { deckId: string; requestId: string }) {
+  // This hint chooses a path only. Both paths recheck under their own locks.
+  // Waiting polls go straight to matchmaking rather than paying for two full
+  // transactions each time; active and empty lobbies avoid the queue entirely.
+  const [hint] = search ? [] : await db.select({ status: sql<string>`${onlineRoomsTable.state}->>'status'` })
+    .from(onlineRoomsTable).where(and(isRanked, isOpen, belongsTo(userId)))
+    .orderBy(desc(onlineRoomsTable.createdAt)).limit(1);
+  if (!search && hint?.status !== 'waiting') {
+    // An idle lobby or an already-paired battle cannot claim another queue seat.
+    // Keep these reads off the global matchmaking lock so a busy match/result
+    // cannot hold every unrelated player's search behind its room/profile locks.
+    const current = await db.transaction(async tx => {
+      let stats = await rankProfile(tx, userId);
+      const open = await tx.select().from(onlineRoomsTable)
+        .where(and(isRanked, isOpen, belongsTo(userId)))
+        .orderBy(desc(onlineRoomsTable.createdAt)).for('update');
+      for (const row of open) {
+        if (restore(row.state).status === 'waiting') return { retryQueue: true as const };
+        const now = Date.now();
+        const room = await refreshRankedRoom(tx, row, now);
+        stats = await rankProfile(tx, userId);
+        if (room.status === 'active') {
+          return { stats, progress: rankProgress(stats.points), room: onlineRoomView(room, row.code, userId, now) };
+        }
+      }
+      return { stats, progress: rankProgress(stats.points), room: null };
+    });
+    if (!('retryQueue' in current)) return current;
+    // End the row-lock transaction before acquiring the queue lock. The queue
+    // path rechecks the room, so cancellation/pairing races remain authoritative.
+  }
   return db.transaction(async tx => {
     await tx.execute(sql`select pg_advisory_xact_lock(72613401)`);
     const now = Date.now();
