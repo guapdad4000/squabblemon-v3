@@ -11,6 +11,7 @@ async function scene(page, query = "") {
   await page.getByRole("grid", { name: "Chess board, White at bottom" }).waitFor();
 }
 const square = (page, name) => page.locator(`[data-square="${name}"]`);
+const tierChoice = (page, id, name) => page.getByRole("radio", { name: `Tier ${id}, ${name}`, exact: true });
 async function play(page, from, to) { await square(page, from).click(); await square(page, to).click(); }
 try {
   for (const [name, width, height] of [["small-phone", 320, 700], ["phone", 390, 844], ["tablet", 768, 1024], ["desktop", 1440, 960]]) {
@@ -32,6 +33,14 @@ try {
     assert(grid.width >= 288, `board at ${width}px is ${grid.width}px`);
     assert(Math.abs(grid.width - grid.height) < 1);
     assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
+    for (const label of await page.locator('.park-chess__tier-options label').all()) {
+      const readable = await label.evaluate(element => {
+        const card = element.getBoundingClientRect();
+        const text = element.querySelector('span').getBoundingClientRect();
+        return text.left >= card.left && text.right <= card.right && text.top >= card.top && text.bottom <= card.bottom && card.height >= 44;
+      });
+      assert.equal(readable, true, `tier labels fit their 44px targets at ${width}px`);
+    }
     await square(page, "e2").focus();
     await page.keyboard.press("ArrowUp");
     assert.equal(await page.evaluate(() => document.activeElement?.getAttribute("data-square")), "e3");
@@ -75,6 +84,7 @@ try {
   await page.getByRole("button", { name: "knight", exact: true }).focus();
   await page.keyboard.press("Enter");
   await page.waitForFunction(() => window.__parkChess.run.revision === 1);
+  await page.getByRole("button", { name: "a8, White knight", exact: true }).waitFor();
   assert.match(await square(page, "a8").getAttribute("aria-label"), /White knight/);
   assert.equal(await page.evaluate(() => window.__parkChess.requests.at(-1).body.move.promotion), "n");
   await page.getByRole("dialog").waitFor({ state: "hidden" });
@@ -87,11 +97,14 @@ try {
   assert.equal(await page.getByLabel("Pieces you captured").locator('[data-type="p"][data-color="b"]').count(), 1);
   results.push({ name: "promotion-keyboard-check-captures", passed: true });
 
-  await scene(page, "retry=start");
+  await scene(page, "retry=start&tier=3");
+  await tierChoice(page, 2, "Park Regular").check();
   await page.getByRole("button", { name: "New match", exact: true }).click();
   await page.getByRole("button", { name: "Retry saved action" }).click();
   await page.waitForFunction(() => window.__parkChess.requests.length === 2 && document.querySelector('[data-square="e2"]').getAttribute('aria-disabled') === 'false');
   assert.deepEqual(await page.evaluate(() => window.__parkChess.requests.map(r => r.body)), await page.evaluate(() => [window.__parkChess.requests[0].body, window.__parkChess.requests[0].body]));
+  assert.equal(await page.evaluate(() => window.__parkChess.requests[0].body.tier), 2);
+  assert.equal(await page.evaluate(() => window.__parkChess.run.tier), 2);
   await scene(page, "retry=move");
   await page.getByRole("button", { name: "New match", exact: true }).click();
   await play(page, "e2", "e4");
@@ -121,6 +134,9 @@ try {
   await page.waitForFunction(() => window.__parkChess.bootstrapRefreshes === 1);
   assert.equal(await page.evaluate(() => window.__parkChess.banked), 1);
   assert.equal(await page.evaluate(() => window.__parkChess.campaign.tier), 2);
+  assert.deepEqual(await page.evaluate(() => window.__parkChess.rating), { value: 808, games: 1, peak: 808 });
+  assert.match(await page.locator('.park-chess__rating-change').innerText(), /\+8 PARK RATING/);
+  assert.match(await page.locator('.park-chess__rating').innerText(), /PROVISIONAL 1\/10/);
   assert.equal(await square(page, "g7").getAttribute("aria-disabled"), "true");
   await page.screenshot({ path: `${out}/checkmate-ticket.png`, fullPage: true });
   await page.getByRole("button", { name: "Play tier 2" }).click();
@@ -132,7 +148,87 @@ try {
   await page.waitForFunction(() => window.__parkChess.run.phase === 'resigned');
   assert.equal(await page.evaluate(() => window.__parkChess.banked), 1);
   assert.equal(await page.evaluate(() => window.__parkChess.earned.packTickets), 0);
+  assert.equal(await page.evaluate(() => window.__parkChess.rating.games), 2);
+  assert.match(await page.locator('.park-chess__rating-change').innerText(), /-16 PARK RATING/);
   results.push({ name: "saved-mate-one-ticket-next-tier-confirmed-resign", passed: true });
+
+  await scene(page, "tier=3&start-scene=mate");
+  assert.equal(await page.getByRole("radio").count(), 5);
+  assert.equal(await tierChoice(page, 3, "Hustler").isChecked(), true, "first visit defaults to newest unlocked rival");
+  for (const [id, name] of [[4, "Tactician"], [5, "Block Master"]]) {
+    assert.equal(await page.getByRole("radio", { name: `Tier ${id}, ${name}, locked`, exact: true }).isDisabled(), true);
+  }
+  await tierChoice(page, 1, "Rookie").check();
+  await page.getByRole("button", { name: "New match", exact: true }).click();
+  await page.waitForFunction(() => window.__parkChess.run?.tier === 1);
+  for (const radio of await page.getByRole("radio").all()) assert.equal(await radio.isDisabled(), true, "saved match cannot switch opponents");
+  await play(page, "g6", "g7");
+  await page.getByText("+1 PACK TICKET BANKED", { exact: true }).waitFor();
+  assert.equal(await page.evaluate(() => window.__parkChess.campaign.tier), 3, "an earlier replay cannot unlock a higher rival");
+  assert.equal(await tierChoice(page, 1, "Rookie").isChecked(), true, "replay choice stays after a finished replay");
+  await page.getByRole("button", { name: "Play tier 1", exact: true }).click();
+  await page.waitForFunction(() => window.__parkChess.run.phase === "active");
+  await play(page, "g6", "g7");
+  await page.waitForFunction(() => window.__parkChess.banked === 2);
+  assert.equal(await page.evaluate(() => window.__parkChess.campaign.tier), 3);
+  await tierChoice(page, 3, "Hustler").check();
+  await page.getByRole("button", { name: "Play tier 3", exact: true }).click();
+  await page.waitForFunction(() => window.__parkChess.run.phase === "active");
+  await play(page, "g6", "g7");
+  await page.waitForFunction(() => window.__parkChess.campaign.tier === 4 && window.__parkChess.banked === 3);
+  assert.equal(await tierChoice(page, 4, "Tactician").isChecked(), true, "new unlock becomes the next selected challenge");
+  assert.equal(await page.evaluate(() => window.__parkChess.rating.games), 3, "each completed replay is rated exactly once");
+  await page.screenshot({ path: `${out}/tier-replay-progress-phone.png`, fullPage: true });
+  results.push({ name: "unlocked-tier-replay-tickets-frontier-only-progression-new-unlock-default", passed: true });
+
+  await scene(page, "tier=5&run-tier=2&scene=capture");
+  assert.match(await page.locator('.park-chess__player').first().innerText(), /Park Regular[\s\S]*TIER 2\/5/);
+  assert.match(await page.locator('.park-chess__tier-picker').innerText(), /UNLOCKED 5\/5/);
+  assert.equal(await tierChoice(page, 2, "Park Regular").isChecked(), true);
+  const resumed = await page.evaluate(() => JSON.stringify(window.__parkChess.run));
+  await page.reload();
+  await page.getByRole("grid").waitFor();
+  assert.equal(await page.evaluate(() => JSON.stringify(window.__parkChess.run)), resumed);
+  const unauthorizedTier = await page.evaluate(async () => {
+    const response = await fetch('/api/player/park-chess/start', { method: 'POST', body: JSON.stringify({ requestId: crypto.randomUUID(), tier: 6 }) });
+    return response.status;
+  });
+  assert.equal(unauthorizedTier, 400);
+  assert.equal(await page.evaluate(() => JSON.stringify(window.__parkChess.run)), resumed);
+  const existingTier = await page.evaluate(async () => {
+    const response = await fetch('/api/player/park-chess/start', { method: 'POST', body: JSON.stringify({ requestId: crypto.randomUUID(), tier: 5 }) });
+    return (await response.json()).run.tier;
+  });
+  assert.equal(existingTier, 2, "start cannot replace an active lower-tier match");
+  assert.equal(await page.evaluate(() => JSON.stringify(window.__parkChess.run)), resumed);
+  results.push({ name: "resumed-rival-distinct-from-unlocked-frontier-and-no-active-replacement", passed: true });
+
+  await scene(page, "scene=draw&tier=1");
+  await play(page, "h1", "g1");
+  await page.waitForFunction(() => window.__parkChess.run.phase === "draw");
+  assert.deepEqual(await page.evaluate(() => window.__parkChess.rating), { value: 792, games: 1, peak: 800 });
+  assert.equal(await page.evaluate(() => window.__parkChess.banked), 0);
+  assert.match(await page.locator('.park-chess__rating-change').innerText(), /-8 PARK RATING/);
+  results.push({ name: "draw-rates-against-rival-strength-without-ticket", passed: true });
+
+  await scene(page, "scene=mate&legacy=1");
+  await page.getByText("Older saved match · unrated. Your tickets and tier progress still count.", { exact: true }).waitFor();
+  await play(page, "g6", "g7");
+  await page.getByText("+1 PACK TICKET BANKED", { exact: true }).waitFor();
+  assert.deepEqual(await page.evaluate(() => window.__parkChess.rating), { value: 800, games: 0, peak: 800 });
+  assert.equal(await page.evaluate(() => window.__parkChess.campaign.tier), 2);
+  assert.equal(await page.locator('.park-chess__rating-change').count(), 0);
+  await page.getByRole("button", { name: "Play tier 2", exact: true }).click();
+  await page.waitForFunction(() => window.__parkChess.run.phase === "active");
+  assert.equal(await page.locator('.park-chess__unrated').count(), 0);
+  assert.equal(await page.evaluate(() => window.__parkChess.runRating.rated), true);
+  await scene(page, "old-status=1");
+  assert.match(await page.locator('.park-chess__rating').innerText(), /800[\s\S]*PROVISIONAL 0\/10/);
+  await page.getByRole("button", { name: "How to play" }).click();
+  await page.getByRole("dialog").getByText("Park Rating", { exact: true }).click();
+  await page.getByText("Their ratings are internal estimates, not calibrated human Elo.", { exact: false }).waitFor();
+  await page.getByRole("button", { name: "Close", exact: true }).click();
+  results.push({ name: "unrated-legacy-still-earns-reward-and-safe-old-status-rating-help", passed: true });
 
   await scene(page, "delay=5000");
   await page.getByRole("button", { name: "New match", exact: true }).click();

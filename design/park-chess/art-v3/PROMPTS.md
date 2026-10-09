@@ -1,0 +1,14 @@
+# Chess team orientation and rival pawn color
+
+Generated with the built-in imagegen tool. Edit target: `../art-v1/pieces.png`; annotated gameplay screenshot supplied as a visual request reference.
+
+```text
+Use case: precise-object-edit.
+Asset type: transparent Squabblemon chess-piece sprite atlas.
+Input images: Image 1 is the EDIT TARGET, the existing 2172x724 transparent atlas with 6 columns and 2 rows. Image 2 is only the user's annotated gameplay reference; do not reproduce the board, text or annotations.
+Primary request: Make the player squad face the opponent, and make the rival pawns red.
+Edit ONLY these atlas characters: re-render ALL SIX miniatures in the TOP ROW (the white/blue player team) turned toward the TOP of the image, facing away from the viewer toward the rival. Show the backs and top of their heads and shoulders from the SAME elevated overhead camera. These are upright characters viewed from behind, NOT upside-down pictures. Keep their bodies upright, shoes and pedestals grounded at the bottom of each cell. Preserve each character's recognizable hair, clothes, props and body silhouette: navy hooded YN pawn holding orange drink; muscular black security Bouncer rook; leopard-hat white-shirt rose-holding Simmy knight; red-bandana blue-overall hammer-carrying John Henry bishop; curly-haired green-outfit Ashlee queen; cornrowed white-shirt GUAP king with glasses and gold clenched-fist pendant. Do not force front-facing faces onto the rear view.
+In the BOTTOM ROW (the black/red rival team), change ONLY the FIRST miniature, the YN pawn: give it a vivid RED hooded jacket and red cap details instead of navy blue. Keep its white shoes, dark trousers, orange drink, existing forward-facing pose, black pedestal and red fist emblem. Keep the other FIVE bottom-row characters unchanged, facing toward the bottom of the image.
+Layout invariants: EXACT same wide canvas 2172x724, SIX equal columns and TWO equal rows, each cell362x362. Column order pawn, rook, knight, bishop, queen, king. Player/white-blue is row0; rival/black-red is row1. Twelve separate centered sprites with no overlap, no missing figures, same scale and comparable occupied area. Keep each entire character, hammer, hair, hands, shoes and round base within its own cell, with at least28px transparent margin on every edge so the existing game crop does not cut anything off. Preserve white/cream circular pedestals with blue rims and blue clenched-fist emblems for row0; dark pedestals with red rims and red clenched-fist emblems for row1. Pedestal perspective and emblem positions stay consistent with the target.
+Style: crisp inked top-down anime/comic fighting-game tabletop miniatures, matching Image1 exactly. True clean RGBA transparency around every sprite and between cells. NO background, NO painted checkerboard, NO grid lines, NO labels, NO arrows, NO text, NO watermarks. NEVER crowns or crown-shaped jewelry; use clenched-fist insignia only.
+```

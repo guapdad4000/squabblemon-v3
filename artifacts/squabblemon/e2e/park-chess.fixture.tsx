@@ -3,6 +3,7 @@ import { QueryClient, QueryClientProvider, useQuery } from "@tanstack/react-quer
 import { getGetPlayerBootstrapQueryKey, type PlayerBootstrap } from "@workspace/api-client-react";
 import { createParkChessRun, getParkChessView, playParkChessMove, resignParkChessRun, type ParkChessRun } from "@workspace/squabblemon-engine/parkChess";
 import { PARK_CHESS_LESSONS } from "@workspace/squabblemon-engine/parkChessLessons";
+import { createParkChessRating, getParkChessOpponentRating, settleParkChessRating, type ParkChessRatingState } from "@workspace/squabblemon-engine/parkChessRating";
 import ParkChessGame, { type ParkChessStatus } from "../src/components/fadecade/ParkChessGame";
 import { ParkChessCabinet } from "../src/components/fadecade/ParkChessCabinet";
 import "../src/index.css";
@@ -17,12 +18,15 @@ if (params.has("reset")) {
   history.replaceState(null, "", `${location.pathname}${params.size ? "?" + params : ""}`);
 }
 const saved = localStorage.getItem(storageKey);
-let { run, campaign, banked, applied } = saved ? JSON.parse(saved) : {
+const stored = saved ? JSON.parse(saved) : {
   run: null as ParkChessRun | null,
   campaign: { wins: 0, losses: 0, draws: 0, games: 0, tier: Number(params.get("tier") ?? 1) },
   banked: 0,
   applied: [] as string[],
 };
+let { run, campaign, banked, applied } = stored;
+let rating: ParkChessRatingState = stored.rating ?? createParkChessRating();
+let runRating: ParkChessStatus["runRating"] = stored.runRating ?? null;
 const requests: { path: string; body: Record<string, unknown> }[] = [];
 const aborted: string[] = [];
 let bootstrapRefreshes = 0;
@@ -32,15 +36,18 @@ const specialPositions: Record<string, string> = {
   capture: "7k/8/8/3p4/4P3/8/8/7K w - - 0 1",
   check: "4r2k/8/8/8/8/8/8/4K3 w - - 0 1",
   mate: "7k/8/5KQ1/8/8/8/8/8 w - - 0 1",
+  draw: "7k/8/8/8/8/8/8/R6K w - - 99 1",
 };
-if (!run && params.get("scene")) {
-  run = createParkChessRun(crypto.randomUUID(), campaign.tier);
-  const fen = specialPositions[params.get("scene")!];
-  if (fen) run = { ...run, startFen: fen, fen };
+function fixtureRun(id: string, tier: number, scene: string | null): ParkChessRun {
+  const next = createParkChessRun(id, tier);
+  const fen = scene ? specialPositions[scene] : undefined;
+  return fen ? { ...next, startFen: fen, fen } : next;
 }
-function persist() { localStorage.setItem(storageKey, JSON.stringify({ run, campaign, banked, applied })); }
+if (!run && params.get("scene")) run = fixtureRun(crypto.randomUUID(), Number(params.get("run-tier") ?? campaign.tier), params.get("scene"));
+if (run && !runRating) runRating = { opponent: getParkChessOpponentRating(run.tier), change: null, rated: !saved && !params.has("legacy") };
+function persist() { localStorage.setItem(storageKey, JSON.stringify({ run, campaign, banked, applied, rating, runRating })); }
 function status(): ParkChessStatus {
-  return { run: run ? getParkChessView(run) : null, campaign, earned: { packTickets: run?.phase === "won" ? 1 : 0, softCurrency: 0, styleShards: 0 }, serverNow: Date.now() };
+  return { run: run ? getParkChessView(run) : null, campaign, earned: { packTickets: run?.phase === "won" ? 1 : 0, softCurrency: 0, styleShards: 0 }, ...(!params.has("old-status") ? { rating, runRating } : {}), serverNow: Date.now() };
 }
 persist();
 const bootstrap = { profile: { id: "park-chess-fixture", displayName: "PARK TESTER", settings: { reducedMotion: params.has("reduced") }, wallet: { packTickets: 20 } } } as PlayerBootstrap;
@@ -67,16 +74,26 @@ window.fetch = async (input, init) => {
     const identity = body.actionId ?? body.requestId;
     if (!applied.includes(identity)) {
       if (path.endsWith("/start")) {
-        if (!run || run.phase !== "active") run = createParkChessRun(body.requestId, campaign.tier);
+        const selectedTier = body.tier ?? campaign.tier;
+        if (!Number.isInteger(selectedTier) || selectedTier < 1 || selectedTier > campaign.tier) return respond({ error: "Choose an unlocked tier." }, 400);
+        if (!run || run.phase !== "active") {
+          run = fixtureRun(body.requestId, selectedTier, params.get("start-scene"));
+          runRating = { opponent: getParkChessOpponentRating(selectedTier), change: null, rated: true };
+        }
       } else {
         if (!run || body.revision !== run.revision) return respond({ error: "Your match changed. Sync to resume." }, 409);
         try {
           run = path.endsWith("/resign") ? resignParkChessRun(run) : playParkChessMove(run, body.move);
           if (run.phase !== "active") {
             campaign.games++;
-            if (run.phase === "won") { campaign.wins++; campaign.tier = Math.min(5, campaign.tier + 1); banked++; }
+            if (run.phase === "won") { campaign.wins++; if (run.tier === campaign.tier) campaign.tier = Math.min(5, campaign.tier + 1); banked++; }
             else if (run.phase === "draw") campaign.draws++;
             else campaign.losses++;
+            if (runRating?.rated && !runRating.change) {
+              const settlement = settleParkChessRating(rating, run.tier, run.phase === "won" ? "win" : run.phase === "draw" ? "draw" : "loss");
+              rating = settlement.state;
+              runRating = { ...runRating, change: settlement.change };
+            }
           }
         } catch (error) { return respond({ error: (error as Error).message }, 409); }
       }

@@ -6,9 +6,9 @@ Fullscreen chess in an illustrated overhead Oakland park, with actual Squabbler 
 
 The player is White and the rival is Black. **GUAP is the king and Ashlee is the queen** on both sides; the guide, square labels and queen promotion identify them. Other roles are YN pawn, Bouncer rook, Simmy knight and John Henry bishop. Ordinary legal chess includes check, castling, en passant, all four promotion choices, checkmate and draw rules. Complete move history preserves repetition across reloads. Tap a piece and a marked destination, or use arrow keys and Enter; promotion, help and resignation use existing accessible dialogs. Confirm resignation before ending a match.
 
-Every server-verified checkmate win credits exactly one Pack Ticket. There is no daily cap or cooldown. Draws, losses and resignations credit zero. Each win advances the next opponent: Rookie, Park Regular, Hustler, Tactician, Block Master. Tier five remains replayable for one ticket per subsequent win. Card XP/levels and owned-card stats do not change chess rules.
+Every server-verified checkmate win credits exactly one Pack Ticket. There is no daily cap or cooldown. Draws, losses and resignations credit zero. Beat your highest unlocked opponent to open the next tier: Rookie, Park Regular, Hustler, Tactician, Block Master. Any unlocked tier can be replayed for another ticket per win; earlier-tier wins do not advance the unlocked frontier. Active games retain their saved opponent. Card XP/levels and owned-card stats do not change chess rules.
 
-The server chooses legal AI replies. Tiers increase from seeded random moves to material/position alpha-beta search, with maximum depths of 0/1/2/3/4 and strict node caps of 0/96/650/1800/4000. Budgeted iterative search retains completed results; depth four is conditional on available nodes. These are game difficulty tiers, without an Elo rating claim. Measured opening/midgame/endgame median tier-five replies were 567/710/262 ms, with a peak of 743 ms in those samples.
+The server chooses legal AI replies. Tiers increase from seeded random moves to material/position alpha-beta search, with maximum depths of 0/1/2/3/4 and strict node caps of 0/96/650/1800/4000. Budgeted iterative search retains completed results; depth four is conditional on available nodes. Park Rating starts at 800 and uses Elo-style math against internal bot estimates, separate from human chess ratings. The panel shows current rating, peak, ten provisional games and each completed match's change. Tutorials and matches started before this system remain unrated. See [Park Rating and replays](park-rating-and-replays.md) for the formula, persistence and validation. Measured opening/midgame/endgame median tier-five replies were 567/710/262 ms, with a peak of 743 ms in those samples.
 
 ## Always available chess academy
 
@@ -18,7 +18,7 @@ Each lesson can be restarted and replayed any time. The beginner guide covers tu
 
 ## Persistence and authority
 
-Authenticated `/api/player/park-chess` GET returns the saved match/campaign. POST `/start`, `/:runId/move` and `/:runId/resign` validate strict bodies. Client-supplied FEN, tier, result or rewards are rejected. Profile locks and permanent start/action receipts atomically save game state, campaign progress and exactly-once tickets. Lost responses retry the same IDs; changed, stale or foreign requests conflict. Existing collection-claims JSON stores the data; no SQL migration is required.
+Authenticated `/api/player/park-chess` GET returns the saved match/campaign and Park Rating. POST `/start`, `/:runId/move` and `/:runId/resign` validate strict bodies. Entry accepts an optional unlocked tier from 1–5. Client-supplied FEN, result, rewards or ratings are rejected. Profile locks and permanent start/action receipts atomically save game state, campaign progress, exactly-once tickets and rating changes. Lost responses retry the same IDs; changed, stale or foreign requests conflict. Existing collection-claims JSON stores the data; no SQL migration is required.
 
 ## Art and licensing
 
@@ -26,12 +26,15 @@ Built-in imagegen produced the overhead park, twelve padded Squabbler miniatures
 
 The current Japanese arcade frame is `cabinet-v2.webp`, with GUAP on the left rail and Ashlee on the right. Its master, targeted edit prompt and manifest are in `art-v2/`; the original cabinet remains in `art-v1/`.
 
+The current piece atlas is `pieces-v2.webp`: the player white/blue squad faces up toward the opponent, while rival pawns wear red hoodies and caps. Rival sprite cells are vertically aligned at the same scale as friendly pieces to keep their complete silhouettes inside each square. The generated edit master, prompt and alpha/hash metadata are in `art-v3/`.
+
 The live CRT shows a checkerboard preview with both teams' GUAP kings and Ashlee queens, a Japanese subtitle, five-tier/ticket copy and a yellow 44 px PLAY button. The target pulses on hover/keyboard focus and respects both OS and profile reduced-motion preferences.
 
 Chess rules use pinned `chess.js` 1.4.0. Original BSD-2-Clause license is retained in `lib/squabblemon-engine/licenses/chess.js.txt` and public distribution at `artifacts/squabblemon/public/third-party/chess.js.txt`. See `lib/squabblemon-engine/park-chess-rules.md` for the verified upstream source and engine details.
 
 ## Validation
 
+- Rating/replay follow-up: 43 named engine/rating/lesson/navigation tests passed, including nine rating-math tests. All 16 backend tests passed on both owned PGlite and native PostgreSQL with five connections. All 16 production-component browser scenarios passed, covering 320/390/768/1440 px, frontier-only progression, replay tickets, locked rivals, saved games, retry identity, rating settlement, old-client compatibility and unrated tutorials. API and frontend typechecks and the complete local production build passed.
 - Shared engine: 17 rules/AI tests and 10 lesson tests. All 14 preset moves and scripted replies are legal; wrong-move rejection, continuation, restart and completion are covered. A poisoned-pawn position verifies that the stronger tier avoids the greedy trap.
 - Backend: 6 focused tests passed on both owned PGlite and native PostgreSQL with five connections. Seven same-day wins credited exactly seven tickets; retries/concurrency prevented duplicate rewards; draws/losses/resignation paid zero.
 - Navigation: 7 named tests passed.

@@ -20,7 +20,7 @@ router.get("/player/park-chess", async (req, res) => {
 router.post("/player/park-chess/start", async (req, res) => {
   const body = parkChessStartInput.safeParse(req.body);
   if (!body.success) { res.status(400).json({ error: "Invalid chess entry" }); return; }
-  try { res.json(await startParkChess(getAuth(req).userId!, body.data.requestId)); } catch (error) { failure(res, error); }
+  try { res.json(await startParkChess(getAuth(req).userId!, body.data.requestId, undefined, body.data.tier)); } catch (error) { failure(res, error); }
 });
 router.post("/player/park-chess/:runId/move", async (req, res) => {
   const id = parkChessRunId.safeParse(req.params.runId), body = parkChessMoveInput.safeParse(req.body);

@@ -1,0 +1,257 @@
+{
+  "generator": "built-in imagegen",
+  "atlas": {
+    "columns": [
+      "pawn",
+      "rook",
+      "knight",
+      "bishop",
+      "queen",
+      "king"
+    ],
+    "rows": [
+      "white-blue-facing-up",
+      "black-red-facing-down"
+    ],
+    "cellSize": [
+      362,
+      362
+    ]
+  },
+  "cells": [
+    {
+      "row": 0,
+      "col": 0,
+      "bounds": [
+        84,
+        40,
+        288,
+        337
+      ],
+      "clearMargins": [
+        84,
+        40,
+        73,
+        24
+      ],
+      "redPixels": 2487,
+      "bluePixels": 5422
+    },
+    {
+      "row": 0,
+      "col": 1,
+      "bounds": [
+        56,
+        43,
+        296,
+        338
+      ],
+      "clearMargins": [
+        56,
+        43,
+        65,
+        23
+      ],
+      "redPixels": 6033,
+      "bluePixels": 2387
+    },
+    {
+      "row": 0,
+      "col": 2,
+      "bounds": [
+        85,
+        44,
+        290,
+        338
+      ],
+      "clearMargins": [
+        85,
+        44,
+        71,
+        23
+      ],
+      "redPixels": 8764,
+      "bluePixels": 2391
+    },
+    {
+      "row": 0,
+      "col": 3,
+      "bounds": [
+        52,
+        51,
+        292,
+        337
+      ],
+      "clearMargins": [
+        52,
+        51,
+        69,
+        24
+      ],
+      "redPixels": 13749,
+      "bluePixels": 4949
+    },
+    {
+      "row": 0,
+      "col": 4,
+      "bounds": [
+        74,
+        50,
+        290,
+        338
+      ],
+      "clearMargins": [
+        74,
+        50,
+        71,
+        23
+      ],
+      "redPixels": 3476,
+      "bluePixels": 2159
+    },
+    {
+      "row": 0,
+      "col": 5,
+      "bounds": [
+        74,
+        49,
+        285,
+        338
+      ],
+      "clearMargins": [
+        74,
+        49,
+        76,
+        23
+      ],
+      "redPixels": 3946,
+      "bluePixels": 2402
+    },
+    {
+      "row": 1,
+      "col": 0,
+      "bounds": [
+        71,
+        22,
+        299,
+        301
+      ],
+      "clearMargins": [
+        71,
+        22,
+        62,
+        60
+      ],
+      "redPixels": 14889,
+      "bluePixels": 0
+    },
+    {
+      "row": 1,
+      "col": 1,
+      "bounds": [
+        48,
+        16,
+        292,
+        301
+      ],
+      "clearMargins": [
+        48,
+        16,
+        69,
+        60
+      ],
+      "redPixels": 8734,
+      "bluePixels": 0
+    },
+    {
+      "row": 1,
+      "col": 2,
+      "bounds": [
+        68,
+        14,
+        302,
+        300
+      ],
+      "clearMargins": [
+        68,
+        14,
+        59,
+        61
+      ],
+      "redPixels": 11776,
+      "bluePixels": 0
+    },
+    {
+      "row": 1,
+      "col": 3,
+      "bounds": [
+        62,
+        12,
+        309,
+        300
+      ],
+      "clearMargins": [
+        62,
+        12,
+        52,
+        61
+      ],
+      "redPixels": 19312,
+      "bluePixels": 587
+    },
+    {
+      "row": 1,
+      "col": 4,
+      "bounds": [
+        62,
+        9,
+        297,
+        300
+      ],
+      "clearMargins": [
+        62,
+        9,
+        64,
+        61
+      ],
+      "redPixels": 10817,
+      "bluePixels": 0
+    },
+    {
+      "row": 1,
+      "col": 5,
+      "bounds": [
+        68,
+        13,
+        307,
+        299
+      ],
+      "clearMargins": [
+        68,
+        13,
+        54,
+        62
+      ],
+      "redPixels": 9693,
+      "bluePixels": 0
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "design/park-chess/art-v3/pieces-v2.png",
+      "width": 2172,
+      "height": 724,
+      "hasAlpha": true,
+      "bytes": 1477425,
+      "sha256": "71af529a58b3ad902dd3f126e002bb06efcfeb8e9b12735bcac79fd5c4178b06"
+    },
+    {
+      "path": "artifacts/squabblemon/public/assets/park-chess/pieces-v2.webp",
+      "width": 2172,
+      "height": 724,
+      "hasAlpha": true,
+      "bytes": 324158,
+      "sha256": "a79862267e414d510a72d976d55b15e07b9af2f32464e0d940c2ef2b125fd867"
+    }
+  ]
+}

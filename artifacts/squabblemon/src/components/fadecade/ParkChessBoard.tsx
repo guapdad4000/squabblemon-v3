@@ -21,7 +21,7 @@ export function ChessPiece({ type, color, compact = false }: { type: ParkChessPi
   const [artFailed, setArtFailed] = useState(false);
   return <span className="park-chess__piece" data-color={color} data-type={type} data-compact={compact} aria-hidden="true">
     {!artFailed && <span className="park-chess__piece-art" style={{ "--piece-column": chessPieceOrder.indexOf(type), "--piece-row": color === "w" ? 0 : 1 } as CSSProperties}>
-      <img src={getAssetUrl("assets/park-chess/pieces.webp")} alt="" draggable={false} onError={() => setArtFailed(true)} />
+      <img src={getAssetUrl("assets/park-chess/pieces-v2.webp")} alt="" draggable={false} onError={() => setArtFailed(true)} />
     </span>}
     {artFailed && <Icon className="park-chess__piece-fallback" />}
     <span className="park-chess__piece-role">{type.toUpperCase()}</span>

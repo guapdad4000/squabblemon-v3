@@ -26,8 +26,8 @@ async function position(userId: string, run: ParkChessRun, fen: string) {
   const [row] = await db.select().from(claims).where(and(eq(claims.clerkUserId, userId), eq(claims.milestoneKey, `park-chess:run:v1:${run.id}`)));
   await db.update(claims).set({ reward: { parkChessRun: { ...row.reward.parkChessRun!, state: { ...run, startFen: fen, fen, moves: [] } } } }).where(eq(claims.id, row.id));
 }
-async function mate(userId: string) {
-  const started = await startParkChess(userId, randomUUID(), now);
+async function mate(userId: string, tier?: number) {
+  const started = await startParkChess(userId, randomUUID(), now, tier);
   await position(userId, started.run!, mateFen);
   return moveParkChess(userId, started.run!.id, 0, randomUUID(), { from: "f7", to: "g7" }, now);
 }
@@ -139,7 +139,233 @@ test("stalemate, fifty-move draw, resignation and actual bot checkmate grant no 
   assert.equal(lost.run!.phase, "lost");
   assert.equal(lost.run!.lastBotMove!.san, "Qh4#");
   assert.equal(lost.earned.packTickets, 0);
+  assert.equal(lost.runRating!.change!.result, "loss");
+  assert.equal(lost.rating.games, 5);
   assert.deepEqual(lost.campaign, { wins: 1, losses: 2, draws: 2, games: 5, tier: 2 });
+  assert.equal((await profile(user)).packTickets, 8);
+});
+
+test("unlocked tiers replay at their original difficulty and Rookie wins cannot unlock harder tiers", async t => {
+  const user = await player(t);
+  await mate(user);
+  await mate(user);
+  assert.equal((await getParkChess(user, now)).campaign.tier, 3);
+  for (let index = 0; index < 3; index++) {
+    const requestId = randomUUID();
+    const started = await startParkChess(user, requestId, now, 1);
+    assert.equal(started.run!.tier, 1);
+    assert.equal(started.campaign.tier, 3);
+    await position(user, started.run!, mateFen);
+    const won = await moveParkChess(user, requestId, 0, randomUUID(), { from: "f7", to: "g7" }, now);
+    assert.equal(won.campaign.tier, 3);
+    assert.equal(won.campaign.wins, 3 + index);
+    assert.equal(won.earned.packTickets, 1);
+  }
+  const frontier = await mate(user, 3);
+  assert.equal(frontier.campaign.tier, 4);
+  assert.equal(frontier.campaign.wins, 6);
+  assert.equal((await profile(user)).packTickets, 13);
+  const resumed = await startParkChess(user, randomUUID(), now);
+  assert.equal(resumed.run!.tier, 4, "omitting the tier selects the unlocked frontier, not total wins + 1");
+});
+
+test("start selections reject invalid and locked tiers before saving a run or entry receipt", async t => {
+  const user = await player(t);
+  for (const tier of [0, 6, 1.5, Number.NaN])
+    await assert.rejects(startParkChess(user, randomUUID(), now, tier), error => error instanceof Error && "status" in error && error.status === 400);
+  const lockedId = randomUUID();
+  await assert.rejects(startParkChess(user, lockedId, now, 2), /unlock/i);
+  assert.equal((await getParkChess(user, now)).run, null);
+  await mate(user);
+  const unlocked = await startParkChess(user, lockedId, now, 2);
+  assert.equal(unlocked.run!.tier, 2, "a rejected locked request did not consume its request ID");
+  assert.equal(unlocked.run!.phase, "active");
+  assert.equal((await profile(user)).packTickets, 8);
+});
+
+test("concurrent tier selections preserve the active match and durable entry receipts reject changed retries", async t => {
+  const user = await player(t);
+  await mate(user);
+  const frontier = await startParkChess(user, randomUUID(), now, 2);
+  const replayIds = Array.from({ length: 3 }, () => randomUUID());
+  const starts = await Promise.all(replayIds.map(id => startParkChess(user, id, now, 1)));
+  for (const started of starts) {
+    assert.equal(started.run!.id, frontier.run!.id);
+    assert.equal(started.run!.tier, 2, "a selected replay cannot replace an unfinished match");
+    assert.equal(started.replayed, true);
+  }
+  for (const requestId of replayIds) {
+    const [receipt] = await db.select().from(claims).where(and(eq(claims.clerkUserId, user), eq(claims.milestoneKey, `park-chess:start:v1:${requestId}`)));
+    assert.equal(receipt.reward.parkChessStart!.tier, 2, "the receipt snapshots the actual resumed game difficulty");
+    assert.equal(receipt.reward.parkChessStart!.requestedTier, 1);
+  }
+  await resignParkChess(user, frontier.run!.id, 0, randomUUID(), now);
+  for (const requestId of replayIds) {
+    assert.equal((await startParkChess(user, requestId, now, 1)).run!.phase, "resigned");
+    await assert.rejects(startParkChess(user, requestId, now, 2), /entry ID/i);
+    await assert.rejects(startParkChess(user, requestId, now), /entry ID/i);
+  }
+  const replay = await startParkChess(user, randomUUID(), now, 1);
+  assert.equal(replay.run!.tier, 1);
+  assert.equal(replay.campaign.games, 2);
+  assert.equal(replay.campaign.tier, 2);
+});
+
+test("legacy campaigns preserve their unlocked frontier and legacy retries cannot silently create or switch a game", async t => {
+  const user = await player(t), requestId = randomUUID();
+  await db.insert(claims).values({ clerkUserId: user, milestoneKey: "park-chess:campaign:v1", reward: { parkChessCampaign: { version: 1, state: {
+    wins: 2, losses: 1, draws: 0, games: 3, activeRunId: null, lastRunId: null,
+  } } } });
+  assert.equal((await getParkChess(user, now)).campaign.tier, 3);
+  const replay = await startParkChess(user, requestId, now, 1);
+  await position(user, replay.run!, mateFen);
+  const won = await moveParkChess(user, requestId, 0, randomUUID(), { from: "f7", to: "g7" }, now);
+  assert.equal(won.campaign.wins, 3);
+  assert.equal(won.campaign.tier, 3);
+  assert.equal((await getParkChess(user, now)).campaign.tier, 3, "the migrated frontier is stored independently of accumulated wins");
+  const [receipt] = await db.select().from(claims).where(and(eq(claims.clerkUserId, user), eq(claims.milestoneKey, `park-chess:start:v1:${requestId}`)));
+  await db.update(claims).set({ reward: { parkChessStart: { runId: requestId } } }).where(eq(claims.id, receipt.id));
+  const oldRetry = await startParkChess(user, requestId, now);
+  assert.equal(oldRetry.run!.id, requestId);
+  assert.equal(oldRetry.run!.phase, "won");
+  assert.equal(oldRetry.replayed, true);
+  await assert.rejects(startParkChess(user, requestId, now, 1), /entry ID/i);
+  assert.equal((await profile(user)).packTickets, 8);
+  assert.equal((await startParkChess(user, randomUUID(), now)).run!.tier, 3);
+});
+
+test("a concurrent replay start and checkmate settle once and never advance the frontier twice", async t => {
+  const user = await player(t), started = await startParkChess(user, randomUUID(), now), actionId = randomUUID();
+  await position(user, started.run!, mateFen);
+  const responses = await Promise.all([
+    moveParkChess(user, started.run!.id, 0, actionId, { from: "f7", to: "g7" }, now),
+    startParkChess(user, randomUUID(), now, 1),
+    moveParkChess(user, started.run!.id, 0, actionId, { from: "f7", to: "g7" }, now),
+    startParkChess(user, randomUUID(), now, 1),
+  ]);
+  const saved = await getParkChess(user, now);
+  assert.equal(saved.campaign.games, 1);
+  assert.equal(saved.campaign.wins, 1);
+  assert.equal(saved.campaign.tier, 2);
+  assert.equal((await profile(user)).packTickets, 8);
+  assert.ok(responses.every(response => response.run!.id === started.run!.id || response.run!.tier === 1));
+  assert.deepEqual(saved.rating, { value: 808, games: 1, peak: 808 });
+  if (saved.run!.phase === "active") {
+    assert.equal(saved.run!.tier, 1);
+    assert.equal((await startParkChess(user, randomUUID(), now, 2)).run!.id, saved.run!.id);
+  }
+});
+
+test("Park Rating persists separately, changes once for a result, and does not change during legal or rejected turns", async t => {
+  const user = await player(t), empty = await getParkChess(user, now);
+  assert.deepEqual(empty.rating, { value: 800, games: 0, peak: 800 });
+  assert.equal(empty.runRating, null);
+  const started = await startParkChess(user, randomUUID(), now, 1), run = started.run!;
+  assert.deepEqual(started.runRating, { opponent: 600, change: null, rated: true });
+  await assert.rejects(moveParkChess(user, run.id, 0, randomUUID(), { from: "e2", to: "e5" }, now), /legal|Invalid move/i);
+  const moved = await moveParkChess(user, run.id, 0, randomUUID(), { from: "e2", to: "e4" }, now);
+  assert.deepEqual(moved.rating, empty.rating);
+  assert.equal(moved.runRating!.change, null);
+  const actionId = randomUUID();
+  const ended = await Promise.all([0, 1, 2].map(() => resignParkChess(user, run.id, 1, actionId, now)));
+  for (const result of ended) {
+    assert.deepEqual(result.rating, { value: 776, games: 1, peak: 800 });
+    assert.deepEqual(result.runRating, { opponent: 600, rated: true, change: {
+      before: 800, after: 776, delta: -24, opponent: 600, result: "loss",
+    } });
+    assert.equal(result.campaign.games, 1);
+    assert.equal(result.campaign.tier, 1);
+  }
+  const reload = await getParkChess(user, now);
+  assert.deepEqual(reload.rating, ended[0].rating);
+  assert.deepEqual(reload.runRating, ended[0].runRating);
+  assert.equal((await profile(user)).packTickets, 7);
+  const next = await startParkChess(user, randomUUID(), now);
+  assert.deepEqual(next.rating, reload.rating);
+  assert.deepEqual(next.runRating, { opponent: 600, change: null, rated: true });
+});
+
+test("rated checkmates and draws save their rating receipt with ticket settlement and replay rewards remain unlimited", async t => {
+  const user = await player(t), first = await mate(user, 1);
+  assert.deepEqual(first.rating, { value: 808, games: 1, peak: 808 });
+  assert.deepEqual(first.runRating!.change, { before: 800, after: 808, delta: 8, opponent: 600, result: "win" });
+  assert.equal(first.earned.packTickets, 1);
+  const requestId = randomUUID(), started = await startParkChess(user, requestId, now, 2);
+  assert.deepEqual(started.runRating, { opponent: 800, change: null, rated: true });
+  await position(user, started.run!, mateFen);
+  const actionId = randomUUID();
+  const drawn = await moveParkChess(user, requestId, 0, actionId, { from: "f7", to: "e6" }, now);
+  assert.equal(drawn.run!.reason, "stalemate");
+  assert.deepEqual(drawn.rating, { value: 808, games: 2, peak: 808 });
+  assert.deepEqual(drawn.runRating!.change, { before: 808, after: 808, delta: 0, opponent: 800, result: "draw" });
+  assert.equal(drawn.campaign.tier, 2);
+  assert.equal(drawn.earned.packTickets, 0);
+  const repeated = await moveParkChess(user, requestId, 0, actionId, { from: "f7", to: "e6" }, now);
+  assert.equal(repeated.replayed, true);
+  assert.deepEqual(repeated.rating, drawn.rating);
+  assert.equal((await profile(user)).packTickets, 8);
+  const replay = await mate(user, 1);
+  assert.deepEqual(replay.rating, { value: 815, games: 3, peak: 815 });
+  assert.equal(replay.campaign.tier, 2, "Park Rating is independent of the unlocked tier frontier");
+  assert.equal((await profile(user)).packTickets, 9);
+});
+
+test("pre-rating active games finish unrated and historical wins do not fabricate a Park Rating", async t => {
+  const user = await player(t), started = await startParkChess(user, randomUUID(), now);
+  const [runRow] = await db.select().from(claims).where(and(eq(claims.clerkUserId, user), eq(claims.milestoneKey, `park-chess:run:v1:${started.run!.id}`)));
+  const { ratingBefore: _rating, opponentRating: _opponent, ratingChange: _change, ...legacyRun } = runRow.reward.parkChessRun!;
+  await db.update(claims).set({ reward: { parkChessRun: legacyRun } }).where(eq(claims.id, runRow.id));
+  const [campaignRow] = await db.select().from(claims).where(and(eq(claims.clerkUserId, user), eq(claims.milestoneKey, "park-chess:campaign:v1")));
+  await db.update(claims).set({ reward: { parkChessCampaign: { version: 1, state: {
+    wins: 12, losses: 3, draws: 2, games: 17, activeRunId: started.run!.id, lastRunId: started.run!.id,
+  } } } }).where(eq(claims.id, campaignRow.id));
+  const restored = await getParkChess(user, now);
+  assert.deepEqual(restored.rating, { value: 800, games: 0, peak: 800 });
+  assert.equal(restored.campaign.tier, 5);
+  assert.deepEqual(restored.runRating, { opponent: 600, change: null, rated: false });
+  await position(user, restored.run!, mateFen);
+  const won = await moveParkChess(user, started.run!.id, 0, randomUUID(), { from: "f7", to: "g7" }, now);
+  assert.deepEqual(won.rating, restored.rating);
+  assert.equal(won.runRating!.change, null);
+  assert.equal(won.runRating!.rated, false);
+  assert.equal(won.earned.packTickets, 1);
+  assert.equal(won.campaign.wins, 13);
+  assert.equal((await profile(user)).packTickets, 8);
+  const rated = await startParkChess(user, randomUUID(), now, 5);
+  assert.equal(rated.runRating!.rated, true);
+  assert.equal(rated.runRating!.opponent, 1400);
+  assert.deepEqual(rated.rating, { value: 800, games: 0, peak: 800 });
+});
+
+test("a mismatched rating snapshot cannot pay or overwrite a newer saved rating", async t => {
+  const user = await player(t), started = await startParkChess(user, randomUUID(), now);
+  await position(user, started.run!, mateFen);
+  const [campaignRow] = await db.select().from(claims).where(and(eq(claims.clerkUserId, user), eq(claims.milestoneKey, "park-chess:campaign:v1")));
+  const newerRating = { value: 900, games: 1, peak: 900 };
+  await db.update(claims).set({ reward: { parkChessCampaign: { version: 1, state: {
+    ...(campaignRow.reward.parkChessCampaign!.state as Record<string, unknown>), rating: newerRating,
+  } } } }).where(eq(claims.id, campaignRow.id));
+  await assert.rejects(moveParkChess(user, started.run!.id, 0, randomUUID(), { from: "f7", to: "g7" }, now), /saved rating changed/i);
+  const saved = await getParkChess(user, now);
+  assert.deepEqual(saved.rating, newerRating);
+  assert.equal(saved.run!.phase, "active");
+  assert.equal(saved.run!.revision, 0);
+  assert.equal(saved.campaign.games, 0);
+  assert.equal(saved.runRating!.change, null);
+  assert.equal((await profile(user)).packTickets, 7);
+});
+
+test("the stored opponent rating determines settlement even when the current tier anchor differs", async t => {
+  const user = await player(t), started = await startParkChess(user, randomUUID(), now);
+  await position(user, started.run!, mateFen);
+  const [runRow] = await db.select().from(claims).where(and(eq(claims.clerkUserId, user), eq(claims.milestoneKey, `park-chess:run:v1:${started.run!.id}`)));
+  // A server-authored historical anchor remains part of this game. A later
+  // bot tuning cannot change the expected score of an already-started match.
+  await db.update(claims).set({ reward: { parkChessRun: { ...runRow.reward.parkChessRun!, opponentRating: 1000 } } }).where(eq(claims.id, runRow.id));
+  assert.equal((await getParkChess(user, now)).runRating!.opponent, 1000);
+  const won = await moveParkChess(user, started.run!.id, 0, randomUUID(), { from: "f7", to: "g7" }, now);
+  assert.deepEqual(won.rating, { value: 824, games: 1, peak: 824 });
+  assert.deepEqual(won.runRating!.change, { before: 800, after: 824, delta: 24, opponent: 1000, result: "win" });
   assert.equal((await profile(user)).packTickets, 8);
 });
 
@@ -154,17 +380,22 @@ async function api(t: test.TestContext, userId: string | null) {
   const base = `http://127.0.0.1:${(server.address() as AddressInfo).port}/api/player/park-chess`;
   return { get: () => fetch(base), post: (path: string, body: unknown) => fetch(base + path, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body) }) };
 }
-test("authenticated chess routes reject forged results, tier, history and foreign games, and restore saved legal turns", async t => {
+test("authenticated chess routes validate tier selections, reject forged results and history, and restore saved legal turns", async t => {
   const user = await player(t), other = await player(t);
   const anonymous = await api(t, null), own = await api(t, user), foreign = await api(t, other);
   assert.equal((await anonymous.get()).status, 401);
   assert.equal((await anonymous.post("/start", { requestId: randomUUID() })).status, 401);
   assert.equal((await own.post("/start", { requestId: randomUUID(), tier: 5, fen: mateFen })).status, 400);
+  assert.equal((await own.post("/start", { requestId: randomUUID(), tier: 5 })).status, 409);
+  assert.equal((await own.post("/start", { requestId: randomUUID(), tier: 0 })).status, 400);
+  assert.equal((await own.post("/start", { requestId: randomUUID(), tier: "1" })).status, 400);
+  assert.equal((await own.post("/start", { requestId: randomUUID(), tier: 1, rating: 3000 })).status, 400);
   assert.equal((await own.post("/start", { requestId: "not-a-uuid" })).status, 400);
-  const start = await own.post("/start", { requestId: randomUUID() });
+  const start = await own.post("/start", { requestId: randomUUID(), tier: 1 });
   assert.equal(start.status, 200);
   const state = await start.json() as ParkChessStatus;
   assert.equal((await own.post(`/${state.run!.id}/move`, { revision: 0, actionId: randomUUID(), move: { from: "e2", to: "e4" }, phase: "won", packTickets: 999 })).status, 400);
+  assert.equal((await own.post(`/${state.run!.id}/move`, { revision: 0, actionId: randomUUID(), move: { from: "e2", to: "e4" }, runRating: { change: { delta: 999 } } })).status, 400);
   assert.equal((await own.post(`/${state.run!.id}/move`, { revision: 0, actionId: randomUUID(), move: { from: "e2", to: "e4", fen: mateFen } })).status, 400);
   assert.equal((await foreign.post(`/${state.run!.id}/move`, { revision: 0, actionId: randomUUID(), move: { from: "e2", to: "e4" } })).status, 404);
   assert.equal((await own.post(`/${state.run!.id}/move`, { revision: 0, actionId: randomUUID(), move: { from: "e2", to: "e5" } })).status, 409);
@@ -183,6 +414,8 @@ test("authenticated chess routes reject forged results, tier, history and foreig
 
 test("chess input contracts accept only complete client intents", () => {
   assert.equal(parkChessStartInput.safeParse({ requestId: randomUUID(), wins: 10 }).success, false);
+  for (const tier of [1, 2, 3, 4, 5]) assert.equal(parkChessStartInput.safeParse({ requestId: randomUUID(), tier }).success, true);
+  for (const tier of [0, 6, 1.5, "1", null]) assert.equal(parkChessStartInput.safeParse({ requestId: randomUUID(), tier }).success, false);
   assert.equal(parkChessMoveInput.safeParse({ revision: 0, actionId: randomUUID(), move: { from: "a7", to: "a8", promotion: "q" } }).success, true);
   for (const move of [{ from: "a0", to: "a1" }, { from: "A7", to: "a8" }, { from: "a7", to: "a8", promotion: "k" }])
     assert.equal(parkChessMoveInput.safeParse({ revision: 0, actionId: randomUUID(), move }).success, false);

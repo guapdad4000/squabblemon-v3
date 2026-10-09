@@ -25,7 +25,7 @@ export function ParkChessCabinet({ onOpen }: { onOpen: () => void }) {
             <div className="park-chess-cabinet__tiles" aria-hidden="true">{Array.from({ length: 64 }, (_, i) => <i key={i} data-dark={(Math.floor(i / 8) + i % 8) % 2 === 1} />)}</div>
             <i className="park-chess-cabinet__target" aria-hidden="true" />
             {previewCrew.map((piece, index) => <span className="park-chess-cabinet__piece" key={index} data-position={index} data-color={piece.color} aria-hidden="true">
-              <span className="park-chess-cabinet__sprite" style={{ "--chess-column": piece.column, "--chess-row": piece.color === "w" ? 0 : 1 } as CSSProperties}><img src={getAssetUrl("assets/park-chess/pieces.webp")} alt="" draggable={false} /></span>
+              <span className="park-chess-cabinet__sprite" style={{ "--chess-column": piece.column, "--chess-row": piece.color === "w" ? 0 : 1 } as CSSProperties}><img src={getAssetUrl("assets/park-chess/pieces-v2.webp")} alt="" draggable={false} /></span>
               <b>{piece.role === "king" ? "K" : "Q"}</b>
             </span>)}
           </div>

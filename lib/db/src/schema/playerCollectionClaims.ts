@@ -29,8 +29,15 @@ export type CollectionRoadRewardRecord = {
   waffleRun?: { version: 1; runId: string; day: string; state: unknown; earned: {softCurrency:number;packTickets:number;styleShards:number}; lastActionId?: string };
   /** Unlimited chess runs use permanent start/action receipts and one win payout. */
   parkChessCampaign?: { version: 1; state: unknown };
-  parkChessRun?: { version: 1; runId: string; state: unknown; packTickets: number; startedAt: string; completedAt: string | null };
-  parkChessStart?: { runId: string };
+  parkChessRun?: {
+    version: 1; runId: string; state: unknown; packTickets: number; startedAt: string; completedAt: string | null;
+    /** Missing for games started before Park Rating; those games finish unrated. */
+    ratingBefore?: { value: number; games: number; peak: number };
+    opponentRating?: number;
+    ratingChange?: { before: number; after: number; delta: number; opponent: number; result: "win" | "loss" | "draw" } | null;
+  };
+  /** tier records the actual resumed/new game; requestedTier locks client intent. */
+  parkChessStart?: { runId: string; tier?: number; requestedTier?: number | null };
   parkChessAction?: { runId: string; actionId: string; revision: number; fingerprint: string };
   starterMythic?: { cardId: string; softCurrency: number; packTickets: number; duplicateShards: number };
   cardId?: string;
