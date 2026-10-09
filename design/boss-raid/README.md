@@ -1,6 +1,7 @@
-# Precinct Pressure — daily boss raid
+# Punch on Patrol — daily boss raid
 
-Entry: Fadecade → Precinct Pressure → choose a legal, owned ten-card crew.
+Entry: Fadecade → Punch on Patrol → choose a legal, owned ten-card crew.
+The cabinet opens `?game=punch-on-patrol` on the arcade route. The existing shared Back control returns to the cabinets; direct entries use the same hub fallback, and browser Forward/reload preserves the game screen.
 Officer Oink sits above a dedicated three-lane precinct battlefield with five persistent tiers. Six rounds, two starting Motion increasing each round, real base-level card abilities, native hand draws and round-end/round-start effects. Existing collectible Officer Oink stays unchanged.
 
 ## Blast and score
@@ -77,7 +78,7 @@ The blast uses three CSS/SVG charge paths, one impact and boss shake for 1.5 sec
 - Browser fixture exercises real UI and engine at desktop, two phones, and both iPad orientations, including reduced motion, dialogs, saved reloads, six-round results and interrupted-response retry. Fixture API is mocked; account/wallet authority is tested separately above.
 - Screenshot evidence lives in `screenshots/boss-raid-v2/`. `motion-report.json` confirms all five forms load, advance real frames, pause behind dialogs/off-screen, stay still for reduced motion, and avoid title overlap on phones.
 
-This implementation is local until explicitly committed and published.
+The Punch on Patrol cabinet refresh is included in the Check the Block academy and story puzzle patch.
 
 ## Battlefield UI refinement
 

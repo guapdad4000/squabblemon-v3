@@ -159,10 +159,10 @@ export default function BossRaidGame({
         </div>
         <div className="raid-entry-story">
           <small>DAILY BOSS / THE BLOCK FIGHTS BACK</small>
-          <h1>
-            PRECINCT
+          <h1 aria-label="Punch on Patrol">
+            PUNCH ON
             <br />
-            PRESSURE
+            PATROL
           </h1>
           <p>
             Five evolving bosses. One daily attack. Your damage stays on Oink

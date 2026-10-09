@@ -1,0 +1,46 @@
+/* One contextual scene, one complete evidence editor, one set of actions. */
+.story-puzzle-v3 { background:#070f16; color:#f5eddd; }
+.story-puzzle-v3 .story-puzzle-bg { position:fixed; opacity:.24; filter:brightness(.5) saturate(.9); }
+.story-puzzle-v3 .story-puzzle-content { max-width:1120px; padding-bottom:32px; }
+.story-puzzle-v3 .story-puzzle-header { padding-top:16px; margin:0; border:0; }
+.story-puzzle-v3 .story-puzzle-back { min-height:44px; margin-bottom:4px; color:#cad8df; }
+.story-puzzle-v3 .story-puzzle-header h2 { font-size:clamp(27px,3.3vw,42px); line-height:1.05; color:#ffe8b9; letter-spacing:-.035em; }
+.story-puzzle-v3 .story-puzzle-header p { margin:12px 0 16px; padding:12px 16px; max-width:960px; font-size:14px; line-height:1.6; color:#e4e5de; background:#07111ccc; border-left:3px solid #f6d28d; }
+.story-puzzle-v3 .puzzle-scene { position:relative; height:200px; border:1px solid #f6d28d44; margin:0 0 20px; overflow:hidden; }
+.story-puzzle-v3 .puzzle-scene img { width:100%; height:100%; object-fit:cover; }
+.story-puzzle-v3 .puzzle-scene::after { content:''; position:absolute; inset:0; background:linear-gradient(transparent 70%,#09162288); pointer-events:none; }
+.story-puzzle-v3 .story-puzzle-main { display:grid; grid-template-columns:minmax(0,1fr) 240px; gap:20px; align-items:start; }
+.story-puzzle-v3 .story-puzzle-list { padding:0; gap:8px; }
+.story-puzzle-v3 .story-puzzle-item { min-height:100px; border-radius:3px; gap:10px; transform:none; }
+.story-puzzle-v3 .story-puzzle-item:nth-child(even) { transform:none; }
+.story-puzzle-v3 .story-puzzle-item-content>strong { font:900 italic 18px/1.2 var(--font-display); letter-spacing:0; }
+.story-puzzle-v3 .story-puzzle-item-content>span { font:14px/1.5 var(--font-sans); }
+.story-puzzle-v3 .puzzle-evidence-glyph { width:36px; flex:none; display:grid; place-items:center; color:#775525; padding:4px 0; }
+.story-puzzle-v3 .puzzle-evidence-glyph span { font:900 italic 25px var(--font-display); }
+.story-puzzle-v3 .puzzle-evidence-glyph--portrait { width:64px; position:relative; }
+.story-puzzle-v3 .puzzle-evidence-glyph--portrait img { width:64px; height:76px; object-fit:cover; object-position:top; border:1px solid #8d6d3b; }
+.story-puzzle-v3 .puzzle-evidence-glyph--portrait span { position:absolute; bottom:0; right:0; background:#302519; color:#f5d796; padding:2px 5px; font-size:16px; }
+.story-puzzle-v3 .story-puzzle-sidebar { position:sticky; top:16px; gap:14px; }
+.story-puzzle-v3 .story-puzzle-hints { padding:0; border:0; background:none; }
+.story-puzzle-v3 .story-puzzle-hint-btn { width:100%; min-height:44px; color:#ffe4ad; border-color:#baa477; }
+.story-puzzle-v3 .story-puzzle-hints-list { background:#132632; border:1px solid #536b79; padding:16px; margin:0 0 12px; }
+.story-puzzle-v3 .story-puzzle-hints-list li { font-size:14px; }
+.story-puzzle-v3 .story-puzzle-actions { margin-top:0; }
+.story-puzzle-v3 .story-puzzle-submit { min-height:58px; font:900 italic 18px var(--font-display); color:#1d1b14; background:linear-gradient(#ffedb6,#dab065); border:1px solid #ffedb6; box-shadow:0 4px #7f5b2b; }
+.story-puzzle-v3 .story-puzzle-skip { min-height:44px; }
+.story-puzzle-v3 .house-puzzle-slot { display:block; margin:0 0 5px; font:700 10px var(--font-mono); color:#805b27; }
+.story-puzzle-v3 .house-pass, .story-puzzle-v3 .house-route { margin-bottom:20px; }
+@media(max-width:800px) { .story-puzzle-v3 .story-puzzle-main { grid-template-columns:1fr; gap:16px; } .story-puzzle-v3 .story-puzzle-sidebar { position:static; } }
+@media(max-width:480px) {
+ .story-puzzle-v3 .story-puzzle-content { padding-inline:12px; }
+ .story-puzzle-v3 .puzzle-scene { height:150px; margin-bottom:14px; }
+ .story-puzzle-v3 .story-puzzle-header p { padding:12px; line-height:1.55; }
+ .story-puzzle-v3 .story-puzzle-header h2 { font-size:28px; }
+ .story-puzzle-v3 .story-puzzle-item { min-height:106px; gap:7px; padding:8px 5px; }
+ .story-puzzle-v3 .story-puzzle-item-content>strong { font-size:16px; }
+ .story-puzzle-v3 .story-puzzle-item-content>span { font-size:13px; }
+ .story-puzzle-v3 .puzzle-evidence-glyph { width:28px; }
+ .story-puzzle-v3 .puzzle-evidence-glyph span { font-size:22px; }
+ .story-puzzle-v3 .puzzle-evidence-glyph--portrait { width:44px; }
+ .story-puzzle-v3 .puzzle-evidence-glyph--portrait img { width:44px; height:65px; }
+}

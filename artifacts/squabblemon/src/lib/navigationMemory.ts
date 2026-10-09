@@ -13,6 +13,16 @@ export function rememberHistoryLocation(index: number) {
   writeMemory('route:' + index, location.pathname + location.search + location.hash);
 }
 export function routeFallback(path: string): string {
+  const pathname = path.split(/[?#]/, 1)[0];
+  if (/\/game\/(?:challenges|training)$/.test(pathname)) {
+    const hashIndex = path.indexOf('#');
+    const query = new URLSearchParams(path.slice(path.indexOf('?') + 1, hashIndex < 0 ? undefined : hashIndex));
+    if (['punch-on-patrol', 'check-the-block'].includes(query.get('game') ?? '')) {
+      query.delete('game');
+      const remaining = query.toString();
+      return pathname + (remaining ? '?' + remaining : '') + (hashIndex < 0 ? '' : path.slice(hashIndex));
+    }
+  }
   if (/\/game\/shop\?/.test(path)) {
     const query = new URLSearchParams(path.split('?')[1]?.split('#')[0]);
     if (['item', 'card', 'order', 'payment'].some(key => query.has(key))) {

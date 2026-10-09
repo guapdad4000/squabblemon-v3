@@ -1,0 +1,100 @@
+{
+  "generator": "built-in imagegen",
+  "runtimeConversion": "Sharp WebP quality90; pieces92; alphaQuality100; effort6",
+  "atlas": {
+    "columns": [
+      "pawn",
+      "rook",
+      "knight",
+      "bishop",
+      "queen",
+      "king"
+    ],
+    "rows": [
+      "white-blue",
+      "black-red"
+    ],
+    "cellSize": [
+      362,
+      362
+    ],
+    "identities": [
+      "YN",
+      "Bouncer",
+      "Simmy",
+      "John Henry",
+      "Ashlee",
+      "GUAP"
+    ]
+  },
+  "cabinet": {
+    "screenPercent": [
+      16.55,
+      29.2,
+      67,
+      50.3
+    ]
+  },
+  "artifacts": [
+    {
+      "path": "design/park-chess/art-v1/pieces.png",
+      "dimensions": [
+        2172,
+        724
+      ],
+      "mode": "RGBA",
+      "bytes": 1367747,
+      "sha256": "b5e27b0d9970d3afed60994f167119e080a9ebaf9ae6f9e8b04456bfc3429cad"
+    },
+    {
+      "path": "artifacts/squabblemon/public/assets/park-chess/pieces.webp",
+      "dimensions": [
+        2172,
+        724
+      ],
+      "mode": "RGBA",
+      "bytes": 305196,
+      "sha256": "20c04243656ca07964a9e46b46df48f923cd2183eaa9fb361d9bff79282d6d4c"
+    },
+    {
+      "path": "design/park-chess/art-v1/park-table.png",
+      "dimensions": [
+        1672,
+        941
+      ],
+      "mode": "RGB",
+      "bytes": 3421496,
+      "sha256": "ecff34354a7074b65a5244443f3822bf89d3b645bba7ecc09b1f02859c764f09"
+    },
+    {
+      "path": "artifacts/squabblemon/public/assets/park-chess/park-table.webp",
+      "dimensions": [
+        1672,
+        941
+      ],
+      "mode": "RGB",
+      "bytes": 639536,
+      "sha256": "74f6c2bf006d664605efef23b5e44cfff63850b601e387ceb971485a02598b31"
+    },
+    {
+      "path": "design/park-chess/art-v1/cabinet.png",
+      "dimensions": [
+        1460,
+        1078
+      ],
+      "mode": "RGBA",
+      "bytes": 2150601,
+      "sha256": "9434282a3fc5928510885ccd4f3237cc52a641c56fc5b468d3e96a3ef98fc409"
+    },
+    {
+      "path": "artifacts/squabblemon/public/assets/park-chess/cabinet.webp",
+      "dimensions": [
+        1460,
+        1078
+      ],
+      "mode": "RGBA",
+      "bytes": 400278,
+      "sha256": "e87c3448139b6d6ee7b9a1ffb104bf116b04120d28c606f0e497f610b761de10"
+    }
+  ]
+}

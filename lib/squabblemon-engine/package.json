@@ -35,6 +35,11 @@
     "./arcadeGames": "./src/arcadeGames.ts",
     "./bossNpcCards": "./src/bossNpcCards.ts",
     "./bossRaid": "./src/bossRaid.ts",
-    "./legendBounties": "./src/legendBounties.ts"
+    "./legendBounties": "./src/legendBounties.ts",
+    "./parkChess": "./src/parkChess.ts",
+    "./parkChessLessons": "./src/parkChessLessons.ts"
+  },
+  "dependencies": {
+    "chess.js": "1.4.0"
   }
 }

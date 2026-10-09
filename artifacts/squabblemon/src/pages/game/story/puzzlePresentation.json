@@ -1,0 +1,167 @@
+{
+  "s2-the-morning-after-evidence-order": {
+    "kind": "timeline",
+    "art": "assets/story/puzzles/v2/s2-the-morning-after-evidence-order.webp",
+    "scene": "Harbor dispatch office at dawn, cargo launch already loaded, shipping notices, three wall clocks and sealed crates"
+  },
+  "s2-museum-of-the-block-evidence-order": {
+    "kind": "assembly",
+    "art": "assets/story/puzzles/v2/s2-museum-of-the-block-evidence-order.webp",
+    "scene": "Neighborhood museum restoration bench, old brass handrail, bolts, drilled holes, primer brushes and sequential repair photographs"
+  },
+  "s2-premiere-night-evidence-order": {
+    "kind": "custody",
+    "art": "assets/story/puzzles/v2/s2-premiere-night-evidence-order.webp",
+    "scene": "Film premiere backstage document custody desk, sealed packet, wax seals, signature cards, red velvet and gold spotlight"
+  },
+  "sherlock-missing-reel-sequence": {
+    "kind": "timeline",
+    "art": "assets/story/puzzles/v2/sherlock-missing-reel-sequence.webp",
+    "scene": "Old cinema projection room, missing film reel, film leader, power notice and hallway security monitors"
+  },
+  "sherlock-clocks": {
+    "kind": "timeline",
+    "art": "assets/story/puzzles/v2/sherlock-clocks.webp",
+    "scene": "Detective street parcel case, railway clock, bakery shutter and river bell visible across rainy Victorian urban street"
+  },
+  "sherlock-route": {
+    "kind": "route",
+    "art": "assets/story/puzzles/v2/sherlock-route.webp",
+    "scene": "Detective cart route map desk with station, narrow loading ramp and river dock, damaged delivery cart in background"
+  },
+  "sherlock-tape": {
+    "kind": "reverse",
+    "art": "assets/story/puzzles/v2/sherlock-tape.webp",
+    "scene": "Analog recording studio forensic tape machine, reversed magnetic tape, splice strips and a small brass key"
+  },
+  "sherlock-cable": {
+    "kind": "signal",
+    "art": "assets/story/puzzles/v2/sherlock-cable.webp",
+    "scene": "Pirate weather radio repair bench, microphone, six distinct cable modules and antenna, colorful sockets"
+  },
+  "sherlock-voices": {
+    "kind": "seating",
+    "art": "assets/story/puzzles/v2/sherlock-voices.webp",
+    "scene": "Four recording booths side by side, fan, wall clock, rain window and padded soundproof chamber"
+  },
+  "sherlock-seats": {
+    "kind": "seating",
+    "art": "assets/story/puzzles/v2/sherlock-seats.webp",
+    "scene": "Five empty VIP theater chairs facing illuminated stage, mirrors at far ends, nightclub purple velvet"
+  },
+  "sherlock-ledger": {
+    "kind": "custody",
+    "art": "assets/story/puzzles/v2/sherlock-ledger.webp",
+    "scene": "Brass trophy forensic custody table, authentic trophy beside obvious replica, workshop tags, six sealed transfer envelopes"
+  },
+  "sherlock-proof": {
+    "kind": "timeline",
+    "art": "assets/story/puzzles/v2/sherlock-proof.webp",
+    "scene": "Detective fraud proof desk, email terminal, payment receipt, camera, printer and mismatched clocks"
+  },
+  "oz-route": {
+    "kind": "route",
+    "art": "assets/story/puzzles/v2/oz-route.webp",
+    "scene": "Rainy Oz transit shelter, six bus stops miniature route board, soaked transfer ticket and distant terminal"
+  },
+  "oz-signal": {
+    "kind": "signal",
+    "art": "assets/story/puzzles/v2/oz-signal.webp",
+    "scene": "Oz emergency bridge control panel, single battery, five heavy switches, mechanical interlocks and warning lamps"
+  },
+  "oz-claims": {
+    "kind": "seating",
+    "art": "assets/story/puzzles/v2/oz-claims.webp",
+    "scene": "Oz municipal claims office with four distinct numbered service windows, green brass counters and emerald light"
+  },
+  "oz-flight": {
+    "kind": "timeline",
+    "art": "assets/story/puzzles/v2/oz-flight.webp",
+    "scene": "Oz airborne tram dispatch room, repair logs, platform clock, weather radio and tram outside window"
+  },
+  "alice-sizes": {
+    "kind": "state",
+    "art": "assets/story/puzzles/v2/alice-sizes.webp",
+    "scene": "Wonderland room with tiny door, enormous brass key on tall shelf, cake and potion bottle on ornate table"
+  },
+  "alice-cups": {
+    "kind": "seating",
+    "art": "assets/story/puzzles/v2/alice-cups.webp",
+    "scene": "Wonderland tea assignment table, four distinct cups, spoon, steam, icy cup and floating weightless cup"
+  },
+  "alice-clock": {
+    "kind": "amount",
+    "art": "assets/story/puzzles/v2/alice-clock.webp",
+    "scene": "Wonderland clock workshop with six hour drawers, clock springs and floating golden hour pieces"
+  },
+  "alice-decree": {
+    "kind": "assembly",
+    "art": "assets/story/puzzles/v2/alice-decree.webp",
+    "scene": "Wonderland Queen decree repair table, five torn parchment strips with interlocking jagged edges, broken wax seal"
+  },
+  "alice-law": {
+    "kind": "timeline",
+    "art": "assets/story/puzzles/v2/alice-law.webp",
+    "scene": "Wonderland court clerks desk, wet red ink decree, kitchen bell, courier receipt and skewed clock"
+  },
+  "yasuke-signals": {
+    "kind": "flags",
+    "art": "assets/story/puzzles/v2/yasuke-signals.webp",
+    "scene": "Urban samurai arena marshals desk, exactly four cloth banners white blue gold red, signed marshal scroll"
+  },
+  "yasuke-contract": {
+    "kind": "assembly",
+    "art": "assets/story/puzzles/v2/yasuke-contract.webp",
+    "scene": "Urban samurai public arena contract desk, five paper copies showing progressive physical stamps and crossed-out clauses"
+  },
+  "cellblock-forms": {
+    "kind": "timeline",
+    "art": "assets/story/puzzles/v2/cellblock-forms.webp",
+    "scene": "Cellblock library approval desk, five stamped forms, unit office clock and library clock, warm reading light"
+  },
+  "cellblock-shelves": {
+    "kind": "seating",
+    "art": "assets/story/puzzles/v2/cellblock-shelves.webp",
+    "scene": "Cellblock library borrowing counter, five distinct books diagrams math history prose and poetry, alias lending cards"
+  },
+  "leon-route": {
+    "kind": "route",
+    "art": "assets/story/puzzles/v2/leon-route.webp",
+    "scene": "Flooded neighborhood delivery route planning board, dry library pharmacy church shelter garden and kitchen landmarks"
+  },
+  "leon-day": {
+    "kind": "timeline",
+    "art": "assets/story/puzzles/v2/leon-day.webp",
+    "scene": "Community kitchen afternoon planning desk, phone charger, letter pickup envelope, appointment card, supplies bag and clock"
+  },
+  "squabble-house-breakfast-line": {
+    "kind": "state",
+    "art": "assets/story/puzzles/v2/squabble-house-breakfast-line.webp",
+    "scene": "Squabble House diner waffle station, cold iron, bowl of batter, cooked golden waffle, empty plate and syrup bottle"
+  },
+  "squabble-house-receipt-register": {
+    "kind": "amount",
+    "art": "assets/story/puzzles/v2/squabble-house-receipt-register.webp",
+    "scene": "Squabble House cashier arithmetic desk, detailed blank receipts, coins, food orders and register, warm neon red"
+  },
+  "squabble-house-booth-truce": {
+    "kind": "seating",
+    "art": "assets/story/puzzles/v2/squabble-house-booth-truce.webp",
+    "scene": "Squabble House diner red vinyl five-seat booth with chrome trim, left and right ends clear, no people"
+  },
+  "squabble-house-grill-rush": {
+    "kind": "timeline",
+    "art": "assets/story/puzzles/v2/squabble-house-grill-rush.webp",
+    "scene": "Squabble House busy diner pass, eggs waffle bacon hash browns toast five plated orders, pickup clock and ticket rail"
+  },
+  "squabble-house-dry-route": {
+    "kind": "route",
+    "art": "assets/story/puzzles/v2/squabble-house-dry-route.webp",
+    "scene": "Squabble House wet diner tile floor, yellow safety cone, dry mats winding from front door to service counter"
+  },
+  "squabble-house-feather-file": {
+    "kind": "timeline",
+    "art": "assets/story/puzzles/v2/squabble-house-feather-file.webp",
+    "scene": "Squabble House security investigation desk, five CCTV monitors, feather, stolen waffle and pigeon silhouette at open window"
+  }
+}

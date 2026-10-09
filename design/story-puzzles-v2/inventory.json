@@ -1,0 +1,1709 @@
+[
+  {
+    "chapter": "Chapter Nine: The Morning After",
+    "nodeId": "s2-the-morning-after-evidence",
+    "id": "s2-the-morning-after-evidence-order",
+    "title": "The launch was already loaded",
+    "instruction": "Order the five records by real time. All are Wednesday except the owner\u2019s Monday notice. Dispatch runs 20 minutes fast; other clocks are correct. What was already underway when Rich made his promise?",
+    "imageAssetId": "assets/story/theater/evidence.webp",
+    "pieces": [
+      {
+        "id": "livestream-promise",
+        "label": "Public promise \u2014 Wednesday 20:00",
+        "detail": "Synchronized stream: \u201cNo changes before inspection.\u201d"
+      },
+      {
+        "id": "gate-scan",
+        "label": "Launch crate enters \u2014 Wednesday 20:03",
+        "detail": "Correct gate clock. Seal matches the truck manifest."
+      },
+      {
+        "id": "owner-notice",
+        "label": "Owner\u2019s notice \u2014 Monday 10:00",
+        "detail": "Correct office clock. Inspection window announced."
+      },
+      {
+        "id": "delivery-order",
+        "label": "Order generated \u2014 Wednesday 19:50",
+        "detail": "Fast dispatch clock. Equipment marked RELEASE IMMEDIATELY."
+      },
+      {
+        "id": "truck-loaded",
+        "label": "Truck departs \u2014 Wednesday 20:12",
+        "detail": "Fast dispatch clock. Loaded with the launch crates."
+      }
+    ],
+    "solution": [
+      "owner-notice",
+      "delivery-order",
+      "truck-loaded",
+      "livestream-promise",
+      "gate-scan"
+    ],
+    "hints": [
+      "Subtract twenty minutes from both dispatch entries.",
+      "The truck left at 19:52, before the 20:00 promise."
+    ],
+    "solvedText": "Order at 19:30, truck away at 19:52, promise at 20:00, crates through the gate at 20:03. The loading plan was already in motion; the matching seal connects it to Rich\u2019s equipment.",
+    "skipText": "The group orders the copies together. You receive the same story progress, with no puzzle bonus."
+  },
+  {
+    "chapter": "Chapter Thirteen: Museum of the Block",
+    "nodeId": "s2-museum-of-the-block-evidence",
+    "id": "s2-museum-of-the-block-evidence-order",
+    "title": "The rail in five photographs",
+    "instruction": "Order the five repair records by what physically changed. These photographs have no reliable timestamps. Bolt holes and primer remain visible in later stages; nobody removes or repaints them.",
+    "imageAssetId": "assets/story/theater/evidence.webp",
+    "pieces": [
+      {
+        "id": "inspection-report",
+        "label": "Signed inspection",
+        "detail": "Inspector\u2019s sticker crosses dry yellow paint. All bolts fitted."
+      },
+      {
+        "id": "drilled-rail",
+        "label": "Drilled rail",
+        "detail": "New bolt holes. Bare metal inside and outside them. No primer."
+      },
+      {
+        "id": "supply-receipt",
+        "label": "Delivered rail",
+        "detail": "Unpierced bare metal. Supplier\u2019s wrapping still attached."
+      },
+      {
+        "id": "volunteer-photo",
+        "label": "Bolts and yellow paint",
+        "detail": "Primer visible under yellow edges. All bolts fitted. No sticker."
+      },
+      {
+        "id": "primer-coat",
+        "label": "Primed rail",
+        "detail": "Primer lines the drilled holes. No bolts or yellow paint."
+      }
+    ],
+    "solution": [
+      "supply-receipt",
+      "drilled-rail",
+      "primer-coat",
+      "volunteer-photo",
+      "inspection-report"
+    ],
+    "hints": [
+      "Track irreversible changes: holes, primer, bolts and paint, sticker.",
+      "Bare holes precede primed holes. The sticker crosses finished paint."
+    ],
+    "solvedText": "Delivered, drilled, primed, assembled and painted, inspected. The material record backs the repair crew\u2019s account even with the broken camera clock.",
+    "skipText": "The group orders the copies together. You receive the same story progress, with no puzzle bonus."
+  },
+  {
+    "chapter": "Chapter Fifteen: Premiere Night",
+    "nodeId": "s2-premiere-night-evidence",
+    "id": "s2-premiere-night-evidence-order",
+    "title": "Nine fifty-three, seal intact",
+    "instruction": "Rebuild the packet\u2019s five handoffs. Match each recorded OUT custody code to the next IN code. Start at the partner\u2019s signature and finish with the owner. A crowd photo alone does not prove a handoff.",
+    "imageAssetId": "assets/story/theater/evidence.webp",
+    "pieces": [
+      {
+        "id": "owner-delivery",
+        "label": "Owner receives \u2014 21:53",
+        "detail": "IN B7. Seal 41 intact; owner signs receipt."
+      },
+      {
+        "id": "courier-receives",
+        "label": "Courier receives",
+        "detail": "IN P4 \u2192 OUT C9. Seal 41 intact."
+      },
+      {
+        "id": "blue-receives",
+        "label": "Blue receives",
+        "detail": "IN W2 \u2192 OUT B7. Seal 41 intact; microphone already handed over."
+      },
+      {
+        "id": "partner-signs",
+        "label": "Partner signs \u2014 20:42",
+        "detail": "No incoming code. Packet sealed 41; OUT P4."
+      },
+      {
+        "id": "stage-desk",
+        "label": "Stage desk receives",
+        "detail": "IN C9 \u2192 OUT W2. Seal 41 intact; logged at the side table."
+      }
+    ],
+    "solution": [
+      "partner-signs",
+      "courier-receives",
+      "stage-desk",
+      "blue-receives",
+      "owner-delivery"
+    ],
+    "hints": [
+      "The signed partner copy is the only record with no incoming code.",
+      "Follow P4, then C9, then W2, then B7."
+    ],
+    "solvedText": "Seal 41 stays intact through every matched handoff. The owner receives the completed packet at 21:53, seven minutes before Rich\u2019s reservation ends.",
+    "skipText": "The group orders the copies together. You receive the same story progress, with no puzzle bonus."
+  },
+  {
+    "chapter": "The Missing Motion, Part II",
+    "nodeId": "sherlock-evidence-order",
+    "id": "sherlock-missing-reel-sequence",
+    "title": "The Reel Timeline",
+    "instruction": "Order by actual time. Lobby clock and hallway camera are five minutes fast; courier and witness phones are correct. Use what the records show, not the order someone handed them over.",
+    "imageAssetId": "assets/story/theater/evidence.webp",
+    "pieces": [
+      {
+        "id": "hallway-frame",
+        "label": "Hallway frame",
+        "detail": "18:07, hallway camera: Promoter carries the rattling plinth. Camera is five minutes fast."
+      },
+      {
+        "id": "power-notice",
+        "label": "Power-cut notice",
+        "detail": "18:00, lobby clock: power notice posted. The lobby clock is five minutes fast."
+      },
+      {
+        "id": "leader-strip",
+        "label": "Film leader strip",
+        "detail": "18:04, synchronized phone: film leader protrudes from the plinth\u2019s loose bottom panel."
+      },
+      {
+        "id": "empty-case",
+        "label": "Empty case receipt",
+        "detail": "17:58, synchronized courier phone: empty case delivered to the now-open prop room. Photo shows its empty interior."
+      }
+    ],
+    "solution": [
+      "power-notice",
+      "empty-case",
+      "hallway-frame",
+      "leader-strip"
+    ],
+    "hints": [
+      "Correct both fast clocks by subtracting five minutes.",
+      "The four actual times are 17:55, 17:58, 18:02, 18:04."
+    ],
+    "solvedText": "The empty case arrived before Promoter carried the rattling plinth. Film protruding from its bottom identifies the hiding place; the timestamps alone do not.",
+    "skipText": "Sherlock orders the timestamps himself. The trail still leads to the trophy plinth."
+  },
+  {
+    "chapter": "The Thirteenth Bell",
+    "nodeId": "sherlock-thirteenth-bell-clocks",
+    "id": "sherlock-clocks",
+    "title": "Three clocks. One fake trip.",
+    "instruction": "Place the five sightings from earliest to latest in real time. Station is 7 minutes fast; bakery is 4 minutes slow; river is correct. The invoice claims the parcel left on the 9:07 train.",
+    "imageAssetId": "assets/story/theater/evidence.webp",
+    "pieces": [
+      {
+        "id": "sherlock-clocks-4",
+        "label": "Station whistle \u2014 9:14",
+        "detail": "Station clock. Train departs; manifest lists passengers, no freight."
+      },
+      {
+        "id": "sherlock-clocks-3",
+        "label": "Bakery van \u2014 9:01",
+        "detail": "Bakery clock. Witness sees the van at the river kiosk in the bakery\u2019s side mirror."
+      },
+      {
+        "id": "sherlock-clocks-2",
+        "label": "Station gate \u2014 9:11",
+        "detail": "Station clock. Van exits toward the river carrying the sealed parcel."
+      },
+      {
+        "id": "sherlock-clocks-0",
+        "label": "Bakery shutter \u2014 8:56",
+        "detail": "Bakery clock. Van enters the loading bay; parcel seal is intact."
+      },
+      {
+        "id": "sherlock-clocks-1",
+        "label": "River bell \u2014 9:02",
+        "detail": "River clock. The delivery cart passes the bell with no parcel."
+      }
+    ],
+    "solution": [
+      "sherlock-clocks-0",
+      "sherlock-clocks-1",
+      "sherlock-clocks-2",
+      "sherlock-clocks-3",
+      "sherlock-clocks-4"
+    ],
+    "hints": [
+      "Fast clocks must be moved backward; slow clocks forward.",
+      "Convert the two bakery readings first. The shutter is 9:00; the mirror sighting is 9:05.",
+      "Real order: 9:00, 9:02, 9:04, 9:05, 9:07."
+    ],
+    "solvedText": "The parcel reached the kiosk at 9:05, two minutes before the alleged train trip began. Compare its serial number with both invoices next.",
+    "skipText": "Your crew reconstructs the answer with you. The story and its rewards continue."
+  },
+  {
+    "chapter": "The Thirteenth Bell",
+    "nodeId": "sherlock-thirteenth-bell-route",
+    "id": "sherlock-route",
+    "title": "Rebuild the unclocked route",
+    "instruction": "Order all six stops from station to river. Each was visited once. The damaged cart could not reverse on a narrow ramp. Use the witnesses together; no single witness saw the whole trip.",
+    "imageAssetId": "assets/story/theater/evidence.webp",
+    "pieces": [
+      {
+        "id": "sherlock-route-0",
+        "label": "Station",
+        "detail": "Departure point. The cart had clean wheels here."
+      },
+      {
+        "id": "sherlock-route-4",
+        "label": "Ticket kiosk",
+        "detail": "The last dry wheel print is here, immediately before the river."
+      },
+      {
+        "id": "sherlock-route-2",
+        "label": "Laundromat",
+        "detail": "The driver visited immediately before the tower."
+      },
+      {
+        "id": "sherlock-route-3",
+        "label": "Clock tower",
+        "detail": "Exactly two stops separate the tower from the station."
+      },
+      {
+        "id": "sherlock-route-5",
+        "label": "River",
+        "detail": "End point. The cart was abandoned on the bank."
+      },
+      {
+        "id": "sherlock-route-1",
+        "label": "Bakery",
+        "detail": "Flour was acquired here. It was already visible at the laundromat."
+      }
+    ],
+    "solution": [
+      "sherlock-route-0",
+      "sherlock-route-1",
+      "sherlock-route-2",
+      "sherlock-route-3",
+      "sherlock-route-4",
+      "sherlock-route-5"
+    ],
+    "hints": [
+      "Fix both endpoints, then place the kiosk.",
+      "Tower is fourth. Laundromat has to be third."
+    ],
+    "solvedText": "Flour appears before the tower; the kiosk is the final stop before the river. Its back camera should show who unloaded Passenger.",
+    "skipText": "Your crew reconstructs the answer with you. The story and its rewards continue."
+  },
+  {
+    "chapter": "Dead Air, Live Alibis",
+    "nodeId": "sherlock-dead-air-tape",
+    "id": "sherlock-tape",
+    "title": "The file plays backward",
+    "instruction": "The six word-splices are backward. Decode them, then build the instruction. The engineer confirms the place is called STUDIO THREE, and the object is a KEY. Nothing is hidden under the whole building.",
+    "imageAssetId": "assets/story/theater/evidence.webp",
+    "pieces": [
+      {
+        "id": "sherlock-tape-1",
+        "label": "YEK",
+        "detail": "A physical object, not a musical pitch."
+      },
+      {
+        "id": "sherlock-tape-4",
+        "label": "OIDUTS",
+        "detail": "Part of a two-word room name."
+      },
+      {
+        "id": "sherlock-tape-0",
+        "label": "DNIF",
+        "detail": "Reverse the characters; this is an instruction."
+      },
+      {
+        "id": "sherlock-tape-5",
+        "label": "EERHT",
+        "detail": "Part of the same room name."
+      },
+      {
+        "id": "sherlock-tape-3",
+        "label": "KS ED",
+        "detail": "Spaces are tape damage. Join, then reverse."
+      },
+      {
+        "id": "sherlock-tape-2",
+        "label": "W O L E B",
+        "detail": "Spaces are tape damage. Join, then reverse."
+      }
+    ],
+    "solution": [
+      "sherlock-tape-0",
+      "sherlock-tape-1",
+      "sherlock-tape-2",
+      "sherlock-tape-3",
+      "sherlock-tape-4",
+      "sherlock-tape-5"
+    ],
+    "hints": [
+      "Remove stray spaces before reversing. The phrase begins FIND KEY.",
+      "Read it as FIND KEY / BELOW DESK / STUDIO THREE."
+    ],
+    "solvedText": "FIND KEY BELOW DESK, STUDIO THREE. A location we can inspect\u2014not proof of who left the message.",
+    "skipText": "Your crew reconstructs the answer with you. The story and its rewards continue."
+  },
+  {
+    "chapter": "Dead Air, Live Alibis",
+    "nodeId": "sherlock-dead-air-switches",
+    "id": "sherlock-cable",
+    "title": "Do not feed the weather back into itself",
+    "instruction": "Build one signal path from microphone to antenna using all six components. Match socket codes, not similar-looking names. A connection must use the output of one piece and the input of the next.",
+    "imageAssetId": "assets/story/theater/evidence.webp",
+    "pieces": [
+      {
+        "id": "sherlock-cable-0",
+        "label": "Microphone",
+        "detail": "OUT M2. No input."
+      },
+      {
+        "id": "sherlock-cable-1",
+        "label": "Preamp",
+        "detail": "IN M2 \u2192 OUT L7."
+      },
+      {
+        "id": "sherlock-cable-2",
+        "label": "Recorder",
+        "detail": "IN L7 \u2192 OUT D4. The label \u201camplifier\u201d has been crossed out."
+      },
+      {
+        "id": "sherlock-cable-4",
+        "label": "Amplifier",
+        "detail": "IN R9 \u2192 OUT H1. Do not connect microphone-level audio here."
+      },
+      {
+        "id": "sherlock-cable-5",
+        "label": "Antenna",
+        "detail": "IN H1. No output."
+      },
+      {
+        "id": "sherlock-cable-3",
+        "label": "Modulator",
+        "detail": "IN D4 \u2192 OUT R9."
+      }
+    ],
+    "solution": [
+      "sherlock-cable-0",
+      "sherlock-cable-1",
+      "sherlock-cable-2",
+      "sherlock-cable-3",
+      "sherlock-cable-4",
+      "sherlock-cable-5"
+    ],
+    "hints": [
+      "Start at the only piece with no input.",
+      "Recorder accepts L7, not R9; the amplifier belongs near the antenna."
+    ],
+    "solvedText": "The full recording plays: four voices asking for their credits back. Somebody cut off that ending before airing the whisper.",
+    "skipText": "Your crew reconstructs the answer with you. The story and its rewards continue."
+  },
+  {
+    "chapter": "Dead Air, Live Alibis",
+    "nodeId": "sherlock-dead-air-voices",
+    "id": "sherlock-voices",
+    "title": "Four rooms, four takes",
+    "instruction": "Place the witnesses under Studios A, B, C, D, left to right. A has a fan; B has a clock; C has rain against glass; D is soundproof. Studio A\u2019s clock had been removed that morning.",
+    "imageAssetId": "assets/story/theater/evidence.webp",
+    "pieces": [
+      {
+        "id": "sherlock-voices-0",
+        "label": "Watson",
+        "detail": "No ticking in my take. I was not in the silent room or the room with an outside window."
+      },
+      {
+        "id": "sherlock-voices-2",
+        "label": "Alice",
+        "detail": "Mine was not soundproof. Neither mechanical noise is on my take."
+      },
+      {
+        "id": "sherlock-voices-3",
+        "label": "Streamer\u2019s friend",
+        "detail": "My take contains no fan, clock, or rain."
+      },
+      {
+        "id": "sherlock-voices-1",
+        "label": "Cornball",
+        "detail": "My room had a mechanical background sound. Watson had the other mechanical room."
+      }
+    ],
+    "solution": [
+      "sherlock-voices-0",
+      "sherlock-voices-1",
+      "sherlock-voices-2",
+      "sherlock-voices-3"
+    ],
+    "hints": [
+      "Place the silent take first, then eliminate rooms for Alice.",
+      "Watson must be A. Cornball takes the remaining mechanical room, B."
+    ],
+    "solvedText": "Every original take has a different room signature. The broadcast combines all four; somebody assembled it after recording.",
+    "skipText": "Your crew reconstructs the answer with you. The story and its rewards continue."
+  },
+  {
+    "chapter": "The Case of Negative Space",
+    "nodeId": "sherlock-negative-space-seats",
+    "id": "sherlock-seats",
+    "title": "Everybody remembers being VIP",
+    "instruction": "Rebuild five seats from left to right, facing the stage. Only seats 2, 3, and 4 had a direct view; the end seats faced mirrors. \u201cBeside\u201d means immediately adjacent.",
+    "imageAssetId": "assets/story/theater/evidence.webp",
+    "pieces": [
+      {
+        "id": "sherlock-seats-0",
+        "label": "Watson",
+        "detail": "I sat at an end. Sherlock was to my right, somewhere."
+      },
+      {
+        "id": "sherlock-seats-1",
+        "label": "Alice",
+        "detail": "I sat beside Watson, but not beside Promoter."
+      },
+      {
+        "id": "sherlock-seats-4",
+        "label": "Sherlock",
+        "detail": "I took the other end; I could reach the right aisle."
+      },
+      {
+        "id": "sherlock-seats-3",
+        "label": "Promoter",
+        "detail": "Cornball sat immediately to my left."
+      },
+      {
+        "id": "sherlock-seats-2",
+        "label": "Cornball",
+        "detail": "Alice and Promoter were my two neighbors."
+      }
+    ],
+    "solution": [
+      "sherlock-seats-0",
+      "sherlock-seats-1",
+      "sherlock-seats-2",
+      "sherlock-seats-3",
+      "sherlock-seats-4"
+    ],
+    "hints": [
+      "The two end witnesses orient the entire row.",
+      "Cornball must be in the middle, with Alice on his left."
+    ],
+    "solvedText": "Cornball and Promoter could see the real pedestal. Sherlock and Watson saw the side reflection. Their accounts describe different views of the same display.",
+    "skipText": "Your crew reconstructs the answer with you. The story and its rewards continue."
+  },
+  {
+    "chapter": "The Case of Negative Space",
+    "nodeId": "sherlock-negative-space-ledger",
+    "id": "sherlock-ledger",
+    "title": "Follow the brass, not the brochure",
+    "instruction": "Trace the original trophy from maker to final holder. Handoff codes connect OUT to IN. All six records belong in the chain. Photograph and replica notes do not transfer the brass object.",
+    "imageAssetId": "assets/story/theater/evidence.webp",
+    "pieces": [
+      {
+        "id": "sherlock-ledger-0",
+        "label": "Maker",
+        "detail": "Serial 041. OUT K8. Original brass trophy."
+      },
+      {
+        "id": "sherlock-ledger-4",
+        "label": "Courier",
+        "detail": "IN P2 \u2192 OUT H9. Seal recorded intact."
+      },
+      {
+        "id": "sherlock-ledger-5",
+        "label": "Community hall",
+        "detail": "IN H9. Serial 041 signed into the display cupboard; no outgoing record."
+      },
+      {
+        "id": "sherlock-ledger-1",
+        "label": "School",
+        "detail": "IN K8 \u2192 OUT M3. Kept a paper rubbing."
+      },
+      {
+        "id": "sherlock-ledger-2",
+        "label": "Library",
+        "detail": "IN M3 \u2192 OUT R6. Sent museum a photograph, not the trophy."
+      },
+      {
+        "id": "sherlock-ledger-3",
+        "label": "Repair shop",
+        "detail": "IN R6 \u2192 OUT P2. Polished original serial 041."
+      }
+    ],
+    "solution": [
+      "sherlock-ledger-0",
+      "sherlock-ledger-1",
+      "sherlock-ledger-2",
+      "sherlock-ledger-3",
+      "sherlock-ledger-4",
+      "sherlock-ledger-5"
+    ],
+    "hints": [
+      "Start with the original\u2019s maker; follow handoff codes.",
+      "The photograph branches off at the library. The original continues to the repair shop."
+    ],
+    "solvedText": "Serial 041 ends at the hall. The museum got a photograph. Its promise of an original was false before the supposed theft.",
+    "skipText": "Your crew reconstructs the answer with you. The story and its rewards continue."
+  },
+  {
+    "chapter": "The Case of Negative Space",
+    "nodeId": "sherlock-negative-space-proof",
+    "id": "sherlock-proof",
+    "title": "When did he know?",
+    "instruction": "Arrange the evidence by actual time, earliest first. Two devices use the wrong clock: printer is 10 minutes fast, camera is 5 minutes slow. The email and payment server use correct time.",
+    "imageAssetId": "assets/story/theater/evidence.webp",
+    "pieces": [
+      {
+        "id": "sherlock-proof-2",
+        "label": "First ticket sale \u2014 14:06",
+        "detail": "Payment-server time. Money accepted for the advertised original."
+      },
+      {
+        "id": "sherlock-proof-1",
+        "label": "Poster print \u2014 14:14",
+        "detail": "Printer time. \u201cSEE THE ORIGINAL.\u201d Job approved by Promoter."
+      },
+      {
+        "id": "sherlock-proof-4",
+        "label": "Theft announcement \u2014 14:12",
+        "detail": "Server time. Refund deadline postponed because of the alleged theft."
+      },
+      {
+        "id": "sherlock-proof-3",
+        "label": "Spotlight moved \u2014 14:04",
+        "detail": "Camera time. Promoter turns the light away from the mirrored painting."
+      },
+      {
+        "id": "sherlock-proof-0",
+        "label": "Loan email \u2014 14:00",
+        "detail": "Server time. \u201cPhotograph only; brass original remains at the hall.\u201d Opened on Promoter\u2019s account."
+      }
+    ],
+    "solution": [
+      "sherlock-proof-0",
+      "sherlock-proof-1",
+      "sherlock-proof-2",
+      "sherlock-proof-3",
+      "sherlock-proof-4"
+    ],
+    "hints": [
+      "Correct the printer and camera clocks before comparing entries.",
+      "The poster was printed at 14:04; the light moved at 14:09."
+    ],
+    "solvedText": "He opened the photograph-only email before approving the poster. Then he moved the light after collecting ticket money. This was concealment, not a misunderstanding.",
+    "skipText": "Your crew reconstructs the answer with you. The story and its rewards continue."
+  },
+  {
+    "chapter": "The Yellow Line",
+    "nodeId": "oz-yellow-line-map",
+    "id": "oz-route",
+    "title": "Six stops and a wet transfer",
+    "instruction": "Rebuild the route from shelter to terminal. Each sign gives stops remaining AFTER that stop. One sign lost its number, so use the transfer note. Visit every stop once.",
+    "imageAssetId": "assets/story/theater/evidence.webp",
+    "pieces": [
+      {
+        "id": "oz-route-0",
+        "label": "Storm shelter",
+        "detail": "Five stops remain."
+      },
+      {
+        "id": "oz-route-4",
+        "label": "Poppy depot",
+        "detail": "One stop remains."
+      },
+      {
+        "id": "oz-route-3",
+        "label": "Lion square",
+        "detail": "Between bridge and depot, with neither stop skipped."
+      },
+      {
+        "id": "oz-route-1",
+        "label": "Straw market",
+        "detail": "My missing number is one less than the shelter\u2019s."
+      },
+      {
+        "id": "oz-route-2",
+        "label": "Copper bridge",
+        "detail": "Three stops remain."
+      },
+      {
+        "id": "oz-route-5",
+        "label": "Emerald Terminal",
+        "detail": "No stops remain. Transfers home are processed here."
+      }
+    ],
+    "solution": [
+      "oz-route-0",
+      "oz-route-1",
+      "oz-route-2",
+      "oz-route-3",
+      "oz-route-4",
+      "oz-route-5"
+    ],
+    "hints": [
+      "Work backward from zero, then fill the missing number.",
+      "Shelter is first, market second; square must be after bridge and before depot."
+    ],
+    "solvedText": "Route restored. The return transfer points to Emerald. Oz controls the terminal\u2014not the weather, whatever his billboard says.",
+    "skipText": "Your crew reconstructs the answer with you. The story and its rewards continue."
+  },
+  {
+    "chapter": "The Yellow Line",
+    "nodeId": "oz-yellow-line-signal",
+    "id": "oz-signal",
+    "title": "One battery, no second chances",
+    "instruction": "Arrange all five bridge operations. The battery is connected once and stays on. Use the interlocks printed on the controls; an unsafe operation cannot be undone.",
+    "imageAssetId": "assets/story/theater/evidence.webp",
+    "pieces": [
+      {
+        "id": "oz-signal-0",
+        "label": "Connect power",
+        "detail": "No prerequisite. Every other control needs power."
+      },
+      {
+        "id": "oz-signal-4",
+        "label": "Depart",
+        "detail": "Requires the loaded brake test to pass; nobody boards after departure."
+      },
+      {
+        "id": "oz-signal-2",
+        "label": "Raise the gate",
+        "detail": "Only after road traffic stops. Boarding through a closed gate is impossible."
+      },
+      {
+        "id": "oz-signal-1",
+        "label": "Stop road traffic",
+        "detail": "Must happen before the gate rises. Cannot be done once passengers start boarding."
+      },
+      {
+        "id": "oz-signal-3",
+        "label": "Board and test brakes",
+        "detail": "Passengers board through the raised gate. With their weight aboard, perform the stationary brake test."
+      }
+    ],
+    "solution": [
+      "oz-signal-0",
+      "oz-signal-1",
+      "oz-signal-2",
+      "oz-signal-3",
+      "oz-signal-4"
+    ],
+    "hints": [
+      "Find the operation that is possible with a dead battery.",
+      "Road traffic must stop before the gate; boarding and brake test come before departure."
+    ],
+    "solvedText": "The loaded brakes hold. Tin Man removes the sponsored kiosk from the service controls before anyone can sell the bridge again.",
+    "skipText": "Your crew reconstructs the answer with you. The story and its rewards continue."
+  },
+  {
+    "chapter": "Behind the Curtain",
+    "nodeId": "oz-behind-the-curtain-receipts",
+    "id": "oz-claims",
+    "title": "He moved the windows again",
+    "instruction": "Place the four claimants at windows 1\u20134. Dorothy has window 4. Lion is beside Dorothy. Tin Man is not at an end. Scarecrow refuses any window whose number exceeds Tin Man\u2019s.",
+    "imageAssetId": "assets/story/theater/evidence.webp",
+    "pieces": [
+      {
+        "id": "oz-claims-2",
+        "label": "Lion \u2014 courage",
+        "detail": "Wants to stop mistaking fear for failure."
+      },
+      {
+        "id": "oz-claims-3",
+        "label": "Dorothy \u2014 home",
+        "detail": "Wants a return transfer, not an upgrade."
+      },
+      {
+        "id": "oz-claims-0",
+        "label": "Scarecrow \u2014 brain",
+        "detail": "Wants a certificate to drive the return route."
+      },
+      {
+        "id": "oz-claims-1",
+        "label": "Tin Man \u2014 heart",
+        "detail": "Wants the bridge work acknowledged."
+      }
+    ],
+    "solution": [
+      "oz-claims-0",
+      "oz-claims-1",
+      "oz-claims-2",
+      "oz-claims-3"
+    ],
+    "hints": [
+      "Place Dorothy, then her neighbor Lion.",
+      "Tin Man cannot use 1 or 4, and 3 is occupied."
+    ],
+    "solvedText": "All four claimants are at the right windows. All four windows lead to the same stool. Oz has run out of places to send them.",
+    "skipText": "Your crew reconstructs the answer with you. The story and its rewards continue."
+  },
+  {
+    "chapter": "Behind the Curtain",
+    "nodeId": "oz-behind-the-curtain-storm-plan",
+    "id": "oz-flight",
+    "title": "The tram log lost its clock",
+    "instruction": "Put six events in real order. The repair clock runs 6 minutes fast; the platform clock runs 3 minutes slow; weather radio is correct. No tied times. Find the departure window, not the order printed on the sheet.",
+    "imageAssetId": "assets/story/theater/evidence.webp",
+    "pieces": [
+      {
+        "id": "oz-flight-1",
+        "label": "Brakes tested \u2014 16:09",
+        "detail": "Repair clock. Empty tram test passes."
+      },
+      {
+        "id": "oz-flight-3",
+        "label": "Doors closed \u2014 16:04",
+        "detail": "Platform clock. Lion counts everyone aboard."
+      },
+      {
+        "id": "oz-flight-4",
+        "label": "Tram departs \u2014 16:09",
+        "detail": "Weather-radio time. Route remains clear."
+      },
+      {
+        "id": "oz-flight-2",
+        "label": "Passengers loaded \u2014 16:02",
+        "detail": "Platform clock. Crew rechecks brakes under load."
+      },
+      {
+        "id": "oz-flight-5",
+        "label": "Storm returns \u2014 16:07",
+        "detail": "Platform clock. Service window closes."
+      },
+      {
+        "id": "oz-flight-0",
+        "label": "Power restored \u2014 16:06",
+        "detail": "Repair clock. Electrical test passes."
+      }
+    ],
+    "solution": [
+      "oz-flight-0",
+      "oz-flight-1",
+      "oz-flight-2",
+      "oz-flight-3",
+      "oz-flight-4",
+      "oz-flight-5"
+    ],
+    "hints": [
+      "Subtract six from repair times; add three to platform times.",
+      "Loading is 16:05. Closing is 16:07. The storm returns at 16:10."
+    ],
+    "solvedText": "The tram departs at 16:09, one minute before the storm returns. The route is workable, provided nobody delays departure for a speech.",
+    "skipText": "Your crew reconstructs the answer with you. The story and its rewards continue."
+  },
+  {
+    "chapter": "The Borrowed Hour",
+    "nodeId": "alice-borrowed-hour-sizes",
+    "id": "alice-sizes",
+    "title": "Do not shrink without the key",
+    "instruction": "Start ordinary-sized. Use every action once. Cake makes Alice tall; drinking the WHOLE bottle makes her tiny from any starting size. Only tall Alice reaches the key; only tiny Alice reaches the lock and fits the doorway.",
+    "imageAssetId": "assets/story/theater/evidence.webp",
+    "pieces": [
+      {
+        "id": "alice-sizes-1",
+        "label": "Pocket the key",
+        "detail": "Requires tall size. Once pocketed, it changes size with Alice."
+      },
+      {
+        "id": "alice-sizes-0",
+        "label": "Eat the cake",
+        "detail": "Changes size to tall. The bottle and key can be carried afterward."
+      },
+      {
+        "id": "alice-sizes-4",
+        "label": "Cross the doorway",
+        "detail": "Requires tiny size and an unlocked door."
+      },
+      {
+        "id": "alice-sizes-2",
+        "label": "Drink the whole bottle",
+        "detail": "Changes size to tiny. The bottle is used up."
+      },
+      {
+        "id": "alice-sizes-3",
+        "label": "Turn the key",
+        "detail": "Requires tiny size AND the pocketed key. Unlocks the door."
+      }
+    ],
+    "solution": [
+      "alice-sizes-0",
+      "alice-sizes-1",
+      "alice-sizes-2",
+      "alice-sizes-3",
+      "alice-sizes-4"
+    ],
+    "hints": [
+      "Shrinking is irreversible here, so check what must be collected first.",
+      "Cake \u2192 key \u2192 bottle leaves Alice tiny with the key."
+    ],
+    "solvedText": "Alice exits with the key in her pocket. The door requests that future complaints be made in writing, away from its hinges.",
+    "skipText": "Your crew reconstructs the answer with you. The story and its rewards continue."
+  },
+  {
+    "chapter": "The Borrowed Hour",
+    "nodeId": "alice-borrowed-hour-cups-puzzle",
+    "id": "alice-cups",
+    "title": "Four cups, one stolen spring",
+    "instruction": "Assign cups to Alice, Cheshire, Clockkeeper, Queen in that order. Alice refuses hot drinks. Clockkeeper needs a spoon to time his shift. Cheshire\u2019s cup weighs nothing. Nobody shares.",
+    "imageAssetId": "assets/story/theater/evidence.webp",
+    "pieces": [
+      {
+        "id": "alice-cups-3",
+        "label": "Rose tea",
+        "detail": "Hot. Liquid. No spoon. A metal glint under the crown-shaped sugar."
+      },
+      {
+        "id": "alice-cups-0",
+        "label": "Iced lemon",
+        "detail": "Cold. Liquid. No spoon."
+      },
+      {
+        "id": "alice-cups-1",
+        "label": "Empty cup",
+        "detail": "No liquid, no spoon, no weight. Somehow still on the bill."
+      },
+      {
+        "id": "alice-cups-2",
+        "label": "Black tea",
+        "detail": "Hot. Liquid. Contains the table\u2019s only spoon."
+      }
+    ],
+    "solution": [
+      "alice-cups-0",
+      "alice-cups-1",
+      "alice-cups-2",
+      "alice-cups-3"
+    ],
+    "hints": [
+      "Start with weight and temperature; two cups are forced.",
+      "Only black tea has the Clockkeeper\u2019s spoon. Rose tea is left for the Queen."
+    ],
+    "solvedText": "The spring is in the Queen\u2019s rose tea. Her own cup stopped the clock while she billed everyone for staying.",
+    "skipText": "Your crew reconstructs the answer with you. The story and its rewards continue."
+  },
+  {
+    "chapter": "The Borrowed Hour",
+    "nodeId": "alice-borrowed-hour-clock",
+    "id": "alice-clock",
+    "title": "Give the hours back",
+    "instruction": "Arrange six hour-drawers from smallest debt to largest. Every drawer has a different whole-hour debt, 1 through 6. Read the relationships; the labels are amounts, not assembly directions.",
+    "imageAssetId": "assets/story/theater/evidence.webp",
+    "pieces": [
+      {
+        "id": "alice-clock-0",
+        "label": "Clockkeeper",
+        "detail": "Owes one hour."
+      },
+      {
+        "id": "alice-clock-2",
+        "label": "Alice",
+        "detail": "Owes twice the Clockkeeper\u2019s debt, plus one."
+      },
+      {
+        "id": "alice-clock-5",
+        "label": "Queen",
+        "detail": "Owes six hours. She quietly borrowed from her own clock."
+      },
+      {
+        "id": "alice-clock-1",
+        "label": "Door",
+        "detail": "Owes one more hour than Clockkeeper. It stayed late for repairs."
+      },
+      {
+        "id": "alice-clock-4",
+        "label": "Kitchen",
+        "detail": "Owes one less than the Queen."
+      },
+      {
+        "id": "alice-clock-3",
+        "label": "Cheshire",
+        "detail": "Owes twice the Door\u2019s debt."
+      }
+    ],
+    "solution": [
+      "alice-clock-0",
+      "alice-clock-1",
+      "alice-clock-2",
+      "alice-clock-3",
+      "alice-clock-4",
+      "alice-clock-5"
+    ],
+    "hints": [
+      "Turn each relationship into a number before ordering.",
+      "Alice owes 3; Cheshire owes 4. Kitchen falls between Cheshire and Queen."
+    ],
+    "solvedText": "The drawers release 1, 2, 3, 4, 5, 6 hours. The Queen owed the most. Her late-fee speech ages badly in real time.",
+    "skipText": "Your crew reconstructs the answer with you. The story and its rewards continue."
+  },
+  {
+    "chapter": "The Queen Meets a Full Stop",
+    "nodeId": "alice-full-stop-sentence",
+    "id": "alice-decree",
+    "title": "The promise under the seal",
+    "instruction": "Rebuild the five strips into the Queen\u2019s original sentence. The torn-edge codes connect: the right edge of one strip matches the left edge of the next. START and END are outside edges. Read the result before submitting.",
+    "imageAssetId": "assets/story/theater/evidence.webp",
+    "pieces": [
+      {
+        "id": "alice-decree-1",
+        "label": "may",
+        "detail": "Edges: crown \u2192 spoon."
+      },
+      {
+        "id": "alice-decree-2",
+        "label": "leave the party",
+        "detail": "Edges: spoon \u2192 rose."
+      },
+      {
+        "id": "alice-decree-3",
+        "label": "when",
+        "detail": "Edges: rose \u2192 bell."
+      },
+      {
+        "id": "alice-decree-0",
+        "label": "Every guest",
+        "detail": "Edges: START \u2192 crown."
+      },
+      {
+        "id": "alice-decree-4",
+        "label": "the bell rings",
+        "detail": "Edges: bell \u2192 END."
+      }
+    ],
+    "solution": [
+      "alice-decree-0",
+      "alice-decree-1",
+      "alice-decree-2",
+      "alice-decree-3",
+      "alice-decree-4"
+    ],
+    "hints": [
+      "Find START, then match the tear codes.",
+      "The permission \u201cmay\u201d joins the guest to the action; the bell ends the sentence."
+    ],
+    "solvedText": "\u201cEvery guest may leave the party when the bell rings.\u201d The gold seal covered the word \u201cmay.\u201d Alice kept the signed napkin.",
+    "skipText": "Your crew reconstructs the answer with you. The story and its rewards continue."
+  },
+  {
+    "chapter": "The Queen Meets a Full Stop",
+    "nodeId": "alice-full-stop-order",
+    "id": "alice-law",
+    "title": "Yesterday has wet ink",
+    "instruction": "Order the five exhibits by their recorded sequence. Kitchen bell rings at noon. The clerk\u2019s desk clock is 10 minutes fast; courier receipts use the correct clock.",
+    "imageAssetId": "assets/story/theater/evidence.webp",
+    "pieces": [
+      {
+        "id": "alice-law-1",
+        "label": "Guests leave \u2014 bell",
+        "detail": "Kitchen bell. Queen\u2019s napkin permits departure at this signal."
+      },
+      {
+        "id": "alice-law-2",
+        "label": "Rule written \u2014 12:16",
+        "detail": "Clerk clock. Writing appears on the newly delivered page."
+      },
+      {
+        "id": "alice-law-3",
+        "label": "Seal applied \u2014 12:18",
+        "detail": "Clerk clock. Gold seal crosses a wet word."
+      },
+      {
+        "id": "alice-law-4",
+        "label": "Summons delivered \u2014 12:12",
+        "detail": "Courier receipt. Quotes the newly sealed rule."
+      },
+      {
+        "id": "alice-law-0",
+        "label": "Blank paper delivered \u2014 11:55",
+        "detail": "Courier receipt. The packet is opened on camera, pages blank."
+      }
+    ],
+    "solution": [
+      "alice-law-0",
+      "alice-law-1",
+      "alice-law-2",
+      "alice-law-3",
+      "alice-law-4"
+    ],
+    "hints": [
+      "The clerk\u2019s readings must go backward ten minutes.",
+      "Writing happened at 12:06, sealing at 12:08, summons at 12:12."
+    ],
+    "solvedText": "The guests left at noon. The new rule was written six minutes later. The Queen\u2019s date cannot change the recorded sequence.",
+    "skipText": "Your crew reconstructs the answer with you. The story and its rewards continue."
+  },
+  {
+    "chapter": "A Banner Without a Master",
+    "nodeId": "yasuke-banner-without-master-banners",
+    "id": "yasuke-signals",
+    "title": "The marshal\u2019s disputed signals",
+    "instruction": "Arrange the four banners into a valid opening. Red cannot precede gold. Blue immediately follows white. Gold is neither first nor second. These constraints are from the signed marshal sheet, not the sponsor\u2019s flyer.",
+    "imageAssetId": "assets/story/theater/evidence.webp",
+    "pieces": [
+      {
+        "id": "yasuke-signals-3",
+        "label": "Red sun",
+        "detail": "Begin play."
+      },
+      {
+        "id": "yasuke-signals-0",
+        "label": "White square",
+        "detail": "Clear equipment and open exits."
+      },
+      {
+        "id": "yasuke-signals-1",
+        "label": "Blue circle",
+        "detail": "Inspect the cleared floor."
+      },
+      {
+        "id": "yasuke-signals-2",
+        "label": "Gold stripe",
+        "detail": "Admit spectators to the marked seats."
+      }
+    ],
+    "solution": [
+      "yasuke-signals-0",
+      "yasuke-signals-1",
+      "yasuke-signals-2",
+      "yasuke-signals-3"
+    ],
+    "hints": [
+      "Blue and white form a pair. Gold needs a later slot, with red still after it.",
+      "Gold must be third, leaving white and blue first and second."
+    ],
+    "solvedText": "The young marshal opens the court correctly. The sponsor\u2019s \u201cVIP entry first\u201d flyer goes in the bin.",
+    "skipText": "Your crew reconstructs the answer with you. The story and its rewards continue."
+  },
+  {
+    "chapter": "A Banner Without a Master",
+    "nodeId": "yasuke-banner-without-master-contract",
+    "id": "yasuke-contract",
+    "title": "Catch the switched copy",
+    "instruction": "Order five versions of the agreement by their physical evidence. New marks remain on later copies unless a note explicitly says a clause was removed. Find when free public hours disappeared.",
+    "imageAssetId": "assets/story/theater/evidence.webp",
+    "pieces": [
+      {
+        "id": "yasuke-contract-1",
+        "label": "Youth copy",
+        "detail": "Adds free hours; no signature or stamp."
+      },
+      {
+        "id": "yasuke-contract-3",
+        "label": "Sponsor copy",
+        "detail": "Same signature, sponsor stamp; free-hours paragraph removed."
+      },
+      {
+        "id": "yasuke-contract-4",
+        "label": "Filed correction",
+        "detail": "Both marks retained. Free hours restored and margin initialed by both parties."
+      },
+      {
+        "id": "yasuke-contract-2",
+        "label": "Signed copy",
+        "detail": "Free hours plus the organizer\u2019s signature. No sponsor stamp."
+      },
+      {
+        "id": "yasuke-contract-0",
+        "label": "Draft A",
+        "detail": "Plain text. No signatures, stamp, or free-hours clause."
+      }
+    ],
+    "solution": [
+      "yasuke-contract-0",
+      "yasuke-contract-1",
+      "yasuke-contract-2",
+      "yasuke-contract-3",
+      "yasuke-contract-4"
+    ],
+    "hints": [
+      "Track additions first. A later deletion does not make a copy an earlier draft.",
+      "The sponsor stamp first appears on the version that removes free hours."
+    ],
+    "solvedText": "The sponsor removed public access after the organizer signed. The filed correction restores it with both initials; the original alteration remains visible in the record.",
+    "skipText": "Your crew reconstructs the answer with you. The story and its rewards continue."
+  },
+  {
+    "chapter": "The Library Hour",
+    "nodeId": "cellblock-library-hour-forms",
+    "id": "cellblock-forms",
+    "title": "Five stamps, two bad clocks",
+    "instruction": "Order the room\u2019s five approval records in actual time. Library clock is 5 minutes slow. Unit-office clock is 8 minutes fast. All other stamps are correct. The posted opening notice should match the last approved record.",
+    "imageAssetId": "assets/story/theater/evidence.webp",
+    "pieces": [
+      {
+        "id": "cellblock-forms-4",
+        "label": "Notice board \u2014 09:18",
+        "detail": "Correct clock. Photograph shows Thursday pasted over Tuesday."
+      },
+      {
+        "id": "cellblock-forms-0",
+        "label": "Library \u2014 09:05",
+        "detail": "Library clock. Books and shelves accepted."
+      },
+      {
+        "id": "cellblock-forms-3",
+        "label": "Unit office \u2014 09:24",
+        "detail": "Unit-office clock. Tuesday assignment confirmed."
+      },
+      {
+        "id": "cellblock-forms-2",
+        "label": "Schedule \u2014 09:14",
+        "detail": "Correct clock. Room assigned for Tuesday, this month."
+      },
+      {
+        "id": "cellblock-forms-1",
+        "label": "Safety \u2014 09:12",
+        "detail": "Correct clock. Exit and room check passed."
+      }
+    ],
+    "solution": [
+      "cellblock-forms-0",
+      "cellblock-forms-1",
+      "cellblock-forms-2",
+      "cellblock-forms-3",
+      "cellblock-forms-4"
+    ],
+    "hints": [
+      "Convert library forward five minutes and unit office backward eight.",
+      "Real approvals run 09:10, 09:12, 09:14, 09:16, 09:18."
+    ],
+    "solvedText": "Tuesday survived every approval. Thursday appears only on the notice board. Compare the pasted date with Kingpin\u2019s seat ledger.",
+    "skipText": "Your crew reconstructs the answer with you. The story and its rewards continue."
+  },
+  {
+    "chapter": "The Library Hour",
+    "nodeId": "cellblock-library-hour-shelves",
+    "id": "cellblock-shelves",
+    "title": "One man, five library cards",
+    "instruction": "Assign the five books to aliases A, B, C, D, E in that order. A borrowed practical diagrams. B borrowed neither stories nor history. C borrowed nonfiction but no how-to book. D borrowed prose fiction. E took what remained.",
+    "imageAssetId": "assets/story/theater/evidence.webp",
+    "pieces": [
+      {
+        "id": "cellblock-shelves-0",
+        "label": "Fix the Wobble",
+        "detail": "Nonfiction repair diagrams. How to brace tables."
+      },
+      {
+        "id": "cellblock-shelves-2",
+        "label": "Before This Block",
+        "detail": "Nonfiction neighborhood history. No instructions."
+      },
+      {
+        "id": "cellblock-shelves-3",
+        "label": "The Ninth Passenger",
+        "detail": "A prose mystery. Fiction, no verses."
+      },
+      {
+        "id": "cellblock-shelves-1",
+        "label": "One Pot, Many Plates",
+        "detail": "Nonfiction how-to recipes. No repair diagrams."
+      },
+      {
+        "id": "cellblock-shelves-4",
+        "label": "Window Light",
+        "detail": "Poetry collection. Fiction in verse."
+      }
+    ],
+    "solution": [
+      "cellblock-shelves-0",
+      "cellblock-shelves-1",
+      "cellblock-shelves-2",
+      "cellblock-shelves-3",
+      "cellblock-shelves-4"
+    ],
+    "hints": [
+      "Place the diagrams and prose mystery first.",
+      "History belongs to C; cooking is the only remaining match for B."
+    ],
+    "solvedText": "Every return slip has Kingpin\u2019s same borrower stamp under a different alias. Those aliases match all five \u201creserved\u201d seats in his ledger.",
+    "skipText": "Your crew reconstructs the answer with you. The story and its rewards continue."
+  },
+  {
+    "chapter": "A Place to Return",
+    "nodeId": "homeless-a-place-to-return-dry-route",
+    "id": "leon-route",
+    "title": "The app wants us in the canal",
+    "instruction": "Rebuild the six-checkpoint dry route, library to kitchen. Every stop is used once. Pharmacy is immediately before the church. Church is fourth. Shelter comes before pharmacy. Garden is immediately before the kitchen.",
+    "imageAssetId": "assets/story/theater/evidence.webp",
+    "pieces": [
+      {
+        "id": "leon-route-5",
+        "label": "Community kitchen",
+        "detail": "End. Dry storage and outlets."
+      },
+      {
+        "id": "leon-route-4",
+        "label": "Garden path",
+        "detail": "Flat path beside the kitchen. No stairs."
+      },
+      {
+        "id": "leon-route-1",
+        "label": "Bus shelter",
+        "detail": "Dry curb ramp. Must be reached before the pharmacy shutters close."
+      },
+      {
+        "id": "leon-route-0",
+        "label": "Library",
+        "detail": "Start. Step-free side exit; charging ends at six."
+      },
+      {
+        "id": "leon-route-3",
+        "label": "Church ramp",
+        "detail": "Fourth checkpoint. Rear gate has now been unjammed."
+      },
+      {
+        "id": "leon-route-2",
+        "label": "Pharmacy walkway",
+        "detail": "Wide enough for Passenger. Next passage reaches the church."
+      }
+    ],
+    "solution": [
+      "leon-route-0",
+      "leon-route-1",
+      "leon-route-2",
+      "leon-route-3",
+      "leon-route-4",
+      "leon-route-5"
+    ],
+    "hints": [
+      "Fix endpoints and fourth checkpoint, then fill adjacent pairs.",
+      "Pharmacy is third. Garden is fifth. Shelter gets the remaining slot."
+    ],
+    "solvedText": "The dry route avoids the flooded underpass and both stairways. Leon marks the repaired gate so the next person does not trust an old map.",
+    "skipText": "Your crew reconstructs the answer with you. The story and its rewards continue."
+  },
+  {
+    "chapter": "A Place to Return",
+    "nodeId": "homeless-a-place-to-return-appointments",
+    "id": "leon-day",
+    "title": "One afternoon. No teleporting.",
+    "instruction": "Start at the kitchen at 12:00. Charge takes 20 minutes; call takes 10. Walk kitchen\u2192letter desk: 20, desk\u2192appointment: 30, appointment\u2192supplies: 20 minutes. Letter pickup takes 10 minutes and closes at 13:10. Appointment is 14:00\u201314:30; supplies open at 15:00. Use each task once; waiting is allowed.",
+    "imageAssetId": "assets/story/theater/evidence.webp",
+    "pieces": [
+      {
+        "id": "leon-day-4",
+        "label": "Collect supplies",
+        "detail": "At or after 15:00. The signed storage receipt is already in Leon\u2019s pocket."
+      },
+      {
+        "id": "leon-day-0",
+        "label": "Charge phone",
+        "detail": "Kitchen outlet. Needed for the call. Supplies depot has no outlet."
+      },
+      {
+        "id": "leon-day-1",
+        "label": "Confirm letter desk",
+        "detail": "Call from the kitchen with the charged phone. Desk releases the replacement only after this call."
+      },
+      {
+        "id": "leon-day-2",
+        "label": "Collect letter",
+        "detail": "Bring the call confirmation. Must finish before desk closes at 13:10."
+      },
+      {
+        "id": "leon-day-3",
+        "label": "Attend appointment",
+        "detail": "Needs the letter. Fixed start 14:00, finish 14:30."
+      }
+    ],
+    "solution": [
+      "leon-day-0",
+      "leon-day-1",
+      "leon-day-2",
+      "leon-day-3",
+      "leon-day-4"
+    ],
+    "hints": [
+      "Work backward from the letter desk closing time; do not go to supplies first.",
+      "Charge ends 12:20; call 12:30; letter pickup finishes 13:00. Reach appointment by 13:30 and wait."
+    ],
+    "solvedText": "Letter collected by 13:00. Appointment reached at 13:30. After the meeting, reach supplies at 14:50 and wait ten minutes. Cornball\u2019s haircut is not on this route.",
+    "skipText": "Your crew reconstructs the answer with you. The story and its rewards continue."
+  },
+  {
+    "chapter": "The Last Waffle",
+    "nodeId": "squabble-house-last-waffle-puzzle",
+    "id": "squabble-house-breakfast-line",
+    "title": "Build the Last Waffle",
+    "instruction": "Rebuild the kitchen log from first action to last. Start with a cold, empty iron and an empty plate. Each action happens once. Follow the requirements printed on the tickets; nothing happens offscreen.",
+    "imageAssetId": "assets/story/squabble-house/puzzles/ch01.webp",
+    "pieces": [
+      {
+        "id": "syrup",
+        "label": "Finish with syrup",
+        "detail": "Syrup goes only on the cooked waffle after it reaches the plate.",
+        "imageAssetId": "assets/story/squabble-house/puzzles/props/ticket.webp"
+      },
+      {
+        "id": "batter",
+        "label": "Pour the batter",
+        "detail": "The iron must already be hot and empty. Pouring fills it with uncooked batter.",
+        "imageAssetId": "assets/story/squabble-house/puzzles/props/ticket.webp"
+      },
+      {
+        "id": "plate",
+        "label": "Lift onto the plate",
+        "detail": "Lift the waffle out only after the cook cycle finishes. The iron becomes empty.",
+        "imageAssetId": "assets/story/squabble-house/puzzles/props/ticket.webp"
+      },
+      {
+        "id": "heat",
+        "label": "Heat the empty iron",
+        "detail": "This must happen while the iron is empty, before any batter is poured.",
+        "imageAssetId": "assets/story/squabble-house/puzzles/props/ticket.webp"
+      },
+      {
+        "id": "cook",
+        "label": "Close and cook",
+        "detail": "The iron must contain batter. Complete the full cook cycle before opening it.",
+        "imageAssetId": "assets/story/squabble-house/puzzles/props/ticket.webp"
+      }
+    ],
+    "solution": [
+      "heat",
+      "batter",
+      "cook",
+      "plate",
+      "syrup"
+    ],
+    "hints": [
+      "The cold iron cannot cook anything. Find the ticket that changes that.",
+      "Heat \u2192 batter \u2192 cook \u2192 plate \u2192 syrup. The waffle was perfect when it left the kitchen."
+    ],
+    "solvedText": "The kitchen sequence is sound. A cooked, plated waffle left the pass. Someone took it after service\u2014not before.",
+    "skipText": "Let the crew explain the solution. The next fade still has to be won to earn its reward.",
+    "presentation": {
+      "theme": "squabble-house",
+      "layout": "tickets",
+      "slotLabels": [
+        "First action",
+        "Second action",
+        "Third action",
+        "Fourth action",
+        "Last action"
+      ]
+    }
+  },
+  {
+    "chapter": "The Receipts",
+    "nodeId": "squabble-house-receipts-puzzle",
+    "id": "squabble-house-receipt-register",
+    "title": "Sort the Damage",
+    "instruction": "tek-KEN needs the receipt lines from smallest final charge to largest. Final charge = food + extras \u2212 discount. Use the amounts printed on each receipt. No tax or tip is added. All five final charges are different.",
+    "imageAssetId": "assets/story/squabble-house/puzzles/ch02.webp",
+    "pieces": [
+      {
+        "id": "red-plate",
+        "label": "Red\u2019s plate",
+        "detail": "$8 food + $3 extras \u2212 $2 discount.",
+        "imageAssetId": "assets/story/squabble-house/puzzles/props/receipt.webp"
+      },
+      {
+        "id": "og-combo",
+        "label": "OG\u2019s combo",
+        "detail": "$10 food + $2 extras \u2212 $1 discount.",
+        "imageAssetId": "assets/story/squabble-house/puzzles/props/receipt.webp"
+      },
+      {
+        "id": "coffee",
+        "label": "Coffee refill",
+        "detail": "$6 food + $1 extras \u2212 $3 discount.",
+        "imageAssetId": "assets/story/squabble-house/puzzles/props/receipt.webp"
+      },
+      {
+        "id": "blue-plate",
+        "label": "Blue\u2019s plate",
+        "detail": "$12 food + $0 extras \u2212 $5 discount.",
+        "imageAssetId": "assets/story/squabble-house/puzzles/props/receipt.webp"
+      },
+      {
+        "id": "side-order",
+        "label": "Mystery side order",
+        "detail": "$9 food + $2 extras \u2212 $5 discount.",
+        "imageAssetId": "assets/story/squabble-house/puzzles/props/receipt.webp"
+      }
+    ],
+    "solution": [
+      "coffee",
+      "side-order",
+      "blue-plate",
+      "red-plate",
+      "og-combo"
+    ],
+    "hints": [
+      "Calculate each total before comparing them. A bigger printed food price can have a smaller final charge.",
+      "The final charges are $4, $6, $7, $9, $11. Blue\u2019s $7 plate comes before Red\u2019s $9 plate."
+    ],
+    "solvedText": "$37 in actual orders. Blue\u2019s plate and Red\u2019s plate share Red OG\u2019s account number. The food was real; the romance story remains unverified.",
+    "skipText": "Let the crew explain the solution. The next fade still has to be won to earn its reward.",
+    "presentation": {
+      "theme": "squabble-house",
+      "layout": "register",
+      "slotLabels": [
+        "Lowest charge",
+        "2nd lowest",
+        "Middle charge",
+        "2nd highest",
+        "Highest charge"
+      ]
+    }
+  },
+  {
+    "chapter": "Family Discount",
+    "nodeId": "squabble-house-family-discount-puzzle",
+    "id": "squabble-house-booth-truce",
+    "title": "A Booth Apart",
+    "instruction": "Seat the five people left to right as you face the booth. One person per seat. Use every person once and satisfy every seating request. Left and right refer to the screen, not the diners\u2019 hands.",
+    "imageAssetId": "assets/story/squabble-house/puzzles/ch03.webp",
+    "pieces": [
+      {
+        "id": "cuff",
+        "label": "Cuff",
+        "detail": "Sits immediately next to Blue.",
+        "imageAssetId": "assets/story/squabble-house/puzzles/props/booth.webp"
+      },
+      {
+        "id": "blue",
+        "label": "Blue",
+        "detail": "Sits at the opposite end from Red, somewhere to Red\u2019s right.",
+        "imageAssetId": "assets/story/squabble-house/puzzles/props/booth.webp"
+      },
+      {
+        "id": "manager",
+        "label": "Manager",
+        "detail": "Takes the middle seat: seat 3 of 5.",
+        "imageAssetId": "assets/story/squabble-house/puzzles/props/booth.webp"
+      },
+      {
+        "id": "red",
+        "label": "Red",
+        "detail": "Takes an end seat.",
+        "imageAssetId": "assets/story/squabble-house/puzzles/props/booth.webp"
+      },
+      {
+        "id": "ken",
+        "label": "tek-KEN",
+        "detail": "Sits immediately to Red\u2019s right so Red can read the bill.",
+        "imageAssetId": "assets/story/squabble-house/puzzles/props/booth.webp"
+      }
+    ],
+    "solution": [
+      "red",
+      "ken",
+      "manager",
+      "cuff",
+      "blue"
+    ],
+    "hints": [
+      "Red occupies an end and Blue must be to his right. That rules out Red\u2019s right-hand end.",
+      "Red is seat 1, Blue seat 5, Manager seat 3. tek-KEN belongs immediately after Red; Cuff fills seat 4."
+    ],
+    "solvedText": "Red \u2022 tek-KEN \u2022 Manager \u2022 Cuff \u2022 Blue. Both rivals can see the receipts without reaching each other. Their OGs, unfortunately, are still standing.",
+    "skipText": "Let the crew explain the solution. The next fade still has to be won to earn its reward.",
+    "presentation": {
+      "theme": "squabble-house",
+      "layout": "booths",
+      "slotLabels": [
+        "Seat 1 \u00b7 left end",
+        "Seat 2",
+        "Seat 3 \u00b7 middle",
+        "Seat 4",
+        "Seat 5 \u00b7 right end"
+      ]
+    }
+  },
+  {
+    "chapter": "Hands on the Clock",
+    "nodeId": "squabble-house-hands-on-the-clock-puzzle",
+    "id": "squabble-house-grill-rush",
+    "title": "Keep the Pass Moving",
+    "instruction": "One grill. Start at minute 0. Cook one ticket at a time without interruption, using each ticket once. Each order must FINISH at or before its pickup deadline. Choose the sequence that gets all five out on time; waiting never helps.",
+    "imageAssetId": "assets/story/squabble-house/puzzles/ch04.webp",
+    "pieces": [
+      {
+        "id": "hash",
+        "label": "Hash browns",
+        "detail": "Cook time: 3 minutes. Pickup deadline: minute 10.",
+        "imageAssetId": "assets/story/squabble-house/puzzles/props/plate.webp"
+      },
+      {
+        "id": "toast",
+        "label": "Toast",
+        "detail": "Cook time: 1 minute. Pickup deadline: minute 11.",
+        "imageAssetId": "assets/story/squabble-house/puzzles/props/plate.webp"
+      },
+      {
+        "id": "waffle",
+        "label": "Waffle",
+        "detail": "Cook time: 3 minutes. Pickup deadline: minute 5.",
+        "imageAssetId": "assets/story/squabble-house/puzzles/props/plate.webp"
+      },
+      {
+        "id": "eggs",
+        "label": "Eggs",
+        "detail": "Cook time: 2 minutes. Pickup deadline: minute 2.",
+        "imageAssetId": "assets/story/squabble-house/puzzles/props/plate.webp"
+      },
+      {
+        "id": "bacon",
+        "label": "Bacon",
+        "detail": "Cook time: 2 minutes. Pickup deadline: minute 7.",
+        "imageAssetId": "assets/story/squabble-house/puzzles/props/plate.webp"
+      }
+    ],
+    "solution": [
+      "eggs",
+      "waffle",
+      "bacon",
+      "hash",
+      "toast"
+    ],
+    "hints": [
+      "The eggs need two minutes and must finish by minute two. Nothing can go before them.",
+      "After eggs finish at 2: waffle finishes at 5, bacon at 7, hash browns at 10, toast at 11. Any swap makes an order late."
+    ],
+    "solvedText": "Every pickup hits its deadline: 2, 5, 7, 10, 11. Griddle keeps the service moving while Security keeps Titan away from the hot pass.",
+    "skipText": "Let the crew explain the solution. The next fade still has to be won to earn its reward.",
+    "presentation": {
+      "theme": "squabble-house",
+      "layout": "pass",
+      "slotLabels": [
+        "First on grill",
+        "Second on grill",
+        "Third on grill",
+        "Fourth on grill",
+        "Last on grill"
+      ]
+    }
+  },
+  {
+    "chapter": "Wet Floor. Dry Humor.",
+    "nodeId": "squabble-house-wet-floor-puzzle",
+    "id": "squabble-house-dry-route",
+    "title": "Respect the Wet Floor",
+    "instruction": "Trace the dry route from A1 (front door) to D3 (service pass). Columns A\u2013D go left to right; rows 1\u20133 go from the windows toward the counter. Step one square horizontally or vertically. No diagonals. Use every dry tile once; all unlisted squares are wet.",
+    "imageAssetId": "assets/story/squabble-house/puzzles/ch05.webp",
+    "pieces": [
+      {
+        "id": "c3",
+        "label": "C3 \u00b7 turn at the cone",
+        "detail": "Dry square C3. The service pass is one square to the right.",
+        "imageAssetId": "assets/story/squabble-house/puzzles/props/cone.webp"
+      },
+      {
+        "id": "b1",
+        "label": "B1 \u00b7 window mat",
+        "detail": "Dry square B1. A1 is one square left; B2 is one square toward the counter.",
+        "imageAssetId": "assets/story/squabble-house/puzzles/props/cone.webp"
+      },
+      {
+        "id": "d3",
+        "label": "D3 \u00b7 service pass",
+        "detail": "Dry square D3. Finish here.",
+        "imageAssetId": "assets/story/squabble-house/puzzles/props/cone.webp"
+      },
+      {
+        "id": "a1",
+        "label": "A1 \u00b7 front door",
+        "detail": "Dry square A1. Start here.",
+        "imageAssetId": "assets/story/squabble-house/puzzles/props/cone.webp"
+      },
+      {
+        "id": "c2",
+        "label": "C2 \u00b7 aisle mat",
+        "detail": "Dry square C2. B2 is one square left; C3 is one square toward the counter.",
+        "imageAssetId": "assets/story/squabble-house/puzzles/props/cone.webp"
+      },
+      {
+        "id": "b2",
+        "label": "B2 \u00b7 booth corner",
+        "detail": "Dry square B2. B1 is one square toward the windows; C2 is one square right.",
+        "imageAssetId": "assets/story/squabble-house/puzzles/props/cone.webp"
+      }
+    ],
+    "solution": [
+      "a1",
+      "b1",
+      "b2",
+      "c2",
+      "c3",
+      "d3"
+    ],
+    "hints": [
+      "From A1, only B1 is a listed horizontal or vertical neighbor. Follow the dry squares, not the diagonal shortcuts.",
+      "A1 \u2192 B1 \u2192 B2 \u2192 C2 \u2192 C3 \u2192 D3. Right, toward counter, right, toward counter, right."
+    ],
+    "solvedText": "Plate delivered. Shoes dry. Red and Blue\u2019s diagonal shortcut was not on the map\u2014and neither was their landing.",
+    "skipText": "Let the crew explain the solution. The next fade still has to be won to earn its reward.",
+    "presentation": {
+      "theme": "squabble-house",
+      "layout": "route",
+      "slotLabels": [
+        "Start \u00b7 A1",
+        "Step 2",
+        "Step 3",
+        "Step 4",
+        "Step 5",
+        "Finish \u00b7 D3"
+      ]
+    }
+  },
+  {
+    "chapter": "The Real Thief",
+    "nodeId": "squabble-house-real-thief-puzzle",
+    "id": "squabble-house-feather-file",
+    "title": "The Feather File",
+    "instruction": "Put the five camera events in real chronological order, earliest to latest. All stamps are from the same night. Each camera\u2019s clock error is printed on its evidence card: subtract a fast clock\u2019s error; add a slow clock\u2019s error. Use every event once.",
+    "imageAssetId": "assets/story/squabble-house/puzzles/ch06.webp",
+    "pieces": [
+      {
+        "id": "accusation",
+        "label": "Red points at Blue",
+        "detail": "Booth camera reads 02:25. Its clock is accurate.",
+        "imageAssetId": "assets/story/squabble-house/puzzles/props/evidence.webp"
+      },
+      {
+        "id": "theft",
+        "label": "Waffle leaves the plate",
+        "detail": "Shelf camera reads 02:20. Its clock is 3 minutes slow. A small wing crosses the plate.",
+        "imageAssetId": "assets/story/squabble-house/puzzles/props/evidence.webp"
+      },
+      {
+        "id": "escape",
+        "label": "Pigeon reaches the exit",
+        "detail": "Exit camera reads 02:29. Its clock is 2 minutes fast. The stolen waffle is in its claws.",
+        "imageAssetId": "assets/story/squabble-house/puzzles/props/evidence.webp"
+      },
+      {
+        "id": "plate",
+        "label": "Manager plates breakfast",
+        "detail": "Kitchen camera reads 02:19. Its clock is 2 minutes slow.",
+        "imageAssetId": "assets/story/squabble-house/puzzles/props/evidence.webp"
+      },
+      {
+        "id": "entry",
+        "label": "Pigeon enters the window",
+        "detail": "Hall camera reads 02:24. Its clock is 2 minutes fast.",
+        "imageAssetId": "assets/story/squabble-house/puzzles/props/evidence.webp"
+      }
+    ],
+    "solution": [
+      "plate",
+      "entry",
+      "theft",
+      "accusation",
+      "escape"
+    ],
+    "hints": [
+      "A fast camera shows a later time than reality. Correct every timestamp before sorting the events.",
+      "Actual times: plated 02:21; pigeon enters 02:22; theft 02:23; accusation 02:25; escape 02:27."
+    ],
+    "solvedText": "The pigeon took the waffle two minutes before Red accused Blue. The receipts prove who paid; the footage proves who ate. Those are different questions.",
+    "skipText": "Let the crew explain the solution. The next fade still has to be won to earn its reward.",
+    "presentation": {
+      "theme": "squabble-house",
+      "layout": "evidence",
+      "slotLabels": [
+        "Earliest event",
+        "Second event",
+        "Third event",
+        "Fourth event",
+        "Latest event"
+      ]
+    }
+  }
+]

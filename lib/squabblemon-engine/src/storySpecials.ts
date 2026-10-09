@@ -390,7 +390,7 @@ const falseBottomNodes: readonly StoryNode[] = [
       title: "The Reel Timeline",
       instruction:
         "Order by actual time. Lobby clock and hallway camera are five minutes fast; courier and witness phones are correct. Use what the records show, not the order someone handed them over.",
-      imageAssetId: "assets/story/theater/evidence.webp",
+      imageAssetId: "assets/story/puzzles/v2/sherlock-missing-reel-sequence.webp",
       pieces: [
         {
           id: "hallway-frame",

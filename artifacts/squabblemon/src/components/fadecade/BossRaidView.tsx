@@ -192,6 +192,7 @@ export function BossRaidView({
   return (
     <main
       className="boss-raid raid-v2 raid-v3"
+      aria-label="Punch on Patrol battle"
       data-testid="boss-raid-stage"
       data-round={shownMatch.round}
       data-tier={run.bossTier}
@@ -675,7 +676,7 @@ export function BossRaidView({
               src={getAssetUrl("assets/boss-raid/attack-complete-seal.svg")}
               alt=""
             />
-            <small>DAILY ATTACK COMPLETE</small>
+            <small>PUNCH ON PATROL · ATTACK COMPLETE</small>
             <Dialog.Title>
               {run.hp === 0
                 ? "PRECINCT DOWN"
@@ -757,7 +758,7 @@ export function BossRaidView({
               </>
             ) : forms ? (
               <>
-                <small>FIVE FORMS · ONE CAMPAIGN</small>
+                <small>PUNCH ON PATROL · FIVE FORMS</small>
                 <h2>THE WHOLE PRECINCT</h2>
                 <div className="raid-form-cards">
                   {BOSS_FORMS.map((f) => (
@@ -782,7 +783,7 @@ export function BossRaidView({
               </>
             ) : (
               <>
-                <h2>MAKE IT HURT.</h2>
+                <h2>PUNCH ON PATROL</h2>
                 <p>
                   Play a six-round match against a shuffled ten-card police
                   deck. The police draw cards, spend Motion and contest your

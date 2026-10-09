@@ -767,62 +767,6 @@
 .raid-entry .raid-fire {
   width: 100%;
 }
-.raid-cabinet {
-  width: 260px;
-  max-width: 100%;
-  color: #e5d191;
-}
-.raid-cabinet-art {
-  position: relative;
-  isolation: isolate;
-  overflow: hidden;
-  min-height: 335px;
-  padding: 18px;
-  border: 5px solid #374b5a;
-  border-radius: 15px 15px 7px 7px;
-  background: linear-gradient(160deg, #0a1c2c, #12101a);
-  box-shadow:
-    inset 0 0 0 2px #a98650,
-    0 9px 15px #000a;
-}
-.raid-cabinet-art img {
-  position: absolute;
-  z-index: -1;
-  width: 240px;
-  height: 270px;
-  object-fit: contain;
-  right: -22px;
-  bottom: 50px;
-  filter: drop-shadow(0 4px 8px #000);
-}
-.raid-cabinet h2 {
-  font-size: 32px;
-  font-weight: 950;
-  font-style: italic;
-  line-height: 0.95;
-  margin: 12px 0 115px;
-  text-shadow: 0 2px 6px #000;
-}
-.raid-cabinet small {
-  font-size: 8px;
-}
-.raid-cabinet p {
-  font-size: 7px;
-}
-.raid-cabinet > span {
-  font-size: 10px;
-  display: block;
-  margin-top: 10px;
-}
-.raid-cabinet .cabinet-btn {
-  width: 100%;
-  min-height: 36px;
-  font-weight: 900;
-  color: #192533;
-  background: #efd18c;
-  border: 1px solid #ffe4a7;
-  border-radius: 4px;
-}
 @media (max-width: 800px) {
   .boss-raid {
     padding: 6px 9px 13px;

@@ -9,7 +9,7 @@ export function useGameBack() {
   const search = useSearch();
   return () => {
     if (previousGameLocation()) history.back();
-    else navigate(routeFallback(path + (search ? '?' + search : '')), { replace: true });
+    else navigate(routeFallback(path + (search ? '?' + search : '') + window.location.hash), { replace: true });
   };
 }
 

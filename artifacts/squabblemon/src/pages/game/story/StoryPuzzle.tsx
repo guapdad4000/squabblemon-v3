@@ -1,3 +1,4 @@
+import { motion, useReducedMotion } from 'framer-motion';
 import { getAssetUrl } from '../../../data';
 import { type StoryPuzzleDefinition } from '@workspace/squabblemon-engine/story';
 import { type StoryPuzzleCompletion, useCompletePlayerStoryPuzzle } from '@workspace/api-client-react';
@@ -6,6 +7,8 @@ import { GripVertical } from 'lucide-react';
 import { createPortal } from 'react-dom';
 import '../../../styles/puzzle.css';
 import '../../../styles/squabble-house.css';
+import { PuzzleScene, PuzzleGlyph, puzzlePresentation, puzzleSlotLabel } from './PuzzleScene';
+import '../../../styles/puzzle-display.css';
 import { DinerPuzzleInstrument } from './DinerPuzzleInstrument';
 import { useStoryModalFocus } from './useStoryModalFocus';
 
@@ -20,6 +23,7 @@ export function StoryPuzzle({
   onCompleted: (result: StoryPuzzleCompletion) => void;
   onClose: () => void;
 }) {
+  const reducedMotion = useReducedMotion();
   const completePuzzle = useCompletePlayerStoryPuzzle();
   const [pieces, setPieces] = useState(puzzle.pieces.map(p => p.id));
   const [draggedIdx, setDraggedIdx] = useState<number | null>(null);
@@ -150,25 +154,26 @@ export function StoryPuzzle({
   }, [onClose]);
 
   return createPortal(
-    <div className={`story-puzzle-host ${diner ? 'house-puzzle' : ''}`} data-layout={puzzle.presentation?.layout}
+    <div className={`story-puzzle-host story-puzzle-v3 ${diner ? 'house-puzzle' : ''}`} data-layout={puzzle.presentation?.layout} data-puzzle-kind={puzzlePresentation(puzzle).kind}
       ref={hostRef} role="dialog" aria-modal="true" aria-labelledby="story-puzzle-title">
-      <div className="story-puzzle-bg" style={{ backgroundImage: `url(${getAssetUrl(puzzle.imageAssetId)})` }} />
+      <div className="story-puzzle-bg" style={{ backgroundImage: `url(${getAssetUrl(puzzlePresentation(puzzle).art)})` }} />
       <div className="story-puzzle-content">
         <header className="story-puzzle-header">
           <button type="button" onClick={onClose} disabled={submitting} className="story-puzzle-back">&larr; Back</button>
-          {diner && <span className="house-puzzle-eyebrow">Squabble House · On the clock</span>}
           <h2 id="story-puzzle-title">{puzzle.title}</h2>
           <p>{puzzle.instruction}</p>
         </header>
 
-        {diner && <DinerPuzzleInstrument puzzle={puzzle} order={pieces} />}
+        <PuzzleScene puzzle={puzzle} />
+        {diner && (puzzle.presentation?.layout === 'route' || puzzle.presentation?.layout === 'pass') && <DinerPuzzleInstrument puzzle={puzzle} order={pieces} />}
         <div className="story-puzzle-main">
           <ul className="story-puzzle-list" ref={listRef} role="listbox" aria-label="Evidence pieces">
             {pieces.map((id, index) => {
               const piece = puzzle.pieces.find(p => p.id === id)!;
-              const evidenceIndex = puzzle.pieces.findIndex(p => p.id === id);
               return (
-                <li
+                <motion.li
+                  layout={reducedMotion ? false : "position"}
+                  transition={{duration: .18, ease: "easeOut"}}
                   key={id}
                   className={`story-puzzle-item ${draggedIdx === index ? 'is-dragging' : ''}`}
                   tabIndex={0}
@@ -200,18 +205,9 @@ export function StoryPuzzle({
                   >
                     <GripVertical className="story-puzzle-grip" size={22} aria-hidden="true" />
                   </button>
-                  {!diner && <div
-                    className="story-puzzle-item-art"
-                    aria-hidden="true"
-                    style={{
-                      backgroundImage: `url(${getAssetUrl(piece.imageAssetId ?? puzzle.imageAssetId)})`,
-                      backgroundPosition: `${15 + ((evidenceIndex * 31) % 70)}% ${18 + ((evidenceIndex * 23) % 64)}%`
-                    }}
-                  >
-                    <span>{String(index + 1).padStart(2, '0')}</span>
-                  </div>}
+                  <PuzzleGlyph puzzle={puzzle} index={index} pieceId={id} />
                   <div className="story-puzzle-item-content">
-                    {diner && <small className="house-puzzle-slot">{String(index + 1).padStart(2, '0')} / {puzzle.presentation?.slotLabels[index]}</small>}
+                    {puzzleSlotLabel(puzzle,index) && <small className="house-puzzle-slot">{puzzleSlotLabel(puzzle,index)}</small>}
                     <strong>{piece.label}</strong>
                     <span id={`clue-${puzzle.id}-${piece.id}`}>{piece.detail}</span>
                   </div>
@@ -219,7 +215,7 @@ export function StoryPuzzle({
                     <button type="button" aria-label={`Move ${piece.label} up`} disabled={submitting || index === 0} onClick={() => moveItem(index, index - 1)}>↑</button>
                     <button type="button" aria-label={`Move ${piece.label} down`} disabled={submitting || index === pieces.length - 1} onClick={() => moveItem(index, index + 1)}>↓</button>
                   </div>
-                </li>
+                </motion.li>
               );
             })}
           </ul>
@@ -227,8 +223,6 @@ export function StoryPuzzle({
 
           <div className="story-puzzle-sidebar">
             <div className="story-puzzle-hints">
-              <h3>{diner ? 'Crew help' : 'Notes'}</h3>
-              {diner && <p className="house-puzzle-help">Drag the grip, use ↑ ↓ on a ticket, or tap its move buttons. Read every clue before submitting.</p>}
               {hintsUsed > 0 && (
                 <ul className="story-puzzle-hints-list">
                   {puzzle.hints.slice(0, hintsUsed).map((hint, i) => (

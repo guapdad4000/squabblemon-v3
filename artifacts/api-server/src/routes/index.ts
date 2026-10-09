@@ -1,4 +1,5 @@
 import bossRaidRouter from './bossRaid';
+import parkChessRouter from './parkChess';
 import arcadeGamesRouter from './arcadeGames';
 import waffleRunRouter from './waffleRun';
 import dailyCloutRouter from './dailyClout';
@@ -40,6 +41,7 @@ router.use(starterMythicRouter);
 router.use(waffleRunRouter);
 router.use(arcadeGamesRouter);
 router.use(bossRaidRouter);
+router.use(parkChessRouter);
 router.use(legendBountiesRouter);
 router.use(mailRouter);
 router.use(notificationsRouter);

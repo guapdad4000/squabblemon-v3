@@ -1,5 +1,7 @@
 import { lazy, Suspense, useMemo, useState } from "react";
+import { useLocation, useSearch } from "wouter";
 import { BossRaidCabinet } from "../../components/fadecade/BossRaidCabinet";
+import { ParkChessCabinet } from "../../components/fadecade/ParkChessCabinet";
 import type { ArcadeKind } from "@workspace/squabblemon-engine/arcadeGames";
 import { ArcadeGameCabinet } from "../../components/fadecade/ArcadeCabinets";
 import "../../styles/arcade-games.css";
@@ -28,6 +30,7 @@ import { type ActivityId } from "@workspace/squabblemon-engine/activities";
 import { isTrainingCircuitActivity } from "../../lib/resultBroadcastEligibility";
 
 const BossRaidGame = lazy(() => import("../../components/fadecade/BossRaidGame"));
+const ParkChessGame = lazy(() => import("../../components/fadecade/ParkChessGame"));
 const ArcadeGame = lazy(() => import("../../components/fadecade/ArcadeGames"));
 
 export type BattleConfig = {
@@ -48,15 +51,28 @@ export function ChallengesHub({
   openTraining?: boolean;
 }) {
   const [arcadeKind, setArcadeKind] = useState<ArcadeKind | null>(null);
-  const [bossOpen, setBossOpen] = useState(false);
+  const [path, navigate] = useLocation();
+  const search = useSearch();
+  const bossOpen = new URLSearchParams(search).get("game") === "punch-on-patrol";
+  const chessOpen = new URLSearchParams(search).get("game") === "check-the-block";
   const [waffleOpen, setWaffleOpen] = useState(false);
   const [battleConfig, setBattleConfig] = useState<BattleConfig | null>(null);
-  useFadecadeMusic(!battleConfig && !waffleOpen && !arcadeKind && !bossOpen);
+  useFadecadeMusic(!battleConfig && !waffleOpen && !arcadeKind && !bossOpen && !chessOpen);
   const [roadReturn, setRoadReturn] = useState<RoadReturn | undefined>();
   const runsQuery = useListChallengeRuns();
   function launchBattle(config: BattleConfig) {
     setRoadReturn(undefined);
     setBattleConfig(config);
+  }
+  function setBossOpen(open: boolean) {
+    setRouteGame(open ? "punch-on-patrol" : null);
+  }
+  function setRouteGame(game: string | null) {
+    const params = new URLSearchParams(search);
+    if (game) params.set("game", game);
+    else params.delete("game");
+    const query = params.toString();
+    navigate(`${path}${query ? `?${query}` : ""}${window.location.hash}`, { replace: !game });
   }
 
   const legalCrews = useMemo(() => {
@@ -107,6 +123,8 @@ export function ChallengesHub({
 
     return saved.length ? saved : fallback;
   }, [bootstrap]);
+
+  if (chessOpen) return <Suspense fallback={<main className="park-chess park-chess--loading">FINDING YOUR TABLE…</main>}><ParkChessGame bootstrap={bootstrap} /></Suspense>;
 
   if (bossOpen)
     return (
@@ -253,6 +271,7 @@ export function ChallengesHub({
               onOpen={() => setArcadeKind("girl-fade")}
             />
             <BossRaidCabinet onOpen={() => setBossOpen(true)} />
+            <ParkChessCabinet onOpen={() => setRouteGame("check-the-block")} />
             <StockzMachine bootstrap={bootstrap} />
             <EventsMachine
               playerId={bootstrap.profile.id}

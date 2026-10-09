@@ -1,0 +1,165 @@
+.patrol-cabinet {
+  width: 100%;
+  min-width: 0;
+}
+
+.patrol-cabinet__preview {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  gap: 0.9cqw;
+  padding: 2%;
+  overflow: hidden;
+  text-align: center;
+  color: #f8f0d4;
+  background: #081628;
+}
+
+.patrol-cabinet__preview::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background: linear-gradient(180deg, #03101ab3, #07122633 48%, #030a16d9);
+}
+
+.patrol-cabinet__scene {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.45;
+}
+
+.patrol-cabinet__officer {
+  position: absolute;
+  right: -1%;
+  bottom: 5%;
+  z-index: 1;
+  width: 52%;
+  height: 91%;
+  object-fit: contain;
+  object-position: right bottom;
+  opacity: 0.85;
+  transform-origin: center bottom;
+}
+
+.patrol-cabinet__siren {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  z-index: 2;
+  width: 27%;
+  pointer-events: none;
+  opacity: 0.45;
+}
+.patrol-cabinet__siren--red {
+  left: 0;
+  background: radial-gradient(ellipse at left center, #ed403e88, transparent 74%);
+}
+.patrol-cabinet__siren--blue {
+  right: 0;
+  background: radial-gradient(ellipse at right center, #52bbff88, transparent 74%);
+}
+
+.patrol-cabinet__tag,
+.patrol-cabinet__title,
+.patrol-cabinet__rules,
+.patrol-cabinet__preview > .cabinet-btn {
+  position: relative;
+  z-index: 3;
+  flex: none;
+}
+
+.patrol-cabinet__tag {
+  font: 800 clamp(9px, 2cqw, 11px)/1.1 var(--font-mono);
+  letter-spacing: 0.09em;
+  color: #c5e5f8;
+  text-shadow: 0 1px 3px #03080e;
+}
+
+.patrol-cabinet__title {
+  margin: 0;
+  max-width: 100%;
+  font: 900 italic clamp(17px, 6cqw, 29px)/0.98 var(--font-display);
+  letter-spacing: -0.025em;
+  color: #fff3b9;
+  text-shadow: 2px 3px #061324, 0 0 8px #061324;
+}
+.patrol-cabinet__title > span { display: block; }
+.patrol-cabinet__title > span:last-child { color: #92d4ff; }
+
+.patrol-cabinet__rules {
+  font: 800 clamp(9px, 1.9cqw, 11px)/1.15 var(--font-mono);
+  letter-spacing: 0.025em;
+  color: #f2e4bc;
+  text-shadow: 0 1px 3px #03080e;
+}
+
+.patrol-cabinet__preview > .cabinet-btn {
+  width: 76%;
+  min-height: 44px;
+  padding: 5px 10px;
+  margin-top: 0.5cqw;
+  border: 1px solid #ffe49b;
+  border-radius: 2px;
+  background: #f8d349;
+  color: #101826;
+  font: 900 clamp(12px, 3cqw, 15px)/1 var(--font-display);
+  box-shadow: inset 0 -3px #ae842777;
+  transition: background-color 140ms ease, transform 140ms ease;
+}
+.patrol-cabinet__preview > .cabinet-btn:hover {
+  background: #fff0a1;
+}
+.patrol-cabinet__preview > .cabinet-btn:focus-visible {
+  outline: 2px solid #101826;
+  outline-offset: -4px;
+}
+.patrol-cabinet__machine:focus-within .arcade-cabinet__screen-border {
+  box-shadow: inset 0 0 0 2px #fff0a1;
+}
+
+@container (max-width: 320px) {
+  .patrol-cabinet__preview { gap: 0.4cqw; padding: 0.5%; }
+  .patrol-cabinet__preview > .cabinet-btn { margin-top: 0; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .patrol-cabinet:hover .patrol-cabinet__officer,
+  .patrol-cabinet:focus-within .patrol-cabinet__officer {
+    animation: patrol-attract-breathe 4s ease-in-out infinite;
+  }
+  .patrol-cabinet:hover .patrol-cabinet__siren,
+  .patrol-cabinet:focus-within .patrol-cabinet__siren {
+    animation: patrol-attract-siren 2.4s ease-in-out infinite alternate;
+  }
+  .patrol-cabinet .patrol-cabinet__siren--blue { animation-delay: -2.4s; }
+}
+
+@keyframes patrol-attract-breathe {
+  50% { transform: translateY(-1.5%) scale(1.025); }
+}
+@keyframes patrol-attract-siren {
+  from { opacity: 0.25; }
+  to { opacity: 0.65; }
+}
+
+.fadecade-hub[data-reduce-motion="true"] .patrol-cabinet__officer,
+.fadecade-hub[data-reduce-motion="true"] .patrol-cabinet__siren {
+  animation: none !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  .patrol-cabinet__officer,
+  .patrol-cabinet__siren { animation: none !important; }
+  .patrol-cabinet__preview > .cabinet-btn { transition: none; }
+}

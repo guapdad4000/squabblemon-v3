@@ -1,0 +1,33 @@
+{
+  "generator": "built-in imagegen",
+  "revision": "v2 Guap-left / Ashlee-right Japanese arcade frame",
+  "runtimeConversion": "Sharp WebP quality90 alphaQuality100 effort6",
+  "screenPercent": {
+    "left": 16.55,
+    "top": 29.2,
+    "width": 67.5,
+    "height": 50.3
+  },
+  "artifacts": [
+    {
+      "path": "design/park-chess/art-v2/cabinet-v2.png",
+      "dimensions": [
+        1460,
+        1078
+      ],
+      "mode": "RGBA",
+      "bytes": 2129796,
+      "sha256": "5935b690c1b3f20e71219eb20009e03c2262011b7d2fe4e5ef06c95ae60d8a51"
+    },
+    {
+      "path": "artifacts/squabblemon/public/assets/park-chess/cabinet-v2.webp",
+      "dimensions": [
+        1460,
+        1078
+      ],
+      "mode": "RGBA",
+      "bytes": 400966,
+      "sha256": "aa0a79be729b74ade7917205ed22c7ca5cc89c28a03731e28b569c7ca9dc6457"
+    }
+  ]
+}

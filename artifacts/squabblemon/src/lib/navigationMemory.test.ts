@@ -34,3 +34,20 @@ test('view memory tolerates blocked and corrupt session storage', () => {
     assert.doesNotThrow(() => writeMemory('tab','cards'));
   } finally { globalThis.sessionStorage = original; }
 });
+
+test('direct Punch on Patrol entries return to their arcade and preserve other navigation choices', () => {
+  assert.equal(routeFallback('/game/challenges?game=punch-on-patrol'), '/game/challenges');
+  assert.equal(
+    routeFallback('/game/challenges?machine=road&game=punch-on-patrol&notification=milestone#arcade'),
+    '/game/challenges?machine=road&notification=milestone#arcade',
+  );
+  assert.equal(routeFallback('/game/training?game=punch-on-patrol&tab=drills'), '/game/training?tab=drills');
+  assert.equal(routeFallback('/game/challenges?game=another-game'), '/game');
+  assert.equal(routeFallback('/game/challenges#arcade'), '/game');
+});
+
+test('direct chess entries return to the complete arcade with its other query choices', () => {
+  assert.equal(routeFallback('/game/challenges?game=check-the-block'), '/game/challenges');
+  assert.equal(routeFallback('/game/challenges?source=park&game=check-the-block#machines'), '/game/challenges?source=park#machines');
+  assert.equal(routeFallback('/game/training?game=check-the-block'), '/game/training');
+});

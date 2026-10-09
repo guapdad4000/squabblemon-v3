@@ -1,0 +1,299 @@
+[
+  {
+    "id": "s2-the-morning-after-evidence-order",
+    "title": "The launch was already loaded",
+    "art": "assets/story/puzzles/v2/s2-the-morning-after-evidence-order.webp",
+    "width": 1100,
+    "height": 619,
+    "bytes": 191716,
+    "sha256": "564a6fc7cfe4d9fdc56e0f1f025262d0a00e82d3943309f543cc3ba25f3e03a0"
+  },
+  {
+    "id": "s2-museum-of-the-block-evidence-order",
+    "title": "The rail in five photographs",
+    "art": "assets/story/puzzles/v2/s2-museum-of-the-block-evidence-order.webp",
+    "width": 1100,
+    "height": 619,
+    "bytes": 175756,
+    "sha256": "7230aeb626c3f7f5ee2876fa0919fc2064c412708311dddc72cbc93e98ba0f50"
+  },
+  {
+    "id": "s2-premiere-night-evidence-order",
+    "title": "Nine fifty-three, seal intact",
+    "art": "assets/story/puzzles/v2/s2-premiere-night-evidence-order.webp",
+    "width": 1100,
+    "height": 619,
+    "bytes": 165268,
+    "sha256": "5e3ab1bdc3ea74fa312f6e243d212549194c992d078c2431539ac253017c8924"
+  },
+  {
+    "id": "sherlock-missing-reel-sequence",
+    "title": "The Reel Timeline",
+    "art": "assets/story/puzzles/v2/sherlock-missing-reel-sequence.webp",
+    "width": 1100,
+    "height": 619,
+    "bytes": 157916,
+    "sha256": "79445db3af9094096004151db72423227b933a2298d95135a9215a084a29de43"
+  },
+  {
+    "id": "sherlock-clocks",
+    "title": "Three clocks. One fake trip.",
+    "art": "assets/story/puzzles/v2/sherlock-clocks.webp",
+    "width": 1100,
+    "height": 619,
+    "bytes": 208492,
+    "sha256": "22756439780159040c4c3c2517b8c9508c892a08d89b7ca82327338ef284445e"
+  },
+  {
+    "id": "sherlock-route",
+    "title": "Rebuild the unclocked route",
+    "art": "assets/story/puzzles/v2/sherlock-route.webp",
+    "width": 1100,
+    "height": 619,
+    "bytes": 229614,
+    "sha256": "e6259c44ca406c5f214a277ac9b694f726992e98675411a8fa4dc02e45e407e0"
+  },
+  {
+    "id": "sherlock-tape",
+    "title": "The file plays backward",
+    "art": "assets/story/puzzles/v2/sherlock-tape.webp",
+    "width": 1100,
+    "height": 619,
+    "bytes": 154122,
+    "sha256": "ab993bb557d0c9708002e998381f61976b660139b791a4dccc0237f48489cb82"
+  },
+  {
+    "id": "sherlock-cable",
+    "title": "Do not feed the weather back into itself",
+    "art": "assets/story/puzzles/v2/sherlock-cable.webp",
+    "width": 1100,
+    "height": 619,
+    "bytes": 215472,
+    "sha256": "88c9eb7bbf24fedcdabf22ddb1df7869ebecd48aead890f50ed7c5a2c0441299"
+  },
+  {
+    "id": "sherlock-voices",
+    "title": "Four rooms, four takes",
+    "art": "assets/story/puzzles/v2/sherlock-voices.webp",
+    "width": 1100,
+    "height": 619,
+    "bytes": 182012,
+    "sha256": "806a1e3c9e7949d0e1a269f54dcb8f5fc093db5b81cc5953bb935dd88328cb90"
+  },
+  {
+    "id": "sherlock-seats",
+    "title": "Everybody remembers being VIP",
+    "art": "assets/story/puzzles/v2/sherlock-seats.webp",
+    "width": 1100,
+    "height": 619,
+    "bytes": 183982,
+    "sha256": "5ae47e9ce020dd6cc43a50ef348a39098024d2128f58106a19cf76ca7ad00bb2"
+  },
+  {
+    "id": "sherlock-ledger",
+    "title": "Follow the brass, not the brochure",
+    "art": "assets/story/puzzles/v2/sherlock-ledger.webp",
+    "width": 1100,
+    "height": 619,
+    "bytes": 175682,
+    "sha256": "0ebcb10652cb237f4d02583ea12a3c2b9e0351ccf2ca466c5c71e0ef7f34120f"
+  },
+  {
+    "id": "sherlock-proof",
+    "title": "When did he know?",
+    "art": "assets/story/puzzles/v2/sherlock-proof.webp",
+    "width": 1100,
+    "height": 619,
+    "bytes": 159716,
+    "sha256": "2a1eba2e45441867a7a55ccd898b6d3869ee2450a393c94337f4639b4fa5d8c0"
+  },
+  {
+    "id": "oz-route",
+    "title": "Six stops and a wet transfer",
+    "art": "assets/story/puzzles/v2/oz-route.webp",
+    "width": 1100,
+    "height": 619,
+    "bytes": 224124,
+    "sha256": "4817d49f1e7cfdefe3160a324dd33b3ff5140c501a826e45c3638483a9113d45"
+  },
+  {
+    "id": "oz-signal",
+    "title": "One battery, no second chances",
+    "art": "assets/story/puzzles/v2/oz-signal.webp",
+    "width": 1100,
+    "height": 619,
+    "bytes": 209460,
+    "sha256": "ec7dfe3dcf773f15eac7df60cc6cf7c96b2b920ebb7f8e8d59ac984964aaa78d"
+  },
+  {
+    "id": "oz-claims",
+    "title": "He moved the windows again",
+    "art": "assets/story/puzzles/v2/oz-claims.webp",
+    "width": 1100,
+    "height": 619,
+    "bytes": 205296,
+    "sha256": "6238e845b2e0b4a3b94aeee4c42147e95401067dc7447533534c5ba56d1e50d9"
+  },
+  {
+    "id": "oz-flight",
+    "title": "The tram log lost its clock",
+    "art": "assets/story/puzzles/v2/oz-flight.webp",
+    "width": 1100,
+    "height": 619,
+    "bytes": 187388,
+    "sha256": "43b67e74c7092a0246eb26a27aa37717412d88ecf1d99006f2467f70730f6207"
+  },
+  {
+    "id": "alice-sizes",
+    "title": "Do not shrink without the key",
+    "art": "assets/story/puzzles/v2/alice-sizes.webp",
+    "width": 1100,
+    "height": 619,
+    "bytes": 171394,
+    "sha256": "1513020ce5dd21df28a5b9a98c73e74f1e899cdc3f595f281de0def21d3a60fe"
+  },
+  {
+    "id": "alice-cups",
+    "title": "Four cups, one stolen spring",
+    "art": "assets/story/puzzles/v2/alice-cups.webp",
+    "width": 1100,
+    "height": 619,
+    "bytes": 191576,
+    "sha256": "d7cacd48dbfb7e4993c713a112cb28158988aa15a4c2ef66319a78619a1f0c60"
+  },
+  {
+    "id": "alice-clock",
+    "title": "Give the hours back",
+    "art": "assets/story/puzzles/v2/alice-clock.webp",
+    "width": 1100,
+    "height": 619,
+    "bytes": 211318,
+    "sha256": "3b57eb61d95e9fc795fda2d67e03763ea11e65db5fcd2c9dea6b5d3b5242ccff"
+  },
+  {
+    "id": "alice-decree",
+    "title": "The promise under the seal",
+    "art": "assets/story/puzzles/v2/alice-decree.webp",
+    "width": 1100,
+    "height": 619,
+    "bytes": 197086,
+    "sha256": "20b00033d9fc98080f4a8c3d17da1f55d6a5bc56e697c423bb00493f5b2478a4"
+  },
+  {
+    "id": "alice-law",
+    "title": "Yesterday has wet ink",
+    "art": "assets/story/puzzles/v2/alice-law.webp",
+    "width": 1100,
+    "height": 619,
+    "bytes": 160848,
+    "sha256": "8ba961d36b4edd6fe64c50a2b8ad3ad14a53dd128374159a2e987ce2adf3f0f2"
+  },
+  {
+    "id": "yasuke-signals",
+    "title": "The marshal’s disputed signals",
+    "art": "assets/story/puzzles/v2/yasuke-signals.webp",
+    "width": 1100,
+    "height": 619,
+    "bytes": 202032,
+    "sha256": "2811e0d3bf4f653297af0dc51304cdf2752654201157193c4263ada0c14e3df1"
+  },
+  {
+    "id": "yasuke-contract",
+    "title": "Catch the switched copy",
+    "art": "assets/story/puzzles/v2/yasuke-contract.webp",
+    "width": 1100,
+    "height": 619,
+    "bytes": 182446,
+    "sha256": "8d54c3e2c770bf80d2b23557630eec2fd03216875a3543a9a362a0bbf8898c15"
+  },
+  {
+    "id": "cellblock-forms",
+    "title": "Five stamps, two bad clocks",
+    "art": "assets/story/puzzles/v2/cellblock-forms.webp",
+    "width": 1100,
+    "height": 619,
+    "bytes": 175022,
+    "sha256": "a4198241079e80e07729e0d4c0a6982241d27002351996c4d61d3e5b8279685b"
+  },
+  {
+    "id": "cellblock-shelves",
+    "title": "One man, five library cards",
+    "art": "assets/story/puzzles/v2/cellblock-shelves.webp",
+    "width": 1100,
+    "height": 619,
+    "bytes": 193806,
+    "sha256": "b49c8e4ac9c6db7ae8af3a3da17fe82a4d6540bd299e70790cf6bdf22a4c6eb4"
+  },
+  {
+    "id": "leon-route",
+    "title": "The app wants us in the canal",
+    "art": "assets/story/puzzles/v2/leon-route.webp",
+    "width": 1100,
+    "height": 619,
+    "bytes": 240630,
+    "sha256": "80b648e73995e08893e35df114502833e71ffc6ab35b320cb069cb6ed19462bc"
+  },
+  {
+    "id": "leon-day",
+    "title": "One afternoon. No teleporting.",
+    "art": "assets/story/puzzles/v2/leon-day.webp",
+    "width": 1100,
+    "height": 619,
+    "bytes": 182760,
+    "sha256": "d70ea4aa0b91a71783282c077b7fa42bf83c342c5881c182be865b2065733918"
+  },
+  {
+    "id": "squabble-house-breakfast-line",
+    "title": "Build the Last Waffle",
+    "art": "assets/story/puzzles/v2/squabble-house-breakfast-line.webp",
+    "width": 1100,
+    "height": 619,
+    "bytes": 202728,
+    "sha256": "5be386a0f04b9178fb5ec535045390316108579a1748ea3b0e73d0b32927eca0"
+  },
+  {
+    "id": "squabble-house-receipt-register",
+    "title": "Sort the Damage",
+    "art": "assets/story/puzzles/v2/squabble-house-receipt-register.webp",
+    "width": 1100,
+    "height": 619,
+    "bytes": 178306,
+    "sha256": "a79d296af732708e26f361e2a713690c2e686c200fc4826bf74b7cb3549eea28"
+  },
+  {
+    "id": "squabble-house-booth-truce",
+    "title": "A Booth Apart",
+    "art": "assets/story/puzzles/v2/squabble-house-booth-truce.webp",
+    "width": 1100,
+    "height": 619,
+    "bytes": 166798,
+    "sha256": "737f205fadc841e7540ccb9de5bcaa18910c75caab877f43129fad57728efc77"
+  },
+  {
+    "id": "squabble-house-grill-rush",
+    "title": "Keep the Pass Moving",
+    "art": "assets/story/puzzles/v2/squabble-house-grill-rush.webp",
+    "width": 1100,
+    "height": 619,
+    "bytes": 199118,
+    "sha256": "e3f3becfdd493773adc07f72d8b496c45d9b8d2e2c0f9cf73d34154b17c32817"
+  },
+  {
+    "id": "squabble-house-dry-route",
+    "title": "Respect the Wet Floor",
+    "art": "assets/story/puzzles/v2/squabble-house-dry-route.webp",
+    "width": 1100,
+    "height": 619,
+    "bytes": 210024,
+    "sha256": "08d686e89886d21deac6c4490a9e8e31ad819531555d4e28ddafa81c4e937247"
+  },
+  {
+    "id": "squabble-house-feather-file",
+    "title": "The Feather File",
+    "art": "assets/story/puzzles/v2/squabble-house-feather-file.webp",
+    "width": 1100,
+    "height": 619,
+    "bytes": 178870,
+    "sha256": "3f1929f56720b8014ea77092c408c0a7c78e127a99d15542dc949294266949d0"
+  }
+]

@@ -52,8 +52,8 @@ function puzzle(
   hints: readonly string[], solvedText: string, layout: PuzzleLayout, slotLabels: readonly string[], prop: string,
 ): StoryPuzzleDefinition {
   return {
-    id, title, instruction, imageAssetId: `${root}/puzzles/ch${String(chapter).padStart(2, "0")}.webp`,
-    pieces: pieces.map(([pieceId, label, detail]) => ({ id: pieceId, label, detail, imageAssetId: `${root}/puzzles/props/${prop}.webp` })),
+    id, title, instruction, imageAssetId: `assets/story/puzzles/v2/${id}.webp`,
+    pieces: pieces.map(([pieceId, label, detail]) => ({ id: pieceId, label, detail, imageAssetId: `assets/story/puzzles/v2/${id}.webp` })),
     solution, hints, solvedText, skipText: "Let the crew explain the solution. The next fade still has to be won to earn its reward.",
     presentation: { theme: "squabble-house", layout, slotLabels },
   };

@@ -82,7 +82,7 @@ function puzzle(
     id,
     title,
     instruction,
-    imageAssetId: "assets/story/theater/evidence.webp",
+    imageAssetId: `assets/story/puzzles/v2/${id}.webp`,
     pieces: scramblePuzzlePieces(id, ordered),
     solution: ordered.map((piece) => piece.id),
     hints,

@@ -232,7 +232,7 @@ function puzzleFor(
     id: `${chapterId}-evidence-order`,
     title: puzzle.title,
     instruction: puzzle.instruction,
-    imageAssetId: "assets/story/theater/evidence.webp",
+    imageAssetId: `assets/story/puzzles/v2/${chapterId}-evidence-order.webp`,
     pieces: puzzle.pieces,
     solution: puzzle.solution,
     hints: puzzle.hints,

@@ -1,0 +1,15 @@
+.park-chess-academy__nav{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.park-chess-academy__picker{max-width:1100px;margin:28px auto;color:#e8e0c9}
+.park-chess-academy__picker>p{margin-bottom:20px;font-size:13px}
+.park-chess-academy__picker>div{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.park-chess button.park-chess-academy__card{display:flex;align-items:center;gap:16px;padding:20px;text-align:left;min-width:0;background:#0c241bdc;border-color:#a5b18488;box-shadow:0 10px 22px #0006}
+.park-chess-academy__card:hover{border-color:#ffde8b!important;background:#1a3b28ee!important}
+.park-chess-academy__card>span:last-child{min-width:0}.park-chess-academy__card strong{display:block;font:900 italic 23px/1.1 var(--font-display);color:#ffe396;margin:7px 0}.park-chess-academy__card small{font:800 9px var(--font-mono);color:#b5cdae}.park-chess-academy__card p{font:400 12px/1.45 var(--font-sans);margin:8px 0;color:#e1dfcf}.park-chess-academy__card b{font:900 9px var(--font-mono);color:#c9e6b2}
+.park-chess-academy__portrait{position:relative;width:68px;height:68px;flex:none}
+.park-chess-academy__picker>small{display:block;font:800 9px var(--font-mono);color:#b5cdae;margin-top:18px}
+.park-chess-academy__feedback,.park-chess-academy__hint{font-size:12px;line-height:1.5;padding:10px;border-left:2px solid #ffdc85;background:#143423;margin:10px 0;color:#fff0c8}.park-chess-academy__feedback{border-color:#f0a28a;background:#482c22}
+.park-chess-academy__practice-note{font:700 10px/1.5 var(--font-mono);color:#acc8b4;margin:18px 0 0}
+.park-chess-academy__complete{width:34px;height:34px;margin:8px 0;color:#ffe084}
+.park-chess-academy .park-chess__square[data-hint=true]::after{content:"";position:absolute;inset:6%;border:2px dashed #ffe084;border-radius:3px;pointer-events:none;z-index:3}
+@media(max-width:950px){.park-chess-academy__picker>div{grid-template-columns:1fr}.park-chess button.park-chess-academy__card{padding:16px}.park-chess-academy__portrait{width:56px;height:56px}}
+@media(max-width:760px){.park-chess-academy .park-chess__header{flex-wrap:wrap}.park-chess-academy__nav{justify-content:flex-start;gap:6px}.park-chess-academy__nav button{font-size:11px!important;padding-inline:10px!important}.park-chess-academy__picker{margin-top:16px}.park-chess-academy__card strong{font-size:21px}.park-chess-academy__panel{display:block}.park-chess-academy__panel .park-chess__actions{margin-top:12px}}

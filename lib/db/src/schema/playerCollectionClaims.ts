@@ -27,6 +27,11 @@ export type CollectionRoadRewardRecord = {
   bossCampaign?: {version:2;state:unknown};
   bossRaid?: {version:1;runId:string;day:string;state:unknown;earned:{softCurrency:number;packTickets:number;styleShards:number};lastActionId?:string};
   waffleRun?: { version: 1; runId: string; day: string; state: unknown; earned: {softCurrency:number;packTickets:number;styleShards:number}; lastActionId?: string };
+  /** Unlimited chess runs use permanent start/action receipts and one win payout. */
+  parkChessCampaign?: { version: 1; state: unknown };
+  parkChessRun?: { version: 1; runId: string; state: unknown; packTickets: number; startedAt: string; completedAt: string | null };
+  parkChessStart?: { runId: string };
+  parkChessAction?: { runId: string; actionId: string; revision: number; fingerprint: string };
   starterMythic?: { cardId: string; softCurrency: number; packTickets: number; duplicateShards: number };
   cardId?: string;
   softCurrency?: number;

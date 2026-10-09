@@ -1,0 +1,40 @@
+{
+  "generator": "built-in imagegen",
+  "runtimeConversion": "WebP quality90 alphaQuality100 effort6",
+  "artifacts": [
+    {
+      "path": "design/boss-raid/cabinet-v1/punch-on-patrol-cabinet-v1.png",
+      "sha256": "89436db4dcace2b67883058e8fabf61972164b74d92aae618b369c5849131149",
+      "bytes": 2053738,
+      "dimensions": [
+        1459,
+        1078
+      ],
+      "alpha": {
+        "outside": 0,
+        "center": 0,
+        "upperHole": 0,
+        "lowerHole": 0,
+        "leftHole": 0,
+        "rightHole": 0
+      }
+    },
+    {
+      "path": "artifacts/squabblemon/public/assets/boss-raid/punch-on-patrol-cabinet-v1.webp",
+      "sha256": "86b176ef81595aca8c98b01ec088bd683ee28acddff1824429995d2d04e5d814",
+      "bytes": 391430,
+      "dimensions": [
+        1459,
+        1078
+      ],
+      "alpha": {
+        "outside": 0,
+        "center": 0,
+        "upperHole": 0,
+        "lowerHole": 0,
+        "leftHole": 0,
+        "rightHole": 0
+      }
+    }
+  ]
+}
