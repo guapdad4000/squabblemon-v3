@@ -1,5 +1,5 @@
 import { autoBuildDeck } from './deckWorkshop';
-import { cardCatalog } from '../data';
+import { cardCatalog, cards } from '../data';
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { recommendedWorkshopCrews, replaceDeckCard, summarizeDeckTest, workshopSuggestions } from './deckWorkshop';
@@ -61,6 +61,7 @@ test('workshop teaches each affected archetype without creating or replacing dec
     assert.ok(lesson.detail.length > 0);
     assert.ok(lesson.testCrew.length >= 4);
     assert.ok(lesson.testCrew.includes(lesson.cardId));
+    assert.deepEqual(engineIdsToCatalogIds(catalogIdsToEngineIds([...lesson.testCrew])), lesson.testCrew, `${lesson.cardId}: every suggested slot uses its collectible identity`);
   }
 });
 
@@ -83,14 +84,14 @@ test('the four revised lessons expose complete legal balance-lab crews', () => {
 test('revised workshop copy explains the dependable setup and bounded payoff', () => {
   const detail = (cardId: string) => workshopSuggestions.find(lesson => lesson.cardId === cardId)!.detail;
   assert.match(detail('inmate-crafty'), /another inmate or a real support card first/i);
-  assert.match(detail('inmate-crafty'), /2\/3 Crafty/);
+  assert(detail('inmate-crafty').includes(`${cards['inmate-crafty'].cost}/${cards['inmate-crafty'].power} Crafty`));
   assert.match(detail('inmate-crafty'), /\+3 locally and \+3 across districts/);
   assert.match(detail('sherlock'), /actual Sherlock cancellation/i);
   assert.match(detail('sherlock'), /weakest other character \+2/i);
-  assert.match(detail('sherlock'), /Watson is a 2\/3/i);
+  assert(detail('sherlock').includes(`Watson is a ${cards.watson.cost}/${cards.watson.power}`));
   assert.match(detail('sherlock'), /repairs up to 3 actual damage/i);
   assert.match(detail('sherlock'), /Protects that ally or a fallback ally, and Protects Sherlock anywhere/i);
-  assert.match(detail('demario'), /2\/3 Demario/);
+  assert(detail('demario').includes(`${cards.demario.cost}/${cards.demario.power} Demario`));
   assert.match(detail('demario'), /Normal or Powered Luigion consumes it once for \+2/);
   assert.match(detail('demario'), /SQUABBLE is optional for the powered jump/i);
   assert.doesNotMatch(detail('demario'), /adds only the powered jump/i);

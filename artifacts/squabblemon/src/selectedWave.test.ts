@@ -283,9 +283,9 @@ for (const owner of ['player', 'cpu'] as const) {
       },
     ];
     const a = cast(m, 'last-set-og', owner);
-    assert.equal(find(a.m, athlete)?.powerModifier, 1);
+    assert.equal(find(a.m, athlete)?.powerModifier, 2);
     const b = cast(a.m, 'last-set-og', owner, 2);
-    assert.equal(find(b.m, athlete)?.powerModifier, 1);
+    assert.equal(find(b.m, athlete)?.powerModifier, 2);
   });
   test(`${owner}: each training tier pays once only after successful entrance`, () => {
     for (const tier of [0, 1, 2, 3]) {

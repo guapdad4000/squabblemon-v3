@@ -54,8 +54,8 @@ function cover(m: Match, c: CardInstance) {
 const traps = (m: Match, kind: string) => (m.districtTraps ?? []).filter(t => t.kind === kind);
 
 test('crew parity rules 45 preserves other stats outside approved rivalry and Combo buffs', () => {
-  assert.equal(CARD_BALANCE_VERSION, 51);
-  assert.equal(ONLINE_RULES_VERSION, 51);
+  assert.equal(CARD_BALANCE_VERSION, 52);
+  assert.equal(ONLINE_RULES_VERSION, 52);
   assert.equal(frozen.balanceVersion, 35);
   for (const [id, old] of Object.entries(frozen.cards) as [string, { cost: number; power: number }][]) {
     const discounted: Record<string, number> = { 'ganger-blue': 2, 'techbro': 3, 'the-block-spin': 3, 'the-sideshow': 2, 'the-after-party': 2, 'the-kickback': 2, 'the-setup': 1 };

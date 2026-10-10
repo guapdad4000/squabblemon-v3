@@ -81,7 +81,8 @@
     "test:road-motion-browser": "PW_TEST_SCREENSHOT_NO_FONTS_READY=1 node --import tsx e2e/verify-road-motion.mjs",
     "test:park-chess": "node --import tsx --test ../../lib/squabblemon-engine/parkChess.test.ts ../../lib/squabblemon-engine/parkChessLessons.test.ts ../../lib/squabblemon-engine/parkChessRating.test.ts src/lib/navigationMemory.test.ts src/lib/pageNavigation.test.ts",
     "test:park-chess-browser": "node e2e/verify-park-chess.mjs",
-    "test:story-puzzles-browser": "node e2e/verify-story-puzzle-pass.mjs"
+    "test:story-puzzles-browser": "node e2e/verify-story-puzzle-pass.mjs",
+    "test:base-pvp": "node --import ../../scripts/battle-test-css.mjs --import tsx --test --test-skip-pattern=\"custom deck transcript\" src/basePvpPatch.test.ts src/basePvpGuards.test.ts src/fullBalanceAuthority.test.ts src/multiplayer.test.ts src/fullCatalogPresentationAudit.test.tsx src/lib/deckWorkshop.test.ts src/rivalryBasePlaytest.test.ts"
   },
   "devDependencies": {
     "@clerk/react": "^6.15.1",

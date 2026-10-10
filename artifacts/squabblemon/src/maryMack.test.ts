@@ -24,7 +24,7 @@ test('Mary is one Mythical collectible: early 2/3, printed 15 Cents, no extra el
   assert.equal(catalogCardById['ms-mary-mack'].rarity, 'Mythical');
   assert.equal(cards['ms-mary-mack'].cost, 2); assert.equal(cards['ms-mary-mack'].power, 3);
   assert.equal(cards['ms-mary-mack'].ability, '15 Cents'); assert(!cards['ms-mary-mack-elephant']);
-  assert.equal(ONLINE_RULES_VERSION, 51); assert.equal(CARD_BALANCE_VERSION, 51);
+  assert.equal(ONLINE_RULES_VERSION, 52); assert.equal(CARD_BALANCE_VERSION, 52);
 });
 
 for (const owner of ['player', 'cpu'] as const) {

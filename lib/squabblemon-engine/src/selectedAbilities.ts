@@ -245,7 +245,7 @@ export function selectedReveal(
               ),
               t,
             ),
-            1,
+            2,
           );
       }
     } else shield(local(isFitnessCharacter));
@@ -261,11 +261,11 @@ export function selectedReveal(
               all.filter((c) => c.lane === l),
               t,
             ),
-            id === 'one-man-band' ? 4 : 5,
+            id === 'one-man-band' ? 4 : 3,
           );
       } else {
         const c = local(eligible);
-        grant(c, 5);
+        grant(c, id === 'og-calisthenics' ? 3 : 5);
         if (id === 'og-calisthenics') shield(c);
       }
       if (success) m = consume(m, s, id);

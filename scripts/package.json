@@ -11,7 +11,9 @@
     "balance:full": "tsx ./src/balance-lab.ts --full",
     "balance:elements": "tsx ./src/element-balance-audit.ts",
     "balance:dark-composition": "tsx ./src/dark-composition-audit.ts",
-    "balance:dark-sweep": "tsx ./src/dark-card-sweep.ts"
+    "balance:dark-sweep": "tsx ./src/dark-card-sweep.ts",
+    "balance:pvp": "node --import tsx src/fullBalanceSweep.ts",
+    "balance:pvp:pairs": "node --import tsx src/fullBalanceInteractions.ts --run"
   },
   "devDependencies": {
     "@types/node": "catalog:",

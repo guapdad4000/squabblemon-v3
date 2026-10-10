@@ -1,3 +1,4 @@
+import { applyBasePvpBalance } from './basePvpBalance';
 import { applyCrewMatchupBalance } from './crewMatchupBalance';
 import { selectedCards, selectedRarities, selectedFactions, selectedUpgradeEffects } from './selectedWave';
 import { streetLegendsCards, streetLegendsRarities, streetLegendsUpgradeEffects, streetLegendsFactions } from './streetLegendsWave';
@@ -297,6 +298,7 @@ applyRosterBalance(cards);
 applyFullRosterBuffs(cards);
 applyCrewMatchupBalance(cards);
 applyElementalHandBonuses(cards);
+applyBasePvpBalance(cards);
 
 /** Complete authored crews without changing their existing draw order. Never use for submitted decks. */
 export function completeEngineCrew(ids: readonly string[], candidates: readonly string[] = ['buspass', 'soulfood', 'cognac', 'bustdown', 'energydrink', 'subwaymap']): string[] {

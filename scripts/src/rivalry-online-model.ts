@@ -23,7 +23,7 @@ export function createRivalryRoom(settings: RivalrySettings): OnlineRoom {
   room = joinOnlineRoom(room, member(other, c), 0);
   room = applyOnlineCommand(room, 'player', { type: 'ready' }, 0);
   room = applyOnlineCommand(room, 'cpu', { type: 'ready' }, 0);
-  const progress = (ids: string[]) => Object.fromEntries(ids.map(id => [id, { xp: 4500, level: 10, moveTier: settings.tier }]));
+  const progress = (ids: string[]) => Object.fromEntries(ids.map(id => [id, { xp: settings.tier ? 4500 : 0, level: settings.tier ? 10 : 1, moveTier: settings.tier }]));
   const snapshot = createAbilityUpgradeSnapshot(p, c, { player: progress(p), cpu: progress(c) });
   const match = createMatchFromEngineCards(settings.first, p, other, c, undefined, undefined, snapshot, createDistrictSnapshot(settings.seed));
   return { ...room, match: { ...match, squabbleByOwner: { player: false, cpu: false }, phase: room.openingSeat === 'player' ? 'player' : 'cpu-reveal' } };

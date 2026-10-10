@@ -16,6 +16,12 @@ import { rivalryRecipes as recipes, createRivalryRoom, applyRivalryCommand, type
 const deckCards = (id: string) => decks.find(deck => deck.id === id)!.cards;
 const matchups = {
   rivalry: { title: 'Blood / Crips', sides: ['Crips', 'Blood'], recipes },
+  blueInmate: { title: 'Crips / Inmate', sides: ['Crips', 'Inmate'], recipes: { blue: recipes.blue, red: recommendedWorkshopCrews.cellblock } },
+  redInmate: { title: 'Blood / Inmate', sides: ['Blood', 'Inmate'], recipes: { blue: recipes.red, red: recommendedWorkshopCrews.cellblock } },
+  blueRoutes: { title: 'Crips / Fitness Routes', sides: ['Crips', 'Fitness Routes'], recipes: { blue: recipes.blue, red: deckCards('fitness-routes') } },
+  redRoutes: { title: 'Blood / Fitness Routes', sides: ['Blood', 'Fitness Routes'], recipes: { blue: recipes.red, red: deckCards('fitness-routes') } },
+  blueCircuit: { title: 'Crips / Fitness Circuit', sides: ['Crips', 'Fitness Circuit'], recipes: { blue: recipes.blue, red: deckCards('fitness-circuit') } },
+  redCircuit: { title: 'Blood / Fitness Circuit', sides: ['Blood', 'Fitness Circuit'], recipes: { blue: recipes.red, red: deckCards('fitness-circuit') } },
   counterplay: { title: 'Combo / Counterplay', sides: ['Combo', 'Counterplay'], recipes: { blue: deckCards('combo'), red: recommendedWorkshopCrews.counterplay } },
   compound: { title: 'Compound / Crips', sides: ['Compound', 'Crips'], recipes: { blue: deckCards('compound'), red: recipes.blue } },
 } as const;
@@ -23,7 +29,7 @@ type MatchupId = keyof typeof matchups;
 function Fixture() {
   const [matchupId, setMatchupId] = useState<MatchupId>('rivalry');
   const [activeMatchupId, setActiveMatchupId] = useState<MatchupId>('rivalry');
-  const [settings, setSettings] = useState<Settings>({ first: 'blue', tier: 2, seed: 'human-rivalry-1', recipes });
+  const [settings, setSettings] = useState<Settings>({ first: 'blue', tier: 0, seed: 'human-rivalry-1', recipes });
   const [active, setActive] = useState(settings);
   const [room, setRoom] = useState(() => createRivalryRoom(settings));
   const match = room.match!;
@@ -57,7 +63,7 @@ function Fixture() {
   return <main style={{ height: '100dvh', background: '#080808', color: 'white', display: 'flex', flexDirection: 'column' }}>
     <header style={{ flexShrink: 0, padding: 8, display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center', background: '#171717', zIndex: 60 }}>
       <strong>{matchups[activeMatchupId].title} · shared-screen playtest</strong>
-      <label>Matchup <select aria-label="Matchup" value={matchupId} onChange={e => { const id = e.target.value as MatchupId; setMatchupId(id); setSettings({ ...settings, first: 'blue', tier: 0, recipes: matchups[id].recipes }); }}><option value="rivalry">Blood / Crips</option><option value="counterplay">Combo / Counterplay</option><option value="compound">Compound / Crips</option></select></label>
+      <label>Matchup <select aria-label="Matchup" value={matchupId} onChange={e => { const id = e.target.value as MatchupId; setMatchupId(id); setSettings({ ...settings, first: 'blue', tier: 0, recipes: matchups[id].recipes }); }}>{Object.entries(matchups).map(([id, matchup]) => <option key={id} value={id}>{matchup.title}</option>)}</select></label>
       <label>Player side <select aria-label="Player side" value={settings.first} onChange={e => setSettings({ ...settings, first: e.target.value as Settings['first'] })}><option value="blue">{matchups[matchupId].sides[0]}</option><option value="red">{matchups[matchupId].sides[1]}</option></select></label>
       <label>Tier <select aria-label="Training tier" value={settings.tier} onChange={e => setSettings({ ...settings, tier: Number(e.target.value) })}>{[0, 1, 2, 3].map(t => <option key={t}>{t}</option>)}</select></label>
       <label>Seed <input aria-label="Match seed" value={settings.seed} onChange={e => setSettings({ ...settings, seed: e.target.value })} style={{ width: 130 }} /></label>

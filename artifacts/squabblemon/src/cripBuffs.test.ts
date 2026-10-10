@@ -39,12 +39,12 @@ for (const owner of owners) for (const tier of [0, 3]) {
     const setup = cast(m, 'look-out', owner, 1);
     assert.equal(get(setup.after, weak).powerModifier, 0);
     const called = cast(setup.after, 'hooper', other(owner), 0).after;
-    assert.equal(get(called, weak).powerModifier, 2);
+    assert.equal(get(called, weak).powerModifier, 3);
     assert.equal(get(called, strong).powerModifier, 10);
     assert.equal(get(called, setup.c).powerModifier, tier);
     assert(called.effectLog.some(e => e.cardInstanceId === setup.c.instanceId && e.targets.some(t => t.cardInstanceId === weak.instanceId)));
     const again = cast(called, 'hooper', other(owner), 2).after;
-    assert.equal(get(again, weak).powerModifier, 2, 'call cannot pay twice');
+    assert.equal(get(again, weak).powerModifier, 3, 'call cannot pay twice');
   });
   test(`Ganger Blue gains +1 only when covering a Blue Set ally (${owner}, tier ${tier})`, () => {
     for (const tagged of [false, true]) {
@@ -53,7 +53,7 @@ for (const owner of owners) for (const tier of [0, 3]) {
       m.boards[2] = [ally];
       const { c, after } = cast(m, 'ganger-blue', owner, 0);
       assert.equal(get(after, c).powerModifier, tier + (tagged ? 1 : 0));
-      assert.equal(get(after, ally).powerModifier, tagged ? 4 : 3);
+      assert.equal(get(after, ally).powerModifier, tagged ? 5 : 3);
       assert(get(after, ally).statuses.protected);
     }
   });
@@ -173,14 +173,14 @@ for (const owner of owners) test(`Look Out refreshes with Blue backup but stops 
   let current = setup.after;
   for (let call = 1; call <= 4; call++) {
     current = cast(current, 'hooper', other(owner), 1).after;
-    assert.equal(get(current, ally).powerModifier, Math.min(call, 3) * 2);
+    assert.equal(get(current, ally).powerModifier, Math.min(call, 3) * 3);
     assert.equal(get(current, setup.c).lookoutCalls, Math.min(call, 3));
     assert.equal(get(current, setup.c).powerModifier, 3, 'only one training payout');
     const extra = unit('hooper', other(owner), 1);
     current = playTurnCard({ ...current, phase: owner === 'player' ? 'cpu-reveal' : 'player',
       [other(owner) === 'player' ? 'playerHand' : 'cpuHand']: [{ ...extra, lane: null }],
       [other(owner) === 'player' ? 'playerMotion' : 'cpuMotion']: 9 }, other(owner), extra.instanceId, 2);
-    assert.equal(get(current, ally).powerModifier, Math.min(call, 3) * 2, 'second play cannot call twice');
+    assert.equal(get(current, ally).powerModifier, Math.min(call, 3) * 3, 'second play cannot call twice');
     // Clear test opponents between rounds so lane capacity cannot hide a trigger.
     current = { ...current, boards: current.boards.map(l => l.filter(c => c.owner === owner)) as Match['boards'] };
     if (call < 4) current = nextRound({ ...current, phase: 'resolved' });

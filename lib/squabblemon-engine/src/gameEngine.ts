@@ -1,3 +1,4 @@
+import { PVP_SUPPORT } from './basePvpBalance';
 import { selectedCards, fakeMarriage } from './selectedWave';
 import { selectedReveal, selectedMoved, selectedGain, selectedDamage, selectedResolved, type SelectedTools } from './selectedAbilities';
 import { bossNpcCards } from './bossNpcCards';
@@ -9,7 +10,7 @@ import { musicReveal, musicResolved, musicAfterPlay, musicMoved, musicDamage, mu
 import { HOMECOMING_KIT_IDS, homecomingReveal, homecomingArrival, homecomingAfterPlay, homecomingRoundEnd, type HomecomingTools } from './homecomingAbilities';
 import { homecomingCards } from './homecomingWave';
 import { isActiveOngoing } from './rosterBalance';
-import { creativeStatusApplied, creativePreventDamage, creativeCanCross, REPLACED_BONDS, CREATIVE_KITS, creativeAbilityResolved, creativeReveal, creativeMoved, creativeBeforeEntrance, creativeAfterPlay, creativeAfterAction, creativeDamage, creativeShieldBroken, creativeIntercept, creativeFinishIntercept, creativeAnchor, creativeAppeal, creativeCleansed, creativeRefund, creativeRoundEnd, creativeRoundStart, creativeDistrictMarks, type CreativeMark, type CreativeTools } from './creativeReworks';
+import { canEchoCreativeEntrance, creativeStatusApplied, creativePreventDamage, creativeCanCross, REPLACED_BONDS, CREATIVE_KITS, creativeAbilityResolved, creativeReveal, creativeMoved, creativeBeforeEntrance, creativeAfterPlay, creativeAfterAction, creativeDamage, creativeShieldBroken, creativeIntercept, creativeFinishIntercept, creativeAnchor, creativeAppeal, creativeCleansed, creativeRefund, creativeRoundEnd, creativeRoundStart, creativeDistrictMarks, type CreativeMark, type CreativeTools } from './creativeReworks';
 export { blockbusterExtraCost } from './blockbusterRules';
 import { blockbusterWaveCards } from './blockbusterWave';
 import { resolveBlockbusterWave, blockbusterExtraCost, type LaneDamage, type DiceResult, type BlockbusterTools } from './blockbusterRules';
@@ -237,7 +238,7 @@ export type TimedEffect = {
 };
 export type DiscountToken = {
   startsAtRound?: number;
-  id: string; owner: Owner; sourceInstanceId: string; eligibility: 'selected-music' | 'any' | 'red-side' | 'printed-two-cost' | 'printed-four-plus' | 'another-district' | 'livewire-cross-district' | 'electric-delivery' | 'homecoming' | 'poison-character' | 'wiseman-prediction' | 'creative-local' | 'lookout-watch';
+  id: string; owner: Owner; sourceInstanceId: string; eligibility: 'character-transfer' | 'selected-music' | 'any' | 'red-side' | 'printed-two-cost' | 'printed-four-plus' | 'another-district' | 'livewire-cross-district' | 'electric-delivery' | 'homecoming' | 'poison-character' | 'wiseman-prediction' | 'creative-local' | 'lookout-watch';
   targetLane?: Lane;
   targetInstanceId?: string;
   bonusHandsOnUse?: number;
@@ -642,6 +643,7 @@ const tokenEligible = (token: DiscountToken, card: CardInstance, targetLane: Lan
   (token.eligibility === "homecoming" && token.targetInstanceId === card.instanceId)
   || (token.eligibility === 'selected-music' && token.sourceLane === targetLane && MUSIC_CHARACTER_IDS.includes(card.cardId))
   || token.eligibility === "any"
+  || (token.eligibility === "character-transfer" && (card.kind ?? "character") === "character" && !card.hazard)
   || (token.eligibility === 'red-side' && sideOzWaveFactions[card.cardId] === 'Red Side')
   || (token.eligibility === "printed-two-cost" && card.cost === 2)
   || (token.eligibility === "printed-four-plus" && card.cost >= 4)
@@ -734,6 +736,7 @@ export function getCharacterDistrictMarks(match: Match): CharacterDistrictMark[]
     ...creativeDistrictMarks(match).filter(mark => !mark.text.includes('mi-') && !mark.text.includes('sl-')),
     ...streetLegendsDistrictMarks(match),
     ...musicDistrictMarks(match),
+    ...match.discountTokens.filter(t => t.eligibility === 'character-transfer' && t.sourceLane !== undefined).map(t => ({owner:t.owner,lane:t.sourceLane!,text:`Transfer Ticket · next character anywhere: −1 Motion / +${t.bonusHandsOnUse ?? 0} Hands · until used`})),
     ...match.discountTokens.filter(t => t.eligibility === 'creative-local' && t.targetLane !== undefined && (t.expiresAfterRound??99) >= match.round).map(t => ({owner:t.owner,lane:t.targetLane!,text:`Local pass · next character here −1 Motion (minimum 1) · R${t.startsAtRound}–${t.expiresAfterRound}`})),
     ...(match.districtTraps ?? []).filter(t => t.expiresAfterRound >= match.round
       && (t.kind !== 'dead-air' || match.boards[t.lane].some(c => c.instanceId === t.source.instanceId && activeAbility(c)))).map(t => ({ owner: t.owner, lane: t.lane,
@@ -1240,7 +1243,11 @@ const applyOngoingRoundEndHandEffects = (m: Match): Match => {
       if (REPLACED_BONDS.has(card.cardId)) continue;
       const bond = card.elementalBond && canonicalElement(card.elementalBond);
       if (!bond) continue;
-      const allies = result.boards.flat().filter(c => !c.hazard && c.owner === card.owner && c.kind !== 'support' && canonicalElement(c.type) === bond && c.instanceId !== card.instanceId);
+      const eligibleAllies = result.boards.flat().filter(c => !c.hazard && c.owner === card.owner && c.kind !== 'support' && canonicalElement(c.type) === bond && c.instanceId !== card.instanceId);
+      // Sushi Chef serves one Water ally per district; wide boards earn more plates.
+      const allies = abilityCardId(card) === 'monsoonanchor'
+        ? ([0, 1, 2] as Lane[]).map(lane => lowest(eligibleAllies.filter(c => c.lane === lane))).filter((c): c is CardInstance => !!c)
+        : eligibleAllies;
       for (const ally of allies) {
         result = modify(result, ally.instanceId, c => ({
           ...c,
@@ -1274,7 +1281,7 @@ const applyOngoingRoundEndHandEffects = (m: Match): Match => {
  */
 export const SUMMON_TEMPLATES = {
   'demario-mushroom': DEMARIO_MUSHROOM,
-  grin: { id: 'cheshire', name: 'Grin', type: 'Air', cost: 0, power: 6, ability: 'The Smile Stays', effect: 'A 6-Hand Grin left by a returning ally.', kind: 'token' as const, abilityUpgrades: [] },
+  grin: { id: 'cheshire', name: 'Grin', type: 'Air', cost: 0, power: 4, ability: 'The Smile Stays', effect: 'A 4-Hand Grin left by a returning ally.', kind: 'token' as const, abilityUpgrades: [] },
   cardguard: { id: 'queen-of-hearts', name: 'Card Guard', type: 'Dark', cost: 0, power: 2, ability: 'Royal Guard', effect: 'A 2-Hand guard summoned after an execution.', kind: 'token' as const, abilityUpgrades: [] },
   'smile-bomb': {
     id: 'smile-bomb', name: 'Smile Bomb', type: 'Fire', cost: 0, power: 0,
@@ -1679,7 +1686,8 @@ const resolveSquabblehouseDogReveal = (match: Match, dog: CardInstance, echoed =
         lastEffectNote: `${dog.name}: remote Blue Set backup, +2 Hands.` }));
     }
   } else {
-    const victim = highest(inLane(result, og.owner === 'player' ? 'cpu' : 'player', ogLane));
+    const victim = highest(inLane(result, og.owner === 'player' ? 'cpu' : 'player', ogLane)
+      .filter(card => !cannotLoseHands(card)));
     if (victim) {
       targetIds.push(victim.instanceId);
       result = targetEnemyPowerReduction(result, liveDog, victim, 1,
@@ -2000,12 +2008,12 @@ function applyLookoutWatch(m: Match, owner: Owner, lane: Lane): Match {
     }] };
     const ally = lowest(m.boards.flat().filter(c => !c.hazard && c.owner === watcher.owner
       && c.instanceId !== watcher.instanceId && (c.gangTag ?? GANG_BY_CARD_ID[c.cardId]) === 'blue'));
-    if (ally) m = modify(m, ally.instanceId, c => ({ ...c, powerModifier: c.powerModifier + 2,
-      lastEffectNote: 'On Point: Blue Set backup, +2 Hands.' }));
+    if (ally) m = modify(m, ally.instanceId, c => ({ ...c, powerModifier: c.powerModifier + 3,
+      lastEffectNote: 'On Point: Blue Set backup, +3 Hands.' }));
     m = addEvent(before, m, { type: 'ability', sourceId: watcher.instanceId, owner: watcher.owner, lane,
       targetIds: [watcher.instanceId, ...(ally ? [ally.instanceId] : [])],
       note: `${watcher.name} called out district ${lane + 1}: your next card there costs 1 less Motion.`
-        + (ally ? ` ${ally.name} gained +2 Hands for Blue Set backup.` : '') });
+        + (ally ? ` ${ally.name} gained +3 Hands for Blue Set backup.` : '') });
     m = trainWaveAbility(m, watcher.instanceId);
   }
   return m;
@@ -2537,7 +2545,7 @@ function resolveFairytaleAbility(m: Match, source: CardInstance, echoed: boolean
       .map(id => m.boards.flat().find(c => c.instanceId === id))
       .filter((c): c is CardInstance => !!c && c.owner === source.owner && c.instanceId !== source.instanceId
         && (c.kind ?? 'character') === 'character' && activeAbility(c) && hasEntrance(c)
-        && !['oz', 'tayaty', 'scammer'].includes(abilityCardId(c)));
+        && !['oz', 'tayaty', 'scammer'].includes(abilityCardId(c)) && canEchoCreativeEntrance(abilityCardId(c)));
     const ally = eligible.find(c => ['dorothy', 'scarecrow', 'tinman', 'lion'].includes(abilityCardId(c))) ?? eligible[0];
     if (ally) {
       m = modify(m, source.instanceId, c => ({ ...c, waveOnce: { ...c.waveOnce, oz: true } }));
@@ -3404,11 +3412,12 @@ function resolveAbilityBase(match: Match, source: CardInstance, { echoed = false
       succeeded = true;
     };
     if (source.cardId === 'ganger-blue') {
-      const ally = lowest(allies.filter(c => c.lane !== l));
+      const remote = allies.filter(c => c.lane !== l);
+      const ally = lowest(remote.filter(c => (c.gangTag ?? GANG_BY_CARD_ID[c.cardId]) === 'blue')) ?? lowest(remote);
       if (ally) {
-        const amount = (ally.gangTag ?? GANG_BY_CARD_ID[ally.cardId]) === 'blue' ? 4 : 3;
+        const amount = (ally.gangTag ?? GANG_BY_CARD_ID[ally.cardId]) === 'blue' ? 5 : 3;
         addHands(ally, amount, `Blue Side Cover: +${amount} Hands and Protected.`);
-        if (amount === 4) addHands(findCard(m, source.instanceId)!, 1, 'Blue Side Cover: backed Blue Set, +1 Hand.');
+        if (amount === 5) addHands(findCard(m, source.instanceId)!, 1, 'Blue Side Cover: backed Blue Set, +1 Hand.');
         const wasProtected = ally.statuses.protected;
         m = grantProtection(m, source, ally.instanceId);
         succeeded ||= !wasProtected && !!findCard(m, ally.instanceId)?.statuses.protected;
@@ -3416,7 +3425,7 @@ function resolveAbilityBase(match: Match, source: CardInstance, { echoed = false
         addHands(findCard(m, source.instanceId)!, 1, 'Blue Side Cover: no remote ally, +1 Hand.');
       }
     } else if (source.cardId === 'ganger-red') {
-      const target = highest(enemiesHere());
+      const target = highest(enemiesHere().filter(card => !cannotLoseHands(card)));
       if (target) {
         targetIds.add(target.instanceId);
         const beforeDamage = m;
@@ -3734,13 +3743,14 @@ function resolveAbilityBase(match: Match, source: CardInstance, { echoed = false
     m = modify(m, source.instanceId, c => ({ ...c, powerModifier: c.powerModifier + 1, lastEffectNote: 'Act Up: +1 Hand.' }));
     const echoCardId = match.lastRevealedCardId;
     const echoedCard = echoCardId && !['tayaty', 'oz'].includes(echoCardId) ? cards[echoCardId] : null;
-    if (echoCardId && echoedCard) {
+    if (echoCardId && echoedCard && canEchoCreativeEntrance(echoCardId)) {
       const current = findCard(m, source.instanceId)!;
       const echoSource: CardInstance = { ...current, cardId: echoCardId, ability: echoedCard.ability, effect: echoedCard.effect };
       m = resolveAbility(m, echoSource, { echoed: true });
       note(`Act Up echoed ${echoedCard.name}'s ${echoedCard.ability}.`);
     } else {
-      note('Act Up gained +1 Hand; there was no earlier On Reveal to echo.');
+      m = grantProtection(m, source, source.instanceId);
+      note('Act Up: no repeatable entrance; gained +1 Hand and a Stand-In shield.');
     }
   }
   else if (source.cardId === 'waterboy') {
@@ -3752,8 +3762,9 @@ function resolveAbilityBase(match: Match, source: CardInstance, { echoed = false
     note(supported ? 'Cold Water restored 1 Motion.' : 'Cold Water needs another friendly card here.');
   }
   else if (source.cardId === 'buspass') {
-    m = addDiscountToken(m, source.owner, source, 'any');
-    note('All-Day Transfer: your next card costs 1 less Motion.');
+    m = addDiscountToken(m, source.owner, source, 'character-transfer');
+    m = {...m,discountTokens:m.discountTokens.map(t=>t.sourceInstanceId===source.instanceId && t.eligibility==='character-transfer'?{...t,bonusHandsOnUse:PVP_SUPPORT.transfer}:t)};
+    note(`Transfer Ticket: next character costs 1 less Motion and arrives with +${PVP_SUPPORT.transfer} Hands.`);
   }
   else if (source.cardId === 'sideofhands') {
     const ally = lowest(inLane(m, source.owner, l).filter(card => card.instanceId !== source.instanceId
@@ -3830,7 +3841,7 @@ function resolveAbilityBase(match: Match, source: CardInstance, { echoed = false
     const allies = inLane(m, source.owner, l).filter(c => c.instanceId !== source.instanceId && (source.cardId !== 'soulfood' || c.kind !== 'support'));
     // Frozen allies drop to 0 Hands and can tie with other weak allies; a cleanse must reach the one that needs it.
     const target = lowest(allies.filter(needsCleanse)) ?? lowest(allies);
-    const amount = source.cardId === 'pinaynurse' ? 3 : 1;
+    const amount = source.cardId === 'pinaynurse' ? 3 : PVP_SUPPORT.soulFood;
     if (target) {
       targetIds.add(target.instanceId);
       m = cleanseAlly(m, target.instanceId, c => ({ ...c, statuses: cleanseStatuses(c.statuses), powerModifier: c.powerModifier + amount, lastEffectNote: `${source.ability}: cleansed, +${amount} Hands.` }));
@@ -3841,7 +3852,7 @@ function resolveAbilityBase(match: Match, source: CardInstance, { echoed = false
     const allies = inLane(m, source.owner, l).filter(c => c.instanceId !== source.instanceId && (source.cardId !== 'cognac' || c.kind !== 'support'));
     const target = lowest(allies);
     const targets = target ? [target] : [];
-    const amount = source.cardId === 'cognac' ? (target?.type === 'Fire' ? 3 : 2) : 1;
+    const amount = source.cardId === 'cognac' ? (target?.type === 'Fire' ? PVP_SUPPORT.fireCognac : PVP_SUPPORT.cognac) : 1;
     for (const ally of targets) {
       targetIds.add(ally.instanceId);
       m = modify(m, ally.instanceId, c => ({ ...c, powerModifier: c.powerModifier + amount, lastEffectNote: `${source.ability}: +${amount} Hands.` }));
@@ -4199,7 +4210,13 @@ function resolveAbilityBase(match: Match, source: CardInstance, { echoed = false
     } else if (id === 'homelesslegend') {
       note('Built Different is ready to survive a lethal hit and recover lost Hands.');
     } else if (id === 'godofhookah') {
-      note('Pass the Hose is watching for round-end Burn damage.');
+      const spark = lowest(m.boards.flat().filter(c => c.owner === enemy && c.lane !== l
+        && (c.kind ?? 'character') === 'character' && !c.hazard && c.statuses.burnStacks === 0));
+      if (spark) {
+        targetIds.add(spark.instanceId);
+        m = applyBurn(m, source, spark, 1, 'Pass the Hose: lit the next district; 1 Burn.');
+      }
+      note(spark ? 'Pass the Hose attempted a remote ignition; the Burn relay is ready.' : 'Pass the Hose has no unburned remote target; the Burn relay is ready.');
     } else if (id === 'mailman') {
       note('Express Delivery is watching for your second Electric character each round.');
     }
@@ -4370,11 +4387,11 @@ function resolveAbilityBase(match: Match, source: CardInstance, { echoed = false
       const crew = m.boards.flat().filter(c => !c.hazard && c.owner === source.owner && c.instanceId !== source.instanceId && c.kind !== 'support');
       const recovery = lowest(crew.filter(c => c.type === 'Light' && needsCleanse(c)));
       for (const target of crew) cleanse(target, 0);
-      if (recovery) buff(findCard(m, recovery.instanceId), 1);
       for (const district of [0, 1, 2] as const) {
         const target = lowest(inLane(m, source.owner, district).filter(c => c.instanceId !== source.instanceId && (c.kind ?? 'character') === 'character'));
-        if (target) buff(target, target.type === 'Light' ? 2 : 1);
+        if (target) buff(target, 2);
       }
+      if (recovery) buff(findCard(m, recovery.instanceId), 2);
     }
     const succeeded = [...targetIds].some(key => {
       const old = findCard(before, key), current = findCard(m, key);
@@ -4760,7 +4777,7 @@ function resolveCardPlay(match: Match, owner: Owner, instanceId: string, targetL
   }));
   if (usedToken?.bonusHandsOnUse) m = modify(m, instanceId, c => ({
     ...c, powerModifier: c.powerModifier + usedToken.bonusHandsOnUse!,
-    lastEffectNote: `No Place Like Home: discounted redeployment, +${usedToken.bonusHandsOnUse} Hand.`,
+    lastEffectNote: ` ${usedToken.eligibility === "character-transfer" ? "Transfer Ticket" : "No Place Like Home"}: discounted deployment, +${usedToken.bonusHandsOnUse} Hands.`.trim(),
   }));
   m = addEvent(match, m, {
     type: 'play', sourceId: instanceId, owner, lane: targetLane,

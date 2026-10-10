@@ -1,3 +1,4 @@
+import { PVP_SUPPORT } from './basePvpBalance';
 import type { Card } from "./data";
 import type {
   Match,
@@ -69,11 +70,11 @@ export const CREATIVE_KITS: Record<string, readonly [string, string]> = {
   ],
   stud: [
     "Hold You Down",
-    "On Reveal: Bond to your weakest other ally here. Once while together, intercept its next targeted hostile ability, then try to move the surviving pair to your weakest other district with two spaces. Protect the surviving partner whether the escape succeeds or is blocked.",
+    "On Reveal: Give your weakest other ally here +1 Hand and bond to it. Once while together, intercept its next targeted hostile ability, then try to move the surviving pair to your weakest other district with two spaces. Protect the surviving partner whether the escape succeeds or is blocked.",
   ],
   stonersr: [
     "Pass It Around",
-    "On Reveal: Cleanse your weakest afflicted ally here and leave a token through next round. Your next other character arriving here gains +2 Hands. If you cleansed an ally, pass a smaller +1 token once to a different arrival.",
+    "On Reveal: Cleanse your weakest afflicted ally here and leave a token through next round. Your next other character arriving here gains +4 Hands. If you cleansed an ally, pass a smaller +1 token once to a different arrival.",
   ],
   laundry: [
     "Spin Cycle",
@@ -507,7 +508,7 @@ export function creativeDistrictMarks(m: Match): CharacterDistrictMark[] {
     delayed: "entrance queued for round end",
     ink: "next move grants Protection and +1",
     bond: "one interception and paired escape",
-    chill: "next other friendly arrival: +2",
+    chill: "next other friendly arrival",
     cycle: "next move cleanses",
     bounty: "owner defeat earns +3",
     revenge: "shield break: hit attacker for 3",
@@ -544,7 +545,7 @@ export function creativeDistrictMarks(m: Match): CharacterDistrictMark[] {
     owner: x.owner,
     lane: x.lane,
     ...(itemArtwork[x.kind] ? { artworkId: itemArtwork[x.kind] } : {}),
-    text: `${x.source.ability} · ${x.kind === "pending-appeal" ? "pending " + Object.keys(x.pending ?? {}).join(", ") : x.kind === "goal" ? `reach ${x.amount ?? 5} Hands: Protection and +2` : (labels[x.kind] ?? x.kind)}${["project", "jobs", "stash"].includes(x.kind) ? " · " + (x.seen?.length ?? 0) + "/" + (x.kind === "stash" ? 3 : 2) : ""}${x.kind === "tab" && x.amount ? " · Tip earned" : ""}${x.targets.length ? ": " + x.targets.map((id) => card(m, id)?.name ?? "departed target").join(", ") : ""}${x.ready ? " · ready" : ""}${x.expires === 99 ? " · until used" : " · through R" + x.expires}`,
+    text: `${x.source.ability} · ${x.kind === "pending-appeal" ? "pending " + Object.keys(x.pending ?? {}).join(", ") : x.kind === "goal" ? `reach ${x.amount ?? 5} Hands: Protection and +2` : x.kind === "chill" ? `next other friendly arrival: +${x.amount ?? 0}` : (labels[x.kind] ?? x.kind)}${["project", "jobs", "stash"].includes(x.kind) ? " · " + (x.seen?.length ?? 0) + "/" + (x.kind === "stash" ? 3 : 2) : ""}${x.kind === "tab" && x.amount ? " · Tip earned" : ""}${x.targets.length ? ": " + x.targets.map((id) => card(m, id)?.name ?? "departed target").join(", ") : ""}${x.ready ? " · ready" : ""}${x.expires === 99 ? " · until used" : " · through R" + x.expires}`,
   }));
   for (const c of board(m)) {
     const id = identity(c);
@@ -577,6 +578,7 @@ export function creativeDistrictMarks(m: Match): CharacterDistrictMark[] {
 }
 
 /** Returns null only for a card outside this wave. Echoes cannot re-arm persistent contracts. */
+export const canEchoCreativeEntrance = (id:string):boolean => !CREATIVE_KITS[id] || ["barber", "abuela", "partytitan", "bboy", "yn-atv-lord"].includes(id);
 export function creativeReveal(
   m: Match,
   s: CardInstance,
@@ -586,10 +588,7 @@ export function creativeReveal(
   if (!CREATIVE_KITS[s.cardId]) return null;
   if (
     !active(s) ||
-    (echoed &&
-      !["barber", "abuela", "partytitan", "bboy", "yn-atv-lord"].includes(
-        s.cardId,
-      ))
+    (echoed && !canEchoCreativeEntrance(s.cardId))
   )
     return m;
   const before = m,
@@ -706,8 +705,10 @@ export function creativeReveal(
       break;
     }
     case "stud":
-      if (a[0] && !s.creativeUsed?.intercept)
+      if (a[0] && !s.creativeUsed?.intercept) {
+        give(a[0], 1);
         put("bond", [a[0]], l, { expires: 99 }, "source");
+      }
       break;
     case "stonersr": {
       const target = a.find(afflicted);
@@ -716,7 +717,7 @@ export function creativeReveal(
         "chill",
         [],
         l,
-        { amount: 2, ready: !!target, seen: [s.instanceId] },
+        { amount: 4, ready: !!target, seen: [s.instanceId] },
         "lane",
       );
       break;
@@ -748,6 +749,7 @@ export function creativeReveal(
     }
     case "bustdown": {
       const target = a[0];
+      if (target) give(target, PVP_SUPPORT.wristCheck);
       if (target && !target.statuses.protected) {
         cover(target);
         put("watch", [target], l, { expires: 99 }, "target");
