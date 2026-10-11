@@ -1,0 +1,98 @@
+/* Refine the existing choreography; no additional bursts or phase timers. */
+.battle-arena.battle-hud .battle-choreography.battle-choreography--legible .attack-caption {
+  isolation: isolate;
+  left: clamp(10px, 2vw, 28px);
+  right: auto;
+  top: 84px;
+  transform: none;
+  width: min(360px, calc(100% - 130px));
+  height: 58px;
+  border: 0;
+  border-left: 2px solid var(--attack-color);
+  background: linear-gradient(90deg, #06101cd9, #06101cba 76%, transparent);
+  box-shadow: none;
+  animation-name: attack-caption-settle;
+}
+.battle-arena.battle-hud .battle-choreography--legible .attack-caption::after {
+  background: linear-gradient(90deg, transparent, #06101c88 35%, #06101cbf 80%, transparent);
+}
+.battle-arena.battle-hud .battle-choreography--legible .attack-caption .attack-caption__scene { opacity: .22; }
+.battle-arena.battle-hud .battle-choreography--legible .attack-caption .attack-caption__fighter {
+  width: 27%;
+  height: 112%;
+  object-fit: contain;
+  object-position: center bottom;
+  filter: drop-shadow(0 2px 3px #0008);
+}
+.battle-arena.battle-hud .battle-choreography--legible .attack-caption .attack-caption__copy { padding: 6px 12px 6px 2px; }
+.battle-arena.battle-hud .battle-choreography--legible .attack-caption span { font-size: 9px; color: #f8e3af; text-shadow: 0 1px 2px #000; }
+.battle-arena.battle-hud .battle-choreography--legible .attack-caption strong {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  margin-top: 3px;
+  font-size: 16px;
+  line-height: 1.08;
+  text-shadow: 0 2px 2px #000;
+}
+@keyframes attack-caption-settle {
+  from { opacity: 0; translate: -8px 0; }
+  to { opacity: 1; translate: 0 0; }
+}
+
+.battle-arena.battle-hud .battle-choreography--legible .attack-delta {
+  z-index: 2;
+  max-width: min(144px, 37vw);
+  gap: 2px;
+  animation-name: attack-delta-readable;
+  text-shadow: -1px -1px 0 #04070b, 1px -1px 0 #04070b, -1px 1px 0 #04070b, 1px 1px 0 #04070b, 0 2px 3px #000;
+}
+.battle-arena.battle-hud .battle-choreography--legible .attack-delta strong {
+  font-size: clamp(23px, 4vw, 30px);
+  font-variant-numeric: tabular-nums;
+  padding: 1px 4px;
+  border-radius: 3px;
+  background: #06101cde;
+  box-shadow: 0 1px 0 #f7edce24;
+}
+.battle-arena.battle-hud .battle-choreography--legible .attack-delta span {
+  max-width: 100%;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  text-align: center;
+  padding: 3px 5px;
+  font-size: 10px;
+  line-height: 1.15;
+  color: #f8fafc;
+  background: #06101cf2;
+  border-color: #e8d9b64d;
+}
+/* Keep the original 650 ms envelope, hold its readable portion, travel less. */
+@keyframes attack-delta-readable {
+  0% { opacity: 0; transform: translateY(5px); }
+  12%, 86% { opacity: 1; }
+  100% { opacity: 0; transform: translateY(-13px); }
+}
+.battle-arena .battle-choreography--legible .attack-hit .attack-star { fill-opacity: .58; }
+.battle-arena .battle-choreography--legible .attack-hit .attack-flash { fill-opacity: .7; }
+.battle-arena .battle-choreography--legible .attack-beam-core { stroke: #fff9e4; }
+
+@media (max-width: 600px) {
+  .battle-arena.battle-hud .battle-choreography.battle-choreography--legible .attack-caption { top: 92px; width: calc(100% - 106px); height: 48px; }
+  .battle-arena.battle-hud .battle-choreography--legible .attack-caption strong { font-size: 13px; }
+  .battle-arena.battle-hud .battle-choreography--legible .attack-caption span { font-size: 8px; }
+}
+@media (min-width: 601px) and (max-height: 580px) {
+  .battle-arena.battle-hud .battle-choreography.battle-choreography--legible .attack-caption { top: 40px; width: min(320px, calc(100% - 186px)); height: 34px; }
+  .battle-arena.battle-hud .battle-choreography--legible .attack-caption strong { font-size: 12px; -webkit-line-clamp: 1; }
+  .battle-arena.battle-hud .battle-choreography--legible .attack-caption .attack-caption__fighter { height: 100%; }
+}
+
+.battle-arena[data-reduced-motion='true'] .battle-choreography--legible :is(.attack-caption, .attack-delta),
+.battle-choreography--legible.is-replay :is(.attack-caption, .attack-delta),
+[data-effects-enabled='false'] .battle-choreography--legible :is(.attack-caption, .attack-delta) { animation: none; opacity: 1; }
+[data-effects-enabled='false'] .battle-choreography--legible :is(.attack-paths, .attack-hit-shell, .attack-material, .attack-moving-card, .attack-destroyed-card) { display: none; }
+@media (prefers-reduced-motion: reduce) {
+  .battle-arena .battle-choreography--legible :is(.attack-caption, .attack-delta) { animation: none; opacity: 1; }
+}

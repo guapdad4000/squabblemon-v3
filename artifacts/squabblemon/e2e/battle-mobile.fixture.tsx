@@ -24,12 +24,18 @@ function App() {
     const m = requestedEncounter
       ? createStoryMatch(requestedEncounter, 'block', 'story-player', undefined, snapshot)
       : createMatch('block', requestedRival?.id ?? 'combo', undefined, undefined, snapshot);
+    const counts = (query.get('counts') ?? '4,1,6').split(',').map(value => Math.max(0, Math.min(12, Number(value) || 0)));
     m.playerMotion = 20;
     m.playerHand = ['barber', 'cornball', 'snow', 'wifey', 'plug', 'hooper', 'roaster'].map((id, i) => createCardInstance(id, 'player', 'hand', i));
     m.boards = ([0, 1, 2] as Lane[]).map(lane => (['cpu', 'player'] as const).flatMap(owner =>
-      ['hooper', 'cornball', 'barber', 'plug', 'wifey', 'snow'].slice(0, lane === 0 ? 4 : lane === 1 ? 1 : 6).map((id, i) => {
-        const card = { ...createCardInstance(id, owner, `lane-${lane}`, i), lane };
-        if (lane === 0 && i === 0) card.statuses.frozen = true;
+      Array.from({ length: counts[lane] ?? 4 }, (_, i) => ['hooper', 'cornball', 'barber', 'plug', 'wifey', 'snow'][i % 6]).map((id, i) => {
+        const card = { ...createCardInstance(query.has('status-stress') && lane === 0 && i === 0 ? 'ms-mary-mack' : id, owner, `lane-${lane}`, i), lane };
+        if (lane === 0 && i === 0) {
+          if (query.has('status-stress')) {
+            card.maryCents = 12; card.powerModifier = 100; card.continuousPower = 2;
+            card.statuses.protected = true; card.statuses.burnStacks = 1; card.statuses.weakened = true;
+          } else card.statuses.frozen = true;
+        }
         if (lane === 0 && i === 2) card.statuses.protected = true;
         return card;
       })));
@@ -51,15 +57,17 @@ function App() {
   const [phase, setPhase] = useState(query.get('phase') ?? (effectMode ? 'effects' : 'player-ready'));
   const [fast, setFast] = useState(query.has('fast'));
   (window as any).__battleHudFixture = { setPhase, setMessage, setEffectMode, setCue, setReplayStep, setRound: (round: number) => setMatch(m => ({ ...m, round })) };
-  const resolved = effectMode ? playCard(match, 'player', match.playerHand[0].instanceId, 0) : match;
-  const event = effectMode ? resolved.effectLog.find(e => e.type === 'ability' && e.cardId === 'barber') : null;
+  const effectCard = match.playerHand.find(card => card.cardId === query.get('effect-card')) ?? match.playerHand[0];
+  const effectLane = Math.max(0, Math.min(2, Number(query.get('effect-lane')) || 0)) as Lane;
+  const resolved = effectMode ? playCard(match, 'player', effectCard.instanceId, effectLane) : match;
+  const event = effectMode ? resolved.effectLog.find(e => e.type === 'ability' && e.cardId === effectCard.cardId) : null;
   const effect = event ? { ...event, targetIds: event.targets.map(t => t.cardInstanceId), impact: true } : null;
   const play = (id: string, lane: Lane, squabble: boolean) => { setMatch(m => playTurnCard(m, 'player', id, lane, squabble)); setSelected(null); setLane(null); };
   return <div style={{ height: '100dvh' }}><Battle match={resolved} deck={decks[0]} rivalDeck={query.has('long-name') ? { ...fixtureRival, name: 'The Extremely Long Rival Crew Name' } : fixtureRival} online={online}
     selectedInstanceId={selected} setSelectedInstanceId={setSelected} selectedLane={lane} setSelectedLane={setLane}
     squabble={squabble} setSquabble={setSquabble} onPlayCard={play} commit={() => { if (selected && lane !== null) play(selected, lane, squabble); }}
     endTurn={noop} skipSequence={() => setPhase('player-ready')} battleSpeed={fast ? 1.5 : 1} onToggleBattleSpeed={() => setFast(value => !value)} presentationPhase={phase} phaseMessage={effectMode ? event?.note ?? message : message}
-    guidedReadingCue={cue} onContinueGuidedReading={() => setCue(null)}
+    reviewingFinalBoard={query.has('review-final')} guidedReadingCue={cue} onContinueGuidedReading={() => setCue(null)}
     replay={replayStep && event ? { event, step: replayStep } : null} onReplayStep={(_: unknown, step: 'before' | 'after') => setReplayStep(step)} onExitReplay={() => setReplayStep(null)}
     timerSeconds={Number(query.get('timer') ?? 20)} timerEnabled={!query.has('effect') && !query.has('no-timer')} impactLane={event ? 0 : null} activeEffect={effect} activeEffectId={event?.cardInstanceId}
     activeEffectLane={event ? 0 : null} presentationScores={event?.scores.after} setInspect={setInspect} onShowRules={noop} />

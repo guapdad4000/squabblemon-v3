@@ -1,0 +1,82 @@
+{
+  "commit": "235bdc1f5c922835ec87aa751cb6760e521c957d",
+  "battleUIFailures": 23,
+  "bossUIFailures": 1,
+  "baselineFailures": 24,
+  "extraBaselineFailures": [],
+  "missingBaselineFailures": [],
+  "differentAssertions": {},
+  "baselineFileCounts": [
+    {
+      "file": "src/battleChoreography.test.ts",
+      "pass": 2,
+      "fail": 1
+    },
+    {
+      "file": "src/districts.test.ts",
+      "pass": 30,
+      "fail": 6
+    },
+    {
+      "file": "src/gameEngine.test.ts",
+      "pass": 39,
+      "fail": 3
+    },
+    {
+      "file": "src/gameplayUpgrade.test.ts",
+      "pass": 9,
+      "fail": 1
+    },
+    {
+      "file": "src/neighborhoodCommons.test.ts",
+      "pass": 5,
+      "fail": 1
+    },
+    {
+      "file": "src/subwayArrival.test.ts",
+      "pass": 6,
+      "fail": 8
+    },
+    {
+      "file": "src/superCommonCards.test.ts",
+      "pass": 15,
+      "fail": 3
+    },
+    {
+      "file": "src/bossRaid.test.ts",
+      "pass": 13,
+      "fail": 1
+    },
+    {
+      "file": "src/components/Battle.test.tsx",
+      "pass": 69,
+      "fail": 0
+    }
+  ],
+  "allFailureNames": [
+    "Church Auntie buff adds immediate Hands, preserves existing shields, and respects silence",
+    "Cognac and Soul Food support a character, skipping items and enemies",
+    "Common self boosts honor their printed conditions",
+    "Mary Mack round end and delayed elephant return happen through native card engine",
+    "Nurse now supports a healthy ally and Edgar/Abuela have their tuned bodies",
+    "O-Block flips with occupancy; penalties stop at zero and frozen cards stay zero",
+    "Pawn Shop sacrifices the weakest other ally once per side per round",
+    "Penthouse changes once at round four and replay frames preserve both score rules",
+    "Pirate Radio scores empty neighboring lanes and switches off with a third ally",
+    "Soul Food cleanses a frozen ally even when another ally ties at 0 Hands",
+    "Subway cpu: a defeated first rider uses only that side's ride until next round",
+    "Subway cpu: lethal rider removal preserves the landed tax, defeat, and legal preview",
+    "Subway cpu: lethal tax preserves nested reactions and a neutral aura-loss casualty",
+    "Subway cpu: nonlethal arrival tax keeps the rider and Security's +1",
+    "Subway player: a defeated first rider uses only that side's ride until next round",
+    "Subway player: lethal rider removal preserves the landed tax, defeat, and legal preview",
+    "Subway player: lethal tax preserves nested reactions and a neutral aura-loss casualty",
+    "Subway player: nonlethal arrival tax keeps the rider and Security's +1",
+    "Time Square adds a single reversible side bonus for three distinct types",
+    "Waff-L House freezes comeback eligibility before either side acts and resets first plays each round",
+    "coached Water Boy upgrades require a successful refund; support upgrades boost their target",
+    "freeze, silence and power modifiers affect scoring; Plug discounts its next other-lane play",
+    "movement feedback preserves both districts and deduplicates participants",
+    "new elemental abilities replay deterministically and matchup bonuses apply to new Plant cards"
+  ]
+}

@@ -1501,8 +1501,8 @@ test('PvE battles offer a 1.5x speed pill that scales presentation beats but not
   assert.match(fast, /data-battle-speed="fast"/);
   assert.match(fast, /--presentation-speed:1\.5/);
   assert.match(fast, /data-testid="button-battle-speed"[^>]*aria-pressed="true"/);
-  // The pill sits in the same control row as skip.
-  assert.match(fast, /data-testid="button-fast-forward"[^]*?data-testid="button-battle-speed"/);
+  // The pill precedes Skip in the control row, matching visual and keyboard order.
+  assert.match(fast, /data-testid="button-battle-speed"[^]*?data-testid="button-fast-forward"/);
 });
 
 test('PvP battles never show the speed pill and keep normal presentation timing', () => {
@@ -1514,4 +1514,76 @@ test('PvP battles never show the speed pill and keep normal presentation timing'
   assert.doesNotMatch(online, /data-testid="button-battle-speed"/);
   assert.match(online, /data-battle-speed="normal"/);
   assert.match(online, /--presentation-speed:1[;"]/);
+});
+
+
+test('combat card faces retain authoritative stats, statuses and form charge while full inspection remains complete', () => {
+  const card = createCardInstance('ms-mary-mack', 'player', 'combat-presentation', 0);
+  card.maryCents = 12;
+  card.powerModifier = -1;
+  card.continuousPower = 2;
+  card.statuses.protected = true;
+  card.statuses.burnStacks = 1;
+  card.statuses.weakened = true;
+  const compact = renderToStaticMarkup(<CardView card={card} isBoard boardPresentation="combat" effectivePower={104} currentRound={2} />);
+  assert.match(compact, /collector-card--combat/);
+  assert.match(compact, /data-card-power="104"/);
+  assert.match(compact, /Hands: 104/);
+  assert.match(compact, /data-stat-length="3"/);
+  assert.match(compact, /12¢ \/ 15¢/);
+  assert.match(compact, /data-card-status="protected"/);
+  assert.match(compact, /data-status-count="4"/);
+  assert.match(compact, /card-status-summary[^>]*>\+3<\/span>/);
+  assert.match(compact, /Burning: 1 burn stack/);
+  assert.match(compact, /data-testid="card-ongoing-hands"[^>]*>\+2↥/);
+  assert.match(compact, /Ongoing: \+2 Hands/);
+  assert.ok(compact.includes(getCardImage(card.id)), 'tactical face uses the canonical character portrait');
+  const full = renderToStaticMarkup(<CardView card={card} isBoard isInspector boardPresentation="combat" />);
+  assert.doesNotMatch(full, /collector-card--combat/);
+  assert.match(full, /data-card-presentation="full"/);
+  assert.match(full, /collector-card-ability/);
+  assert.ok(full.includes(card.ability), 'the inspector keeps the complete ability');
+  const hand = renderToStaticMarkup(<CardView card={card} boardPresentation="combat" />);
+  assert.doesNotMatch(hand, /collector-card--combat/);
+});
+
+
+test('selected card has a readable move peek; committed plays and replay suppress it', () => {
+  const match = createMatch('block', 'combo');
+  const card = match.playerHand[0];
+  const selected = renderBattle(match, { selectedInstanceId: card.instanceId });
+  assert.match(selected, /data-testid="battle-hand-peek"/);
+  assert.match(selected, /data-hand-peek="true"/);
+  assert.ok(selected.includes(card.ability));
+  assert.doesNotMatch(renderBattle(match), /data-testid="battle-hand-peek"/);
+  assert.doesNotMatch(renderBattle(match, { selectedInstanceId: card.instanceId, presentationPhase: 'effects' }), /data-testid="battle-hand-peek"/);
+});
+
+test('selected Pirate Radio play forecasts all lane effects without replacing actual scores', () => {
+  const match = createMatch('block', 'combo', undefined, undefined, districtSnapshotFor(['bodega', 'pirate-radio', 'construction-site']));
+  const first = { ...createCardInstance('cornball', 'player', 'radio-board', 0), lane: 1 as Lane };
+  const next = createCardInstance('plug', 'player', 'radio-hand', 0);
+  match.boards = [[], [first], []]; match.playerHand = [next]; match.playerMotion = 10;
+  const html = renderBattle(match, { selectedInstanceId: next.instanceId, selectedLane: 1 });
+  assert.equal((html.match(/class="preview-player">3<b/g) ?? []).length, 2, 'both adjacent lanes project broadcast bonus');
+  assert.equal((html.match(/data-testid="preview-lane-/g) ?? []).length, 3);
+  assert.match(html, /data-testid="score-player-0"[^>]*>[\s\S]*?>0<\/span>/);
+  assert.match(html, /data-testid="district-status-1">1\/2 allies/);
+  const online = renderBattle(match, { selectedInstanceId: next.instanceId, selectedLane: 1, online: onlinePresentationFor(match) });
+  assert.doesNotMatch(online, /data-testid="preview-lane-/);
+});
+
+
+test('hand peek respects a playable district discount before selecting a district', () => {
+  const match = createMatch('block', 'combo', undefined, undefined, districtSnapshotFor(['bodega', 'pirate-radio', 'construction-site']));
+  const card = createCardInstance('barber', 'player', 'discount-hand', 0);
+  match.playerHand = [card]; match.playerMotion = card.cost - 1;
+  const html = renderBattle(match, { selectedInstanceId: card.instanceId });
+  const peek = html.match(/<aside class="battle-hand-peek"[^>]*>/)?.[0];
+  assert.ok(peek);
+  assert.doesNotMatch(peek, /data-unavailable="true"/);
+  assert.match(html, /battle-hand-peek__cost-label">Base/);
+  assert.match(getRenderedLaneButton(html, 0), /aria-disabled="false"/);
+  const expensive = renderBattle(match, { selectedInstanceId: card.instanceId, selectedLane: 1 });
+  assert.match(expensive, /data-testid="battle-hand-peek" data-unavailable="true"/);
 });

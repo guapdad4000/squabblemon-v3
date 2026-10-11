@@ -1,0 +1,123 @@
+import { useEffect, useId, useRef, useState, type CSSProperties, type KeyboardEvent, type MouseEvent, type ReactNode } from 'react';
+import { ChevronDown, ChevronUp, Swords } from 'lucide-react';
+import './battle-formation.css';
+
+interface BattleFormationProps {
+  children: ReactNode;
+  /** Includes the staged reveal card so every rendered tile gets a grid slot. */
+  count: number;
+  /** Settled cards only; the inspector does not contain the staged card back. */
+  inspectCount?: number;
+  crowded?: boolean;
+  label: string;
+  onInspect: (event: MouseEvent<HTMLButtonElement>) => void;
+  style?: CSSProperties;
+  className?: string;
+  testId?: string;
+}
+
+interface ScrollState {
+  scrollable: boolean;
+  before: boolean;
+  after: boolean;
+  remaining: number;
+}
+
+const EMPTY_SCROLL: ScrollState = { scrollable: false, before: false, after: false, remaining: 0 };
+
+/** Retains direct card children and the existing battlefield container geometry. */
+export function BattleFormation({ children, count, inspectCount = count, crowded = count > 4, label, onInspect, style, className = '', testId }: BattleFormationProps) {
+  const stackRef = useRef<HTMLDivElement>(null);
+  const rowStarts = useRef<number[]>([]);
+  const frame = useRef<number | null>(null);
+  const [scroll, setScroll] = useState<ScrollState>(EMPTY_SCROLL);
+  const hintId = useId();
+  const inspectable = inspectCount > 0 && (crowded || scroll.scrollable);
+
+  useEffect(() => {
+    const stack = stackRef.current;
+    if (!stack) return;
+
+    const measure = () => {
+      frame.current = null;
+      const cards = Array.from(stack.children).filter((child): child is HTMLElement => child instanceof HTMLElement && child.matches('.battle-board-card'));
+      // offsetTop is stable while entry effects transform the card artwork.
+      const starts = cards.map(card => card.offsetTop).sort((a, b) => a - b);
+      rowStarts.current = starts.filter((top, index) => index === 0 || Math.abs(top - starts[index - 1]) > 2);
+      const scrollable = stack.scrollHeight > stack.clientHeight + 2;
+      // Ignore trailing scroll padding: the cue describes actual hidden cards.
+      const remaining = cards.filter(card => card.offsetTop + card.offsetHeight > stack.scrollTop + stack.clientHeight + 2).length;
+      const after = scrollable && remaining > 0;
+      const next: ScrollState = {
+        scrollable,
+        before: scrollable && stack.scrollTop > 2,
+        after,
+        remaining: after ? remaining : 0,
+      };
+      setScroll(previous => previous.scrollable === next.scrollable && previous.before === next.before && previous.after === next.after && previous.remaining === next.remaining ? previous : next);
+    };
+    const schedule = () => {
+      if (frame.current === null) frame.current = requestAnimationFrame(measure);
+    };
+    const resize = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(schedule);
+    const childrenChanged = typeof MutationObserver === 'undefined' ? null : new MutationObserver(schedule);
+    resize?.observe(stack);
+    childrenChanged?.observe(stack, { childList: true });
+    stack.addEventListener('scroll', schedule, { passive: true });
+    window.addEventListener('resize', schedule, { passive: true });
+    schedule();
+    return () => {
+      resize?.disconnect();
+      childrenChanged?.disconnect();
+      stack.removeEventListener('scroll', schedule);
+      window.removeEventListener('resize', schedule);
+      if (frame.current !== null) cancelAnimationFrame(frame.current);
+      frame.current = null;
+    };
+  }, [count]);
+
+  const scrollTo = (top: number) => {
+    const stack = stackRef.current;
+    if (!stack) return;
+    const reducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches || stack.closest('[data-reduced-motion="true"]') !== null;
+    stack.scrollTo({ top, behavior: reducedMotion ? 'auto' : 'smooth' });
+  };
+  const advanceRow = (direction: 1 | -1) => {
+    const stack = stackRef.current;
+    if (!stack) return;
+    const destination = direction === 1
+      ? rowStarts.current.find(top => top > stack.scrollTop + 2) ?? stack.scrollHeight - stack.clientHeight
+      : [...rowStarts.current].reverse().find(top => top < stack.scrollTop - 2) ?? 0;
+    scrollTo(destination);
+  };
+  const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+    // Card keyboard interactions continue to use their canonical inspector.
+    if (event.target !== event.currentTarget || !scroll.scrollable) return;
+    if (event.key === 'ArrowDown' || event.key === 'PageDown') {
+      event.preventDefault();
+      advanceRow(1);
+    } else if (event.key === 'ArrowUp' || event.key === 'PageUp') {
+      event.preventDefault();
+      advanceRow(-1);
+    } else if (event.key === 'Home' || event.key === 'End') {
+      event.preventDefault();
+      scrollTo(event.key === 'Home' ? 0 : event.currentTarget.scrollHeight - event.currentTarget.clientHeight);
+    }
+  };
+
+  return <>
+    <div ref={stackRef} className={`battle-card-stack battle-formation-stack ${className}`.trim()} data-count={count} data-crowded={crowded} data-scrollable={scroll.scrollable} data-inspectable={inspectable} data-more-before={scroll.before} data-more-after={scroll.after} data-testid={testId} style={style} role="group" aria-label={`${label}, ${count} ${count === 1 ? 'card' : 'cards'}`} aria-describedby={scroll.scrollable ? hintId : undefined} tabIndex={scroll.scrollable ? 0 : undefined} onKeyDown={handleKeyDown}>
+      {children}
+    </div>
+    {scroll.scrollable && <>
+      <span id={hintId} className="sr-only">Scroll to see every card. Arrow keys move one complete row; Home returns to the first row. View {inspectCount} opens the full gang.</span>
+      <button type="button" className="battle-formation-continuation" aria-label={scroll.after ? `Show the next row in ${label}${scroll.remaining ? `, ${scroll.remaining} more ${scroll.remaining === 1 ? 'card' : 'cards'} below` : ''}` : `Return to the first row in ${label}`} title={scroll.after ? 'More cards below' : 'Back to first row'} data-direction={scroll.after ? 'down' : 'up'} onClick={event => { event.stopPropagation(); scroll.after ? advanceRow(1) : scrollTo(0); }}>
+        <span aria-hidden="true">{scroll.after && scroll.remaining > 0 ? `+${scroll.remaining}` : ''}</span>
+        {scroll.after ? <ChevronDown size={11} aria-hidden="true" /> : <ChevronUp size={11} aria-hidden="true" />}
+      </button>
+    </>}
+    {inspectable && <button type="button" className="formation-expand battle-formation-inspect" aria-label={`Inspect all ${inspectCount} ${inspectCount === 1 ? 'card' : 'cards'} in ${label}`} onClick={event => { event.stopPropagation(); event.currentTarget.focus({ preventScroll: true }); onInspect(event); }}>
+      <Swords size={12} aria-hidden="true" /><span>View {inspectCount}</span>
+    </button>}
+  </>;
+}

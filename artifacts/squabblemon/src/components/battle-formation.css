@@ -1,0 +1,46 @@
+/* Direct card children preserve battle sizing, artwork and inspector behavior.
+   Each tile snaps to the beginning of its grid row, including unlimited crews. */
+.battle-arena.battle-hud .battle-card-stack.battle-formation-stack {
+  position: relative;
+  scroll-snap-type: y mandatory;
+  scroll-padding-block: 0;
+  overscroll-behavior-y: contain;
+  scrollbar-width: thin;
+}
+.battle-arena.battle-hud .battle-formation-stack > .battle-board-card {
+  scroll-snap-align: start;
+}
+.battle-arena.battle-hud .battle-formation-stack:focus-visible {
+  outline: 2px solid #ffe3a5;
+  outline-offset: -2px;
+}
+.battle-arena.battle-hud .battle-side button.battle-formation-continuation,
+.battle-arena.battle-hud .battle-side button.formation-expand.battle-formation-inspect {
+  position: absolute; z-index: 24; bottom: 0;
+  display: flex; align-items: center; justify-content: center; gap: 3px;
+  height: 32px; min-height: 32px; border: 1px solid #d8bd795e;
+  border-radius: 5px; background: #07111bed; color: #fff0d4;
+  font: 800 9px/1 var(--font-display); text-shadow: 0 1px 2px #000;
+  cursor: pointer; touch-action: manipulation;
+  transition: transform 120ms ease, background-color 120ms ease;
+}
+.battle-arena.battle-hud .battle-side .battle-formation-continuation {
+  left: 2px; width: 36px; min-width: 36px; padding: 1px;
+}
+.battle-arena.battle-hud .battle-formation-continuation > span {
+  overflow: hidden; text-overflow: ellipsis; font-variant-numeric: tabular-nums;
+}
+.battle-arena.battle-hud .battle-side .formation-expand.battle-formation-inspect {
+  right: 2px; min-width: 48px; max-width: calc(100% - 42px); padding: 2px 5px;
+}
+.battle-arena.battle-hud .battle-formation-inspect > span { white-space: nowrap; }
+.battle-arena.battle-hud .battle-side :is(.battle-formation-continuation,.battle-formation-inspect):active {
+  transform: translateY(1px); background: #293021;
+}
+.battle-arena.battle-hud .battle-side :is(.battle-formation-continuation,.battle-formation-inspect):focus-visible {
+  outline: 2px solid #ffe3a5; outline-offset: 2px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .battle-arena.battle-hud .battle-side :is(.battle-formation-continuation,.battle-formation-inspect) { transition: none; }
+}
+.battle-arena.battle-hud[data-reduced-motion='true'] .battle-side :is(.battle-formation-continuation,.battle-formation-inspect) { transition: none; }

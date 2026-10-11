@@ -4,8 +4,10 @@ import {
   useEffect,
   useRef,
   useMemo,
+  useId,
   type CSSProperties,
 } from "react";
+import { createPortal } from "react-dom";
 import {
   applyBossAction,
   BOSS_NPCS,
@@ -38,8 +40,57 @@ import { BossRaidTargetLine } from "./BossRaidTargetLine";
 import { BossIdleSprite } from "./BossIdleSprite";
 import "../../styles/boss-raid.css";
 import "../../styles/boss-raid-design.css";
+import "../battle-board.css";
 export const bossArt = (name: string) =>
   getAssetUrl(`assets/boss-raid/${name}.webp`);
+function RaidFormationDialog({ lane, owner, cards, round, onClose, onInspect }: {
+  lane: Lane;
+  owner: "player" | "cpu";
+  cards: CardInstance[];
+  round: number;
+  onClose: () => void;
+  onInspect: (card: CardInstance) => void;
+}) {
+  const dialog = useRef<HTMLDialogElement>(null);
+  const titleId = useId();
+  const descriptionId = useId();
+  useEffect(() => {
+    const node = dialog.current;
+    const opener = document.activeElement as HTMLElement | null;
+    node?.showModal();
+    return () => {
+      node?.close();
+      if (opener?.isConnected) opener.focus({ preventScroll: true });
+    };
+  }, []);
+  const side = owner === "cpu" ? "Police" : "Your crew";
+  return createPortal(
+    <dialog ref={dialog} className="raid-formation-dialog"
+      aria-labelledby={titleId} aria-describedby={descriptionId}
+      onCancel={onClose}
+      onClick={(event) => { if (event.target === event.currentTarget) onClose(); }}>
+      <header className="raid-formation-header">
+        <div><small>{["Checkpoint", "Barricade", "Lockup"][lane]}</small><h2 id={titleId}>{side} · {cards.length}</h2></div>
+        <button type="button" onClick={onClose} aria-label="Close formation">×</button>
+      </header>
+      <div className="raid-formation-content">
+        <p id={descriptionId}>Select a card for its full ability and live status.</p>
+        <div className="raid-formation-cards">
+          {cards.map((fighter) => (
+            <div className="raid-formation-card" key={fighter.instanceId}>
+              <CardView card={fighter} isBoard isEnemy={owner === "cpu"}
+                fillContainer disableLayout effectivePower={getEffectiveCardPower(fighter)}
+                currentRound={round} onClick={() => onInspect(fighter)}
+                onInspect={() => onInspect(fighter)} />
+            </div>
+          ))}
+        </div>
+      </div>
+      <footer><button type="button" onClick={onClose}>← Back to board</button></footer>
+    </dialog>, document.body,
+  );
+}
+
 export function BossRaidView({
   status,
   busy = false,
@@ -65,6 +116,7 @@ export function BossRaidView({
     form = bossForm(run.bossTier),
     campaign = status.campaign;
   const [resultsDismissed, setResultsDismissed] = useState(false);
+  const [formation, setFormation] = useState<{ lane: Lane; owner: "player" | "cpu" } | null>(null);
   const arenaRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const arena = arenaRef.current;
@@ -142,7 +194,7 @@ export function BossRaidView({
   const trigger = useRef<HTMLElement | null>(null),
     card = run.match.playerHand.find((c) => c.instanceId === selected),
     locked = busy || !!blast || run.phase !== "active" || !!error,
-    modal = !!intel || help || retire || forms;
+    modal = !!intel || help || retire || forms || !!formation;
   const resultsOpen =
     run.phase !== "active" && !blast && !resultsDismissed && !modal;
   const preview = useMemo(
@@ -191,7 +243,7 @@ export function BossRaidView({
   };
   return (
     <main
-      className="boss-raid raid-v2 raid-v3"
+      className="boss-raid raid-v2 raid-v3 raid-combat-layout"
       aria-label="Punch on Patrol battle"
       data-testid="boss-raid-stage"
       data-round={shownMatch.round}
@@ -393,6 +445,17 @@ export function BossRaidView({
                 (c) => c.owner === "player",
               ),
               enemy = shownMatch.boards[lane].filter((c) => c.owner === "cpu");
+            const laneName = ["Checkpoint", "Barricade", "Lockup"][lane];
+            const laneResult = preview.winners[lane] === "player"
+              ? "You lead" : preview.winners[lane] === "cpu" ? "Police lead" : "Tied";
+            const laneDescription = [
+              `${laneName}. Police ${preview.policeHands[lane]} Hands. You ${preview.hands[lane]} Hands. ${laneResult}.`,
+              blast && !policeRevealing ? `${blast.damage[lane]} damage to the boss.` : "",
+              card ? targets[lane]
+                ? `Select to deploy ${card.name} for ${bossCardCost(run, card, lane, squabble, investment)} Motion.${selectedLane === lane ? " Selected." : ""}`
+                : `Cannot play ${card.name} here.`
+                : "",
+            ].filter(Boolean).join(" ");
             return (
               <section
                 className="raid-lane"
@@ -402,7 +465,10 @@ export function BossRaidView({
                 data-playable={!!card && targets[lane]}
                 data-selected={!!card && selectedLane === lane}
               >
-                <div className="raid-police">
+                <div className="raid-formation">
+                <div className="raid-police" role="group" data-count={enemy.length} data-overflow={enemy.length > 4}
+                  tabIndex={enemy.length > 4 ? 0 : undefined}
+                  aria-label={`Police in lane ${lane + 1}: ${enemy.length} cards`}>
                   {enemy.map((c) => {
                     const npc = BOSS_NPCS[c.cardId as BossNpcId];
                     return npc ? (
@@ -416,7 +482,7 @@ export function BossRaidView({
                         }
                         key={c.instanceId}
                         onClick={(e) => open(e, () => setIntel(c))}
-                        aria-label={`${c.name}: ${c.effect}`}
+                        aria-label={`${c.name}. Motion ${c.cost}. Hands ${getEffectiveCardPower(c)}. ${c.effect}${c.statuses.silenced ? " Silenced." : c.statuses.frozen ? " Frozen." : ""}`}
                       >
                         <BossIdleSprite
                           asset={c.cardId === "raid-oink" ? form.art : npc.art}
@@ -429,9 +495,9 @@ export function BossRaidView({
                           }
                           reduced={reducedMotion}
                         />
-                        <b>{getEffectiveCardPower(c)}</b>
-                        <small className="raid-npc-cost">⚡{c.cost}</small>
-                        <span>{c.name}</span>
+                        <b className="raid-npc-power" aria-label={`${getEffectiveCardPower(c)} Hands`}>{getEffectiveCardPower(c)}</b>
+                        <small className="raid-npc-cost" aria-label={`${c.cost} Motion`}>⚡{c.cost}</small>
+                        <span className="raid-npc-name">{c.name}</span>
                         {(c.statuses.silenced || c.statuses.frozen) && (
                           <small>
                             {c.statuses.silenced ? "SILENCED" : "FROZEN"}
@@ -445,12 +511,32 @@ export function BossRaidView({
                         isBoard
                         isEnemy
                         disableLayout
-                        presentationOnly
+                        fillContainer
+                        boardPresentation="combat"
+                        effectivePower={getEffectiveCardPower(c)}
+                        currentRound={shownMatch.round}
+                        onClick={() => setIntel(c)}
+                        onInspect={() => setIntel(c)}
                       />
                     );
                   })}
                 </div>
-                <div className="raid-lane-label">
+                <div className="raid-formation-footer">
+                  {enemy.length > 4 && <button type="button" className="raid-formation-expand"
+                    aria-label={`View all ${enemy.length} police cards in ${laneName}`} aria-haspopup="dialog"
+                    onClick={(event) => { event.currentTarget.focus({ preventScroll: true }); setFormation({ lane, owner: "cpu" }); }}>
+                    <span aria-hidden="true">↗</span> View {enemy.length}
+                  </button>}
+                </div>
+                </div>
+                <button
+                  type="button"
+                  className={`raid-lane-label${card ? " raid-deploy" : ""}`}
+                  disabled={!card || locked || !targets[lane]}
+                  aria-pressed={!!card && selectedLane === lane}
+                  aria-label={laneDescription}
+                  onClick={() => setSelectedLane(lane)}
+                >
                   <h3>{["CHECKPOINT", "BARRICADE", "LOCKUP"][lane]}</h3>
                   <div>
                     <b className="raid-police-score">
@@ -473,10 +559,17 @@ export function BossRaidView({
                       ? ` · ${blast.damage[lane]} DAMAGE`
                       : ""}
                   </small>
-                </div>
+                  {card && <span className="raid-lane-choice">{targets[lane]
+                    ? selectedLane === lane ? "✓ SELECTED" : `SELECT · ${bossCardCost(run, card, lane, squabble, investment)} ⚡`
+                    : "BLOCKED"}</span>}
+                </button>
+                <div className="raid-formation">
                 <div
                   className="raid-crew"
-                  tabIndex={0}
+                  role="group"
+                  data-count={crew.length}
+                  data-overflow={crew.length > 4}
+                  tabIndex={crew.length > 4 ? 0 : undefined}
                   aria-label={`Lane ${lane + 1} crew: ${crew.map((c) => `${c.name}, ${getEffectiveCardPower(c)} Hands`).join("; ")}`}
                 >
                   {crew.length === 0 && (
@@ -494,24 +587,20 @@ export function BossRaidView({
                       isBoard
                       disableLayout
                       fillContainer
-                      presentationOnly
+                      boardPresentation="combat"
+                      onClick={() => setIntel(c)}
+                      onInspect={() => setIntel(c)}
                     />
                   ))}
                 </div>
-                {card && (
-                  <button
-                    className="raid-deploy"
-                    disabled={locked || !targets[lane]}
-                    aria-pressed={selectedLane === lane}
-                    onClick={() => setSelectedLane(lane)}
-                  >
-                    {targets[lane]
-                      ? selectedLane === lane
-                        ? "✓ SELECTED"
-                        : `SELECT · ${bossCardCost(run, card, lane, squabble, investment)} ⚡`
-                      : "BLOCKED"}
-                  </button>
-                )}
+                <div className="raid-formation-footer">
+                  {crew.length > 4 && <button type="button" className="raid-formation-expand"
+                    aria-label={`View all ${crew.length} crew cards in ${laneName}`} aria-haspopup="dialog"
+                    onClick={(event) => { event.currentTarget.focus({ preventScroll: true }); setFormation({ lane, owner: "player" }); }}>
+                    <span aria-hidden="true">↗</span> View {crew.length}
+                  </button>}
+                </div>
+                </div>
               </section>
             );
           })}
@@ -707,6 +796,9 @@ export function BossRaidView({
           </Dialog.Content>
         </Dialog.Portal>
       </Dialog.Root>
+      {formation && <RaidFormationDialog lane={formation.lane} owner={formation.owner}
+        cards={shownMatch.boards[formation.lane].filter((fighter) => fighter.owner === formation.owner)}
+        round={shownMatch.round} onClose={() => setFormation(null)} onInspect={setIntel} />}
       {intel && <CardInspector card={intel} match={run.match} onClose={close} />}
       <Dialog.Root
         open={help || retire || forms}

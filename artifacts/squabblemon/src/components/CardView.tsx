@@ -29,6 +29,8 @@ interface CardViewProps {
   testId?: string;
   className?: string;
   isBoard?: boolean;
+  /** Tactical board face; collection and inspection keep their complete card face. */
+  boardPresentation?: 'combat';
   isEnemy?: boolean;
   effectivePower?: number;
   cost?: number;
@@ -73,13 +75,14 @@ function movementLockCue(instance: CardInstance | null, currentRound?: number) {
 
 function CardViewComponent({
   card, queued, squabble, onClick, onInspect, inspectable, testId, className = '',
-  isBoard, isEnemy, effectivePower, cost, highlighted,
+  isBoard, boardPresentation, isEnemy, effectivePower, cost, highlighted,
   effectRole, effectKind, disableLayout, layoutDependency, unavailable, inspectionLayout,
   disabledReason, variantId, progress, isInspector,
   fillContainer, presentationOnly, dragEnabled = false, covered = false,
   entryBurst, scoreStance, portraitPop, backgroundUrl, currentRound,
 }: CardViewProps) {
   const inspection = useCardInspection(card, inspectable ?? (!presentationOnly && !isInspector), onInspect, variantId);
+  const combatPresentation = isBoard && !isInspector && boardPresentation === 'combat';
   const equippedScene = useCardScene(card.id);
   const isInstance = 'instanceId' in card;
   const instance = isInstance ? card as CardInstance : null;
@@ -158,7 +161,16 @@ function CardViewComponent({
     ongoingHands ? `Ongoing: +${ongoingHands} Hands from other clocked-in staff.` : '',
   ].filter(Boolean).join(' ');
   const powerModifier = instance?.powerModifier ?? 0;
+  const combatChargeLabel = instance?.cardId === 'ms-mary-mack'
+    ? instance.maryElephant ? '15¢' : `${instance.maryCents ?? 0}¢`
+    : instance?.cardId === 'powerhouse' ? `OT ${instance.bankedMotion ?? 0}/3`
+    : instance?.aliceReady ? '+3 · −1⚡' : '';
+  const combatBuddyCue = buddyRockForm
+    ? `EARTH${buddyTurnsRemaining === null ? '' : ` · ${buddyTurnsRemaining}T`}`
+    : isBuddyBud ? instance?.buddyBud?.sprouted ? 'SPROUTED' : `+3${buddyBudTurns === null ? '' : ` · ${buddyBudTurns}T`}`
+    : `PLANT −1⚡${buddyGrowthTurns === null ? '' : ` · ${buddyGrowthTurns}T`}`;
   const handsDelta = powerModifier + ongoingHands;
+  const compactStatusCount = [covered, isProtected, isBlocked, isSilenced, isFrozen, burnStacks > 0, isWeakened, isLocked, movementLock, isBoosted, isMoved, ongoingHands > 0].filter(Boolean).length;
   const variantKind = getVariantKind(variantId);
   const rarity = getCardRarity(instance?.cardId ?? card.id, card.kind);
   const entryAccent = cardEntryAccent(card);
@@ -204,6 +216,7 @@ function CardViewComponent({
       data-card-power={displayPower}
       data-battle-draggable={dragEnabled && !presentationOnly ? true : undefined}
       data-card-zone={isBoard ? 'board' : 'hand'}
+      data-card-presentation={combatPresentation ? 'combat' : 'full'}
       data-live-finish={isInspector || queued || squabble ? true : undefined}
       data-card-variant={variantKind ?? 'base'}
       data-card-rarity={rarity}
@@ -225,7 +238,7 @@ function CardViewComponent({
       onPointerMove={moveFoil}
       onPointerLeave={resetFoil}
       onPointerCancel={resetFoil}
-      aria-label={`${card.name}. ${card.kind === 'token' ? 'Summoned token' : CARD_RARITY_DEFINITIONS[rarity].label + ' rarity'}.${boardStatusLabel ? ` ${boardStatusLabel}` : ''}${fuseDescription}${covered ? ' Covered until the next targeted hostile ability.' : ''}${disabledReason ? ` ${disabledReason}` : ''}`}
+      aria-label={`${card.name}. ${motionLabel}: ${motionValue}. Hands: ${displayPower}. ${card.kind === 'token' ? 'Summoned token' : CARD_RARITY_DEFINITIONS[rarity].label + ' rarity'}.${boardStatusLabel ? ` ${boardStatusLabel}` : ''}${fuseDescription}${covered ? ' Covered until the next targeted hostile ability.' : ''}${disabledReason ? ` ${disabledReason}` : ''}`}
       aria-pressed={!isBoard && !isInspector && !presentationOnly ? !!queued : undefined}
       title={disabledReason ?? (card.hazard ? fuseDescription.trim() : undefined)}
       onClick={presentationOnly ? undefined : onClick}
@@ -235,6 +248,7 @@ function CardViewComponent({
         collector-card relative shrink-0 flex flex-col justify-end text-left group
         ${tactile ? 'collector-card--tactile' : ''}
         ${isInspector ? 'collector-card--inspector' : ''}
+        ${combatPresentation ? 'collector-card--combat' : ''}
         ${card.name.length > 24 ? 'collector-card--long-name' : ''} ${card.name.split(/\s+/).some(word => word.length >= 10) ? 'collector-card--wide-word' : ''}
         ${fillContainer ? 'w-full aspect-[63/88]' : isBoard ? `battle-board-card w-[64px] sm:w-[78px] lg:w-[96px] aspect-[63/88] ${aliveClass} ${stanceClass}` : isInspector ? className : 'battle-hand-card w-[100px] md:w-[136px] aspect-[63/88] shadow-xl shadow-black/80'}
         ${queued ? 'scale-105 -translate-y-2 z-50 ring-2 ring-primary ring-offset-2 ring-offset-black' : 'z-10'}
@@ -251,7 +265,7 @@ function CardViewComponent({
       `}
       style={{ ['--entry-color' as any]: entryAccent }}
     >
-      {isBoard && <BattleStatus frozen={isFrozen} silenced={isSilenced} protected={isProtected || covered} />}
+      {isBoard && !combatPresentation && <BattleStatus frozen={isFrozen} silenced={isSilenced} protected={isProtected || covered} />}
       <div className={`collector-frame absolute inset-0 p-[2px] md:p-[3px] transition-colors duration-300 card-bevel
         ${queued && squabble ? 'bg-accent shadow-[0_0_30px_theme(colors.accent.DEFAULT)]' : queued ? 'bg-primary' : 'bg-zinc-700 group-hover:bg-zinc-400'}
         ${isEnemy && !queued ? 'bg-accent/40 group-hover:bg-accent/70' : ''}
@@ -279,37 +293,38 @@ function CardViewComponent({
 
           <div className="absolute inset-x-0 bottom-0 h-[50%] bg-gradient-to-t from-black via-black/80 to-transparent z-10 pointer-events-none" />
 
+          {combatPresentation && <BattleStatus frozen={isFrozen} silenced={isSilenced} protected={isProtected || covered} />}
           <div className="card-stat-pair absolute top-0 inset-x-0 flex justify-between z-20 pointer-events-none">
-            <div className="bg-primary text-black px-1.5 py-1 min-w-[1.5rem] md:min-w-[2.25rem] flex flex-col items-center justify-center shadow-md border-r border-b border-black/30" style={{ clipPath: 'polygon(0 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%)' }}>
+            <div className="card-stat--motion bg-primary text-black px-1.5 py-1 min-w-[1.5rem] md:min-w-[2.25rem] flex flex-col items-center justify-center shadow-md border-r border-b border-black/30" style={{ clipPath: 'polygon(0 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%)' }}>
               {isLarge && <span className="text-[5px] md:text-[7px] font-mono uppercase tracking-widest leading-none opacity-80 mb-0.5">{motionLabel}</span>}
-              <span className={`font-display font-black leading-none ${isBoard ? 'text-sm' : 'text-lg md:text-xl'}`}>{motionValue}</span>
+              <span data-stat-length={String(motionValue).length} className={`card-stat-value font-display font-black leading-none ${isBoard ? 'text-sm' : 'text-lg md:text-xl'}`}>{motionValue}</span>
             </div>
 
-            <div className={`px-1.5 py-1 min-w-[1.5rem] md:min-w-[2.25rem] flex flex-col items-center justify-center shadow-md border-l border-b border-black/30 ${handsDelta > 0 ? 'bg-green-400 text-black' : handsDelta < 0 ? 'bg-accent text-white' : 'bg-zinc-200 text-black'}`} style={{ clipPath: 'polygon(0 0, 100% 0, 100% 100%, 6px 100%, 0 calc(100% - 6px))' }}>
+            <div className={`card-stat--hands px-1.5 py-1 min-w-[1.5rem] md:min-w-[2.25rem] flex flex-col items-center justify-center shadow-md border-l border-b border-black/30 ${handsDelta > 0 ? 'bg-green-400 text-black' : handsDelta < 0 ? 'bg-accent text-white' : 'bg-zinc-200 text-black'}`} style={{ clipPath: 'polygon(0 0, 100% 0, 100% 100%, 6px 100%, 0 calc(100% - 6px))' }}>
               {isLarge && <span className="text-[5px] md:text-[7px] font-mono uppercase tracking-widest leading-none opacity-80 mb-0.5">{isBuddyBud ? 'Payoff' : 'Hands'}</span>}
-              <span className={`font-display font-black leading-none ${isBoard ? 'text-sm' : 'text-lg md:text-xl'}`}>{isBuddyBud ? '+3' : displayPower}</span>
+              <span data-stat-length={String(isBuddyBud ? '+3' : displayPower).length} className={`card-stat-value font-display font-black leading-none ${isBoard ? 'text-sm' : 'text-lg md:text-xl'}`}>{isBuddyBud ? '+3' : displayPower}</span>
               {powerModifier !== 0 && isBoard && (
-                <span className="text-[5px] font-mono font-bold block -mt-0.5 tracking-tighter">
+                <span className="card-stat-delta text-[5px] font-mono font-bold block -mt-0.5 tracking-tighter">
                   {powerModifier > 0 ? `+${powerModifier}` : powerModifier}
                 </span>
               )}
               {ongoingHands > 0 && isBoard && (
-                <span className="text-[5px] font-mono font-bold block tracking-tighter" data-testid="card-ongoing-hands"
+                <span className="card-stat-ongoing text-[5px] font-mono font-bold block tracking-tighter" data-testid="card-ongoing-hands"
                   style={{ fontSize: '6px', lineHeight: 1, whiteSpace: 'nowrap' }}>
-                  +{ongoingHands} ongoing
+                  +{ongoingHands}{combatPresentation ? '↥' : ' ongoing'}
                 </span>
               )}
             </div>
           </div>
 
-          {chargeLabel && <span className="absolute top-[24%] inset-x-1 z-20 rounded bg-black/85 px-1 py-0.5 text-center font-mono text-[7px] font-bold text-cyan-100" data-testid="card-charge">{chargeLabel}</span>}
+          {chargeLabel && <span className="absolute top-[24%] inset-x-1 z-20 rounded bg-black/85 px-1 py-0.5 text-center font-mono text-[7px] font-bold text-cyan-100" data-testid="card-charge" title={chargeLabel}>{combatPresentation ? combatChargeLabel : chargeLabel}</span>}
           {(buddyCue || buddyBudCue) && !isInspector && <span
             className={`buddy-form-cue absolute left-1 right-1 top-[25%] z-20 ${buddyRockForm ? 'buddy-form-cue--squabble' : ''} ${isBuddyBud ? 'buddy-form-cue--bud' : ''}`}
             data-testid="buddy-form-cue"
             title={isBuddyBud ? buddyBudDescription : buddyDescription}
-          >{isBuddyBud ? buddyBudCue : buddyCue}</span>}
+          >{combatPresentation ? combatBuddyCue : isBuddyBud ? buddyBudCue : buddyCue}</span>}
           {isBoard && (
-            <div className="card-status-stack absolute top-[28px] right-1 z-20 pointer-events-none" aria-hidden="true">
+            <div className="card-status-stack absolute top-[28px] right-1 z-20 pointer-events-none" data-status-count={compactStatusCount} aria-hidden="true">
               {covered && <div data-card-status="covered" title="Covered" className="card-status bg-amber-200 text-black ring-1 ring-amber-500"><Shield size={8} strokeWidth={3} /></div>}
               {isProtected && <div data-card-status="protected" title="Protected this round" className="card-status bg-yellow-400 text-black"><Shield size={8} strokeWidth={3} /></div>}
               {isBlocked && <div data-card-status="blocked" title="Blocked" className="card-status bg-accent text-white"><Ban size={8} strokeWidth={3} /></div>}
@@ -321,6 +336,8 @@ function CardViewComponent({
               {movementLock && <div data-card-status="movement-locked" title={movementLock.label} className="card-status bg-amber-300 text-black"><LockKeyhole size={8} strokeWidth={3} /><span>R{movementLock.throughRound}</span></div>}
               {isBoosted && <div data-card-status="boosted" title="Boosted" className="card-status bg-emerald-400 text-black"><Sparkles size={8} strokeWidth={3} /></div>}
               {isMoved && <div data-card-status="moved" title="Moved" className="card-status bg-purple-500 text-white"><Wind size={8} strokeWidth={3} /></div>}
+              {combatPresentation && ongoingHands > 0 && <div data-card-status="ongoing" title={`Ongoing: +${ongoingHands} Hands`} className="card-status bg-emerald-400 text-black">↥</div>}
+              {combatPresentation && compactStatusCount > 1 && <span className="card-status-summary" title={`${compactStatusCount} active effects. Inspect for details.`}>+{compactStatusCount - 1}</span>}
             </div>
           )}
 
@@ -385,6 +402,7 @@ function cardViewPropsEqual(previous: CardViewProps, next: CardViewProps) {
     && previous.testId === next.testId
     && previous.className === next.className
     && previous.isBoard === next.isBoard
+    && previous.boardPresentation === next.boardPresentation
     && previous.isEnemy === next.isEnemy
     && previous.effectivePower === next.effectivePower
     && previous.cost === next.cost

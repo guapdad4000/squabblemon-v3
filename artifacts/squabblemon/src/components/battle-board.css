@@ -1,0 +1,292 @@
+/* Tactical board faces are opt-in. Full card art, rarity treatments and the
+   canonical inspector stay shared; only collection metadata leaves the field. */
+.collector-card.collector-card--combat {
+  aspect-ratio: 4 / 5;
+  container-type: inline-size;
+}
+.collector-card--combat .collector-frame { padding: 2px; }
+.collector-card.collector-card--combat .collector-portrait { bottom: 9%; height: 88%; object-fit: contain; object-position: center bottom; }
+.collector-card--combat .collector-card-copy { padding: 3px 4px; min-width: 0; background: linear-gradient(transparent,#050910ee 28%); }
+.collector-card--combat .collector-card-copy > div:first-child,
+.collector-card--combat .collector-engraving,
+.collector-card--combat .collector-edition-seal { display: none; }
+.collector-card--combat .collector-card-copy h4 {
+  display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2;
+  overflow: hidden; font-size: clamp(8px, 13cqw, 13px); line-height: 1.05;
+  letter-spacing: -.02em; text-shadow: 0 1px 3px #000;
+}
+.collector-card--combat .card-stat-pair > div { padding: 2px 3px; min-width: 20px; min-height: 23px; }
+.collector-card--combat .card-stat-pair .card-stat-value { font-size: clamp(18px, 28cqw, 24px); line-height: 1; font-variant-numeric: tabular-nums; }
+.collector-card--combat .card-stat-pair .card-stat--motion .card-stat-value { font-size: clamp(14px, 21cqw, 20px); }
+.collector-card--combat .card-stat-pair .card-stat-value[data-stat-length='3'] { font-size: 14px; }
+.collector-card--combat .card-stat-pair .card-stat-value:is([data-stat-length='4'],[data-stat-length='5']) { font-size: 10px; }
+.collector-card--combat .card-stat-delta { font-size: 7px; margin: 1px 0 0; line-height: 1; }
+.collector-card--combat .card-stat-ongoing { font-size: 7px !important; line-height: 1; }
+:is(.battle-arena.battle-hud,.raid-combat-layout) .collector-card--combat .card-status-stack { top: calc(max(23px, clamp(18px,28cqw,24px) + 4px) + 2px); right: 1px; gap: 1px; grid-template-columns: 12px 10px; width: 23px; }
+.collector-card--combat .card-status { width: 12px; height: 12px; min-width: 12px; min-height: 12px; }
+.collector-card--combat .card-status:nth-child(n+2) { display: none; }
+.collector-card--combat .card-status-summary { display: grid; place-items: center; width: 10px; height: 12px; border-radius: 2px; background: #07111bf2; color: #fff0d4; font: 800 7px/1 var(--font-mono); }
+/* Current Hands is the board read; its itemized arithmetic stays in inspection.
+   A bounded status badge keeps every extra effect discoverable at small sizes. */
+.collector-card--combat :is(.card-stat-delta,.card-stat-ongoing) { display: none; }
+.collector-card--combat .card-status svg { width: 10px; height: 10px; }
+.collector-card--combat [data-testid='card-charge'],
+.collector-card--combat .buddy-form-cue { top: 28px; left: 2px; right: 26px; padding: 2px 1px; font-size: 7px; line-height: 1.1; overflow-wrap: anywhere; }
+.collector-card--combat .battle-status-material { z-index: 18; }
+@container (max-width:60px) {
+  .collector-card--combat .collector-card-copy h4 { -webkit-line-clamp: 1; }
+  .collector-card--combat [data-testid="card-charge"], .collector-card--combat .buddy-form-cue { font-size: 6px; }
+}
+
+/* One geometry model: equal districts, fixed hub, two complete rows per side.
+   Cards are constrained by BOTH dimensions, including crowded formations. */
+.battle-arena.battle-hud .battlefield-grid {
+  min-height: 0; padding: 6px clamp(6px,2vw,24px) 8px;
+  gap: clamp(6px,1.4vw,24px); align-items: stretch;
+}
+.battle-arena.battle-hud .district-lane {
+  --hub-name-height: 30px; --hub-body-height: 120px; --hub-score-height: 38px;
+  position: relative; grid-template-rows: minmax(0,1fr) calc(var(--hub-name-height) + var(--hub-body-height)) minmax(0,1fr);
+  border: 0; border-radius: 8px; transform: none; backdrop-filter: none;
+  background: linear-gradient(#07121b45,#07121b16 45% 55%,#121b1945);
+  box-shadow: inset 0 0 0 1px #b8d4e322;
+  transition: background-color 140ms ease, box-shadow 140ms ease;
+}
+.battle-arena.battle-hud .district-lane:is(.is-selected,.is-legal,.is-effect-lane,[data-contested='true']):hover { transform: none; }
+.battle-arena.battle-hud .district-lane::after { display: none !important; }
+.battle-arena.battle-hud .district-lane.is-legal { box-shadow: inset 0 0 0 1px #f0cd8770; }
+.battle-arena.battle-hud .district-lane.is-selected,
+.battle-arena.battle-hud .district-lane.is-selected:hover {
+  box-shadow: inset 0 0 0 2px #ffe3a5, inset 0 0 22px #f4c56522;
+  background: linear-gradient(#ffd67b14,#0b141b66 45% 55%,#ffd67b18);
+}
+.battle-arena.battle-hud .district-lane.is-illegal { opacity: 1; filter: none; }
+.battle-arena.battle-hud .district-lane.is-illegal .district-target { color: #fdabae; }
+.battle-arena.battle-hud .district-lane.is-locked { box-shadow: inset 0 0 0 1px #fb718555; }
+.battle-arena.battle-hud .district-lane.is-effect-lane { box-shadow: inset 0 0 0 2px #cdefff; }
+.battle-arena.battle-hud .battle-side { padding: 7px 4px; min-height: 0; overflow: visible; container-type: size; }
+.battle-arena.battle-hud .battle-card-stack[data-count] {
+  --columns: 2; --rows: max(2,var(--mobile-rows,2)); --formation-gap: 5px;
+  display: grid; grid-template-columns: repeat(2,minmax(0,1fr));
+  grid-template-rows: repeat(var(--rows),minmax(0,1fr)); grid-auto-rows: minmax(0,1fr);
+  width: 100%; height: 100%; gap: var(--formation-gap);
+  align-content: center; align-items: center; justify-items: center;
+  overflow: visible; margin: 0;
+}
+.battle-arena.battle-hud .battle-card-stack[data-count] > .battle-board-card {
+  width: min(132px,calc((100cqw - var(--formation-gap)) / 2),calc((100cqh - (var(--rows) - 1) * var(--formation-gap)) / var(--rows) * .8));
+  max-height: none; aspect-ratio: 4 / 5; margin: 0; justify-self: center;
+}
+.battle-arena.battle-hud .battle-card-stack[data-count='1'] > .battle-board-card { grid-column: 1 / -1; grid-row: 1 / 3; }
+.battle-arena.battle-hud .battle-card-stack[data-count='2'] > .battle-board-card { grid-row: 1 / 3; }
+.battle-arena.battle-hud .battle-card-stack[data-count='3'] > .battle-board-card:last-child { grid-column: 1 / -1; }
+/* Unlimited formations remain inspectable and scroll at sensible card size,
+   rather than reducing combat stats to unreadable dots. */
+.battle-arena.battle-hud .battle-card-stack[data-crowded='true'] { align-content: start; grid-template-rows: repeat(var(--rows),minmax(55px,1fr)); overflow-y: auto; overflow-x: hidden; scrollbar-width: thin; scrollbar-color: #e7c589 #07111b; overscroll-behavior: contain; }
+.battle-arena.battle-hud .battle-card-stack[data-crowded='true'] > .battle-board-card { min-width: min(44px,calc((100cqw - var(--formation-gap)) / 2)); }
+.battle-arena.battle-hud .battle-side:has([data-crowded='true']) { padding-bottom: 27px; }
+.battle-arena.battle-hud .battle-side .formation-expand {
+  display: flex; position: absolute; bottom: 0; right: 3px; z-index: 20;
+  min-height: 24px; padding: 2px 6px; font-size: 9px; background: #08121deb;
+  border: 1px solid #8cadc455; border-radius: 5px;
+}
+.battle-arena.battle-hud .battle-side:not(:has([data-crowded='true'])) .formation-expand { display: none; }
+
+/* Name opens the district explainer; the larger score/rule surface selects it.
+   One explicit column clears legacy wide-screen placements during resizing.
+   Preview, lock and cost cues occupy reserved space and cannot move any cards. */
+.battle-arena.battle-hud .battle-district-hub { display: grid; position: relative; z-index: 12; grid-template-columns: minmax(0,1fr); grid-template-rows: var(--hub-name-height) var(--hub-body-height); height: calc(var(--hub-name-height) + var(--hub-body-height)); min-height: 0; }
+.battle-arena.battle-hud .mobile-district-open {
+  display: flex; position: relative; inset: auto; width: 100%; height: var(--hub-name-height); min-height: var(--hub-name-height);
+  justify-content: center; align-items: center; gap: 4px; padding: 2px 4px; border-radius: 0;
+  color: #fff2db; font: 900 clamp(11px,1.2vw,14px)/1.05 var(--font-display);
+  letter-spacing: .02em; background: transparent;
+  text-shadow: 0 1px 2px #000, 1px 0 2px #000, -1px 0 2px #000, 0 -1px 2px #000, 0 0 6px #000;
+}
+.battle-arena.battle-hud .mobile-district-open > span:first-child { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; }
+.battle-arena.battle-hud .mobile-district-open > span:last-child { flex: none; color: #f1d39a; }
+.battle-arena.battle-hud .district-lane .district-target {
+  height: var(--hub-body-height); min-height: var(--hub-body-height); padding: 0 3px; border-radius: 0; overflow: visible;
+  background: transparent; border: 0; box-shadow: none;
+}
+/* Glyph halos hold contrast against location art without a rectangular panel. */
+.battle-arena.battle-hud .district-lane:is(.is-legal,.is-selected) .district-target { background: transparent; box-shadow: none; }
+.battle-arena.battle-hud .battle-district-hub .location-node__shade { display: none; }
+.battle-arena.battle-hud .district-marker {
+  position: relative; display: grid; grid-template-columns: minmax(0,1fr);
+  grid-template-rows: var(--hub-score-height) 20px 30px 16px 16px;
+  justify-items: center; text-align: center; gap: 0; height: var(--hub-body-height); width: 100%; min-width: 0; padding: 0;
+  background: transparent; text-shadow: 0 1px 2px #000, 1px 0 2px #000, -1px 0 2px #000, 0 -1px 2px #000, 0 0 6px #000;
+}
+.battle-arena.battle-hud .district-marker h3,
+.battle-arena.battle-hud .district-marker .district-kicker { display: none; }
+.battle-arena.battle-hud .district-score-row {
+  display: flex; grid-column: 1; grid-row: 1; position: relative; height: var(--hub-score-height);
+  align-self: center; align-items: center; justify-content: center; padding: 0; margin: 0; gap: 6px; width: 100%; font-size: 28px;
+}
+.battle-arena.battle-hud .district-score-side { display: grid; justify-items: center; min-width: 30px; gap: 0; }
+.battle-arena.battle-hud .district-score-label { display: block; position: static; inset: auto; color: #f1f6fa; font: 700 9px/10px var(--font-sans); letter-spacing: .06em; }
+.battle-arena.battle-hud .district-score-side .score-with-delta { line-height: 1; }
+.battle-arena.battle-hud .district-score-side--rival .score-tick { color: #85ddf1; }
+.battle-arena.battle-hud .district-score-side--player .score-tick { color: #ffe099; }
+.battle-arena.battle-hud .score-divider svg { width: 11px; height: 11px; }
+.battle-arena.battle-hud .district-forecast-slot { grid-column: 1; grid-row: 2; width: 100%; min-width: 0; height: 20px; }
+.battle-arena.battle-hud .district-preview { display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 0; margin: 0; height: 20px; width: 100%; padding: 0; border: 0; background: transparent; font: 700 10px/11px var(--font-sans); }
+.battle-arena.battle-hud .preview-caption { color: #fff6de; font-size: 9px; line-height: 9px; }
+.battle-arena.battle-hud .preview-values { display: flex; align-items: center; justify-content: center; gap: 4px; }
+.battle-arena.battle-hud .preview-values > :is(.preview-rival,.preview-player) { white-space: nowrap; }
+.battle-arena.battle-hud .preview-rival { color: #b6edfa; }
+.battle-arena.battle-hud .preview-player { color: #ffe6ad; }
+.battle-arena.battle-hud .preview-values b { margin-left: 2px; font-weight: 700; }
+.battle-arena.battle-hud .preview-values [data-direction='loss'] { color: #ffb1b5; }
+.battle-arena.battle-hud .district-marker .district-rule {
+  grid-column: 1; grid-row: 3; width: 100%; min-width: 0; max-width: none; padding: 1px 0 0; text-align: center;
+  display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; height: 30px; margin: 0;
+  color: #fff4e2; font: 600 clamp(11px,1vw,12px)/14px var(--font-sans);
+}
+.battle-arena.battle-hud .district-marker .district-live-cues { display: flex; align-items: center; justify-content: center; gap: 4px; grid-row: 4; grid-column: 1; width: 100%; min-width: 0; overflow: hidden; height: 16px; }
+.battle-arena.battle-hud .district-marker :is(.district-rule-status,.character-district-mark) { display: block; min-width: 0; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font: 700 10px/16px var(--font-sans); margin: 0; }
+.battle-arena.battle-hud .district-rule-status { color: #e7eef7; }
+.battle-arena.battle-hud .district-rule-status[data-state='active'] { color: #e1d0ff; }
+.battle-arena.battle-hud .district-rule-status[data-state='blocked'] { color: #ffcf9c; }
+.battle-arena.battle-hud .district-marker .character-district-mark { display: flex; justify-content: center; gap: 3px; background: transparent; }
+.battle-arena.battle-hud .district-prompt { grid-row: 5; grid-column: 1; align-self: center; justify-content: center; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font: 700 10px/16px var(--font-sans); }
+.battle-arena.battle-hud .district-lane.is-selected .district-target::after { display: block; content: ''; position: absolute; inset: 0 8px auto; height: 2px; background: #ffe3a5; width: auto; transform: none; }
+
+/* Selection shares the normal card width at every height, with enough headroom
+   for the lift/halo. In particular, tablet cards never jump to desktop width. */
+.battle-arena.battle-hud { --battle-hand-width: clamp(96px,14.5vh,128px); }
+.battle-arena.battle-hud .battle-hand-card { width: var(--battle-hand-width) !important; }
+.battle-arena.battle-hud #hand-tray { height: calc(var(--battle-hand-width) * 88 / 63 + 30px); padding: 20px 12px 4px; }
+
+.battle-arena.battle-hud .battle-hand-card[aria-pressed='true'] { width: var(--battle-hand-width,136px) !important; --tw-ring-color: #ffe3a5; --tw-ring-offset-width: 0px; }
+.battle-arena.battle-hud .battle-hand-card { transition: filter 140ms ease; }
+@media (max-width:600px) {
+  .battle-arena.battle-hud { --battle-hand-width: 100px; }
+  .battle-arena.battle-hud .battle-board-card.collector-card--combat .card-stat-pair .card-stat-value { font-size: clamp(18px,28cqw,24px); }
+  .battle-arena.battle-hud .battle-board-card.collector-card--combat .card-stat-pair .card-stat--motion .card-stat-value { font-size: clamp(14px,21cqw,20px); }
+  .battle-arena.battle-hud .battle-board-card.collector-card--combat .collector-card-copy h4 { font-size: clamp(8px,13cqw,13px); }
+}
+@media (max-width:600px) and (max-height:680px) {
+  .battle-arena.battle-hud { --battle-hand-width: 82px; }
+}
+/* Short landscape protects the field by docking the hand beside it. */
+@media (min-width:601px) and (max-height:580px) {
+  .battle-arena.battle-hud {
+    --battle-hand-width: 96px; display: grid;
+    grid-template-columns: minmax(0,1fr) 166px; grid-template-rows: 76px minmax(0,1fr);
+  }
+  .battle-arena.battle-hud .battle-command-header { grid-column: 1 / -1; grid-row: 1; }
+  .battle-arena.battle-hud .battlefield-grid { grid-column: 1; grid-row: 2; height: 100%; padding: 4px 6px 8px; gap: 7px; }
+  .battle-arena.battle-hud .battle-command-deck { grid-column: 2; grid-row: 2; display: flex; flex-direction: column; min-height: 0; padding: 4px 4px max(4px,env(safe-area-inset-bottom)); background: linear-gradient(90deg,#07111b88,#07111be0); border-left: 1px solid #d5bd7f33; }
+  .battle-arena.battle-hud #hand-tray { flex: 1; min-height: 0; height: auto; padding: 12px 4px; overflow-y: auto; overflow-x: hidden; }
+  .battle-arena.battle-hud .battle-hand-row { flex-direction: column; justify-content: flex-start; align-items: center; width: 100%; height: max-content; min-height: 100%; gap: 10px; padding: 0 0 8px; }
+  .battle-arena.battle-hud .battle-hand-card { width: 96px !important; }
+  .battle-arena.battle-hud .battle-hand-card .collector-card-ability { display: none; }
+  .battle-arena.battle-hud .battle-actions { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); flex: none; width: 100%; padding: 3px; gap: 4px; }
+  .battle-arena.battle-hud .battle-motion { width: auto; justify-self: center; }
+  .battle-arena.battle-hud .battle-motion > :is(span,strong) { font-size: 24px; }
+  .battle-arena.battle-hud .battle-squabble { justify-self: center; min-width: 0; width: 100%; padding-inline: 2px; gap: 3px; font-size: 9px; }
+  .battle-arena.battle-hud .battle-primary-action { grid-column: 1 / -1; justify-self: stretch; width: 100%; min-width: 0; min-height: 44px; margin-inline: 0; padding-inline: 6px; font-size: 11px; }
+  .battle-arena.battle-hud .decision-clock { width: 100%; padding: 3px; }
+  .battle-arena.battle-hud .decision-clock > div:first-child { font-size: 8px; }
+  .battle-arena.battle-hud .wild-investment { position: absolute; bottom: 100%; right: 0; width: 166px; background: #08121bf5; }
+}
+/* Landscape uses the width it actually has: one readable row for four cards,
+   two rows for larger crews. Portrait retains the compact two-column board. */
+@media (min-width:601px) and (orientation:landscape) {
+  .battle-arena.battle-hud .battle-card-stack[data-count] { --columns: 4; --rows: 1; grid-template-columns: repeat(4,minmax(0,1fr)); grid-template-rows: minmax(0,1fr); }
+  .battle-arena.battle-hud .battle-card-stack[data-count] > .battle-board-card { grid-row: 1; grid-column: auto; width: min(132px,calc((100cqw - 3 * var(--formation-gap)) / 4),calc(100cqh * .8)); }
+  .battle-arena.battle-hud .battle-card-stack[data-count='1'] > .battle-board-card { grid-column: 1 / -1; }
+  .battle-arena.battle-hud .battle-card-stack[data-count='3'] > .battle-board-card:last-child { grid-column: auto; }
+  .battle-arena.battle-hud .battle-card-stack[data-count='2'] > .battle-board-card:first-child { grid-column: 2; }
+  .battle-arena.battle-hud .battle-card-stack[data-count='2'] > .battle-board-card:last-child { grid-column: 3; }
+  .battle-arena.battle-hud .battle-card-stack[data-crowded='true'] { --columns: 3; --rows: max(2,var(--wide-rows,2)); grid-template-columns: repeat(3,minmax(0,1fr)); grid-template-rows: repeat(var(--rows),minmax(55px,1fr)); }
+  .battle-arena.battle-hud .battle-card-stack[data-crowded='true'] > .battle-board-card { grid-row: auto; width: min(132px,calc((100cqw - 2 * var(--formation-gap)) / 3),calc((100cqh - (var(--rows) - 1) * var(--formation-gap)) / var(--rows) * .8)); }
+}
+
+@media (max-width:360px) {
+  .battle-arena.battle-hud .battlefield-grid { gap: 4px; padding-inline: 6px; }
+  .battle-arena.battle-hud .battle-side { padding-inline: 2px; }
+  .battle-arena.battle-hud .battle-card-stack[data-count] { --formation-gap: 4px; }
+}
+@media (max-width:600px) and (max-height:680px) {
+  .battle-arena.battle-hud .battle-card-stack[data-count] > .battle-board-card { min-width: min(44px,calc((100cqw - var(--formation-gap)) / 2)); }
+  .battle-arena.battle-hud .battle-card-stack:not([data-count='0'],[data-count='1'],[data-count='2']) { align-content: start; grid-template-rows: repeat(var(--rows),minmax(55px,1fr)); overflow-y: auto; overflow-x: hidden; scrollbar-width: thin; scrollbar-color: #e7c589 #07111b; }
+  .battle-arena.battle-hud .battle-side:has(.battle-card-stack:not([data-count='0'],[data-count='1'],[data-count='2'])) { padding-bottom: 27px; }
+  .battle-arena.battle-hud .battle-side:has(.battle-card-stack:not([data-count='0'],[data-count='1'],[data-count='2'])) .formation-expand { display: flex; }
+}
+
+@media (prefers-reduced-motion:reduce) {
+}
+.battle-arena.battle-hud[data-reduced-motion='true'] .district-lane { transition: none; }
+
+/* Shared finish modules also style board typography. Combat semantics take
+   precedence in either battle surface, independent of lazy CSS arrival order. */
+:is(.battle-arena.battle-hud,.raid-combat-layout) .collector-card.collector-card--combat .card-stat-pair .card-stat-value { font-size: clamp(18px,28cqw,24px); }
+:is(.battle-arena.battle-hud,.raid-combat-layout) .collector-card.collector-card--combat .card-stat-pair .card-stat--motion .card-stat-value { font-size: clamp(14px,21cqw,20px); }
+:is(.battle-arena.battle-hud,.raid-combat-layout) .collector-card.collector-card--combat .card-stat-pair .card-stat-value[data-stat-length='3'] { font-size: 14px; }
+:is(.battle-arena.battle-hud,.raid-combat-layout) .collector-card.collector-card--combat .card-stat-pair .card-stat-value:is([data-stat-length='4'],[data-stat-length='5']) { font-size: 10px; }
+:is(.battle-arena.battle-hud,.raid-combat-layout) .collector-card.collector-card--combat .collector-card-copy h4 { font-size: clamp(8px,13cqw,13px); line-height: 1.05; }
+@media (max-width:600px) and (max-height:680px) {
+  .battle-arena.battle-hud .battlefield-grid { padding-block: 2px 4px; }
+  .battle-arena.battle-hud .battle-side { padding: 3px 2px; }
+  .battle-arena.battle-hud .battle-side:has(.battle-card-stack:not([data-count='0'],[data-count='1'],[data-count='2'])) { padding-bottom: 22px; }
+  .battle-arena.battle-hud .battle-side .formation-expand { min-height: 20px; height: 20px; padding-block: 0; }
+}
+
+@media (min-width:900px) {
+  .battle-arena.battle-hud .district-lane { --hub-name-height: 34px; --hub-body-height: 128px; --hub-score-height: 46px; }
+  .battle-arena.battle-hud .district-score-row { font-size: 34px; }
+  .battle-arena.battle-hud .district-score-label { font-size: 10px; line-height: 12px; }
+  .battle-arena.battle-hud .district-marker :is(.district-rule-status,.character-district-mark) { font-size: 11px; }
+}
+@media (max-width:360px), (min-width:601px) and (max-height:580px) {
+  .battle-arena.battle-hud .district-lane { --hub-name-height: 28px; }
+  .battle-arena.battle-hud .district-score-row { font-size: 26px; }
+}
+
+/* The crowd footer stays reserved while scrolling through the same crew. */
+.battle-arena.battle-hud .battle-side:has(.battle-formation-stack[data-inspectable='true']) { padding-bottom: 36px; }
+
+/* A short phone uses a compact hand, preserving one complete combat row per
+   side and the touch-size crew footer instead of clipping every fighter. */
+@media (max-width:600px) and (max-height:620px) {
+  .battle-arena.battle-hud { --battle-hand-width: 64px; }
+  .battle-arena.battle-hud .district-lane { --hub-name-height: 24px; --hub-body-height: 100px; --hub-score-height: 34px; }
+  .battle-arena.battle-hud .district-marker { grid-template-rows: 34px 18px 24px 12px 12px; }
+  .battle-arena.battle-hud .district-score-row { font-size: 24px; }
+  .battle-arena.battle-hud .district-marker .district-rule { height: 24px; font-size: 10px; line-height: 12px; }
+  .battle-arena.battle-hud .district-forecast-slot,
+  .battle-arena.battle-hud .district-preview { height: 18px; }
+  .battle-arena.battle-hud .district-marker .district-live-cues,
+  .battle-arena.battle-hud .district-marker :is(.district-rule-status,.character-district-mark),
+  .battle-arena.battle-hud .district-prompt { height: 12px; line-height: 12px; }
+  .battle-arena.battle-hud .district-marker :is(.district-rule-status,.character-district-mark) { font-size: 9px; }
+  .battle-arena.battle-hud #hand-tray { height: 100px; padding: 6px 8px 3px; }
+  .battle-arena.battle-hud .battle-hand-row { height: 91px; }
+  .battle-arena.battle-hud .battle-hand-card,
+  .battle-arena.battle-hud .battle-hand-card[aria-pressed='true'] { width: 64px !important; scale: 1; }
+  .battle-arena.battle-hud .decision-clock { padding-block: 1px; height: 19px; }
+  .battle-arena.battle-hud .battle-actions { padding-top: 2px; }
+  .battle-arena.battle-hud .battle-side:has(.battle-formation-stack[data-inspectable='true']) { padding-bottom: 32px; }
+}
+@media (min-width:601px) and (max-height:460px) {
+  .battle-arena.battle-hud .district-lane { --hub-name-height: 24px; --hub-body-height: 100px; --hub-score-height: 34px; }
+  .battle-arena.battle-hud .district-marker { grid-template-rows: 34px 18px 24px 12px 12px; }
+  .battle-arena.battle-hud .district-score-row { font-size: 24px; }
+  .battle-arena.battle-hud .district-score-label { font-size: 9px; line-height: 10px; }
+  .battle-arena.battle-hud .district-marker .district-rule { height: 24px; font-size: 10px; line-height: 12px; }
+  .battle-arena.battle-hud .district-forecast-slot,
+  .battle-arena.battle-hud .district-preview { height: 18px; }
+  .battle-arena.battle-hud .district-marker .district-live-cues,
+  .battle-arena.battle-hud .district-marker :is(.district-rule-status,.character-district-mark),
+  .battle-arena.battle-hud .district-prompt { height: 12px; line-height: 12px; }
+  .battle-arena.battle-hud .battle-side { padding-top: 2px; }
+  .battle-arena.battle-hud .battle-side:has(.battle-formation-stack[data-inspectable='true']) { padding-bottom: 32px; }
+}
+
+@media (max-width:600px) and (max-height:620px), (min-width:601px) and (max-height:460px) {
+  .battle-arena.battle-hud .district-preview { font-size: 9px; line-height: 10px; }
+  .battle-arena.battle-hud .preview-caption { font-size: 8px; line-height: 8px; }
+}

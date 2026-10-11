@@ -1,0 +1,236 @@
+{
+  "zoom": 0.8899999856948853,
+  "checks": [
+    {
+      "actionFits": true,
+      "crowdedCards": [
+        {
+          "cardHeight": 55,
+          "count": 12,
+          "height": 56,
+          "scrollable": "true"
+        },
+        {
+          "cardHeight": 55,
+          "count": 12,
+          "height": 56,
+          "scrollable": "true"
+        }
+      ],
+      "documentOverflow": false,
+      "forecastOverlapsRule": false,
+      "hubBackgrounds": [
+        "rgba(0, 0, 0, 0)",
+        "rgba(0, 0, 0, 0)",
+        "rgba(0, 0, 0, 0)"
+      ],
+      "hubCenterOffsets": [
+        0,
+        0,
+        0.00000762939453125
+      ],
+      "pirateStatus": "1/2 allies",
+      "selectedFits": true,
+      "viewport": [
+        320,
+        568
+      ]
+    },
+    {
+      "actionFits": true,
+      "crowdedCards": [
+        {
+          "cardHeight": 55,
+          "count": 12,
+          "height": 129,
+          "scrollable": "true"
+        },
+        {
+          "cardHeight": 55,
+          "count": 12,
+          "height": 129,
+          "scrollable": "true"
+        }
+      ],
+      "documentOverflow": false,
+      "forecastOverlapsRule": false,
+      "hubBackgrounds": [
+        "rgba(0, 0, 0, 0)",
+        "rgba(0, 0, 0, 0)",
+        "rgba(0, 0, 0, 0)"
+      ],
+      "hubCenterOffsets": [
+        0,
+        0.00000762939453125,
+        0.00002288818359375
+      ],
+      "pirateStatus": "1/2 allies",
+      "selectedFits": true,
+      "viewport": [
+        389,
+        843
+      ]
+    },
+    {
+      "actionFits": true,
+      "crowdedCards": [
+        {
+          "cardHeight": 55,
+          "count": 12,
+          "height": 198,
+          "scrollable": "true"
+        },
+        {
+          "cardHeight": 55,
+          "count": 12,
+          "height": 198,
+          "scrollable": "true"
+        }
+      ],
+      "documentOverflow": false,
+      "forecastOverlapsRule": false,
+      "hubBackgrounds": [
+        "rgba(0, 0, 0, 0)",
+        "rgba(0, 0, 0, 0)",
+        "rgba(0, 0, 0, 0)"
+      ],
+      "hubCenterOffsets": [
+        9.5367431640625e-7,
+        0.00002288818359375,
+        0.00000762939453125
+      ],
+      "pirateStatus": "1/2 allies",
+      "selectedFits": true,
+      "viewport": [
+        768,
+        1023
+      ]
+    },
+    {
+      "actionFits": true,
+      "crowdedCards": [
+        {
+          "cardHeight": 55,
+          "count": 12,
+          "height": 77,
+          "scrollable": "true"
+        },
+        {
+          "cardHeight": 55,
+          "count": 12,
+          "height": 77,
+          "scrollable": "true"
+        }
+      ],
+      "documentOverflow": false,
+      "forecastOverlapsRule": false,
+      "hubBackgrounds": [
+        "rgba(0, 0, 0, 0)",
+        "rgba(0, 0, 0, 0)",
+        "rgba(0, 0, 0, 0)"
+      ],
+      "hubCenterOffsets": [
+        0.00000762939453125,
+        0,
+        0.00006103515625
+      ],
+      "pirateStatus": "1/2 allies",
+      "selectedFits": true,
+      "viewport": [
+        1023,
+        768
+      ]
+    },
+    {
+      "actionFits": true,
+      "crowdedCards": [
+        {
+          "cardHeight": 55,
+          "count": 12,
+          "height": 131,
+          "scrollable": "true"
+        },
+        {
+          "cardHeight": 55,
+          "count": 12,
+          "height": 131,
+          "scrollable": "true"
+        }
+      ],
+      "documentOverflow": false,
+      "forecastOverlapsRule": false,
+      "hubBackgrounds": [
+        "rgba(0, 0, 0, 0)",
+        "rgba(0, 0, 0, 0)",
+        "rgba(0, 0, 0, 0)"
+      ],
+      "hubCenterOffsets": [
+        0.00000762939453125,
+        0,
+        0.0000152587890625
+      ],
+      "pirateStatus": "1/2 allies",
+      "selectedFits": true,
+      "viewport": [
+        1440,
+        900
+      ]
+    },
+    {
+      "actionFits": true,
+      "crowdedCards": [
+        {
+          "cardHeight": 55,
+          "count": 12,
+          "height": 55,
+          "scrollable": "true"
+        },
+        {
+          "cardHeight": 55,
+          "count": 12,
+          "height": 55,
+          "scrollable": "true"
+        }
+      ],
+      "documentOverflow": false,
+      "forecastOverlapsRule": false,
+      "hubBackgrounds": [
+        "rgba(0, 0, 0, 0)",
+        "rgba(0, 0, 0, 0)",
+        "rgba(0, 0, 0, 0)"
+      ],
+      "hubCenterOffsets": [
+        0,
+        0.00000762939453125,
+        0.00000762939453125
+      ],
+      "pirateStatus": "1/2 allies",
+      "selectedFits": true,
+      "viewport": [
+        843,
+        389
+      ]
+    }
+  ],
+  "stablePhoneFieldBefore": {
+    "bottom": 590.9234390258789,
+    "height": 506.96978759765625,
+    "left": 0,
+    "right": 389.88763427734375,
+    "top": 83.95365142822266,
+    "width": 389.88763427734375,
+    "x": 0,
+    "y": 83.95365142822266
+  },
+  "stablePhoneFieldAfter": {
+    "bottom": 590.9234390258789,
+    "height": 506.96978759765625,
+    "left": 0,
+    "right": 389.88763427734375,
+    "top": 83.95365142822266,
+    "width": 389.88763427734375,
+    "x": 0,
+    "y": 83.95365142822266
+  },
+  "selectionChangesField": false
+}

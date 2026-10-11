@@ -1,0 +1,237 @@
+[
+  {
+    "lanes": [
+      {
+        "centerOffsets": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "columns": "114.8px",
+        "location": "bodega",
+        "previewInStatusRow": true,
+        "previewOverlaps": false
+      },
+      {
+        "centerOffsets": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "columns": "114.8px",
+        "location": "pirate-radio",
+        "previewInStatusRow": true,
+        "previewOverlaps": false
+      },
+      {
+        "centerOffsets": [
+          0,
+          0,
+          0,
+          0,
+          -0.01
+        ],
+        "columns": "114.817px",
+        "location": "construction-site",
+        "previewInStatusRow": true,
+        "previewOverlaps": false
+      }
+    ],
+    "size": [
+      389,
+      842
+    ]
+  },
+  {
+    "lanes": [
+      {
+        "centerOffsets": [
+          0,
+          0,
+          0,
+          0,
+          -0.01
+        ],
+        "columns": "180.442px",
+        "location": "bodega",
+        "previewInStatusRow": true,
+        "previewOverlaps": false
+      },
+      {
+        "centerOffsets": [
+          0,
+          0,
+          0,
+          0,
+          -0.01
+        ],
+        "columns": "180.442px",
+        "location": "pirate-radio",
+        "previewInStatusRow": true,
+        "previewOverlaps": false
+      },
+      {
+        "centerOffsets": [
+          0,
+          0,
+          0,
+          0,
+          -0.01
+        ],
+        "columns": "180.442px",
+        "location": "construction-site",
+        "previewInStatusRow": true,
+        "previewOverlaps": false
+      }
+    ],
+    "size": [
+      600,
+      900
+    ]
+  },
+  {
+    "lanes": [
+      {
+        "centerOffsets": [
+          0,
+          0,
+          0,
+          0,
+          -0.01
+        ],
+        "columns": "163.378px",
+        "location": "bodega",
+        "previewInStatusRow": true,
+        "previewOverlaps": false
+      },
+      {
+        "centerOffsets": [
+          0,
+          0,
+          0,
+          0,
+          -0.01
+        ],
+        "columns": "163.378px",
+        "location": "pirate-radio",
+        "previewInStatusRow": true,
+        "previewOverlaps": false
+      },
+      {
+        "centerOffsets": [
+          0,
+          0,
+          0,
+          0,
+          -0.01
+        ],
+        "columns": "163.378px",
+        "location": "construction-site",
+        "previewInStatusRow": true,
+        "previewOverlaps": false
+      }
+    ],
+    "size": [
+      700,
+      500
+    ]
+  },
+  {
+    "lanes": [
+      {
+        "centerOffsets": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "columns": "312.026px",
+        "location": "bodega",
+        "previewInStatusRow": true,
+        "previewOverlaps": false
+      },
+      {
+        "centerOffsets": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "columns": "312.026px",
+        "location": "pirate-radio",
+        "previewInStatusRow": true,
+        "previewOverlaps": false
+      },
+      {
+        "centerOffsets": [
+          0,
+          0,
+          0,
+          0,
+          -0.01
+        ],
+        "columns": "312.044px",
+        "location": "construction-site",
+        "previewInStatusRow": true,
+        "previewOverlaps": false
+      }
+    ],
+    "size": [
+      1023,
+      768
+    ]
+  },
+  {
+    "lanes": [
+      {
+        "centerOffsets": [
+          0,
+          0,
+          0,
+          0,
+          -0.01
+        ],
+        "columns": "424.579px",
+        "location": "bodega",
+        "previewInStatusRow": true,
+        "previewOverlaps": false
+      },
+      {
+        "centerOffsets": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "columns": "424.596px",
+        "location": "pirate-radio",
+        "previewInStatusRow": true,
+        "previewOverlaps": false
+      },
+      {
+        "centerOffsets": [
+          0,
+          0,
+          0,
+          0,
+          -0.01
+        ],
+        "columns": "424.579px",
+        "location": "construction-site",
+        "previewInStatusRow": true,
+        "previewOverlaps": false
+      }
+    ],
+    "size": [
+      1440,
+      900
+    ]
+  }
+]

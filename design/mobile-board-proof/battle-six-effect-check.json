@@ -1,0 +1,27 @@
+{
+  "ambience": [
+    {
+      "active": "false",
+      "id": "bodega",
+      "state": "paused"
+    },
+    {
+      "active": "false",
+      "id": "pirate-radio",
+      "state": "paused"
+    },
+    {
+      "active": "false",
+      "id": "construction-site",
+      "state": "paused"
+    }
+  ],
+  "caption": "Snow BunnyCold Shoulder",
+  "delta": [
+    {
+      "animation": "0.65s",
+      "font": "23px",
+      "text": "−4Frozen"
+    }
+  ]
+}

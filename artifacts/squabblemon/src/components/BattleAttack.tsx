@@ -9,6 +9,7 @@ import { getCardWallpaper } from '../lib/cardFinish';
 import type { PresentationEffect } from './PlayLoop';
 
 import { DrFadeEntrance } from './DrFadeArt';
+import './battle-attack-polish.css';
 
 type Point = { x: number; y: number; width: number; height: number };
 
@@ -165,7 +166,7 @@ export function BattleAttack({ card, effect, impact, replaying = false, audioEna
   const showPortrait = (effect.type === 'ability' && (effect.chain?.total ?? 0) < 2) || intensity === 'squabble';
   const chainFrom = effect.chain?.fromId && effect.chain.fromId !== sourceId ? effect.chain.fromId : null;
   const hidden = { display: 'none' } as const;
-  return <div ref={root} className={`battle-choreography kind-${effect.kind} intensity-${intensity} ${impact ? 'is-impact' : 'is-winding-up'} ${replaying ? 'is-replay' : ''}`}
+  return <div ref={root} className={`battle-choreography battle-choreography--legible kind-${effect.kind} intensity-${intensity} ${impact ? 'is-impact' : 'is-winding-up'} ${replaying ? 'is-replay' : ''}`}
     data-mary-landing={effect.source?.after?.maryElephant && !effect.source?.before ? true : undefined}
     data-testid="character-attack" data-character={card.id} data-owner={effect.owner} data-impact={impact}
     style={{ '--attack-color': cardEntryAccent(card) } as React.CSSProperties} aria-hidden="true">
@@ -176,7 +177,7 @@ export function BattleAttack({ card, effect, impact, replaying = false, audioEna
     {showPortrait && card.id !== 'dr-fade' && <div className="attack-caption">
       <img className="attack-caption__scene" src={getCardWallpaper(card.type)} alt="" />
       <img className="attack-caption__fighter" src={getCardImage(effect.source?.after?.maryElephant ? 'ms-mary-mack-elephant' : card.id)} alt="" />
-      <div><span>{intensity === 'squabble' ? 'SQUABBLE · DOUBLE HANDS' : card.name}</span>
+      <div className="attack-caption__copy"><span>{intensity === 'squabble' ? 'SQUABBLE · DOUBLE HANDS' : card.name}</span>
         <strong>{effect.abilityMetadata?.upgradeName ?? card.ability}</strong></div>
     </div>}
     <svg className="attack-paths" width="100%" height="100%">
