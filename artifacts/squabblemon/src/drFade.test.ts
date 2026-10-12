@@ -23,9 +23,9 @@ function fixture(owner: Owner = 'player') {
 }
 const power = (m: Match, id: string) => getEffectiveCardPower(m.boards.flat().find(c => c.instanceId === id)!);
 
-test('Dr. Fade is the guaranteed 4 Motion / 6 Hands Light Legendary with a valid upgrade path', () => {
+test('Dr. Fade is the guaranteed 3 Motion / 5 Hands Light Legendary with a valid upgrade path', () => {
   assert.equal(catalogCardById['dr-fade'].rarity,'Legendary');
-  assert.equal(cards.drfade.cost,4); assert.equal(cards.drfade.power,6); assert.equal(cards.drfade.type,'Light');
+  assert.equal(cards.drfade.cost,3); assert.equal(cards.drfade.power,5); assert.equal(cards.drfade.type,'Light');
   assert.ok(ROOKIE_FOUNDATION_IDS.includes('dr-fade'));
   assert.equal(ROOKIE_MENTOR_CORE_IDS.length,10);
   assert.ok(ROOKIE_MENTOR_CORE_IDS.slice(0,5).includes('dr-fade'));
@@ -57,17 +57,17 @@ for (const status of ['silenced','frozen'] as const) test(status+' Dr. Fade cann
 test('empty districts and hazard tokens cannot manufacture coaching value',()=>{
   const f=fixture(); const hazard={...f.ally,hazard:true};
   const resolved=playCard({...f.match,boards:[[],[hazard],[]]},'player',f.fade.instanceId,0);
-  assert.equal(power(resolved,f.fade.instanceId),6); assert.equal(power(resolved,hazard.instanceId),0);
+  assert.equal(power(resolved,f.fade.instanceId),5); assert.equal(power(resolved,hazard.instanceId),0);
 });
 test('SQUABBLE doubles only Dr. Fade base Hands; the ability remains +2 / -2',()=>{
   const f=fixture();const resolved=playCard(f.match,'player',f.fade.instanceId,0,true);
-  assert.equal(power(resolved,f.fade.instanceId),12);
+  assert.equal(power(resolved,f.fade.instanceId),10);
   assert.equal(power(resolved,f.enemy.instanceId),5);assert.equal(power(resolved,f.ally.instanceId),4);
 });
 test('all three upgrades add bounded effects to the actual successful targets',()=>{
   const f=fixture(); f.match.abilityUpgradeSnapshot=createAbilityUpgradeSnapshot(['drfade'],[],{player:{drfade:{xp:2800,level:8,moveTier:3}}});
   const resolved=playCard(f.match,'player',f.fade.instanceId,0);
-  assert.equal(power(resolved,f.fade.instanceId),7);assert.equal(power(resolved,f.enemy.instanceId),4);assert.equal(power(resolved,f.ally.instanceId),5);
+  assert.equal(power(resolved,f.fade.instanceId),6);assert.equal(power(resolved,f.enemy.instanceId),4);assert.equal(power(resolved,f.ally.instanceId),5);
 });
 test('every offered recruit preserves a legal tutorial win and the Dr. Fade SQUABBLE payoff',()=>{
   for(const recruit of ROOKIE_FOUNDATION_IDS.filter(id=>!ROOKIE_MENTOR_CORE_IDS.includes(id))){

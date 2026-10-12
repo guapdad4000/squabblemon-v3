@@ -278,10 +278,10 @@ for (const owner of ["player", "cpu"] as const) {
       source.instanceId,
       0,
     );
-    assert.equal(m[key], 2);
+    assert.equal(m[key], 1);
     m = { ...m, [key]: 0 };
     const next = end(m);
-    assert.equal(next[key], Math.max(0, Math.min(9, next.round) - 2));
+    assert.equal(next[key], Math.max(0, Math.min(9, next.round) - 1));
     assert(!kinds(next).includes("debt"));
   });
   test(`${owner}: pure bonds no longer scale the whole board from hand`, () => {
@@ -310,15 +310,15 @@ for (const owner of ["player", "cpu"] as const) {
       const setup = cast(m, id, owner);
       m = cast(setup.after, "inmate-informant", enemy).after;
       if (id === "stud") {
-        assert.equal(find(m, target)?.powerModifier, 10);
+        assert.equal(find(m, target)?.powerModifier, 11);
         assert.equal(find(m, target)?.lane, 1);
         assert.equal(find(m, setup.source)?.powerModifier, -3);
       }
       if (id === "lebron-james") {
         assert.equal(find(m, target)?.powerModifier, 10);
         assert.equal(
-          m.boards.flat().find((c) => c.cardId === "inmate-informant" && c.owner === enemy)?.powerModifier,
-          -3,
+          m.boards.flat().find((c) => c.cardId === "inmate-informant" && c.owner === enemy),
+          undefined, // Three-Hand revenge defeats this two-Hand attacker.
         );
         assert(!kinds(m).includes("revenge"));
       }
@@ -454,7 +454,7 @@ for (const owner of ["player", "cpu"] as const) {
         assert(!kinds(m).includes("cycle"));
       } else {
         const arrival = cast(m, "og", owner);
-        assert.equal(find(arrival.after, arrival.source)?.powerModifier, 2);
+        assert.equal(find(arrival.after, arrival.source)?.powerModifier, 4);
         assert.equal(
           arrival.after.creativeMarks?.find((x) => x.kind === "chill")?.amount,
           1,
@@ -469,10 +469,11 @@ for (const owner of ["player", "cpu"] as const) {
     m.boards = [[a, b], [], []];
     m = cast(m, "bblnice", owner).after;
     m = cast(m, "cognac", owner).after;
-    assert.equal(find(m, a)?.powerModifier, 2);
+    assert.equal(find(m, a)?.powerModifier, 3);
     assert.equal(find(m, b)?.powerModifier, 2);
     m = cast(m, "cognac", owner).after;
-    assert.equal(find(m, b)?.powerModifier, 2);
+    assert.equal(find(m, b)?.powerModifier, 5, "the second Cognac directly buffs the now-weakest ally");
+    assert.equal(find(m, a)?.powerModifier, 3, "Good Company does not echo again this round");
     m = cast(blank(), "hater", owner).after;
     const grown = cast(m, "youngbull", enemy);
     assert.equal(
@@ -488,7 +489,7 @@ for (const owner of ["player", "cpu"] as const) {
   });
   test(`${owner}: gardener, Torta, Nigerian Father, and Incel have bounded round payoffs`, () => {
     let m = blank();
-    const plant = unit("rastamon", owner, 0);
+    const plant = {...unit("rastamon", owner, 0),basePower:1};
     m.boards = [[plant], [], []];
     m = cast(m, "gardener", owner).after;
     assert(kinds(m).includes("seed"));
@@ -497,7 +498,7 @@ for (const owner of ["player", "cpu"] as const) {
       m.boards.flat().find((c) => c.cardId === "gardener")?.powerModifier,
       0,
     );
-    assert.equal(find(m, plant)?.powerModifier, 3, "Rastamon wins the tie for weakest Plant after Gardener's printed Hands increase");
+    assert.equal(find(m, plant)?.powerModifier, 4, "the fixed one-Hand Plant wins the weakest-target tie");
     assert(!kinds(m).includes("seed"));
     m = end(m);
     assert.equal(
@@ -507,7 +508,7 @@ for (const owner of ["player", "cpu"] as const) {
     );
     assert.equal(
       find(m, plant)?.powerModifier,
-      3,
+      4,
       "a harvested Seed cannot pay twice",
     );
     m = blank();
@@ -530,7 +531,7 @@ for (const owner of ["player", "cpu"] as const) {
     m = cast(m, "cognac", owner).after;
     m = end(end(m));
     assert(find(m, child)?.statuses.protected);
-    assert.equal(find(m, child)?.powerModifier, 5);
+    assert.equal(find(m, child)?.powerModifier, 6);
     const loner = cast(blank(), "incel", owner);
     m = end(end(end(loner.after)));
     assert.equal(find(m, loner.source)?.powerModifier, 4);
@@ -545,7 +546,7 @@ for (const owner of ["player", "cpu"] as const) {
     assert.equal(find(m, guest)?.lane, 0);
     assert(!kinds(m).includes("visit"));
     m = blank();
-    const regular = unit("cornball", owner, 0);
+    const regular = {...unit("cornball", owner, 0),basePower:1};
     m.boards = [[regular], [], []];
     m = cast(m, "ahki", owner).after;
     m = cast(m, "break", owner).after;
@@ -592,7 +593,7 @@ for (const owner of ["player", "cpu"] as const) {
     const mark = seed.after.creativeMarks?.find(x => x.kind === "seed");
     assert.equal(mark?.expires, m.round);
     m = end(json(seed.after));
-    assert.equal(find(m, seed.source)?.powerModifier, 3);
+    assert.equal(find(m, seed.source)?.powerModifier, 4);
     assert.equal(find(m, remotePlant)?.powerModifier, 0);
     assert(!kinds(m).includes("seed"));
   });
@@ -666,11 +667,11 @@ for (const owner of ["player", "cpu"] as const) {
     assert(kinds(m).includes("jobs"));
     m = cast(m, "break", owner, 0).after;
     assert(!kinds(m).includes("jobs"));
-    assert.equal(find(m, a)?.powerModifier, 2);
-    assert.equal(find(m, b)?.powerModifier, 3);
+    assert.equal(find(m, a)?.powerModifier, 1);
+    assert.equal(find(m, b)?.powerModifier, 2);
     assert.equal(m[owner === "player" ? "playerMotion" : "cpuMotion"], 8);
   });
-  test(`${owner}: Circuit Captain gives each distinct Electric worker +1, then +1 each once`, () => {
+  test(`${owner}: Circuit Captain gives each distinct Electric worker +1, then restores one Motion once`, () => {
     let m = cast(blank(), "circuitcaptain", owner).after;
     const first = cast(m, "wiretap", owner, 0);
     m = first.after;
@@ -691,10 +692,10 @@ for (const owner of ["player", "cpu"] as const) {
       1,
     );
     m = secondPlayed;
-    assert.equal(find(m, first.source)?.powerModifier, 2, "first worker totals +2");
-    assert.equal(find(m, secondSource)?.powerModifier, 2, "second worker totals +2");
+    assert.equal(find(m, first.source)?.powerModifier, 1, "first worker totals +1");
+    assert.equal(find(m, secondSource)?.powerModifier, 1, "second worker totals +1");
     assert(!kinds(m).includes("jobs"));
-    assert.equal(m[motionKey], 7, "the completion refund and loan apply after the worker's 3 Motion cost");
+    assert.equal(m[motionKey], 6, "the district discount, one-Motion loan and completion refund apply");
 
     // The completed job is consumed across serialization; later Electric plays
     // and movement cannot re-award Hands or refund Motion.
@@ -702,14 +703,14 @@ for (const owner of ["player", "cpu"] as const) {
     const third = cast(m, "stockz", owner, 2);
     m = third.after;
     assert.equal(find(m, third.source)?.powerModifier, 0);
-    assert.equal(find(m, first.source)?.powerModifier, 2);
-    assert.equal(find(m, secondSource)?.powerModifier, 2);
+    assert.equal(find(m, first.source)?.powerModifier, 1);
+    assert.equal(find(m, secondSource)?.powerModifier, 1);
     assert.equal(m[owner === "player" ? "playerMotion" : "cpuMotion"], 6);
 
     m = cast(json(m), "break", owner, 0).after;
     assert(!kinds(m).includes("jobs"));
-    assert.equal(find(m, first.source)?.powerModifier, 2);
-    assert.equal(find(m, secondSource)?.powerModifier, 2);
+    assert.equal(find(m, first.source)?.powerModifier, 1);
+    assert.equal(find(m, secondSource)?.powerModifier, 1);
     assert.equal(m[owner === "player" ? "playerMotion" : "cpuMotion"], 7);
   });
   test(`${owner}: Coach retries a failed eligible entrance once, without replay loops`, () => {
@@ -754,7 +755,7 @@ for (const owner of ["player", "cpu"] as const) {
     assert.equal(find(entrant.after, entrant.source)?.lane, 1);
     assert(!kinds(entrant.after).includes("route"));
     let m = blank();
-    const air = unit("roaster", owner, 0);
+    const air = {...unit("roaster", owner, 0),basePower:1};
     m.boards = [[air], [], []];
     m = cast(m, "slipstream", owner).after;
     m = cast(m, "break", owner).after;
@@ -818,7 +819,7 @@ for (const owner of ["player", "cpu"] as const) {
     assert.equal(find(m, h.source)?.powerModifier, 1);
     const seed = cast({ ...blank(), round: 6 }, "gardener", owner);
     m = end(seed.after);
-    assert.equal(find(m, seed.source)?.powerModifier, 3);
+    assert.equal(find(m, seed.source)?.powerModifier, 4);
   });
   test(`${owner}: trimming bonus Hands never becomes damage recovery credit`, () => {
     let m = blank();
@@ -905,7 +906,7 @@ for (const owner of ["player", "cpu"] as const) {
   test(`${owner}: Coach fallback does not open an unsafe retry`, () => {
     let m = blank(); const client = unit("cornball", owner, 0); m.boards[0] = [client];
     m = cast(m, "cornercoach", owner).after;
-    assert.equal(find(m, client)?.powerModifier, 1);
+    assert.equal(find(m, client)?.powerModifier, 3);
     assert(!kinds(m).includes("coach"));
   });
   test(`${owner}: Dance Captain pays a different dancer following the first destination once`, () => {
@@ -977,7 +978,7 @@ for (const owner of ["player", "cpu"] as const) {
     let m = blank();
     const captain = unit("dancecaptain", owner, 2),
       dancer = unit("break", owner, 0),
-      visitor = unit("cornball", owner, 0),
+      visitor = {...unit("cornball", owner, 0),basePower:1},
       local = unit("cornball", owner, 1, 1);
     m.boards = [[dancer, visitor], [local], [captain]];
     m = cast(m, "bboy", owner).after;
@@ -990,7 +991,7 @@ for (const owner of ["player", "cpu"] as const) {
   });
   test(`${owner}: audit - Ahki pays departure while retaining the return reward`, () => {
     let m = blank();
-    const guest = unit("cornball", owner, 0);
+    const guest = {...unit("cornball", owner, 0),basePower:1};
     m.boards = [[guest], [], []];
     m = cast(m, "ahki", owner).after;
     m = cast(m, "break", owner).after;

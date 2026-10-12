@@ -4,7 +4,7 @@ import { createMatch, createCardInstance, playCard } from './gameEngine';
 import { battleChanges } from './battleChoreography';
 import { buildReplayFrame } from './components/PlayLoop';
 
-function setup(attacker = 'roaster', power = 2) {
+function setup(attacker = 'roaster', power = 1) {
   const source = createCardInstance(attacker, 'player', 'destruction', 0);
   const target = { ...createCardInstance('hooper', 'cpu', 'destruction', 1), lane: 0 as const, basePower: power };
   const match = createMatch('block', 'combo');
@@ -37,6 +37,6 @@ test('covered blocks lethal damage; nonlethal damage leaves the card alive', () 
     const result = playCard(match, 'player', source.instanceId, 0);
     const survivor = result.boards[0].find(c => c.instanceId === target.instanceId)!;
     assert.ok(survivor);
-    assert.equal(survivor.powerModifier, protectedTarget ? 0 : -2);
+    assert.equal(survivor.powerModifier, protectedTarget ? 0 : -1);
   }
 });

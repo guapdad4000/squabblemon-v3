@@ -22,13 +22,13 @@ function shield(m: Match, target: CardInstance) {
     startsAtRound: 1, expiresAtRound: 7, expiration: 'match-complete' });
 }
 
-test('Epic leaders retain their costs, IDs and kits; v52 Ashlee is a 5/2 Plant leader', () => {
+test('Epic leaders retain their costs, IDs and kits; v59 Ashlee is a 5/2 Plant leader', () => {
   for (const id of ['piratedj', 'promoter', 'gamer']) {
     assert.equal(cards[id].cost, 3);
     assert.equal(catalogCardById[cards[id].id].rarity, 'Epic');
     assert.match(cards[id].effect, /On Reveal:/); assert.match(cards[id].effect, /Ongoing:/);
   }
-  assert.equal(cards.ashlee.type, 'Plant'); assert.match(cards.ashlee.effect, /Plant allies in all three/);
+  assert.equal(cards.ashlee.type, 'Plant'); assert.match(cards.ashlee.effect, /Plant allies occupy at least two districts/);
   assert.equal(cards.ashlee.cost, 5); assert.equal(cards.ashlee.power, 2);
   assert.equal(catalogCardById.ashlee.power, 2, 'the collectible uses the same v52 base Hands budget');
   assert.equal(cards.buddy.cost, 3); assert.equal(cards.folks.cost, 4);
@@ -46,7 +46,7 @@ for (const owner of ['player', 'cpu'] as const) test('DJ rewards exactly the sec
   assert.equal(second.after[owner === 'player' ? 'playerMotion' : 'cpuMotion'], 7);
   assert.equal(find(second.after, second.source).powerModifier, 2, 'DJ bonus stacks with Streamer cheap-play bonus');
   const third = cast(second.after, 'techbro', owner, 2, 3);
-  assert.equal(third.after[owner === 'player' ? 'playerMotion' : 'cpuMotion'], 9 - cards.techbro.cost + 2);
+  assert.equal(third.after[owner === 'player' ? 'playerMotion' : 'cpuMotion'], 9 - cards.techbro.cost + 1);
   assert.equal(third.after.electricPlays?.[owner]?.count, 3);
   assert.equal(third.after.leaderRounds?.[owner]?.piratedj, 3);
 });
@@ -179,7 +179,7 @@ for (const owner of ['player', 'cpu'] as const) test('Stewards enhance existing 
   assert.deepEqual(stewards.map(c => c.id), ['steward', 'steward-blue']);
   assert(stewards.every(c => c.basePower === 2));
 });
-test('Ashlee rewards a full Plant spread; Air cards and Guyana do not fill missing Plant districts', () => {
+test('Ashlee rewards two Plant districts and scales to three; Air cards and Guyana do not receive Plant rewards', () => {
   for (const full of [true, false]) {
     const m = blank(), local = unit('promoter', 'player', 0, 1);
     const plant = unit('gardener', 'player', 1, 2, 1);
@@ -188,9 +188,9 @@ test('Ashlee rewards a full Plant spread; Air cards and Guyana do not fill missi
     const { after, source } = cast(m, 'ashlee');
     assert.equal(find(after, local).powerModifier, 1, 'original local crew buff stays');
     assert.equal(find(after, source).type, 'Plant');
-    assert.equal(find(after, source).powerModifier, full ? 1 : 0);
-    assert.equal(find(after, plant).powerModifier, full ? 1 : 0);
-    assert.equal(find(after, remote).powerModifier, full ? 1 : 0);
+    assert.equal(find(after, source).powerModifier, 2);
+    assert.equal(find(after, plant).powerModifier, 2);
+    assert.equal(find(after, remote).powerModifier, full ? 2 : 0);
     const guyana = after.boards.flat().find(c => c.cardId === 'guyana')!;
     assert.equal(guyana.type, 'Earth'); assert.equal(guyana.basePower, 4); assert(guyana.statuses.uncounterable);
   }

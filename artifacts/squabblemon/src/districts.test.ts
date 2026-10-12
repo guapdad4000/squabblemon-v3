@@ -76,7 +76,7 @@ test('The Trap rewards actual movement once per card, never direct deployment or
 
 test('Waff-L House freezes comeback eligibility before either side acts and resets first plays each round', () => {
   let m = initial('waff-l-house', 'time-square', 'magic-city');
-  m.boards[0] = [card('og', 'cpu', 99, 0)];
+  m.boards[0] = [{...card('og', 'cpu', 99, 0),basePower:20}];
   m = advance(m);
   assert.equal(m.districtRuntime!.trailing.player[0], true);
   assert.equal(m.districtRuntime!.trailing.cpu[0], false);
@@ -129,17 +129,17 @@ test('County Jail stops first-arrival self movement and pulls, with no movement-
 test('Penthouse changes once at round four and replay frames preserve both score rules', () => {
   let m = initial('penthouse', 'time-square', 'bodega');
   m.boards[0] = [card('cornball', 'player', 0, 0)];
-  assert.equal(getDistrictResults(m)[0].player, 4);
+  assert.equal(getDistrictResults(m)[0].player, 5);
   m = { ...m, round: 3 };
   m = advance(m);
-  assert.equal(getDistrictResults(m)[0].player, 2);
+  assert.equal(getDistrictResults(m)[0].player, 3);
   const boundary = m.effectLog.find(e => e.type === 'round-start')!;
-  assert.equal(getDistrictResults({ ...m, ...boundary.replay.before })[0].player, 4);
-  assert.equal(getDistrictResults({ ...m, ...boundary.replay.after })[0].player, 2);
+  assert.equal(getDistrictResults({ ...m, ...boundary.replay.before })[0].player, 5);
+  assert.equal(getDistrictResults({ ...m, ...boundary.replay.after })[0].player, 3);
   assert.match(m.effectLog.at(-1)!.note, /party starts/);
   m.boards[0].push(card('cornball', 'player', 1, 0));
-  assert.equal(getDistrictResults(m)[0].player, 4);
-  assert.equal(getDistrictResults(advance(m))[0].player, 4, 'gang bonus does not accumulate');
+  assert.equal(getDistrictResults(m)[0].player, 6);
+  assert.equal(getDistrictResults(advance(m))[0].player, 6, 'gang bonus does not accumulate');
 });
 
 test('Time Square adds a single reversible side bonus for three distinct types', () => {
@@ -148,9 +148,9 @@ test('Time Square adds a single reversible side bonus for three distinct types',
   const base = m.boards[0].reduce((n, c) => n + c.basePower, 0);
   assert.equal(getDistrictResults(m)[0].player, base + 3);
   m.boards[0].push(card('cornball', 'player', 3, 0));
-  assert.equal(getDistrictResults(m)[0].player, base + 4);
+  assert.equal(getDistrictResults(m)[0].player, base + 3 + card('cornball').basePower);
   m.boards[0] = m.boards[0].filter(c => c.cardId !== 'hooper');
-  assert.equal(getDistrictResults(m)[0].player, base + 1 - card('hooper').basePower, 'removing the third type removes the bonus');
+  assert.equal(getDistrictResults(m)[0].player, base + card('cornball').basePower - card('hooper').basePower, 'removing the third type removes the bonus');
 });
 
 test('Magic City rewards only the first play per side in rounds five and six', () => {
@@ -258,12 +258,14 @@ test('O-Block flips with occupancy; penalties stop at zero and frozen cards stay
   const m = initial('o-block', 'bodega', 'the-trap');
   const own = card('cornball', 'player', 0, 0), rival = card('hooper', 'cpu', 0, 0);
   m.boards[0] = [own];
-  assert.equal(getDistrictResults(m)[0].player, 3);
+  assert.equal(getDistrictResults(m)[0].player, own.basePower + 2);
   m.boards[0].push(rival);
-  assert.equal(getDistrictResults(m)[0].player, 1);
+  assert.equal(getDistrictResults(m)[0].player, own.basePower);
   m.boards[0].push(card('cornball', 'cpu', 1, 0));
-  assert.equal(getDistrictResults(m)[0].player, 0);
-  assert.equal(getDistrictResults(m)[0].cpu, rival.basePower + 1 + 4);
+  assert.equal(getDistrictResults(m)[0].player, Math.max(0,own.basePower-1));
+  m.boards[0][0] = {...own, basePower: 1};
+  assert.equal(getDistrictResults(m)[0].player, 0, 'the penalty floors at zero');
+  assert.equal(getDistrictResults(m)[0].cpu, rival.basePower + card('cornball').basePower + 4);
   m.boards[0] = [{ ...own, statuses: { ...own.statuses, frozen: true } }];
   assert.equal(getDistrictResults(m)[0].player, 0);
   assert.equal(own.powerModifier, 0);
@@ -425,15 +427,15 @@ test('Rooftop Garden grows both sides at each boundary through round six and rec
 test('Pawn Shop sacrifices the weakest other ally once per side per round', () => {
   let m=initial('pawn-shop','bodega','the-trap');const weak={...card('cornball','player',80,0),powerModifier:2};
   m.boards[0]=[weak,{...card('cornball','player',81,0),basePower:20},card('cornball','cpu',80,0)];
-  m=play(m,'cornball',0);assert(!m.boards[0].some(c=>c.instanceId===weak.instanceId));assert.equal(m.boards[0].at(-1)!.powerModifier,3);
+  m=play(m,'cornball',0);assert(!m.boards[0].some(c=>c.instanceId===weak.instanceId));assert.equal(m.boards[0].at(-1)!.powerModifier,weak.basePower+2);
   assert(m.effectLog.find(e=>e.note.startsWith('PAWN SHOP:'))!.targets.some(t=>t.cardInstanceId===weak.instanceId&&t.after===null));
   m=play(m,'cornball',0);assert.equal(m.boards[0].at(-1)!.powerModifier,0);
   assert.equal(play(initial('pawn-shop','bodega','the-trap'),'cornball',0).boards[0][0].powerModifier,0);
 });
 test('Pirate Radio scores empty neighboring lanes and switches off with a third ally',()=>{
  const m=initial('pirate-radio','underground-ring','mirror-arcade');m.boards[0]=[card('cornball','player',1,0),card('cornball','player',2,0)];
- assert.deepEqual(getDistrictResults(m).map(s=>s.player),[2,3,3]);assert.equal(getDistrictSharedBonus(m,'cpu',1),0);
- m.boards[0].push(card('cornball','player',3,0));assert.deepEqual(getDistrictResults(m).map(s=>s.player),[3,0,0]);
+ assert.deepEqual(getDistrictResults(m).map(s=>s.player),[4,3,3]);assert.equal(getDistrictSharedBonus(m,'cpu',1),0);
+ m.boards[0].push(card('cornball','player',3,0));assert.deepEqual(getDistrictResults(m).map(s=>s.player),[6,0,0]);
 });
 test('Blackout silences before reveal; moving in avoids Silence',()=>{
  let m=play(initial('blackout-block','bodega','the-trap'),'bikelife',0);assert.equal(m.boards[0][0].statuses.silenced,true);assert.equal(m.boards[0][0].powerModifier,0);assert.equal(m.boards[0][0].moved,false);

@@ -30,10 +30,10 @@ test('the Triple OG set ships as a complete, pullable catalog wave', () => {
   validateCardAbilityUpgrades();
   const expected: Record<string, [string, string, number, number]> = {
     'triple-og-blue': ['CLUE COOKY', 'Mythical', 4, 8],
-    'triple-og-red': ['RED PUNCH', 'Mythical', 4, 8],
+    'triple-og-red': ['RED PUNCH', 'Mythical', 4, 4],
     initiation: ['INITIATION', 'Legendary', 1, 0],
     'block-spinner': ['BLOCK SPINNER', 'Epic', 1, 3],
-    'look-out': ['LOOK OUT', 'Epic', 1, 3],
+    'look-out': ['LOOK OUT', 'Epic', 1, 1],
   };
   for (const [id, [name, rarity, cost, power]] of Object.entries(expected)) {
     const card = catalogCardById[id];
@@ -84,7 +84,7 @@ test('home-side Triple OG reveals resolve in story-scheduled, runtime-locked, an
       } else {
         boards[homeLane] = [unit('hooper', 'cpu', homeLane, 42)];
       }
-      let match: Match = { ...blank(), round: 4, playerMotion: 4, boards, playerHand: [source] };
+      let match: Match = { ...blank(), round: 4, playerMotion: source.cost, boards, playerHand: [source] };
       if (lockKind === 'scheduled') match.storyEncounter = {
         id: 'scheduled-lane-lock',
         enemy: { id: 'test', name: 'Test', portraitAssetId: 'test', deckId: 'block', cardIds: [], behaviorProfile: 'balanced' },
@@ -107,9 +107,9 @@ test('home-side Triple OG reveals resolve in story-scheduled, runtime-locked, an
         assert.equal(getEffectiveCardPower(after.boards[homeLane].find(card => card.cardId === 'hooper')!), cards.hooper.power - 1,
           'the friendly donor pays exactly 1 Hand');
       } else {
-        assert.equal(getEffectiveCardPower(find(after, 'triple-og-red')), cards['triple-og-red'].power + 1,
+        assert.equal(getEffectiveCardPower(find(after, 'triple-og-red')), cards['triple-og-red'].power + 2,
           `RED PUNCH still gains for its reveal in its ${lockKind}-locked home`);
-        assert.equal(getEffectiveCardPower(after.boards[homeLane].find(card => card.cardId === 'hooper')!), cards.hooper.power - 1);
+        assert.equal(getEffectiveCardPower(after.boards[homeLane].find(card => card.cardId === 'hooper')!), cards.hooper.power - 2);
       }
       const ordinary = createCardInstance('hooper', 'player', 'ordinary-locked', 0);
       const blocked = { ...match, playerHand: [ordinary] };
@@ -155,7 +155,7 @@ test('home-side OGs waive only Corrupt Church Motion while preserving other cost
     return {
       source,
       match: {
-        ...blank(), round: 4, playerMotion: 4, playerHand: [source],
+        ...blank(), round: 4, playerMotion: source.cost, playerHand: [source],
         districtSnapshot: { ...createDistrictSnapshot(`og-cost-${cardId}-${homeEffect}`),
           locations: ids.map(location) as unknown as DistrictSnapshot['locations'] },
         districtRuntime: districtRuntime(),
@@ -173,7 +173,7 @@ test('home-side OGs waive only Corrupt Church Motion while preserving other cost
     assert(canAffordSelection(match, 'player', source.instanceId, homeLane),
       'home lane ignores its lock and location tithe at the printed Motion cost');
     const after = playTurnCard(match, 'player', source.instanceId, homeLane);
-    assert.equal(after.playerMotion, 4 - cards[cardId].cost, 'the home-side OG pays its printed Motion');
+    assert.equal(after.playerMotion, 0, 'the home-side OG pays its printed Motion');
 
     const unlocked = { ...match, storyRuntime: undefined };
     for (const regularId of ['hooper', 'blueside1', 'redside2']) {
@@ -261,8 +261,8 @@ test('RED PUNCH taxes his own district and moves anyone he cannot touch', () => 
   m.boards[2][0].statuses.protected = true;
   const after = cast(m, 'triple-og-red', 2);
   const punch = find(after, 'triple-og-red');
-  assert.equal(getEffectiveCardPower(punch), cards['triple-og-red'].power + 2, 'gained one Hand per card actually weakened');
-  assert.equal(getEffectiveCardPower(after.boards.flat().find(c => c.cardId === 'oink')!), cards.oink.power - 1);
+  assert.equal(getEffectiveCardPower(punch), cards['triple-og-red'].power + 4, 'collects the actual two-Hand losses from both enemies');
+  assert.equal(getEffectiveCardPower(after.boards.flat().find(c => c.cardId === 'oink')!), cards.oink.power - 2);
   const respected = after.boards.flat().find(c => c.cardId === 'hooper')!;
   assert.notEqual(respected.lane, 2, 'the protected ally was moved out of respect');
   assert.equal(getEffectiveCardPower(respected), cards.hooper.power, 'the moved ally kept every Hand');
@@ -274,8 +274,8 @@ test('a silenced Triple OG still answers roll call', () => {
   const source = createCardInstance('triple-og-red', 'player', 'cast', 7);
   source.statuses.silenced = true;
   const after = playTurnCard({ ...m, phase: 'player', playerHand: [source] }, 'player', source.instanceId, 2);
-  assert.equal(getEffectiveCardPower(find(after, 'triple-og-red')), cards['triple-og-red'].power + 1);
-  assert.equal(getEffectiveCardPower(after.boards.flat().find(c => c.cardId === 'oink')!), cards.oink.power - 1);
+  assert.equal(getEffectiveCardPower(find(after, 'triple-og-red')), cards['triple-og-red'].power + 2);
+  assert.equal(getEffectiveCardPower(after.boards.flat().find(c => c.cardId === 'oink')!), cards.oink.power - 2);
 });
 
 test('INITIATION puts the next character on with the set already in the district', () => {
@@ -335,8 +335,8 @@ test('Roll Call removes a 1-Hand ally instead of leaving it at zero, and replays
   const after = cast(m, 'triple-og-red', 2);
   assert.equal(after.boards.flat().some(c => c.cardId === 'cornball'), false,
     'a 1-Hand ally that pays roll call leaves the board like any other defeated card');
-  assert.equal(getEffectiveCardPower(find(after, 'triple-og-red')), cards['triple-og-red'].power + 2, 'both the lethal ally payment and enemy payment count');
-  assert.equal(getEffectiveCardPower(find(after, 'oink')), cards.oink.power - 1);
+  assert.equal(getEffectiveCardPower(find(after, 'triple-og-red')), cards['triple-og-red'].power + 3, 'one lethal ally Hand and two enemy Hands count');
+  assert.equal(getEffectiveCardPower(find(after, 'oink')), cards.oink.power - 2);
   const frames = after.effectLog.filter(entry => entry.replay);
   assert(frames.length >= 2, 'the lethal payment and roll call have replay frames');
   for (let i = 1; i < frames.length; i += 1) {

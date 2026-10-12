@@ -184,7 +184,7 @@ for (const owner of ['player', 'cpu'] as const) {
     const baby = cast(m, 'crosswind', owner);
     assert.equal(find(baby.after, foe).statuses.weakened, true);
     assert.notEqual(find(baby.after, ally).lane, 0);
-    assert.equal(find(baby.after, ally).powerModifier, 1);
+    assert.equal(find(baby.after, ally).powerModifier, 2);
     assert.equal(find(cast(m, 'monsoonanchor', owner).after, foe).statuses.weakened, true);
   });
   test(`Baby rewards only a successful ally move and leaves missing or blocked passengers unchanged: ${owner}`, () => {
@@ -192,7 +192,7 @@ for (const owner of ['player', 'cpu'] as const) {
     const m = blank(); m.boards[0] = [ally];
     const successful = cast(m, 'crosswind', owner);
     assert.notEqual(find(successful.after, ally).lane, 0);
-    assert.equal(find(successful.after, ally).powerModifier, 1);
+    assert.equal(find(successful.after, ally).powerModifier, 2);
 
     const blockedAlly = unit('cornball', owner, 0, 42);
     blockedAlly.statuses.locked = true;

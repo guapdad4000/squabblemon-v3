@@ -17,7 +17,7 @@ test('Compound starter invests in growth cards without restricted rivalry cards'
 });
 
 for (const owner of ['player','cpu'] as const) for (const tier of [0,1,2,3]) {
- test('Combo fits Streamer, Techbro and Plug into six Motion and retains the loan: '+owner+' tier '+tier, () => {
+ test('Combo fits Streamer, Techbro and Plug into six Motion and spends the loan: '+owner+' tier '+tier, () => {
   const ids=['streamer','techbro','plug'];
   let m: Match={...createMatch('combo','block'),round:3,boards:[[],[],[]],playerMotion:6,cpuMotion:6,playerHand:[],cpuHand:[],
     abilityUpgradeSnapshot:createAbilityUpgradeSnapshot(ids,ids,{[owner]:Object.fromEntries(ids.map(id=>[id,{xp:tier?4500:0,level:tier?10:1,moveTier:tier}]))})};
@@ -26,7 +26,7 @@ for (const owner of ['player','cpu'] as const) for (const tier of [0,1,2,3]) {
   for (const c of instances) {
     m=playTurnCard({...m,phase:owner==='player'?'player':'cpu-reveal'},owner,c.instanceId,2);
   }
-  assert.equal(owner==='player'?m.playerMotion:m.cpuMotion,2);
+  assert.equal(owner==='player'?m.playerMotion:m.cpuMotion,0);
   assert.equal(m.boards[2].filter(c=>c.owner===owner).length,3);
   const tech=m.boards[2].find(c=>c.cardId==='techbro')!;
   assert.equal(tech.powerModifier,tier,'loan earns only the existing training bonus');
@@ -35,7 +35,7 @@ for (const owner of ['player','cpu'] as const) for (const tier of [0,1,2,3]) {
 }
 test('Combo budget buffs preserve costs and printed Hands outside the two selected values',()=>{
  assert.equal(cards.techbro.cost,3);
- assert.equal(cards.techbro.power,4);
+ assert.equal(cards.techbro.power,5);
  assert.equal(cards.streamer.cost,2);
  assert.equal(cards.streamer.power,3);
 });

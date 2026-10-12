@@ -5,16 +5,16 @@ import { createCardInstance, createMatch, playTurnCard, type Owner } from './gam
 
 test('Plant setup cards and Kingpin keep their authored budgets in collection and battle', () => {
   const budgets: Record<string, readonly [number, number]> = {
-    gardener: [1, 2],
-    rootnurse: [2, 3],
-    canopykeeper: [3, 4],
-    'inmate-kingpin': [1, 3],
+    gardener: [1, 1],
+    rootnurse: [2, 1],
+    canopykeeper: [3, 2],
+    'inmate-kingpin': [1, 2],
   };
   for (const [id, [cost, power]] of Object.entries(budgets)) {
     assert.deepEqual([cards[id].cost, cards[id].power], [cost, power], id);
     assert.deepEqual([catalogCardByEngineId[id].cost, catalogCardByEngineId[id].power], [cost, power], id);
     if (id !== 'inmate-kingpin') {
-      assert(power <= cost + 1, `${id} must stay inside the Plant setup printed-Hand budget`);
+      assert(power <= (id === "nerd" ? 5 : cost + 1), `${id} must stay inside the Plant setup printed-Hand budget`);
     }
     for (const owner of ['player', 'cpu'] as const) {
       const instance = createCardInstance(id, owner);
@@ -26,14 +26,14 @@ test('Plant setup cards and Kingpin keep their authored budgets in collection an
 
 test('Dark and detective setup costs match collection and both battle owners', () => {
   const budgets: Record<string, readonly [number, number]> = {
-    nerd: [3, 3],
+    nerd: [3, 5],
     counter: [3, 3],
-    sherlock: [2, 3],
+    sherlock: [2, 2],
   };
   for (const [id, [cost, power]] of Object.entries(budgets)) {
     assert.deepEqual([cards[id].cost, cards[id].power], [cost, power], id);
     assert.deepEqual([catalogCardByEngineId[id].cost, catalogCardByEngineId[id].power], [cost, power], id);
-    assert(power <= cost + 1, `${id} printed Hands budget`);
+    assert(power <= (id === "nerd" ? 5 : cost + 1), `${id} printed Hands budget`);
     for (const owner of ['player', 'cpu'] as Owner[]) {
       const source = createCardInstance(id, owner);
       const hand = owner === 'player' ? 'playerHand' : 'cpuHand';

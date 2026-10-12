@@ -90,6 +90,8 @@ export function musicReveal(m: Match, s: CardInstance, t: MusicTools, echoed = f
       m = t.returnAlly(m, s, target);
       succeeded = (s.owner === 'player' ? m.playerHand : m.cpuHand).some(c => c.instanceId === target.instanceId);
       if (succeeded) {
+        const handKey = s.owner === 'player' ? 'playerHand' : 'cpuHand';
+        m = { ...m, [handKey]: m[handKey].map(c => c.instanceId === target.instanceId ? { ...c, powerModifier: c.powerModifier + 2 } : c) };
         m = { ...m, discountTokens: m.discountTokens.map(x => x.createdOrder >= oldOrder && x.targetInstanceId === target.instanceId ? { ...x, expiresAfterRound: m.round + 1 } : x) };
         targets.push(target.instanceId);
       } else m = remove(m, ledger(m, s, 'spinback')!.id);
@@ -141,7 +143,7 @@ export function musicReveal(m: Match, s: CardInstance, t: MusicTools, echoed = f
       }
       for (const lane of lanes.filter(x => x !== s.lane)) {
         const target = sorted(musical(m, s).filter(c => c.lane === lane), t)[0];
-        if (target) { m = buff(m, target.instanceId, 3, t); targets.push(target.instanceId); succeeded = true; }
+        if (target) { m = buff(m, target.instanceId, 4, t); targets.push(target.instanceId); succeeded = true; }
       }
       if (!succeeded) m = remove(m, ledger(m, s, 'torch')!.id);
     }
@@ -215,9 +217,9 @@ export function musicResolved(before: Match, m: Match, source: CardInstance, t: 
     if (!target) continue;
     const start = m;
     m = spend(m, rapper, kit, { usedRound: m.round });
-    if (local) m = t.hit(m, rapper, target, -2, 'Sixteen Bars'); else m = buff(m, target.instanceId, 2, t);
+    if (local) m = t.hit(m, rapper, target, -3, 'Sixteen Bars'); else m = buff(m, target.instanceId, 3, t);
     if (!local || damaged(start, m, target, t)) m = t.train(m, rapper.instanceId);
-    m = t.event(start, m, rapper, [target.instanceId], local ? 'Sixteen Bars: local diss attempted (one per round).' : 'Sixteen Bars: another stage earned +2 Hands (one per round).');
+    m = t.event(start, m, rapper, [target.instanceId], local ? 'Sixteen Bars: local diss attempted (one per round).' : 'Sixteen Bars: another stage earned +3 Hands (one per round).');
   }
   return musicAfterAction(before, m, t);
 }
@@ -243,10 +245,10 @@ export function musicAfterPlay(before: Match, m: Match, id: string, t: MusicTool
         if (m[key] > old) m = t.train(m, manager.instanceId);
         m = t.event(start, m, manager, [id], 'Read the Contract: the blocked performance refunded 1 Motion.');
       } else if (find(m, id)) {
-        const old = find(m, id)!.statuses.protected;
         m = t.protect(m, manager, id);
-        if (!old && find(m, id)?.statuses.protected) m = t.train(m, manager.instanceId);
-        m = t.event(start, m, manager, [id], 'Read the Contract: protected the insured artist after the entrance.');
+        m = buff(m, id, 1, t);
+        m = t.train(m, manager.instanceId);
+        m = t.event(start, m, manager, [id], 'Read the Contract: protected the insured artist and granted +1 Hand after the entrance.');
       }
     }
     for (const x of marks(before, 'call').filter(x => x.owner === entrant.owner && x.source.instanceId !== id && !x.targets.includes(id) && x.lane !== entrant.lane)) {
@@ -254,9 +256,9 @@ export function musicAfterPlay(before: Match, m: Match, id: string, t: MusicTool
       const caller = find(m, x.targets[0]), hypeman = find(m, x.source.instanceId), responder = find(m, id);
       if (!active(caller) || !active(hypeman) || !responder) continue;
       const start = m; m = remove(m, x.id);
-      m = buff(m, caller.instanceId, 2, t); m = buff(m, responder.instanceId, 2, t); m = t.protect(m, hypeman, caller.instanceId);
+      m = buff(m, caller.instanceId, 3, t); m = buff(m, responder.instanceId, 3, t); m = t.protect(m, hypeman, caller.instanceId);
       m = t.train(m, hypeman.instanceId);
-      m = t.event(start, m, hypeman, [caller.instanceId, id], 'Say It Back: caller and responder gained +2 each; caller Protected.');
+      m = t.event(start, m, hypeman, [caller.instanceId, id], 'Say It Back: caller and responder gained +3 each; caller Protected.');
     }
   }
   m = bookingArrival(before, m, entrant, t);
@@ -397,7 +399,7 @@ export function musicRoundStart(m: Match, _t?: MusicTools): Match {
 }
 
 export function musicDistrictMarks(m: Match): CharacterDistrictMark[] {
-  const labels: Record<string, string> = { 'mi-soundcheck': 'next different Music deployment with a successful entrance refunds 1 Motion', 'mi-call': 'different Music deployment elsewhere: +2 to caller and responder; Protect caller', 'mi-rider': 'next Music deployment: denial refund or Protection', 'mi-booking': 'next enemy play or move here: 1 damage, then Weaken only if hit lands', 'mi-diss': 'target’s next positive Hands gain: one Silence attempt', 'mi-contract': 'client cannot move; up to 2 bonus Hands become royalties at expiry', 'mi-circuit': 'visit all three districts: first new district +3; third +3 and Protection' };
+  const labels: Record<string, string> = { 'mi-soundcheck': 'next different Music deployment with a successful entrance refunds 1 Motion', 'mi-call': 'different Music deployment elsewhere: +3 to caller and responder; Protect caller', 'mi-rider': 'next Music deployment: denial refund or Protection and +1 Hand', 'mi-booking': 'next enemy play or move here: 1 damage, then Weaken only if hit lands', 'mi-diss': 'target’s next positive Hands gain: one Silence attempt', 'mi-contract': 'client cannot move; up to 2 bonus Hands become royalties at expiry', 'mi-circuit': 'visit all three districts: first new district +3; third +3 and Protection' };
   const visible = marks(m).filter(x => labels[x.kind]).map(x => ({ owner: x.owner, lane: x.lane, text: `${x.source.ability} · ${labels[x.kind]} · through R${x.expires}${x.targets.length ? ': ' + x.targets.map(id => find(m, id)?.name ?? 'departed character').join(', ') : ''}` }));
   for (const bro of board(m).filter(c => identity(c) === 'fitness-bro')) visible.push({ owner: bro.owner, lane: bro.lane!, text: `One More Rep · ${ledger(m, bro, 'reps')?.amount ?? 0}/3${active(bro) ? '' : ' · disabled'}` });
   return visible;

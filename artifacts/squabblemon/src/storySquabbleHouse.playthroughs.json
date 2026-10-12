@@ -19,7 +19,7 @@
       "moves": [
         {
           "cardInstanceId": "player:house-proof-squabble-house-last-waffle-battle-4:4:drfade",
-          "lane": 0,
+          "lane": 1,
           "squabble": false,
           "endTurn": false
         },
@@ -273,7 +273,7 @@
       "moves": [
         {
           "cardInstanceId": "player:house-proof-squabble-house-family-discount-battle-44:4:drfade",
-          "lane": 0,
+          "lane": 1,
           "squabble": false,
           "endTurn": false
         },
@@ -321,7 +321,7 @@
         },
         {
           "cardInstanceId": "player:house-proof-squabble-house-family-discount-battle-44:7:buspass",
-          "lane": 2,
+          "lane": 0,
           "squabble": false,
           "endTurn": false
         },
@@ -400,7 +400,7 @@
       "moves": [
         {
           "cardInstanceId": "player:house-proof-squabble-house-hands-on-the-clock-battle-3:4:drfade",
-          "lane": 0,
+          "lane": 2,
           "squabble": true,
           "endTurn": false
         },
@@ -539,7 +539,7 @@
         },
         {
           "cardInstanceId": "player:house-proof-squabble-house-wet-floor-battle-4:0:cornball",
-          "lane": 1,
+          "lane": 0,
           "squabble": false,
           "endTurn": false
         },

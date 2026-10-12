@@ -12,7 +12,7 @@ import { previewBattlePlay } from './battlePreview';
 const owners = ['player', 'cpu'] as const;
 const opposite = (owner: Owner): Owner => owner === 'player' ? 'cpu' : 'player';
 const unit = (id: string, owner: Owner, index: number, lane: Lane | null = null): CardInstance =>
-  ({ ...createCardInstance(id, owner, 'subway-arrival', index), lane, arrivalOrder: index });
+  ({ ...createCardInstance(id, owner, 'subway-arrival', index), lane, arrivalOrder: index, ...(id === 'cornball' ? {basePower: 1} : {}) });
 const find = (match: Match, id: string) => match.boards.flat().find(card => card.instanceId === id);
 const damage = (match: Match, id: string) => (match.laneDamage ?? [])
   .filter(entry => entry.instanceId === id).reduce((total, entry) => total + entry.amount, 0);
@@ -73,7 +73,7 @@ function ready(match: Match, rider: CardInstance): Match {
 for (const owner of owners) {
   test(`Subway ${owner}: lethal rider removal preserves the landed tax, defeat, and legal preview`, () => {
     const { match, rider, security, origin, destination } = fixture(owner);
-    assert.equal(getEffectiveCardPower(rider), 1, 'use the approved one-Hand Cornball');
+    assert.equal(getEffectiveCardPower(rider), 1, 'use an explicit one-Hand rider to exercise lethal arrival');
     const after = playAndPreview(match, rider, origin);
     assert.equal(find(after, rider.instanceId), undefined);
     assert.equal([...after.playerHand, ...after.cpuHand].some(card => card.instanceId === rider.instanceId), false);

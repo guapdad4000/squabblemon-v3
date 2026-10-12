@@ -58,7 +58,7 @@ for (const owner of owners) for (const tier of [0, 1, 2, 3]) {
     assert.equal(get(recruit.after, recruit.c).gangTag, 'blue');
     assert.equal(get(recruit.after, recruit.c).powerModifier, 2 + tier);
     const support = cast(recruit.after, 'triple-og-blue', owner, 0);
-    assert.equal(get(support.after, recruit.c).powerModifier, 4 + tier);
+    assert.equal(get(support.after, recruit.c).powerModifier, 3 + tier);
     assert(get(support.after, recruit.c).statuses.protected);
     const later = cast(support.after, 'alchy', owner, 1);
     assert.equal(get(later.after, later.c).powerModifier, 0);

@@ -96,8 +96,8 @@ test('Fanboy intercepts one hostile package per round, then leaves the idol expo
   assert.equal(find(boy.after, boy.source).idolId, idol.instanceId);
   let after = cast(boy.after, 'roaster', 'cpu', 0).after;
   assert.equal(find(after, idol).powerModifier, 8);
-  assert.equal(find(after, boy.source).powerModifier, 0, '-2 hit, +2 from Fangirl');
-  assert.equal(find(after, boy.source).statuses.burnStacks, 2);
+  assert.equal(find(after, boy.source).powerModifier, 1, '-1 hit, +2 from Fangirl');
+  assert.equal(find(after, boy.source).statuses.burnStacks, 1);
   after = cast(after, 'nerd', 'cpu', 0).after;
   assert.equal(find(after, idol).statuses.silenced, true);
 });
@@ -248,7 +248,7 @@ test('Mailman creates one persistent Package; only the next Electric in that dis
   const delivered = cast(restored, 'techbro', 'player', 1);
   assert.equal(delivered.after.discountTokens.filter(t => t.eligibility === 'electric-delivery').length, 0);
   assert.equal(find(delivered.after, delivered.source).powerModifier, 2);
-  assert.equal(delivered.after.playerMotion, second.after.playerMotion - cards.techbro.cost + 1 + 2);
+  assert.equal(delivered.after.playerMotion, second.after.playerMotion - cards.techbro.cost + 1 + 1);
   assert(delivered.after.effectLog.some(e => e.replay.before.discountTokens.some(t => t.eligibility === 'electric-delivery')));
 });
 

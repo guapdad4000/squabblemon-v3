@@ -1,3 +1,4 @@
+import { RED_SET_BENCHMARK_CARD_IDS } from '../../lib/squabblemon-engine/src/tripleOgs';
 import assert from 'node:assert/strict';
 import {readFileSync,writeFileSync} from 'node:fs';
 import path from 'node:path';
@@ -10,7 +11,7 @@ const plan=JSON.parse(readFileSync(path.join(directory,'plan.json'),'utf8')) as 
 assert.equal(sourceHash(),plan.sourceHash); assert.equal(validateCoverage(plan),16); assert.deepEqual(plan.excludedCardIds,[]);
 for(const d of authoredRankingDecks())assert(plan.decks.some(p=>[...p.cardIds].sort().join('|')===[...d.cardIds].sort().join('|')),`Missing ${d.id}`);
 const red=plan.decks.find(d=>d.id==='focused-red-set')!;
-assert(red.cardIds.includes('guap')&&red.cardIds.includes('folks'));
+assert.deepEqual(red.cardIds,[...RED_SET_BENCHMARK_CARD_IDS]);
 for(const id of ['starter-sunday-dinner','starter-fitness-routes','starter-fitness-circuit','starter-music-tour','starter-music-industry','starter-community-table','starter-squabblehouse-shift'])assert(plan.decks.some(d=>d.id===id));
 const missingCase=structuredClone(plan);missingCase.cases.pop();assert.throws(()=>validateCoverage(missingCase));
 const duplicate=structuredClone(plan);duplicate.cases[1]=duplicate.cases[0];assert.throws(()=>validateCoverage(duplicate));

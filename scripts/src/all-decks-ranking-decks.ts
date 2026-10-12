@@ -1,3 +1,4 @@
+import { RED_SET_BENCHMARK_CARD_IDS } from '../../lib/squabblemon-engine/src/tripleOgs';
 import assert from 'node:assert/strict';
 import { cards } from '@workspace/squabblemon-engine/data';
 import { createDefaultBalanceDecks, type BalanceDeck } from '@workspace/squabblemon-engine/balanceLab';
@@ -20,8 +21,7 @@ export function authoredRankingDecks(): BalanceDeck[] {
     ...elementDecks,
     {
       id: 'focused-red-set', name: 'Blood / Red Set',
-      cardIds: ['triple-og-red', 'block-spinner', 'redside1', 'ganger-red', 'cane-corso-red',
-        'initiation', 'guap', 'folks', 'cognac', 'bustdown'],
+      cardIds: [...RED_SET_BENCHMARK_CARD_IDS],
     },
     {
       id: 'focused-blue-set', name: 'Crip / Blue Set',

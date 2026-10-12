@@ -27,7 +27,7 @@ for (const owner of ['player', 'cpu'] as const) test(`unchanged street fighters 
     if (['homelessyn', 'divorceddad', 'incel'].includes(id)) match.boards[0] = [enemy, bigEnemy];
     const after = playTurnCard(match, owner, source.instanceId, 0);
     const find = (key: string) => after.boards.flat().find(c => c.instanceId === key)!;
-    const selfBuff: Record<string, number> = { homelessyn: 3, sportsprodigy: 2, fein: 1, divorceddad: 2, failedathlete: 3, krump: 1 };
+    const selfBuff: Record<string, number> = { homelessyn: 3, sportsprodigy: 2, fein: 1, divorceddad: 2, failedathlete: 3, krump: 2 };
     if (id in selfBuff) assert.equal(find(source.instanceId).powerModifier, selfBuff[id], id);
     if (id === 'stud') { assert.equal(find(ally.instanceId).powerModifier, 1); assert(find(ally.instanceId).statuses.protected); }
     if (id === 'gothkid') { assert(find(enemy.instanceId).statuses.silenced); assert(!find(bigEnemy.instanceId).statuses.silenced); }
@@ -35,13 +35,13 @@ for (const owner of ['player', 'cpu'] as const) test(`unchanged street fighters 
     if (id === 'stonerjr' || id === 'stonersr') { assert(!find(ally.instanceId).statuses.frozen); assert.equal(find(ally.instanceId).powerModifier, 1); assert(find(remote.instanceId).statuses.silenced); }
     if (id === 'bblnice' || id === 'failedrapper') { assert.equal(find(ally.instanceId).powerModifier, 1); assert.equal(find(item.instanceId).powerModifier, 0); }
     if (id === 'bbldemon') { assert.equal(find(enemy.instanceId), undefined, 'a one-Hands enemy is destroyed'); assert.equal(find(bigEnemy.instanceId).powerModifier, 19); }
-    if (id === 'krump') assert.equal(find(bigEnemy.instanceId).powerModifier, 19);
+    if (id === 'krump') assert.equal(find(bigEnemy.instanceId).powerModifier, 18);
     if (id === 'sportsprodigy') assert.equal(find(bigEnemy.instanceId).powerModifier, 19);
     if (id === 'break') { assert.equal(find(ally.instanceId).lane, 2, 'frozen fighters contribute no district Hands'); assert.equal(find(ally.instanceId).powerModifier, 1); }
     if (id === 'bboy') { assert.equal(find(source.instanceId).lane, 2); assert.equal(find(remoteTwo.instanceId).powerModifier, 11); }
     if (id === 'yunghustle') assert.equal(owner === 'player' ? after.playerMotion : after.cpuMotion, 9);
     if (id === 'simmy') { assert.equal(find(bigEnemy.instanceId).powerModifier, 17); assert.equal(find(ally.instanceId).powerModifier, 2); }
-    if (id === 'foodz') for (const target of [ally, remote, remoteTwo]) { assert(!find(target.instanceId).statuses.frozen); assert(!find(target.instanceId).statuses.silenced); assert.equal(find(target.instanceId).powerModifier, target.powerModifier + (target.type === 'Light' ? 2 : 1)); }
+    if (id === 'foodz') for (const target of [ally, remote, remoteTwo]) { assert(!find(target.instanceId).statuses.frozen); assert(!find(target.instanceId).statuses.silenced); assert.equal(find(target.instanceId).powerModifier, target.powerModifier + (target.type === 'Light' ? 3 : 2)); }
     assert(after.effectLog.some(e => e.type === 'ability'), id);
     assert.equal(ally.powerModifier, 0, 'input state is immutable');
   }

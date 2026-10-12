@@ -41,7 +41,7 @@ for (const owner of ['player', 'cpu'] as const) test(`Squabble Cook keeps its re
 
 test('granted Protection survives its grantor returning to hand', () => {
   let m=blank();const tin=unit('tinman','player',0);m.boards[0]=[tin];
-  const entrant=cast(m,'hooper'); m=entrant.after;
+  const entrant=cast(m,'lion'); m=entrant.after;
   const returned=cast(m,'dorothy').after;
   assert.equal(find(returned,tin).lane,null);
   assert(returned.timedEffects.some(e=>e.targetInstanceId===entrant.source.instanceId));
@@ -213,7 +213,7 @@ for (const owner of ['player', 'cpu'] as const) {
     const withOrdinary=blank();withOrdinary.boards[0]=[unit('tinman',owner,0,204)];
     const {source: ordinary,after: ordinaryArrival}=cast(withOrdinary,'hooper',owner,0);
     assert.equal(find(ordinaryArrival,ordinary).powerModifier,1,'ordinary plays retain their old reward');
-    assert.equal(find(ordinaryArrival,ordinary).statuses.protected,true);
+    assert.equal(find(ordinaryArrival,ordinary).statuses.protected,false);
   });
   test(`Tin Man triggers once on Mad Hatter's arrival and still rewards paired movement for ${owner}`, () => {
     const swap=blank(), cheap=unit('bonnetgirl',owner,0,220);
@@ -239,9 +239,9 @@ for (const owner of ['player', 'cpu'] as const) {
 }
 test('Tin Man and Lion respect once-per-round and active-status gates', () => {
   const m=blank(), tin=unit('tinman','player',0);m.boards[0]=[tin];
-  const a=cast(m,'bonnetgirl'), b=cast(a.after,'squabbleserver');
+  const a=cast(m,'lion'), b=cast(a.after,'squabbleserver');
   assert(find(a.after,a.source).statuses.protected); assert(!find(b.after,b.source).statuses.protected);
-  const next=cast(advance(b.after),'squabbleserver'); assert(find(next.after,next.source).statuses.protected);
+  const next=cast(advance(b.after),'lion'); assert(find(next.after,next.source).statuses.protected);
   const lone=cast(blank(),'lion');assert(find(lone.after,lone.source).statuses.protected);
 });
 test('Alice returns once, leaves a capped Grin and receives +3 on her next deployment', () => {
@@ -608,7 +608,7 @@ test('Oz movement bonus uses successful current-round IDs, not persistent moved 
   m.entranceHistory = [later.instanceId, ally.instanceId];
   m.roundMovedIds = { player: [ally.instanceId, later.instanceId], cpu: [] };
   const first = cast(m, 'oz', 'player', 1).after;
-  assert.equal(find(first, ally).powerModifier, 4); // entrance value + current-round movement bonus
+  assert.equal(find(first, ally).powerModifier, 5); // entrance value + current-round movement bonus
   assert(first.roundMovedIds?.player.includes(ally.instanceId));
   assert.deepEqual(cast(JSON.parse(JSON.stringify(m)), 'oz', 'player', 1).after, first);
 
@@ -704,7 +704,7 @@ for (const owner of ['player', 'cpu'] as const) {
     assert.equal(find(treated, injured).powerModifier, injured.powerModifier + 3, 'Watson restores exactly three of the four lost Hands');
     assert.equal(getEffectiveCardPower(find(treated, injured)), 4);
     assert(find(treated, injured).statuses.protected);
-    assert.equal(cards.watson.power, 4); assert.equal(cards.watson.cost, 2);
+    assert.equal(cards.watson.power, 2); assert.equal(cards.watson.cost, 2);
   });
 }
 

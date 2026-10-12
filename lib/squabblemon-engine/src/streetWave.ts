@@ -14,7 +14,7 @@ export const STREET_WAVE = [
   ['bblnice', 'bbl-nice', 'BBL Nice', 'Uncommon', 'Light', 3, 2, 'Good Company', 'Give every other friendly character here +1 Hands.', 'Support'],
   ['bbldemon', 'bbl-demon', 'BBL Demon', 'Legendary', 'Fire', 4, 4, 'Problem Energy', 'Give every enemy here -1 Hands.', 'Disruption'],
   ['break', 'break-dancer', 'Break', 'Uncommon', 'Air', 2, 2, 'Floor Sweep', 'Move your lowest-Hands other friendly character here to your weakest other district. If moved, give it +1 Hands.', 'Movement'],
-  ['krump', 'krump-dancer', 'Krump', 'Rare', 'Fire', 3, 3, 'Chest Pop', 'If an enemy is here, gain +1 Hands and give the highest-Hands enemy here -1 Hands.', 'Disruption'],
+  ['krump', 'krump-dancer', 'Krump', 'Rare', 'Fire', 3, 3, 'Chest Pop', 'If an enemy is here, gain +2 Hands and give the highest-Hands enemy here -2 Hands.', 'Disruption'],
   ['bboy', 'bboy', 'Bboy', 'Uncommon', 'Air', 2, 2, 'Windmill', 'Move to your weakest other district. If moved, give the lowest-Hands other friendly character there +1 Hands.', 'Movement'],
   ['yunghustle', 'yung-hustle', 'Yung Hustle', 'Common', 'Electric', 1, 1, 'Side Hustle', 'If a friendly character is in another district, restore 1 Motion, up to 9.', 'Tempo'],
   ['failedrapper', 'failed-rapper', 'Failed Rapper', 'Common', 'Air', 2, 1, 'One More Verse', 'Give every other friendly character here costing 2 or less +1 Hands.', 'Support'],

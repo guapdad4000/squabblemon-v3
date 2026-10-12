@@ -73,7 +73,7 @@ test('City Legend Motion prices and Dragonfly Jones Hands are printed on playabl
   assert.equal(cards.tron.cost, 3);
   assert.match(cards.tron.effect, /If all three gained Hands, restore 1 Motion/);
   assert.equal(cards.ashlee.cost, 5);
-  assert.equal(cards.ashlee.power, 3);
+  assert.equal(cards.ashlee.power, 2);
   assert.equal(cards.captainjigga.cost, 5);
   assert.equal(cards.counter.cost, 3);
   assert.equal(cards.counter.power, 3);
@@ -209,7 +209,7 @@ test('new effects respect conditions, guard and direct protection', () => {
   shonuff.foe.powerModifier = 0;
   const noBoost = playCard(shonuff.m, 'player', shonuff.source.instanceId, 0);
   assert.equal(onBoard(noBoost, shonuff.source).powerModifier, 0);
-  assert.equal(onBoard(noBoost, shonuff.foe).powerModifier, -1);
+  assert.equal(onBoard(noBoost, shonuff.foe).powerModifier, -2);
   const guard = unit('wifey', 'cpu', 8);
   guard.statuses.protected = true;
   shonuff.foe.powerModifier = 2;
@@ -220,6 +220,8 @@ test('new effects respect conditions, guard and direct protection', () => {
   assert.equal(onBoard(guarded, guard).statuses.blocked, true);
 
   const yasuke = setup('yasuke');
+  yasuke.ally.basePower = 1; // Make this shielded ally the weakest eligible hostile target.
+  yasuke.source.basePower = 30;
   let protectedBoard = playCard(yasuke.m, 'player', yasuke.source.instanceId, 0);
   const attacker = createCardInstance('gothkid', 'cpu', 'legend', 9);
   protectedBoard = playCard({ ...protectedBoard, phase: 'cpu-reveal', cpuMotion: 9, cpuHand: [attacker] }, 'cpu', attacker.instanceId, 0);

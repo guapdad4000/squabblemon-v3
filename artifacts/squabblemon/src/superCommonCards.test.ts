@@ -90,7 +90,7 @@ test('Bus Pass and Water Boy allow four plays on the first turn without a draw o
 });
 
 test('Cognac and Soul Food support a character, skipping items and enemies', () => {
-  for (const [id, amount] of [['cognac', 2], ['soulfood', 1]] as const) {
+  for (const [id, amount] of [['cognac', 3], ['soulfood', 3]] as const) {
     const target = instance('shiesty');
     target.statuses = { ...target.statuses, frozen: true, silenced: true };
     const m = reveal(id, m => ({ ...m, boards: [[instance('buspass', 'player', 1), target, instance('cornball', 'cpu', 2)], [], []] }));
@@ -110,7 +110,7 @@ test('Soul Food cleanses a frozen ally even when another ally ties at 0 Hands', 
     const weak = { ...instance('torta', owner, 1), powerModifier: -9 };
     const m = reveal('soulfood', m => ({ ...m, boards: [[frozen, weak], [], []] }), owner);
     assert.equal(find(m, 'shiesty').statuses.frozen, false);
-    assert.equal(find(m, 'shiesty').powerModifier, 1);
+    assert.equal(find(m, 'shiesty').powerModifier, 3);
     assert.equal(find(m, 'torta').powerModifier, -9);
   }
 });
@@ -141,8 +141,8 @@ test('silenced or frozen new cards do not fire abilities', () => {
 test('coached Water Boy upgrades require a successful refund; support upgrades boost their target', () => {
   for (const [id, hasAlly, selfBonus, targetBonus] of [
     ['waterboy', false, 0, 0], ['waterboy', true, 3, 0],
-    ['cognac', false, 0, 0], ['cognac', true, 0, 5],
-    ['soulfood', true, 0, 4], ['bustdown', true, 0, 3],
+    ['cognac', false, 0, 0], ['cognac', true, 0, 6],
+    ['soulfood', true, 0, 6], ['bustdown', true, 0, 4],
   ] as const) {
     const m = reveal(id, m => ({ ...m,
       abilityUpgradeSnapshot: createAbilityUpgradeSnapshot(crew, m.cpuCardIds, { player: { [id]: { xp: 4500, level: 10, moveTier: 3 } } }),

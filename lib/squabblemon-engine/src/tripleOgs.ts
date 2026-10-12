@@ -13,7 +13,7 @@ export type GangColor = 'blue' | 'red';
 /** Cards that count as a set presence for Initiation, including the existing story gangers. */
 export const GANG_BY_CARD_ID: Record<string, GangColor> = {
   'triple-og-blue': 'blue', 'look-out': 'blue', blueside1: 'blue', 'ganger-blue': 'blue', 'blue-nose-pit': 'blue',
-  'triple-og-red': 'red', 'block-spinner': 'red', redside1: 'red', 'ganger-red': 'red',
+  'triple-og-red': 'red', 'block-spinner': 'red', redside1: 'red', 'ganger-red': 'red', 'cane-corso-red': 'red',
 };
 
 export const GANG_LABEL: Record<GangColor, string> = { blue: 'Blue Set', red: 'Red Set' };
@@ -31,10 +31,10 @@ export const CANNOT_LOSE_HANDS_CARD_IDS = ['blueside1', 'triple-og-blue'] as con
 
 const definitions = [
   ['triple-og-blue', 'triple-og-blue', 'CLUE COOKY', 'Mythical', 'Water', 4, 6, 'Homage', 'character',
-    "Only playable in the left district, even when its location adds Motion or the lane is locked. On Reveal: If you are losing this district, collect up to +4 Hands in homage per reveal. Other friendly Blue Set characters each contribute +1 without losing Hands and count first; other friendly characters pay 1 Hand each toward the remaining total, keeping at least 1. Then send the weakest enemy here to your strongest district with -1 Hand. Give your weakest Blue Set ally in each other district +2 Hands and Protection. CLUE COOKY cannot lose Hands, and this ability cannot be Silenced.",
+    "Only playable in the left district, even when its location adds Motion or the lane is locked. On Reveal: If you are losing this district, collect up to +3 Hands in homage per reveal. Other friendly Blue Set characters each contribute +1 without losing Hands and count first; other friendly characters pay 1 Hand each toward the remaining total, keeping at least 1. Then send the weakest enemy here to your strongest district with -1 Hand. Give your weakest Blue Set ally in each other district +1 Hand and Protection. CLUE COOKY cannot lose Hands, and this ability cannot be Silenced.",
     'Pressure'],
   ['triple-og-red', 'triple-og-red', 'RED PUNCH', 'Mythical', 'Fire', 4, 3, 'Roll Call', 'character',
-    "Only playable in the right district, even when its location adds Motion or the lane is locked. On Reveal: Give every other character in this district, allies included, -1 Hand, and gain +1 Hand for each one that takes it. Anyone RED PUNCH cannot touch is moved to another district out of respect. This ability cannot be Silenced.",
+    "Only playable in the right district, even when its location adds Motion or the lane is locked. On Reveal: Give every other character here, allies included, -1 Hand. Up to three strongest enemies that can lose Hands instead take 2 damage. Gain the Hands actually lost, up to +6 per reveal. Anyone RED PUNCH cannot touch is moved to another district out of respect. This ability cannot be Silenced.",
     'Disruption'],
   ['initiation', 'initiation', 'INITIATION', 'Legendary', 'Dark', 1, 0, 'Marked Territory', 'support',
     "On Reveal: Mark this district as your territory. The next character you play here is put on by the set you already have here: it takes their colors and gains +2 Hands. With no set of yours here, it still gains +2 Hands. The mark holds until it is used.",
@@ -79,3 +79,6 @@ export const tripleOgCards: Record<string, Card> = Object.fromEntries(definition
     })),
   }],
 ));
+
+/** Red crew benchmark. Shared Fire finishers belong in explicit mixed-deck diagnostics. */
+export const RED_SET_BENCHMARK_CARD_IDS = ['triple-og-red', 'block-spinner', 'redside1', 'ganger-red', 'cane-corso-red', 'initiation', 'redneck-evil', 'redside5', 'cognac', 'bustdown'] as const;

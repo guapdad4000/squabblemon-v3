@@ -1,3 +1,4 @@
+import { RED_SET_BENCHMARK_CARD_IDS } from '../../lib/squabblemon-engine/src/tripleOgs';
 import {
   createMatchFromEngineCards, createAbilityUpgradeSnapshot, createDistrictSnapshot,
   type Lane, type Owner,
@@ -7,7 +8,7 @@ import { createOnlineRoom, joinOnlineRoom, applyOnlineCommand, type OnlineRoom, 
 
 export const rivalryRecipes = {
   blue: ['triple-og-blue', 'look-out', 'blueside1', 'ganger-blue', 'blue-nose-pit', 'initiation', 'waterboy', 'alchy', 'cognac', 'bustdown'],
-  red: ['triple-og-red', 'block-spinner', 'redside1', 'ganger-red', 'cane-corso-red', 'initiation', 'redneck-evil', 'redside5', 'cognac', 'bustdown'],
+  red: [...RED_SET_BENCHMARK_CARD_IDS],
 };
 export type RivalrySettings = { first: 'blue' | 'red'; tier: number; seed: string; openingSeat?: Owner; recipes?: { blue: readonly string[]; red: readonly string[] } };
 export type RivalryCommand = { kind: 'play'; owner: Owner; id: string; lane: Lane; squabble: boolean } | { kind: 'pass'; owner: Owner };

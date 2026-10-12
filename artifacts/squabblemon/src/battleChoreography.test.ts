@@ -24,12 +24,13 @@ test('freeze feedback reflects effective power lost and names the actual victim'
 
 test('movement feedback preserves both districts and deduplicates participants', () => {
   const { target, resolved } = cast('vibe', 'player', 1);
-  const event = resolved.effectLog.find(event => event.type === 'ability' && event.targets.some(p => p.cardInstanceId === target.instanceId))!;
+  const event = resolved.effectLog.find(event => event.kind === 'move' && [event.source, ...event.targets].some(p => p?.cardInstanceId === target.instanceId))!;
   const changes = battleChanges(event);
   const moved = changes.find(change => change.cardInstanceId === target.instanceId)!;
   assert.equal(moved.before?.lane, 1);
   assert.equal(moved.after?.lane, 0);
-  assert.equal(moved.delta, 1);
+  assert.equal(moved.delta, 0);
+  assert.equal(resolved.boards[0].find(c => c.instanceId === target.instanceId)?.powerModifier, 1, "arrival reward follows the movement frame");
   assert.ok(moved.labels.includes('Moved'));
   assert.equal(new Set(changes.map(change => change.cardInstanceId)).size, changes.length);
 });

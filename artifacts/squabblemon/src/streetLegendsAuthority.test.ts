@@ -187,7 +187,7 @@ for (const owner of ['player', 'cpu'] as const) {
     const rapper = unit('the-rapper', owner, 0); m.boards[0].push(rapper);
     const performer = cast(m, 'the-manager-nice', owner, 1);
     assert.equal(owner === 'player' ? performer.after.playerMotion : performer.after.cpuMotion, 8);
-    assert.equal(find(performer.after, performer.source)?.powerModifier, 2); assert(!kinds(performer.after).includes('mi-soundcheck'));
+    assert.equal(find(performer.after, performer.source)?.powerModifier, 3); assert(!kinds(performer.after).includes('mi-soundcheck'));
     const response = cast(performer.after, 'the-hype-man', owner, 2);
     assert(find(response.after, response.source)?.statuses.protected); assert(!kinds(response.after).includes('mi-rider'));
     assert(getCharacterDistrictMarks(response.after).every(x => !x.text.includes('ledger')));

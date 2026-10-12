@@ -145,7 +145,7 @@ for (const owner of ["player", "cpu"] as const) {
       m = cast(m, "stonersr", owner).after;
       const first = cast(m, "og", owner);
       m = first.after;
-      assert.equal(find(m, first.source)?.powerModifier, 2);
+      assert.equal(find(m, first.source)?.powerModifier, 4);
       const second = cast(m, "bodegacat", owner);
       m = second.after;
       assert.equal(find(m, second.source)?.powerModifier, dirty ? 1 : 0);
@@ -232,8 +232,8 @@ for (const owner of ["player", "cpu"] as const) {
     m = cast(m, "juneteenth-chair-guy", owner).after;
     const hit = cast(m, "inmate-informant", enemy);
     m = hit.after;
-    assert.equal(find(m, big)?.powerModifier, 7);
-    assert.equal(find(m, hit.source)?.powerModifier, -3);
+    assert.equal(find(m, big)?.powerModifier, 8);
+    assert.equal(find(m, hit.source), undefined, "three-Hand retaliation defeats the two-Hand attacker");
     assert(
       m.boards.flat().find((c) => c.cardId === "juneteenth-chair-guy")
         ?.creativeUsed?.chair,
@@ -244,7 +244,7 @@ for (const owner of ["player", "cpu"] as const) {
     m = cast(m, "workboots", owner).after;
     m = cast(m, "bustdown", owner).after;
     m = cast(m, "inmate-informant", enemy).after;
-    assert.equal(find(m, big)?.powerModifier, 7);
+    assert.equal(find(m, big)?.powerModifier, 8);
   });
   test(`${owner}: Lawyer only earns legal fees after dismissing a pending status`, () => {
     let m = blank();
@@ -361,7 +361,7 @@ for (const owner of ["player", "cpu"] as const) {
     assert.equal(find(m, child)?.powerModifier, 1);
     m = cast(m, "cognac", owner).after;
     m = end(end(m));
-    assert.equal(find(m, child)?.powerModifier, 5);
+    assert.equal(find(m, child)?.powerModifier, 6);
     assert(find(m, child)?.statuses.protected);
   });
   test(`${owner}: Nerd reveals a hand card only on disabling an active ongoing ability`, () => {

@@ -1,0 +1,1194 @@
+{
+  "buddy": {
+    "cost": 3,
+    "power": 3
+  },
+  "folks": {
+    "cost": 4,
+    "power": 2
+  },
+  "drfade": {
+    "cost": 3,
+    "power": 5
+  },
+  "guap": {
+    "cost": 6,
+    "power": 6
+  },
+  "bossbabe": {
+    "cost": 3,
+    "power": 3
+  },
+  "scammer": {
+    "cost": 3,
+    "power": 3
+  },
+  "rastamon": {
+    "cost": 2,
+    "power": 2
+  },
+  "roaster": {
+    "cost": 3,
+    "power": 3
+  },
+  "nerd": {
+    "cost": 3,
+    "power": 5
+  },
+  "cornball": {
+    "cost": 1,
+    "power": 2
+  },
+  "plug": {
+    "cost": 2,
+    "power": 2
+  },
+  "streamer": {
+    "cost": 2,
+    "power": 3
+  },
+  "gamer": {
+    "cost": 3,
+    "power": 1
+  },
+  "techbro": {
+    "cost": 3,
+    "power": 5
+  },
+  "bikelife": {
+    "cost": 2,
+    "power": 4
+  },
+  "vibe": {
+    "cost": 2,
+    "power": 3
+  },
+  "hooper": {
+    "cost": 4,
+    "power": 4
+  },
+  "baby": {
+    "cost": 4,
+    "power": 5
+  },
+  "oink": {
+    "cost": 4,
+    "power": 4
+  },
+  "snow": {
+    "cost": 3,
+    "power": 3
+  },
+  "wifey": {
+    "cost": 3,
+    "power": 3
+  },
+  "barber": {
+    "cost": 4,
+    "power": 5
+  },
+  "bottle": {
+    "cost": 2,
+    "power": 3
+  },
+  "sneaker": {
+    "cost": 4,
+    "power": 3
+  },
+  "church": {
+    "cost": 3,
+    "power": 1
+  },
+  "landlord": {
+    "cost": 2,
+    "power": 3
+  },
+  "carmeet": {
+    "cost": 2,
+    "power": 2
+  },
+  "promoter": {
+    "cost": 3,
+    "power": 2
+  },
+  "nail": {
+    "cost": 2,
+    "power": 3
+  },
+  "og": {
+    "cost": 4,
+    "power": 4
+  },
+  "delivery": {
+    "cost": 1,
+    "power": 1
+  },
+  "youngbull": {
+    "cost": 2,
+    "power": 4
+  },
+  "transplant": {
+    "cost": 1,
+    "power": 1
+  },
+  "tayaty": {
+    "cost": 3,
+    "power": 3
+  },
+  "edgar": {
+    "cost": 2,
+    "power": 2
+  },
+  "nguyen": {
+    "cost": 2,
+    "power": 2
+  },
+  "manman": {
+    "cost": 3,
+    "power": 3
+  },
+  "pinaynurse": {
+    "cost": 2,
+    "power": 2
+  },
+  "honestthot": {
+    "cost": 1,
+    "power": 1
+  },
+  "earthy": {
+    "cost": 1,
+    "power": 1
+  },
+  "abuela": {
+    "cost": 4,
+    "power": 2
+  },
+  "icecream": {
+    "cost": 3,
+    "power": 4
+  },
+  "shiesty": {
+    "cost": 1,
+    "power": 1
+  },
+  "torta": {
+    "cost": 2,
+    "power": 1
+  },
+  "waterboy": {
+    "cost": 1,
+    "power": 2
+  },
+  "buspass": {
+    "cost": 0,
+    "power": 0
+  },
+  "cognac": {
+    "cost": 1,
+    "power": 0
+  },
+  "bustdown": {
+    "cost": 1,
+    "power": 0
+  },
+  "soulfood": {
+    "cost": 1,
+    "power": 0
+  },
+  "concrete": {
+    "cost": 1,
+    "power": 1
+  },
+  "bodegacat": {
+    "cost": 1,
+    "power": 1
+  },
+  "crossingguard": {
+    "cost": 2,
+    "power": 2
+  },
+  "laundry": {
+    "cost": 2,
+    "power": 4
+  },
+  "busker": {
+    "cost": 2,
+    "power": 1
+  },
+  "cornercoach": {
+    "cost": 3,
+    "power": 1
+  },
+  "nightcashier": {
+    "cost": 2,
+    "power": 2
+  },
+  "dogwalker": {
+    "cost": 2,
+    "power": 2
+  },
+  "mural": {
+    "cost": 2,
+    "power": 2
+  },
+  "chessregular": {
+    "cost": 3,
+    "power": 1
+  },
+  "gardener": {
+    "cost": 1,
+    "power": 1
+  },
+  "piratedj": {
+    "cost": 3,
+    "power": 2
+  },
+  "dancecaptain": {
+    "cost": 3,
+    "power": 4
+  },
+  "nightmedic": {
+    "cost": 3,
+    "power": 3
+  },
+  "subwaymagician": {
+    "cost": 3,
+    "power": 3
+  },
+  "ogdominican": {
+    "cost": 3,
+    "power": 3
+  },
+  "conductor": {
+    "cost": 4,
+    "power": 1
+  },
+  "midnightmayor": {
+    "cost": 3,
+    "power": 2
+  },
+  "bigzoey": {
+    "cost": 3,
+    "power": 2
+  },
+  "leroy": {
+    "cost": 3,
+    "power": 5
+  },
+  "partytitan": {
+    "cost": 6,
+    "power": 7
+  },
+  "energydrink": {
+    "cost": 1,
+    "power": 0
+  },
+  "charger": {
+    "cost": 1,
+    "power": 0
+  },
+  "firstaid": {
+    "cost": 2,
+    "power": 0
+  },
+  "boombox": {
+    "cost": 2,
+    "power": 0
+  },
+  "subwaymap": {
+    "cost": 0,
+    "power": 0
+  },
+  "workboots": {
+    "cost": 1,
+    "power": 0
+  },
+  "sideofhands": {
+    "cost": 2,
+    "power": 0
+  },
+  "homelessyn": {
+    "cost": 1,
+    "power": 2
+  },
+  "sportsprodigy": {
+    "cost": 3,
+    "power": 5
+  },
+  "fein": {
+    "cost": 1,
+    "power": 2
+  },
+  "alchy": {
+    "cost": 2,
+    "power": 2
+  },
+  "stud": {
+    "cost": 3,
+    "power": 5
+  },
+  "gothkid": {
+    "cost": 2,
+    "power": 3
+  },
+  "stonerjr": {
+    "cost": 1,
+    "power": 2
+  },
+  "stonersr": {
+    "cost": 3,
+    "power": 3
+  },
+  "divorceddad": {
+    "cost": 3,
+    "power": 3
+  },
+  "bblnice": {
+    "cost": 3,
+    "power": 4
+  },
+  "bbldemon": {
+    "cost": 4,
+    "power": 4
+  },
+  "break": {
+    "cost": 2,
+    "power": 2
+  },
+  "krump": {
+    "cost": 3,
+    "power": 1
+  },
+  "bboy": {
+    "cost": 2,
+    "power": 1
+  },
+  "yunghustle": {
+    "cost": 1,
+    "power": 1
+  },
+  "failedrapper": {
+    "cost": 2,
+    "power": 1
+  },
+  "failedathlete": {
+    "cost": 3,
+    "power": 4
+  },
+  "incel": {
+    "cost": 2,
+    "power": 3
+  },
+  "redpill": {
+    "cost": 3,
+    "power": 2
+  },
+  "simmy": {
+    "cost": 4,
+    "power": 5
+  },
+  "foodz": {
+    "cost": 3,
+    "power": 3
+  },
+  "dragonflyjones": {
+    "cost": 2,
+    "power": 3
+  },
+  "shonuff": {
+    "cost": 3,
+    "power": 1
+  },
+  "yasuke": {
+    "cost": 2,
+    "power": 1
+  },
+  "mansamusa": {
+    "cost": 4,
+    "power": 3
+  },
+  "tron": {
+    "cost": 3,
+    "power": 2
+  },
+  "johnhenry": {
+    "cost": 5,
+    "power": 6
+  },
+  "ashlee": {
+    "cost": 5,
+    "power": 2
+  },
+  "captainjigga": {
+    "cost": 5,
+    "power": 3
+  },
+  "counter": {
+    "cost": 3,
+    "power": 3
+  },
+  "homelessguy": {
+    "cost": 2,
+    "power": 4
+  },
+  "fangirl": {
+    "cost": 1,
+    "power": 1
+  },
+  "grownfanboy": {
+    "cost": 3,
+    "power": 4
+  },
+  "lawlessyn": {
+    "cost": 2,
+    "power": 2
+  },
+  "streetapostle": {
+    "cost": 3,
+    "power": 3
+  },
+  "asphaltapostle": {
+    "cost": 3,
+    "power": 4
+  },
+  "colognecriminal": {
+    "cost": 3,
+    "power": 3
+  },
+  "passportbro": {
+    "cost": 3,
+    "power": 3
+  },
+  "seafoodassassin": {
+    "cost": 4,
+    "power": 4
+  },
+  "homelesslegend": {
+    "cost": 3,
+    "power": 5
+  },
+  "godofhookah": {
+    "cost": 4,
+    "power": 3
+  },
+  "mailman": {
+    "cost": 3,
+    "power": 3
+  },
+  "lola": {
+    "cost": 3,
+    "power": 3
+  },
+  "repoman": {
+    "cost": 4,
+    "power": 1
+  },
+  "madhatter": {
+    "cost": 2,
+    "power": 1
+  },
+  "track-suit-auntie": {
+    "cost": 1,
+    "power": 2
+  },
+  "gym-bag-yn": {
+    "cost": 2,
+    "power": 3
+  },
+  "stairwell-sprinter": {
+    "cost": 2,
+    "power": 3
+  },
+  "last-set-og": {
+    "cost": 4,
+    "power": 5
+  },
+  "tour-van-driver": {
+    "cost": 3,
+    "power": 3
+  },
+  "mixtape-cousin": {
+    "cost": 2,
+    "power": 2
+  },
+  "merch-table-hustler": {
+    "cost": 3,
+    "power": 2
+  },
+  "the-favorite-grandchild": {
+    "cost": 1,
+    "power": 2
+  },
+  "cousin-back-from-college": {
+    "cost": 2,
+    "power": 3
+  },
+  "plate-auntie": {
+    "cost": 2,
+    "power": 3
+  },
+  "church-aunties-rival": {
+    "cost": 2,
+    "power": 3
+  },
+  "big-sister": {
+    "cost": 2,
+    "power": 3
+  },
+  "second-plate-cousin": {
+    "cost": 2,
+    "power": 3
+  },
+  "grill-uncle": {
+    "cost": 3,
+    "power": 4
+  },
+  "grandma-said-sit-down": {
+    "cost": 4,
+    "power": 5
+  },
+  "gym-spotter-yn": {
+    "cost": 2,
+    "power": 4
+  },
+  "calisthenics-yn": {
+    "cost": 2,
+    "power": 4
+  },
+  "og-calisthenics": {
+    "cost": 4,
+    "power": 5
+  },
+  "night-bus-driver": {
+    "cost": 2,
+    "power": 2
+  },
+  "community-cook": {
+    "cost": 2,
+    "power": 4
+  },
+  "jump-rope-menace": {
+    "cost": 3,
+    "power": 3
+  },
+  "delivery-app-cyclist": {
+    "cost": 2,
+    "power": 2
+  },
+  "studio-couch-yn": {
+    "cost": 1,
+    "power": 1
+  },
+  "barbershop-heckler": {
+    "cost": 2,
+    "power": 2
+  },
+  "group-chat-instigator": {
+    "cost": 3,
+    "power": 5
+  },
+  "bluetooth-unc": {
+    "cost": 2,
+    "power": 2
+  },
+  "one-man-band": {
+    "cost": 4,
+    "power": 4
+  },
+  "booster": {
+    "cost": 2,
+    "power": 2
+  },
+  "indian-scammer": {
+    "cost": 3,
+    "power": 4
+  },
+  "naija-scammer": {
+    "cost": 3,
+    "power": 4
+  },
+  "black-air-fade-1s": {
+    "cost": 1,
+    "power": 0
+  },
+  "hair-stylist": {
+    "cost": 2,
+    "power": 3
+  },
+  "stylist": {
+    "cost": 2,
+    "power": 2
+  },
+  "demario": {
+    "cost": 2,
+    "power": 3
+  },
+  "luigion": {
+    "cost": 2,
+    "power": 3
+  },
+  "black-cowboy": {
+    "cost": 3,
+    "power": 3
+  },
+  "inmate-crafty": {
+    "cost": 2,
+    "power": 4
+  },
+  "inmate-boyfriend": {
+    "cost": 2,
+    "power": 2
+  },
+  "inmate-informant": {
+    "cost": 2,
+    "power": 3
+  },
+  "inmate-contraband": {
+    "cost": 2,
+    "power": 4
+  },
+  "lebron-james": {
+    "cost": 3,
+    "power": 3
+  },
+  "dorothy": {
+    "cost": 2,
+    "power": 2
+  },
+  "scarecrow": {
+    "cost": 2,
+    "power": 3
+  },
+  "tinman": {
+    "cost": 2,
+    "power": 3
+  },
+  "lion": {
+    "cost": 3,
+    "power": 3
+  },
+  "oz": {
+    "cost": 4,
+    "power": 5
+  },
+  "alice": {
+    "cost": 2,
+    "power": 1
+  },
+  "cheshire": {
+    "cost": 2,
+    "power": 1
+  },
+  "queenofhearts": {
+    "cost": 3,
+    "power": 1
+  },
+  "mrrabbit": {
+    "cost": 2,
+    "power": 1
+  },
+  "sherlock": {
+    "cost": 2,
+    "power": 2
+  },
+  "watson": {
+    "cost": 2,
+    "power": 2
+  },
+  "undercova": {
+    "cost": 2,
+    "power": 2
+  },
+  "thefeds": {
+    "cost": 4,
+    "power": 1
+  },
+  "dmvworker": {
+    "cost": 2,
+    "power": 2
+  },
+  "ptang": {
+    "cost": 3,
+    "power": 3
+  },
+  "bonnetgirl": {
+    "cost": 1,
+    "power": 1
+  },
+  "corruptpastor": {
+    "cost": 3,
+    "power": 3
+  },
+  "powerhouse": {
+    "cost": 4,
+    "power": 3
+  },
+  "ronald": {
+    "cost": 3,
+    "power": 4
+  },
+  "trapvamp": {
+    "cost": 3,
+    "power": 3
+  },
+  "squabblecook": {
+    "cost": 2,
+    "power": 3
+  },
+  "squabbleserver": {
+    "cost": 1,
+    "power": 2
+  },
+  "sugarfoot": {
+    "cost": 2,
+    "power": 2
+  },
+  "yn-gokarter": {
+    "cost": 2,
+    "power": 2
+  },
+  "yn-atv-lord": {
+    "cost": 3,
+    "power": 4
+  },
+  "janitor": {
+    "cost": 3,
+    "power": 3
+  },
+  "homeless-wiseman": {
+    "cost": 3,
+    "power": 2
+  },
+  "juneteenth-chair-guy": {
+    "cost": 4,
+    "power": 4
+  },
+  "squabble-house-manager": {
+    "cost": 1,
+    "power": 1
+  },
+  "riptidebruiser": {
+    "cost": 1,
+    "power": 1
+  },
+  "stillwatermedic": {
+    "cost": 2,
+    "power": 1
+  },
+  "monsoonanchor": {
+    "cost": 3,
+    "power": 2
+  },
+  "rainmaker": {
+    "cost": 4,
+    "power": 4
+  },
+  "batteryback": {
+    "cost": 1,
+    "power": 2
+  },
+  "circuitcaptain": {
+    "cost": 4,
+    "power": 4
+  },
+  "wiretap": {
+    "cost": 2,
+    "power": 1
+  },
+  "livewire": {
+    "cost": 3,
+    "power": 3
+  },
+  "sprout": {
+    "cost": 1,
+    "power": 2
+  },
+  "rootnurse": {
+    "cost": 2,
+    "power": 1
+  },
+  "canopykeeper": {
+    "cost": 3,
+    "power": 2
+  },
+  "gardenwall": {
+    "cost": 3,
+    "power": 1
+  },
+  "gust": {
+    "cost": 1,
+    "power": 2
+  },
+  "crosswind": {
+    "cost": 2,
+    "power": 1
+  },
+  "slipstream": {
+    "cost": 3,
+    "power": 2
+  },
+  "cloudbreak": {
+    "cost": 3,
+    "power": 2
+  },
+  "redside1": {
+    "cost": 1,
+    "power": 2
+  },
+  "redside2": {
+    "cost": 2,
+    "power": 3
+  },
+  "redside3": {
+    "cost": 2,
+    "power": 3
+  },
+  "redside4": {
+    "cost": 3,
+    "power": 4
+  },
+  "redside5": {
+    "cost": 2,
+    "power": 2
+  },
+  "blueside1": {
+    "cost": 2,
+    "power": 2
+  },
+  "blueside2": {
+    "cost": 1,
+    "power": 1
+  },
+  "blueside3": {
+    "cost": 2,
+    "power": 3
+  },
+  "blueside4": {
+    "cost": 2,
+    "power": 3
+  },
+  "blueside5": {
+    "cost": 2,
+    "power": 2
+  },
+  "wickedwitch": {
+    "cost": 4,
+    "power": 5
+  },
+  "flyingmonkeys": {
+    "cost": 4,
+    "power": 5
+  },
+  "ganger-blue": {
+    "cost": 2,
+    "power": 2
+  },
+  "ganger-red": {
+    "cost": 2,
+    "power": 3
+  },
+  "snitch": {
+    "cost": 3,
+    "power": 3
+  },
+  "cracked-head": {
+    "cost": 5,
+    "power": 5
+  },
+  "triple-og-blue": {
+    "cost": 4,
+    "power": 8
+  },
+  "triple-og-red": {
+    "cost": 4,
+    "power": 4
+  },
+  "initiation": {
+    "cost": 1,
+    "power": 0
+  },
+  "block-spinner": {
+    "cost": 1,
+    "power": 3
+  },
+  "look-out": {
+    "cost": 1,
+    "power": 1
+  },
+  "miami-surgeon": {
+    "cost": 3,
+    "power": 3
+  },
+  "roommate": {
+    "cost": 1,
+    "power": 2
+  },
+  "ahki": {
+    "cost": 2,
+    "power": 2
+  },
+  "mr-trick": {
+    "cost": 3,
+    "power": 3
+  },
+  "dr-umah": {
+    "cost": 3,
+    "power": 3
+  },
+  "atl-scammer": {
+    "cost": 2,
+    "power": 2
+  },
+  "hater": {
+    "cost": 1,
+    "power": 2
+  },
+  "teacher": {
+    "cost": 3,
+    "power": 3
+  },
+  "tattoo-artist": {
+    "cost": 3,
+    "power": 3
+  },
+  "og-skater": {
+    "cost": 3,
+    "power": 3
+  },
+  "inmate-kingpin": {
+    "cost": 1,
+    "power": 2
+  },
+  "live-streamer-male": {
+    "cost": 2,
+    "power": 2
+  },
+  "redneck": {
+    "cost": 2,
+    "power": 3
+  },
+  "redneck-evil": {
+    "cost": 4,
+    "power": 5
+  },
+  "lawyer": {
+    "cost": 3,
+    "power": 3
+  },
+  "nigerian-father": {
+    "cost": 4,
+    "power": 4
+  },
+  "bouncer": {
+    "cost": 4,
+    "power": 1
+  },
+  "rent-a-cop": {
+    "cost": 2,
+    "power": 2
+  },
+  "the-shootout": {
+    "cost": 3,
+    "power": 0
+  },
+  "the-block-spin": {
+    "cost": 3,
+    "power": 0
+  },
+  "the-sideshow": {
+    "cost": 2,
+    "power": 0
+  },
+  "the-concert": {
+    "cost": 2,
+    "power": 0
+  },
+  "the-setup": {
+    "cost": 1,
+    "power": 0
+  },
+  "the-dice-game": {
+    "cost": 0,
+    "power": 0
+  },
+  "the-after-party": {
+    "cost": 2,
+    "power": 0
+  },
+  "the-kickback": {
+    "cost": 2,
+    "power": 0
+  },
+  "the-cookout": {
+    "cost": 3,
+    "power": 0
+  },
+  "the-babyshower": {
+    "cost": 2,
+    "power": 0
+  },
+  "squabblehouse-security": {
+    "cost": 3,
+    "power": 4
+  },
+  "squabblehouse-teknician": {
+    "cost": 5,
+    "power": 5
+  },
+  "griddle-master": {
+    "cost": 3,
+    "power": 2
+  },
+  "inmate-reformed": {
+    "cost": 3,
+    "power": 3
+  },
+  "squabblehouse-bus-boy": {
+    "cost": 1,
+    "power": 1
+  },
+  "squabblehouse-cashier": {
+    "cost": 2,
+    "power": 1
+  },
+  "waffle-warlord": {
+    "cost": 5,
+    "power": 5
+  },
+  "cane-corso-red": {
+    "cost": 2,
+    "power": 3
+  },
+  "blue-nose-pit": {
+    "cost": 2,
+    "power": 3
+  },
+  "boo-boo-the-fool": {
+    "cost": 2,
+    "power": 2
+  },
+  "mr-mc-hands": {
+    "cost": 4,
+    "power": 4
+  },
+  "ms-mary-mack": {
+    "cost": 2,
+    "power": 3
+  },
+  "pimp-swookie": {
+    "cost": 3,
+    "power": 3
+  },
+  "og-uncle-harley-davidson": {
+    "cost": 4,
+    "power": 5
+  },
+  "suga-mama": {
+    "cost": 3,
+    "power": 4
+  },
+  "side-chick": {
+    "cost": 2,
+    "power": 2
+  },
+  "gas-station-window-wiper": {
+    "cost": 1,
+    "power": 2
+  },
+  "parole-officer": {
+    "cost": 3,
+    "power": 3
+  },
+  "work-hubby": {
+    "cost": 2,
+    "power": 3
+  },
+  "he-just-a-friend": {
+    "cost": 3,
+    "power": 4
+  },
+  "crazy-ex-boyfriend": {
+    "cost": 3,
+    "power": 5
+  },
+  "uncle-sam": {
+    "cost": 4,
+    "power": 6
+  },
+  "apartment-maintenance-sage": {
+    "cost": 3,
+    "power": 4
+  },
+  "bail-bonds-auntie": {
+    "cost": 2,
+    "power": 3
+  },
+  "lash-tech": {
+    "cost": 2,
+    "power": 3
+  },
+  "the-opening-act": {
+    "cost": 1,
+    "power": 2
+  },
+  "the-dj": {
+    "cost": 2,
+    "power": 2
+  },
+  "the-hype-man": {
+    "cost": 2,
+    "power": 1
+  },
+  "the-manager-nice": {
+    "cost": 2,
+    "power": 3
+  },
+  "the-rapper": {
+    "cost": 3,
+    "power": 3
+  },
+  "the-janky-promoter": {
+    "cost": 3,
+    "power": 4
+  },
+  "the-local-celebrity": {
+    "cost": 3,
+    "power": 4
+  },
+  "the-battle-rapper": {
+    "cost": 3,
+    "power": 3
+  },
+  "the-manager-evil": {
+    "cost": 4,
+    "power": 5
+  },
+  "the-og-rap-legend": {
+    "cost": 5,
+    "power": 6
+  },
+  "fitness-bro": {
+    "cost": 2,
+    "power": 3
+  },
+  "fitness-girl": {
+    "cost": 2,
+    "power": 3
+  },
+  "personal-trainer": {
+    "cost": 3,
+    "power": 4
+  },
+  "demon-trainer": {
+    "cost": 4,
+    "power": 6
+  },
+  "kyle": {
+    "cost": 4,
+    "power": 3
+  },
+  "stockz": {
+    "cost": 3,
+    "power": 4
+  }
+}

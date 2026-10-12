@@ -168,7 +168,7 @@ for (const owner of ['player','cpu'] as const) {
    const enemy=owner==='player'?'cpu':'player';
    for(const shielded of [false,true]) {
     let m=blank();const immune={...unit('triple-og-blue',enemy,0,91),powerModifier:20};
-    const target=unit('rastamon',enemy,0,92);m.boards[0]=[immune,target];
+    const target={...unit('rastamon',enemy,0,92),basePower:5};m.boards[0]=[immune,target];
     if(id==='cane-corso-red')m.boards[0].push(unit('triple-og-red',owner,0,93));
     if(shielded)m=cast(m,'bustdown',enemy).after;
     const before=live(m,target.instanceId).powerModifier;
@@ -176,7 +176,7 @@ for (const owner of ['player','cpu'] as const) {
     assert.equal(live(after,immune.instanceId).powerModifier,20,'immune OG is untouched');
     assert.equal(live(after,target.instanceId).powerModifier,before+(shielded?2:id==='ganger-red'?-2:-1));
     if(shielded)assert.equal(live(after,target.instanceId).statuses.protected,false);
-    if(id==='ganger-red')assert.equal(live(after,card.instanceId).powerModifier,1);
+    if(id==='ganger-red')assert.equal(live(after,card.instanceId).powerModifier,shielded?0:1);
    }
   });
  }
@@ -186,7 +186,7 @@ for(const owner of ['player','cpu'] as const) {
  test(`${owner}: Blue Side Cover prioritizes remote crew and preserves neutral and solo fallbacks`,()=>{
   const m=blank(),blue=unit('ganger-blue',owner,1,101),neutral=unit('cornball',owner,2,102);m.boards=[[],[blue],[neutral]];
   const played=cast(m,'ganger-blue',owner,0);
-  assert.equal(live(played.after,blue.instanceId).powerModifier,5);
+  assert.equal(live(played.after,blue.instanceId).powerModifier,4);
   assert.equal(live(played.after,blue.instanceId).statuses.protected,true);
   assert.equal(live(played.after,neutral.instanceId).powerModifier,0);
   assert.equal(live(played.after,played.card.instanceId).powerModifier,1);
@@ -199,11 +199,11 @@ for(const owner of ['player','cpu'] as const) {
   const m=blank(),ally=unit('blueside1',owner,1,103);m.boards[1]=[ally];
   const watch=cast(m,'look-out',owner,0);const enemy=owner==='player'?'cpu':'player';
   const first=cast(watch.after,'og',enemy,2).after;
-  assert.equal(live(first,ally.instanceId).powerModifier,3);
+  assert.equal(live(first,ally.instanceId).powerModifier,2);
   assert.equal(live(first,watch.card.instanceId).lookoutCalls,1);
   const candidate=createCardInstance('rastamon',owner);assert.equal(getLegalCardCost(first,owner,candidate,2),Math.max(0,cards.rastamon.cost-1));
   const second=cast(first,'og',enemy,0).after;
-  assert.equal(live(second,ally.instanceId).powerModifier,3);
+  assert.equal(live(second,ally.instanceId).powerModifier,2);
   assert.equal(live(second,watch.card.instanceId).lookoutCalls,1);
  });
 }
@@ -214,7 +214,7 @@ for(const owner of ['player','cpu'] as const) {
   const setup=cast(m,'look-out',owner,0);m=setup.after;const enemy=owner==='player'?'cpu':'player';
   for(let call=1;call<=4;call++) {
    m=cast(m,'hooper',enemy,1).after;
-   assert.equal(live(m,ally.instanceId).powerModifier,Math.min(call,3)*3);
+   assert.equal(live(m,ally.instanceId).powerModifier,Math.min(call,3)*2);
    assert.equal(live(m,setup.card.instanceId).lookoutCalls,Math.min(call,3));
    assert.equal(live(m,setup.card.instanceId).powerModifier,0,'no upgrade payout');
    m={...m,boards:m.boards.map(l=>l.filter(c=>c.owner===owner)) as Match['boards']};
@@ -229,9 +229,9 @@ for(const owner of ['player','cpu'] as const) {
   const m=blank(),ally=unit('ganger-blue',owner,1,202);m.boards[1]=[ally];
   let covered=cast(m,'ganger-blue',owner,0).after;const enemy=owner==='player'?'cpu':'player';
   covered=cast(covered,'ganger-red',enemy,1).after;
-  assert.equal(live(covered,ally.instanceId).powerModifier,5);
+  assert.equal(live(covered,ally.instanceId).powerModifier,4);
   assert.equal(live(covered,ally.instanceId).statuses.protected,false);
   covered=cast(covered,'ganger-red',enemy,1).after;
-  assert.equal(live(covered,ally.instanceId).powerModifier,3);
+  assert.equal(live(covered,ally.instanceId).powerModifier,2);
  });
 }

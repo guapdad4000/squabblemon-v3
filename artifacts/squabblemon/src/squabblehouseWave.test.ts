@@ -67,8 +67,8 @@ test('Squabblehouse wave definitions expose all nine playable identities, budget
     'squabblehouse-bus-boy': ['Uncommon', 1, 1, 'Water'],
     'squabblehouse-cashier': ['Rare', 2, 1, 'Earth'],
     'waffle-warlord': ['Legendary', 5, 5, 'Fire'],
-    'cane-corso-red': ['Rare', 2, 6, 'Fire'],
-    'blue-nose-pit': ['Rare', 2, 5, 'Water'],
+    'cane-corso-red': ['Rare', 2, 3, 'Fire'],
+    'blue-nose-pit': ['Rare', 2, 3, 'Water'],
   };
   for (const id of IDS) {
     const card = squabblehouseWaveCards[id];
@@ -182,23 +182,23 @@ test('Dog On Reveal waits without its matching OG and never teleports as part of
 });
 
 test('Red dog leaps two lanes to intercept one complete Griddle damage-and-Burn package', () => {
-  // A fresh v52 guard survives 3 damage; a wounded guard still covers a lethal hit.
-  for (const wounded of [false, true]) {
+  // Fresh and wounded guards intercept lethal damage; a +1 buff lets a guard survive.
+  for (const condition of ['fresh', 'wounded', 'boosted']) {
     let match = blank();
     const og = unit('triple-og-red', 'cpu', 2, 11);
     const dog = unit('cane-corso-red', 'cpu', 0, 12);
-    dog.powerModifier = wounded ? -3 : 0;
+    dog.powerModifier = condition === 'wounded' ? -1 : condition === 'boosted' ? 1 : 0;
     match = withBoard(match, og, dog);
     const after = cast(match, 'griddle-master', 'player', 2);
     const guardedOg = findInstance(after, og.instanceId)!;
     const hitDog = findInstance(after, dog.instanceId);
     assert.equal(guardedOg.powerModifier, 0, 'the OG receives no damage');
     assert.equal(guardedOg.statuses.burnStacks, 0, 'the OG receives no Burn from the intercepted package');
-    if (wounded) {
-      assert.equal(hitDog, undefined, '3 damage destroys a guard wounded to 3 Hands');
+    if (condition !== 'boosted') {
+      assert.equal(hitDog, undefined, 'the guard takes the lethal package instead of its OG');
     } else {
-      assert.ok(hitDog, 'the fresh 6-Hand bodyguard survives the 3-damage hit');
-      assert.equal(hitDog.basePower + hitDog.powerModifier, 3);
+      assert.ok(hitDog, 'a 4-Hand buffed guard survives the 3-damage hit');
+      assert.equal(hitDog.basePower + hitDog.powerModifier, 1);
       assert.equal(hitDog.statuses.burnStacks, 1, 'the survivor receives Burn with the damage');
       assert.equal(hitDog.squabblehouseGuardRound, 1, 'the interception spends this round’s guard charge');
     }
@@ -211,9 +211,9 @@ test('Red dog leaps two lanes to intercept one complete Griddle damage-and-Burn 
       && event.targets.some(target => target.cardInstanceId === og.instanceId));
     assert.ok(guardHit, 'damage event names the real dog recipient and protected OG');
     const dogTarget = guardHit.targets.find(target => target.cardInstanceId === dog.instanceId)!;
-    assert.equal(dogTarget.before?.power, wounded ? 3 : 6);
-    if (wounded) assert.equal(dogTarget.after, null);
-    else assert.equal(dogTarget.after?.power, 3);
+    assert.equal(dogTarget.before?.power, dog.basePower + dog.powerModifier);
+    if (condition !== 'boosted') assert.equal(dogTarget.after, null);
+    else assert.equal(dogTarget.after?.power, 1);
   }
 });
 

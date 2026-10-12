@@ -113,7 +113,7 @@ test('both online owners keep Manager derived Hands authoritative, projected, an
     const liveManager = after.match!.boards.flat().find(card => card.instanceId === managerId)!;
     assert.equal(liveManager.powerModifier, 1,
       `${owner}: the reveal reward is the only permanent modifier on the Manager`);
-    assert.equal(getDistrictResults(after.match!)[1][owner], 5,
+    assert.equal(getDistrictResults(after.match!)[1][owner], 4,
       `${owner}: score includes the two legacy staff and the derived Manager aura`);
 
     const restored = json(after) as OnlineRoom;
@@ -122,10 +122,10 @@ test('both online owners keep Manager derived Hands authoritative, projected, an
       const view = onlineRoomView(restored, 'DINER', userId, 11);
       const publicManager = view.boards.flat().find(card => card.instanceId === managerId)!;
       assert.ok(publicManager);
-      assert.equal(publicManager.power, 5, `${owner}/${userId}: projection exposes computed Hands`);
-      assert.equal(publicManager.basePower, 2);
+      assert.equal(publicManager.power, 4, `${owner}/${userId}: projection exposes computed Hands`);
+      assert.equal(publicManager.basePower, 1);
       assert.equal(publicManager.powerModifier, 1);
-      assert.equal(view.scores[1][owner], 5);
+      assert.equal(view.scores[1][owner], 4);
       const serializedView = JSON.stringify(view);
       for (const privateKey of ['playerHand', 'cpuHand', 'replay', 'abilityUpgradeSnapshot', 'playerCardIds', 'cpuCardIds']) {
         assert.ok(!serializedView.includes(`"${privateKey}"`), `${owner}/${userId}: public view does not leak ${privateKey}`);

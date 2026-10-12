@@ -88,7 +88,7 @@ test('five collectible identities have rarities, three upgrades and legal acquis
   }
   assert.equal(SUMMON_TEMPLATES['demario-mushroom'].power, 2);
   assert.match(cards.demario.effect, /While in hand: At the start of each round, summon one 2-Hand Mushroom/);
-  assert.match(cards.demario.effect, /On Reveal: Summon two more Mushrooms in random open districts/);
+  assert.match(cards.demario.effect, /On Reveal: Summon one more Mushroom in a random open district/);
   assert.match(SUMMON_TEMPLATES['demario-mushroom'].effect, /consumes one Mushroom for \+2 Hands/);
 });
 
@@ -157,7 +157,7 @@ for (const owner of ['player', 'cpu'] as const) {
     }
   });
 
-  test(`${owner}: Demario reveal makes two seeded eligible summons and replays identically`, () => {
+  test(`${owner}: Demario reveal makes one seeded eligible summon and replays identically`, () => {
     const reveal = (index: number) => {
       const source = createCardInstance('demario', owner, `reveal-seed-${index}`, index);
       const m = blank();
@@ -168,14 +168,14 @@ for (const owner of ['player', 'cpu'] as const) {
     const first = reveal(0), replay = reveal(0);
     assert.deepEqual(replay, first);
     assert.deepEqual(JSON.parse(JSON.stringify(first)), first);
-    assert.equal(mushrooms(first, owner).length, 2);
+    assert.equal(mushrooms(first, owner).length, 1);
     assert.ok(mushrooms(first, owner).every(card => card.lane !== null
       && first.boards[card.lane].filter(item => item.owner === owner).length <= 4));
     const observedLanes = new Set<number>();
     for (let seed = 1; seed <= 16; seed++) {
       const after = reveal(seed);
       const summoned = mushrooms(after, owner);
-      assert.equal(summoned.length, 2);
+      assert.equal(summoned.length, 1);
       for (const mushroom of summoned) observedLanes.add(mushroom.lane!);
     }
     assert.ok(observedLanes.size > 1, 'different source seeds should vary eligible summon lanes');

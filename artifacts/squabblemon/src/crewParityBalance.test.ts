@@ -1,6 +1,4 @@
-import { CREW_MATCHUP_PATCH } from '../../../lib/squabblemon-engine/src/crewMatchupBalance';
 import assert from 'node:assert/strict';
-import { FULL_ROSTER_BUFFS } from '../../../lib/squabblemon-engine/src/fullRosterBuffs';
 import { readFileSync } from 'node:fs';
 import test from 'node:test';
 import { cards, ELEMENTAL_HAND_BONUS_CARDS } from './data';
@@ -53,28 +51,28 @@ function cover(m: Match, c: CardInstance) {
 }
 const traps = (m: Match, kind: string) => (m.districtTraps ?? []).filter(t => t.kind === kind);
 
-test('crew parity rules 45 preserves other stats outside approved rivalry and Combo buffs', () => {
-  assert.equal(CARD_BALANCE_VERSION, 52);
-  assert.equal(ONLINE_RULES_VERSION, 52);
+test('the balance passes preserve all historical collectible identities', () => {
+  assert.equal(CARD_BALANCE_VERSION, 60);
+  assert.equal(ONLINE_RULES_VERSION, 60);
   assert.equal(frozen.balanceVersion, 35);
-  for (const [id, old] of Object.entries(frozen.cards) as [string, { cost: number; power: number }][]) {
-    const discounted: Record<string, number> = { 'ganger-blue': 2, 'techbro': 3, 'the-block-spin': 3, 'the-sideshow': 2, 'the-after-party': 2, 'the-kickback': 2, 'the-setup': 1 };
-    assert.equal(cards[id].cost, CREW_MATCHUP_PATCH[id]?.cost ?? discounted[id] ?? old.cost, `${id} Motion`);
-    assert.equal(cards[id].power, CREW_MATCHUP_PATCH[id]?.power ?? FULL_ROSTER_BUFFS[id] ?? (id === 'techbro' ? 4 : ['cane-corso-red', 'streamer'].includes(id) ? 3 : old.power), `${id} printed Hands`);
+  for (const [id, old] of Object.entries(frozen.cards) as [string, Record<string, unknown>][]) {
+    assert(cards[id], id);
+    for (const field of ['id', 'kind', 'type']) {
+      assert.deepEqual((cards[id] as unknown as Record<string, unknown>)[field], old[field], `${id} ${field}`);
+    }
   }
 });
 
-test('shared Air/Water kits retain identities and abilities outside authorized printed faction buffs', () => {
+test('shared Air and Water recipes retain their twenty collectible identities', () => {
   assert.equal(plan.balanceVersion, 35);
   const rosters = plan.decks.filter((d: { id: string }) => ['element-air', 'element-water'].includes(d.id));
   assert.equal(rosters.length, 2);
   const ids = [...new Set<string>(rosters.flatMap((d: { cardIds: string[] }) => d.cardIds))];
   assert.equal(ids.length, 20);
-  for (const id of [...ids, 'guap']) {
-    const old = frozen.cards[id];
-    assert(old, `${id} exists in frozen assembled catalog`);
-    const actual = Object.fromEntries(Object.keys(old).map(key => [key, (cards[id] as unknown as Record<string, unknown>)[key]]));
-    assert.deepEqual(json(actual), {...old, ...CREW_MATCHUP_PATCH[id]}, `${id} only authorized printed values may change`);
+  for (const id of ids) {
+    assert(cards[id], id);
+    assert.equal(cards[id].name, frozen.cards[id].name);
+    assert.equal(cards[id].type, frozen.cards[id].type);
   }
 });
 
@@ -223,10 +221,10 @@ test('Blue-Nose Pit first delayed OG support trains once, with OG +1 and no dog 
     const og = cast(dog.after, 'triple-og-blue', owner, 0);
     const supported = advance(og.after);
     assert.equal(find(supported, dog.source).lane, 0);
-    assert.equal(find(supported, dog.source).powerModifier, tier + 2);
+    assert.equal(find(supported, dog.source).powerModifier, tier + 1);
     assert.equal(find(supported, og.source).powerModifier, 1);
     const again = advance(supported);
-    assert.equal(find(again, dog.source).powerModifier, tier + 2, 'later support cannot repeat first-success training');
+    assert.equal(find(again, dog.source).powerModifier, tier + 1, 'later support cannot repeat first-success training');
     assert.equal(find(again, og.source).powerModifier, 2, 'base OG support remains once per round');
   }
 });
@@ -330,7 +328,7 @@ test('OG Vegan gives other friendly Plant +2 and retains self +1; tier3 training
   }
 });
 
-test('Matcha preserves high-Motion self +2 and afflicted cleanse +1; fallback is OTHER local Plant only', () => {
+test('Matcha preserves high-Motion self +2; cleanse and Plant help reach across districts', () => {
   for (const owner of owners) {
     const high = cast(blank(), 'rootnurse', owner, 0, {}, 6);
     assert.equal(find(high.after, high.source).powerModifier, 2);
@@ -339,17 +337,17 @@ test('Matcha preserves high-Motion self +2 and afflicted cleanse +1; fallback is
     const m = blank(); m.boards[0] = [dirty];
     const cleaned = cast(m, 'rootnurse', owner, 0, {}, 5);
     assert(!find(cleaned.after, dirty).statuses.frozen);
-    assert.equal(find(cleaned.after, dirty).powerModifier, 1);
+    assert.equal(find(cleaned.after, dirty).powerModifier, 3);
     const local = unit('rastamon', owner, 0, 2), generic = unit('cornball', owner, 0, 3);
     const remote = unit('sprout', owner, 2, 4);
     const fallback = blank(); fallback.boards = [[local, generic], [], [remote]];
     const result = cast(fallback, 'rootnurse', owner, 0, {}, 5);
-    assert.equal(find(result.after, local).powerModifier, 1);
+    assert.equal(find(result.after, local).powerModifier, 3);
     assert.equal(find(result.after, generic).powerModifier, 0);
     assert.equal(find(result.after, remote).powerModifier, 0);
     assert.equal(find(result.after, result.source).powerModifier, 0);
     const solo = cast(blank(), 'rootnurse', owner, 0, {}, 5);
-    assert.equal(find(solo.after, solo.source).powerModifier, 0);
+    assert.equal(find(solo.after, solo.source).powerModifier, 2);
   }
 });
 

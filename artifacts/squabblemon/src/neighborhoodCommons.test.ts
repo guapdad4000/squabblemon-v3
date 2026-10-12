@@ -39,7 +39,7 @@ test('all eleven neighborhood cards are Common, upgradeable, and individually ob
 });
 
 test('Common self boosts honor their printed conditions', () => {
-  assert.equal(cards.youngbull.power, 2);
+  assert.equal(cards.youngbull.power, 4);
   const cases = [
     ['youngbull', [], [instance('cornball', 'cpu', 1)], 1],
     ['transplant', [], [], 1],

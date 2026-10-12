@@ -147,7 +147,7 @@ for (const owner of ['player', 'cpu'] as const) {
       const before = JSON.stringify(m), after = cast(m, 'inmate-boyfriend', owner, tier);
       assert.equal(JSON.stringify(m), before);
       assert.deepEqual(cast(JSON.parse(before), 'inmate-boyfriend', owner, tier), after);
-      assert.equal(after.boards[1][0].powerModifier, 3);
+      assert.equal(after.boards[1][0].powerModifier, 2);
       assert.equal(after.boards[2][0].powerModifier, 0);
       assert.equal(find(after, 'inmate-boyfriend').powerModifier, tier);
       assert.equal(after.effectLog.filter(e => e.abilityMetadata).length, tier);
@@ -176,7 +176,7 @@ for (const owner of ['player', 'cpu'] as const) {
     const roleOnly = blank(); roleOnly.boards[0] = [unit('lebron-james', owner)];
     assert.equal(find(cast(roleOnly, 'inmate-crafty', owner, 3), 'inmate-crafty').powerModifier, 0);
     assert.equal(cards['inmate-crafty'].cost, 2);
-    assert.equal(cards['inmate-crafty'].power, 5);
+    assert.equal(cards['inmate-crafty'].power, 4);
   });
 }
 for (const owner of ['player', 'cpu'] as const) test(`${owner}: Crafty requires a local friendly inmate or support`, () => {

@@ -202,8 +202,21 @@ export function selectedReveal(
   else if (id === 'gym-bag-yn') {
     if (!roundSpent(m, s, id) && transfer(local(isFitnessCharacter)))
       m = consume(m, s, id);
-  } else if (id === 'mixtape-cousin') transfer(local(isMusicCharacter));
-  else if (id === 'cousin-back-from-college') transfer(local(family));
+  } else if (id === 'mixtape-cousin') {
+    const artist = local(isMusicCharacter);
+    if (!roundSpent(m, s, id) && transfer(artist) && artist) {
+      m = consume(m, s, id);
+      grant(find(m, artist.instanceId), 2);
+      grant(find(m, s.instanceId), 1);
+    }
+  }
+  else if (id === 'cousin-back-from-college') {
+    const relative = local(family);
+    if (transfer(relative) && relative && !roundSpent(m, s, id)) {
+      m = consume(m, s, id);
+      grant(find(m, relative.instanceId), 2);
+    }
+  }
   else if (id === 'stairwell-sprinter') {
     if (transfer(s, true) && !spent(m, s, `${id}:${s.instanceId}`)) {
       m = consume(m, s, `${id}:${s.instanceId}`);
@@ -220,11 +233,17 @@ export function selectedReveal(
       const c = pull(isMusicCharacter);
       if (c) {
         m = consume(m, s, id);
-        grant(c, 1);
-        grant(find(m, s.instanceId), 1);
+        grant(c, 2);
+        grant(find(m, s.instanceId), 2);
       }
     }
-  } else if (id === 'night-bus-driver') pull(() => true);
+  } else if (id === 'night-bus-driver') {
+    const passenger = pull(() => true);
+    if (passenger && !spent(m, s, `${id}:${s.instanceId}`)) {
+      m = consume(m, s, `${id}:${s.instanceId}`);
+      grant(passenger, 2);
+    }
+  }
   else if (id === 'last-set-og') {
     if (
       board(m).some(
@@ -261,17 +280,20 @@ export function selectedReveal(
               all.filter((c) => c.lane === l),
               t,
             ),
-            id === 'one-man-band' ? 4 : 3,
+            3,
           );
       } else {
         const c = local(eligible);
-        grant(c, id === 'og-calisthenics' ? 3 : 5);
+        grant(c, id === 'one-man-band' ? 4 : 3);
         if (id === 'og-calisthenics') shield(c);
       }
       if (success) m = consume(m, s, id);
     }
-  } else if (id === 'studio-couch-yn') grant(local(isMusicCharacter), 2);
+  } else if (id === 'studio-couch-yn') grant(local(isMusicCharacter), 3);
   else if (id === 'plate-auntie') {
+    // A fresh reveal replaces this instance's reservation; echoes cannot bank one.
+    const pendingId = `sw:${s.owner}:plate-pending:${s.instanceId}`;
+    if (!echoed || local(family)) m = { ...m, creativeMarks: (m.creativeMarks ?? []).filter(x => x.id !== pendingId) };
     const c =
       local((c) => family(c) && c.powerModifier < 0) ??
       local((c) => family(c) && !!c.statuses.burnStacks) ??
@@ -283,9 +305,16 @@ export function selectedReveal(
           ...x,
           statuses: { ...x.statuses, burnStacks: 0 },
         }));
+        const patient = find(m, c.instanceId);
+        if (patient && (patient.powerModifier > c.powerModifier || c.statuses.burnStacks > 0)) shield(patient);
         success = true;
         targets.push(c.instanceId);
-      } else grant(c, 2);
+      } else grant(c, 3);
+    } else if (!echoed) {
+      m = put(m, s, `plate-pending:${s.instanceId}`, {
+        kind: 'sw-plate-pending', expires: m.round + 1,
+      });
+      success = true;
     }
   } else if (id === 'community-cook') {
     const eligible = (c: CardInstance) => !spent(m, s, `meal:${c.instanceId}`);
@@ -293,8 +322,8 @@ export function selectedReveal(
       local((c) => eligible(c) && c.powerModifier < 0) ?? local(eligible);
     if (c) {
       m = consume(m, s, `meal:${c.instanceId}`);
-      if (c.powerModifier < 0) m = recovery(m, c, 3, t);
-      else grant(c, 2);
+      if (c.powerModifier < 0) m = recovery(m, c, 4, t);
+      else grant(c, 3);
       if (homeless(c)) shield(find(m, c.instanceId));
       targets.push(c.instanceId);
       success = true;
@@ -345,7 +374,7 @@ export function selectedReveal(
           c,
           id === 'grandma-said-sit-down' &&
             (m.roundMovedIds?.[s.owner]?.length ?? 0) >= 2
-            ? 3
+            ? 4
             : id === 'grandma-said-sit-down' ? 2 : 1,
           s.ability,
         );
@@ -438,6 +467,22 @@ function payout(
     `${s.ability}${key.endsWith(':hand') ? ' (In Hand)' : ''}: +${n} Hand${n === 1 ? '' : 's'}.`,
   );
 }
+// Consume before buffing: Family gain reactions must never pay the same plate twice.
+export function selectedArrived(m: Match, entrant: CardInstance, t: MusicTools): Match {
+  if (!family(entrant) || entrant.hazard || entrant.kind === 'support') return m;
+  for (const pending of (m.creativeMarks ?? []).filter(x =>
+    x.kind === 'sw-plate-pending' && x.expires >= m.round &&
+    x.owner === entrant.owner && x.lane === entrant.lane &&
+    x.source.instanceId !== entrant.instanceId)) {
+    const auntie = find(m, pending.source.instanceId);
+    if (!auntie || !active(auntie) || auntie.lane !== pending.lane || identity(auntie) !== 'plate-auntie') continue;
+    const before = m;
+    m = { ...m, creativeMarks: m.creativeMarks?.filter(x => x.id !== pending.id) };
+    m = buff(m, entrant.instanceId, 3, t);
+    m = t.event(before, m, auntie, [entrant.instanceId], 'Saved You a Plate: arriving Fire or Family ally gains +3 Hands.');
+  }
+  return m;
+}
 export function selectedMoved(
   before: Match,
   m: Match,
@@ -447,6 +492,7 @@ export function selectedMoved(
   const c = find(m, id),
     old = find(before, id);
   if (!c || !old || c.lane === old.lane) return m;
+  m = selectedArrived(m, c, t);
   if (isFitnessCharacter(c)) {
     m = put(m, c, `route:${id}`, {
       seen: [...new Set([...routes(before, old), String(c.lane)])],
@@ -455,7 +501,7 @@ export function selectedMoved(
   }
   if (isFitnessCharacter(c)) {
     const coach = (c.owner === 'player' ? m.playerHand : m.cpuHand).find(x => x.cardId === 'og-calisthenics' && active(x));
-    if (coach) m = payout(m, coach, 'og-calisthenics:hand', c, 2, 2, t);
+    if (coach) m = payout(m, coach, 'og-calisthenics:hand', c, 1, 2, t);
   }
   for (const w of (m.creativeMarks ?? []).filter(
     (x) =>
@@ -480,7 +526,7 @@ export function selectedMoved(
       s.instanceId !== id &&
       family(c)
     )
-      m = payout(m, s, kit, c, 2, 3, t);
+      m = payout(m, s, kit, c, 3, 3, t);
     if (kit === 'calisthenics-yn' && s.instanceId === id)
       m = payout(m, s, `${kit}:${id}`, s, 2, 2, t);
     if (kit === 'fake-marriage' && s.lane === c.lane && s.instanceId !== id)
@@ -514,7 +560,7 @@ export function selectedGain(
       active(s) &&
       identity(s) === 'second-plate-cousin',
   ))
-    if (family(c)) m = payout(m, s, 'second-plate-cousin', s, 2, 2, t, true);
+    if (family(c)) m = payout(m, s, 'second-plate-cousin', s, 3, 2, t, true);
   return m;
 }
 export function selectedDamage(
@@ -536,7 +582,7 @@ export function selectedDamage(
       active(s) &&
       identity(s) === 'grill-uncle',
   ))
-    m = payout(m, s, 'grill-uncle', s, 1, 2, t);
+    m = payout(m, s, 'grill-uncle', s, 2, 2, t);
   return m;
 }
 export function selectedResolved(
@@ -546,6 +592,18 @@ export function selectedResolved(
   t: MusicTools,
   echoed = false,
 ): Match {
+  if (!echoed && find(m, c.instanceId)?.creativeEntranceSucceeded && family(c)) {
+    for (const cook of board(m).filter(x => x.owner === c.owner && x.instanceId !== c.instanceId && x.lane === c.lane && active(x) && identity(x) === 'grill-uncle')) {
+      const key = 'grill-uncle:stoke';
+      if (roundSpent(m, cook, key) || (mark(m, cook, key)?.amount ?? 0) >= 2) continue;
+      const victim = strong(enemies(m, cook), t);
+      if (!victim) continue;
+      const start = m;
+      m = consume(m, cook, key);
+      m = t.burn(m, cook, victim, 1, 'Keep the Grill Hot');
+      m = t.event(start, m, cook, [victim.instanceId], 'Keep the Grill Hot: Family entrance attempts 1 Burn; once per round, twice per side per match.');
+    }
+  }
   if (
     echoed ||
     !find(m, c.instanceId)?.creativeEntranceSucceeded ||
@@ -581,7 +639,7 @@ export function selectedResolved(
           eligibility: 'selected-music',
           sourceLane: s.lane!,
           createdOrder: order,
-          expiresAfterRound: m.round,
+          expiresAfterRound: m.round + 1,
         },
       ],
     };

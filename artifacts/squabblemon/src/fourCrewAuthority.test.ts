@@ -31,16 +31,16 @@ test('revised recommendations remain legal collectibles, not new starters or bat
     assert.ok(!ids.includes('demario-mushroom') && !ids.includes('luigion-powered'));
   }
   assert.equal(cards['inmate-crafty'].cost, 2);
-  assert.equal(cards['inmate-crafty'].power, 5);
+  assert.equal(cards['inmate-crafty'].power, 4);
   assert.equal(cards.watson.cost, 2);
-  assert.equal(cards.watson.power, 3);
+  assert.equal(cards.watson.power, 2);
   assert.equal(cards.demario.cost, 2);
   assert.equal(cards.demario.power, 3);
   assert.equal(cards.luigion.cost, 2);
   assert.equal(cards.luigion.power, 3);
   assert.equal(MAX_MOTION, 9);
-  assert.equal(CARD_BALANCE_VERSION, 52);
-  assert.equal(ONLINE_RULES_VERSION, 52);
+  assert.equal(CARD_BALANCE_VERSION, 60);
+  assert.equal(ONLINE_RULES_VERSION, 60);
 });
 
 for (const crewId of crewIds) for (let tier = 0; tier <= 3; tier++) {
@@ -155,7 +155,7 @@ for (const owner of ['player', 'cpu'] as const) for (let tier = 0; tier <= 3; ti
     room.match![owner === 'player' ? 'playerMotion' : 'cpuMotion'] = 9;
     room = playOnline(room, owner, 'inmate-boyfriend', 0);
     const crafty = room.match!.boards.flat().find(card => card.cardId === 'inmate-crafty')!;
-    assert.equal(crafty.powerModifier, 3);
+    assert.equal(crafty.powerModifier, 2);
     room = playOnline(room, owner, 'sherlock', 0);
     const trap = room.match!.districtTraps![0];
     const enemy: Owner = owner === 'player' ? 'cpu' : 'player';

@@ -92,7 +92,7 @@ test("City Never Sleeps taxes, discounts, Sneaker, Promoter, Nail, and OG Uncle 
   const reseller = custom("sneaker", "player", 22), og = custom("og", "cpu", 23);
   m = { ...m, phase: "player", playerHand: [reseller], playerMotion: 20, boards: [[og], [], []] };
   m = playCard(m, "player", reseller.instanceId, 0);
-  assert.equal(m.boards[0].find(card => card.instanceId === reseller.instanceId)?.powerModifier, og.basePower);
+  assert.equal(m.boards[0].find(card => card.instanceId === reseller.instanceId)?.powerModifier, Math.min(3, og.basePower));
   assert.equal(m.boards[0].find(card => card.instanceId === og.instanceId)?.statuses.weakened, true);
 
   const promoter = custom("promoter", "player", 24), handHigh = custom("og", "cpu", 25), handLow = custom("cornball", "cpu", 26);
@@ -107,8 +107,8 @@ test("City Never Sleeps taxes, discounts, Sneaker, Promoter, Nail, and OG Uncle 
   m = playCard(m, "player", nail.instanceId, 0);
   m = { ...m, phase: "cpu-reveal", cpuHand: [roasterHit], cpuMotion: 20 };
   m = playCard(m, "cpu", roasterHit.instanceId, 0);
-  assert.equal(m.boards[0].find(card => card.instanceId === target.instanceId)?.powerModifier, 1);
-  assert.equal(m.boards[0].find(card => card.instanceId === target.instanceId)?.statuses.burnStacks, 2);
+  assert.equal(m.boards[0].find(card => card.instanceId === target.instanceId)?.powerModifier, 2);
+  assert.equal(m.boards[0].find(card => card.instanceId === target.instanceId)?.statuses.burnStacks, 1);
   assert(!m.timedEffects.some(effect => effect.kind === "nail-mitigation"));
 });
 
@@ -272,7 +272,7 @@ test('conditional upgrade families affect authored targets only after a successf
   assert.deepEqual(events.map((event) => event.abilityMetadata?.upgradeId), [
     'roaster:upgrade:1', 'roaster:upgrade:2', 'roaster:upgrade:3',
   ]);
-  assert.equal(resolved.boards[0].find((card) => card.instanceId === enemy.instanceId)?.powerModifier, -5);
+  assert.equal(resolved.boards[0].find((card) => card.instanceId === enemy.instanceId)?.powerModifier, -4);
   assert.equal(resolved.boards[0].find((card) => card.cardId === 'roaster')?.powerModifier, 1);
   const failed = playOne('roaster', (base) => ({
     ...base,
@@ -336,7 +336,7 @@ test('freeze, silence and power modifiers affect scoring; Plug discounts its nex
   const frozen = { ...custom('hooper', 'player', 1), statuses: { frozen: true, silenced: false, protected: false, blocked: false } };
   assert.equal(getEffectiveCardPower(frozen), 0);
   const boosted = { ...custom('cornball', 'player', 2), powerModifier: 2 };
-  assert.equal(getLaneScore([boosted], 0), 3);
+  assert.equal(getLaneScore([boosted], 0), 4);
   let match = playOne('plug');
   const cheap = custom('snow', 'player', 3);
   match = { ...match, phase: 'player', playerMotion: cheap.cost - 1, playerHand: [cheap] };
@@ -348,7 +348,7 @@ test('freeze, silence and power modifiers affect scoring; Plug discounts its nex
 test('hostile abilities change real enemy cards and scoring', () => {
   const recentEnemy = { ...custom('hooper', 'cpu', 20), lane: 0 as const, playedRound: 1 };
   const roasted = playOne('roaster', m => ({ ...m, boards: [[recentEnemy], [], []] }));
-  assert.equal(roasted.boards[0].find(c => c.instanceId === recentEnemy.instanceId)?.powerModifier, -3);
+  assert.equal(roasted.boards[0].find(c => c.instanceId === recentEnemy.instanceId)?.powerModifier, -2);
 
   const silenced = playOne('nerd', m => ({ ...m, boards: [[recentEnemy], [], []] }));
   assert(silenced.boards[0].find(c => c.instanceId === recentEnemy.instanceId)?.statuses.silenced);
@@ -415,7 +415,7 @@ test('movement and engine cards keep their persistent board changes', () => {
   assert.equal(combo.boards[1].find(c => c.instanceId === remotePlug.instanceId)?.powerModifier, 2);
 
   const flexed = playOne('techbro', m => ({ ...m, playerMotion: 6, boards: [[streamer], [], []] }));
-  assert.equal(flexed.playerMotion, 5);
+  assert.equal(flexed.playerMotion, 4);
   assert.equal(flexed.boards[0].find(c => c.cardId === 'techbro')?.powerModifier, 0);
 });
 
@@ -497,10 +497,10 @@ test('battle events identify play, reveal, ability source and ordered target sta
   assert.equal(ability.targets.length, 1);
   assert.equal(ability.targets[0].cardInstanceId, enemy.instanceId);
   assert.equal(ability.targets[0].before?.power, enemy.basePower);
-  assert.equal(ability.targets[0].after?.power, enemy.basePower - 3);
+  assert.equal(ability.targets[0].after?.power, enemy.basePower - 2);
   assert.deepEqual(ability.targets[0].before?.statuses, enemy.statuses);
   assert.equal(ability.scores.before[0].cpu, enemy.basePower + 2);
-  assert.equal(ability.scores.after[0].cpu, enemy.basePower - 3 + 2);
+  assert.equal(ability.scores.after[0].cpu, enemy.basePower - 2 + 2);
   assert.equal(ability.scores.after[0].player, 3);
 });
 
@@ -715,7 +715,7 @@ test('new elemental abilities replay deterministically and matchup bonuses apply
   assert.equal(burned.boards[0].find(card => card.instanceId === plant.instanceId)?.statuses.burnStacks, 4,
     'Fire receives its +1 matchup stack against a new Plant card');
 
-  const fireTarget = { ...custom('folks', 'cpu', 1012), lane: 0 as const };
+  const fireTarget = { ...custom('folks', 'cpu', 1012), basePower: 10, lane: 0 as const };
   const riptide = custom('riptidebruiser', 'player', 1013);
   const riptideMatch = playCard({
     ...createMatch('vibes', 'vibes'), playerMotion: 20, playerHand: [riptide],
@@ -827,7 +827,7 @@ test('passes are synchronous authoritative events and survive round transitions'
 });
 
 test('Church Auntie buff adds immediate Hands, preserves existing shields, and respects silence', () => {
-  assert.equal(cards.church.cost,3); assert.equal(cards.church.power,4);
+  assert.equal(cards.church.cost,3); assert.equal(cards.church.power,1);
   validateCardAbilityUpgrades({church:cards.church});
   for(const protectedAlready of [false,true]){
     const ally={...custom('cornball','player',91),lane:0 as const};
@@ -839,7 +839,7 @@ test('Church Auntie buff adds immediate Hands, preserves existing shields, and r
     assert.equal(result.timedEffects.filter(e=>e.kind==='church-protection').length,protectedAlready?0:1);
   }
   const alone=playOne('church');
-  assert.equal(alone.boards[0][0].basePower,4);
+  assert.equal(alone.boards[0][0].basePower,1);
   assert.equal(alone.boards[0][0].statuses.protected,false);
   const ally={...custom('cornball','player',92),lane:0 as const};
   const silenced=playOne('church',m=>({...m,playerHand:m.playerHand.map(c=>({...c,statuses:{...c.statuses,silenced:true}})),boards:[[ally],[],[]]}));

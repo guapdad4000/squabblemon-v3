@@ -89,7 +89,7 @@ test("locked-lane mythical plays are accepted online and reproduce in authoritat
     cardInstanceId: source.instanceId, lane: 2, squabble: false, endTurn: false,
   }]);
   assert.equal(played.match!.boards[2].find(card => card.cardId === 'triple-og-red')?.lane, 2);
-  assert.equal(played.match!.boards[2].find(card => card.cardId === 'hooper')?.powerModifier, -1,
+  assert.equal(played.match!.boards[2].find(card => card.cardId === 'hooper')?.powerModifier, -2,
     'RED PUNCH resolves against its actual locked district online');
   assert.deepEqual(replayed.boards, played.match!.boards, 'authoritative replay matches the online command');
 

@@ -1,3 +1,4 @@
+import { RED_SET_BENCHMARK_CARD_IDS } from '../../lib/squabblemon-engine/src/tripleOgs';
 import { createHash } from 'node:crypto';
 import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
@@ -20,8 +21,7 @@ const opponents: Record<string, BalanceDeck> = {
   inmate: defaults.find(deck => deck.id === 'focus-cellblock')!,
   blood: {
     id: 'focused-red-set', name: 'Blood / Red Set',
-    cardIds: ['triple-og-red', 'block-spinner', 'redside1', 'ganger-red', 'cane-corso-red',
-      'initiation', 'guap', 'folks', 'cognac', 'bustdown'],
+    cardIds: [...RED_SET_BENCHMARK_CARD_IDS],
   },
   crip: {
     id: 'focused-blue-set', name: 'Crip / Blue Set',

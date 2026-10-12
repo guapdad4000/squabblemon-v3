@@ -109,8 +109,10 @@ for (const owner of ['player', 'cpu'] as const) {
  });
  test('Repo Man tows the most boosted enemy and redistributes only existing bonus Hands: '+owner,()=>{
   for(const bonus of [0,1,5]) {
-   const m=blank(), target={...unit('og',enemy,1),powerModifier:bonus}, ally=unit('cornball',owner,0);
-   m.boards=[[ally],[target],[]];const after=cast(m,'repoman',owner).after;
+   const m=blank(), target={...unit('og',enemy,1),powerModifier:bonus}, ally={...unit('cornball',owner,0),basePower:1};
+   m.boards=[[ally],[target],[]];
+   const source={...createCardInstance('repoman',owner,'repo-targeting',1),basePower:2};
+   const after=playTurnCard({...m,phase:owner==='player'?'player':'cpu-reveal',[owner==='player'?'playerHand':'cpuHand']:[source]},owner,source.instanceId,0);
    assert.equal(find(after,target).lane,0);assert.equal(find(after,target).powerModifier,Math.max(0,bonus-3));
    assert.equal(find(after,ally).powerModifier,Math.min(3,bonus));assert.equal(find(after,target).recoverableDamage??0,0,'confiscating bonuses is not damage');
   }
@@ -147,7 +149,7 @@ for (const owner of ['player', 'cpu'] as const) {
    assert(blocked[owner==='player'?'playerHand':'cpuHand'].some(c=>c.instanceId===cheap.instanceId));
    assert.equal(find(blocked,expensive).lane,1);assert(!find(blocked,expensive).statuses.protected);
   expensive.statuses.locked=false;
-  m.boards=[[cheap,unit('og',owner,0),unit('church',owner,0)],[expensive,unit('plug',owner,1),unit('landlord',owner,1),unit('nerd',owner,1)],[]];
+  m.boards=[[cheap,unit('og',owner,0),{...unit('church',owner,0),basePower:3}],[expensive,unit('plug',owner,1),unit('landlord',owner,1),unit('nerd',owner,1)],[]];
    const seated=cast(m,'madhatter',owner).after;
    assert(seated[owner==='player'?'playerHand':'cpuHand'].some(c=>c.instanceId===cheap.instanceId));
    assert.equal(find(seated,expensive).lane,0);assert.equal(seated.boards[0].length,4);assert.equal(seated.boards[1].length,3);
@@ -171,7 +173,7 @@ for (const owner of ['player', 'cpu'] as const) {
     assert.equal(find(after,remote).powerModifier,3);
   });
   test('Mad Hatter’s weaker return triggers Cheshire and Mr Rabbit while preserving the hand credit: '+owner,()=>{
-    const m=blank(), local=unit('cornball',owner,0), rabbit=unit('mrrabbit',owner,0);
+    const m=blank(), local={...unit('cornball',owner,0),basePower:1}, rabbit={...unit('mrrabbit',owner,0),basePower:3};
     const hatter=createCardInstance('madhatter',owner,'tea-party',1), cheshire=createCardInstance('cheshire',owner,'tea-party',2);
     m.boards[0]=[local,rabbit];
     const hand=owner==='player'?'playerHand':'cpuHand';
@@ -181,7 +183,7 @@ for (const owner of ['player', 'cpu'] as const) {
     assert(after.discountTokens.some(t=>t.targetInstanceId===local.instanceId));
     assert.equal(find(after,rabbit).powerModifier,1);
     assert.equal(after.boards[0].filter(c=>c.cardId==='grin').length,1);
-    assert.equal(after.boards[0].find(c=>c.cardId==='grin')?.basePower,6);
+    assert.equal(after.boards[0].find(c=>c.cardId==='grin')?.basePower,4);
   });
  test('each reworked kit awards existing training tiers after a successful base ability: '+owner,()=>{
   for(const id of ['counter','concrete','lola','repoman','madhatter']) {

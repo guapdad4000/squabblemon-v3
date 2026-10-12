@@ -126,8 +126,8 @@ test('the Diner Manager and Bus Boy use their approved printed cost and Hands va
   const busBoy = createCardInstance('squabblehouse-bus-boy', 'player');
 
   assert.equal(afterHoursWaveRarities['squabble-house-manager'], 'Legendary');
-  assert.deepEqual([manager.cost, manager.power], [1, 2]);
-  assert.deepEqual([busBoy.cost, busBoy.power], [1, 2]);
+  assert.deepEqual([manager.cost, manager.power], [1, 1]);
+  assert.deepEqual([busBoy.cost, busBoy.power], [1, 1]);
   assert.equal(getLegalCardCost(match, 'player', manager, 0), 1);
   assert.equal(getLegalCardCost(match, 'player', busBoy, 0), 1);
 
@@ -273,13 +273,13 @@ test('Manager-derived Hands participate in highest damage, lowest cleanse, and d
   const employeeMale = character('squabblecook', 'cpu', 1, 26, { basePower: 1 });
   const employeeFemale = character('squabbleserver', 'cpu', 1, 27, { basePower: 1 });
   let afterEntry = play(withBoard(blank(), employeeMale, employeeFemale,
-    character('techbro', 'cpu', 0, 28, { basePower: 3 })),
+    character('techbro', 'cpu', 0, 28, { basePower: 2 })),
     'squabble-house-manager', 'cpu', 0, 29);
   const entryManager = card(afterEntry, 'squabble-house-manager', 'cpu')!;
   afterEntry = play(afterEntry, 'inmate-reformed', 'player', 0, 30);
   assert.equal(instance(afterEntry, entryManager.instanceId)?.powerModifier, -1,
     'the active aura selects the Manager as strongest when an enemy enters');
-  assert.equal(getEffectiveCardPower(instance(afterEntry, entryManager.instanceId)!), 3);
+  assert.equal(getEffectiveCardPower(instance(afterEntry, entryManager.instanceId)!), 2);
 
   afterEntry = play(afterEntry, 'griddle-master', 'player', 1, 31);
   assert.equal(instance(afterEntry, employeeMale.instanceId), undefined,
@@ -287,9 +287,9 @@ test('Manager-derived Hands participate in highest damage, lowest cleanse, and d
   const afterDeathManager = instance(afterEntry, entryManager.instanceId)!;
   assert.equal(afterDeathManager.powerModifier, -1,
     'losing an employee removes derived aura, not an extra point of permanent enemy damage');
-  assert.equal(getEffectiveCardPower(afterDeathManager), 2);
+  assert.equal(getEffectiveCardPower(afterDeathManager), 1);
   const attackedAfterDeath = play(afterEntry, 'squabblehouse-security', 'player', 0, 32);
-  assert.equal(instance(attackedAfterDeath, 'cpu:diner-on-shift-test:28:techbro')?.powerModifier, -2,
+  assert.equal(instance(attackedAfterDeath, 'cpu:diner-on-shift-test:28:techbro'), undefined,
     'after an employee dies, strongest-target selection switches to the remaining stronger ally');
   assert.equal(instance(attackedAfterDeath, entryManager.instanceId)?.powerModifier, -1,
     'passive aura loss neither damages nor takes attribution from the Manager');
@@ -335,7 +335,7 @@ test('Manager taxes only the first enemy character played or moved into its dist
         match = play(match, 'hooper', enemy, 1, 41);
         firstId = `${enemy}:diner-on-shift-test:41:hooper`;
       } else {
-        const patrol = character('squabblehouse-bus-boy', enemy, 0, 42);
+        const patrol = character('squabblehouse-bus-boy', enemy, 0, 42, { basePower: 3 });
         match = withBoard(match, ...match.boards.flat(), patrol);
         match = nextRealRound(match);
         firstId = patrol.instanceId;
@@ -691,7 +691,7 @@ test('ongoing Hands collapse records a neutral Manager departure, not another en
   for (const owner of ['player', 'cpu'] as const) {
     const enemy: Owner = owner === 'player' ? 'cpu' : 'player';
     const manager = character('squabble-house-manager', owner, 2, 210, {
-      basePower: 2, powerModifier: -2, continuousPower: 1,
+      basePower: 2, basePower: 2, powerModifier: -2, continuousPower: 1,
     });
     const employee = character('squabbleserver', owner, 0, 211, { basePower: 1 });
     const before = withBoard(blank(), manager, employee);
@@ -740,9 +740,9 @@ test('a real Cashier receipt blocks an unlocked Bus Boy patrol in the following 
 test('lethal Manager arrival damage is recorded before Bonnetgirl watches a neutral aura collapse', () => {
   for (const owner of ['player', 'cpu'] as const) {
     const enemy: Owner = owner === 'player' ? 'cpu' : 'player';
-    const busBoy = character('squabblehouse-bus-boy', owner, 0, 230, { powerModifier: -1 });
+    const busBoy = character('squabblehouse-bus-boy', owner, 0, 230, { basePower: 2, powerModifier: -1 });
     const friendlyManager = character('squabble-house-manager', owner, 2, 231, {
-      powerModifier: -2, continuousPower: 1,
+      basePower: 2, powerModifier: -2, continuousPower: 1,
     });
     const bonnet = character('bonnetgirl', owner, 1, 232);
     const enemyManager = character('squabble-house-manager', enemy, 1, 233);

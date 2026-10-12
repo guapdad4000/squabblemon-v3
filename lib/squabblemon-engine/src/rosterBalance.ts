@@ -14,7 +14,7 @@ export const ROSTER_BALANCE_PATCH: Record<string, Partial<Pick<Card, 'cost' | 'p
   dogwalker: { effect: 'On Reveal: If at least 2 other friendly characters are here, gain +3 Hands.' },
   cognac: { effect: 'On Reveal: Give your weakest friendly character here +2 Hands, or +3 if it is Fire.' },
   charger: { effect: 'On Reveal: Restore 1 Motion per friendly character here, up to 3. With at least 3 characters here, also Protect your weakest local Electric character.' },
-  cloudbreak: { effect: 'On Reveal: Move to your weakest other district. If you move, give your weakest ally left in the original district +2 Hands and Protection.' },
+  cloudbreak: { effect: 'On Reveal: Move to your weakest other district. If you move, gain +1 Hand and give your weakest ally left in the original district +2 Hands (+3 if Air) and Protection.' },
   teacher: { effect: 'On Reveal: Silence the highest-Hands enemy here with an active Ongoing ability. If none exists, Silence the strongest enemy here. Protection and district guards apply.' },
   nerd: { effect: "On Reveal: Silence the highest-Hands active Ongoing enemy here, otherwise the strongest enemy, bypassing Wifey's Side Eye. Protection still blocks this. Newly interrupting an active Ongoing ability grants +1 Hand and reveals one enemy hand card." },
   scammer: { effect: 'On Reveal: Copy the base Hands (up to 7) and printed ability of the strongest active Ongoing enemy here. If none exists, copy only the strongest enemy\'s base Hands (up to 7) and gain +1 Hand. Copied entrances never trigger.' },

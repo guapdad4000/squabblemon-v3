@@ -1,6 +1,6 @@
 import { PVP_SUPPORT } from './basePvpBalance';
 import { selectedCards, fakeMarriage } from './selectedWave';
-import { selectedReveal, selectedMoved, selectedGain, selectedDamage, selectedResolved, type SelectedTools } from './selectedAbilities';
+import { selectedReveal, selectedArrived, selectedMoved, selectedGain, selectedDamage, selectedResolved, type SelectedTools } from './selectedAbilities';
 import { bossNpcCards } from './bossNpcCards';
 import { streetLegendsCards } from './streetLegendsWave';
 import { maryMackRoundEnd, maryMackRoundStart } from './maryMack';
@@ -1357,6 +1357,8 @@ const summonCard = (
       if (arrival) result = applyBuddyEarthToTarget(result, buddy, arrival);
     }
   }
+  const plateArrival = findCard(result, instanceId);
+  if (plateArrival) result = selectedArrived(result, plateArrival, waveTools());
   return result;
 };
 const addDiscountToken = (m: Match, owner: Owner, source: CardInstance, eligibility: DiscountToken["eligibility"]): Match => {
@@ -2008,12 +2010,12 @@ function applyLookoutWatch(m: Match, owner: Owner, lane: Lane): Match {
     }] };
     const ally = lowest(m.boards.flat().filter(c => !c.hazard && c.owner === watcher.owner
       && c.instanceId !== watcher.instanceId && (c.gangTag ?? GANG_BY_CARD_ID[c.cardId]) === 'blue'));
-    if (ally) m = modify(m, ally.instanceId, c => ({ ...c, powerModifier: c.powerModifier + 3,
-      lastEffectNote: 'On Point: Blue Set backup, +3 Hands.' }));
+    if (ally) m = modify(m, ally.instanceId, c => ({ ...c, powerModifier: c.powerModifier + 2,
+      lastEffectNote: 'On Point: Blue Set backup, +2 Hands.' }));
     m = addEvent(before, m, { type: 'ability', sourceId: watcher.instanceId, owner: watcher.owner, lane,
       targetIds: [watcher.instanceId, ...(ally ? [ally.instanceId] : [])],
       note: `${watcher.name} called out district ${lane + 1}: your next card there costs 1 less Motion.`
-        + (ally ? ` ${ally.name} gained +3 Hands for Blue Set backup.` : '') });
+        + (ally ? ` ${ally.name} gained +2 Hands for Blue Set backup.` : '') });
     m = trainWaveAbility(m, watcher.instanceId);
   }
   return m;
@@ -2054,10 +2056,10 @@ function fairytaleArrival(m: Match, id: string, movedHere = false): Match {
     const before = m;
     const hands = movedHere || ['dorothy', 'scarecrow', 'tinman', 'lion'].includes(abilityCardId(entrant)) ? 2 : 1;
     m = waveRound(m, tin.instanceId, 'tinman');
-    m = grantProtection(m, tin, id);
+    if (hands === 2) m = grantProtection(m, tin, id);
     m = modify(m, id, c => ({ ...c, powerModifier: c.powerModifier + hands }));
     m = trainWaveAbility(m, tin.instanceId);
-    m = addEvent(before, m, { type: 'ability', sourceId: tin.instanceId, owner: tin.owner, targetIds: [id], note: `Heart Starter: first ally entering this round gains +${hands} ${hands === 1 ? 'Hand' : 'Hands'} and Protection.` });
+    m = addEvent(before, m, { type: 'ability', sourceId: tin.instanceId, owner: tin.owner, targetIds: [id], note: `Heart Starter: first ally entering this round gains +${hands} ${hands === 1 ? 'Hand' : 'Hands'}${hands === 2 ? ' and Protection' : ''}.` });
   }
   return m;
 }
@@ -2413,13 +2415,16 @@ function resolveSideOzAbility(m: Match, source: CardInstance, echoed: boolean): 
     succeeded = applyStatus(highest(enemiesHere()), 'weakened');
     resolution = succeeded ? 'Bad Omen applied Weaken.' : 'Bad Omen had no target or its status was blocked or already present.';
   } else if (source.cardId === 'redside5') {
-    const target = lowest(own().filter(card => card.instanceId !== source.instanceId));
-    if (target) buff(target, 2, 'Raise the Colors: +2 Hands.');
+    const allies = own().filter(card => card.instanceId !== source.instanceId && card.kind !== 'support');
+    const isRed = (card: CardInstance) => (card.gangTag ?? GANG_BY_CARD_ID[card.cardId]) === 'red' || sideOzWaveFactions[card.cardId] === 'Red Side';
+    const target = lowest(allies.filter(isRed)) ?? lowest(allies);
+    const amount = target && isRed(target) ? 3 : 2;
+    if (target) buff(target, amount, `Raise the Colors: +${amount} Hands.`);
     else {
       buff(findCard(m, source.instanceId)!, 1, 'Raise the Colors: no other ally, +1 Hand.');
       applyStatus(highest(enemiesHere()), 'weakened');
     }
-    resolution = target ? `${target.name} gained +2 Hands.` : 'Alone on the board, Ruby Shades gained +1 Hand and tried to Weaken an enemy here.';
+    resolution = target ? `${target.name} gained +${amount} Hands.` : 'With no other character ally, Ruby Shades gained +1 Hand and tried to Weaken an enemy here.';
   } else if (source.cardId === 'blueside1') {
     const target = highest(m.boards.flat().filter(card => !card.hazard && card.owner === enemy && card.lane !== lane));
     const hit = damage(target, 3);
@@ -2554,7 +2559,8 @@ function resolveFairytaleAbility(m: Match, source: CardInstance, echoed: boolean
         ? m.roundMovedIds[source.owner]?.includes(ally.instanceId) ?? false
         : m.lastMovedAlly?.[source.owner]?.instanceId === ally.instanceId
           && m.lastMovedAlly[source.owner]!.round === m.round;
-      if (movedThisRound && findCard(m, ally.instanceId)) m = modify(m, ally.instanceId, c => ({ ...c, powerModifier: c.powerModifier + 2, lastEffectNote: 'The Grand Reveal: moved ally echoed, +2 Hands.' }));
+      const echoBonus = movedThisRound ? 3 : ['dorothy', 'scarecrow', 'tinman', 'lion'].includes(abilityCardId(ally)) ? 2 : 0;
+      if (echoBonus && findCard(m, ally.instanceId)) m = modify(m, ally.instanceId, c => ({ ...c, powerModifier: c.powerModifier + echoBonus, lastEffectNote: `The Grand Reveal: echoed ally gained +${echoBonus} Hands.` }));
     }
   } else if (id === 'alice' && source.aliceReady && !echoed) {
     m = modify(m, source.instanceId, c => ({ ...c, aliceReady: false })); buff(source, 3);
@@ -3061,7 +3067,7 @@ function resolveAbilityBase(match: Match, source: CardInstance, { echoed = false
         // Blue loyalty fills the capped rally before any ordinary ally is taxed.
         const donors = [...allies.filter(blueSet), ...allies.filter(card => !blueSet(card))];
         for (const ally of donors) {
-          if (homage >= 4) break;
+          if (homage >= 3) break;
           const before = findCard(m, ally.instanceId);
           if (!before) continue;
           if (blueSet(before)) {
@@ -3101,19 +3107,23 @@ function resolveAbilityBase(match: Match, source: CardInstance, { echoed = false
           .filter(card => (card.gangTag ?? GANG_BY_CARD_ID[card.cardId]) === 'blue'));
         if (!ally) continue;
         targetIds.add(ally.instanceId);
-        m = modify(m, ally.instanceId, card => ({ ...card, powerModifier: card.powerModifier + 2,
-          lastEffectNote: `${source.ability}: Blue Set reinforcement, +2 Hands.` }));
+        m = modify(m, ally.instanceId, card => ({ ...card, powerModifier: card.powerModifier + 1,
+          lastEffectNote: `${source.ability}: Blue Set reinforcement, +1 Hand.` }));
         m = grantProtection(m, source, ally.instanceId);
         reinforced++;
       }
       noteFromTail(`${source.ability}: ${behind ? homage ? `collected +${homage} Hands (${blueHomage} from Blue Set without Hands loss; ${homage - blueHomage} paid by other allies).` : 'the side had nothing to give.' : 'this district was not losing, so no homage was owed.'}`
         + (sent ? ` ${weakest!.name} was sent to your strongest district with -1 Hand.` : '')
-        + (reinforced ? ` Reinforced the weakest Blue Set ally in ${reinforced} other district${reinforced === 1 ? '' : 's'} for +2 Hands and Protection each.` : ''));
+        + (reinforced ? ` Reinforced the weakest Blue Set ally in ${reinforced} other district${reinforced === 1 ? '' : 's'} for +1 Hand and Protection each.` : ''));
       if (!echoed && (homage > 0 || sent || reinforced > 0)) m = trainWaveAbility(m, source.instanceId);
     } else if (id === 'triple-og-red') {
-      let taken = 0, respected = 0;
+      let taken = 0, affected = 0, respected = 0;
       const lineup = [...inLane(m, source.owner, l).filter(c => c.instanceId !== source.instanceId), ...inLane(m, enemy, l)]
         .filter(c => (c.kind ?? 'character') === 'character');
+      const heavyTargets = new Set(lineup.filter(c => c.owner === enemy && !c.statuses.protected
+        && !c.statuses.uncounterable && !cannotLoseHands(c))
+        .sort((a, b) => getEffectiveCardPower(b) - getEffectiveCardPower(a) || a.instanceId.localeCompare(b.instanceId))
+        .slice(0, 3).map(c => c.instanceId));
       for (const other of lineup) {
         const before = findCard(m, other.instanceId);
         if (!before) continue;
@@ -3131,16 +3141,18 @@ function resolveAbilityBase(match: Match, source: CardInstance, { echoed = false
         // Allies take the same destruction-aware damage as enemies, so a 1-Hand
         // ally leaves the board instead of lingering at zero.
         const beforeDamage = m;
+        const damage = before.owner === enemy && heavyTargets.has(before.instanceId) ? 2 : 1;
         m = step(before.owner === source.owner
           ? reduceHands(m, before, 1, `${source.ability}: -1 Hand.`)
-          : targetEnemyPowerReduction(m, source, before, -1, `${source.ability}: -1 Hand.`));
+          : targetEnemyPowerReduction(m, source, before, damage, `${source.ability}: -${damage} Hands.`));
         if (rawCombatPower(before) > 0 && directDamageAmount(beforeDamage, m, before) > 0) {
-          taken++; targetIds.add(before.instanceId);
+          taken += directDamageAmount(beforeDamage, m, before); affected++; targetIds.add(before.instanceId);
         }
       }
-      if (taken) m = modify(m, source.instanceId, c => ({ ...c, powerModifier: c.powerModifier + taken,
-        lastEffectNote: `${source.ability}: took ${taken} Hand${taken === 1 ? '' : 's'} off the district.` }));
-      noteFromTail(`${source.ability}: ${taken} card${taken === 1 ? '' : 's'} lost a Hand and ${source.name} gained +${taken}.`
+      const gained = Math.min(6, taken);
+      if (gained) m = modify(m, source.instanceId, c => ({ ...c, powerModifier: c.powerModifier + gained,
+        lastEffectNote: `${source.ability}: took ${gained} Hand${taken === 1 ? '' : 's'} off the district.` }));
+      noteFromTail(`${source.ability}: ${affected} card${affected === 1 ? '' : 's'} lost ${taken} Hands total and ${source.name} gained +${gained} (maximum 6).`
         + (respected ? ` ${respected} untouchable card${respected === 1 ? ' was' : 's were'} moved out of respect.` : ''));
       if (!echoed && (taken > 0 || respected > 0)) m = trainWaveAbility(m, source.instanceId);
     } else if (id === 'initiation') {
@@ -3169,7 +3181,10 @@ function resolveAbilityBase(match: Match, source: CardInstance, { echoed = false
   if (Object.hasOwn(afterHoursWaveCards, source.cardId)) {
     const allies = inLane(m, source.owner, l).filter(c => c.instanceId !== source.instanceId);
     let succeeded = false;
-    const addHands = (target: CardInstance, amount: number, text: string) => {
+    const addHands = (target: CardInstance | undefined, amount: number, text: string) => {
+      // Reactions can destroy the source or recipient before its follow-up.
+      // A resolved attack stays resolved; never buff a missing character.
+      if (!target || !findCard(m, target.instanceId)) return;
       targetIds.add(target.instanceId);
       m = modify(m, target.instanceId, c => ({ ...c, powerModifier: c.powerModifier + amount, lastEffectNote: text }));
       succeeded = true;
@@ -3270,10 +3285,10 @@ function resolveAbilityBase(match: Match, source: CardInstance, { echoed = false
       const remote = lowest(m.boards.flat().filter(c => !c.hazard && c.owner === source.owner
         && c.lane !== l && c.instanceId !== source.instanceId && (c.kind ?? 'character') === 'character'
         && ['inmate-crafty', 'inmate-boyfriend', 'inmate-informant', 'inmate-contraband'].includes(c.cardId)));
-      if (remote) buff(remote, 3);
+      if (remote) buff(remote, 2);
       if (target || remote) resolutionNote = 'Looking Out resolved.'
         + (target ? ` ${target.name} here gained +3 Hands.` : '')
-        + (remote ? ` ${remote.name} in another district gained +3 Hands.` : '');
+        + (remote ? ` ${remote.name} in another district gained +2 Hands.` : '');
     } else if (source.cardId === 'inmate-informant') {
       const target = highest(inLane(m, enemy, l));
       if (target) {
@@ -3333,7 +3348,7 @@ function resolveAbilityBase(match: Match, source: CardInstance, { echoed = false
         succeeded = true;
       }
     } else if (source.cardId === 'demario') {
-      for (let draw = 0; draw < 2; draw++) {
+      for (let draw = 0; draw < 1; draw++) {
         const result = plantDemarioMushroom(m, source, draw, false);
         m = result.match;
         if (result.token) { targetIds.add(result.token.instanceId); succeeded = true; }
@@ -3406,7 +3421,10 @@ function resolveAbilityBase(match: Match, source: CardInstance, { echoed = false
     const allies = m.boards.flat().filter(c => !c.hazard && c.owner === source.owner && c.instanceId !== source.instanceId
       && c.kind !== 'support');
     const enemiesHere = () => inLane(m, enemy, l);
-    const addHands = (target: CardInstance, amount: number, text: string) => {
+    const addHands = (target: CardInstance | undefined, amount: number, text: string) => {
+      // Reactions can destroy the source or recipient before its follow-up.
+      // A resolved attack stays resolved; never buff a missing character.
+      if (!target || !findCard(m, target.instanceId)) return;
       targetIds.add(target.instanceId);
       m = modify(m, target.instanceId, c => ({ ...c, powerModifier: c.powerModifier + amount, lastEffectNote: text }));
       succeeded = true;
@@ -3415,9 +3433,9 @@ function resolveAbilityBase(match: Match, source: CardInstance, { echoed = false
       const remote = allies.filter(c => c.lane !== l);
       const ally = lowest(remote.filter(c => (c.gangTag ?? GANG_BY_CARD_ID[c.cardId]) === 'blue')) ?? lowest(remote);
       if (ally) {
-        const amount = (ally.gangTag ?? GANG_BY_CARD_ID[ally.cardId]) === 'blue' ? 5 : 3;
+        const amount = (ally.gangTag ?? GANG_BY_CARD_ID[ally.cardId]) === 'blue' ? 4 : 3;
         addHands(ally, amount, `Blue Side Cover: +${amount} Hands and Protected.`);
-        if (amount === 5) addHands(findCard(m, source.instanceId)!, 1, 'Blue Side Cover: backed Blue Set, +1 Hand.');
+        if (amount === 4) addHands(findCard(m, source.instanceId)!, 1, 'Blue Side Cover: backed Blue Set, +1 Hand.');
         const wasProtected = ally.statuses.protected;
         m = grantProtection(m, source, ally.instanceId);
         succeeded ||= !wasProtected && !!findCard(m, ally.instanceId)?.statuses.protected;
@@ -3434,8 +3452,8 @@ function resolveAbilityBase(match: Match, source: CardInstance, { echoed = false
           effect.targetInstanceId === target.instanceId
           && (effect.kind === 'church-protection' || effect.kind === 'salon-protection')
           && !m.timedEffects.some(remaining => remaining.id === effect.id));
-        succeeded = directDamageAmount(beforeDamage, m, target) > 0 || protectionConsumed;
-        if (succeeded) addHands(findCard(m, source.instanceId)!, 1, 'Red Side Retaliation: damage landed or Protection consumed, +1 Hand.');
+        succeeded = directDamageAmount(beforeDamage, m, target) > 0;
+        if (succeeded) addHands(findCard(m, source.instanceId)!, 1, 'Red Side Retaliation: damage landed, +1 Hand.');
       }
     } else if (source.cardId === 'snitch') {
       const target = highest(enemiesHere());
@@ -3497,9 +3515,9 @@ function resolveAbilityBase(match: Match, source: CardInstance, { echoed = false
     const t = highest(inLane(m, enemy, l));
     if (t) {
       targetIds.add(t.instanceId);
-      const amount = t.playedRound === m.round ? -3 : -2;
-      m = targetEnemyBurnAndPowerReduction(m, source, t, 2, amount, `Ratio'd Receipts: 2 Burn, ${Math.abs(amount)} immediate Hands loss.`);
-      note(`Ratio'd Receipts targeted ${t.name} (2 Burn + ${Math.abs(amount)} immediate Hands loss).`);
+      const amount = t.playedRound === m.round ? -2 : -1;
+      m = targetEnemyBurnAndPowerReduction(m, source, t, 1, amount, `Ratio'd Receipts: 1 Burn, ${Math.abs(amount)} immediate Hands loss.`);
+      note(`Ratio'd Receipts targeted ${t.name} (1 Burn + ${Math.abs(amount)} immediate Hands loss).`);
     } else note("Ratio'd Receipts found no enemy.");
   }
   else if (source.cardId === 'nerd') {
@@ -3526,11 +3544,11 @@ function resolveAbilityBase(match: Match, source: CardInstance, { echoed = false
   }
   else if (source.cardId === 'plug') { m = addDiscountToken(m, source.owner, source, 'another-district'); m = { ...m, plugDiscountLane: { ...m.plugDiscountLane, [source.owner]: l } }; note('Connections: next card in another district costs 1 less Motion.'); }
   else if (source.cardId === 'sneaker') {
-    // Steal: copy the highest-Hands enemy's printed Power onto Sneaker (capped at +7) and apply Weaken.
+    // Steal: copy the highest-Hands enemy's printed Power onto Sneaker (capped at +3) and apply Weaken.
     const target = highest(m.boards.flat().filter(c => !c.hazard && c.owner === enemy && c.kind !== 'support'));
     if (target) {
       targetIds.add(target.instanceId);
-      const bonus = Math.min(7, target.basePower);
+      const bonus = Math.min(3, target.basePower);
       m = modify(m, source.instanceId, c => ({ ...c, powerModifier: c.powerModifier + bonus, lastEffectNote: `Flip Season: +${bonus} Hands (stolen from ${target.name}).` }));
       m = applyWeaken(m, source, target, 'Flip Season: Weakened.');
       note(`Flip Season stole ${bonus} Hands from ${target.name}.`);
@@ -3968,7 +3986,7 @@ function resolveAbilityBase(match: Match, source: CardInstance, { echoed = false
     const target = boosted ?? highest(inLane(m, enemy, l));
     if (target) {
       targetIds.add(target.instanceId);
-      const amount = boosted ? Math.min(2, boosted.powerModifier) : 1;
+      const amount = boosted ? Math.min(3, boosted.powerModifier) : 2;
       const previous = target.powerModifier;
       m = targetEnemyPowerReduction(m, source, target, -amount, `Who's the Master?: -${amount} Hands.`);
       const removed = previous - (findCard(m, target.instanceId)?.powerModifier ?? previous);
@@ -4051,12 +4069,13 @@ function resolveAbilityBase(match: Match, source: CardInstance, { echoed = false
       m = modify(m, ally.instanceId, c => ({ ...c, powerModifier: c.powerModifier + 1, lastEffectNote: 'Jet Set: +1 Hand.' }));
     }
     const plantCrew = m.boards.flat().filter(c => !c.hazard && c.owner === source.owner && c.type === 'Plant' && c.kind !== 'support');
-    const fullPlantCrew = ([0, 1, 2] as Lane[]).every(district => plantCrew.some(c => c.lane === district));
-    if (fullPlantCrew) for (const district of [0, 1, 2] as Lane[]) {
+    const occupiedPlantDistricts = ([0, 1, 2] as Lane[]).filter(district => plantCrew.some(c => c.lane === district));
+    const fullPlantCrew = occupiedPlantDistricts.length >= 2;
+    if (fullPlantCrew) for (const district of occupiedPlantDistricts) {
       const ally = lowest(plantCrew.filter(c => c.lane === district))!;
       targetIds.add(ally.instanceId);
-      m = modify(m, ally.instanceId, c => ({ ...c, powerModifier: c.powerModifier + 1,
-        lastEffectNote: 'Jet Set: Plant in all three districts, +1 Hand.' }));
+      m = modify(m, ally.instanceId, c => ({ ...c, powerModifier: c.powerModifier + 2,
+        lastEffectNote: 'Jet Set: Plant in at least two districts, +2 Hands.' }));
     }
     // Drop Guyana the gorilla into the weakest friendly district (uncounterable: shrugs off power reductions).
     const destination = lowestFriendlyLane(m, source.owner, l);
@@ -4067,7 +4086,7 @@ function resolveAbilityBase(match: Match, source: CardInstance, { echoed = false
       targetIds.add(highestEnemy.instanceId);
       m = targetEnemyPowerReduction(m, source, highestEnemy, -1, 'Jet Set: -1 Hand.');
     }
-    note(`Jet Set summoned Guyana (+4, uncounterable) into district ${destination + 1}, gave +1 Hand to ${alliesHere.length} ally${alliesHere.length === 1 ? '' : 'ies'}${fullPlantCrew ? ', and gave one Plant ally in each district +1 Hand for a full Plant crew' : ''}${highestEnemy ? ', and pressured the highest-Hands enemy' : ''}.`);
+    note(`Jet Set summoned Guyana (+4, uncounterable) into district ${destination + 1}, gave +1 Hand to ${alliesHere.length} ally${alliesHere.length === 1 ? '' : 'ies'}${fullPlantCrew ? ', and gave one Plant ally in each occupied district +2 Hands for a spread Plant crew' : ''}${highestEnemy ? ', and pressured the highest-Hands enemy' : ''}.`);
   }
   else if (source.cardId === 'kyle') {
     for (let index = 0; index < 4; index++) {
@@ -4375,7 +4394,7 @@ function resolveAbilityBase(match: Match, source: CardInstance, { echoed = false
         }
       }
     } else if (id === 'krump' && enemies.length) {
-      buff(source, 1); reduce(highest(enemies), 1);
+      buff(source, 2); reduce(highest(enemies), 2);
     } else if (id === 'yunghustle') {
       if (m.boards.flat().some(c => !c.hazard && c.owner === source.owner && c.kind !== 'support' && c.lane !== l)) {
         const key = source.owner === 'player' ? 'playerMotion' : 'cpuMotion';
@@ -4413,14 +4432,14 @@ function resolveAbilityBase(match: Match, source: CardInstance, { echoed = false
         lastEffectNote: `${source.ability}: +${amount} Hands.`,
       }));
     };
-    const cleanse = (target: CardInstance | undefined) => {
+    const cleanse = (target: CardInstance | undefined, amount = 1) => {
       if (!target || (!target.statuses.frozen && !target.statuses.silenced)) return;
       targetIds.add(target.instanceId);
       m = cleanseAlly(m, target.instanceId, c => ({
         ...c,
         statuses: cleanseStatuses(c.statuses),
-        powerModifier: c.powerModifier + 1,
-        lastEffectNote: `${source.ability}: cleansed, +1 Hands.`,
+        powerModifier: c.powerModifier + amount,
+        lastEffectNote: `${source.ability}: cleansed, +${amount} Hands.`,
       }));
     };
     const reduce = (target: CardInstance | undefined, amount: number) => {
@@ -4454,9 +4473,15 @@ function resolveAbilityBase(match: Match, source: CardInstance, { echoed = false
       const remaining = source.owner === 'player' ? m.playerMotion : m.cpuMotion;
       if (remaining >= 4) buff(findCard(m, source.instanceId), 2);
       else {
-        const patient = lowest(allies.filter(c => c.statuses.frozen || c.statuses.silenced));
-        if (patient) cleanse(patient);
-        else buff(lowest(allies.filter(c => c.type === 'Plant')), 1);
+        const crew = m.boards.flat().filter(c => !c.hazard && c.kind !== 'support'
+          && c.owner === source.owner && c.instanceId !== source.instanceId);
+        const patient = lowest(crew.filter(c => c.statuses.frozen || c.statuses.silenced));
+        if (patient) cleanse(patient, 3);
+        else {
+          const plant = lowest(crew.filter(c => c.type === 'Plant'));
+          if (plant) buff(plant, 3);
+          else buff(findCard(m, source.instanceId), 2);
+        }
       }
     } else if (id === 'rainmaker') {
       targetIds.add(source.instanceId);
@@ -4488,11 +4513,12 @@ function resolveAbilityBase(match: Match, source: CardInstance, { echoed = false
     } else if (id === 'crosswind') {
       weaken(highest(enemies));
       const traveler = lowest(allies);
-      if (traveler && travel(traveler)) buff(findCard(m, traveler.instanceId), 1);
+      if (traveler && travel(traveler)) buff(findCard(m, traveler.instanceId), 2);
     } else if (id === 'cloudbreak') {
       if (travel(source)) {
         const left = lowest(inLane(m, source.owner, l).filter(c => (c.kind ?? 'character') === 'character'));
-        if (left) { buff(left, 2); m = grantProtection(m, source, left.instanceId); }
+        buff(findCard(m, source.instanceId), 1);
+        if (left) { buff(left, left.type === 'Air' ? 3 : 2); m = grantProtection(m, source, left.instanceId); }
       }
     }
     const succeeded = [...targetIds].some(key => {
@@ -4886,6 +4912,8 @@ function resolveCardPlay(match: Match, owner: Owner, instanceId: string, targetL
         note: actual ? 'Told You: predicted character targeted with Weaken; Protection and immunity can block it.' : 'Told You: predicted character already left the board.' });
     }
   }
+  const plateArrival = findCard(m, instanceId);
+  if (plateArrival) m = selectedArrived(m, plateArrival, waveTools());
   let entranceOutcome: MusicEntranceOutcome = 'none';
   const revealed = m.boards.flat().find(c => c.instanceId === instanceId);
   if (revealed) {
@@ -5933,8 +5961,15 @@ function creativeTools(): CreativeTools {
         after,
         {
           type: "ability",
+          // Route bookkeeping can own the actual movement frame. Classify the
+          // recorded positional change before falling back to elemental styling.
           kind:
-            source.type === "Fire"
+            after.effectLog.length === before.effectLog.length
+              && [source.instanceId, ...targets].some(id => {
+                const old = findCard(before, id), current = findCard(after, id);
+                return old?.lane != null && current?.lane != null && old.lane !== current.lane;
+              }) ? "move"
+              : source.type === "Fire"
               ? "fire"
               : source.type === "Water"
                 ? "water"

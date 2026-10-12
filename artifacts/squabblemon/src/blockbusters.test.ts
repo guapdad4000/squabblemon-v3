@@ -39,7 +39,7 @@ const blank = (): Match => ({
 });
 const unit = (owner: Owner, lane: Lane, index = 0) => ({
   ...createCardInstance("bouncer", owner, "test", index),
-  lane,
+  lane, basePower: 5,
 });
 function cast(
   m: Match,

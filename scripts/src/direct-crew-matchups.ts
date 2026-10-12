@@ -1,9 +1,10 @@
+import { RED_SET_BENCHMARK_CARD_IDS } from '../../lib/squabblemon-engine/src/tripleOgs';
 import {mkdirSync,writeFileSync} from 'node:fs';
 import {decks} from '@workspace/squabblemon-engine/data';
 import {simulateBalanceMatch,greedyBalancePolicy,seededLegalBalancePolicy} from '@workspace/squabblemon-engine/balanceLab';
 const recipe=(id:string)=>{const d=decks.find(d=>d.id===id);if(!d)throw Error(id);return {id,name:d.name,cardIds:[...d.cards]};};
 const targets=(process.env.MATCHUP_TARGETS?.split(',') ?? ['fitness-routes','music-tour','fitness-circuit']).map(recipe);
-const allOpponents=[recipe('squabblehouse-shift'),{id:'focused-red-set',name:'Blood / Red',cardIds:['triple-og-red','block-spinner','redside1','ganger-red','cane-corso-red','initiation','guap','folks','cognac','bustdown']},{id:'focused-blue-set',name:'Crip / Blue',cardIds:['triple-og-blue','look-out','blueside1','ganger-blue','blue-nose-pit','initiation','waterboy','alchy','cognac','bustdown']}];
+const allOpponents=[recipe('squabblehouse-shift'),{id:'focused-red-set',name:'Blood / Red',cardIds:[...RED_SET_BENCHMARK_CARD_IDS]},{id:'focused-blue-set',name:'Crip / Blue',cardIds:['triple-og-blue','look-out','blueside1','ganger-blue','blue-nose-pit','initiation','waterboy','alchy','cognac','bustdown']}];
 const opponents=allOpponents.filter(d=>!process.env.MATCHUP_OPPONENTS || process.env.MATCHUP_OPPONENTS.split(',').includes(d.id));
 const rows:any[]=[];const samples:any[]=[];
 for(const a of targets)for(const b of opponents)for(const rotation of (process.env.MATCHUP_ROTATIONS?.split(',').map(Number) ?? [0,1,2,3,5,7,8,9]))for(const tier of [0,3] as const)for(const seat of ['a-player','b-player'] as const)for(const [policyName,policy] of [['seeded',seededLegalBalancePolicy],['greedy',greedyBalancePolicy]] as const){

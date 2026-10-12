@@ -1,0 +1,1 @@
+{"extends":"./battle-tests.tsconfig.json","include":[],"files":["./src/elemental-benchmark.ts","../artifacts/squabblemon/src/elementalPayoffs.test.ts"]}

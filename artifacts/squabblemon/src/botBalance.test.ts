@@ -47,7 +47,7 @@ test('Techbro borrows after paying deployment cost; discounts work at zero remai
     const m: Match = { ...createMatch('block', 'block'), phase: owner === 'player' ? 'player' : 'cpu-reveal',
       playerMotion: 3, cpuMotion: 3, playerHand: [tech], cpuHand: [tech], boards: [[card('edgar', owner, 0)], [], []] };
     const result = playCard(m, owner, tech.instanceId, 0);
-    assert.equal(owner === 'player' ? result.playerMotion : result.cpuMotion, 2);
+    assert.equal(owner === 'player' ? result.playerMotion : result.cpuMotion, 1);
     assert.equal(result.boards[0].find(c => c.cardId === 'techbro')?.powerModifier, 0);
   }
   const bottle = card('bottle', 'player', 0);

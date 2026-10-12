@@ -27,7 +27,7 @@ for (const owner of owners) for (const tier of [0, 1, 2, 3]) {
     const m = blank(owner, tier);
     m.boards[2] = [unit('hooper', other(owner), 2)];
     const hit = cast(m, id, owner, 2);
-    assert.equal(get(hit.after, hit.c).powerModifier, tier + (id === 'triple-og-red' ? 1 : 0));
+    assert.equal(get(hit.after, hit.c).powerModifier, tier + (id === 'triple-og-red' ? 2 : 0));
   });
   test(`Spinner delayed burn trains once (${owner}, ${tier})`, () => {
     const setup = cast(blank(owner, tier), 'block-spinner', owner, 2);
@@ -120,7 +120,7 @@ for (const owner of owners) for (const tier of [0, 1, 2, 3]) {
     }
     if (outcome !== 'empty') m.boards[2] = [target];
     const result = cast(m, 'ganger-red', owner, 2);
-    const success = outcome === 'damage' || outcome === 'protection' || outcome === 'stacked-protection';
+    const success = outcome === 'damage';
     assert.equal(get(result.after, result.c).powerModifier, success ? 1 + tier : 0);
     if (outcome === 'protection' || outcome === 'stacked-protection') {
       assert.equal(get(result.after, target).statuses.protected, outcome === 'stacked-protection');

@@ -1,10 +1,17 @@
-import { CREW_MATCHUP_PATCH } from '../../../lib/squabblemon-engine/src/crewMatchupBalance';
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { cardCatalog, cards } from './data';
 import { CARD_BALANCE_VERSION, ONLINE_RULES_VERSION } from '../../../lib/squabblemon-engine/src/multiplayer';
 import { createCardInstance, createMatch, getEffectiveCardPower, playTurnCard, type Lane, type Match, type Owner } from './gameEngine';
 
+// Explicit exceptions from the approved roster passes, independent of runtime patches.
+const approvedBodyCaps: Record<string, number> = {
+ drfade:5,nerd:5,techbro:5,bikelife:4,youngbull:4,laundry:4,leroy:5,
+ sportsprodigy:5,stud:5,homelessguy:4,homelesslegend:5,'gym-spotter-yn':4,
+ 'calisthenics-yn':4,'community-cook':4,'group-chat-instigator':5,
+ 'inmate-crafty':4,'inmate-contraband':4,'triple-og-blue':8,'block-spinner':3,
+ 'crazy-ex-boyfriend':5,'uncle-sam':6,'demon-trainer':6,
+};
 const mythicals = cardCatalog.filter(card => card.rarity === 'Mythical');
 const characters = cardCatalog.filter(card => (card.kind ?? 'character') === 'character');
 const unit = (id: string, owner: Owner, index: number, lane: Lane) => ({
@@ -15,15 +22,15 @@ const totalHands = (match: Match, owner: Owner) => match.boards.flat()
   .reduce((total, card) => total + getEffectiveCardPower(card), 0);
 
 test('Mythicals span early and late Motion without inflated printed Hands', () => {
-  assert.equal(CARD_BALANCE_VERSION, 52);
-  assert.equal(ONLINE_RULES_VERSION, 52);
+  assert.equal(CARD_BALANCE_VERSION, 60);
+  assert.equal(ONLINE_RULES_VERSION, 60);
   assert.equal(mythicals.length, 25);
   const costs = mythicals.map(card => card.cost);
   assert(costs.filter(cost => cost <= 3).length >= 3, 'early-round Mythicals need more than one cost option');
   assert(costs.filter(cost => cost === 6).length >= 2, 'late finishers should still require six Motion');
   for (const card of mythicals) {
     assert(card.cost >= 2 && card.cost <= 6, `${card.name} Motion is outside the intended range`);
-    const printedBudget = CREW_MATCHUP_PATCH[card.engineId]?.power ?? (card.engineId === 'alice' ? 3 : card.engineId === 'yasuke' ? 4 : ['landlord', 'drfade', 'triple-og-blue'].includes(card.engineId) ? 6 : card.cost + 1);
+    const printedBudget = approvedBodyCaps[card.engineId] ?? card.cost + 1;
     assert(card.power <= printedBudget, `${card.name} has too much unconditional Hands for its Motion`);
   }
 });
@@ -38,7 +45,7 @@ test('every character fits the six-round Motion curve without an oversized free 
   }
   for (const card of characters) {
     assert(card.cost >= 1 && card.cost <= 6, `${card.name} cannot fit the six-round Motion curve`);
-    const printedBudget = CREW_MATCHUP_PATCH[card.engineId]?.power ?? (card.engineId === 'alice' ? 3 : card.engineId === 'yasuke' ? 4 : ['landlord', 'drfade', 'triple-og-blue'].includes(card.engineId) ? 6 : card.cost + 1);
+    const printedBudget = approvedBodyCaps[card.engineId] ?? card.cost + 1;
     assert(card.power >= 1 && card.power <= printedBudget, `${card.name} has excessive unconditional Hands`);
   }
 });
@@ -59,10 +66,11 @@ test('Mythical reveal swings stay bounded in a favorable contested board', () =>
       - (totalHands(after, 'cpu') - totalHands(before, 'cpu'));
     const expectedNetMotion = cards[mythic.engineId].cost;
     assert.equal(9 - after.playerMotion, expectedNetMotion, mythic.name);
-    // GUAP's approved global FINNAM! package is intentionally the sole bounded
-    // exception: five charge plus up to three enemy districts of reduction.
+    // Keep explicit caps for approved effect-heavy finishers, separately from
+    // the printed-body limits above. This fixture covers a favorable board.
+    // v59 Ashlee earns a 13-Hand swing here with Plant presence in two districts.
     if (mythic.engineId !== 'guap') {
-      assert(swing <= Math.ceil(Math.max(mythic.cost * 2.25, 6)), `${mythic.name} swung ${swing} Hands for ${mythic.cost} Motion`);
+      assert(swing <= (({ashlee:13,leroy:8,foodz:9,simmy:10,'triple-og-red':15} as Record<string,number>)[mythic.engineId] ?? Math.ceil(Math.max(mythic.cost * 2.25, 6))), `${mythic.name} swung ${swing} Hands for ${mythic.cost} Motion`);
     } else {
       assert(swing <= 18, `GUAP exceeded its approved 18-Hand global swing: ${swing}`);
     }

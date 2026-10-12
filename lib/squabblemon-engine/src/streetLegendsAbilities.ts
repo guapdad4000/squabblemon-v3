@@ -93,7 +93,7 @@ export function streetLegendsReveal(m: Match, s: CardInstance, t: StreetLegendsT
     if (target && !used(m, s, 'lunch')) { targets.push(target.instanceId); m = t.protect(m, s, target.instanceId); m = replace(use(m, s, 'lunch'), mark(s, 'sl-lunch', m, [target.instanceId])); detail = 'Protection and one next-gain Lunch Bond issued.'; }
   } else if (id === 'he-just-a-friend') {
     const target = sorted(enemies(m, s), t, true)[0];
-    if (target && t.power(target) > t.power(s)) { const destination = open(m, target, t)[0]; if (destination !== undefined) { targets.push(target.instanceId); m = t.enemyMove(m, s, target, destination); if (find(m, target.instanceId)?.lane === destination) { add(s, 2); detail = 'The stronger rival arrived elsewhere; gained +2 Hands.'; } } }
+    if (target && t.power(target) > t.power(s)) { const destination = open(m, target, t)[0]; if (destination !== undefined) { targets.push(target.instanceId); m = t.enemyMove(m, s, target, destination); if (find(m, target.instanceId)?.lane === destination) { add(s, 1); detail = 'The stronger rival arrived elsewhere; gained +1 Hand.'; } } }
     else { const ally = sorted(allies(m, s), t)[0]; if (ally) { targets.push(ally.instanceId); m = t.protect(m, s, ally.instanceId); detail = 'No stronger local rival; Protection given to the weakest ally.'; } }
   } else if (id === 'crazy-ex-boyfriend') {
     if (m.round >= t.roundLimit(m)) { const foe = sorted(enemies(m, s), t, true)[0]; if (foe) { targets.push(foe.instanceId); m = t.hit(m, s, foe, -2, 'You Up?: final-round 2 damage.'); detail = 'Final-round message targeted the strongest local enemy.'; } }

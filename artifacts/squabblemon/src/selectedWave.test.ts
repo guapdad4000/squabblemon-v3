@@ -6,7 +6,7 @@ import {
 } from '../../../lib/squabblemon-engine/src/multiplayer';
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { cards, cardCatalog, decks } from './data';
+import { cards, cardCatalog, decks } from '../../../lib/squabblemon-engine/src/data';
 import {
   getLegalCardCost,
   createAbilityUpgradeSnapshot,
@@ -23,7 +23,7 @@ import {
   type Owner,
   type Lane,
   type CardInstance,
-} from './gameEngine';
+} from '../../../lib/squabblemon-engine/src/gameEngine';
 import {
   SELECTED_WAVE,
   selectedCards,
@@ -202,9 +202,11 @@ for (const o of ['player', 'cpu'] as const) {
       c = unit('mixtape-cousin', o, 2);
     m.boards = [[a], [b], [c]];
     const first = cast(m, 'one-man-band', o);
-    assert.equal(find(first.m, a)?.powerModifier, 4);
+    assert.equal(find(first.m, a)?.powerModifier, 3);
+    assert.equal(find(first.m, b)?.powerModifier, 3);
+    assert.equal(find(first.m, c)?.powerModifier, 3);
     const second = cast(first.m, 'one-man-band', o, 1);
-    assert.equal(find(second.m, a)?.powerModifier, 4);
+    assert.equal(find(second.m, a)?.powerModifier, 3);
   });
   test(`${o}: fit new Music and Fitness cards into existing tribe triggers`, () => {
     const m = blank();
@@ -473,11 +475,11 @@ for (const owner of ['player', 'cpu'] as const) {
     const m = blank(), injured = {...unit('homelesslegend', owner, 0), powerModifier: -4};
     m.boards[0] = [injured];
     const first = cast(m, 'community-cook', owner).m;
-    assert.equal(find(first, injured)?.powerModifier, -1);
-    assert.equal(find(cast(first, 'community-cook', owner).m, injured)?.powerModifier, -1);
+    assert.equal(find(first, injured)?.powerModifier, 0);
+    assert.equal(find(cast(first, 'community-cook', owner).m, injured)?.powerModifier, 0);
     const healthy = blank(), ally = unit('cornball', owner, 0);
     healthy.boards[0] = [ally];
-    assert.equal(find(cast(healthy, 'community-cook', owner).m, ally)?.powerModifier, 2);
+    assert.equal(find(cast(healthy, 'community-cook', owner).m, ally)?.powerModifier, 3);
   });
   test(`${owner}: Grandma retains the one-entrance cap and both sides of route payoff`, () => {
     for (const routed of [false, true]) {
@@ -485,7 +487,7 @@ for (const owner of ['player', 'cpu'] as const) {
       m.boards[0] = [target];
       if (routed) m.roundMovedIds = {...m.roundMovedIds, [owner]: ['route-a', 'route-b']};
       const result = cast(m, 'grandma-said-sit-down', owner).m;
-      assert.equal(find(result, target)?.powerModifier, 4 - (routed ? 3 : 2));
+      assert.equal(find(result, target)?.powerModifier, 4 - (routed ? 4 : 2));
     }
   });
 }
@@ -521,7 +523,7 @@ for (const owner of ['player', 'cpu'] as const) {
         for (let entrance = 0; entrance < 2; entrance++) {
           const c = createCardInstance(entrantId, owner, 'hand-trigger', round * 10 + entrance);
           m = playTurnCard({...m, phase: owner === 'player' ? 'player' : 'cpu-reveal', playerMotion: 9, cpuMotion: 9, [key]: [...m[key], c]}, owner, c.instanceId, 0);
-          assert.equal(find(m, c)?.powerModifier, entrance === 0 && round < 5 ? 2 : 0);
+          assert.equal(find(m, c)?.powerModifier, entrance === 0 && round < 5 ? (heldId === 'og-calisthenics' ? 1 : 2) : 0);
           assert.equal(m[key].filter(x => x.cardId === heldId).length, 2);
         }
       }
@@ -588,16 +590,16 @@ for (const owner of ['player', 'cpu'] as const) {
     const m=blank(); const athletes=[unit('gym-bag-yn',owner,0),unit('calisthenics-yn',owner,1),unit('stairwell-sprinter',owner,2)];
     m.boards=athletes.map(c=>[c]) as Match['boards'];
     const first=cast(m,'og-calisthenics',owner,0).m;
-    for(const c of athletes) assert.equal(find(first,c)?.powerModifier,5);
+    for(const c of athletes) assert.equal(find(first,c)?.powerModifier,3);
     const second=cast(first,'og-calisthenics',owner,1).m;
-    for(const c of athletes) assert.equal(find(second,c)?.powerModifier,5);
+    for(const c of athletes) assert.equal(find(second,c)?.powerModifier,3);
   });
   test(`${owner}: OG Rap Legend's distributed bonus stays shared and finite`, () => {
     const m=blank(); const a=unit('the-rapper',owner,1), b=unit('the-local-celebrity',owner,2);
     m.boards=[[],[a],[b]];
     const first=cast(m,'the-og-rap-legend',owner,0).m;
-    assert.equal(find(first,a)?.powerModifier,3);assert.equal(find(first,b)?.powerModifier,3);
+    assert.equal(find(first,a)?.powerModifier,4);assert.equal(find(first,b)?.powerModifier,4);
     const second=cast(first,'the-og-rap-legend',owner,0).m;
-    assert.equal(find(second,a)?.powerModifier,3);assert.equal(find(second,b)?.powerModifier,3);
+    assert.equal(find(second,a)?.powerModifier,4);assert.equal(find(second,b)?.powerModifier,4);
   });
 }

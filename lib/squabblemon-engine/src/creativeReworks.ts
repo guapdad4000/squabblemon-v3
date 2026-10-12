@@ -98,7 +98,7 @@ export const CREATIVE_KITS: Record<string, readonly [string, string]> = {
   ],
   techbro: [
     "Burn Rate",
-    "On Reveal: Borrow up to 2 Motion, up to the cap. At round end repay unspent borrowed Motion; any remainder reduces your next round starting Motion. Once per match.",
+    "On Reveal: Borrow up to 1 Motion, up to the cap. At round end repay unspent borrowed Motion; any remainder reduces your next round starting Motion. Once per match.",
   ],
   failedrapper: [
     "One More Verse",
@@ -146,7 +146,7 @@ export const CREATIVE_KITS: Record<string, readonly [string, string]> = {
   ],
   cornercoach: [
     "Run It Back",
-    "On Reveal: Coach your weakest eligible ally here through next round. Later friendly placements retry its failed entrance until one succeeds. Coachable: Edgar, Nguyen, Man-Man, Transplant, Bodega Cat, Dog Walker, Sports Prodigy, Homeless YN, Dragonfly Jones, OG Uncle, Barber Bro, Night Shift Medic, Squabble House Worker — Female, The Feds. If nobody qualifies, give your weakest other ally here +1 Hand instead.",
+    "On Reveal: Coach your weakest eligible ally here through next round. Later friendly placements retry its failed entrance until one succeeds. Coachable: Edgar, Nguyen, Man-Man, Transplant, Bodega Cat, Dog Walker, Sports Prodigy, Homeless YN, Dragonfly Jones, OG Uncle, Barber Bro, Night Shift Medic, Squabble House Worker — Female, The Feds. If nobody qualifies, give your weakest other ally here +3 Hands instead.",
   ],
   midnightmayor: [
     "Keys to the City",
@@ -214,7 +214,7 @@ export const CREATIVE_KITS: Record<string, readonly [string, string]> = {
   ],
   gardener: [
     "Rooftop Harvest",
-    "On Reveal: Plant a Seed here. At the end of this round, your weakest Plant ally here gains +3 Hands. One plot per district per side.",
+    "On Reveal: Plant a Seed here. At the end of this round, your weakest Plant ally here gains +4 Hands. One plot per district per side.",
   ],
   incel: [
     "Leave Me Alone",
@@ -222,11 +222,11 @@ export const CREATIVE_KITS: Record<string, readonly [string, string]> = {
   ],
   circuitcaptain: [
     "Everybody on the Clock",
-    "On Reveal: Post two jobs through next round. Your next two different Electric allies played or moved each gain +1 Hand. When both take a job, each gains another +1 Hand and restore 1 Motion once. One job pair per side.",
+    "On Reveal: Post two jobs through next round. Your next two different Electric allies played or moved each gain +1 Hand. When both take a job, restore 1 Motion once. One job pair per side.",
   ],
   canopykeeper: [
     "Show Up Then",
-    "On Reveal: Give your weakest other ally here +1 Hand and promise to help it. Through next round, if another card gives it Hands, cleanses it, or heals enemy damage, it gains +2 Hands and you gain +1 Hand, once.",
+    "On Reveal: Give your weakest other ally here +1 Hand (+2 if Plant) and promise to help it. Through the next two rounds, if another card gives it Hands, cleanses it, or heals enemy damage, it gains +2 Hands (+3 if Plant) and you gain +1 Hand, once.",
   ],
   slipstream: [
     "Boarding Pass",
@@ -501,7 +501,7 @@ export function creativeDistrictMarks(m: Match): CharacterDistrictMark[] {
     "follow-family": "follow family once if space allows",
     tab: "next guest: hit or harmful status earns a Tip",
     project: "two different elements must contribute",
-    jobs: "two different Electric workers: +1 each; when both jobs fill, +1 each and restore 1 Motion",
+    jobs: "two different Electric workers: +1 each; when both jobs fill, restore 1 Motion",
     duel: "leave: +3 to Hooper; stay: take 3 at expiry",
     fork: "next enemy placement saves that district; other marks take 2",
     queue: "next enemy entrance waits until round end",
@@ -537,8 +537,9 @@ export function creativeDistrictMarks(m: Match): CharacterDistrictMark[] {
     treat: "next other friendly arrival: +2",
     ground: "hold this district together: +3 each",
     anchor: "block one forced move: +2",
-    seed: "this round end: weakest Plant here +3",
+    seed: "this round end: weakest Plant here +4",
     promise: "help this ally to fulfill the promise",
+    "sw-plate-pending": "next other Fire or Family arrival here: +3 while Auntie is active here",
     boarding: "next move: +2 and Protection",
   };
   const visible = marks(m).map((x) => ({
@@ -799,7 +800,7 @@ export function creativeReveal(
     case "techbro":
       if (!s.creativeUsed?.loan) {
         const key = s.owner === "player" ? "playerMotion" : "cpuMotion",
-          amount = Math.min(2, 9 - m[key]);
+          amount = Math.min(1, 9 - m[key]);
         m = once(m, s, "loan", t);
         m = { ...m, [key]: m[key] + amount };
         put("loan", [], l, { amount, expires: m.round + 1 }, "source");
@@ -886,7 +887,7 @@ export function creativeReveal(
       if (trainee) {
         const ready = trainee.creativeEntranceSucceeded === false;
         put("coach", [trainee], l, { ready });
-      } else give(a[0], 1);
+      } else give(a[0], 3);
       break;
     }
     case "midnightmayor":
@@ -1026,9 +1027,9 @@ export function creativeReveal(
       break;
     case "canopykeeper":
       if (a[0]) {
-        give(a[0], 1);
+        give(a[0], a[0].type === "Plant" ? 2 : 1);
         // The initial help is not the promised follow-up from another card.
-        put("promise", [a[0]]);
+        put("promise", [a[0]], l, { expires: m.round + 2 });
       }
       break;
     case "slipstream": {
@@ -1220,8 +1221,8 @@ function contribute(
     x.targets.every((target) => seen.includes(target))
   ) {
     m = remove(m, x.id);
-    for (const target of x.targets)
-      m = buff(m, target, x.kind === "jobs" ? 1 : 2, t);
+    if (x.kind !== "jobs") for (const target of x.targets)
+      m = buff(m, target, 2, t);
     if (x.kind === "project" && active(card(m, x.source.instanceId)))
       m = buff(m, x.source.instanceId, 1, t);
     if (x.kind === "jobs") m = t.refund(m, x.owner, 1);
@@ -1633,7 +1634,7 @@ export function creativeAfterAction(
           now.powerModifier > old.powerModifier)
       ) {
         m = remove(m, x.id);
-        m = buff(m, now.instanceId, 2, t);
+        m = buff(m, now.instanceId, now.type === "Plant" ? 3 : 2, t);
         m = buff(m, x.source.instanceId, 1, t);
       }
     }
@@ -2105,7 +2106,7 @@ export function creativeRoundEnd(m: Match, t: CreativeTools): Match {
           ),
           t,
         )[0];
-        if (plant) m = buff(m, plant.instanceId, 3, t);
+        if (plant) m = buff(m, plant.instanceId, 4, t);
       }
     }
     if (start !== m)

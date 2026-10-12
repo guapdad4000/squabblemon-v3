@@ -65,7 +65,7 @@ export function inventory() {
     else {byComposition.set(composition,deck);aliases[deck.id]=[deck.id];}
   }
   const decks=[...byComposition.values()];
-  const historicalRed={...authored.find(deck=>deck.id==='focused-red-set')!,id:'historical-red-guap-folks',name:'Historical red shell with GUAP/FOLKS (diagnostic only)'};
+  const historicalRed={...authored.find(deck=>deck.id==='focused-red-set')!,cardIds:['triple-og-red','block-spinner','redside1','ganger-red','cane-corso-red','initiation','guap','folks','cognac','bustdown'],id:'historical-red-guap-folks',name:'Historical red shell with GUAP/FOLKS (diagnostic only)'};
   assertLegalDeck(historicalRed);
   const catalog=cardCatalog.filter(card=>card.kind!=='token'&&!card.hazard).map(card=>({id:card.engineId,name:card.name,kind:card.kind??'character',type:card.type,cost:card.cost}));
   const included=new Set(decks.flatMap(deck=>deck.cardIds));

@@ -14,7 +14,7 @@ function setup(owner: Owner = 'player') {
   const source = unit('guap', owner, 0);
   const ally = unit('plug', owner, 1);
   const foe = unit('hooper', enemy, 2);
-  const fragile = unit('cornball', enemy, 3);
+  const fragile = { ...unit('cornball', enemy, 3), basePower: 1 };
   const elsewhere = unit('hooper', enemy, 4, 1);
   const m: Match = { ...createMatch('vibes', 'vibes'), round: 6, phase: owner === 'player' ? 'player' : 'cpu-reveal',
     playerMotion: 6, cpuMotion: 6, playerHand: owner === 'player' ? [source] : [], cpuHand: owner === 'cpu' ? [source] : [],
@@ -32,7 +32,7 @@ test('GUAP is a playable top-tier Mythical with pack access, three upgrades, and
   validateCardAbilityUpgrades();
   assert.equal(validateSavedDeck(crew.map(id => cards[id].id), cardCatalog.map(c => c.catalogId), "guap").valid, true);
   const owned = cardCatalog.filter(c => c.engineId !== 'guap').map(c => c.catalogId);
-  assert.equal(generateStreetPack({ ownedCardIds: owned, discoveredCardIds: owned, ownedVariants: [], pity: 0 }, () => 0).rewards[0].cardId, 'guap');
+  assert.equal(generateStreetPack({ ownedCardIds: owned, discoveredCardIds: owned, ownedVariants: [], pity: 0 }, (() => { let call = 0; return () => call++ === 0 ? 9980 : 0; })()).rewards[0].cardId, 'guap');
   assert.equal(moveAssignments.guap, 'char91');
   assert.equal(resolveSpecialMove('guap')?.id, 'char91');
   assert.equal(resolveSpecialMove('guap')?.move, 'FINNAM!');

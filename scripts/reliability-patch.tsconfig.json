@@ -1,0 +1,1 @@
+{"extends":"./battle-tests.tsconfig.json","include":[],"files":["./src/reliability-patch-benchmark.ts","../artifacts/squabblemon/src/reliabilityPatch.test.ts"]}

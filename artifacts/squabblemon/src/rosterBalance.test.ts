@@ -30,11 +30,11 @@ function unprotect(m: Match, target: CardInstance): Match {
 }
 
 test('40 revisions preserve collectible identities and instantiate their new budgets', () => {
-  assert.equal(CARD_BALANCE_VERSION, 52);
-  assert.equal(ONLINE_RULES_VERSION, 52);
+  assert.equal(CARD_BALANCE_VERSION, 60);
+  assert.equal(ONLINE_RULES_VERSION, 60);
   assert.equal(new Set(ROSTER_REVISION_IDS).size, 40);
   assert.equal(cardCatalog.length, 298);
-  const budgets: Record<string, [number, number]> = { 'atl-scammer': [2, 2], failedathlete: [3, 6], lawyer: [3, 3], 'tattoo-artist': [3, 3], 'inmate-kingpin': [1, 3], 'juneteenth-chair-guy': [4, 4], livewire: [3, 3], subwaymagician: [3, 3], squabbleserver: [1, 2], stylist: [2, 2] };
+  const budgets: Record<string, [number, number]> = { 'atl-scammer': [2, 2], failedathlete: [3, 4], lawyer: [3, 3], 'tattoo-artist': [3, 3], 'inmate-kingpin': [1, 2], 'juneteenth-chair-guy': [4, 4], livewire: [3, 3], subwaymagician: [3, 3], squabbleserver: [1, 2], stylist: [2, 2] };
   for (const [id, pair] of Object.entries(budgets)) {
     const c = createCardInstance(id, 'player');
     assert.deepEqual([c.cost, c.basePower], pair, id);
@@ -43,7 +43,7 @@ test('40 revisions preserve collectible identities and instantiate their new bud
   assert.equal(cards['the-concert'].cost, 2);
 });
 
-test('Inmate Kingpin can be played for one Motion with three printed Hands', () => {
+test('Inmate Kingpin can be played for one Motion with two printed Hands', () => {
   for (const owner of ['player', 'cpu'] as const) {
     const source = createCardInstance('inmate-kingpin', owner, 'budget', 0);
     const hand = owner === 'player' ? 'playerHand' : 'cpuHand';
@@ -51,7 +51,7 @@ test('Inmate Kingpin can be played for one Motion with three printed Hands', () 
     const match = { ...blank(), phase: owner === 'player' ? 'player' as const : 'cpu-reveal' as const, [hand]: [source], [motion]: 1 };
     const after = playTurnCard(match, owner, source.instanceId, 0);
     assert.equal(after[motion], 0, owner);
-    assert.equal(find(after, source).basePower, 3, owner);
+    assert.equal(find(after, source).basePower, 2, owner);
   }
 });
 
@@ -99,11 +99,11 @@ for (const owner of ['player', 'cpu'] as const) {
       assert(!find(m, friends[1]).statuses.protected);
     }
   });
-  test(`${owner}: Cognac grants three to Fire and two to another element`, () => {
+  test(`${owner}: Cognac grants four to Fire and three to another element`, () => {
     for (const id of ['youngbull', 'cornball']) {
       const target = unit(id, owner, 0);
       const m = cast({ ...blank(), boards: [[target], [], []] }, 'cognac', owner).after;
-      assert.equal(find(m, target).powerModifier, cards[id].type === 'Fire' ? 3 : 2);
+      assert.equal(find(m, target).powerModifier, cards[id].type === 'Fire' ? 4 : 3);
     }
   });
   test(`${owner}: Stylist refreshes once after movement, never on a blocked move`, () => {
@@ -141,7 +141,7 @@ for (const owner of ['player', 'cpu'] as const) {
   });
   test(`${owner}: Ahki pays departure then actual homecoming, not an intermediate move`, () => {
     for (const fast of [false, true]) {
-      const ally = unit('cornball', owner, 0);
+      const ally = {...unit('cornball', owner, 0),basePower:1};
       let m = { ...blank(), boards: [[ally], [], []] as Match['boards'] };
       if (fast) m = suppressMatchPresentationEvents(m);
       m = cast(m, 'ahki', owner).after;
@@ -245,6 +245,7 @@ for (const owner of ['player', 'cpu'] as const) {
     assert.equal(find(barber.after, barber.source).creativeEntranceSucceeded, false);
     let m = cast(barber.after, 'cornercoach', owner).after;
     assert(mark(m, 'coach')?.ready);
+    m.boards.flat().find(c => c.cardId === 'cornercoach')!.basePower = 10;
     const arrival = cast(m, 'cornball', owner); m = arrival.after;
     assert.equal(find(m, arrival.source).powerModifier, 1); assert(!mark(m, 'coach'));
     m = cast(m, 'cornball', owner, 1).after;

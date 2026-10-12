@@ -39,7 +39,7 @@ test('after-hours catalog exposes exact identities, rarity, variants, upgrades, 
     assert.equal(card.abilityUpgrades.length, 3); assert.ok(card.variantSlots.length > 0);
   }
   const manager = catalogCardById['squabble-house-manager'];
-  assert.deepEqual([manager.cost, manager.power], [1, 2]);
+  assert.deepEqual([manager.cost, manager.power], [1, 1]);
   assert.match(manager.effect, /If an enemy is here, gain \+1 Hand/i);
   assert.match(manager.effect, /each other friendly Squabblehouse staff member anywhere on the board/i);
   assert.match(manager.effect, /first enemy played or moved here each round loses 1 Hand/i);
@@ -121,7 +121,7 @@ for (const owner of ['player', 'cpu'] as const) {
     after = cast(m, 'squabble-house-manager', owner);
     assert.equal(find(after, 'squabble-house-manager').powerModifier, 1);
     assert.equal(cards['squabble-house-manager'].cost, 1);
-    assert.equal(cards['squabble-house-manager'].power, 2);
+    assert.equal(cards['squabble-house-manager'].power, 1);
     const emptyLane = blank();
     const unopposed = cast(emptyLane, 'squabble-house-manager', owner);
     assert.equal(find(unopposed, 'squabble-house-manager').powerModifier, 0, 'Home Advantage still requires an enemy in its district');
