@@ -193,18 +193,40 @@ test("Operator locks movement, Protester clears hazards, and Oink suppresses eve
   );
   assert.equal(target?.squabblehouseCannotMoveThroughRound, 3);
 });
-test("Mary Mack round end and delayed elephant return happen through native card engine", () => {
+test("Mary Mack charges at 2/3 and returns at 4/4 through native rules, bypassing locks and keeping buffs", () => {
   const r = fresh();
+  const originalMary = player("ms-mary-mack", 0);
+  assert.equal(originalMary.cost, 2);
+  assert.equal(originalMary.basePower, 3);
   r.match.boards = [
-    [player("ms-mary-mack", 0), npc("raid-hound", 0), npc("raid-ham", 0)],
+    [{ ...originalMary, powerModifier: 2, statuses: { ...originalMary.statuses, protected: true } }, npc("raid-hound", 0), npc("raid-ham", 0)],
     [npc("raid-operator", 1), npc("raid-feds", 1)],
     [npc("raid-judge", 2)],
   ];
+  // Isolate the five-card census and native return from police deployment choices.
+  r.match.cpuHand = [];
+  r.match.storyRuntime = {
+    activePhaseIndex: -1,
+    appliedEffectIds: [],
+    lanePowerBonuses: [],
+    laneLocks: [{ owner: "player", lanes: [0, 1, 2] }],
+  };
   const next = applyBossAction(r, { type: "blast" }),
-    mary = next.match.boards.flat().find((c) => c.cardId === "ms-mary-mack")!;
+    mary = next.match.boards.flat().find((c) => c.instanceId === originalMary.instanceId)!;
+  assert.equal(next.match.round, 2);
+  assert.equal(mary.maryCents, 15);
   assert.equal(mary.maryElephant, true);
   assert.equal(mary.cost, 4);
+  assert.equal(mary.power, 4);
   assert.equal(mary.basePower, 4);
+  assert.equal(mary.powerModifier, 2, "transformation preserves protected invested Hands");
+  assert.equal(mary.lane, 0, "the weakest lane accepts the elephant despite its location lock");
+  for (const lane of [0, 1, 2] as const) {
+    for (const officer of next.match.boards[lane].filter(c => c.owner === "cpu")) {
+      assert.equal(officer.powerModifier, lane === mary.lane ? -1 : 0, officer.name);
+    }
+  }
+  assert(!next.blasts[0].boards.flat().some(c => c.instanceId === mary.instanceId));
   assert.equal(
     next.blasts[0].hands.reduce((a, b) => a + b, 0),
     0,

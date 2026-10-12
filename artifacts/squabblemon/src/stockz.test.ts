@@ -4,7 +4,7 @@ import { cards, catalogCardById, validateCardAbilityUpgrades } from '@workspace/
 import { createCardInstance, createMatch, playCard, nextRound, type Match, type Lane } from '@workspace/squabblemon-engine/gameEngine';
 test('STOCKZ is a collectible Rare with valid upgrades and supplied portrait', () => {
   assert.equal(catalogCardById.stockz.rarity, 'Rare');
-  assert.equal(cards.stockz.cost, 3); assert.equal(cards.stockz.power, 3);
+  assert.equal(cards.stockz.cost, 3); assert.equal(cards.stockz.power, 4);
   assert.equal(cards.stockz.artworkLayout, 'portrait'); validateCardAbilityUpgrades({ stockz: cards.stockz });
 });
 const investor = () => createCardInstance('stockz','player','test',0);

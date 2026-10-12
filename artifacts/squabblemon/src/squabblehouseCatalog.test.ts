@@ -10,15 +10,16 @@ const addedStaffIds = ['squabblehouse-bus-boy', 'squabblehouse-cashier', 'waffle
 const supportEngineId = 'sideofhands';
 const supportCatalogId = 'a-side-of-hands';
 const newIds = [...staffIds, ...dogIds, ...addedStaffIds];
+// Pin the v52 PvP budgets, while the wave retains its collection identities.
 const printedBudgets: Record<string, [number, number]> = {
   'squabblehouse-security': [3, 4],
   'squabblehouse-teknician': [5, 5],
-  'griddle-master': [3, 3],
+  'griddle-master': [3, 2],
   'inmate-reformed': [3, 3],
-  'cane-corso-red': [2, 3],
-  'blue-nose-pit': [2, 4],
-  'squabblehouse-bus-boy': [1, 2],
-  'squabblehouse-cashier': [2, 3],
+  'cane-corso-red': [2, 6],
+  'blue-nose-pit': [2, 5],
+  'squabblehouse-bus-boy': [1, 1],
+  'squabblehouse-cashier': [2, 1],
   'waffle-warlord': [5, 5],
 };
 const rarities: Record<string, string> = {

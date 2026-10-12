@@ -22,7 +22,7 @@ test('BUDDY is a Legendary Earth character with a distinct normal and Squabble c
     assert.equal(catalogCardById[id].rarity, 'Legendary');
     assert.deepEqual(catalogCardById[id].acquisitionSources, ['Street Packs']);
   }
-  assert.deepEqual([cards.buddy.cost, cards.buddy.power, cards.folks.cost, cards.folks.power], [3, 4, 4, 3]);
+  assert.deepEqual([cards.buddy.cost, cards.buddy.power, cards.folks.cost, cards.folks.power], [3, 3, 4, 2]);
   assert.equal(cards.buddy.type, 'Earth');
   assert.equal(cards.buddy.ability, 'Buddy Buds');
   assert.equal(cards['buddy-bud'], undefined, 'Bud tokens are battle-only and never collectible');
@@ -109,7 +109,7 @@ for (const owner of ['player', 'cpu'] as const) test('Squabbled Buddy transforms
   m.boards = [[foe], [earth], [friendlyNonEarth]];
   const after = playCard(m, owner, source.instanceId, 0, true);
   assert.equal(find(after, source).buddyForm, 'squabble-earth');
-  assert.equal(getEffectiveCardPower(find(after, source)), 10, 'ordinary SQUABBLE boost plus the Earth +2 also applies to Buddy');
+  assert.equal(getEffectiveCardPower(find(after, source)), source.basePower * 2 + 2, 'ordinary SQUABBLE boost plus the Earth +2 also applies to Buddy');
   assert.equal(find(after, earth).powerModifier, 2);
   assert.equal(find(after, friendlyNonEarth).powerModifier, 0);
   assert.equal(find(after, foe).powerModifier, -1);
@@ -123,7 +123,7 @@ for (const owner of ['player', 'cpu'] as const) test('Squabbled Buddy transforms
   assert.equal(expired.round, 6, 'the two-round modifiers expire at the start of round 6');
   assert.equal(find(expired, earth).powerModifier, 0);
   assert.equal(find(expired, foe).powerModifier, 0);
-  assert.equal(find(expired, source).powerModifier, 4, 'the ordinary Squabble base-Hands boost is permanent');
+  assert.equal(find(expired, source).powerModifier, source.basePower, 'the ordinary Squabble base-Hands boost is permanent');
   assert.equal(expired.timedEffects.some(effect => effect.kind.startsWith('buddy-earth')), false);
   const squabbleEvent = after.effectLog.find(event => event.note.startsWith('Earth Squabble:'));
   assert.deepEqual(squabbleEvent?.duration, { unit: 'round', startsAtRound: 4, expiresAtRound: 6, expiration: 'round-start' });
@@ -205,7 +205,7 @@ test('SQUABBLE doubles printed Hands without doubling either ability', () => {
   for (const id of ['buddy', 'folks'] as const) {
     const { m, source, enemy } = setup(id), target = unit('guap', enemy, 0, 1);
     m.boards[0] = [target]; const after = playCard(m, 'player', source.instanceId, 0, true);
-    assert.equal(getEffectiveCardPower(find(after, source)), id === 'buddy' ? 10 : 6);
+    assert.equal(getEffectiveCardPower(find(after, source)), source.basePower * 2 + (id === 'buddy' ? 2 : 0));
     assert.equal(find(after, target).powerModifier, id === 'buddy' ? -1 : 0);
     assert.equal(find(after, source).buddyForm, id === 'buddy' ? 'squabble-earth' : undefined);
     assert.equal(find(after, target).statuses.burnStacks, id === 'folks' ? 3 : 0);
@@ -216,7 +216,7 @@ test('trained tiers add small targeted bonuses without multiplying board-wide Bu
     const { m, source, enemy } = setup(id), target = unit('guap', enemy, 0, 1), ally = unit('guap', 'player', 1, 2);
     m.boards = [[target], [ally], []]; m.abilityUpgradeSnapshot = createAbilityUpgradeSnapshot([id], [], { player: { [id]: { xp: 2800, level: 8, moveTier: 3 } } });
     const after = playCard(m, 'player', source.instanceId, 0);
-    assert.equal(getEffectiveCardPower(find(after, source)), id === 'buddy' ? 7 : 5);
+    assert.equal(getEffectiveCardPower(find(after, source)), source.basePower + (id === 'buddy' ? 3 : 2));
     assert.equal(find(after, target).powerModifier, 0);
     assert.equal(find(after, target).statuses.burnStacks, id === 'folks' ? 3 : 0);
     assert.equal(find(after, ally).powerModifier, id === 'folks' ? 2 : 0);

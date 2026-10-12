@@ -99,7 +99,6 @@ export const BASE_PVP_VALUES: Readonly<Record<string, Partial<Pick<Card,'cost'|'
   "mixtape-cousin":{"power":1},
   "monsoonanchor":{"power":2},
   "mrrabbit":{"cost":2,"power":1},
-  "ms-mary-mack":{"power":5},
   "nerd":{"power":5},
   "night-bus-driver":{"power":2},
   "nightmedic":{"power":3},

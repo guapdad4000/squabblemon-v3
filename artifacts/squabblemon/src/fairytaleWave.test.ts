@@ -1,3 +1,4 @@
+import { BASE_PVP_VALUES } from '../../../lib/squabblemon-engine/src/basePvpBalance';
 import { CREW_MATCHUP_PATCH } from '../../../lib/squabblemon-engine/src/crewMatchupBalance';
 import assert from 'node:assert/strict';
 import { existsSync } from 'node:fs';
@@ -86,7 +87,12 @@ test('all 22 identities, approved costs, artwork, eight alternate pairs and trai
   assert.equal(catalogCardById['mr-rabbit'].faction, 'Wonderland');
   assert.equal(catalogCardById['mr-rabbit'].rarity, 'Rare');
   for (const [id, art, name, rarity, , cost, power] of FAIRYTALE_WAVE) {
-    assert.equal(cards[id].name, name); assert.equal(cards[id].cost, CREW_MATCHUP_PATCH[id]?.cost ?? cost); assert.equal(cards[id].power, CREW_MATCHUP_PATCH[id]?.power ?? (id === 'squabbleserver' ? 2 : power));
+    assert.equal(cards[id].name, name);
+    // The current base PvP budget is applied after the earlier crew patch.
+    const approved = { cost, power: id === 'squabbleserver' ? 2 : power,
+      ...CREW_MATCHUP_PATCH[id], ...BASE_PVP_VALUES[id] };
+    assert.equal(cards[id].cost, approved.cost, `${id} current approved Motion`);
+    assert.equal(cards[id].power, approved.power, `${id} current approved Hands`);
     assert.equal(catalogCardById[art].rarity, rarity);
     assert(catalogCardById[art].acquisitionSources.includes('Street Packs'));
     assert(existsSync(path.resolve('public/assets/characters', art + '.webp')));
@@ -242,7 +248,7 @@ test('Alice returns once, leaves a capped Grin and receives +3 on her next deplo
   const m=blank(), alice=unit('alice','player',0), cat=unit('cheshire','player',1);m.boards=[[alice],[cat],[]];
   const returned=advance(m), hand=find(returned,alice);
   assert.equal(hand.lane,null);assert(hand.aliceReady);assert.equal(returned.boards[0].filter(c=>c.cardId==='grin').length,1);
-  assert.equal(returned.boards[0].find(c=>c.cardId==='grin')?.basePower,6);
+  assert.equal(returned.boards[0].find(c=>c.cardId==='grin')?.basePower,4);
   assert.equal(getLegalCardCost(returned,'player',hand,0),1);
   assert.match(getCardCostExplanation(returned,'player',hand,0),/Drink Me \/ Eat Me/);
   const back=play(returned,hand,0);assert.equal(find(back,alice).powerModifier,3);assert(!find(back,alice).aliceReady);
@@ -252,9 +258,9 @@ test('Alice returns once, leaves a capped Grin and receives +3 on her next deplo
   assert.equal(advance(final).boards[0][0].cardId,'alice');
 });
 for (const owner of ['player', 'cpu'] as const) {
-  test(`Cheshire in ${owner}'s hand leaves one six-Hand Grin on an ally's return`, () => {
+  test(`Cheshire in ${owner}'s hand leaves one four-Hand Grin on an ally's return`, () => {
     assert.equal(cards.cheshire.cost, 2);
-    assert.equal(cards.cheshire.power, 4, 'approved Wonderland body');
+    assert.equal(cards.cheshire.power, 1, 'v52 base Wonderland body');
     const hand = owner === 'player' ? 'playerHand' : 'cpuHand';
     const alice = unit('alice', owner, 0);
     const cheshire = createCardInstance('cheshire', owner, 'hand-grin', 2);
@@ -266,7 +272,7 @@ for (const owner of ['player', 'cpu'] as const) {
     const returned = advance(m);
     assert.equal(find(returned, alice).lane, null);
     assert.equal(returned.boards[0].filter(c => c.cardId === 'grin').length, 1);
-    assert.equal(returned.boards[0].find(c => c.cardId === 'grin')?.basePower, 6);
+    assert.equal(returned.boards[0].find(c => c.cardId === 'grin')?.basePower, 4);
     assert.equal(find(returned, cheshire).waveTrainingUsed, true);
     assert.equal(find(returned, cheshire).powerModifier, 3, 'a hand trigger earns its upgrade exactly once');
     assert.equal(returned.cheshireRounds?.[owner], returned.round - 1);
@@ -355,25 +361,31 @@ for (const owner of ['player', 'cpu'] as const) {
     const alice = unit('alice', owner, 1, 6);
     const cheshire = unit('cheshire', owner, 2, 7);
     const m = blank();
+    // Dorothy chooses the weakest eligible ally across the board. Make the
+    // intended traveler strictly weakest without relying on old printed bodies.
+    rabbit.powerModifier = 4 - rabbit.basePower;
+    alice.powerModifier = 3 - alice.basePower;
+    cheshire.powerModifier = 4 - cheshire.basePower;
+    assert([rabbit, alice, cheshire].every(card => getEffectiveCardPower(card) > getEffectiveCardPower(ally)));
     m.boards = [[rabbit, ally], [alice], [cheshire]];
     const dorothy = cast(m, 'dorothy', owner).after;
     assert.equal(find(dorothy, ally).lane, null);
-    assert.equal(find(dorothy, rabbit).powerModifier, 1);
+    assert.equal(find(dorothy, rabbit).powerModifier, rabbit.powerModifier + 1);
     assert.equal(getLegalCardCost(dorothy, owner, find(dorothy, ally), 0), 1, 'Dorothy retains her Homecoming discount');
     assert.equal(dorothy.boards.flat().filter(c => c.cardId === 'grin').length, 1);
     const next = advance(dorothy);
     assert.equal(find(next, alice).lane, null);
-    assert.equal(find(next, rabbit).powerModifier, 2, 'each separate return grants +1 Hand');
+    assert.equal(find(next, rabbit).powerModifier, rabbit.powerModifier + 2, 'each separate return grants exactly +1 Hand');
     assert.equal(next.boards.flat().filter(c => c.cardId === 'grin').length, 1, 'Cheshire still caps its Grin once per round');
     assert.equal(next.effectLog.filter(e => e.cardInstanceId === rabbit.instanceId && e.note.includes('Pocket Watch')).length, 2);
 
     const silenced = blank();
     silenced.boards[0] = [{ ...rabbit, statuses: { ...rabbit.statuses, silenced: true } }, ally];
-    assert.equal(find(cast(silenced, 'dorothy', owner).after, rabbit).powerModifier, 0);
+    assert.equal(find(cast(silenced, 'dorothy', owner).after, rabbit).powerModifier, rabbit.powerModifier, 'suppressed Rabbit gains no return Hands');
     const rival = owner === 'player' ? 'cpu' : 'player';
     const enemyReturn = blank();
     enemyReturn.boards = [[rabbit], [unit('alice', rival, 1, 10)], []];
-    assert.equal(find(advance(enemyReturn), rabbit).powerModifier, 0, 'enemy returns do not grant Hands');
+    assert.equal(find(advance(enemyReturn), rabbit).powerModifier, rabbit.powerModifier, 'enemy returns do not grant Hands');
   });
 
   test(`Mr Rabbit's return credit stacks with an existing targeted discount for ${owner}, with a 1-Motion floor`, () => {
@@ -681,13 +693,18 @@ for (const owner of ['player', 'cpu'] as const) {
     const after = cast(placed.after, 'cornball', enemy, placed.after.districtTraps![0].lane).after;
     assert.equal(find(after, placed.source).powerModifier, 2);
     assert(after.boards[2].every(c => c.powerModifier === 0));
-    const injured = unit('hooper', owner, 0); injured.powerModifier = -4; injured.recoverableDamage = 4;
+    const injured = unit('hooper', owner, 0);
+    // Retain a living one-Hand patient with four recoverable damage. Printed
+    // Hands may change, but the healing limit and outstanding debt do not.
+    injured.powerModifier = 1 - injured.basePower; injured.recoverableDamage = 4;
+    assert.equal(getEffectiveCardPower(injured), 1);
     const heal = blank(); heal.boards[0] = [injured];
     const treated = cast(heal, 'watson', owner).after;
     assert.equal(find(treated, injured).recoverableDamage, 1);
-    assert.equal(find(treated, injured).powerModifier, -1);
+    assert.equal(find(treated, injured).powerModifier, injured.powerModifier + 3, 'Watson restores exactly three of the four lost Hands');
+    assert.equal(getEffectiveCardPower(find(treated, injured)), 4);
     assert(find(treated, injured).statuses.protected);
-    assert.equal(cards.watson.power, 3); assert.equal(cards.watson.cost, 2);
+    assert.equal(cards.watson.power, 4); assert.equal(cards.watson.cost, 2);
   });
 }
 

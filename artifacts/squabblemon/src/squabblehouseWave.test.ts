@@ -58,16 +58,17 @@ test('Squabblehouse wave definitions expose all nine playable identities, budget
     'inmate-reformed', 'squabblehouse-bus-boy', 'squabblehouse-cashier', 'waffle-warlord',
     'cane-corso-red', 'blue-nose-pit',
   ]);
+  // Pin the v52 PvP budgets separately from mechanic and collection assertions.
   const expected = {
     'squabblehouse-security': ['Legendary', 3, 4, 'Normal'],
     'squabblehouse-teknician': ['Mythical', 5, 5, 'Electric'],
-    'griddle-master': ['Rare', 3, 3, 'Fire'],
+    'griddle-master': ['Rare', 3, 2, 'Fire'],
     'inmate-reformed': ['Rare', 3, 3, 'Normal'],
-    'squabblehouse-bus-boy': ['Uncommon', 1, 2, 'Water'],
-    'squabblehouse-cashier': ['Rare', 2, 3, 'Earth'],
+    'squabblehouse-bus-boy': ['Uncommon', 1, 1, 'Water'],
+    'squabblehouse-cashier': ['Rare', 2, 1, 'Earth'],
     'waffle-warlord': ['Legendary', 5, 5, 'Fire'],
-    'cane-corso-red': ['Rare', 2, 3, 'Fire'],
-    'blue-nose-pit': ['Rare', 2, 4, 'Water'],
+    'cane-corso-red': ['Rare', 2, 6, 'Fire'],
+    'blue-nose-pit': ['Rare', 2, 5, 'Water'],
   };
   for (const id of IDS) {
     const card = squabblehouseWaveCards[id];
@@ -181,25 +182,39 @@ test('Dog On Reveal waits without its matching OG and never teleports as part of
 });
 
 test('Red dog leaps two lanes to intercept one complete Griddle damage-and-Burn package', () => {
-  let match = blank();
-  const og = unit('triple-og-red', 'cpu', 2, 11);
-  const dog = unit('cane-corso-red', 'cpu', 0, 12);
-  match = withBoard(match, og, dog);
-  const after = cast(match, 'griddle-master', 'player', 2);
-  assert.equal(findInstance(after, og.instanceId)?.powerModifier, 0, 'the OG remains protected');
-  assert.equal(findInstance(after, dog.instanceId), undefined, '3 damage destroys the 3-Hands bodyguard');
-  const jump = after.effectLog.find(event => event.cardInstanceId === dog.instanceId && event.kind === 'move');
-  assert.ok(jump, 'emergency movement is a canonical movement event');
-  assert.equal(jump.replay.before.boards.flat().find(card => card.instanceId === dog.instanceId)?.lane, 0);
-  assert.equal(jump.replay.after.boards.flat().find(card => card.instanceId === dog.instanceId)?.lane, 2,
-    'emergency guard may leap across two lanes');
-  const guardHit = after.effectLog.find(event => event.targets.some(target => target.cardInstanceId === dog.instanceId)
-    && event.targets.some(target => target.cardInstanceId === og.instanceId));
-  assert.ok(guardHit, 'damage event names the real dog recipient');
-  assert.ok(guardHit.targets.some(target => target.cardInstanceId === og.instanceId),
-    'the same event names the protected OG');
-  assert.equal(guardHit.targets.find(target => target.cardInstanceId === dog.instanceId)?.before?.power, 3);
-  assert.equal(guardHit.targets.find(target => target.cardInstanceId === dog.instanceId)?.after, null);
+  // A fresh v52 guard survives 3 damage; a wounded guard still covers a lethal hit.
+  for (const wounded of [false, true]) {
+    let match = blank();
+    const og = unit('triple-og-red', 'cpu', 2, 11);
+    const dog = unit('cane-corso-red', 'cpu', 0, 12);
+    dog.powerModifier = wounded ? -3 : 0;
+    match = withBoard(match, og, dog);
+    const after = cast(match, 'griddle-master', 'player', 2);
+    const guardedOg = findInstance(after, og.instanceId)!;
+    const hitDog = findInstance(after, dog.instanceId);
+    assert.equal(guardedOg.powerModifier, 0, 'the OG receives no damage');
+    assert.equal(guardedOg.statuses.burnStacks, 0, 'the OG receives no Burn from the intercepted package');
+    if (wounded) {
+      assert.equal(hitDog, undefined, '3 damage destroys a guard wounded to 3 Hands');
+    } else {
+      assert.ok(hitDog, 'the fresh 6-Hand bodyguard survives the 3-damage hit');
+      assert.equal(hitDog.basePower + hitDog.powerModifier, 3);
+      assert.equal(hitDog.statuses.burnStacks, 1, 'the survivor receives Burn with the damage');
+      assert.equal(hitDog.squabblehouseGuardRound, 1, 'the interception spends this round’s guard charge');
+    }
+    const jump = after.effectLog.find(event => event.cardInstanceId === dog.instanceId && event.kind === 'move');
+    assert.ok(jump, 'emergency movement is a canonical movement event');
+    assert.equal(jump.replay.before.boards.flat().find(card => card.instanceId === dog.instanceId)?.lane, 0);
+    assert.equal(jump.replay.after.boards.flat().find(card => card.instanceId === dog.instanceId)?.lane, 2,
+      'emergency guard may leap across two lanes');
+    const guardHit = after.effectLog.find(event => event.targets.some(target => target.cardInstanceId === dog.instanceId)
+      && event.targets.some(target => target.cardInstanceId === og.instanceId));
+    assert.ok(guardHit, 'damage event names the real dog recipient and protected OG');
+    const dogTarget = guardHit.targets.find(target => target.cardInstanceId === dog.instanceId)!;
+    assert.equal(dogTarget.before?.power, wounded ? 3 : 6);
+    if (wounded) assert.equal(dogTarget.after, null);
+    else assert.equal(dogTarget.after?.power, 3);
+  }
 });
 
 test('same-lane dogs guard in place, one dog spends one package per round, and duplicates resolve deterministically', () => {
@@ -289,6 +304,8 @@ test('uncounterable attacks, Griddle shieldbreak, Wifey, and disabled dogs retai
   const shieldedOg = unit('triple-og-red', 'cpu', 2, 11);
   const shieldDog = unit('cane-corso-red', 'cpu', 0, 12);
   shieldedOg.statuses.protected = true;
+  // Wound the 6-Hand guard to preserve this lethal shieldbreak-order regression.
+  shieldDog.powerModifier = -4;
   shielded = withBoard(shielded, shieldedOg, shieldDog);
   shielded.timedEffects = [{ id: 'test-shield', kind: 'church-protection', sourceInstanceId: shieldedOg.instanceId,
     targetInstanceId: shieldedOg.instanceId, owner: 'cpu', lane: 2, startsAtRound: 1, expiresAtRound: 99,
@@ -297,6 +314,8 @@ test('uncounterable attacks, Griddle shieldbreak, Wifey, and disabled dogs retai
   assert.equal(findInstance(shielded, shieldDog.instanceId), undefined,
     'Griddle breaks the strongest enemy shield, then its 3-damage follow-up is redirected to and destroys the 2-Hand dog');
   assert.equal(findInstance(shielded, shieldedOg.instanceId)?.powerModifier, 0);
+  assert.equal(findInstance(shielded, shieldedOg.instanceId)?.statuses.protected, false,
+    'Griddle removes the OG shield before its damage package reaches the guard');
 
   let sideEye = blank();
   const wifeyOg = unit('triple-og-red', 'cpu', 2, 21);

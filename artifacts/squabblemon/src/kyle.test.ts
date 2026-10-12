@@ -25,7 +25,7 @@ const clone = <T,>(value: T): T => JSON.parse(JSON.stringify(value));
 
 test('KYLE is a collectible Legendary with the supplied portrait and valid upgrade path', () => {
   assert.equal(catalogCardById.kyle.rarity, 'Legendary');
-  assert.equal(cards.kyle.cost, 4); assert.equal(cards.kyle.power, 4);
+  assert.equal(cards.kyle.cost, 4); assert.equal(cards.kyle.power, 3);
   assert.equal(cards.kyle.artworkLayout, 'portrait');
   validateCardAbilityUpgrades({ kyle: cards.kyle });
   assert.equal(catalogCardById['smile-bomb'], undefined);
@@ -75,7 +75,7 @@ test('four kills award exactly +8 persistent Hands to their KYLE, with no collat
   const after = advance(m);
   assert.equal(after.boards[1].length,0);
   assert.equal(kyle(after).powerModifier,8);
-  assert.equal(getEffectiveCardPower(kyle(after)),12);
+  assert.equal(getEffectiveCardPower(kyle(after)),kyle(m).basePower + 8);
   assert.equal(kyle(advance(after)).powerModifier,8);
 });
 

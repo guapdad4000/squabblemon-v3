@@ -22,14 +22,15 @@ function shield(m: Match, target: CardInstance) {
     startsAtRound: 1, expiresAtRound: 7, expiration: 'match-complete' });
 }
 
-test('existing Epic leaders retain their costs, IDs and base kits; Ashlee is Plant', () => {
+test('Epic leaders retain their costs, IDs and kits; v52 Ashlee is a 5/2 Plant leader', () => {
   for (const id of ['piratedj', 'promoter', 'gamer']) {
     assert.equal(cards[id].cost, 3);
     assert.equal(catalogCardById[cards[id].id].rarity, 'Epic');
     assert.match(cards[id].effect, /On Reveal:/); assert.match(cards[id].effect, /Ongoing:/);
   }
   assert.equal(cards.ashlee.type, 'Plant'); assert.match(cards.ashlee.effect, /Plant allies in all three/);
-  assert.equal(cards.ashlee.cost, 5); assert.equal(cards.ashlee.power, 3);
+  assert.equal(cards.ashlee.cost, 5); assert.equal(cards.ashlee.power, 2);
+  assert.equal(catalogCardById.ashlee.power, 2, 'the collectible uses the same v52 base Hands budget');
   assert.equal(cards.buddy.cost, 3); assert.equal(cards.folks.cost, 4);
   assert.equal(cards.buddy.type, 'Earth');
   assert.equal(cards.buddy.elementalBond, undefined, 'Buddy is an Earth character, not an elemental-bond engine');
