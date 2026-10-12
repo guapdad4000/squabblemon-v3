@@ -1,3 +1,4 @@
+import { ArcadeGauge, ArcadeObjective, ArcadeMilestones, ArcadePrizeArt } from "./ArcadePolish";
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
@@ -121,23 +122,7 @@ function Sprite({
   );
 }
 function HP({ hp, max, label }: { hp: number; max: number; label: string }) {
-  return (
-    <div className="wr-hp" data-low={hp / max < 0.3}>
-      <span>{label}</span>
-      <div
-        role="progressbar"
-        aria-label={`${label} health`}
-        aria-valuenow={hp}
-        aria-valuemin={0}
-        aria-valuemax={max}
-      >
-        <i style={{ width: `${Math.max(0, hp / max) * 100}%` }} />
-      </div>
-      <b>
-        {hp}/{max}
-      </b>
-    </div>
-  );
+  return <ArcadeGauge value={hp} max={max} label={label} className="wr-hp" />;
 }
 function playSound(
   kind: "hop" | "battle" | "move" | "win" | "end",
@@ -369,6 +354,13 @@ export function WaffleRunGame({
           {sound ? "SFX ON" : "SFX OFF"}
         </button>
       </header>
+      {activeRun && run && <>
+        <ArcadeObjective chapter={`FLOOR ${run.floor} / NIGHT SHIFT`} title={run.phase === "battle" ? "Read the next attack" : run.phase === "learning" ? "Pick your new trick" : run.phase === "ended" ? "Your take is safe" : "Steal waffles · Dodge the watch"}
+          detail={run.phase === "battle" ? `Staff intent: ${run.enemyIntent.replace('-', ' ')}. Guard or dodge the heavy hit.` : "Watch the red plate before you hop. Battles unlock new moves."}
+          value={run.waffles} max={run.waffles<12?12:30} banked={status?.earned.softCurrency}/>
+        <ArcadeMilestones value={run.waffles} steps={[{at:12,label:"First ticket"},{at:30,label:"Second ticket"}]}/>
+      </>}
+
       <section className="wr-cabinet-screen" data-testid="waffle-run-screen">
         <img className="wr-diner" src={art("diner")} alt="" />
         <div className="wr-scanlines" aria-hidden="true" />
@@ -395,6 +387,7 @@ export function WaffleRunGame({
               </div>
             ) : run?.phase === "ended" ? (
               <div className="wr-receipt">
+                <ArcadePrizeArt/>
                 <PixelTitle text="BIRD DOWN" />
                 <strong>
                   {run.endReason === "retired"
@@ -564,6 +557,12 @@ export function WaffleRunGame({
                   className="wr-battle-bird"
                   animationKey={effect}
                 />
+                <div className="wr-combat-status" aria-label="Active battle effects">
+                  {run.shield>0&&<span>GUARD · {run.shield}</span>}
+                  {run.dodge&&<span>DODGE READY</span>}
+                  {run.boost>0&&<span>POWER · +{run.boost}</span>}
+                  {run.poison>0&&<span>SYRUP · {run.poison} TURNS</span>}
+                </div>
                 <div className="wr-battle-health">
                   <HP hp={run.hp} max={run.maxHp} label="INNERCITY PIGEON" />
                 </div>

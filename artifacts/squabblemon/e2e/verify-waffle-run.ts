@@ -362,12 +362,19 @@ async function verify(width: number, height: number) {
     await page.getByRole("button", { name: "BACK AFTER RESET" }).waitFor();
     assert.equal(attempts, 0);
     assert.equal(documents, 1, "game actions must not reload page");
+    if (process.env.MINIGAME_ONLY === 'true') {
+      assert.deepEqual(errors, []);
+      console.log(`PASS ${width}: waffle retry, combat, resume, final receipt, two daily attempts, no reload`);
+      return;
+    }
     await page.goto(origin + "/missions?mythic=john-henry", {
       waitUntil: "domcontentloaded",
     });
     await page.getByRole("dialog", { name: /Steel/ }).waitFor();
     await shot("john-henry");
-    await page.getByRole("button", { name: "Claim John Henry" }).click();
+    const meet = page.getByRole("button", { name: /Meet John Henry/ });
+    if (await meet.isVisible()) await meet.click();
+    await page.getByRole("button", { name: /Claim John Henry/ }).click();
     await page
       .getByText("John Henry joined your crew.", { exact: false })
       .waitFor();

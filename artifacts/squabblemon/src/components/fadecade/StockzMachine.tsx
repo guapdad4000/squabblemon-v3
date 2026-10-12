@@ -1,3 +1,4 @@
+import { ArcadeObjective, ArcadePrizeArt } from "./ArcadePolish";
 import { ArcadeCabinet } from './MachineScreen';
 import { StreetSelect } from '../ui/street-select';
 import { useEffect, useRef, useState } from "react";
@@ -128,7 +129,10 @@ export function StockzMachine({ bootstrap }: { bootstrap: PlayerBootstrap }) {
         title="Stockz · Clout Exchange"
         kind="stockz"
       >
-        <div className="stockz-panel" id="stockz-setup">
+        <div className="stockz-panel" id="stockz-setup" style={{backgroundImage:`linear-gradient(#071218b0,#071218ee),url("${getAssetUrl('assets/minigames/polish-v2/stockz-exchange.webp')}")`}}>
+          {query.data && <ArcadeObjective chapter="DAILY CLOUT EXCHANGE" title={active ? `${active.ticker} · Call locked` : "Call your shot"}
+            detail={active ? "Wait for the closing bell. Your bet survives leaving the cabinet." : "A correct call returns 2× the stake. Fictional stocks, 50/50 direction."}
+            value={query.data.roundsToday} max={STOCKZ_DAILY_LIMIT} /> }
           <header className="stockz-hero">
             <img src={banner} alt="Stockz at his neighborhood trading booth" />
             <div><span>THE CLOUT EXCHANGE</span><h2>BUY<br />MONEY.</h2><p>CALL YOUR SHOT. OWN THE BELL.</p></div>
@@ -263,6 +267,7 @@ export function StockzMachine({ bootstrap }: { bootstrap: PlayerBootstrap }) {
               {query.data.recent.length > 0 && (
                 <div className="stockz-history">
                   <h4>Trade receipts</h4>
+                  {latest?.payout ? <ArcadePrizeArt/> : null}
                   {query.data.recent.map((round) => (
                     <p key={round.id} data-result={round.payout ? "win" : "miss"}>
                       <b>
