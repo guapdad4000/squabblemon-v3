@@ -554,3 +554,68 @@ test("only a confirmed close leaves a friendly room; failed or offline attempts 
   );
   assert.deepEqual(rankedSent, [], "ranked results are untouched by room intents");
 });
+
+test('Leroy awakened artwork survives persisted online-room views for both players', async () => {
+  const { createCardInstance } = await import('../../../lib/squabblemon-engine/src/gameEngine');
+  const room = fixture();
+  const leroy = { ...createCardInstance('leroy', 'player', 'glow-view', 0), lane: 0 as const, goldenGlow: true };
+  room.match!.boards[0].push(leroy);
+  const restored = JSON.parse(JSON.stringify(room)) as OnlineRoom;
+  for (const user of ['a', 'b']) {
+    const packet = onlineRoomView(restored, 'GLOW-RECONNECT', user, 10);
+    assert.equal(packet.boards[0].find(card => card.instanceId === leroy.instanceId)?.goldenGlow, true);
+    assert(packet.hand.every(card => !Object.hasOwn(card, 'goldenGlow')));
+  }
+});
+
+test('Kumite rooms cannot reuse friendly lobby commands or contaminate a friendly series', () => {
+  const room = { ...fixture(), kumite: { tournamentId: 'test-week', matchId: 'test-qf', roundDeadline: 1_000_000 } };
+  const before = structuredClone(room);
+  const finished = applyOnlineCommand(room, 'player', { type: 'surrender' }, 20);
+  assert.deepEqual(room, before, 'the authoritative input remains immutable');
+  assert.equal(finished.winner, 'cpu');
+  assert.equal(finished.completedAt, 20);
+  assert.equal(finished.kumite?.finishedAt, 20);
+  assert.deepEqual(finished.series, { player: 0, cpu: 0, draws: 0 });
+  for (const type of ['lobby', 'leave', 'rematch'] as const)
+    assert.throws(() => applyOnlineCommand(finished, 'player', { type }, 21), /Kumite/);
+  assert.equal(expireOnlineRoom(finished, finished.expiresAt + 1).status, 'complete', 'bracket settlement may read a completed room after friendly expiry');
+  const waiting = { ...room, status: 'waiting' as const, match: null, startedAt: null, deadline: null };
+  const forfeited = applyOnlineCommand(waiting, 'cpu', { type: 'surrender' }, 30);
+  assert.equal(forfeited.status, 'complete');
+  assert.equal(forfeited.winner, 'player', 'an assigned rival can forfeit before Ready');
+  assert.equal(forfeited.startedAt, null);
+  assert.equal(forfeited.completedAt, 30);
+  const roundDeadline = room.deadline! - 1;
+  const shortRound = { ...room, kumite: { ...room.kumite, roundDeadline } };
+  assert.equal(expireOnlineRoom(shortRound, roundDeadline).reason, 'expired', 'the round closes before a later turn deadline');
+  assert.throws(() => applyOnlineCommand(shortRound, 'player', { type: 'end-turn' }, roundDeadline), /deadline/);
+  const timeout = expireOnlineRoom(room, room.deadline!);
+  assert.equal(timeout.completedAt, room.deadline);
+  assert.equal(timeout.kumite?.finishedAt, room.deadline);
+  assert.deepEqual(timeout.series, { player: 0, cpu: 0, draws: 0 });
+});
+
+test('Golden Glow activates only on a successful reveal and survives modern online event projection', () => {
+  for (const owner of ['player', 'cpu'] as const) {
+    const room = fixture(owner);
+    const source = createCardInstance('leroy', owner, 'glow-resolve', 0);
+    const normal = { ...createCardInstance('cornball', owner, 'glow-resolve', 1), lane: 1 as const };
+    const fire = { ...createCardInstance('hooper', owner, 'glow-resolve', 2), lane: 2 as const };
+    const cast = (boards: Match['boards']) => applyOnlineCommand({ ...room, match: {
+      ...room.match!, boards, [owner === 'player' ? 'playerHand' : 'cpuHand']: [source],
+      [owner === 'player' ? 'playerMotion' : 'cpuMotion']: 9,
+    } }, owner, { type: 'play', instanceId: source.instanceId, lane: 0, squabble: false }, 10);
+    const failed = cast([[], [], []]);
+    assert.equal(failed.match!.boards[0].find(card => card.instanceId === source.instanceId)?.goldenGlow, undefined);
+    const successful = cast([[], [normal], [fire]]);
+    assert.equal(successful.match!.boards[0].find(card => card.instanceId === source.instanceId)?.goldenGlow, true);
+    const persisted = JSON.parse(JSON.stringify(successful)) as OnlineRoom;
+    for (const userId of ['a', 'b']) {
+      const view = onlineRoomView(persisted, 'GLOWROOM12', userId, 11);
+      assert.equal(view.boards[0].find(card => card.instanceId === source.instanceId)?.goldenGlow, true);
+      assert(view.events.some(event => event.participants?.some(participant => participant.cardInstanceId === source.instanceId && participant.after?.goldenGlow)),
+        'the existing effect presenter receives the awakened state on the public source snapshot');
+    }
+  }
+});

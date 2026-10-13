@@ -33,7 +33,7 @@ test('40 revisions preserve collectible identities and instantiate their new bud
   assert.equal(CARD_BALANCE_VERSION, 60);
   assert.equal(ONLINE_RULES_VERSION, 60);
   assert.equal(new Set(ROSTER_REVISION_IDS).size, 40);
-  assert.equal(cardCatalog.length, 298);
+  assert.equal(cardCatalog.length, 301);
   const budgets: Record<string, [number, number]> = { 'atl-scammer': [2, 2], failedathlete: [3, 4], lawyer: [3, 3], 'tattoo-artist': [3, 3], 'inmate-kingpin': [1, 2], 'juneteenth-chair-guy': [4, 4], livewire: [3, 3], subwaymagician: [3, 3], squabbleserver: [1, 2], stylist: [2, 2] };
   for (const [id, pair] of Object.entries(budgets)) {
     const c = createCardInstance(id, 'player');

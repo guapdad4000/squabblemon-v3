@@ -13,6 +13,7 @@ import {
   useFriendMatch,
 } from "../../lib/multiplayer";
 import { MultiplayerBattle } from "../../components/MultiplayerBattle";
+import { KumiteWaitingRoom } from "../../components/kumite/KumiteWaitingRoom";
 import { FadeRules, FriendlyFadesHub } from "../../components/social/FriendlyFadesHub";
 import { FadeAlleyScene } from "../../components/social/FadeAlleyScene";
 import { FadeSeriesBoard } from "../../components/social/FadeSeriesBoard";
@@ -50,7 +51,7 @@ export function Multiplayer({ bootstrap, code }: { bootstrap: PlayerBootstrap; c
   // Targeted rooms are matched to the shared social snapshot by room code.
   const targeted = code ? social.query.data?.invitations.find(item => item.roomCode === code) : undefined;
   function leave() {
-    navigate(room?.ranked ? "/game/online" : "/game/online?tab=friends");
+    navigate(room?.kumite ? "/game/kumite?view=arena" : room?.ranked ? "/game/online" : "/game/online?tab=friends");
   }
   async function openRoom(join = false) {
     if (operationLock.current || !chosen) return;
@@ -120,6 +121,8 @@ export function Multiplayer({ bootstrap, code }: { bootstrap: PlayerBootstrap; c
         />
       </>
     );
+  if (room?.kumite && room.status === 'waiting') return <KumiteWaitingRoom
+    room={room} busy={working} connected={connected} onLeave={leave} send={send} error={errorBanner} />;
   if (!code && !friends) return <FadePark bootstrap={bootstrap} />;
 
   const invitedPlayer = targeted?.direction === 'outgoing' ? targeted.player : null;

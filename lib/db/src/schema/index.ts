@@ -5,6 +5,7 @@ export * from "./playerPackOpenings";
 export * from "./playerCollectionClaims";
 export * from "./playerStory";
 export * from './onlineRooms';
+export * from './kumite';
 export * from "./challengeRuns";
 export * from './paymentOrders';
 export * from './social';

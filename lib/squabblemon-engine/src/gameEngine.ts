@@ -137,6 +137,8 @@ export type CardInstance = Card & {
   creativeLane?: Lane;
   /** Imposter keeps Scammer's identity/artwork while adopting a printed passive. */
   copiedAbilityCardId?: string;
+  /** Leroy keeps his awakened portrait after Golden Glow successfully resolves. */
+  goldenGlow?: boolean;
   networkBoosts?: number;
   /** Homeless Legend may refuse destruction once per match. */
   legendSaved?: boolean;
@@ -3961,10 +3963,49 @@ function resolveAbilityBase(match: Match, source: CardInstance, { echoed = false
     if (target) { targetIds.add(target.instanceId); m = targetEnemyPowerReduction(m, source, target, -2, 'Hold the Block: -2 Hands.'); }
     note(ally || target ? 'Hold the Block shifted the district.' : 'Hold the Block found no other cards.');
   }
+  else if (source.cardId === 'bushedo-brown') {
+    const ally = lowest(inLane(m, source.owner, l).filter(c => c.instanceId !== source.instanceId && !c.hazard && c.kind !== 'support'));
+    if (ally) { targetIds.add(ally.instanceId); m = grantProtection(m, source, ally.instanceId); }
+    const target = highest(inLane(m, enemy, l));
+    if (target && getEffectiveCardPower(target) > getEffectiveCardPower(source)) {
+      targetIds.add(target.instanceId);
+      m = targetEnemyPowerReduction(m, source, target, -1, 'Personal Security: -1 Hand.');
+    }
+    note('Personal Security guarded an ally and read the strongest opposing fighter.');
+  }
+  else if (source.cardId === 'franklin-duke') {
+    const target = highest(inLane(m, enemy, l));
+    if (target && getEffectiveCardPower(target) > getEffectiveCardPower(source)) {
+      targetIds.add(target.instanceId);
+      const beforeModifier = target.powerModifier;
+      m = targetEnemyPowerReduction(m, source, target, -2, 'Read The Strike: -2 Hands.');
+      const after = findCard(m, target.instanceId);
+      if (!after || after.powerModifier < beforeModifier)
+        m = modify(m, source.instanceId, c => ({ ...c, powerModifier: c.powerModifier + 2, lastEffectNote: 'Read The Strike: +2 Hands.' }));
+    } else {
+      const ally = lowest(m.boards.flat().filter(c => c.owner === source.owner && c.lane !== l && !c.hazard && c.kind !== 'support'));
+      if (ally) { targetIds.add(ally.instanceId); m = modify(m, ally.instanceId, c => ({ ...c, powerModifier: c.powerModifier + 1, lastEffectNote: 'Read The Strike: +1 Hand.' })); }
+    }
+    note('Read The Strike countered a stronger fighter or coached the weakest ally elsewhere.');
+  }
+  else if (source.cardId === 'chonk-lee') {
+    let hits = 0;
+    for (const lane of ([0, 1, 2] as Lane[]).filter(lane => lane !== l)) {
+      const target = highest(inLane(m, enemy, lane));
+      if (!target) continue;
+      targetIds.add(target.instanceId);
+      const beforeModifier = target.powerModifier;
+      m = targetEnemyPowerReduction(m, source, target, -1, 'No Mercy: -1 Hand.');
+      const after = findCard(m, target.instanceId);
+      if (!after || after.powerModifier < beforeModifier) hits++;
+    }
+    if (hits) m = modify(m, source.instanceId, c => ({ ...c, powerModifier: c.powerModifier + Math.min(2, hits), lastEffectNote: `No Mercy: +${Math.min(2, hits)} Hands.` }));
+    note(`No Mercy landed ${hits} cross-district hit${hits === 1 ? '' : 's'}.`);
+  }
   else if (source.cardId === 'leroy') {
     const succeeds = new Set(m.boards.flat().filter(c => !c.hazard && c.owner === source.owner).map(c => canonicalElement(c.type))).size >= 3;
     if (succeeds) {
-      m = modify(m, source.instanceId, c => ({ ...c, powerModifier: c.powerModifier + 1, lastEffectNote: 'Golden Glow: +1 Hands.' }));
+      m = modify(m, source.instanceId, c => ({ ...c, goldenGlow: true, powerModifier: c.powerModifier + 1, lastEffectNote: 'Golden Glow: +1 Hands.' }));
       const target = highest(inLane(m, enemy, l));
       if (target) { targetIds.add(target.instanceId); m = targetEnemyPowerReduction(m, source, target, -2, 'Golden Glow: -2 Hands.'); }
     }
@@ -5740,6 +5781,7 @@ const cardState = (card: CardInstance | undefined): CardEventState | null => car
   power: getEffectiveCardPower(card), basePower: card.basePower, powerModifier: card.powerModifier,
   ...(card.continuousPower ? { continuousPower: card.continuousPower } : {}),
   moved: card.moved, statuses: { ...card.statuses }, lastEffectNote: card.lastEffectNote,
+  ...(card.goldenGlow ? { goldenGlow: true } : {}),
   ...(card.maryCents !== undefined ? { maryCents: card.maryCents } : {}),
   ...(card.maryElephant ? { maryElephant: true } : {}),
   ...(card.buddyForm ? { buddyForm: card.buddyForm } : {}),
@@ -5864,6 +5906,7 @@ export type CardEventState = {
   power: number; basePower: number; powerModifier: number; moved: boolean;
   continuousPower?: number;
   statuses: Statuses; lastEffectNote: string;
+  goldenGlow?: boolean;
   maryCents?: number;
   maryElephant?: boolean;
   buddyForm?: 'earth' | 'squabble-earth';

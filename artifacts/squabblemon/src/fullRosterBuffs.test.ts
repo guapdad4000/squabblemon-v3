@@ -7,11 +7,17 @@ import { CARD_BALANCE_VERSION } from '@workspace/squabblemon-engine/multiplayer'
 
 // Frozen after v60 elemental tempo buffs; printed Hands unchanged.
 // Update deliberately when a new balance pass changes a printed budget.
-const budgets = JSON.parse(readFileSync(new URL('./balanceBudgets.v60.json', import.meta.url), 'utf8')) as Record<string, { cost: number; power: number }>;
+const budgets: Record<string, { cost: number; power: number }> = {
+  ...JSON.parse(readFileSync(new URL('./balanceBudgets.v60.json', import.meta.url), 'utf8')),
+  // Kumite additions keep the existing v60 roster budgets frozen.
+  'bushedo-brown': { cost: 3, power: 3 },
+  'franklin-duke': { cost: 4, power: 4 },
+  'chonk-lee': { cost: 5, power: 5 },
+};
 
-test('all 298 collectible cards retain the approved printed budgets in either authoritative seat', () => {
+test('all 301 collectible cards retain the approved printed budgets in either authoritative seat', () => {
   assert.equal(CARD_BALANCE_VERSION, 60);
-  assert.equal(cardCatalog.length, 298);
+  assert.equal(cardCatalog.length, 301);
   assert.deepEqual(Object.keys(budgets).sort(), cardCatalog.map(c => c.engineId).sort());
   for (const entry of cardCatalog) {
     const expected = budgets[entry.engineId];

@@ -9,6 +9,10 @@ process.env.LOG_LEVEL = 'silent';
 process.env.CLERK_TELEMETRY_DISABLED = '1';
 globalThis.Netlify = { env: { get: key => process.env[key] } };
 const { default: handler, config } = await import('../artifacts/api-server/dist/netlify-functions/api.mjs');
+const { default: kumiteTick, config: kumiteTickConfig } = await import('../artifacts/api-server/dist/netlify-functions/kumite-tick.mjs');
+assert.equal(typeof kumiteTick, 'function');
+assert.equal(kumiteTickConfig.schedule, '*/15 * * * *');
+assert.equal(kumiteTickConfig.path, undefined, 'Scheduled bracket reconciliation exposes no player-callable URL.');
 assert.equal(typeof handler, 'function');
 assert.deepEqual(config.path, ['/api', '/api/*']);
 // Netlify discovers scheduled functions from the exported config on the

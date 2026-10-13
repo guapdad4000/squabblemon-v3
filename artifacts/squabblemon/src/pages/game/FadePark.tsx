@@ -4,7 +4,7 @@ import { FadeFinderButton } from '../../components/FadeFinderButton';
 import { useEffect, useRef, useState } from 'react';
 import { Link, useLocation } from 'wouter';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { ArrowUpRight, Swords, Trophy, Users, Radio } from 'lucide-react';
+import { ArrowUpRight, Swords, Trophy, Users, Radio, HandFist } from 'lucide-react';
 import { type PlayerBootstrap } from '@workspace/api-client-react';
 import { getAssetUrl, starterRecipes, validateSavedDeck } from '../../data';
 import { DeckCarousel } from '../../components/DeckCarousel';
@@ -21,6 +21,7 @@ export function FightTabs({ friends = false, searching = false, challenges = fal
   return <nav className="fight-tabs" aria-label="Fight modes">
     <Link to="/game/online" aria-current={!friends && !challenges ? 'page' : undefined}><Swords size={15} />Fade Park<span>Ranked</span></Link>
     {searching ? <span className="fight-tabs-disabled" title="Cancel your search to open friend fades"><Users size={15} />Friendly Fades</span> : <Link to="/game/online?tab=friends" aria-current={friends ? 'page' : undefined}><Users size={15} />Friendly Fades<span>Private</span></Link>}
+    {searching ? <span className="fight-tabs-disabled" title="Cancel your ranked search to enter Kumite"><HandFist size={15} />Kumite</span> : <Link to="/game/kumite"><HandFist size={15} />Kumite<span>Weekly · 8</span></Link>}
     <Link to="/game/challenges" aria-current={challenges ? 'page' : undefined}><Trophy size={15} />Challenges<span>Solo</span></Link>
   </nav>;
 }

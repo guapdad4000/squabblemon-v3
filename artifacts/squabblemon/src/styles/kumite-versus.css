@@ -1,0 +1,58 @@
+.kumite-waiting .kumite-shell { max-width: 1160px; }
+.kumite-waiting__heading { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin: 20px 0 12px; }
+.kumite-waiting__heading h1 { font: 900 22px/1 var(--font-display); text-transform: uppercase; margin: 0; }
+.kumite-versus { position: relative; isolation: isolate; height: clamp(360px, 44vw, 510px); overflow: hidden; background: linear-gradient(125deg, #d52319 0 43%, #f5c819 43% 47%, #17130e 47% 56%, #ed321d 56% 100%); border: 1px solid #f9c535; }
+.kumite-versus__backdrop { position: absolute; z-index: -1; width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
+.kumite-versus__halves { height: 100%; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+.kumite-versus__fighter { position: relative; min-width: 0; isolation: isolate; }
+.kumite-versus__fighter--player { background: linear-gradient(110deg, #15090475, transparent 65%); }
+.kumite-versus__fighter--cpu { background: linear-gradient(250deg, #180a0475, transparent 65%); }
+.kumite-versus__seat { position: absolute; z-index: 3; top: 16px; left: 18px; padding: 6px 12px; background: #15110dec; color: #ffd22f; font: 800 9px/1 var(--font-mono); letter-spacing: .15em; transform: skewX(-8deg); }
+.kumite-versus__fighter--cpu .kumite-versus__seat { left: auto; right: 18px; }
+.kumite-versus__portrait { position: absolute; inset: 0 2% 60px; overflow: hidden; }
+.kumite-versus__portrait > img:not(.kumite-logo) { position: absolute; height: 160%; width: auto; max-width: none; top: 4%; left: 50%; transform: translateX(-50%); filter: drop-shadow(-3px 0 #f9cb27) drop-shadow(3px 0 #ed251b) drop-shadow(0 12px 14px #0009); }
+.kumite-versus__portrait[data-art-fallback='true'] { display: grid; place-items: center; padding: 12%; }
+.kumite-versus__portrait > .kumite-logo { width: 100%; max-width: 300px; filter: grayscale(1) contrast(3) brightness(2) drop-shadow(0 7px 0 #0009); }
+.kumite-versus__nameplate { position: absolute; z-index: 4; left: 5%; right: 6%; bottom: 38px; min-height: 84px; display: flex; flex-direction: column; justify-content: center; padding: 13px 24px 12px; color: #0c0b09; background: #ffd126; border: 3px solid #16110c; transform: rotate(-4deg); clip-path: polygon(4% 0, 100% 0, 96% 100%, 0 100%); box-shadow: 0 4px 0 #d52b17; }
+.kumite-versus__fighter--cpu .kumite-versus__nameplate { transform: rotate(4deg); }
+.kumite-versus__nameplate h2 { font: 900 italic clamp(20px, 2.9vw, 36px)/.98 var(--font-display); text-transform: uppercase; overflow-wrap: anywhere; margin: 0; }
+.kumite-versus__hero { display: block; font: 800 9px/1.4 var(--font-mono); text-transform: uppercase; margin-top: 6px; letter-spacing: .055em; }
+.kumite-versus__ready { position: absolute; left: 24px; right: 24px; bottom: 8px; display: flex; justify-content: center; align-items: center; gap: 6px; margin: 0; font: 800 9px/1.3 var(--font-mono); text-transform: uppercase; color: #f6e5c4; text-shadow: 0 1px 2px #000; }
+.kumite-versus__fighter[data-ready='true'] .kumite-versus__ready { color: #ffd435; }
+.kumite-versus__versus { position: absolute; z-index: 5; left: 50%; top: 36%; transform: translate(-50%, -50%) rotate(-10deg) skewX(-7deg); font: 1000 italic clamp(70px, 9vw, 126px)/.85 var(--font-display); letter-spacing: -.13em; color: #ffcf18; -webkit-text-stroke: 3px #17120d; text-shadow: 7px 8px 0 #c22316; pointer-events: none; }
+.kumite-waiting__controls { margin-top: 14px; background: linear-gradient(0deg, #100b07e8, #100b07c9), var(--kumite-panel-art) center/cover; }
+.kumite-waiting__controls .kumite-panel__body { padding: 18px 24px 14px; }
+.kumite-waiting__facts { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 0 0 16px; }
+.kumite-waiting__facts dt { display: flex; align-items: center; gap: 6px; color: #bda577; font: 700 8px/1.4 var(--font-mono); text-transform: uppercase; }
+.kumite-waiting__facts dd { margin: 5px 0 0; color: #e8d3a8; font: 600 11px/1.5 var(--font-sans); overflow-wrap: anywhere; }
+.kumite-waiting__controls .kumite-signup__status { margin-top: 13px; font-size: 10px; }
+.kumite-waiting__actions { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.kumite-waiting__actions .kumite-text-button { margin-top: 8px; }
+@media (max-width: 600px) {
+  .kumite-waiting__heading { margin-top: 16px; }
+  .kumite-waiting__heading h1 { font-size: 17px; }
+  .kumite-waiting .kumite-topbar__stamp { display: none; }
+  .kumite-versus { height: 342px; }
+  .kumite-versus__seat { top: 10px; left: 9px; padding: 5px 7px; font-size: 9px; }
+  .kumite-versus__fighter--cpu .kumite-versus__seat { right: 9px; }
+  .kumite-versus__portrait { inset: 0 0 67px; }
+  .kumite-versus__portrait > img:not(.kumite-logo) { height: 146%; }
+  .kumite-versus__nameplate { left: 3%; right: 4%; bottom: 33px; min-height: 72px; padding: 10px 10px; border-width: 2px; }
+  .kumite-versus__nameplate h2 { font-size: clamp(15px, 4.8vw, 20px); line-height: 1.02; }
+  .kumite-versus__hero { font-size: 8px; margin-top: 5px; letter-spacing: 0; }
+  .kumite-versus__versus { top: 36%; font-size: 66px; -webkit-text-stroke-width: 2px; text-shadow: 4px 5px 0 #c22316; }
+  .kumite-versus__ready { left: 5px; right: 5px; bottom: 8px; font-size: 9px; }
+  .kumite-waiting__controls .kumite-panel__body { padding: 16px 14px 12px; }
+  .kumite-waiting__facts { gap: 14px; margin-bottom: 16px; }
+  .kumite-waiting__facts dt { font-size: 9px; }
+  .kumite-waiting__facts dd { font-size: 11px; }
+  .kumite-waiting__facts dt svg { width: 13px; height: 13px; }
+  .kumite-waiting__controls .kumite-signup__status { font-size: 9px; line-height: 1.6; }
+}
+@media (max-height: 550px) and (orientation: landscape) {
+  .kumite-waiting__heading { margin-top: 12px; }
+  .kumite-versus { height: 270px; }
+  .kumite-versus__nameplate { min-height: 60px; padding: 9px 18px; }
+  .kumite-versus__nameplate h2 { font-size: 24px; }
+  .kumite-versus__versus { font-size: 82px; }
+}

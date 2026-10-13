@@ -4,6 +4,7 @@ import { LobbyDepth } from '../../components/LobbyDepth';
 import { avatarSticker } from '@workspace/squabblemon-engine/cosmetics';
 import { Attention } from '../../components/Notifications';
 import { StarterMythic } from '../../components/StarterMythic';
+import { KumiteShortcut } from '../../components/kumite/KumiteShortcut';
 import { GameBackButton } from '../../components/venue/GameBackButton';
 import { playInteractionSound } from '../../lib/interactionAudio';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -271,6 +272,7 @@ export function Home({ bootstrap, onGuideComplete }: { bootstrap: PlayerBootstra
       <Link className="safehouse-bounty-logo" href="/game/missions" aria-label={`Open bounties${claimed ? ` · ${claimed} ready` : ''}`}><img src={getAssetUrl('assets/bounty-hunter/hero.webp')} alt="" /><span className="sr-only">Bounties</span><Attention section="missions" />{claimed > 0 && <b>{claimed}</b>}</Link>
       <JohnHenryMythic bootstrap={bootstrap} placement="shortcut" />
       <StarterMythic bootstrap={bootstrap} placement="shortcut" autoShow={!onGuideComplete && view === 'room' && !growthOpen && !mailOpen && !bulletinOpen} />
+      <KumiteShortcut />
       <SceneFrame kind="safehouse" frameRef={frame} poster={`${import.meta.env.BASE_URL}scenes/safehouse/concept.webp`}
         onMessage={receive} onReady={() => { setSceneFallback('none'); resetRoomMarkers(markers.current); setMarkersPlaced(false); setSceneReady(true); syncRoom(); sendScene(frame, { type: 'view', view }); }} />
       <div className="safehouse__shade" />

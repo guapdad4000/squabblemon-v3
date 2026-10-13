@@ -8,6 +8,7 @@ import type {
 import type { ReactionView } from "@workspace/squabblemon-engine/reactions";
 import {
   cardCatalog,
+  catalogCardById,
   ROOKIE_CORE_IDS,
 } from "@workspace/squabblemon-engine/data";
 
@@ -196,7 +197,8 @@ test(
     const actor = () => (view.activeSeat === "player" ? users[0] : users[1]);
     const actorView = async () => (await request(actor(), `/${code}`)).body;
     view = await actorView();
-    assert.equal(view.hand[0].power, 1, "trained card is normalized");
+    assert.equal(view.hand[0].cardId, "cornball");
+    assert.equal(view.hand[0].power, catalogCardById.cornball.power, "trained card is normalized to the current canonical base stat");
     for (const user of users.slice(0, 2)) {
       const response = (await request(user, `/${code}`)).body;
       assert(!JSON.stringify(response).includes('"replay"'));

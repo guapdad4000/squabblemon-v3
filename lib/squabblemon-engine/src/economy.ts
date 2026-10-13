@@ -1,6 +1,6 @@
 import { REACTION_PACKS } from './reactions';
 import { spendStyleShards, type StyleShardBalances } from './styleShards';
-import { catalogCardById } from './data';
+import { catalogCardById, isKumiteExclusiveCard } from './data';
 import { CHARACTER_STYLE_OFFERS, cosmeticId, hasCharacterStickers, styleSetFor, type CharacterStyleOfferId } from './cosmetics';
 import { CARD_XP_CAP, cardLevelFromXp, normalizeCardProgress, type CardProgressionMap } from './cardProgression';
 
@@ -112,6 +112,7 @@ export function planShopPurchase(wallet: ShopWallet, input: Pick<ShopRequest, 'i
     next.deckSlots += 1;
     summary = `Gang slot ${next.deckSlots} unlocked.`;
   } else if (offer.id === 'common-recruit') {
+    if (isKumiteExclusiveCard(card!.catalogId)) throw new ShopRuleError('This character unlocks through Kumite progression.');
     if (card!.rarity !== 'Common') throw new ShopRuleError('Neighborhood recruitment is for Common cards.');
     if (wallet.ownedCardIds.includes(card!.catalogId)) throw new ShopRuleError('You already own this character.');
     next.ownedCardIds = [...wallet.ownedCardIds, card!.catalogId];

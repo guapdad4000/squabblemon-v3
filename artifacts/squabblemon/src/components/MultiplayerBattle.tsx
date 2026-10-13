@@ -7,10 +7,12 @@ import { resolveRoomExit, type RoomExitIntent } from '../lib/roomExit';
 import { onlineResultCopy } from './onlineResultCopy';
 import { useBattleResultExit } from '../lib/useBattleResultExit';
 import { useTurnClockCues } from '../lib/turnClockCues';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
 import { createPortal } from 'react-dom';
 import { LayoutGroup, AnimatePresence, useReducedMotion } from 'framer-motion';
-import { cards, type Card } from '../data';
+import { cards, getAssetUrl, type Card } from '../data';
+import { KumiteArena } from './kumite/KumiteArena';
+import { KumiteResult } from './kumite/KumiteResult';
 import { SUMMON_TEMPLATES, type CardInstance, type Lane, type Match } from '../gameEngine';
 import { otherSeat, TURN_SECONDS, type OnlineCommand, type OnlineRoomView, type PublicCard, type Seat } from '@workspace/squabblemon-engine/multiplayer';
 import { Battle, type OnlineBattlePresentation } from './Battle';
@@ -80,7 +82,7 @@ export function onlineBattleProjection(room: OnlineRoomView): { match: Match; pr
     turnSeconds: TURN_SECONDS, rivalHandCount: room.rivalHandCount,
     playerIdentity: room.members[room.seat] ?? undefined,
     rivalIdentity: room.members[rival] ?? undefined,
-    mode: room.ranked ? room.ranked.opponent === 'bot' ? 'Park bot' : 'Ranked' : 'Friend fade',
+    mode: room.kumite ? 'Kumite' : room.ranked ? room.ranked.opponent === 'bot' ? 'Park bot' : 'Ranked' : 'Friend fade',
   } };
 }
 
@@ -235,13 +237,14 @@ export function MultiplayerBattle({ room, busy, connected, reducedMotion: profil
   const backToRoom = () => leaveResults(() => { setReviewBoard(false); void roomIntent('lobby'); });
   /** Closing the room on purpose: only leave once the server confirms it closed. */
   const closeRoom = () => leaveResults(() => { void roomIntent('leave'); });
-  const exitResults = () => room.ranked ? leaveResults(onLeave) : backToRoom();
+  const exitResults = () => room.kumite || room.ranked ? leaveResults(onLeave) : backToRoom();
   const rank = room.ranked?.result;
   const resultCopy = onlineResultCopy(room);
   const latest = room.events.at(-1);
-  return <main className="h-[100dvh] bg-black text-white font-sans flex flex-col relative overflow-hidden game-bg" data-testid="online-battle" data-turn={myTurn ? 'you' : 'rival'} data-round={room.round} data-revision={room.revision} data-status={room.status} data-connected={connected}>
+  return <main className="h-[100dvh] bg-black text-white font-sans flex flex-col relative overflow-hidden game-bg" style={room.kumite ? { '--kumite-platform': `url("${getAssetUrl('assets/kumite/layers/platform.webp')}")` } as CSSProperties : undefined} data-kumite={Boolean(room.kumite)} data-testid="online-battle" data-turn={myTurn ? 'you' : 'rival'} data-round={room.round} data-revision={room.revision} data-status={room.status} data-connected={connected}>
+    {room.kumite && <KumiteArena reducedMotion={Boolean(reducedMotion)} platform={false} className="kumite-arena-scene--battle" />}
     {clockDanger && <div className="pvp-clock-glow" aria-hidden="true" data-testid="pvp-clock-glow" />}
-    {!surrender && (room.status === 'active' || reviewBoard) && <button type="button" className="pvp-exit-control" data-testid="pvp-exit" onClick={() => room.status === 'complete' ? exitResults() : openExit()}>{room.status === 'complete' && !room.ranked ? 'Back to the room' : 'Leave battle'}</button>}
+    {!surrender && (room.status === 'active' || reviewBoard) && <button type="button" className="pvp-exit-control" data-testid="pvp-exit" onClick={() => room.status === 'complete' ? exitResults() : openExit()}>{room.status === 'complete' ? room.kumite ? 'Back to Kumite' : !room.ranked ? 'Back to the room' : 'Leave battle' : 'Leave battle'}</button>}
     <AnimatePresence>{arrival && <MatchArrival player={room.members[room.seat]!} rival={rival} label={room.ranked?.opponent === 'bot' ? 'Park Bot found · ranked sparring' : 'Your fade is ready'} onContinue={() => setArrival(false)} />}</AnimatePresence>
     {battleStartEffectVisible && !arrival && room.status === 'active' && !reducedMotion && (
       <BattleStartSmoke onComplete={() => setBattleStartEffectVisible(false)} />
@@ -265,7 +268,13 @@ export function MultiplayerBattle({ room, busy, connected, reducedMotion: profil
     <AnimatePresence>{inspect && <CardInspector card={projected.match.boards.flat().find(c => c.instanceId === inspect.instanceId) ?? inspect} onClose={() => setInspect(null)} />}{rules && <RulesModal onClose={() => setRules(false)} />}</AnimatePresence>
     {room.status === 'complete' && reviewBoard && (typeof document === 'undefined' ? null : createPortal(<button className="park-result-return" onClick={() => setReviewBoard(false)}>View result</button>, document.body))}
     <Dialog open={room.status === 'complete' && !reviewBoard && !celebrating} onOpenChange={open => { if (!open) setReviewBoard(true); }}>
-      <ParkResult outcome={room.winner === 'draw' ? 'draw' : room.winner === room.seat ? 'win' : 'loss'} ranked={Boolean(room.ranked)} rank={rank ?? undefined} reducedMotion={reducedMotion}
+      {room.kumite ? <KumiteResult outcome={room.winner === 'draw' ? 'draw' : room.winner === room.seat ? 'win' : 'loss'} ranked={false} reducedMotion={reducedMotion}
+        hero={room.ownDeck.hero} playerName={room.members[room.seat]!.name} final={room.kumite.matchId === 'r3-m1'}
+        claimed={room.scores.filter(s => s.winner === room.seat).length} rivalClaimed={room.scores.filter(s => s.winner === rivalSeat).length}
+        description={resultCopy.description} timeoutResult={room.reason === 'timeout'}>
+        <button className="online-primary" onClick={() => leaveResults(onLeave)}>Back to Kumite</button>
+        <button className="online-secondary" onClick={() => setReviewBoard(true)}>Inspect final board</button>
+      </KumiteResult> : <ParkResult outcome={room.winner === 'draw' ? 'draw' : room.winner === room.seat ? 'win' : 'loss'} ranked={Boolean(room.ranked)} rank={rank ?? undefined} reducedMotion={reducedMotion}
         title={resultCopy.title} subtitle={resultCopy.subtitle} boardNote={resultCopy.boardNote}
         claimed={room.scores.filter(s => s.winner === room.seat).length} rivalClaimed={room.scores.filter(s => s.winner === rivalSeat).length}
          series={room.ranked ? undefined : <FadeSeriesBoard variant="result" reducedMotion={reducedMotion} gameNumber={room.gameNumber} rivalName={rival.name}
@@ -280,13 +289,13 @@ export function MultiplayerBattle({ room, busy, connected, reducedMotion: profil
           <button className="online-secondary" data-testid="button-retry-exit" disabled={exitBusy}
             onClick={() => void roomIntent(exitFailed)}>Try again</button>
         </p>}
-      </ParkResult>
+      </ParkResult>}
     </Dialog>
     <Dialog open={surrender && room.status === 'active'} onOpenChange={open => { if (!open && !submittingSurrender) keepPlaying(); }}><DialogContent className="street-dialog pvp-exit-dialog"><DialogTitle>Leave this fade?</DialogTitle><DialogDescription>Surrendering gives your rival the win{room.ranked ? ' and records a ranked loss' : ''}. Closing the app or leaving does not pause the server turn clock.</DialogDescription>
-      {(!connected || surrenderFailed) && <p role="alert"> {surrenderFailed ? 'Surrender could not be confirmed.' : 'Connection lost.'} You can return to {room.ranked ? 'Fade Park' : 'friend fades'} without confirming a surrender. The server clock keeps running{room.ranked ? ' and a ranked loss is still possible' : ''}.</p>}
+      {(!connected || surrenderFailed) && <p role="alert"> {surrenderFailed ? 'Surrender could not be confirmed.' : 'Connection lost.'} You can return to {room.kumite ? 'Kumite' : room.ranked ? 'Fade Park' : 'friend fades'} without confirming a surrender. The server clock keeps running{room.ranked ? ' and a ranked loss is still possible' : ''}.</p>}
       <button className="online-primary" disabled={busy || !connected || submittingSurrender} onClick={() => void confirmSurrender()}>{submittingSurrender ? 'Surrendering…' : 'Surrender'}</button>
       <button className="online-secondary" disabled={submittingSurrender} onClick={keepPlaying}>Keep playing</button>
-      {(!connected || surrenderFailed) && <button className="online-secondary" disabled={submittingSurrender} onClick={returnToHub}>Return to {room.ranked ? 'Fade Park' : 'friend fades'} without surrender confirmation</button>}
+      {(!connected || surrenderFailed) && <button className="online-secondary" disabled={submittingSurrender} onClick={returnToHub}>Return to {room.kumite ? 'Kumite' : room.ranked ? 'Fade Park' : 'friend fades'} without surrender confirmation</button>}
     </DialogContent></Dialog>
   </main>;
 }

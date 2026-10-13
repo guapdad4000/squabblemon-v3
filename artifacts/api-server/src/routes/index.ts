@@ -11,6 +11,7 @@ import storyRouter from "./story";
 import shopRouter from "./shop";
 import promoCodesRouter from './promoCodes';
 import multiplayerRouter from './multiplayer';
+import kumiteRouter from './kumite';
 import challengeRouter from "./challenge";
 import paymentsRouter from './payments';
 
@@ -34,6 +35,7 @@ router.use(storyRouter);
 router.use(shopRouter);
 router.use(promoCodesRouter);
 router.use(multiplayerRouter);
+router.use(kumiteRouter);
 router.use(challengeRouter);
 router.use(paymentsRouter);
 router.use(accountRewardsRouter);

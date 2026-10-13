@@ -19,6 +19,7 @@ const loaders = {
   Shop: () => import('./Shop').then(m => ({ default: m.Shop })),
   Story: () => import('./Story').then(m => ({ default: m.Story })),
   Multiplayer: () => import('./Multiplayer').then(m => ({ default: m.Multiplayer })),
+  Kumite: () => import('./Kumite').then(m => ({ default: m.Kumite })),
   ChallengesHub: () => import('./ChallengesHub').then(m => ({ default: m.ChallengesHub })),
 };
 
@@ -39,6 +40,7 @@ export const Settings = lazy(loaders.Settings);
 export const Shop = lazy(loaders.Shop);
 export const Story = lazy(loaders.Story);
 export const Multiplayer = lazy(loaders.Multiplayer);
+export const Kumite = lazy(loaders.Kumite);
 export const ChallengesHub = lazy(loaders.ChallengesHub);
 
 export function gameRouteKey(path: string): keyof typeof loaders | undefined {
@@ -47,6 +49,7 @@ export function gameRouteKey(path: string): keyof typeof loaders | undefined {
   if (pathname === '/game/events') return 'Events';
   if (pathname === '/game/admin/patches') return 'PatchDesk';
   if (pathname === '/game/onboarding') return 'Onboarding';
+  if (pathname === '/game/kumite') return 'Kumite';
   if (/^\/game\/(training|challenges|play)$/.test(pathname)) return 'ChallengesHub';
   if (/^\/game\/online(?:\/[^/]+)?$/.test(pathname)) return 'Multiplayer';
   if (/^\/game\/story\/play\/[^/]+$/.test(pathname)) return 'PlayerDeckPlay';

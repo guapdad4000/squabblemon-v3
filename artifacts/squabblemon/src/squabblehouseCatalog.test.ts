@@ -36,7 +36,7 @@ const rarities: Record<string, string> = {
 
 test('Squabblehouse staff and dogs register as collectible, pack-eligible cards with their authored rarity and faction tags', () => {
   validateCardAbilityUpgrades();
-  assert.equal(cardCatalog.length, 298);
+  assert.equal(cardCatalog.length, 301);
   for (const id of newIds) {
     const card = catalogCardById[id];
     assert.ok(card, id);

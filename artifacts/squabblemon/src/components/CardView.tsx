@@ -9,7 +9,7 @@ import { CardProgress } from './CardProgress';
 import type { CardProgress as CardProgressValue } from '@workspace/squabblemon-engine/cardProgression';
 import { CardRarityTreatment, getCardRarity, getRarityClass } from './CardRarityTreatment';
 import { CardUpgradeCue } from './CardUpgrades';
-import { Card, getCardImage, getBuddySquabbleImage } from '../data';
+import { Card, getAssetUrl, getCardImage, getBuddySquabbleImage } from '../data';
 import { canonicalElement, cardEntryAccent } from '@workspace/squabblemon-engine/data';
 import { CARD_RARITY_DEFINITIONS } from '../data';
 import { cardFinishLabel, cardMotionReduced, getCardWallpaper } from '../lib/cardFinish';
@@ -285,7 +285,7 @@ function CardViewComponent({
           {card.id === 'dr-fade' && (!isBoard || fillContainer || isInspector)
             ? <DrFadeArt className={'collector-portrait ' + (isSilenced ? 'grayscale' : '')} animated={!isSilenced && !isFrozen} />
             : <img
-                src={isBurntPlate ? getCardImage('burnt-plate') : isBuddyBud ? getCardImage('buddy') : buddyRockForm ? getBuddySquabbleImage() : instance?.maryElephant ? getCardImage('ms-mary-mack-elephant') : getCardImage(card.id, variantId)}
+                src={instance?.cardId === 'leroy' && instance.goldenGlow ? getAssetUrl('assets/kumite/fighters/bruce-leroy-glow.webp') : isBurntPlate ? getCardImage('burnt-plate') : isBuddyBud ? getCardImage('buddy') : buddyRockForm ? getBuddySquabbleImage() : instance?.maryElephant ? getCardImage('ms-mary-mack-elephant') : getCardImage(card.id, variantId)}
                 alt=""
                  draggable={false}
                 className={`collector-portrait absolute inset-x-0 bottom-[10%] w-full h-[85%] object-contain object-bottom transition-transform duration-500 z-10 ${isSilenced ? 'grayscale' : ''} ${!isInspector && card.kind !== 'blockbuster' && 'group-hover/inner:scale-[1.03]'} ${isInspector ? 'collector-portrait--inspector' : ''}`}

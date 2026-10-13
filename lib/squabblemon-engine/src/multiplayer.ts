@@ -66,6 +66,7 @@ export type OnlineCommand =
 /** Head-to-head record for the friendly games played inside one room. */
 export type SeriesRecord = { player: number; cpu: number; draws: number };
 export type OnlineRoom = {
+  kumite?: { tournamentId: string; matchId: string; roundDeadline: number; finishedAt?: number };
   reactions?: ReactionChannel;
   ranked?: { redirectCode?: string; queuedAt: number; heartbeatAt: number; botAfter: number; bot: boolean; botNextAt?: number; ratings: { player: number; cpu?: number }; settlement?: Partial<Record<Seat, RankedResult>> };
   rulesVersion: number;
@@ -77,6 +78,8 @@ export type OnlineRoom = {
   closedBy?: Seat | null;
   members: { player: OnlineMember; cpu: OnlineMember | null };
   status: "waiting" | "active" | "complete" | "closed";
+  startedAt?: number | null;
+  completedAt?: number | null;
   match: Match | null;
   openingSeat: Seat;
   activeSeat: Seat;
@@ -98,7 +101,7 @@ function recordSeries(
   room: OnlineRoom,
   winner: Seat | "draw" | null,
 ): SeriesRecord | undefined {
-  if (room.ranked || winner === null) return room.series;
+  if (room.ranked || room.kumite || winner === null) return room.series;
   const series = roomSeries(room);
   return winner === "draw"
     ? { ...series, draws: series.draws + 1 }
@@ -130,6 +133,8 @@ export function createOnlineRoom(
     closedBy: null,
     members: { player: { ...host, ready: false }, cpu: null },
     status: "waiting",
+    startedAt: null,
+    completedAt: null,
     match: null,
     openingSeat,
     activeSeat: openingSeat,
@@ -164,7 +169,7 @@ export function expireOnlineRoom(room: OnlineRoom, now: number): OnlineRoom {
   if (
     room.status === "active" &&
     room.deadline !== null &&
-    now >= room.deadline
+    now >= room.deadline && (!room.kumite || room.deadline <= room.kumite.roundDeadline)
   ) {
     const winner = otherSeat(room.activeSeat);
     return {
@@ -174,13 +179,18 @@ export function expireOnlineRoom(room: OnlineRoom, now: number): OnlineRoom {
       winner,
       series: recordSeries(room, winner),
       reason: "timeout",
+      completedAt: room.deadline,
+      ...(room.kumite ? { kumite: { ...room.kumite, finishedAt: room.deadline } } : {}),
       deadline: null,
       lastPlayedAt: room.deadline,
       expiresAt: now + ROOM_LIFETIME_MS,
     };
   }
+  if (room.kumite && now >= room.kumite.roundDeadline && (room.status === 'active' || room.status === 'waiting')) {
+    return { ...room, status: 'closed', revision: room.revision + 1, reason: 'expired', deadline: null };
+  }
   if (
-    (room.status === "waiting" || room.status === "complete") &&
+    (room.status === "waiting" || (room.status === "complete" && !room.kumite)) &&
     now >= room.expiresAt
   ) {
     return {
@@ -211,6 +221,8 @@ function startOnlineMatch(room: OnlineRoom, now: number): OnlineRoom {
   return {
     ...room,
     status: "active",
+    startedAt: now,
+    completedAt: null,
     lastPlayedAt: now,
     match,
     activeSeat: room.openingSeat,
@@ -232,17 +244,21 @@ export function applyOnlineCommand(
     );
   if (!room.members[seat])
     throw new OnlineError("Participant is missing.", 403);
+  if (room.kumite && now >= room.kumite.roundDeadline && (room.status === 'active' || room.status === 'waiting'))
+    throw new OnlineError('The Kumite round deadline has passed. Return to the bracket.');
   let next = { ...room, revision: room.revision + 1 };
   if (command.type === "surrender") {
     if (room.status !== "active" && room.status !== "waiting")
       throw new OnlineError("This fade has already ended.");
-    const winner = room.status === "active" ? otherSeat(seat) : null;
+    const winner = room.status === "active" || room.kumite ? otherSeat(seat) : null;
     return {
       ...next,
-      status: room.status === "active" ? "complete" : "closed",
+      status: room.status === "active" || room.kumite ? "complete" : "closed",
       winner,
       series: recordSeries(room, winner),
       reason: "surrender",
+      completedAt: now,
+      ...(room.kumite ? { kumite: { ...room.kumite, finishedAt: now } } : {}),
       ...(winner === null ? {} : { lastPlayedAt: now }),
       ...(winner === null ? { closedBy: seat } : {}),
       deadline: null,
@@ -251,6 +267,7 @@ export function applyOnlineCommand(
   }
   // Deliberately closing a room that is between games, so the rival sees why.
   if (command.type === "leave") {
+    if (room.kumite) throw new OnlineError("Return to Kumite to leave a bracket match.");
     if (room.ranked)
       throw new OnlineError("Return to Fade Park to leave a ranked match.");
     if (room.status === "active")
@@ -266,6 +283,7 @@ export function applyOnlineCommand(
   }
   // Either player can reopen a finished friendly room for the next game.
   if (command.type === "lobby") {
+    if (room.kumite) throw new OnlineError("Return to Kumite for your next bracket match.");
     if (room.ranked)
       throw new OnlineError(
         "Return to Fade Park to find your next ranked opponent.",
@@ -278,6 +296,8 @@ export function applyOnlineCommand(
     return {
       ...next,
       status: "waiting",
+      startedAt: null,
+      completedAt: null,
       gameNumber: room.gameNumber + 1,
       match: null,
       openingSeat: otherSeat(room.openingSeat),
@@ -304,6 +324,7 @@ export function applyOnlineCommand(
       : next;
   }
   if (command.type === "rematch") {
+    if (room.kumite) throw new OnlineError("Return to Kumite for your next bracket match.");
     if (room.ranked) throw new OnlineError("Return to Fade Park to find your next ranked opponent.");
     if (room.status !== "complete" || !room.members.cpu)
       throw new OnlineError("Finish this fade first.");
@@ -312,6 +333,8 @@ export function applyOnlineCommand(
     return {
       ...next,
       status: "waiting",
+      startedAt: null,
+      completedAt: null,
       gameNumber: room.gameNumber + 1,
       match: null,
       openingSeat: otherSeat(room.openingSeat),
@@ -377,6 +400,8 @@ export function applyOnlineCommand(
       winner,
       series: recordSeries(room, winner),
       reason: "districts",
+      completedAt: now,
+      ...(room.kumite ? { kumite: { ...room.kumite, finishedAt: now } } : {}),
       deadline: null,
       expiresAt: now + ROOM_LIFETIME_MS,
     };
@@ -404,6 +429,7 @@ export type PublicCard = {
   maryCents?: number;
   maryElephant?: boolean;
   buddyForm?: CardInstance['buddyForm'];
+  goldenGlow?: boolean;
   buddyGrowthAtRound?: number;
   buddyBud?: CardInstance['buddyBud'];
   buddyEarthExpiresAtRound?: number;
@@ -449,15 +475,17 @@ export type PublicEvent = {
   participants?: PublicParticipant[];
   scores?: EffectLogEntry['scores'];
 };
-export type PublicParticipantState = { lane: Lane; power: number; basePower: number; powerModifier: number; continuousPower?: number; maryCents?: number; maryElephant?: boolean; moved: boolean; statuses: Statuses };
+export type PublicParticipantState = { lane: Lane; power: number; basePower: number; powerModifier: number; continuousPower?: number; goldenGlow?: boolean; maryCents?: number; maryElephant?: boolean; moved: boolean; statuses: Statuses };
 export type PublicParticipant = { cardInstanceId: string; cardId: string; owner: Seat; before: PublicParticipantState | null; after: PublicParticipantState | null; departureCause?: 'aura-loss' | 'transformation' };
-const publicParticipantState = (state: { lane: Lane | null; power: number; basePower: number; powerModifier: number; continuousPower?: number; maryCents?: number; maryElephant?: boolean; moved: boolean; statuses: Statuses } | null): PublicParticipantState | null =>
+const publicParticipantState = (state: { lane: Lane | null; power: number; basePower: number; powerModifier: number; continuousPower?: number; goldenGlow?: boolean; maryCents?: number; maryElephant?: boolean; moved: boolean; statuses: Statuses } | null): PublicParticipantState | null =>
   state && state.lane !== null ? { lane: state.lane, power: state.power, basePower: state.basePower, powerModifier: state.powerModifier,
     ...(state.continuousPower ? { continuousPower: state.continuousPower } : {}),
+    ...(state.goldenGlow ? { goldenGlow: true } : {}),
     ...(state.maryCents !== undefined ? { maryCents: state.maryCents } : {}),
     ...(state.maryElephant ? { maryElephant: true } : {}),
     moved: state.moved, statuses: state.statuses } : null;
 export type OnlineRoomView = {
+  kumite?: { tournamentId: string; matchId: string; roundDeadline: number; finishedAt?: number };
   ranked?: { opponent: "player" | "bot" | "searching"; queuedAt: number; botAfter: number; rating: number; result: RankedResult | null };
   lockedLanes?: Lane[];
   districtMarks?: CharacterDistrictMark[];
@@ -466,6 +494,8 @@ export type OnlineRoomView = {
   revision: number;
   gameNumber: number;
   status: OnlineRoom["status"];
+  startedAt: number | null;
+  completedAt: number | null;
   seat: Seat;
   members: Record<Seat, { name: string; hero: string; avatarKey?: string; level?: number; streetRep?: number; rp?: number; banner?: OnlineBanner; ready: boolean } | null>;
   ownDeck: OnlineDeck;
@@ -517,6 +547,7 @@ export function onlineRoomView(
     ...(card.maryCents !== undefined ? { maryCents: card.maryCents } : {}),
     ...(card.maryElephant ? { maryElephant: true } : {}),
     ...(card.buddyForm ? { buddyForm: card.buddyForm } : {}),
+    ...(card.goldenGlow ? { goldenGlow: true } : {}),
     ...(card.buddyGrowthAtRound !== undefined ? { buddyGrowthAtRound: card.buddyGrowthAtRound } : {}),
     ...(card.buddyBud ? { buddyBud: { ...card.buddyBud } } : {}),
     ...(card.buddyEarthExpiresAtRound !== undefined ? { buddyEarthExpiresAtRound: card.buddyEarthExpiresAtRound } : {}),
@@ -554,6 +585,7 @@ export function onlineRoomView(
           streetRep: member.streetRep, rp: room.ranked?.ratings[memberSeat], ...(member.banner ? { banner: member.banner } : {}), ready: member.ready }
       : null;
   return {
+    ...(room.kumite ? { kumite: { ...room.kumite } } : {}),
     ...(room.ranked ? { ranked: { opponent: room.members.cpu ? room.ranked.bot ? "bot" as const : "player" as const : "searching" as const, queuedAt: room.ranked.queuedAt, botAfter: room.ranked.botAfter, rating: room.ranked.ratings[seat] ?? 1000, result: room.ranked.settlement?.[seat] ?? null } } : {}),
     districts: getMatchDistricts(match, seat),
     lockedLanes: match ? getStoryLockedLanes(match, seat) : [],
@@ -562,6 +594,8 @@ export function onlineRoomView(
     revision: room.revision,
     gameNumber: room.gameNumber,
     status: room.status,
+    startedAt: room.startedAt ?? null,
+    completedAt: room.completedAt ?? null,
     seat,
     members: {
       player: publicMember(room.members.player, 'player'),

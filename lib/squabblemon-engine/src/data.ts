@@ -22,6 +22,8 @@ import { cellblockWaveCards, cellblockWaveRarities, cellblockWaveUpgradeEffects 
 import { fairytaleCards, fairytaleRarities, fairytaleUpgradeEffects, FAIRYTALE_ALTERNATE_ART } from './fairytaleWave';
 import { afterHoursWaveCards, afterHoursWaveRarities, afterHoursWaveUpgradeEffects } from './afterHoursWave';
 import { elementalBondWaveCards, elementalBondWaveRarities, elementalBondWaveUpgradeEffects } from './elementalBondWave';
+import { kumiteCards, kumiteCardRarities, kumiteCardUpgradeEffects, isKumiteExclusiveCard } from './kumiteCards';
+export { KUMITE_EXCLUSIVE_CARD_IDS, KUMITE_CARD_REWARDS, isKumiteExclusiveCard } from './kumiteCards';
 import { sideOzWaveCards, sideOzWaveRarities, sideOzWaveUpgradeEffects, sideOzWaveFactions } from './sideOzWave';
 import { storyCharacterWaveCards, storyCharacterWaveRarities, storyCharacterWaveUpgradeEffects } from './storyCharacterWave';
 import { tripleOgCards, tripleOgRarities, tripleOgUpgradeEffects } from './tripleOgs';
@@ -124,6 +126,7 @@ const upgradeEffects: Record<string, readonly AbilityUpgradeEffect[]> = {
   ...fairytaleUpgradeEffects,
   ...afterHoursWaveUpgradeEffects,
   ...elementalBondWaveUpgradeEffects,
+  ...kumiteCardUpgradeEffects,
   ...sideOzWaveUpgradeEffects,
   ...storyCharacterWaveUpgradeEffects,
   ...tripleOgUpgradeEffects,
@@ -282,6 +285,7 @@ export const cards: Record<string, Card> = {
   ...fairytaleCards,
   ...afterHoursWaveCards,
   ...elementalBondWaveCards,
+  ...kumiteCards,
   ...sideOzWaveCards,
   ...storyCharacterWaveCards,
   ...tripleOgCards,
@@ -305,7 +309,7 @@ export function completeEngineCrew(ids: readonly string[], candidates: readonly 
   const result = [...ids];
   for (const id of [...candidates, ...Object.keys(cards)]) {
     if (result.length >= DECK_SIZE) break;
-    if (cards[id] && !result.includes(id)) result.push(id);
+    if (cards[id] && !isKumiteExclusiveCard(id) && !result.includes(id)) result.push(id);
   }
   return result;
 }
@@ -355,6 +359,7 @@ export const rarityByEngineId = {
   ...cellblockWaveRarities,
   ...afterHoursWaveRarities,
   ...elementalBondWaveRarities,
+  ...kumiteCardRarities,
   ...sideOzWaveRarities,
   ...storyCharacterWaveRarities,
   ...tripleOgRarities,
@@ -498,6 +503,7 @@ const factionByEngineId: Record<string, string> = {
 };
 
 const sourceByEngineId: Record<string, string[]> = {
+  ...Object.fromEntries(Object.keys(kumiteCards).map(id => [id, ['Kumite progression']])),
   ...Object.fromEntries(Object.keys(afterHoursWaveCards).map(id => [id, ['Street Packs']])),
   ...Object.fromEntries(Object.keys(squabblehouseWaveCards).map(id => [id, ['Street Packs']])),
   ...Object.fromEntries(Object.keys(elementalBondWaveCards).map(id => [id, ['Street Packs']])),
@@ -533,7 +539,7 @@ export const cardCatalog: CatalogCard[] = Object.entries(cards).map(
     engineId,
     artworkId: card.id,
     rarity: rarityByEngineId[engineId as keyof typeof rarityByEngineId],
-    faction: factionByEngineId[engineId] ?? "Independent",
+    faction: isKumiteExclusiveCard(engineId) ? 'Kumite' : factionByEngineId[engineId] ?? "Independent",
     crewTags: decks
       .filter((deck) => deck.cards.includes(engineId))
       .map((deck) => deck.id).concat(Object.hasOwn(neighborhoodWaveCards, engineId) ? ['neighborhood'] : [],

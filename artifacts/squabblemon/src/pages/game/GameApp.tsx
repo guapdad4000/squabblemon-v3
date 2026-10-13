@@ -24,7 +24,7 @@ import { cardCatalog, starterRecipes } from '../../data';
 import { STREET_PACK_RULES } from '@workspace/squabblemon-engine/packRules';
 import { Home, Events, PatchDesk, Inventory, CharacterStyles, CharacterCollections, Collection,
   DeckEditor, Decks, DeckTest, PlayerDeckPlay, Missions, Onboarding, Settings,
-  Shop, Story, Multiplayer, ChallengesHub, preloadGameRoute } from './routeModules';
+  Shop, Story, Multiplayer, Kumite, ChallengesHub, preloadGameRoute } from './routeModules';
 import { Redirect, Route, Switch, useLocation, useSearch } from 'wouter';
 import '../../styles/paper-tabs.css';
 
@@ -130,6 +130,7 @@ function GameRoutes({ bootstrap }: { bootstrap: PlayerBootstrap }) {
       <Route path="/game/play"><Redirect to="/game/training" /></Route>
       <Route path="/game/training"><ImmersiveGameRoute bootstrap={bootstrap}><ChallengesHub bootstrap={bootstrap} openTraining /></ImmersiveGameRoute></Route>
       <Route path="/game/challenges"><ImmersiveGameRoute bootstrap={bootstrap}><ChallengesHub bootstrap={bootstrap} /></ImmersiveGameRoute></Route>
+      <Route path="/game/kumite"><Kumite bootstrap={bootstrap} /></Route>
       <Route path="/game/online/:code">{params => <ImmersiveGameRoute bootstrap={bootstrap}><Multiplayer key={params.code} code={params.code.toUpperCase()} bootstrap={bootstrap} /></ImmersiveGameRoute>}</Route>
       <Route path="/game/online"><ImmersiveGameRoute bootstrap={bootstrap}><Multiplayer bootstrap={bootstrap} /></ImmersiveGameRoute></Route>
       <Route path="/game/story/play/:nodeId">{params => <ImmersiveGameRoute bootstrap={bootstrap}><PlayerDeckPlay key={params.nodeId} bootstrap={bootstrap} storyNodeId={params.nodeId} /></ImmersiveGameRoute>}</Route>

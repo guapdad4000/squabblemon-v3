@@ -1,4 +1,4 @@
-import { DECK_SIZE, completeEngineCrew, cards, decks, catalogCardByEngineId } from './data';
+import { DECK_SIZE, completeEngineCrew, cards, decks, catalogCardByEngineId, isKumiteExclusiveCard } from './data';
 import type { StoryEncounterSnapshot } from './gameEngine';
 
 export const activities = [
@@ -31,7 +31,7 @@ const pools: Record<string, string[]> = {
   cheap: ['gamer', 'streamer', 'earthy', 'tayaty', 'edgar', 'nguyen', 'plug'],
 };
 export function draftOffers(week: string): string[][] {
-  const pool = Object.keys(cards).sort((a, b) => stableHash(`${week}:${a}`) - stableHash(`${week}:${b}`) || a.localeCompare(b));
+  const pool = Object.keys(cards).filter(id => !isKumiteExclusiveCard(id)).sort((a, b) => stableHash(`${week}:${a}`) - stableHash(`${week}:${b}`) || a.localeCompare(b));
   // First offer guarantees an affordable opener, without prescribing the crew.
   const cheap = pool.filter(id => cards[id].cost <= 2).slice(0, 3);
   const rest = pool.filter(id => !cheap.includes(id));

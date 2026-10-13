@@ -167,7 +167,7 @@ export async function listFriendRooms(userId: string) {
     )
     .orderBy(desc(onlineRoomsTable.updatedAt))
     .limit(20);
-  return rows.filter(row => !restore(row.state).ranked).map((row) => {
+  return rows.filter(row => !restore(row.state).ranked && !restore(row.state).kumite).map((row) => {
     const room = expireOnlineRoom(restore(row.state), now);
     const seat = memberSeat(room, userId);
     const series = roomSeries(room);
@@ -360,8 +360,8 @@ async function settleRankedRoom(tx: Tx, room: OnlineRoom, now: number, roomId: s
       const userId = room.members[seat]!.userId;
       const [profile] = await tx.select().from(playerProfilesTable).where(eq(playerProfilesTable.clerkUserId,userId)).for('update');
       if (!profile) continue;
-      const tasks: BountyTask[] = [room.ranked ? 'pvp' : 'friendly'];
-      if (room.winner === seat) tasks.push(room.ranked ? 'pvp-win' : 'friendly-win');
+      const tasks: BountyTask[] = [room.ranked || room.kumite ? 'pvp' : 'friendly'];
+      if (room.winner === seat) tasks.push(room.ranked || room.kumite ? 'pvp-win' : 'friendly-win');
       const storyProgress = await progressBountyEvent(tx,profile,`online:${roomId}:${room.gameNumber}`,tasks);
       if(storyProgress!==profile.storyProgress)await tx.update(playerProfilesTable).set({storyProgress}).where(eq(playerProfilesTable.clerkUserId,userId));
     }

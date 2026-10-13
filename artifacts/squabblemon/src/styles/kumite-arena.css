@@ -1,0 +1,36 @@
+.kumite-arena-scene { position:absolute; inset:0; overflow:hidden; pointer-events:none; background:#170e08; }
+.kumite-arena-scene > img { position:absolute; inset:-12px; width:calc(100% + 24px); height:calc(100% + 24px); object-fit:cover; object-position:center; }
+.kumite-arena-scene__back { transform:translate(calc(var(--arena-x,0px) * -.4),calc(var(--arena-y,0px) * -.4)); }
+.kumite-arena-scene__stands { transform:translate(var(--arena-x,0px),var(--arena-y,0px)); }
+.kumite-arena-scene__platform { transform:translate(calc(var(--arena-x,0px) * 1.6),calc(var(--arena-y,0px) * 1.6)); }
+.kumite-arena-scene__shade { position:absolute; inset:0; background:linear-gradient(180deg,#0905022b,#09050212 40%,#080502ae); }
+.kumite-arena-scene--lobby { position:fixed; z-index:-2; }
+[data-kumite='true'] { isolation:isolate; background:#170e08; --kumite-platform-width:112%; --kumite-platform-overhang:clamp(48px,10dvh,110px); }
+[data-kumite='true'] > .kumite-arena-scene { z-index:0; }
+.kumite-arena-scene--battle .kumite-arena-scene__stands { top:-10%; bottom:auto; height:65%; object-position:center bottom; }
+[data-kumite='true'] .battle-arena { background:transparent; }
+[data-kumite='true'] .battle-venue { display:none; }
+[data-kumite='true'] .world-decor { display:none; }
+[data-kumite='true'] .battlefield-grid { isolation:isolate; }
+/* A shallow foreground plane keeps the supplied 3:2 image's natural perspective. */
+[data-kumite='true'] .battlefield-grid::before { content:''; position:absolute; inset:0 -1% calc(0px - var(--kumite-platform-overhang)); z-index:-1; background-image:var(--kumite-platform); background-position:center bottom; background-size:var(--kumite-platform-width) auto; background-repeat:no-repeat; opacity:.97; pointer-events:none; }
+[data-kumite='true'] .district-lane { background:linear-gradient(90deg,#26170b0d,#29170b25,#26170b0d); border-color:#6d422849; }
+[data-kumite='true'] .district-marker { background:#160e09df; border:1px solid #c6a46a70; padding:10px 8px; box-shadow:0 5px 14px #0005; }
+[data-kumite='true'] .battle-command-deck { background:linear-gradient(180deg,#201008d9,#100905); }
+@media(max-width:900px) {
+  [data-kumite='true'] { --kumite-platform-width:140%; --kumite-platform-overhang:32px; }
+}
+@media(max-width:600px) {
+  [data-kumite='true'] { --kumite-platform-width:220%; --kumite-platform-overhang:12px; }
+  [data-kumite='true'] .district-marker { padding:6px 3px; }
+  .kumite-arena-scene__stands { object-position:center 20%; }
+  .kumite-arena-scene--battle .kumite-arena-scene__stands { top:-12%; height:66%; object-position:center bottom; }
+}
+@media(max-width:600px) and (max-height:650px) {
+  [data-kumite='true'] { --kumite-platform-width:180%; --kumite-platform-overhang:26px; }
+}
+@media(max-height:500px) and (orientation:landscape) {
+  [data-kumite='true'] { --kumite-platform-width:110%; --kumite-platform-overhang:clamp(80px,30dvh,130px); }
+}
+@media(prefers-reduced-motion:reduce) { .kumite-arena-scene > img { transform:none; } }
+html[data-reduce-motion='true'] .kumite-arena-scene > img { transform:none; }
