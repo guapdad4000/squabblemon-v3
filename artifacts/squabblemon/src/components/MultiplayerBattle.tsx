@@ -275,7 +275,7 @@ export function MultiplayerBattle({ room, busy, connected, reducedMotion: profil
         description={resultCopy.description} timeoutResult={room.reason === 'timeout'}>
         <button className="online-primary" onClick={() => leaveResults(onLeave)}>Back to Kumite</button>
         <button className="online-secondary" onClick={() => setReviewBoard(true)}>Inspect final board</button>
-      </KumiteResult> : <ParkResult outcome={room.winner === 'draw' ? 'draw' : room.winner === room.seat ? 'win' : 'loss'} ranked={Boolean(room.ranked)} rank={rank ?? undefined} reducedMotion={reducedMotion}
+      </KumiteResult> : <ParkResult outcome={room.winner === 'draw' ? 'draw' : room.winner === room.seat ? 'win' : 'loss'} ranked={Boolean(room.ranked)} rank={rank ?? undefined} resultKey={`${room.code}:${room.gameNumber}:${room.seat}`} reducedMotion={reducedMotion}
         title={resultCopy.title} subtitle={resultCopy.subtitle} boardNote={resultCopy.boardNote}
         claimed={room.scores.filter(s => s.winner === room.seat).length} rivalClaimed={room.scores.filter(s => s.winner === rivalSeat).length}
          series={room.ranked ? undefined : <><PersonalFadeRecord room={room.code} rival={rival.name} /><FadeSeriesBoard variant="result" reducedMotion={reducedMotion} gameNumber={room.gameNumber} rivalName={rival.name}

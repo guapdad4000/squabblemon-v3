@@ -1,0 +1,31 @@
+{
+  "version": "1.13",
+  "date": "2026-10-13",
+  "title": "Kumite: Weekly Eight-Player Tournaments",
+  "artCardId": "dragonfly-jones",
+  "overview": "Kumite brings a weekly eight-player PvP bracket, a live match board and permanent fighter unlocks. Register your owned ten-card gang, check in for assigned fights and climb from quarterfinals to the final. The Safehouse now has a Dragonfly Jones vs Chonk Lee chibi shortcut.",
+  "buffs": [],
+  "changes": [
+    "Find Kumite in Fade Park's PvP modes or use the KUMITE chibi shortcut beneath the Mythic shortcut on the Safehouse. Enter the hallway, choose a valid gang and sign up.",
+    "One tournament each week, with eight human seats and one single-elimination bracket: four quarterfinals, two semifinals and one final. Seeds are randomized when registration closes. There are no replacement bots.",
+    "Entry requires sign-in, completed onboarding, ten distinct owned cards and a selected hero from that gang. Valid saved gangs and owned starter recipes are eligible. Your gang, hero and player presentation lock at signup; later deck edits do not change the entry.",
+    "Registration opens Monday 00:00 UTC and closes at Saturday 00:00 UTC. Quarterfinal, semifinal and final completion cutoffs are Saturday 06:00, 12:00 and 18:00 UTC. The board shows these dates in your local time zone.",
+    "You can withdraw before Saturday's draw and register again to switch gangs, if a seat remains. Two to seven entrants receive distributed byes; fewer than two cancels the week. A final with no surviving entrant ends without a champion.",
+    "Tap Check in & fight to enter your assigned room. Both opponents must tap Ready to begin. Turns have a 75-second limit. Return to your fight reconnects to that same room; going back from its waiting screen does not forfeit.",
+    "Round times are completion deadlines, not six hours from your check-in. A known next pairing can fight early. At cutoff, an already-finished game or expired turn settles first; otherwise one checked-in player advances, while both or neither checked in means both forfeit.",
+    "A full draw replays in a fresh room with the same locked gangs and the same round cutoff. Check in again to enter the replay. Draws count participation once per bracket pairing, so repeated replays do not multiply participation.",
+    "Permanent roadmap progress counts full six-round Kumite battles, full-battle wins and full-final wins. Totals carry across weeks and cards unlock automatically. Byes, no-shows, surrender and turn-timeout wins add no roadmap credit.",
+    "Bushedo Brown (Rare): complete one full fight. Franklin Duke (Epic): win one full fight. Chonk Lee (Legendary): win one full final.",
+    "Dragonfly Jones (Legendary): win three full fights. Undercova Brotha (Rare): win five full fights. Sho'Nuff (Legendary): win eight full fights. Leroy (Mythical): win two full finals. Yasuke (Mythical): win three full finals.",
+    "Bushedo Brown, Franklin Duke and Chonk Lee are earned through Kumite and stay out of Street Packs, variant pack pools, Neighborhood Recruit and borrowed drafts. The other five keep their existing acquisition routes. Once owned, the cards can join your ordinary saved gangs.",
+    "Already own a roadmap fighter? Completing its milestone preserves the card and its XP. Rewards are fighter cards; no dedicated tournament Clout, tickets, skins or duplicate-shard payout is configured.",
+    "Past Winners preserves each bracket champion's name, hero and avatar as they were registered. A legitimate forfeit-decided champion still enters history, but a forfeit final does not count toward Chonk Lee, Leroy or Yasuke's full-final milestones.",
+    "Fight Records covers the latest 52 weekly tournaments: the fastest decisive full fight, recent full-final winners and Hand Throwers ranked by full-fight wins, then full-final titles. Draws, byes, surrender and timeouts stay out of these records. They are separate from lifetime unlock progress and Fade Park rank.",
+    "The movie-style board shows real assigned opponents, check-in, winners, match starts, finishes and durations. Separate date and Fight Records flags display the schedule and verified results. Unplayed byes and no-shows do not receive invented fight times.",
+    "Kumite now scrolls within the game screen on mobile. Signup and section controls come before secondary flags and the roadmap. Swipe the bracket and records rail sideways, inspect fighters, then return to your saved scroll position. The board, flags and fighting mat keep their artwork proportions.",
+    "Assigned fights have a dedicated Kumite VS screen and separate victory/defeat scenes. Returning to Kumite keeps you in the tournament flow; tournament rooms do not offer friend rematches.",
+    "Ordinary PvP wins keep the normal result screen. The rank-up cinematic opens only when a ranked result moves you into a higher PvP tier; gaining RP within your current tier or moving down a tier does not trigger it. RP calculations and earned rewards still settle normally."
+  ],
+  "softCurrency": 0,
+  "packTickets": 0
+}

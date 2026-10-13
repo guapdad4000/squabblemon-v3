@@ -77,7 +77,7 @@ createRoot(document.getElementById('root')!).render(
         <ParkResult
           outcome={mode === 'ranked-loss' ? 'loss' : mode === 'ranked-draw' ? 'draw' : 'win'}
           ranked
-          rank={{ before: mode === 'ranked-loss' ? 120 : 95, after: mode === 'ranked-loss' ? 105 : mode === 'ranked-draw' ? 100 : 120, delta: mode === 'ranked-loss' ? -15 : mode === 'ranked-draw' ? 5 : 25, tier: 'Bronze', outcome: mode === 'ranked-loss' ? 'loss' : mode === 'ranked-draw' ? 'draw' : 'win', bot: false }}
+          rank={{ before: 120, after: mode === 'ranked-loss' ? 105 : mode === 'ranked-draw' ? 125 : 145, delta: mode === 'ranked-loss' ? -15 : mode === 'ranked-draw' ? 5 : 25, tier: 'Bronze', outcome: mode === 'ranked-loss' ? 'loss' : mode === 'ranked-draw' ? 'draw' : 'win', bot: false }}
           claimed={mode === 'ranked-loss' ? 1 : 2}
           rivalClaimed={mode === 'ranked-loss' ? 2 : 1}
           description="Six rounds. Three districts."

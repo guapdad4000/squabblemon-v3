@@ -1,4 +1,5 @@
 import React,{useState} from 'react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import {createRoot} from 'react-dom/client';
 import {createPortal} from 'react-dom';
 import {ResultScreen} from '../src/components/ResultScreen';
@@ -40,11 +41,12 @@ function OnlineFixture(){
    next=applyOnlineCommand(next,'cpu',{type:'ready'},now);
    const finished={...next.match!,phase:'complete' as const,round:6};
     if(result==='active') return next;
-    finished.boards=[['cornball'],['hooper'],...(timeout?[[]]:[['wifey']])].map((ids,lane)=>ids.map((id,i)=>({...createCardInstance(id,timeout?expiredSeat:'cpu','online-result',i),lane,playedRound:1}))) as Match['boards'];
+    finished.boards=(timeout?[['hooper'],['wifey'],[]]:[['cornball'],['hooper'],['wifey']]).map((ids,lane)=>ids.map((id,i)=>({...createCardInstance(id,timeout?expiredSeat:'cpu','online-result',i),lane,playedRound:1}))) as Match['boards'];
     const completed=timeout?expireOnlineRoom({...next,match:finished},next.deadline!):{...next,status:'complete' as const,winner:rankedDraw?'draw' as const:'cpu' as const,reason:'districts' as const,deadline:null,match:finished};
     return {...completed,
-      ...(rankedDraw||timeout?{ranked:{queuedAt:now-20_000,heartbeatAt:now,botAfter:now-8_000,bot:false,ratings:{player:1000,cpu:1000},settlement:{[seat]:{before:95,after:timeout&&seat===expiredSeat?80:rankedDraw?100:120,delta:timeout&&seat===expiredSeat?-15:rankedDraw?5:25,tier:'Bronze',outcome:timeout?(seat===expiredSeat?'loss' as const:'win' as const):'draw' as const,bot:false}}}}:{})};
+      ...(rankedDraw||timeout?{ranked:{queuedAt:now-20_000,heartbeatAt:now,botAfter:now-8_000,bot:false,ratings:{player:1000,cpu:1000},settlement:{[seat]:{before:120,after:timeout&&seat===expiredSeat?105:rankedDraw?125:145,delta:timeout&&seat===expiredSeat?-15:rankedDraw?5:25,tier:'Bronze',outcome:timeout?(seat===expiredSeat?'loss' as const:'win' as const):'draw' as const,bot:false}}}}:{})};
  });
   return <div data-testid="transformed-result-parent" style={{height:'100dvh',overflow:'auto',transform:'translate3d(0,0,0)'}}><MultiplayerBattle room={onlineRoomView(room,'RESULT',seat==='player'?'host':'guest',Date.now())} busy={false} connected reducedMotion send={command=>setRoom(current=>applyOnlineCommand(current,seat,command,Date.now()))} onLeave={()=>{document.body.dataset.action='Online exit';}} /><div aria-hidden="true" style={{height:'50dvh'}} /></div>;
 }
-createRoot(document.getElementById('root')!).render(new URLSearchParams(location.search).get('flow')==='online'?<OnlineFixture/>:<Fixture/>);
+const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+createRoot(document.getElementById('root')!).render(<QueryClientProvider client={queryClient}>{new URLSearchParams(location.search).get('flow')==='online'?<OnlineFixture/>:<Fixture/>}</QueryClientProvider>);

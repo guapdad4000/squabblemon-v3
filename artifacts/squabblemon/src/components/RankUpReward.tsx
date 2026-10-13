@@ -2,7 +2,7 @@ import managerCinematic from "../assets/promotion/squabblehouse-openart-cinemati
 import managerPoster from "../assets/promotion/squabblehouse-manager-poster-v1.webp";
 import { canPlayOptionalBroadcast } from "../lib/optionalBroadcastMedia";
 import { useEffect, useState } from "react";
-import type { RankedResult } from "@workspace/squabblemon-engine/multiplayer";
+import { rankProgress, type RankedResult } from "@workspace/squabblemon-engine/ranked";
 import { RankTrophy } from "./RankArtwork";
 import { GameGlyph } from "./venue/GameGlyph";
 import { AnimatedNumber } from "./AnimatedNumber";
@@ -34,7 +34,7 @@ export function RankUpReward({
     };
   }, [reduced]);
   const rewards = rank.rewards ?? [];
-  const earnedTier = rewards.at(-1)?.tier ?? rank.tier;
+  const earnedTier = rankProgress(rank.after).tier;
   return (
     <div
       className="rank-promotion"
@@ -80,8 +80,7 @@ export function RankUpReward({
       </div>
       <section className="rank-promotion__haul">
         <DialogDescription>
-          Your rank rewards are already saved in your bag. Each milestone pays
-          once per season.
+          {rewards.length ? 'Your rank rewards are already saved in your bag. Each milestone pays once per season.' : 'Milestone gifts pay once per season. This promotion has no new gift.'}
         </DialogDescription>
         <div>
           {rewards.map((reward) => (

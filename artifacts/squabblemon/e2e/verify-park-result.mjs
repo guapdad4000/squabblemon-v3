@@ -120,10 +120,17 @@ for (const [browserName, browserType] of browserTypes) {
       for (const seat of ['player', 'cpu']) {
         const page = await browser.newPage({ viewport, reducedMotion: 'reduce' });
         await page.goto(`${origin}/e2e/result-stage.fixture.html?flow=online&result=active&seat=${seat}&expired=player`);
-        const rule = page.getByTestId('online-clock-rule');
-        await rule.waitFor();
-        assert.ok(await rule.isVisible());
-        assert.match(await rule.innerText(), seat === 'player' ? /End your turn before the clock hits zero or you forfeit/ : /Rival’s turn clock is running/);
+        const battle = page.getByTestId('online-battle');
+        await battle.waitFor();
+        assert.equal(await battle.getAttribute('data-turn'), seat === 'player' ? 'you' : 'rival');
+        const timer = page.getByTestId('turn-timer');
+        await timer.waitFor();
+        assert.match(await timer.getAttribute('aria-label'), /seconds remaining/);
+        const remaining = Number(await page.getByRole('progressbar', { name: 'Turn time remaining' }).getAttribute('aria-valuenow'));
+        assert.ok(remaining > 0 && remaining <= 75, 'The server turn clock runs for both perspectives');
+        await page.getByTestId('pvp-exit').click();
+        await page.getByRole('dialog', { name: 'Leave this fade?' }).waitFor();
+        assert.ok(await page.getByText('Closing the app or leaving does not pause the server turn clock.', { exact: false }).isVisible());
         await page.close();
       }
     }

@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
-import { existsSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import test from 'node:test';
-import { catalogCardById } from '@workspace/squabblemon-engine/data';
+import { catalogCardById, KUMITE_CARD_REWARDS } from '@workspace/squabblemon-engine/data';
 import { PREPARED_PATCHES } from './preparedPatches';
 import { getPatchBanner, PATCH_BANNERS } from './patchBanners';
 
@@ -16,8 +16,15 @@ test('prepared patch notes fit the publication contract', () => {
     for (const line of [...patch.buffs, ...patch.changes]) assert.ok(line.trim() && line.length <= 500, line);
     const letter = [patch.version, patch.title, patch.overview, ...patch.buffs, ...patch.changes].join('\n');
     assert.ok(letter.length < 5500, `${patch.version} letter too long`);
-    assert.equal(patch.softCurrency, ['1.9', '1.10', '1.11', '1.12'].includes(patch.version) ? 0 : patch.version === '1.8' ? 50 : 100);
-    assert.equal(patch.packTickets, ['1.11', '1.12'].includes(patch.version) ? 10 : ['1.8', '1.9', '1.10'].includes(patch.version) ? 0 : 1);
+    assert.ok(patch.buffs.length <= 50 && patch.changes.length <= 50);
+    const date = new Date(`${patch.date}T00:00:00.000Z`).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' });
+    const mailBody = [`Patch ${patch.version} · ${date}`, patch.title, '', patch.overview,
+      ...(patch.buffs.length ? ['', 'Buffs', ...patch.buffs.map(line => `• ${line}`)] : []),
+      ...(patch.changes.length ? ['', 'Changes', ...patch.changes.map(line => `• ${line}`)] : []),
+    ].join('\n');
+    assert.ok(mailBody.length <= 6000, `${patch.version} rendered mail exceeds server limit`);
+    assert.equal(patch.softCurrency, ['1.9', '1.10', '1.11', '1.12', '1.13'].includes(patch.version) ? 0 : patch.version === '1.8' ? 50 : 100);
+    assert.equal(patch.packTickets, ['1.11', '1.12'].includes(patch.version) ? 10 : ['1.8', '1.9', '1.10', '1.13'].includes(patch.version) ? 0 : 1);
   }
   const versionParts = (version: string) => version.split('.').map(Number);
   assert.deepEqual([...versions], [...versions].sort((a, b) => {
@@ -87,4 +94,27 @@ test('Street Legends release carries ten tickets with a version-bound uncropped 
   assert.equal(banner.aspectRatio, '3 / 1');
   assert.ok(existsSync(new URL(`../../public/${banner.path}`, import.meta.url)));
   assert.equal(getPatchBanner('1.11', 'nail'), undefined);
+});
+
+test('Kumite 1.13 stays a reviewed zero-gift draft with accurate mode coverage', () => {
+  const patch = PREPARED_PATCHES.find(item => item.version === '1.13');
+  assert.ok(patch);
+  assert.equal(patch.date, '2026-10-13');
+  assert.equal(patch.artCardId, 'dragonfly-jones');
+  assert.equal(patch.softCurrency, 0);
+  assert.equal(patch.packTickets, 0);
+  assert.deepEqual(patch.buffs, []);
+  const reviewed = JSON.parse(readFileSync(new URL('../../../../docs/releases/kumite-1.13.json', import.meta.url), 'utf8'));
+  assert.deepEqual(patch, reviewed, 'the private desk uses the exact reviewable payload');
+  const text = [patch.overview, ...patch.changes].join('\n');
+  for (const reward of KUMITE_CARD_REWARDS) assert.ok(text.includes(reward.name), `missing unlock ${reward.name}`);
+  assert.match(text, /eight human seats/);
+  assert.match(text, /ten distinct owned cards/);
+  assert.match(text, /Monday 00:00 UTC/);
+  assert.match(text, /Saturday 06:00, 12:00 and 18:00 UTC/);
+  assert.match(text, /75-second/);
+  assert.match(text, /Draws count participation once per bracket pairing/);
+  assert.match(text, /latest 52 weekly tournaments/);
+  assert.match(text, /only when a ranked result moves you into a higher PvP tier/);
+  assert.ok(!/all eight.{0,30}exclusive|claim.{0,20}(?:Clout|tickets)|exclusive skin/i.test(text));
 });
