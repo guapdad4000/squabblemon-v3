@@ -4,7 +4,12 @@
   --kumite-red: #ba231b;
   position: relative;
   isolation: isolate;
-  min-height: 100dvh;
+  height: 100dvh;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  -webkit-overflow-scrolling: touch;
   padding: max(18px, env(safe-area-inset-top)) clamp(14px, 3.4vw, 56px) max(26px, env(safe-area-inset-bottom));
   color: var(--kumite-ivory);
   background: #130f0c;
@@ -72,7 +77,7 @@
 .kumite-scoreboard__rounds { display: flex; justify-content: center; gap: 7px; padding-bottom: 8px; }
 .kumite-scoreboard__rounds > button { padding: 6px 13px; color: #dac9a7; font: 700 8px/1.4 var(--font-mono); text-transform: uppercase; letter-spacing: .03em; border: 1px solid #95774588; background: #171109e0; }
 .kumite-scoreboard__rounds > button[aria-pressed='true'] { color: #261910; border-color: #f1ce86; background: #dab275; }
-.kumite-scoreboard__frame { position: relative; aspect-ratio: 1.26; isolation: isolate; }
+.kumite-scoreboard__frame { position: relative; aspect-ratio: 4 / 3; isolation: isolate; }
 .kumite-scoreboard__art { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: fill; filter: drop-shadow(0 8px 8px #000b); pointer-events: none; }
 .kumite-scoreboard__heading { position: absolute; top: 26.7%; left: 27.3%; right: 27.2%; height: 12.5%; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; }
 .kumite-scoreboard__heading h2 { color: #1c150c; font: 900 italic 40px/.9 var(--font-display); letter-spacing: -.045em; transform: skewX(-6deg); }
@@ -247,15 +252,16 @@
 .kumite-banner--horizontal .kumite-banner__title { font-size: 45px; }
 .kumite-banner--horizontal .kumite-fist-seal { width: 43px; height: 43px; border-width: 3px; }
 .kumite-banner--horizontal .kumite-banner__subtitle { max-width: 75px; font-size: 8px; }
-.kumite-shortcut { display: flex; flex-direction: column; align-items: center; width: 88px; position: relative; filter: drop-shadow(0 6px 6px #0008); transition: transform .18s; }
-.kumite-shortcut:hover { transform: translateY(-3px) rotate(-1deg); }
-.kumite-shortcut .kumite-banner--vertical { width: 88px; }
-.kumite-shortcut .kumite-banner__ink { gap: 9px; }
-.kumite-shortcut .kumite-banner__title { font-size: 21px; }
-.kumite-shortcut .kumite-fist-seal { width: 31px; height: 31px; border-width: 2px; }
-.kumite-shortcut .kumite-banner__subtitle { font-size: 6px; letter-spacing: .05em; }
-.kumite-shortcut__cta { display: flex; align-items: center; justify-content: center; gap: 4px; width: 102px; padding: 7px 3px; margin-top: -6px; border: 1px solid #bd995c; background: #20160ee8; font: 700 7px/1.6 var(--font-mono); color: #f7ddb0; text-align: center; }
-.kumite-shortcut__cta > svg { flex: none; width: 12px; }
+/* The two fighters are the Safehouse icon; its label remains live text. */
+.kumite-shortcut { display:flex; flex-direction:column; align-items:center; width:88px; position:relative; filter:drop-shadow(0 5px 5px #0009); transition:transform .18s; }
+.kumite-shortcut:hover { transform:translateY(-3px); }
+.kumite-shortcut__fight { display:grid; place-items:center; width:100%; aspect-ratio:512 / 468; }
+.kumite-shortcut__fight > img { display:block; width:100%; height:100%; object-fit:contain; }
+.kumite-shortcut__fight > .kumite-logo { width:85%; height:auto; }
+.kumite-shortcut__cta { display:flex; align-items:center; justify-content:center; gap:4px; width:100%; min-height:24px; margin-top:-2px; padding:4px 3px; border:1px solid #bd995c; background:#1b130bf0; font:900 italic 12px/1.1 var(--font-display); letter-spacing:.04em; color:#ffe4a2; text-align:center; }
+.kumite-shortcut__cta > svg { flex:none; width:12px; }
+html[data-reduce-motion='true'] .kumite-shortcut:hover { transform:none; }
+@media(prefers-reduced-motion:reduce) { .kumite-shortcut:hover { transform:none; } }
 @media (min-width: 1500px) { .kumite-arena-head > .kumite-banner { width: 345px; } }
 @media (max-width: 900px) {
   .kumite-registration__grid { gap: 24px; grid-template-columns: 1fr 1.1fr; }
@@ -385,7 +391,7 @@ html[data-reduce-motion='true'] .kumite-shortcut { transition: none; }
 /* Cloth navigation, tournament flags and the earned-card roadmap. */
 .kumite-scoreboard-stage { display:grid; grid-template-columns:minmax(170px,1fr) minmax(0,640px) minmax(170px,1fr); gap:12px; width:100%; align-items:start; margin-top:12px; }
 .kumite-scoreboard-stage > .kumite-scoreboard { width:100%; margin:0; }
-.kumite-side-flag { position:relative; min-width:0; width:100%; max-width:240px; aspect-ratio:.4; justify-self:center; color:#25180d; filter:drop-shadow(0 8px 6px #0008); }
+.kumite-side-flag { position:relative; min-width:0; width:100%; max-width:240px; aspect-ratio:778 / 2022; justify-self:center; color:#25180d; filter:drop-shadow(0 8px 6px #0008); }
 .kumite-side-flag__cloth { position:absolute; inset:0; width:100%; height:100%; object-fit:fill; pointer-events:none; }
 .kumite-side-flag__ink { position:absolute; inset:14% 20% 23%; display:flex; flex-direction:column; gap:14px; }
 .kumite-side-flag h2 { text-align:center; font:900 italic 17px/1 var(--font-display); text-transform:uppercase; letter-spacing:-.025em; margin:0 0 1px; }
@@ -534,3 +540,47 @@ html[data-reduce-motion='true'] .kumite-shortcut { transition: none; }
 @media(max-width:360px) { .kumite-side-flag h2 { font-size:11px; } }
 @media(max-width:600px) { .kumite-scoreboard__seat > div { gap:1px; } .kumite-scoreboard__seat strong { line-height:1.05; } .kumite-scoreboard__seat small { line-height:1.2; } }
 @media(max-width:360px) { .kumite-side-flag { min-height:720px; } }
+
+/* Kumite is a direct game route: it owns scrolling inside the locked game body. */
+.kumite-scoreboard__flags { display:contents; }
+.kumite-side-flag--dates { grid-column:1; grid-row:1; }
+.kumite-side-flag--records { grid-column:3; grid-row:1; }
+.kumite-scoreboard-stage > .kumite-scoreboard { grid-column:2; grid-row:1; }
+@media(max-width:1100px) {
+  /* Put the player's action before secondary records on smaller screens. */
+  .kumite--arena .kumite-shell { display:grid; grid-template-columns:minmax(0,1fr); }
+  .kumite--arena .kumite-topbar { grid-row:1; }
+  .kumite--arena .kumite-arena-head,
+  .kumite--arena .kumite-scoreboard-stage { display:contents; }
+  .kumite-scoreboard-stage > .kumite-scoreboard { grid-column:1; grid-row:2; width:min(640px,100%); margin:12px auto 0; }
+  .kumite-arena-head__line { grid-row:3; }
+  .kumite--arena .kumite-board { grid-row:4; min-width:0; }
+  .kumite-scoreboard__flags { grid-row:5; display:flex; justify-content:center; align-items:flex-start; gap:12px; margin-top:20px; }
+  .kumite-side-flag { flex:0 0 240px; width:240px; max-width:none; min-height:0; aspect-ratio:778 / 2022; margin:0; }
+  .kumite--arena .kumite-roadmap { grid-row:6; width:100%; }
+}
+@media(max-width:600px) {
+  .kumite-topbar__stamp { display:none; }
+  /* Enlarge the board's center while cropping only its decorative outer sides. */
+  .kumite-scoreboard { overflow:hidden; }
+  .kumite-scoreboard__frame { width:155%; margin-left:-27.5%; aspect-ratio:4 / 3; }
+  .kumite-scoreboard__seat strong { display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-size:11px; line-height:1.2; }
+  .kumite-scoreboard__seat small { font-size:7px; line-height:1.2; }
+  .kumite-scoreboard__time { font-size:7px; }
+  .kumite-tabs { position:sticky; top:0; z-index:3; background:linear-gradient(#130e0df2,#130e0dd4 72%,transparent); }
+  .kumite-tabs > button { min-height:58px; }
+  .kumite-tabs > button > span { font-size:10px; }
+  .kumite-panel__body { padding:18px 15px; }
+  .kumite-tabpanel { min-height:0; }
+  /* Both cloths keep their supplied proportions; swipe across to read records. */
+  .kumite-scoreboard__flags { justify-content:flex-start; overflow-x:auto; overflow-y:hidden; scroll-snap-type:x proximity; overscroll-behavior-x:contain; scrollbar-width:thin; scrollbar-color:#c69951 #291b0f; padding:0 1px 12px; }
+  .kumite-side-flag { scroll-snap-align:start; min-height:0; }
+  .kumite-side-flag__ink { gap:12px; }
+  .kumite-side-flag h2 { font-size:15px; }
+  .kumite-side-flag dd { font-size:12px; }
+  .kumite-side-flag dt, .kumite-side-flag h3 { font-size:9px; }
+  .kumite-side-flag__legends li { font-size:11px; }
+  .kumite-side-flag__legends li small, .kumite-side-flag__scope { font-size:8px; }
+  .kumite-side-flag__fastest > span { font-size:12px; }
+  .kumite-side-flag__fastest > strong { font-size:28px; }
+}

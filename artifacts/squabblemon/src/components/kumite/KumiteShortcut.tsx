@@ -1,12 +1,17 @@
+import { useState } from 'react';
 import { ArrowUpRight } from 'lucide-react';
 import { Link } from 'wouter';
-import { KumiteBanner } from './KumiteBanner';
+import { getAssetUrl } from '../../lib/assets';
+import { KumiteLogo } from './KumiteBanner';
 import '../../styles/kumite.css';
 
-/** Compact hanging cloth CTA for the Safehouse's right-hand announcement rail. */
+/** Chibi fight shortcut below the Safehouse's mythic announcements. */
 export function KumiteShortcut({ className = '' }: { className?: string }) {
+  const [missingArt, setMissingArt] = useState(false);
   return <Link href="/game/kumite" className={`kumite-shortcut ${className}`} aria-label="Enter Kumite weekly PvP tournaments" data-preload-route="/game/kumite">
-    <KumiteBanner variant="vertical" subtitle="WEEKLY PVP" />
-    <span className="kumite-shortcut__cta">8 spots. One champion.<ArrowUpRight size={17} aria-hidden="true" /></span>
+    <span className="kumite-shortcut__fight" aria-hidden="true">
+      {missingArt ? <KumiteLogo decorative /> : <img src={getAssetUrl('assets/kumite/dragonfly-vs-chonk-chibi-v1.webp')} alt="" width={512} height={468} draggable={false} onError={() => setMissingArt(true)} />}
+    </span>
+    <span className="kumite-shortcut__cta">KUMITE<ArrowUpRight size={13} aria-hidden="true" /></span>
   </Link>;
 }

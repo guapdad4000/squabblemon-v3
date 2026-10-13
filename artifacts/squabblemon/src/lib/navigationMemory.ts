@@ -57,7 +57,7 @@ export function useViewMemory<T>(key: string, initial: T): [T, Dispatch<SetState
   });
   return [value, update];
 }
-const owners = '.game-shell__content,.game-route-stage,.immersive-shell,.collection-stage__body,.arsenal-body,.arsenal-grid,.inventory-room,.character-styles,.bounty-hunter__scroll,.market,.corner-store__scroll,.story-atlas__viewport,.gang-mural__tags,.gang-mural__members,.gang-mural__skill,.fighter-panel';
+const owners = '.game-shell__content,.game-route-stage,.immersive-shell,.collection-stage__body,.arsenal-body,.arsenal-grid,.inventory-room,.character-styles,.bounty-hunter__scroll,.market,.corner-store__scroll,.story-atlas__viewport,.gang-mural__tags,.gang-mural__members,.gang-mural__skill,.fighter-panel,.kumite,.kumite-scoreboard__flags,.kumite-bracket__scroll';
 /** Restore the entry's own scroll positions, including query-string navigation. */
 export function useNavigationScroll() {
   const [path] = useLocation();

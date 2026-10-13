@@ -34,11 +34,19 @@ export function KumiteScoreboard({ tournament, currentMatch, lastWinner, records
   const round = pickedRound ?? activeRound;
   const matches = (tournament.finals.length ? tournament.finals : emptyKumiteRounds(null))[round] ?? [];
   return <section className="kumite-scoreboard-stage" aria-labelledby={id}>
+    <div className="kumite-scoreboard__flags">
     <KumiteSideFlag title="This week" className="kumite-side-flag--dates">
       <dl><div><dt>Opens</dt><dd><FlagDate timestamp={tournament.registrationOpensAt} /></dd></div><div><dt>First fight</dt><dd><FlagDate timestamp={tournament.startsAt} /></dd></div><div><dt>Final deadline</dt><dd><FlagDate timestamp={tournament.endsAt} /></dd></div></dl>
       <div className="kumite-side-flag__clock"><Clock3 size={15} aria-hidden="true" /><span>{currentMatch ? 'ROUND DEADLINE' : tournament.status === 'registration' ? 'SIGN-UP CLOSES IN' : tournament.status === 'active' ? 'FINAL CLOSES IN' : 'FINISHED'}<strong>{tournament.status === 'registration' || tournament.status === 'active' ? kumiteCountdown(currentMatch?.deadline ?? (tournament.status === 'registration' ? tournament.startsAt : tournament.endsAt), now) : '—'}</strong></span></div>
       <p className="kumite-side-flag__format">8 players<br />3 rounds</p>
     </KumiteSideFlag>
+    <KumiteSideFlag title="Fight records" className="kumite-side-flag--records">
+      <div className="kumite-side-flag__fastest"><h3>FASTEST FIGHT</h3>{records?.fastestFight ? <><strong>{fightDuration(records.fastestFight.durationMs)}<small>.{String(Math.floor(records.fastestFight.durationMs % 1000)).padStart(3, '0')}</small></strong><span>{records.fastestFight.winner.name}</span><small>vs {records.fastestFight.opponent.name}</small></> : <p>No record yet.</p>}</div>
+      <div className="kumite-side-flag__legends"><h3>RECENT WINNERS</h3>{records?.recentWinners.length ? <ol>{records.recentWinners.slice(0, 2).map(winner => <li key={winner.tournamentId}><HandFist size={12} aria-hidden="true" /><span title={winner.name}>{winner.name}</span></li>)}</ol> : tournament.champion ? <p>{tournament.champion.name}<Check size={12} aria-label="Current champion" /></p> : lastWinner ? <p>{lastWinner.name}</p> : <p>{archiveStatus === 'pending' ? 'Loading…' : archiveStatus === 'error' ? 'History unavailable' : 'No champions yet.'}</p>}</div>
+      <div className="kumite-side-flag__legends"><h3>HAND THROWERS</h3>{records?.handThrowers.length ? <ol>{records.handThrowers.slice(0, 3).map(fighter => <li key={fighter.rank}><b>{fighter.rank}</b><span title={fighter.name}><strong>{fighter.name}</strong><small>{fighter.playedWins} W · {fighter.championships} titles</small></span></li>)}</ol> : <p>No ranked records yet.</p>}</div>
+      {records && <small className="kumite-side-flag__scope">{records.scope}</small>}
+    </KumiteSideFlag>
+    </div>
     <div className="kumite-scoreboard">
     <div className="kumite-scoreboard__rounds" role="group" aria-label="Choose live scoreboard round">{roundNames.map((name, index) => <button type="button" key={name} aria-label={name} aria-pressed={round === index} onClick={() => setPickedRound(index)}><img className="kumite-scoreboard__round-cloth" src={getAssetUrl('assets/kumite/nav-flag.webp')} alt="" draggable={false} /><span>{['Quarters', 'Semis', 'Final'][index]}</span></button>)}</div>
     <div className={`kumite-scoreboard__frame ${failedArt ? 'kumite-scoreboard__frame--fallback' : ''}`}>
@@ -59,11 +67,5 @@ export function KumiteScoreboard({ tournament, currentMatch, lastWinner, records
       })}</div>
     </div>
     </div>
-    <KumiteSideFlag title="Fight records" className="kumite-side-flag--records">
-      <div className="kumite-side-flag__fastest"><h3>FASTEST FIGHT</h3>{records?.fastestFight ? <><strong>{fightDuration(records.fastestFight.durationMs)}<small>.{String(Math.floor(records.fastestFight.durationMs % 1000)).padStart(3, '0')}</small></strong><span>{records.fastestFight.winner.name}</span><small>vs {records.fastestFight.opponent.name}</small></> : <p>No record yet.</p>}</div>
-      <div className="kumite-side-flag__legends"><h3>RECENT WINNERS</h3>{records?.recentWinners.length ? <ol>{records.recentWinners.slice(0, 2).map(winner => <li key={winner.tournamentId}><HandFist size={12} aria-hidden="true" /><span title={winner.name}>{winner.name}</span></li>)}</ol> : tournament.champion ? <p>{tournament.champion.name}<Check size={12} aria-label="Current champion" /></p> : lastWinner ? <p>{lastWinner.name}</p> : <p>{archiveStatus === 'pending' ? 'Loading…' : archiveStatus === 'error' ? 'History unavailable' : 'No champions yet.'}</p>}</div>
-      <div className="kumite-side-flag__legends"><h3>HAND THROWERS</h3>{records?.handThrowers.length ? <ol>{records.handThrowers.slice(0, 3).map(fighter => <li key={fighter.rank}><b>{fighter.rank}</b><span title={fighter.name}><strong>{fighter.name}</strong><small>{fighter.playedWins} W · {fighter.championships} titles</small></span></li>)}</ol> : <p>No ranked records yet.</p>}</div>
-      {records && <small className="kumite-side-flag__scope">{records.scope}</small>}
-    </KumiteSideFlag>
   </section>;
 }

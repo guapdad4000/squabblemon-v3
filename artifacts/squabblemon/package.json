@@ -85,6 +85,7 @@
     "test:base-pvp": "node --import ../../scripts/battle-test-css.mjs --import tsx --test --test-skip-pattern=\"custom deck transcript\" src/basePvpPatch.test.ts src/basePvpGuards.test.ts src/fullBalanceAuthority.test.ts src/multiplayer.test.ts src/fullCatalogPresentationAudit.test.tsx src/lib/deckWorkshop.test.ts src/rivalryBasePlaytest.test.ts",
     "test:kumite": "node --import ../../scripts/battle-test-css.mjs --import tsx --test src/components/kumite/*.test.tsx src/multiplayer.test.ts",
     "test:kumite-browser": "node e2e/run-kumite-preview.mjs",
+    "test:kumite-mobile": "node e2e/run-kumite-mobile.mjs",
     "test:player-notes": "node --import ../../scripts/battle-test-css.mjs --import tsx --test src/playerNotes.test.ts src/lib/challengeRunResponse.test.ts src/lib/communityCrew.test.ts src/lib/deckWorkshop.test.ts src/lib/collectionCardViewport.test.ts src/lib/rankedLobbyRecovery.test.ts"
   },
   "devDependencies": {
