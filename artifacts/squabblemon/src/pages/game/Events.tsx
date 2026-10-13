@@ -1,3 +1,5 @@
+import { CommunityCrews } from '../../components/CommunityCrews';
+import type { PlayerBootstrap } from '@workspace/api-client-react';
 import { useEffect, useRef } from 'react';
 import { Link, useSearch } from 'wouter';
 import { ArrowLeft } from 'lucide-react';
@@ -5,7 +7,7 @@ import { SafehouseBulletinBoardContent } from '../../components/SafehouseBulleti
 import { EventFeedbackSection } from '../../components/EventFeedback';
 import { FEEDBACK_SECTION_ID } from '../../content/bulletinBoard';
 
-export function Events({ playerId }: { playerId: string }) {
+export function Events({ playerId, bootstrap }: { playerId: string; bootstrap?: PlayerBootstrap }) {
   const search = useSearch();
   const main = useRef<HTMLElement>(null);
   const wantsFeedback = new URLSearchParams(search).get('section') === 'feedback';
@@ -23,6 +25,7 @@ export function Events({ playerId }: { playerId: string }) {
 
   return <main ref={main} className="events-page" aria-labelledby="events-title" data-testid="page-events">
     <div className="events-page__bar"><Link href="/game" className="events-page__back" data-testid="link-back-safehouse"><ArrowLeft size={15} aria-hidden="true" />Back to Safehouse</Link></div>
+    {bootstrap && <CommunityCrews bootstrap={bootstrap} />}
     <SafehouseBulletinBoardContent playerId={playerId}>
       <EventFeedbackSection playerId={playerId} />
     </SafehouseBulletinBoardContent>

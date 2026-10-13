@@ -1,3 +1,4 @@
+import { PersonalFadeRecord } from './social/PersonalFadeRecord';
 import { BattleReactions } from './BattleReactions';
 import { MatchArrival } from './MatchArrival';
 import { ParkResult } from './ParkResult';
@@ -277,8 +278,8 @@ export function MultiplayerBattle({ room, busy, connected, reducedMotion: profil
       </KumiteResult> : <ParkResult outcome={room.winner === 'draw' ? 'draw' : room.winner === room.seat ? 'win' : 'loss'} ranked={Boolean(room.ranked)} rank={rank ?? undefined} reducedMotion={reducedMotion}
         title={resultCopy.title} subtitle={resultCopy.subtitle} boardNote={resultCopy.boardNote}
         claimed={room.scores.filter(s => s.winner === room.seat).length} rivalClaimed={room.scores.filter(s => s.winner === rivalSeat).length}
-         series={room.ranked ? undefined : <FadeSeriesBoard variant="result" reducedMotion={reducedMotion} gameNumber={room.gameNumber} rivalName={rival.name}
-           series={{ you: room.series[room.seat], rival: room.series[rivalSeat], draws: room.series.draws }} />}
+         series={room.ranked ? undefined : <><PersonalFadeRecord room={room.code} rival={rival.name} /><FadeSeriesBoard variant="result" reducedMotion={reducedMotion} gameNumber={room.gameNumber} rivalName={rival.name}
+           series={{ you: room.series[room.seat], rival: room.series[rivalSeat], draws: room.series.draws }} /></>}
          description={resultCopy.description}
          opponent={room.ranked?.opponent !== 'bot' ? <PostMatchHomie key={`${room.code}:${room.gameNumber}`} code={room.code} /> : undefined}>
         {!room.ranked && <button className="online-primary" data-testid="button-back-to-room" disabled={exitBusy} onClick={backToRoom}>{exitBusy ? 'Opening the room…' : 'Back to the room'}</button>}

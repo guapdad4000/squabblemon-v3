@@ -1,3 +1,4 @@
+import { MISSION_TEMPLATES } from '@workspace/squabblemon-engine/economy';
 import { progressBountyEvent, standardBountyTasks } from './legendBountyProgress';
 import { advanceCareer, availableCareerChoices, readCareer } from "@workspace/squabblemon-engine/career";
 import { battleAchievements } from "@workspace/squabblemon-engine/insights";
@@ -78,6 +79,7 @@ async function resetExpiredMissionsInTransaction(
     await tx
       .update(playerMissionsTable)
       .set({
+        ...(() => { const template = MISSION_TEMPLATES.find(t => t.missionKey === mission.missionKey); return template ? { title: template.title, description: template.description, goal: template.goal, rewardCurrency: template.rewardCurrency, rewardAmount: template.rewardAmount } : {}; })(),
         progress: 0,
         claimedAt: null,
         resetAt: nextReset(mission.cadence, now),

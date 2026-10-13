@@ -1,3 +1,4 @@
+import { PersonalFadeRecord } from '../../components/social/PersonalFadeRecord';
 import { FadePark, FightTabs } from './FadePark';
 import { usePersistentDeckSelection } from '../../lib/deckSelection';
 import { useRef, useState } from "react";
@@ -157,6 +158,7 @@ export function Multiplayer({ bootstrap, code }: { bootstrap: PlayerBootstrap; c
         <section className="fa-control" aria-label="Room controls">
           <div className="fa-sectionhead">
             <h2 data-testid="online-room">{opponentJoined ? 'Rival joined' : invitedPlayer ? `Waiting on ${invitedPlayer.displayName}` : 'Room open'}</h2>
+            {opponentJoined && !room.ranked && <PersonalFadeRecord room={room.code} rival={room.members[opponentSeat]?.name ?? 'Rival'} />}
             {opponentJoined && (room.gameNumber > 1 || played > 0) && <FadeSeriesBoard variant="lobby" reducedMotion={profile.settings.reducedMotion}
               gameNumber={room.gameNumber} rivalName={room.members[opponentSeat]?.name}
               series={{ you: room.series[room.seat], rival: room.series[opponentSeat], draws: room.series.draws }} />}

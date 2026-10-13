@@ -1,3 +1,4 @@
+import communityDecksRouter from './communityDecks';
 import bossRaidRouter from './bossRaid';
 import parkChessRouter from './parkChess';
 import arcadeGamesRouter from './arcadeGames';
@@ -48,6 +49,7 @@ router.use(legendBountiesRouter);
 router.use(mailRouter);
 router.use(notificationsRouter);
 router.use(eventFeedbackRouter);
+router.use(communityDecksRouter);
 router.use(patchesRouter);
 router.use(stockzRouter);
 router.use(socialRouter);

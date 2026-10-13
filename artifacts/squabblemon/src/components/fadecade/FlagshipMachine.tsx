@@ -49,7 +49,7 @@ export function FlagshipMachine({ bootstrap, legalCrews, runsQuery, onBattle, ro
   const search = useSearch();
   useEffect(() => { if (new URLSearchParams(search).get('machine') === 'road') setOpen(true); }, [search]);
   const openButton = useRef<HTMLButtonElement>(null);
-  const runs = runsQuery.data ?? [];
+  const runs = Array.isArray(runsQuery.data) ? runsQuery.data : [];
   const active = runs.find(run => run.status === 'active');
   const returned = roadReturn && runs.find(run => run.id === roadReturn.runId);
   const latest = returned || runs[0];

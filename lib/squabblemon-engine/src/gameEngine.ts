@@ -73,6 +73,8 @@ export type StoryStarObjective = {
   readonly description: string;
   /** Missing only on encounters saved before objective criteria were introduced. */
   readonly criterion?: StoryObjectiveCriterion;
+  /** Victory goals still require a win when collecting a missing star on a replay. */
+  readonly requiresWin?: boolean;
 };
 export type StoryEncounterSnapshot = {
   readonly id: string;
@@ -609,6 +611,7 @@ const historicallyMovedCardIds = (match: Match, owner: Owner): Set<string> => {
 export function evaluateStoryStarObjectives(
   match: Match,
   objectives: readonly StoryStarObjective[] = match.storyEncounter?.starObjectives ?? [],
+  clearedReplay = false,
 ): StoryObjectiveEvaluation[] {
   const won = match.phase === "complete" && getMatchWinner(match) === "player";
   const results = getDistrictResults(match);
@@ -616,7 +619,9 @@ export function evaluateStoryStarObjectives(
   return objectives.map((objective) => {
     const criterion = legacyStoryObjectiveCriterion(objective);
     let achieved = false;
-    if (won && criterion) {
+    const requiresWin = objective.requiresWin ?? (!criterion || criterion.kind === 'win'
+      || (criterion.kind === 'squabble-used' && !criterion.used));
+    if ((won || (clearedReplay && match.phase === 'complete' && !requiresWin)) && criterion) {
       switch (criterion.kind) {
         case "win": achieved = true; break;
         case "districts-held":
@@ -638,6 +643,34 @@ export function evaluateStoryStarObjectives(
 
 export const getStoryStars = (match: Match): number =>
   evaluateStoryStarObjectives(match).filter((objective) => objective.achieved).length;
+/** Objectives are permanent accomplishments; a replay can earn only its missing star. */
+export function mergeStoryObjectiveProgress(match: Match, previousIds: readonly string[] = [], previousStars = 0, alreadyCleared = false) {
+  const objectives = evaluateStoryStarObjectives(match, undefined, alreadyCleared);
+  const allowed = new Set(objectives.map(objective => objective.id));
+  const completedObjectiveIds = [...new Set([...previousIds.filter(id => allowed.has(id)),
+    ...objectives.filter(objective => objective.achieved).map(objective => objective.id)])];
+  return { completedObjectiveIds, stars: Math.min(3, Math.max(previousStars, completedObjectiveIds.length)) };
+}
+/** Recover only accomplishments proved by an old immutable completion receipt. */
+export function recoverLegacyStoryObjectiveIds(receipts: readonly { outcome: string | null; districtsWon: number | null; storyStars: number | null; objectives: readonly StoryStarObjective[] }[]): string[] {
+  const earned = new Set<string>();
+  for (const receipt of receipts) {
+    if (receipt.outcome !== 'win') continue;
+    const classified = receipt.objectives.map(objective => {
+      const criterion = legacyStoryObjectiveCriterion(objective);
+      const achieved = criterion?.kind === 'win' ? true
+        : criterion?.kind === 'districts-held' && criterion.owner === 'player' && receipt.districtsWon !== null
+          ? receipt.districtsWon >= criterion.atLeast : null;
+      return { id: objective.id, achieved };
+    });
+    const known = classified.filter(objective => objective.achieved === true);
+    const unknown = classified.filter(objective => objective.achieved === null);
+    for (const objective of known) earned.add(objective.id);
+    if (known.length + unknown.length === receipt.storyStars)
+      for (const objective of unknown) earned.add(objective.id);
+  }
+  return [...earned];
+}
 const activeLandlord = (match: Match, owner: Owner, targetLane: Lane) =>
   inLane(match, owner === "player" ? "cpu" : "player", targetLane)
     .some((card) => abilityCardId(card) === "landlord" && activeAbility(card));

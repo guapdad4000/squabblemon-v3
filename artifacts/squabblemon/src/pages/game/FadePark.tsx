@@ -1,3 +1,5 @@
+import catchHandsSign from '../../assets/fade-park/catch-hands-sign-v2.webp';
+import { GlobalStandings } from '../../components/GlobalStandings';
 import { RankTrophy, RPToken, RankLadder } from '../../components/RankArtwork';
 import { AnimatedNumber } from '../../components/AnimatedNumber';
 import { FadeFinderButton } from '../../components/FadeFinderButton';
@@ -149,7 +151,7 @@ export function FadePark({ bootstrap }: { bootstrap: PlayerBootstrap }) {
       </div>
       <img
         className="park-street-sign"
-        src={getAssetUrl('assets/fade-park/catch-hands-sign.webp')}
+        src={catchHandsSign}
         alt=""
         draggable={false}
         decoding="async"
@@ -159,7 +161,7 @@ export function FadePark({ bootstrap }: { bootstrap: PlayerBootstrap }) {
     </div>
     <header className="park-topbar"><FightTabs searching={searching} /></header>
     <div className="park-content">
-      <section className="park-intro"><span className="park-eyebrow"><Radio size={13} /> Oakland · Bay Area & beyond</span><h1>FADE<br /><em>PARK.</em></h1><p>Your gang. An open challenge.<br />Pull up and claim your rank.</p><div className="park-ground-rules"><span>3 districts</span><span>6 rounds</span><span>Your next rival</span></div></section>
+      <div className="park-lobby-left"><section className="park-intro"><span className="park-eyebrow"><Radio size={13} /> Oakland · Bay Area & beyond</span><h1>FADE<br /><em>PARK.</em></h1><p>Your gang. An open challenge.<br />Pull up and claim your rank.</p><div className="park-ground-rules"><span>3 districts</span><span>6 rounds</span><span>Your next rival</span></div></section><GlobalStandings playerId={profile.id} /></div>
       <div className="park-board-wrapper park-layer--board">
         <section className="park-ticket" aria-label="Find a ranked match">
           <div className="park-rank"><RankTrophy tier={progress.tier} /><div><span className="park-eyebrow">Preseason · your rank</span><h2>{progress.tier}<strong><RPToken /><AnimatedNumber value={stats.points} /><small> RP</small></strong></h2></div></div>
@@ -198,7 +200,7 @@ export function FadePark({ bootstrap }: { bootstrap: PlayerBootstrap }) {
               {searching && <div className="park-search park-search-overlay" data-testid="ranked-search">
                 <div className="park-search-art"><img className="park-search-poster" src={getAssetUrl('assets/fade-park/search-versus.png')} alt="" /><img className="park-search-fighters" src={getAssetUrl('assets/fade-park/search.gif')} alt="Dr. Fade and Guap warming up" /><img className="park-search-phone" src={getAssetUrl('assets/props/sticker-phone.webp')} alt="" /></div>
                 <div className="park-search-status" role="status"><span className="park-pulse" /><h3>{connected ? 'Calling for a fade…' : 'Reconnecting…'}</h3><time>{String(Math.floor(elapsed / 60)).padStart(2, '0')}:{String(elapsed % 60).padStart(2, '0')}</time></div>
-                <p>Finding your next rival. Hang up the phone to cancel.</p>
+                <p>Checking for players first. A Park Bot joins after 6 seconds. Hang up to cancel.</p>
               </div>}
             </div>
             <FadeFinderButton reduced={profile.settings.reducedMotion} busy={busy} searching={searching}

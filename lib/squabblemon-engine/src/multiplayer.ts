@@ -68,7 +68,7 @@ export type SeriesRecord = { player: number; cpu: number; draws: number };
 export type OnlineRoom = {
   kumite?: { tournamentId: string; matchId: string; roundDeadline: number; finishedAt?: number };
   reactions?: ReactionChannel;
-  ranked?: { redirectCode?: string; queuedAt: number; heartbeatAt: number; botAfter: number; bot: boolean; botNextAt?: number; ratings: { player: number; cpu?: number }; settlement?: Partial<Record<Seat, RankedResult>> };
+  ranked?: { redirectCode?: string; queuedAt: number; heartbeatAt: number; botAfter: number; bot: boolean; botNextAt?: number; botPersona?: string; botReactionCount?: number; ratings: { player: number; cpu?: number }; settlement?: Partial<Record<Seat, RankedResult>> };
   rulesVersion: number;
   revision: number;
   gameNumber: number;

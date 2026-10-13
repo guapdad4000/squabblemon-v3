@@ -1,3 +1,4 @@
+import { useSocialRecords, recordLabel } from './PersonalFadeRecord';
 import { useEffect, useRef, useState, type FormEvent, type ReactNode } from 'react';
 import { Link, useLocation, useSearch } from 'wouter';
 import { useQuery } from '@tanstack/react-query';
@@ -27,6 +28,7 @@ export function FriendlyFadesHub({ accountId, crews, crewId, onCrew, roomBusy, o
   onEnteredCode: (value: string) => void;
 }) {
   const social = useSocial();
+  const records = useSocialRecords();
   const [, navigate] = useLocation();
   const params = new URLSearchParams(useSearch());
   const homieParam = normalizeCode(params.get('homie') ?? '');
@@ -102,7 +104,7 @@ export function FriendlyFadesHub({ accountId, crews, crewId, onCrew, roomBusy, o
                 className="ff-homie" disabled={working} data-testid={`button-target-${player.friendCode}`}
                 onClick={() => { setTarget(player.friendCode); setSendError(null); history.replaceState(history.state, '', `${location.pathname}?tab=friends&homie=${player.friendCode}`); }}>
                 <span className="fa-playericon" aria-hidden="true">{player.displayName.charAt(0)}</span>
-                <span className="ff-homie__copy"><strong className="ff-homie__name">{player.displayName}</strong><small className="ff-homie__handle">@{player.username}</small></span>
+                <span className="ff-homie__copy"><strong className="ff-homie__name">{player.displayName}</strong><small className="ff-homie__handle">@{player.username}</small>{records.data?.players.find(r => r.friendCode === player.friendCode) && <small className="fb-tile__record">Your record · {recordLabel(records.data.players.find(r => r.friendCode === player.friendCode)!.personal)}</small>}</span>
                 {target === player.friendCode && <Check size={16} aria-hidden="true" />}
               </button>)}
             </div>
@@ -154,6 +156,7 @@ export function FadeRules() {
 
 function InvitationView({ id, crewPicker, deckId, working }: { id: string; crewPicker: ReactNode; deckId?: string; working: boolean }) {
   const social = useSocial();
+  const records = useSocialRecords();
   const [, navigate] = useLocation();
   const fromSnapshot = social.query.data?.invitations.find(item => item.id === id);
   const [direct, setDirect] = useState<SocialInvitation | null>(null);

@@ -492,3 +492,4 @@ html[data-reduce-motion="true"] .story-briefing__dossier,
 html[data-reduce-motion="true"] .story-briefing__section-title,
 html[data-reduce-motion="true"] .story-briefing__focus,
 html[data-reduce-motion="true"] .story-briefing__title .eyebrow { transform: none; }
+.story-replay-objectives{font-size:11px;line-height:1.6;color:#655636;margin:0 0 14px}.story-briefing__objective[data-earned=true]{color:#3b743b}

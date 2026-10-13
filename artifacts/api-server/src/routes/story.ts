@@ -1,3 +1,4 @@
+import { getStoryObjectiveProgress } from '../lib/storyObjectives';
 import { getAuth } from "@clerk/express";
 import { Router, type IRouter, type Request, type Response } from "express";
 import {
@@ -36,6 +37,11 @@ function userId(req: Request, res: Response): string | null {
   }
   return id;
 }
+
+router.get('/player/story/nodes/:nodeId/objectives', async (req,res):Promise<void>=>{
+ const id=userId(req,res);if(!id)return;res.setHeader('Cache-Control','private, no-store');
+ try{res.json(await getStoryObjectiveProgress(id,String(req.params.nodeId)));}catch(error){if(error instanceof StoryRequestError){res.status(error.status).json({error:error.message});return;}throw error;}
+});
 
 router.get("/player/story", async (req, res): Promise<void> => {
   const id = userId(req, res);

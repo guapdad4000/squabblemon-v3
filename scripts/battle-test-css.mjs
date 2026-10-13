@@ -9,6 +9,7 @@ const viteEnvironment = JSON.stringify({
 });
 registerHooks({
   load(url, context, nextLoad) {
+    if (url.startsWith(browserSourceRoot) && /\.(?:webp|png|jpe?g|svg|mp4|webm)$/.test(url)) return { format: 'module', source: `export default ${JSON.stringify(url)};`, shortCircuit: true };
     if (url.endsWith('.css')) return { format: 'module', source: '', shortCircuit: true };
     const loaded = nextLoad(url, context);
     if (!url.startsWith(browserSourceRoot) || !loaded.source ||

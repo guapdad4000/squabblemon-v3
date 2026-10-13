@@ -1,3 +1,5 @@
+import { useCollectionCardViewport } from '../lib/useCollectionCardViewport';
+import { AutoDeckDialog } from './AutoDeckDialog';
 import { ROOKIE_FOUNDATION_IDS } from '../data';
 import { crewInsights } from '@workspace/squabblemon-engine/insights';
 import { useEffect, useRef, useState } from 'react';
@@ -28,6 +30,7 @@ export function DeckWorkbench({ initial, ownedCardIds, equippedVariants, onSave,
   const [undo, setUndo] = useState<DeckDraft | null>(null);
   const [slot, setSlot] = useState<number | null>(null);
   const [search, setSearch] = useState('');
+  const [autoOpen, setAutoOpen] = useState(false);
   const [guideStep, setGuideStep] = useState(0);
   const [showLessonTip, setShowLessonTip] = useState(true);
   const recruitPool = [...new Set(ownedCardIds)].filter(id => !lesson || ROOKIE_FOUNDATION_IDS.includes(id));
@@ -52,12 +55,14 @@ export function DeckWorkbench({ initial, ownedCardIds, equippedVariants, onSave,
   const searchInput = useRef<HTMLInputElement>(null);
   const bodyRef = useRef<HTMLFieldSetElement>(null);
   const cardScrollRef = useRef<HTMLDivElement>(null);
+  const collectionGridRef = useRef<HTMLDivElement>(null);
   const browseRef = useRef<HTMLDivElement>(null);
   const actionsRef = useRef<HTMLElement>(null);
   const insights = crewInsights(draft.cardIds);
   const legality = validateSavedDeck(draft.cardIds, ownedCardIds, draft.heroCardId);
   const owned = (lesson ? recruitPool : ownedCardIds).map(id => catalogCardById[id]).filter(Boolean);
   const visible = owned.filter(card => `${card.name} ${card.effect} ${card.type}`.toLowerCase().includes(search.toLowerCase())).sort((a,b) => a.cost - b.cost || a.name.localeCompare(b.name));
+  const nearbyCards = useCollectionCardViewport({ gridRef: collectionGridRef, scrollRef: cardScrollRef, catalogKey: visible.map(card => card.catalogId).join('|'), enabled: true, buffer: 120 });
   const selected = slot === null ? null : catalogCardById[draft.cardIds[slot]];
   const dirty = draft.name !== savedDraft.name
     || draft.heroCardId !== savedDraft.heroCardId
@@ -228,8 +233,8 @@ export function DeckWorkbench({ initial, ownedCardIds, equippedVariants, onSave,
           <label className="arsenal-search"><Search aria-hidden="true" /><span className="sr-only">Browse your collection</span><input ref={searchInput} aria-label="Browse your collection" type="search" placeholder="Name, ability, or type…" value={search} onChange={e => setSearch(e.target.value)} /></label>
         </div>
         <div ref={cardScrollRef} className="deck-workbench__card-scroll">
-        <div className="deck-workbench__collection" data-testid="deck-collection-grid">{visible.map(card => <CardPressTarget data-guide-recruit={card.catalogId} card={card} variantId={equippedVariants[card.catalogId]} key={card.catalogId} onClick={() => choose(card.catalogId)} aria-label={`${draft.cardIds.includes(card.catalogId) ? 'Select' : lesson ? `Plan ${card.name} as a replacement` : 'Add'} ${card.name}; hold for card details`}>
-          <CardView card={card} variantId={equippedVariants[card.catalogId]} isBoard fillContainer presentationOnly disableLayout />
+        <div ref={collectionGridRef} className="deck-workbench__collection" data-testid="deck-collection-grid">{visible.map(card => <CardPressTarget data-collection-discovery-card-id={card.catalogId} data-guide-recruit={card.catalogId} card={card} variantId={equippedVariants[card.catalogId]} key={card.catalogId} onClick={() => choose(card.catalogId)} aria-label={`${draft.cardIds.includes(card.catalogId) ? 'Select' : lesson ? `Plan ${card.name} as a replacement` : 'Add'} ${card.name}; hold for card details`}>
+          {nearbyCards === null || nearbyCards.has(card.catalogId) ? <CardView card={card} variantId={equippedVariants[card.catalogId]} isBoard fillContainer presentationOnly disableLayout /> : <span className="deck-workbench__card-placeholder" aria-hidden="true"><b>{card.cost} / {card.power}</b><span>{card.name}</span></span>}
           {draft.cardIds.includes(card.catalogId) && <span className="deck-workbench__in-crew" title="In your gang"><Check size={14} aria-hidden="true" /><span className="sr-only">In your gang</span></span>}
         </CardPressTarget>)}</div>
         {!visible.length && <div className="arsenal-empty"><Search size={24} /><p>No matching cards. Try another name or ability.</p><button className="arsenal-link" onClick={() => setSearch('')}>Clear search</button></div>}
@@ -243,11 +248,7 @@ export function DeckWorkbench({ initial, ownedCardIds, equippedVariants, onSave,
         {(error || externalError) && <p role="alert">{error || externalError}</p>}
       </div>
       <div className="deck-workbench__action-buttons">
-        {!lesson && <button type="button" className="arsenal-link" disabled={busy || deleting} onClick={() => {
-          const next = autoBuildDeck(draft, ownedCardIds);
-          setUndo(draft); setDraft(next); setSlot(null); setPlannedCardId(null);
-          setNotice(next.cardIds.length === DECK_SIZE ? 'Auto-built around your cover. Review the lineup, then save. Undo is available.' : `Added your owned cards. ${DECK_SIZE - next.cardIds.length} more needed for a full deck.`);
-        }}>Auto build</button>}
+        {!lesson && <button type="button" className="arsenal-link" disabled={busy || deleting} onClick={() => setAutoOpen(true)}>Auto build</button>}
         {lesson ? <>
           <button className="arsenal-link deck-workbench__test" disabled={busy} onClick={() => void persist(false)}><Save size={16} aria-hidden="true" />Save deck</button>
           <button data-guide-save="true" className="arsenal-action deck-workbench__save" disabled={busy || !legality.valid} onClick={() => void persist(true)}><GameGlyph name="fight" />{busy ? 'Saving…' : 'Save & review fight goal'}</button>
@@ -257,6 +258,7 @@ export function DeckWorkbench({ initial, ownedCardIds, equippedVariants, onSave,
         </>}
       </div>
     </footer>
+    {autoOpen && <AutoDeckDialog ownedCardIds={ownedCardIds} onClose={() => setAutoOpen(false)} onBuild={element => { const next = autoBuildDeck(draft, ownedCardIds, element); setUndo(draft); setDraft(next); setSlot(null); setPlannedCardId(null); setAutoOpen(false); setNotice(`Built ${element ?? 'a balanced'} crew from your owned cards. Review, save, or Undo.`); }} />}
     {lesson && !busy && showLessonTip && <CoachSpotlight nonBlocking onDismiss={() => setShowLessonTip(false)} narrate={false} target={guideStep === 0 ? '[data-guide-slot="5"]' : guideStep === 1 ? '[data-guide-recruit="' + recruit + '"]' : guideStep === 2 ? '[data-guide-confirm="true"]' : '[data-guide-save="true"]'} step={'YOUR GANG ' + (guideStep + 1) + ' / 4'} title={guideStep === 0 ? (hasTenUniqueOwnedCards ? 'Ten owned cards. Your draw order.' : 'Complete your owned lineup.') : guideStep === 1 ? 'Plan a swap.' : guideStep === 2 ? 'Review before replacing.' : 'Your gang is ready.'}>{error && <strong>{error} Tap the highlighted save button to try again. </strong>}{guideText}</CoachSpotlight>}
   </ArsenalScreen>;
 }

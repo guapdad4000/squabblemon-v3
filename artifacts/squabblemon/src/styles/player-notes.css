@@ -1,0 +1,142 @@
+.auto-deck-dialog {
+  position: fixed;
+  inset: 0;
+  margin: auto;
+  width: min(680px, calc(100vw - 28px));
+  max-height: calc(100dvh - 28px);
+  padding: 0;
+  border: 1px solid #edba52;
+  background: #0e181c;
+  color: #fff1cf;
+  overflow: auto;
+  box-shadow: 0 25px 90px #000b;
+  border-radius: 16px;
+}
+.auto-deck-dialog::backdrop {
+  background: #03090ee8;
+  backdrop-filter: blur(5px);
+}
+.notes-close {
+  position: absolute;
+  right: 14px;
+  top: 12px;
+  z-index: 2;
+  border: 1px solid #ffffff50;
+  color: white;
+  background: #06101c;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  font-size: 25px;
+}
+.auto-deck-dialog header {
+  position: relative;
+  padding: 34px 28px;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse at 80% 90%, #a9582b55, transparent 60%),
+    linear-gradient(110deg, #0a2429, #151222);
+}
+.auto-deck-dialog header > span {
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: #edba52;
+  font-weight: 900;
+}
+.auto-deck-dialog h2 {
+  font-size: clamp(38px, 7vw, 64px);
+  line-height: 0.9;
+  letter-spacing: -0.055em;
+  font-weight: 950;
+  margin: 18px 0;
+}
+.auto-deck-dialog h2 em {
+  color: #ffbb5f;
+}
+.auto-deck-dialog header p {
+  max-width: 65%;
+  font-size: 13px;
+  line-height: 1.5;
+  position: relative;
+  z-index: 1;
+}
+.auto-deck-dialog header img {
+  position: absolute;
+  right: -2%;
+  bottom: -20%;
+  width: 40%;
+  height: 110%;
+  object-fit: contain;
+  filter: drop-shadow(0 0 25px #edba5235);
+}
+.auto-element-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  padding: 22px;
+}
+.auto-element-grid button {
+  border: 1px solid #39575d;
+  border-radius: 10px;
+  min-height: 70px;
+  background: #10272c;
+  color: #e2ede4;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 8px;
+}
+.auto-element-grid button[aria-pressed="true"] {
+  color: #ffdda0;
+  border-color: #edba52;
+  background: #4b3318;
+  box-shadow: 0 0 16px #edba5225;
+}
+.auto-element-grid small {
+  font-size: 10px;
+  opacity: 0.8;
+}
+.auto-element-grid .game-glyph {
+  width: 24px;
+  height: 24px;
+}
+.auto-deck-dialog footer {
+  padding: 0 22px 22px;
+}
+.auto-deck-dialog footer p {
+  font-size: 12px;
+  color: #acbcc1;
+  line-height: 1.6;
+}
+.notes-action {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  border: 1px solid #f3cf88;
+  border-radius: 9px;
+  padding: 13px 22px;
+  background: linear-gradient(#f7c76b, #d09838);
+  color: #1b1711;
+  font-weight: 900;
+  min-height: 44px;
+}
+.notes-action .game-glyph {
+  width: 25px;
+  height: 25px;
+}
+@media (max-width: 500px) {
+  .auto-element-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    padding: 16px;
+    gap: 8px;
+  }
+  .auto-deck-dialog header {
+    padding: 30px 20px;
+  }
+  .auto-deck-dialog header p {
+    max-width: 70%;
+  }
+}

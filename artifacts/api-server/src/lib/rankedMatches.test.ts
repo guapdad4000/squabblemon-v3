@@ -128,6 +128,7 @@ test('ranked routes: human pairing, retries, cancellation race, bot completion, 
     assert.equal((await state(a.code)).updatedAt.getTime(), savedAt.getTime());
   });
 
+  await db.update(profiles).set({ storyProgress: { treasuredStoryProgress: { cleared: true }, fadePark: { ...rankedStats(null), points: 95, bestPoints: 95 } } }).where(eq(profiles.clerkUserId, users[1]));
   const surrenderId = randomUUID();
   const loss = await action(users[0], a, { type: 'surrender' }, surrenderId);
   assert.equal(loss.ranked.result.outcome, 'loss'); assert.equal(loss.ranked.result.after, 0);
@@ -136,9 +137,11 @@ test('ranked routes: human pairing, retries, cancellation race, bot completion, 
   assert.equal((await search(users[1], requestIds[1])).room.status, 'complete', 'lost search acknowledgement cannot create a second match');
   assert.equal((await getLegendBounties(users[0]))[0].nodes[2].progress,0,'surrender is not a full PvP fade');
   assert.equal((await getLegendBounties(users[1]))[0].nodes[2].progress,0,'a surrendered opponent does not advance PvP');
-  const rank = await ok(users[1], '/ranked'); assert.equal(rank.stats.games, 1); assert.equal(rank.stats.points, 25);
+  const rank = await ok(users[1], '/ranked'); assert.equal(rank.stats.games, 1); assert.equal(rank.stats.points, 120);
+  assert.deepEqual(win.ranked.result.rewards.map((reward: any) => reward.tier), ['Bronze']);
   assert.equal((await request(users[1], `/${a.code}/actions`, { expectedRevision: win.revision, requestId: randomUUID(), command: { type: 'rematch' } })).status, 409);
   const preserved = (await db.select().from(profiles).where(eq(profiles.clerkUserId, users[1])))[0];
+  assert.equal(preserved.softCurrency, 250); assert.equal(preserved.packTickets, 1); assert.equal(preserved.styleShards, 15);
   assert.deepEqual(preserved.storyProgress.treasuredStoryProgress, { cleared: true });
   assert.deepEqual(preserved.savedDecks[0].cardIds, [...ROOKIE_CORE_IDS]);
   assert.equal(preserved.ownedCardIds.length, cardCatalog.length);
@@ -160,6 +163,7 @@ test('ranked routes: human pairing, retries, cancellation race, bot completion, 
   await changeState(botQueue.code, r => ({ ...r, ranked: { ...r.ranked!, botAfter: Date.now() - 1 } }));
   let botView = (await ok(users[4], '/ranked')).room as OnlineRoomView;
   assert.equal(botView.status, 'active'); assert.equal(botView.ranked?.opponent, 'bot');
+  assert.match(botView.members.cpu!.name, /Park Bot/); assert(botView.members.cpu!.avatarKey); assert(botView.members.cpu!.banner);
   assert.equal((await state(botView.code)).guestUserId, null, 'synthetic bots never become real accounts');
   assert.equal((await search(users[4])).room.code, botView.code);
   for (let step = 0; step < 160 && botView.status === 'active'; step++) {

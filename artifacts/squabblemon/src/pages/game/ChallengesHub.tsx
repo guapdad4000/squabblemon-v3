@@ -1,3 +1,4 @@
+import { challengeRunResponse } from '../../lib/challengeRunResponse';
 import { lazy, Suspense, useMemo, useState } from "react";
 import { useLocation, useSearch } from "wouter";
 import { BossRaidCabinet } from "../../components/fadecade/BossRaidCabinet";
@@ -6,7 +7,7 @@ import type { ArcadeKind } from "@workspace/squabblemon-engine/arcadeGames";
 import { ArcadeGameCabinet } from "../../components/fadecade/ArcadeCabinets";
 import "../../styles/arcade-games.css";
 import type { PlayerBootstrap } from "@workspace/api-client-react";
-import { useListChallengeRuns } from "@workspace/api-client-react";
+import { useListChallengeRuns, getListChallengeRunsQueryKey } from "@workspace/api-client-react";
 import { starterRecipes, validateSavedDeck, type Deck } from "../../data";
 import { PlayLoop } from "../../components/PlayLoop";
 import { FightTabs } from "./FadePark";
@@ -59,7 +60,7 @@ export function ChallengesHub({
   const [battleConfig, setBattleConfig] = useState<BattleConfig | null>(null);
   useFadecadeMusic(!battleConfig && !waffleOpen && !arcadeKind && !bossOpen && !chessOpen);
   const [roadReturn, setRoadReturn] = useState<RoadReturn | undefined>();
-  const runsQuery = useListChallengeRuns();
+  const runsQuery = useListChallengeRuns({ query: { queryKey: getListChallengeRunsQueryKey(), select: challengeRunResponse } });
   function launchBattle(config: BattleConfig) {
     setRoadReturn(undefined);
     setBattleConfig(config);

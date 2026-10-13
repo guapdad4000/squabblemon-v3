@@ -14,11 +14,12 @@ import '../../styles/story-rewards.css';
 import '../../styles/squabble-house.css';
 import { StoryMovie } from './story/StoryMovie';
 import { AnimatePresence, motion } from 'framer-motion';
-import { useQueryClient } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useLocation, useSearch } from 'wouter';
 import { Link } from 'wouter';
 import {
   getGetPlayerBootstrapQueryKey,
+  customFetch,
   getGetPlayerStoryQueryKey,
   type PlayerBootstrap,
   type StoryCampaign,
@@ -132,7 +133,7 @@ function ChapterRewardStop({ node, progress, finale, onSelect }: {
       <div className="story-award-stop__prizes">
         {node.rewards.length ? node.rewards.map((reward, index) => <RewardPrize key={`${reward.kind}-${reward.id}-${index}`} reward={reward} compact />) : <span className="story-award-stop__none">No first-clear award</span>}
       </div>
-      {node.kind === 'battle' && <div className={`story-award-stop__bonus ${progress?.stars === 3 ? 'is-earned' : ''}`}><Star size={13} fill={progress?.stars === 3 ? 'currentColor' : 'none'} /><span>Perfect clear bonus</span><strong>+1 Pack Ticket</strong></div>}
+      {node.kind === 'battle' && <div className={`story-award-stop__bonus ${progress?.stars === 3 ? 'is-earned' : ''}`}><Star size={13} fill={progress?.stars === 3 ? 'currentColor' : 'none'} /><span>Three-star bonus</span><strong>+1 Pack Ticket</strong></div>}
       <button type="button" disabled={locked} onClick={onSelect} className="story-award-stop__action" data-testid={`button-open-story-stop-${node.id}`}>{locked ? 'Keep playing to unlock' : earned ? node.kind === 'battle' ? 'Replay battle' : 'Visit scene' : node.kind === 'battle' ? 'Start battle' : 'Play scene'} {!locked && <ArrowRight size={15} />}</button>
     </div>
   </article>;
@@ -547,6 +548,8 @@ export function NodeOverlay({
   useEffect(() => { setMovieDismissed(false); setMovieReplay(false); }, [nodeId]);
 
   const entries = useMemo(() => (storyNode ? sceneEntries(storyNode) : []), [storyNode]);
+  const objectiveOwner = queryClient.getQueryData<PlayerBootstrap>(getGetPlayerBootstrapQueryKey())?.profile.id;
+  const objectives = useQuery({queryKey:['story-objectives',objectiveOwner,nodeId],queryFn:({signal})=>customFetch<{nodeId:string;stars:number;completedObjectiveIds:string[]}>(`/api/player/story/nodes/${encodeURIComponent(nodeId)}/objectives`,{signal}),enabled:Boolean(objectiveOwner&&storyNode?.kind==='battle'&&screen==='briefing'),staleTime:30000,retry:1});
   const seen = useMemo(() => new Set(nodeProgress?.dialogueSeen ?? []), [nodeProgress?.dialogueSeen]);
   const pendingEntries = useMemo(() => {
     if (!storyNode) return [];
@@ -708,6 +711,7 @@ export function NodeOverlay({
         <BattleBriefing
           battle={storyNode as StoryBattleNode}
           stars={nodeProgress.stars}
+          completedObjectiveIds={objectives.data?.completedObjectiveIds ?? (queryClient.getQueryData<PlayerBootstrap>(getGetPlayerBootstrapQueryKey())?.profile.storyProgress?.[nodeId] as {completedObjectiveIds?: string[]} | undefined)?.completedObjectiveIds ?? []}
           cleared={nodeProgress.cleared}
           historyButton={historyButton}
           onClose={onClose}
@@ -821,6 +825,7 @@ function DialogueView({
 function BattleBriefing({
   battle,
   stars,
+  completedObjectiveIds = [],
   cleared,
   historyButton,
   onClose,
@@ -828,6 +833,7 @@ function BattleBriefing({
 }: {
   battle: StoryBattleNode;
   stars: number;
+  completedObjectiveIds?: string[];
   cleared: boolean;
   historyButton: React.ReactNode;
   onClose: () => void;
@@ -895,15 +901,15 @@ function BattleBriefing({
             </div>
 
             <div className="story-briefing__card taped">
-              <div className="story-briefing__section-title">Objectives</div>
+              <div className="story-briefing__section-title">Objectives</div><p className="story-replay-objectives">Complete a replay and meet the missing objective. Victory objectives still need a win; other objectives can be earned after your first clear. Earned stars stay saved.</p>
               <div className="text-[10px] font-mono uppercase tracking-wider text-[#555] mb-3 font-bold" data-testid="briefing-best-stars">
-                Best clear: {Math.min(stars, battle.starObjectives.length)} / {battle.starObjectives.length} stars
+                Stars earned: {Math.min(stars, battle.starObjectives.length)} / {battle.starObjectives.length} · earned stars stay saved
               </div>
               <div>
                 {battle.starObjectives.map((objective) => (
-                  <div key={objective.id} className="story-briefing__objective">
-                    <Check size={16} strokeWidth={3} />
-                    <span>{objective.description}</span>
+                  <div key={objective.id} className="story-briefing__objective" data-earned={completedObjectiveIds.includes(objective.id)}>
+                    {completedObjectiveIds.includes(objective.id) ? <Check size={16} strokeWidth={3} /> : <Star size={16} />}
+                    <span>{objective.description}{completedObjectiveIds.includes(objective.id) ? ' · Earned' : ''}</span>
                   </div>
                 ))}
               </div>

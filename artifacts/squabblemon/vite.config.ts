@@ -4,6 +4,14 @@ import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 import { defineConfig, type Plugin } from 'vite';
 
+// Resolve shared rules from this checkout even when dependencies are linked from another worktree.
+const engineDirectory = path.resolve(import.meta.dirname, '../../lib/squabblemon-engine');
+const engineExports = JSON.parse(readFileSync(path.join(engineDirectory, 'package.json'), 'utf8')).exports as Record<string, string>;
+const engineAliases = Object.fromEntries(Object.entries(engineExports)
+  // Vite also matches package-name prefixes; resolve subpaths before the bare package.
+  .sort(([a], [b]) => Number(a === '.') - Number(b === '.'))
+  .map(([entry, target]) => [entry === '.' ? '@workspace/squabblemon-engine' : '@workspace/squabblemon-engine' + entry.slice(1), path.resolve(engineDirectory, target)]));
+
 const rawPort = process.env.PORT;
 
 if (!rawPort) {
@@ -151,6 +159,7 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
+      ...engineAliases,
       '@workspace/api-client-react': path.resolve(import.meta.dirname, '../../lib/api-client-react/src/index.ts'),
       '@': path.resolve(import.meta.dirname, 'src'),
       '@assets': path.resolve(

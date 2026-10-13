@@ -19,13 +19,16 @@ export const WELCOME_REWARD = Object.freeze({
   streetRep: 5,
 });
 export const MISSION_TEMPLATES = [
-  { missionKey: 'weekly-cleanse', cadence: 'weekly', title: 'Clear the Air', description: 'Cleanse a friendly card in a verified practice fade.', goal: 1, rewardCurrency: 'softCurrency', rewardAmount: 100 },
-  { missionKey: 'weekly-movement', cadence: 'weekly', title: 'Make Room', description: 'Win practice with a moved ally in a district you hold.', goal: 1, rewardCurrency: 'softCurrency', rewardAmount: 100 },
-  { missionKey: 'weekly-experiment', cadence: 'weekly', title: 'Try Something New', description: 'Finish practice after changing at least one card from your last tested gang. Drafts do not count.', goal: 1, rewardCurrency: 'softCurrency', rewardAmount: 100 },
+  { missionKey: 'weekly-wide-win', cadence: 'weekly', title: 'All Lanes Live', description: 'Win all 3 districts in 3 solo card fades.', goal: 3, rewardCurrency: 'packTickets', rewardAmount: 1 },
+  { missionKey: 'weekly-fire-crew', cadence: 'weekly', title: 'Fuel the Fire', description: 'Win 5 solo card fades after playing a Fire character.', goal: 5, rewardCurrency: 'softCurrency', rewardAmount: 250 },
+  { missionKey: 'weekly-support-crew', cadence: 'weekly', title: 'Crew Above Ego', description: 'Win 5 solo card fades after playing a Support-role character.', goal: 5, rewardCurrency: 'softCurrency', rewardAmount: 250 },
+  { missionKey: 'weekly-cleanse', cadence: 'weekly', title: 'Clear the Air', description: 'Cleanse an afflicted friendly card in 3 verified practice fades.', goal: 3, rewardCurrency: 'softCurrency', rewardAmount: 100 },
+  { missionKey: 'weekly-movement', cadence: 'weekly', title: 'Make Room', description: 'Win 4 practice fades with a moved ally in a district you hold.', goal: 4, rewardCurrency: 'softCurrency', rewardAmount: 100 },
+  { missionKey: 'weekly-experiment', cadence: 'weekly', title: 'Try Something New', description: 'Finish 3 practice fades with a changed crew. Change at least one card between each tested gang; drafts do not count.', goal: 3, rewardCurrency: 'softCurrency', rewardAmount: 100 },
   { missionKey: 'rookie-road', cadence: 'onboarding', title: 'Finish Rookie Road', description: 'Complete the guided fade and choose your first gang.', goal: 1, rewardCurrency: 'packTickets', rewardAmount: 1 },
-  { missionKey: 'daily-show-up', cadence: 'daily', title: 'Show Up', description: 'Finish one fade today.', goal: 1, rewardCurrency: 'softCurrency', rewardAmount: 100 },
-  { missionKey: 'daily-take-room', cadence: 'daily', title: 'Take A Room', description: 'Win one fade today.', goal: 1, rewardCurrency: 'softCurrency', rewardAmount: 150 },
-  { missionKey: 'weekly-main-character', cadence: 'weekly', title: 'Main Character Week', description: 'Finish five fades this week. No streak required.', goal: 5, rewardCurrency: 'packTickets', rewardAmount: 2 },
+  { missionKey: 'daily-show-up', cadence: 'daily', title: 'Show Up', description: 'Finish 3 fades today.', goal: 3, rewardCurrency: 'softCurrency', rewardAmount: 100 },
+  { missionKey: 'daily-take-room', cadence: 'daily', title: 'Take A Room', description: 'Win 2 fades today.', goal: 2, rewardCurrency: 'softCurrency', rewardAmount: 150 },
+  { missionKey: 'weekly-main-character', cadence: 'weekly', title: 'Main Character Week', description: 'Finish 15 fades this week. No streak required.', goal: 15, rewardCurrency: 'packTickets', rewardAmount: 2 },
 ] as const;
 export const MAX_DECK_SLOTS = 24;
 export const SHOP_OFFERS = [

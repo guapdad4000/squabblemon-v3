@@ -1,3 +1,5 @@
+import { PARK_BOT_PERSONAS, parkBotPersona, parkBotUsesSquabble, reactParkBot } from '@workspace/squabblemon-engine/parkBots';
+import { RANKED_SEASON, rankMilestoneRewards } from '@workspace/squabblemon-engine/ranked';
 import { addReaction, ownedReactions, resolveReactionTray, ReactionError } from '@workspace/squabblemon-engine/reactions';
 import { progressBountyEvent } from './legendBountyProgress';
 import type { BountyTask } from '@workspace/squabblemon-engine/legendBounties';
@@ -8,6 +10,7 @@ import {
   onlineCommandsTable,
   onlineRoomsTable,
   playerProfilesTable,
+  playerCollectionClaimsTable,
 } from "@workspace/db";
 import {
   ROOKIE_CORE_IDS,
@@ -313,6 +316,7 @@ async function accessFriendRoomOperation(code: string, userId: string, mutation?
       if (!(error instanceof OnlineError)) throw error;
       failure = error;
     }
+    room = reactParkBot(restore(row.state), room, now);
     room = await settleRankedRoom(tx, room, now, row.id);
     room = await syncRoomInvitation(tx, row.id, room);
     // Persist expired turns even when rejecting a late/stale action.
@@ -378,8 +382,18 @@ async function settleRankedRoom(tx: Tx, room: OnlineRoom, now: number, roomId: s
     const outcome = room.winner === 'draw' ? 'draw' : room.winner === seat ? 'win' : 'loss';
     const rival = seat === 'player' ? 'cpu' : 'player';
     const award = awardRank(current, outcome, room.ranked.ratings[rival] ?? 1000, room.ranked.bot);
-    await tx.update(playerProfilesTable).set({ storyProgress: { ...profile.storyProgress, fadePark: award.stats }, updatedAt: new Date(now) }).where(eq(playerProfilesTable.clerkUserId, userId));
-    settlement[seat] = award.result;
+    const rewards = [];
+    for (const reward of rankMilestoneRewards(0, award.stats.bestPoints)) {
+      const [receipt] = await tx.insert(playerCollectionClaimsTable).values({ clerkUserId: userId,
+        milestoneKey: `rank:${RANKED_SEASON}:${reward.tier}`, reward }).onConflictDoNothing().returning();
+      if (receipt) rewards.push(reward);
+    }
+    await tx.update(playerProfilesTable).set({ storyProgress: { ...profile.storyProgress, fadePark: award.stats },
+      softCurrency: sql`${playerProfilesTable.softCurrency} + ${rewards.reduce((total, reward) => total + reward.softCurrency, 0)}`,
+      packTickets: sql`${playerProfilesTable.packTickets} + ${rewards.reduce((total, reward) => total + reward.packTickets, 0)}`,
+      styleShards: sql`${playerProfilesTable.styleShards} + ${rewards.reduce((total, reward) => total + reward.styleShards, 0)}`,
+      updatedAt: new Date(now) }).where(eq(playerProfilesTable.clerkUserId, userId));
+    settlement[seat] = { ...award.result, rewards };
   }
   return { ...room, revision: room.revision + 1, ranked: { ...room.ranked, settlement } };
 }
@@ -397,10 +411,11 @@ function advanceRankedBot(input: OnlineRoom, now: number): OnlineRoom {
     const choice = chooseCpuPlay(room.match, false);
     const card = choice && room.match.cpuHand.find(c => c.instanceId === choice.instanceId);
     const command: OnlineCommand = choice ? { type: 'play', ...choice,
-      squabble: !room.match.squabbleByOwner?.cpu && room.match.round >= 4 && (card?.basePower ?? 0) >= 4,
+      squabble: parkBotUsesSquabble(room, card),
     } : { type: 'end-turn' };
-    room = applyOnlineCommand(room, 'cpu', command, Math.min(now, (room.deadline ?? now + 1) - 1));
-    room = { ...room, ranked: { ...room.ranked!, botNextAt: now + 900 } };
+    const previous = room;
+    room = reactParkBot(previous, applyOnlineCommand(room, 'cpu', command, Math.min(now, (room.deadline ?? now + 1) - 1)), now);
+    room = { ...room, ranked: { ...room.ranked!, botNextAt: now + parkBotPersona(room.ranked?.botPersona).pace } };
     if (room.status === 'active' && room.activeSeat === 'player') room = { ...room, deadline: now + TURN_SECONDS * 1000 };
   }
   return room;
@@ -437,7 +452,7 @@ async function matchWaitingRoom(tx: Tx, own: RoomRow, input: OnlineRoom, now: nu
     const rival = restore(candidate.state);
     if (!rival.ranked || rival.members.cpu) continue;
     const waited = Math.max(now - room.ranked!.queuedAt, now - rival.ranked.queuedAt);
-    const range = waited >= 8000 ? Infinity : 200 + Math.floor(waited / 1000) * 100;
+    const range = waited >= 4000 ? Infinity : 300 + Math.floor(waited / 1000) * 150;
     if (Math.abs(room.ranked!.ratings.player - rival.ranked.ratings.player) > range) continue;
     const joined = readyRanked({ ...rival, ranked: { ...rival.ranked,
       ratings: { player: rival.ranked.ratings.player, cpu: room.ranked!.ratings.player },
@@ -451,10 +466,11 @@ async function matchWaitingRoom(tx: Tx, own: RoomRow, input: OnlineRoom, now: nu
     const recipe = starterRecipes[randomInt(starterRecipes.length)];
     const rookie = (await tx.select({ progress: playerProfilesTable.storyProgress }).from(playerProfilesTable).where(eq(playerProfilesTable.clerkUserId, own.hostUserId)))[0];
     const beginner = rankedStats(rookie?.progress.fadePark).points < 100;
-    const bot: OnlineMember = { userId: `park-bot:${own.code}`, name: 'Park Bot', level: beginner ? 3 : 10, ready: false,
-      deck: { id: 'park-bot', name: 'Park Regulars', hero: beginner ? 'hooper' : recipe.hero,
+    const persona = PARK_BOT_PERSONAS[parseInt(own.code.slice(-4), 16) % PARK_BOT_PERSONAS.length];
+    const bot: OnlineMember = { userId: `park-bot:${own.code}`, name: `${persona.name} · Park Bot`, avatarKey: persona.avatarKey, banner: { cardId: persona.bannerCardId, finish: 'base' }, level: beginner ? 3 : 10, ready: false,
+      deck: { id: 'park-bot', name: persona.personality, hero: beginner ? 'hooper' : recipe.hero,
         cards: catalogIdsToEngineIds(beginner ? [...ROOKIE_CORE_IDS] : recipe.catalogCardIds) } };
-    room = readyRanked({ ...room, ranked: { ...room.ranked!, bot: true, botNextAt: now + 900,
+    room = readyRanked({ ...room, ranked: { ...room.ranked!, bot: true, botPersona: persona.id, botReactionCount: 0, botNextAt: now + persona.pace,
       ratings: { player: room.ranked!.ratings.player, cpu: room.ranked!.ratings.player },
     } }, bot, now);
   }

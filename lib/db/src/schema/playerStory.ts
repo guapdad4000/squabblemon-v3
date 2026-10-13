@@ -14,6 +14,7 @@ import { playerProfilesTable } from "./playerProfiles";
 
 export type PlayerStoryBossProgress = {
   highestPhase: number;
+  completedObjectiveIds?: string[];
 };
 
 export type PlayerStoryReward = {

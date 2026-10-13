@@ -1,3 +1,4 @@
+import { progressBountyEvent, standardBountyTasks } from '../lib/legendBountyProgress';
 import { randomUUID } from "node:crypto";
 import { avatarSticker } from '@workspace/squabblemon-engine/cosmetics';
 import { deliverLatePatchLetters } from "../lib/patches";
@@ -36,6 +37,8 @@ import {
   getDistrictResults,
   getMatchWinner,
   getStoryStars,
+  mergeStoryObjectiveProgress,
+  recoverLegacyStoryObjectiveIds,
   type StoryEncounterSnapshot,
   verifyMatchTranscript,
   verifyStoryMatchTranscript,
@@ -962,8 +965,24 @@ router.post(
                 eq(playerStoryNodesTable.nodeId, storyProgression.nodeId),
               ),
             );
+          const [rewardProfile] = await tx.select().from(playerProfilesTable).where(eq(playerProfilesTable.clerkUserId,userId));
+          if (rewardProfile) {
+            const progress = await progressBountyEvent(tx,rewardProfile,`match:${match.id}`,standardBountyTasks(verifiedMatch,'story',verifiedOutcome,districtsWon,false));
+            if (progress !== rewardProfile.storyProgress) await tx.update(playerProfilesTable).set({storyProgress:progress}).where(eq(playerProfilesTable.clerkUserId,userId));
+          }
           const won = verifiedOutcome === "win";
-          const stars = getStoryStars(verifiedMatch);
+          let savedObjectiveIds = prior?.bossProgress.completedObjectiveIds ?? [];
+          if (prior?.stars && !prior.bossProgress.completedObjectiveIds) {
+            const legacyReceipts = await tx.select().from(playerMatchesTable).where(and(
+              eq(playerMatchesTable.clerkUserId, userId), eq(playerMatchesTable.storyNodeId, storyProgression.nodeId),
+              isNotNull(playerMatchesTable.completedAt), eq(playerMatchesTable.outcome, 'win'),
+            ));
+            savedObjectiveIds = recoverLegacyStoryObjectiveIds(legacyReceipts.map(receipt => ({ ...receipt,
+              objectives: (receipt.storyEncounterSnapshot as unknown as StoryEncounterSnapshot | null)?.starObjectives ?? [],
+            })));
+          }
+          const objectiveProgress = mergeStoryObjectiveProgress(verifiedMatch, savedObjectiveIds, prior?.stars ?? 0, prior?.cleared ?? false);
+          const stars = objectiveProgress.stars;
           firstStoryClear = won && !prior?.cleared;
           const canonicalCleared = (prior?.cleared ?? false) || won;
           const canonicalStars = Math.max(prior?.stars ?? 0, stars);
@@ -984,7 +1003,7 @@ router.post(
               wins: won ? 1 : 0,
               lastOutcome: verifiedOutcome,
               dialogueSeen: prior?.dialogueSeen ?? [],
-              bossProgress: { highestPhase },
+              bossProgress: { highestPhase, completedObjectiveIds: objectiveProgress.completedObjectiveIds },
               firstClearedAt: won ? now : null,
               lastPlayedAt: now,
             })
@@ -999,7 +1018,7 @@ router.post(
                 attempts: sql`${playerStoryNodesTable.attempts} + 1`,
                 wins: sql`${playerStoryNodesTable.wins} + ${won ? 1 : 0}`,
                 lastOutcome: verifiedOutcome,
-                bossProgress: { highestPhase },
+                bossProgress: { highestPhase, completedObjectiveIds: objectiveProgress.completedObjectiveIds },
                 firstClearedAt: prior?.firstClearedAt ?? (won ? now : null),
                 lastPlayedAt: now,
               },
@@ -1042,7 +1061,7 @@ router.post(
             .set({
               storyChapter: sql`greatest(${playerProfilesTable.storyChapter}, ${chapterNumber})`,
               storyNode: sql`case when ${playerProfilesTable.storyChapter} < ${chapterNumber} then ${nodeNumber} when ${playerProfilesTable.storyChapter} = ${chapterNumber} then greatest(${playerProfilesTable.storyNode}, ${nodeNumber}) else ${playerProfilesTable.storyNode} end`,
-              storyProgress: sql`coalesce(${playerProfilesTable.storyProgress}, '{}'::jsonb) || ${JSON.stringify({ [storyProgression.nodeId]: { cleared: canonicalCleared, stars: canonicalStars } })}::jsonb`,
+              storyProgress: sql`coalesce(${playerProfilesTable.storyProgress}, '{}'::jsonb) || ${JSON.stringify({ [storyProgression.nodeId]: { cleared: canonicalCleared, stars: canonicalStars, completedObjectiveIds: objectiveProgress.completedObjectiveIds } })}::jsonb`,
             })
             .where(eq(playerProfilesTable.clerkUserId, userId));
         }

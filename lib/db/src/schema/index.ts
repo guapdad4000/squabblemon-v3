@@ -11,3 +11,4 @@ export * from './paymentOrders';
 export * from './social';
 export * from './eventFeedback';
 export * from './patches';
+export * from './communityDecks';

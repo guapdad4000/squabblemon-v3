@@ -1,3 +1,4 @@
+import { getSocialRecords } from '../lib/socialRecords';
 import { getAuth } from "@clerk/express";
 import { Router, type Request, type Response } from "express";
 import * as schemas from "@workspace/api-zod";
@@ -31,6 +32,7 @@ const endpoint = (output: Parser, run: (req: Request, userId: string) => Promise
       res.status(503).json({ error: "Homies are temporarily unavailable. Please retry." });
     }
   };
+router.get("/social/records", endpoint({ parse: value => value }, (req, userId) => getSocialRecords(userId, typeof req.query.room === "string" ? req.query.room : undefined)));
 router.get("/social", endpoint(schemas.GetSocialStateResponse, (_req, userId) => getSocialState(userId)));
 router.get("/social/search", endpoint(schemas.SearchSocialPlayersResponse, (req, userId) => {
   const parsed = schemas.SearchSocialPlayersQueryParams.safeParse(req.query);

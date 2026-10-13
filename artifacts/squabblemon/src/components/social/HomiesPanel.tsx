@@ -1,3 +1,4 @@
+import { useSocialRecords, recordLabel } from './PersonalFadeRecord';
 import { useEffect, useRef, useState, type CSSProperties, type KeyboardEvent } from 'react';
 import { useLocation, useSearch } from 'wouter';
 import type { SocialPlayer } from '@workspace/api-client-react';
@@ -17,6 +18,7 @@ type Section = typeof SECTIONS[number];
 
 export function HomiesPanel({ onBusyChange }: { onBusyChange: (busy: boolean) => void }) {
   const social = useSocial();
+  const records = useSocialRecords();
   const [, navigate] = useLocation();
   const linkedCode = linkedFriendCode(useSearch());
   const { query } = social;
@@ -87,6 +89,7 @@ export function HomiesPanel({ onBusyChange }: { onBusyChange: (busy: boolean) =>
                 <strong className="fb-tile__name">{p.displayName}</strong>
                 <span className="fb-handle">@{p.username}</span>
                 <Presence player={p} />
+                <span className="fb-tile__record">{records.data?.players.find(r => r.friendCode === p.friendCode) ? `Overall · ${recordLabel(records.data.players.find(r => r.friendCode === p.friendCode)!.overall)}` : records.isError ? 'Record unavailable' : 'Loading record…'}</span>
                 <span className="fb-tile__actions">
                   <button type="button" className="sq-btn sq-btn--primary" onClick={() => invite(p)} aria-label={`Invite ${p.displayName} to a Friendly Fade`} data-testid={`button-invite-${p.username}`}><Swords size={15} />Fade</button>
                   <button type="button" className="sq-btn sq-btn--ghost" disabled={disabled} aria-label={`Remove ${p.displayName}`} data-testid={`button-remove-${p.username}`}

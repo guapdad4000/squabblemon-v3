@@ -1,0 +1,37 @@
+.personal-fade-record {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem 1rem;
+  padding: 0.8rem;
+  color: #f8e6b5;
+  background: linear-gradient(115deg, #101c27, #192b38);
+  border-left: 3px solid #ffd369;
+  font-family: var(--font-display, sans-serif);
+  text-align: center;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+.personal-fade-record > b {
+  font-size: 1.3rem;
+  color: #ffd369;
+}
+.personal-fade-record small {
+  flex-basis: 100%;
+  opacity: 0.8;
+}
+.personal-fade-record__homie {
+  flex-basis: 100%;
+  color: #73e2c3;
+  letter-spacing: 0.12em;
+}
+.personal-fade-record[data-homie] {
+  box-shadow: 0 0 18px #46d5bd25;
+}
+.fb-tile__record {
+  font-size: 0.8rem;
+  color: #fde2a0;
+  text-align: center;
+  margin: 0.25rem 0;
+}

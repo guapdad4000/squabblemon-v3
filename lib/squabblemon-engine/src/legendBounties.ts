@@ -5,7 +5,7 @@ export type BountyNode = {id:string;title:string;description:string;tip:string;t
 const node=(id:string,title:string,task:BountyTask,goal:number,description:string,tip:string,href:string,index:number):BountyNode=>({id,title,task,goal,description,tip,href,reward:index===0?{softCurrency:150,packTickets:0,styleShards:0}:index===1?{softCurrency:0,packTickets:1,styleShards:0}:{softCurrency:250,packTickets:0,styleShards:10}});
 const training='/game/training',friends='/game/online?tab=friends',pvp='/game/online',story='/game/story',challenge='/game/challenges';
 /** Chain alternates inward from the original bar's outer seats. */
-export const LEGEND_BOUNTIES = [
+const BASE_LEGEND_BOUNTIES = [
  {id:'block-party-titan',name:'Block Party Titan',title:'Everybody Outside',theme:'titan',accent:'#f5a137',flavor:'Turn up the speakers. Show the whole block you can hold your own.',nodes:[
  node('soundcheck','Soundcheck','training',3,'Finish 3 training fades.','Complete the full fade. Wins, draws and losses count.',training,0),
  node('invite-the-block','Invite the Block','friendly',2,'Finish 2 friendly fades.','Invite a friend and play to the final result. Surrenders do not count.',friends,1),
@@ -35,6 +35,10 @@ export const LEGEND_BOUNTIES = [
  node('family-table','Family Table','support-win',3,'Win 3 verified fades after playing a Support-role card.','Play the support card during the battle, then finish with a win.',training,1),
  node('everybody-eats','Everybody Eats','boss-win',1,'Win an After Hours boss battle.','Bring your support crew into an After Hours activity.',challenge,2)]},
 ] as const;
+export const LEGEND_BOUNTIES = BASE_LEGEND_BOUNTIES.map(bounty => ({ ...bounty, nodes: bounty.nodes.map(n => {
+ const goal = n.goal * 2;
+ return { ...n, goal, description: (new RegExp('\\b' + n.goal + '\\b').test(n.description) ? n.description.replace(new RegExp('\\b' + n.goal + '\\b'), String(goal)) : n.description.replace(/^Win (a|an) /, `Win ${goal} `).replace(/battle\.$/, 'battles.')) };
+}) }));
 export const LEGEND_SEAT_ORDER=['block-party-titan','p-tang','folks','foodz','kyle','simmy','ashlee'] as const;
 export const legendBountyKey=(id:string)=>`legend-bar:${id}:v1`;
 export const legendNodeKey=(id:string,nodeId:string)=>`legend-bar:${id}:node:${nodeId}:v2`;

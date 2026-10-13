@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { ApiError, customFetch } from "@workspace/api-client-react";
+import { useEffect, useRef, useState } from "react";
+import { ApiError, customFetch, getGetPlayerBootstrapQueryKey } from "@workspace/api-client-react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type {
   OnlineCommand,
@@ -173,6 +173,18 @@ export function useFriendMatch(accountId: string, code?: string) {
       document.removeEventListener("visibilitychange", visible);
     };
   }, [accountId, code, client]);
+  const settledReceipt = useRef('');
+  useEffect(() => {
+    const room = query.data;
+    if (room?.status !== 'complete') return;
+    const receipt = `${accountId}:${room.code}:${room.gameNumber}`;
+    if (settledReceipt.current === receipt) return;
+    settledReceipt.current = receipt;
+    void client.invalidateQueries({ queryKey: ['social-records'] });
+    void client.invalidateQueries({ queryKey: getGetPlayerBootstrapQueryKey() });
+    void client.invalidateQueries({ queryKey: ['park-standings', accountId] });
+    void client.invalidateQueries({ queryKey: ['fade-park', accountId] });
+  }, [query.data?.status, query.data?.gameNumber, query.data?.ranked?.result, accountId, code, client]);
   return {
     connected: isOnlineConnectionFresh({
       online, hasData: !!query.data, dataUpdatedAt: query.dataUpdatedAt, now,

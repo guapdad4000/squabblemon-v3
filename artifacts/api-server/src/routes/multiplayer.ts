@@ -1,3 +1,4 @@
+import { rankedStandings } from '../lib/rankedStandings';
 import { getAuth } from "@clerk/express";
 import { Router, type Request, type Response } from "express";
 import {
@@ -117,6 +118,7 @@ router.post(
     return createFriendRoom(userId, deckId(b.deckId), requestId(b.requestId));
   }, 201),
 );
+router.get('/multiplayer/ranked/standings', endpoint((_req, userId) => rankedStandings(userId)));
 router.get('/multiplayer/ranked', endpoint((_req, userId) => rankedLobby(userId)));
 router.post('/multiplayer/ranked/search', endpoint((req, userId) => {
   const b = bodyOf(req, ['deckId', 'requestId']);

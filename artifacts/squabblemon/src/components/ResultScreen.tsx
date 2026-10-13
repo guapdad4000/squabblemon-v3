@@ -84,8 +84,9 @@ export function ResultScreen({
   const isTutorial = Boolean(tutorial);
   const playerDeck = customPlayerDeck || decks.find((deck) => deck.id === m.playerDeck) || decks[0];
   const objectiveResults = evaluateStoryStarObjectives(m);
-  const earnedStars = objectiveResults.filter((objective) => objective.achieved).length;
-  const objectiveHits = new Map(objectiveResults.map((objective) => [objective.id, objective.achieved]));
+  const savedObjectives: string[] = storyMetadata?.completedObjectiveIds ?? [];
+  const earnedStars = storyMetadata?.stars ?? objectiveResults.filter((objective) => objective.achieved).length;
+  const objectiveHits = new Map(objectiveResults.map((objective) => [objective.id, objective.achieved || savedObjectives.includes(objective.id)]));
   const retry = (
     <div className="result-stage__save" role="alert">
       <p>

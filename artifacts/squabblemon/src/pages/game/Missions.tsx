@@ -35,6 +35,7 @@ export function Missions({ bootstrap }: { bootstrap: PlayerBootstrap }) {
 
   const search = useSearch();
   useEffect(() => { const params = new URLSearchParams(search); if (params.get('view') === 'mastery') setTab('mastery'); else if (params.has('mission') || params.has('mythic')) setTab('bounties'); }, [search]);
+  const [sweepActive, setSweepActive] = useState(false);
   const [claimState, setClaimState] = useState<{ id: string; phase: BountyPhase } | null>(null);
 
   const [payout,setPayout]=useState<BountyPayoutData|null>(null);
@@ -77,6 +78,7 @@ export function Missions({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   async function handleClaim(missionId: string) {
     if (claimLock.current || !bootstrap.missions.some(m => m.id === missionId && m.status === 'claimable')) return;
     claimLock.current = true;
+    setSweepActive(false);
     lastClaimRef.current = missionId;
     setError(null);
     setClaimState({ id: missionId, phase: 'loading' });
@@ -135,7 +137,7 @@ export function Missions({ bootstrap }: { bootstrap: PlayerBootstrap }) {
       ...(legends.data??[]).filter(b=>b.state==='ready').map(b=>({kind:'legend',id:b.id,nodeId:b.currentNodeId})),
     ];
     if (!tasks.length) return;
-    claimLock.current=true;setError(null);
+    claimLock.current=true;setSweepActive(!legendId);setError(null);
     let latest=bootstrap, collected=0, lastId=tasks[0].id;
     let savedPayout:BountyPayoutData|null=null;
     setClaimState({id:lastId,phase:'loading'});
@@ -199,11 +201,8 @@ export function Missions({ bootstrap }: { bootstrap: PlayerBootstrap }) {
         </div>
       </header>}
 
-      {tab === 'bounties' && <div className="bounty-collect-toolbar"><div><span>THE PAYOUT DESK</span><h2>Put in work. Cash out.</h2><p>Every confirmed reward goes straight into your bag.</p></div><button type="button" disabled={!!claimState || ready+legendReady===0} onClick={()=>void collectAll()}>{claimState ? 'Collecting…' : `Collect all · ${ready+legendReady}`}</button></div>}
-      <button type="button" className="bounty-mastery-strip" aria-expanded={tab === 'mastery'} onClick={() => { if (!claimLock.current) setTab(tab === 'mastery' ? 'bounties' : 'mastery'); }} disabled={!!claimState}>
-        <GameGlyph name="mastery" /><b>{tab === 'mastery' ? 'Back to Bounties' : 'Hall of Hands'}</b>
-        <small>{availableCareerChoices(readCareer(bootstrap.profile.storyProgress.gameplay))} rewards ready</small><span>{tab === 'mastery' ? '←' : 'View →'}</span>
-      </button>
+      {tab === 'bounties' && <div className="bounty-collect-toolbar"><span>THE PAYOUT DESK</span><button type="button" disabled={!!claimState || ready+legendReady===0} onClick={()=>void collectAll()}>{claimState ? 'Collecting…' : `Collect all · ${ready+legendReady}`}</button></div>}
+      {tab === 'mastery' && <button type="button" className="bounty-hall-return" onClick={()=>setTab('bounties')}>← Back to Bounties</button>}
 
       {tab === 'mastery' ? (
         <div className="hall-page-stage">
@@ -304,23 +303,23 @@ export function Missions({ bootstrap }: { bootstrap: PlayerBootstrap }) {
             })}
           </div>
         </section>
-        <aside className="bounty-award-case" aria-label="Your trophy cabinet"><img src={getAssetUrl('assets/bounty-hunter/v3/award-case.webp')} alt=""/><div><img src={getAssetUrl('assets/progression/raised-fist.webp')} alt="Fist trophy"/><h2>Hall of Hands</h2><b>{bootstrap.profile.unlockedCosmeticIds.filter(id=>/^(badge|mastery):/.test(id)).length}</b><p>Achievements earned</p><small>Master characters and conquer the block.</small></div></aside>
+        <button type="button" className="bounty-award-case" aria-label="Open Hall of Hands from your trophy cabinet" disabled={!!claimState} onClick={()=>{if(!claimLock.current)setTab('mastery');}}><img src={getAssetUrl('assets/bounty-hunter/v3/award-case.webp')} alt=""/><div><img src={getAssetUrl('assets/progression/raised-fist.webp')} alt="Fist trophy"/><h2>Hall of Hands</h2><b>{bootstrap.profile.unlockedCosmeticIds.filter(id=>/^(badge|mastery):/.test(id)).length}</b><small>{availableCareerChoices(readCareer(bootstrap.profile.storyProgress.gameplay)) ? `${availableCareerChoices(readCareer(bootstrap.profile.storyProgress.gameplay))} rewards ready · OPEN →` : 'OPEN →'}</small></div></button>
         </div>
       )}
       {tab === 'bounties' && <LegendBountyBar openJourney={openJourney} statuses={legends.data ?? []} busy={!!claimState} onClaim={id => void collectAll(id)} loading={legends.isPending} error={legends.isError} onRetry={() => void legends.refetch()} />}
       {tab === 'bounties' && <><StarterMythic bootstrap={bootstrap} placement="banner" /><JohnHenryMythic bootstrap={bootstrap} placement="banner" /></>}
       </div>
-      {tab === 'bounties' && (
+      {tab === 'bounties' && claimState && (
           <div className="bounty-hunter__pov" data-phase={claimState?.phase || 'idle'} data-testid="bounty-pistol" aria-hidden="true">
             <div className="bounty-hunter__pov-inner">
               <img
                 className="bounty-hunter__pistol bounty-hunter__pistol--idle"
-                src={getAssetUrl('assets/bounty-hunter/v3/minigun-idle.webp')}
+                src={getAssetUrl(sweepActive ? 'assets/bounty-hunter/v3/minigun-idle.webp' : 'assets/bounty-hunter/pistol-idle.webp')}
                 alt=""
               />
               <img
                 className="bounty-hunter__pistol bounty-hunter__pistol--fired"
-                src={getAssetUrl('assets/bounty-hunter/v3/minigun-fired.webp')}
+                src={getAssetUrl(sweepActive ? 'assets/bounty-hunter/v3/minigun-fired.webp' : 'assets/bounty-hunter/pistol-fired.webp')}
                 alt=""
               />
             </div>

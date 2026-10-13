@@ -1,5 +1,5 @@
 export const RANKED_SEASON = 'fade-park-preseason-v1';
-export const RANKED_BOT_WAIT_MS = 12_000;
+export const RANKED_BOT_WAIT_MS = 6_000;
 export const RANKED_QUEUE_IDLE_MS = 30_000;
 export const RANK_TIERS = [
   { name: 'Rookie', floor: 0 }, { name: 'Bronze', floor: 100 },
@@ -11,7 +11,13 @@ export type RankedStats = {
   season: string; points: number; rating: number; wins: number; losses: number;
   draws: number; botWins: number; games: number; streak: number; bestPoints: number;
 };
-export type RankedResult = { before: number; after: number; delta: number; tier: string; outcome: 'win' | 'loss' | 'draw'; bot: boolean };
+export type RankReward = { tier: string; softCurrency: number; packTickets: number; styleShards: number };
+export type RankedResult = { before: number; after: number; delta: number; tier: string; outcome: 'win' | 'loss' | 'draw'; bot: boolean; rewards?: RankReward[] };
+/** Season milestones are paid once, including skipped tiers. Demotion cannot farm them. */
+export function rankMilestoneRewards(beforeBest: number, after: number): RankReward[] {
+  return RANK_TIERS.flatMap((tier, index) => index > 0 && beforeBest < tier.floor && after >= tier.floor
+    ? [{ tier: tier.name, softCurrency: 150 + index * 100, packTickets: index < 4 ? 1 : 2, styleShards: index * 15 }] : []);
+}
 export function rankedStats(value: unknown): RankedStats {
   const r = value && typeof value === 'object' ? value as Partial<RankedStats> : {};
   const count = (n: unknown, fallback = 0) => typeof n === 'number' && Number.isFinite(n) ? Math.max(0, Math.floor(n)) : fallback;

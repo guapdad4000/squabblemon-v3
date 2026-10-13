@@ -1,5 +1,5 @@
-import {and,eq} from 'drizzle-orm';
-import {db,playerCollectionClaimsTable,type PlayerProfileRecord} from '@workspace/db';
+import {and,eq,isNull,sql} from 'drizzle-orm';
+import {db,playerCollectionClaimsTable,playerMissionsTable,type PlayerProfileRecord} from '@workspace/db';
 import {legendBountyStatuses,advanceBountyCounters,type BountyTask} from '@workspace/squabblemon-engine/legendBounties';
 import {battleAchievements} from '@workspace/squabblemon-engine/insights';
 import {cards} from '@workspace/squabblemon-engine/data';
@@ -10,6 +10,10 @@ export async function progressBountyEvent(tx:Tx,profile:PlayerProfileRecord,even
  const key=`legend-event:${eventId}`;
  const [seen]=await tx.select().from(playerCollectionClaimsTable).where(and(eq(playerCollectionClaimsTable.clerkUserId,profile.clerkUserId),eq(playerCollectionClaimsTable.milestoneKey,key)));
  if(seen)return profile.storyProgress;
+ for (const [task, missionKey] of [['sweep-win','weekly-wide-win'],['fire-win','weekly-fire-crew'],['support-win','weekly-support-crew']] as const) {
+  if (!tasks.includes(task)) continue;
+  await tx.update(playerMissionsTable).set({progress:sql`least(${playerMissionsTable.goal},${playerMissionsTable.progress}+1)`}).where(and(eq(playerMissionsTable.clerkUserId,profile.clerkUserId),eq(playerMissionsTable.missionKey,missionKey),isNull(playerMissionsTable.claimedAt)));
+ }
  const receipts=await tx.select({key:playerCollectionClaimsTable.milestoneKey}).from(playerCollectionClaimsTable).where(eq(playerCollectionClaimsTable.clerkUserId,profile.clerkUserId));
  const statuses=legendBountyStatuses(null,[],profile.ownedCardIds,receipts.map(r=>r.key),profile.storyProgress.bountyCampaign);
  const counters=advanceBountyCounters(statuses,profile.storyProgress.bountyCampaign,tasks);

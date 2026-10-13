@@ -38,7 +38,9 @@
     "./legendBounties": "./src/legendBounties.ts",
     "./parkChess": "./src/parkChess.ts",
     "./parkChessLessons": "./src/parkChessLessons.ts",
-    "./parkChessRating": "./src/parkChessRating.ts"
+    "./parkChessRating": "./src/parkChessRating.ts",
+    "./parkBots": "./src/parkBots.ts",
+    "./ranked": "./src/ranked.ts"
   },
   "dependencies": {
     "chess.js": "1.4.0"

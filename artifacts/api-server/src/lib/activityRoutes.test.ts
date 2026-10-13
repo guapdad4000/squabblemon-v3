@@ -12,6 +12,7 @@ test('real activity routes validate drafts, normalize combat, replay events and 
  const {eq}=await import('drizzle-orm');
  const {ensurePlayer}=await import('./playerState');
  const {default:router}=await import('../routes/player');
+ const {default:storyRouter}=await import('../routes/story');
  const {default:collectionRouter}=await import('../routes/collection');
  const userId=`activity-http-${randomUUID()}`;
  const savedDeckId=randomUUID(); // The crew builder creates 36-character IDs.
@@ -20,7 +21,7 @@ test('real activity routes validate drafts, normalize combat, replay events and 
  const app=express();app.use(express.json());
  // Test-only authenticated session; production middleware is never modified.
  app.use((req,_res,next)=>{(req as any).auth=Object.assign(()=>({userId,sessionId:'test',tokenType:'session_token',isAuthenticated:true}),{[Symbol.for('@clerk/express.auth')]:true});(req as any).log={warn(data:any){console.log(data.error?.message)},error(){}};next();});
- app.use('/api',router,collectionRouter);app.use((error:Error,_req:any,res:any,_next:any)=>res.status(500).json({error:error.message}));
+ app.use('/api',router,collectionRouter,storyRouter);app.use((error:Error,_req:any,res:any,_next:any)=>res.status(500).json({error:error.message}));
  const server=app.listen(0,'127.0.0.1');await new Promise<void>(resolve=>server.once('listening',resolve));
  const address=server.address() as {port:number};const origin=`http://127.0.0.1:${address.port}/api`;
  t.after(async()=>{await new Promise<void>(resolve=>server.close(()=>resolve()));await db.delete(playerProfilesTable).where(eq(playerProfilesTable.clerkUserId,userId));await pool.end();});
@@ -78,4 +79,6 @@ test('real activity routes validate drafts, normalize combat, replay events and 
  const retried=await post(`/player/matches/${story.body.id}/complete`,{moves:winningMoves});
  assert.equal(retried.status,200);assert.equal(retried.body.alreadyCompleted,true);
  assert.equal(retried.body.profile.softCurrency,cleared.body.profile.softCurrency);
+ const objectiveResponse=await fetch(origin+'/player/story/nodes/welcome-to-the-block/objectives');assert.equal(objectiveResponse.status,200);const objectiveState=await objectiveResponse.json() as any;assert.equal(objectiveState.stars,expectedStoryStars);assert.equal(objectiveState.completedObjectiveIds.length,expectedStoryStars);
+ assert.equal(retried.body.profile.storyProgress.growthDaily.counters['story-win'],1,'story retries advance Growth Lab once');
 });

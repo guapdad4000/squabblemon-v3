@@ -1,4 +1,4 @@
-import { catalogCardByEngineId, catalogCardById } from '../data';
+import { catalogCardByEngineId, catalogCardById, canonicalElement } from '../data';
 import type { Match } from '../gameEngine';
 
 export type DeckDraft = { name: string; cardIds: string[]; heroCardId: string; recipeId: string | null };
@@ -62,11 +62,14 @@ export function summarizeDeckTest(match: Match, cardId: string): string {
 }
 
 /** Build an owned ten-card crew around its cover, retaining partial lineups. */
-export function autoBuildDeck(draft: DeckDraft, ownedIds: readonly string[]): DeckDraft {
+export function autoBuildDeck(draft: DeckDraft, ownedIds: readonly string[], element?: string | null): DeckDraft {
   const pool = [...new Set(ownedIds)].filter(id => catalogCardById[id] && catalogCardById[id].kind !== 'token');
   const owned = new Set(pool);
-  const hero = owned.has(draft.heroCardId) ? draft.heroCardId : pool.find(id => catalogCardById[id].kind !== 'support') ?? pool[0] ?? '';
-  const chosen = draft.cardIds.length < 10 ? [...new Set(draft.cardIds)].filter(id => owned.has(id)).slice(0, 10) : [];
+  const focus = element ? canonicalElement(element) : null;
+  const focusedPool = pool.filter(id => canonicalElement(catalogCardById[id].type) === focus && catalogCardById[id].kind !== 'support');
+  const hero = owned.has(draft.heroCardId) && (!focus || canonicalElement(catalogCardById[draft.heroCardId].type) === focus)
+    ? draft.heroCardId : (focus ? focusedPool[0] ?? pool.find(id => canonicalElement(catalogCardById[id].type) === focus) : undefined) ?? pool.find(id => catalogCardById[id].kind !== 'support') ?? pool[0] ?? '';
+  const chosen = !focus && draft.cardIds.length < 10 ? [...new Set(draft.cardIds)].filter(id => owned.has(id)).slice(0, 10) : [];
   if (hero && !chosen.includes(hero)) chosen.unshift(hero);
   const anchor = catalogCardById[hero];
   // Authored crews give these new factions a coherent starting point. Partial
@@ -82,7 +85,8 @@ export function autoBuildDeck(draft: DeckDraft, ownedIds: readonly string[]): De
     const expensive = chosen.filter(id => catalogCardById[id].cost >= 5).length;
     const score = (id: string) => {
       const c = catalogCardById[id];
-      return (preferred.has(id) ? 40 : 0)
+      return (focus && canonicalElement(c.type) === focus ? 60 : 0)
+        + (preferred.has(id) ? 40 : 0)
         + (anchor && c.faction === anchor.faction ? 8 : 0)
         + (anchor && c.type === anchor.type ? 4 : 0)
         + (c.cost <= 2 && cheap < 4 ? 10 : 0)

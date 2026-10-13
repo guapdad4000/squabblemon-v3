@@ -5,12 +5,13 @@ const EMPTY_CARDS: ReadonlySet<string> = new Set();
 
 /** One observer for the grid. Buttons keep their size and remain keyboard targets. */
 export function useCollectionCardViewport({
-  gridRef, scrollRef, catalogKey, enabled,
+  gridRef, scrollRef, catalogKey, enabled, buffer = COLLECTION_CARD_VIEWPORT_BUFFER,
 }: {
   gridRef: RefObject<HTMLElement | null>;
   scrollRef: RefObject<HTMLElement | null>;
   catalogKey: string;
   enabled: boolean;
+  buffer?: number;
 }) {
   const [nearby, setNearby] = useState<ReadonlySet<string> | null>(EMPTY_CARDS);
 
@@ -29,8 +30,8 @@ export function useCollectionCardViewport({
       let root: HTMLElement | null = scrollRef.current;
       while (root && !/(auto|scroll)/.test(getComputedStyle(root).overflowY)) root = root.parentElement;
       const rootRect = root?.getBoundingClientRect();
-      const top = Math.max(0, rootRect?.top ?? 0) - COLLECTION_CARD_VIEWPORT_BUFFER;
-      const bottom = Math.min(window.innerHeight, rootRect?.bottom ?? window.innerHeight) + COLLECTION_CARD_VIEWPORT_BUFFER;
+      const top = Math.max(0, rootRect?.top ?? 0) - buffer;
+      const bottom = Math.min(window.innerHeight, rootRect?.bottom ?? window.innerHeight) + buffer;
       // Measure once before paint. Stable shells prevent a blank first viewport or layout shift.
       setNearby(new Set(cards.filter(card => {
         const bounds = card.getBoundingClientRect();
@@ -42,7 +43,7 @@ export function useCollectionCardViewport({
           cardId: (entry.target as HTMLElement).dataset.collectionDiscoveryCardId ?? '',
           visible: entry.isIntersecting,
         }))));
-      }, { root, rootMargin: `${COLLECTION_CARD_VIEWPORT_BUFFER}px 0px` });
+      }, { root, rootMargin: `${buffer}px 0px` });
       cards.forEach(card => observer!.observe(card));
     };
     connect();
@@ -57,7 +58,7 @@ export function useCollectionCardViewport({
       cancelAnimationFrame(resizeFrame);
       window.removeEventListener('resize', resize);
     };
-  }, [enabled, catalogKey, gridRef, scrollRef]);
+  }, [enabled, catalogKey, gridRef, scrollRef, buffer]);
 
   return nearby;
 }

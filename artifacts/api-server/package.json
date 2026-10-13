@@ -16,7 +16,8 @@
     "test:social": "node ../../scripts/test-api-database.mjs social",
     "test:events-feedback": "node ../../scripts/test-events-feedback-database.mjs",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "test:db": "node ../../scripts/require-db-tests.mjs"
+    "test:db": "node ../../scripts/require-db-tests.mjs",
+    "test:player-notes": "node ../../scripts/test-player-notes-database.mjs"
   },
   "dependencies": {
     "@clerk/express": "^2.1.66",

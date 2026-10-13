@@ -123,7 +123,7 @@ export function useCardInspection(card: Card | CardInstance, enabled: boolean, o
   const dialog = host && createPortal(<div onClick={event => event.stopPropagation()} onPointerDown={event => event.stopPropagation()}><Suspense fallback={<div role="status" className="card-details-loading">Opening card details…</div>}>
     <Details card={card} variantId={variantId} useCachedProfile onClose={() => setHost(null)} />
   </Suspense></div>, host);
-  return { dialog, props: enabled ? {
+  return { dialog, open, props: enabled ? {
     onPointerDown, onContextMenu, onKeyDown,
     onDragStartCapture: (event: MouseEvent<HTMLElement>) => event.preventDefault(),
     'data-card-inspectable': true,
@@ -132,9 +132,9 @@ export function useCardInspection(card: Card | CardInstance, enabled: boolean, o
 }
 
 /** Use on existing button wrappers so holding never adds/replaces a deck card. */
-export function CardPressTarget({ card, variantId, onInspect, children, ...props }: ButtonHTMLAttributes<HTMLButtonElement> & {
-  card: Card | CardInstance; variantId?: string; onInspect?: () => void;
+export function CardPressTarget({ card, variantId, onInspect, tapToInspect = false, children, ...props }: ButtonHTMLAttributes<HTMLButtonElement> & {
+  card: Card | CardInstance; variantId?: string; onInspect?: () => void; tapToInspect?: boolean;
 }) {
   const inspection = useCardInspection(card, !props.disabled, onInspect, variantId);
-  return <><button {...props} {...inspection.props} type="button">{children}</button>{inspection.dialog}</>;
+  return <><button {...props} {...inspection.props} onClick={tapToInspect ? event => inspection.open(event.currentTarget) : props.onClick} type="button">{children}</button>{inspection.dialog}</>;
 }

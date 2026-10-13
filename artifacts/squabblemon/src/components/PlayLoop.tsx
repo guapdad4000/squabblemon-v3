@@ -121,7 +121,7 @@ const resultBroadcastHoldMs = (speed: 1 | 1.5, fast = false) => scaleBattleBeat(
   fast,
 ), speed);
 
-export function PlayLoop({ mode = 'practice', onExit, onTutorialComplete, onVerifiedComplete, initialDeckId = 'block', initialRivalId = 'combo', hideLobby = false, turnTimerEnabled = true, customPlayerDeck, availableDeckIds, storyNodeId, challengeRunId, equippedVariants, cardProgression = {}, activity, trainingCircuit = false, draftWeek, draftPicks }: { activity?: string; trainingCircuit?: boolean; draftWeek?: string; draftPicks?: string[]; mode?: 'guest' | 'practice' | 'tutorial' | 'story'; onExit: () => void; onTutorialComplete?: () => void; onVerifiedComplete?: (match: Match, serverMatchId?: string) => void; initialDeckId?: string; initialRivalId?: string; hideLobby?: boolean; turnTimerEnabled?: boolean; customPlayerDeck?: Deck; availableDeckIds?: string[]; storyNodeId?: string; challengeRunId?: string; equippedVariants?: EquippedVariantMap; cardProgression?: CardProgressionMap }) {
+export function PlayLoop({ mode = 'practice', onExit, onTutorialComplete, onVerifiedComplete, initialDeckId = 'block', initialRivalId = 'combo', hideLobby = false, turnTimerEnabled = true, customPlayerDeck, availableDeckIds, storyNodeId, challengeRunId, equippedVariants, cardProgression = {}, activity, trainingCircuit = false, draftWeek, draftPicks, loanerPractice = false }: { loanerPractice?: boolean; activity?: string; trainingCircuit?: boolean; draftWeek?: string; draftPicks?: string[]; mode?: 'guest' | 'practice' | 'tutorial' | 'story'; onExit: () => void; onTutorialComplete?: () => void; onVerifiedComplete?: (match: Match, serverMatchId?: string) => void; initialDeckId?: string; initialRivalId?: string; hideLobby?: boolean; turnTimerEnabled?: boolean; customPlayerDeck?: Deck; availableDeckIds?: string[]; storyNodeId?: string; challengeRunId?: string; equippedVariants?: EquippedVariantMap; cardProgression?: CardProgressionMap }) {
   const effectiveTurnTimerEnabled = shouldRunTurnTimer(mode, turnTimerEnabled);
   const [screen, setScreen] = useState<'lobby' | 'battle' | 'result'>(hideLobby ? 'battle' : 'lobby');
   const [reviewBoard, setReviewBoard] = useState(false);
@@ -377,8 +377,9 @@ export function PlayLoop({ mode = 'practice', onExit, onTutorialComplete, onVeri
           if (mode !== 'tutorial') queryClient.setQueryData(getGetPlayerBootstrapQueryKey(), (old: any) => old ? { ...old, profile: res.profile, missions: res.missions, nextAction: res.nextAction } : old);
           if (res.campaign) queryClient.setQueryData(getGetPlayerStoryQueryKey(), res.campaign);
           else if (mode === 'story') void queryClient.invalidateQueries({ queryKey: getGetPlayerStoryQueryKey() });
+          if(res.story) queryClient.setQueryData(['story-objectives',res.profile.id,res.story.nodeId], {nodeId:res.story.nodeId,stars:res.story.stars,completedObjectiveIds:(res.profile.storyProgress?.[res.story.nodeId] as {completedObjectiveIds?:string[]}|undefined)?.completedObjectiveIds ?? []});
           setServerReward(res.reward);
-          setStoryMetadata(res.story);
+          setStoryMetadata(res.story ? { ...res.story, completedObjectiveIds: (res.profile.storyProgress?.[res.story.nodeId] as { completedObjectiveIds?: string[] } | undefined)?.completedObjectiveIds } as StoryMatchMetadata : null);
           setServerRewardError(false);
           onVerifiedComplete?.(finalMatch, serverMatchId);
         });
@@ -387,11 +388,11 @@ export function PlayLoop({ mode = 'practice', onExit, onTutorialComplete, onVeri
         if (generation === matchGeneration.current) setServerRewardError(true);
         return false;
       }
-    } else if (mode === 'guest') localStorage.setItem('squabblemon_guest_tutorial_complete', 'true');
+    } else if (mode === 'guest' && !loanerPractice) localStorage.setItem('squabblemon_guest_tutorial_complete', 'true');
     // Saving/retrying a receipt must never dismiss a card, final-board review,
     // or results. Presentation navigation belongs to the player's controls.
     return false;
-  }, [completePlayerMatch, mode, queryClient, serverMatchId, onVerifiedComplete]);
+  }, [completePlayerMatch, mode, loanerPractice, queryClient, serverMatchId, onVerifiedComplete]);
   const showResults = useCallback(() => {
     cancelPendingResultBroadcast();
     resultStingerRef.current = null;
