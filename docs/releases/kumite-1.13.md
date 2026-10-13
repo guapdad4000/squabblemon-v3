@@ -147,4 +147,3 @@ The player rules above were checked against the current release source. These re
 - Mobile scroll owner, layout and natural art ratios: `artifacts/squabblemon/src/styles/kumite.css:1,550-584`; scroll restoration: `artifacts/squabblemon/src/lib/navigationMemory.ts:57`; shortcut: `artifacts/squabblemon/src/components/kumite/KumiteShortcut.tsx:8`.
 - Upward-tier cinematic gate: `artifacts/squabblemon/src/lib/rankPromotion.ts:4-6`; ranked/result-specific presentation and standard-result return: `artifacts/squabblemon/src/components/ParkResult.tsx:23-28,52-67`.
 - Private prepared-draft import, separate preview and explicit publish: `artifacts/squabblemon/src/pages/game/PatchDesk.tsx:85-102,109-118`; mail title/body limits: `artifacts/api-server/src/lib/patches.ts:46-70`.
-
