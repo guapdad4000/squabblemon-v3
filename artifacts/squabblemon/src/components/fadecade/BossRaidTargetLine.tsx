@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 /** Geometry follows the actual selected hand card; no permanent animation loop. */
 export function BossRaidTargetLine({
   instanceId,
@@ -8,7 +8,6 @@ export function BossRaidTargetLine({
   lane: number;
 }) {
   const ref = useRef<SVGSVGElement>(null);
-  const [path, setPath] = useState("");
   useEffect(() => {
     const svg = ref.current,
       arena = svg?.parentElement;
@@ -31,7 +30,8 @@ export function BossRaidTargetLine({
           y = s.y - a.y,
           tx = t.x + t.width / 2 - a.x,
           ty = t.y + t.height / 2 - a.y;
-        setPath(`M ${x} ${y} Q ${x} ${ty + 45} ${tx} ${ty}`);
+        const d = `M ${x} ${y} Q ${x} ${ty + 45} ${tx} ${ty}`;
+        svg.querySelectorAll("path").forEach((node) => node.setAttribute("d", d));
       });
     };
     const observer = new ResizeObserver(measure);
@@ -53,8 +53,8 @@ export function BossRaidTargetLine({
   }, [instanceId, lane]);
   return (
     <svg ref={ref} className="raid-target-line" aria-hidden="true">
-      <path d={path} className="raid-target-shadow" />
-      <path d={path} />
+      <path className="raid-target-shadow" />
+      <path />
     </svg>
   );
 }

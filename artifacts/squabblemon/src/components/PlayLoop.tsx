@@ -82,7 +82,7 @@ const getLessonStorage = () => {
 /** Use the complete event snapshot: participant-only patches omit summons and lane-wide effects. */
 export const applyEventState = (visual: Match, authoritative: Match, event: EffectLogEntry, key: 'before' | 'after'): Match =>
   // Reuse unchanged cards/boards from the previous frame so memoized card views skip re-rendering.
-  shareEqual(visual, buildReplayFrame(authoritative, event, key));
+  shareEqual(visual, { ...authoritative, ...event.replay[key] });
 
 /** Apply the engine-captured complete visual state for one historical step. */
 export const buildReplayFrame = (live: Match, selected: EffectLogEntry, key: 'before' | 'after'): Match => ({

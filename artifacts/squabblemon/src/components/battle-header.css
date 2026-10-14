@@ -18,7 +18,15 @@
 .battle-command-header--organized .referee-clipboard > .battle-header-music:hover { background: #151b1810; }
 .battle-command-header--organized .battle-tools__panel > .music-dialog { width: min(420px,calc(100vw - 24px)); }
 .battle-command-header--organized .battle-rival-avatar { width: 40px; height: 40px; }
-.battle-command-header--organized .battle-rival-avatar.is-thinking { border-color: #86d5ec; }
+.battle-command-header--organized .battle-rival-avatar.is-thinking { border-color: #86d5ec; box-shadow: 0 0 12px rgba(134, 213, 236, 0.42); animation: rival-thinking-pulse 1.6s ease-in-out infinite; }
+@keyframes rival-thinking-pulse {
+  0%, 100% { box-shadow: 0 0 8px rgba(134, 213, 236, 0.3); }
+  50% { box-shadow: 0 0 16px rgba(134, 213, 236, 0.65); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .battle-command-header--organized .battle-rival-avatar.is-thinking { animation: none; }
+}
+html[data-reduce-motion='true'] .battle-command-header--organized .battle-rival-avatar.is-thinking { animation: none; }
 @media (max-width: 600px) {
   .battle-arena.battle-hud .battle-command-header--organized {
     display: grid; flex: none; position: relative; z-index: 45;

@@ -115,11 +115,14 @@ function Fist() {
     </svg>
   );
 }
+let sharedArcadeAudioContext: AudioContext | null = null;
 function soundTone(enabled: boolean, kind: "hit" | "win" | "stock") {
   if (!enabled) return;
   try {
-    const a = new AudioContext(),
-      o = a.createOscillator(),
+    sharedArcadeAudioContext ??= new AudioContext();
+    const a = sharedArcadeAudioContext;
+    if (a.state === "suspended") void a.resume();
+    const o = a.createOscillator(),
       g = a.createGain();
     o.type = kind === "hit" ? "sawtooth" : "triangle";
     o.frequency.setValueAtTime(
@@ -134,9 +137,12 @@ function soundTone(enabled: boolean, kind: "hit" | "win" | "stock") {
     g.gain.exponentialRampToValueAtTime(0.001, a.currentTime + 0.16);
     o.connect(g);
     g.connect(a.destination);
+    o.onended = () => {
+      o.disconnect();
+      g.disconnect();
+    };
     o.start();
     o.stop(a.currentTime + 0.18);
-    setTimeout(() => void a.close(), 240);
   } catch {
     /* Silent mode remains playable. */
   }

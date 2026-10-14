@@ -24,6 +24,10 @@
   clip-path: polygon(10% 0, 100% 0, 100% 100%, 10% 100%, 0 50%);
   padding: 10px 18px 10px 26px;
 }
+.progression-sign:hover:not(:disabled) {
+  transform: translateY(-2px);
+  filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.45));
+}
 .progression-sign:disabled {
   opacity: 0.35;
   cursor: default;
@@ -40,7 +44,7 @@
   color: #282418;
   border: 5px solid #68502d;
   border-radius: 3px;
-  box-shadow: 0 25px 90px #000a;
+  box-shadow: inset 0 0 0 2px rgba(212, 175, 95, 0.45), 0 25px 90px #000a;
 }
 .progression-dossier::backdrop {
   background: #06100ddd;

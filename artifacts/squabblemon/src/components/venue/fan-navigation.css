@@ -53,11 +53,11 @@
 .fan-nav__ray.is-active { color: #ffe592; }
 .fan-nav__ray.is-active .fan-nav__pose { z-index: 20; }
 .fan-nav__ray.is-active .fan-nav__object { filter: drop-shadow(0 0 6px #ffc85788) drop-shadow(0 5px 3px #000e); animation: fan-object-pop .72s cubic-bezier(.2,.8,.2,1) both; }
-.fan-nav__ray.is-active .fan-nav__label::after { content: ''; display: block; width: 18px; height: 3px; margin: 4px auto -7px; background: #ffe592; clip-path: polygon(0 50%,50% 0,100% 50%,50% 100%); }
+.fan-nav__ray.is-active .fan-nav__label::after { content: ''; display: block; width: 18px; height: 3px; margin: 4px auto -7px; background: #ffe592; box-shadow: 0 0 8px #ffe592; clip-path: polygon(0 50%,50% 0,100% 50%,50% 100%); }
 .fan-nav__ray:focus-visible { outline: 2px solid #ffe592; outline-offset: 0; border-radius: 12px; }
 .fan-nav__ray:focus-visible .fan-nav__pose { z-index: 30; transform: translate(var(--ray-nudge), calc(var(--ray-drop) - 22px)) rotate(calc(var(--ray-angle) * .7)); }
 .fan-nav__ray:focus-visible .fan-nav__object { filter: drop-shadow(0 0 5px #ffe592) drop-shadow(0 5px 3px #000e); }
-.fan-nav__badge { position: absolute; top: 35px; right: 6px; z-index: 60; display: grid; place-items: center; min-width: 21px; height: 21px; padding: 0 5px; border-radius: 50%; background: #ffe592; border: 2px solid #3e2b14; color: #261b0e; font: 900 10px var(--font-mono); }
+.fan-nav__badge { position: absolute; top: 35px; right: 6px; z-index: 60; display: grid; place-items: center; min-width: 21px; height: 21px; padding: 0 5px; border-radius: 50%; background: #ffe592; border: 2px solid #3e2b14; box-shadow: 0 0 12px rgba(255, 229, 146, 0.55); color: #261b0e; font: 900 10px var(--font-mono); }
 @media (hover: hover) {
   .fan-nav__ray:hover { color: #fff0c9; }
   .fan-nav__ray:hover .fan-nav__pose { z-index: 30; transform: translate(var(--ray-nudge), calc(var(--ray-drop) - 24px)) rotate(calc(var(--ray-angle) * .65)); }
@@ -79,6 +79,8 @@
 .fan-menu__choice:hover img { transform: translateY(-8px) rotate(-3deg); }
 .fan-menu__choice strong { font: 900 italic 15px var(--font-display); text-transform: uppercase; margin-top: 12px; }
 .fan-menu__choice small { font: 500 9px var(--font-sans); margin-top: 4px; color: #b5ad99; }
+.fan-menu__choice.is-active { background: radial-gradient(circle at 50% 42%, rgba(255, 220, 115, 0.14), transparent 72%); border-radius: 8px; }
+.fan-menu__choice.is-active img { filter: drop-shadow(0 0 14px rgba(255, 220, 115, 0.38)) drop-shadow(0 6px 4px #000); }
 .fan-menu__choice.is-active strong { color: #ffdc73; text-decoration: underline; text-underline-offset: 5px; }
 .fan-menu__choice:focus-visible { outline: 2px solid #ffe592; outline-offset: 2px; border-radius: 6px; }
 .fan-menu__reward { margin-top: 5px; font: 700 9px var(--font-mono); color: #ffdc73; }

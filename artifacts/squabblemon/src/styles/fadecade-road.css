@@ -21,9 +21,9 @@
 .fadecade-road-milestones{position:absolute;top:calc(50% - var(--road-offset));right:8%;display:flex;flex-direction:column;gap:0}
 .fadecade-road-node{height:86px;display:flex;gap:10px;align-items:center;color:#aaa;font:600 10px var(--font-mono);text-shadow:1px 2px var(--sq-ink)}
 .fadecade-road-node b{display:grid;place-items:center;width:32px;height:32px;border:2px solid #b4aaa0;background:#292c31;color:#d9d9d9;transform:rotate(-5deg);font-size:15px}
-.fadecade-road-node.is-current{color:#ffe467}.fadecade-road-node.is-current b{border-color:#ffe16b;color:#fff6c0;box-shadow:0 0 18px #e5b12866}
+.fadecade-road-node.is-current{color:#ffe467}.fadecade-road-node.is-current b{border-color:#ffe16b;color:#fff6c0;box-shadow:0 0 22px #f2c14488,inset 0 0 8px #ffe16b44}
 .fadecade-road-node.is-cleared{color:#9bddc0}.fadecade-road-node.is-cleared b{border-color:#5ca987;color:#a6e6c9}
-.fadecade-road-node.is-boss b{border-color:#ed645e;color:#ffc9b8;background:#532023}
+.fadecade-road-node.is-boss b{border-color:#ed645e;color:#ffc9b8;background:#532023;box-shadow:0 0 16px rgba(237,100,94,0.45)}
 .fadecade-road-actor{position:absolute;left:36%;top:50%;transform:translate(-50%,-50%);z-index:2;filter:drop-shadow(4px 8px 4px #000b)}
 .is-compact .fadecade-road-actor{top:35%;left:48%}
 .fadecade-sprite{width:62px;aspect-ratio:233/383;background-repeat:no-repeat;background-position:center;background-size:contain}

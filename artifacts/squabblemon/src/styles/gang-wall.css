@@ -97,6 +97,7 @@
 .gang-mural__layers button[aria-pressed="true"] {
   opacity: 1;
   color: #fff4d4;
+  text-shadow: 0 0 14px rgba(247, 223, 165, 0.45), 2px 2px #361b0d;
 }
 .gang-mural__layers button[aria-pressed="true"]::after {
   content: "";

@@ -29,9 +29,11 @@
 .result-immersive__scores small { font-size:16px; opacity:.6; }
 .result-immersive__scores em { font-style:normal; text-transform:uppercase; font-size:9px; letter-spacing:.12em; }
 .result-immersive__scores [data-winner=player] em { color:#246532; font-weight:900; }
+.result-immersive__scores > div[data-winner=player] { border-color:#3b8a4e; box-shadow:0 5px 0 #234d2e,0 12px 24px #0008,0 0 18px rgba(74,222,128,0.22); }
+.result-immersive__scores > div[data-winner=cpu] { border-color:#8f3a2f; }
 .result-immersive .result-stage__actions { position:static; margin:4px 0 0; display:flex; flex-wrap:wrap; justify-content:center; gap:8px; }
 .result-immersive__actions button { min-height:42px; background-color:#171411e8; }
-.result-immersive__actions .studio-action--gold,.result-immersive__actions .venue-button--gold { background:#efca72; color:#241b0c; }
+.result-immersive__actions .studio-action--gold,.result-immersive__actions .venue-button--gold { background:linear-gradient(180deg,#ffe299 0%,#e5b955 100%); color:#241b0c; box-shadow:inset 0 1px 0 rgba(255,255,255,0.55),0 6px 18px rgba(0,0,0,0.42); }
 .result-immersive__details { font-size:12px; }
 .result-immersive__details .result-stage__receipt-drawer { margin:0; background:#15110ee8; }
 .result-immersive__details .result-stage__receipt-drawer[open] { max-height:38vh; overflow:auto; }

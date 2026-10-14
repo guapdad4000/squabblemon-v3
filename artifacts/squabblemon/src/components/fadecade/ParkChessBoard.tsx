@@ -47,7 +47,7 @@ type BoardProps = {
 /** Ranked matches and local lessons share one board, atlas and keyboard model. */
 export function ParkChessBoard({ board: pieces, legalMoves, turn, inCheck, lastMove, selected, locked, busy = false, focusSquare, onFocusSquare, onSelect, onEscape, hint }: BoardProps) {
   const board = useMemo(() => new Map(pieces.map(piece => [piece.square as string, piece])), [pieces]);
-  const legal = legalMoves.filter(move => move.from === selected);
+  const legalTargets = useMemo(() => new Set(legalMoves.filter(move => move.from === selected).map(move => move.to)), [legalMoves, selected]);
   const refs = useRef<Record<string, HTMLButtonElement | null>>({});
   function boardKey(event: KeyboardEvent<HTMLButtonElement>, square: string) {
     const index = squares.indexOf(square);
@@ -61,7 +61,7 @@ export function ParkChessBoard({ board: pieces, legalMoves, turn, inCheck, lastM
     <div className="park-chess__board" role="grid" aria-label="Chess board, White at bottom" aria-busy={busy}>
       {Array.from({ length: 8 }, (_, row) => <div className="park-chess__rank" role="row" key={row}>{squares.slice(row * 8, row * 8 + 8).map((square, column) => {
         const piece = board.get(square);
-        const target = legal.some(move => move.to === square);
+        const target = legalTargets.has(square as ParkChessMove["to"]);
         const check = !!piece && piece.type === "k" && piece.color === turn && inCheck;
         const guided = hint?.from === square || hint?.to === square;
         return <div role="gridcell" key={square}><button
