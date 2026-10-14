@@ -1,4 +1,4 @@
-import { and, eq, like } from 'drizzle-orm';
+import { and, eq, like, or } from 'drizzle-orm';
 import { db, playerCollectionClaimsTable, playerProfilesTable, type CollectionRoadRewardRecord } from '@workspace/db';
 import { catalogCardById, KUMITE_CARD_REWARDS } from '@workspace/squabblemon-engine/data';
 import type { OnlineRoom } from '@workspace/squabblemon-engine/multiplayer';
@@ -7,16 +7,38 @@ import type { KumiteMatchState, KumiteProgression, KumiteState } from './kumiteE
 type Tx = Parameters<Parameters<typeof db.transaction>[0]>[0];
 type Reader = Pick<typeof db, 'select'>;
 export async function kumiteProgression(reader: Reader, userId: string): Promise<KumiteProgression> {
-  const rows = await reader.select({ key: playerCollectionClaimsTable.milestoneKey }).from(playerCollectionClaimsTable)
-    .where(and(eq(playerCollectionClaimsTable.clerkUserId, userId), like(playerCollectionClaimsTable.milestoneKey, 'kumite:%')));
+  const rows = await reader.select({ key: playerCollectionClaimsTable.milestoneKey, reward: playerCollectionClaimsTable.reward }).from(playerCollectionClaimsTable)
+    .where(and(
+      eq(playerCollectionClaimsTable.clerkUserId, userId),
+      or(
+        like(playerCollectionClaimsTable.milestoneKey, 'kumite:%'),
+        like(playerCollectionClaimsTable.milestoneKey, 'boss-raid:%'),
+        like(playerCollectionClaimsTable.milestoneKey, 'boss-campaign:%'),
+      ),
+    ));
   const keys = new Set(rows.map(row => row.key));
   const [profile] = await reader.select({ ownedCardIds: playerProfilesTable.ownedCardIds }).from(playerProfilesTable)
     .where(eq(playerProfilesTable.clerkUserId, userId));
   const owned = new Set(profile?.ownedCardIds ?? []);
+  const raidRows = rows.filter(row => row.key.startsWith('boss-raid:'));
+  const raidCompleted = raidRows.filter(row => {
+    const state = (row.reward as { bossRaid?: { state?: { phase?: string } } } | null)?.bossRaid?.state;
+    return state?.phase && state.phase !== 'active';
+  }).length;
+  const raidWins = raidRows.filter(row => {
+    const state = (row.reward as { bossRaid?: { state?: { phase?: string; score?: number; hp?: number } } } | null)?.bossRaid?.state;
+    return state?.phase && state.phase !== 'active' && ((state.score ?? 0) >= 50 || state.hp === 0);
+  }).length;
+  const raidTierClears = rows
+    .filter(row => row.key.startsWith('boss-campaign:'))
+    .reduce((sum, row) => {
+      const defeated = (row.reward as { bossCampaign?: { state?: { defeated?: unknown[] } } } | null)?.bossCampaign?.state?.defeated;
+      return sum + (Array.isArray(defeated) ? defeated.length : 0);
+    }, 0);
   const progress = {
-    completedMatches: rows.filter(row => row.key.startsWith('kumite:completed:')).length,
-    matchWins: rows.filter(row => row.key.startsWith('kumite:win:')).length,
-    championships: rows.filter(row => row.key.startsWith('kumite:champion:')).length,
+    completedMatches: rows.filter(row => row.key.startsWith('kumite:completed:')).length + raidCompleted,
+    matchWins: rows.filter(row => row.key.startsWith('kumite:win:')).length + raidWins,
+    championships: rows.filter(row => row.key.startsWith('kumite:champion:')).length + raidTierClears,
   };
   return { ...progress, rewards: KUMITE_CARD_REWARDS.map(reward => ({ id: reward.id, cardId: reward.cardId,
     name: catalogCardById[reward.cardId].name, rarity: catalogCardById[reward.cardId].rarity,

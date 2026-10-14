@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=DM+Mono:wght@400;500&family=Manrope:wght@500;600;700;800&display=swap');
-
 .ff-stage {
   position: relative;
   width: 100%;
@@ -39,27 +37,28 @@
 
 /* The live Fade Alley uses the real CityHeader above this venue, not a second HUD. */
 .ff-stage--alley {
+  position: relative; isolation: isolate;
   height: auto; min-height: 100dvh; max-height: none; display: block; overflow: visible;
-  border-top: 0 !important; background: #0a1410; color: #fff2cc;
+  border-top: 0 !important; background: transparent; color: #fff2cc;
   font-family: 'Manrope', sans-serif;
 }
 .ff-stage--alley *, .ff-stage--alley *::before, .ff-stage--alley *::after { box-sizing: border-box; }
 .ff-stage--alley :is(button, a, input):focus-visible { outline: 3px solid #ffe390; outline-offset: 3px; }
-.ff-stage__alley { width: min(1440px, 100%); margin: 0 auto; background: #0a1410; }
+.ff-stage__alley { width: min(1440px, 100%); margin: 0 auto; background: transparent; }
 .ff-stage--alley .ff-stage__nav {
   position: relative; z-index: 7; min-height: 42px; margin: 62px auto 0; padding: 3px clamp(18px,5.5vw,82px); justify-content: center;
-  background: #0b1510; border-bottom: 1px solid #f4d18840; box-shadow: 0 4px 13px #060b09a8;
+  background: rgba(11, 21, 16, 0.72); backdrop-filter: blur(6px); border-bottom: 1px solid #f4d18840; box-shadow: 0 4px 13px #060b09a8;
 }
 .ff-stage--alley .fa-hud-logo { position: absolute; z-index: 6; top: 16px; right: clamp(18px,5vw,70px); display: flex; align-items: center; pointer-events: none; }
 .ff-stage--alley .fa-hud-logo img { width: clamp(116px,12vw,164px); height: auto; object-fit: contain; filter: drop-shadow(2px 3px 2px #000c); }
 .ff-stage--alley .fight-tabs a { min-height: 38px; padding: 12px 13px 5px; }
 .ff-stage--alley .fight-tabs { flex: none; }
-.ff-stage__content { padding-bottom: max(28px, env(safe-area-inset-bottom)); background: radial-gradient(ellipse at 70% 0%, #38503757, transparent 50%), #0a1410; }
+.ff-stage__content { padding-bottom: max(28px, env(safe-area-inset-bottom)); background: transparent; }
 .ff-stage__content > .sq-flash { margin: 12px clamp(18px,5.5vw,82px); }
 
-.ff-stage--alley .fa-scene { position: relative; height: min(420px,49vh); min-height: 330px; overflow: hidden; isolation: isolate; background: #1a2520; }
-.ff-stage--alley .fa-scene__image { position: absolute; inset: 0; z-index: -3; width: 100%; height: 100%; object-fit: cover; object-position: center 52%; }
-.ff-stage--alley .fa-scene::before { content: ''; position: absolute; inset: 0; z-index: -2; background: linear-gradient(90deg,#06100dc9 0%,#06100d8c 26%,#06100d26 59%,#06100d57 100%),linear-gradient(0deg,#0a1410 0%,#0a141032 30%,#0a14104d 100%); }
+.ff-stage--alley .fa-scene { position: relative; height: min(360px,42vh); min-height: 290px; overflow: visible; background: transparent; }
+.ff-stage--alley .fa-scene__image { position: fixed; inset: 0; z-index: -3; width: 100vw; height: 100dvh; object-fit: cover; object-position: center 52%; pointer-events: none; }
+.ff-stage--alley .fa-scene::before { content: ''; position: fixed; inset: 0; z-index: -2; pointer-events: none; background: linear-gradient(180deg,#06100d66 0%,#0a1410b8 55%,#0a1410e6 100%); }
 .ff-stage--alley .fa-scene::after { content: ''; pointer-events: none; position: absolute; inset: 0; z-index: 4; opacity: .19; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.88' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.3'/%3E%3C/svg%3E"); }
 .ff-stage--alley .fa-scene__copy { position: absolute; z-index: 5; top: clamp(16px,4%,26px); left: clamp(24px,5vw,72px); width: auto; }
 .ff-stage--alley .fa-eyebrow { display: flex; align-items: center; gap: 8px; color: #ffe5a0; font: 800 9px 'DM Mono',monospace; letter-spacing: .14em; }

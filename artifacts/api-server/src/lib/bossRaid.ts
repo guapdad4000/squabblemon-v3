@@ -18,17 +18,24 @@ import {
   type BossRaid,
   type BossAction,
   type BossStatus,
+  type BossRaidMode,
 } from "@workspace/squabblemon-engine/bossRaid";
 import {
   lockPlayerProfile,
   PlayerRewardError,
 } from "./playerRewardTransactions";
+import { reconcileKumiteRewards } from "./kumiteRewards";
 type Reader = Pick<typeof db, "select">;
 const prefix = "boss-raid:v2:";
 const campaignKey = "boss-campaign:v2";
+const prefixFor = (mode: BossRaidMode = "precinct") =>
+  mode === "kumite" ? "boss-raid:kumite:v2:" : prefix;
+const campaignKeyFor = (mode: BossRaidMode = "precinct") =>
+  mode === "kumite" ? "boss-campaign:kumite:v2" : campaignKey;
 async function readCampaign(
   reader: Reader,
   userId: string,
+  mode: BossRaidMode = "precinct",
 ): Promise<BossCampaign> {
   const [row] = await reader
     .select()
@@ -36,7 +43,7 @@ async function readCampaign(
     .where(
       and(
         eq(playerCollectionClaimsTable.clerkUserId, userId),
-        eq(playerCollectionClaimsTable.milestoneKey, campaignKey),
+        eq(playerCollectionClaimsTable.milestoneKey, campaignKeyFor(mode)),
       ),
     );
   return (
@@ -47,12 +54,13 @@ async function saveCampaign(
   tx: Parameters<Parameters<typeof db.transaction>[0]>[0],
   userId: string,
   state: BossCampaign,
+  mode: BossRaidMode = "precinct",
 ) {
   await tx
     .insert(playerCollectionClaimsTable)
     .values({
       clerkUserId: userId,
-      milestoneKey: campaignKey,
+      milestoneKey: campaignKeyFor(mode),
       reward: { bossCampaign: { version: 2, state } },
     })
     .onConflictDoUpdate({
@@ -63,14 +71,14 @@ async function saveCampaign(
       set: { reward: { bossCampaign: { version: 2, state } } },
     });
 }
-async function entries(reader: Reader, userId: string) {
+async function entries(reader: Reader, userId: string, mode: BossRaidMode = "precinct") {
   return reader
     .select()
     .from(playerCollectionClaimsTable)
     .where(
       and(
         eq(playerCollectionClaimsTable.clerkUserId, userId),
-        like(playerCollectionClaimsTable.milestoneKey, prefix + "%"),
+        like(playerCollectionClaimsTable.milestoneKey, prefixFor(mode) + "%"),
       ),
     )
     .orderBy(desc(playerCollectionClaimsTable.createdAt))
@@ -80,8 +88,9 @@ async function status(
   reader: Reader,
   userId: string,
   now: Date,
+  mode: BossRaidMode = "precinct",
 ): Promise<BossStatus> {
-  const rows = await entries(reader, userId),
+  const rows = await entries(reader, userId, mode),
     day = bossDay(now),
     today = rows.find((r) => r.reward.bossRaid?.day === day),
     active = rows.find(
@@ -96,10 +105,10 @@ async function status(
     .where(
       and(
         eq(playerCollectionClaimsTable.clerkUserId, userId),
-        like(playerCollectionClaimsTable.milestoneKey, prefix + "%"),
+        like(playerCollectionClaimsTable.milestoneKey, prefixFor(mode) + "%"),
       ),
     );
-  const campaign = await readCampaign(reader, userId);
+  const campaign = await readCampaign(reader, userId, mode);
   return {
     day,
     resetsAt: bossReset(now),
@@ -119,13 +128,17 @@ async function status(
     }),
   };
 }
-export const getBossRaid = (userId: string, now = new Date()) =>
-  status(db, userId, now);
+export const getBossRaid = (
+  userId: string,
+  now = new Date(),
+  mode: BossRaidMode = "precinct",
+) => status(db, userId, now, mode);
 export async function startBossRaid(
   userId: string,
   requestId: string,
   cardIds: string[],
   now = new Date(),
+  mode: BossRaidMode = "precinct",
 ) {
   return db.transaction(async (tx) => {
     await lockPlayerProfile(tx, userId);
@@ -134,7 +147,7 @@ export async function startBossRaid(
       .from(playerProfilesTable)
       .where(eq(playerProfilesTable.clerkUserId, userId));
     if (!profile) throw new PlayerRewardError("Player profile not found", 404);
-    const rows = await entries(tx, userId);
+    const rows = await entries(tx, userId, mode);
     if (
       rows.some(
         (r) =>
@@ -142,7 +155,7 @@ export async function startBossRaid(
           (r.reward.bossRaid?.state as BossRaid)?.phase === "active",
       )
     )
-      return status(tx, userId, now);
+      return status(tx, userId, now, mode);
     const day = bossDay(now);
     if (rows.some((r) => r.reward.bossRaid?.day === day))
       throw new PlayerRewardError(
@@ -159,7 +172,7 @@ export async function startBossRaid(
         d.cardIds.length === cardIds.length &&
         d.cardIds.every((id) => cardIds.includes(id)),
     );
-    const campaign = await readCampaign(tx, userId);
+    const campaign = await readCampaign(tx, userId, mode);
     if (campaign.completed)
       throw new PlayerRewardError("All five precinct tiers defeated.", 409);
     const run = createBossRaid(
@@ -168,15 +181,21 @@ export async function startBossRaid(
       cardIds,
       deck?.name ?? "Your crew",
       { tier: campaign.tier, hp: campaign.hp },
+      mode,
     );
-    await saveCampaign(tx, userId, {
-      ...campaign,
-      attacks: campaign.attacks + 1,
-      tierAttacks: campaign.tierAttacks + 1,
-    });
+    await saveCampaign(
+      tx,
+      userId,
+      {
+        ...campaign,
+        attacks: campaign.attacks + 1,
+        tierAttacks: campaign.tierAttacks + 1,
+      },
+      mode,
+    );
     await tx.insert(playerCollectionClaimsTable).values({
       clerkUserId: userId,
-      milestoneKey: prefix + day,
+      milestoneKey: prefixFor(mode) + day,
       reward: {
         bossRaid: {
           version: 1,
@@ -187,7 +206,7 @@ export async function startBossRaid(
         },
       },
     });
-    return status(tx, userId, now);
+    return status(tx, userId, now, mode);
   });
 }
 export async function actBossRaid(
@@ -197,16 +216,24 @@ export async function actBossRaid(
   actionId: string,
   action: BossAction,
   now = new Date(),
+  mode: BossRaidMode = "precinct",
 ) {
   return db.transaction(async (tx) => {
     await lockPlayerProfile(tx, userId);
-    const row = (await entries(tx, userId)).find(
+    let resolvedMode: BossRaidMode = mode;
+    let row = (await entries(tx, userId, resolvedMode)).find(
       (r) => r.reward.bossRaid?.runId === runId,
     );
+    if (!row && resolvedMode === "precinct") {
+      row = (await entries(tx, userId, "kumite")).find(
+        (r) => r.reward.bossRaid?.runId === runId,
+      );
+      if (row) resolvedMode = "kumite";
+    }
     if (!row?.reward.bossRaid)
       throw new PlayerRewardError("Raid not found", 404);
     const stored = row.reward.bossRaid;
-    if (stored.lastActionId === actionId) return status(tx, userId, now);
+    if (stored.lastActionId === actionId) return status(tx, userId, now, resolvedMode);
     const current = stored.state as BossRaid;
     if (current.revision !== revision)
       throw new PlayerRewardError(
@@ -222,7 +249,7 @@ export async function actBossRaid(
       throw e;
     }
     const settled = settleBossCampaign(
-      await readCampaign(tx, userId),
+      await readCampaign(tx, userId, resolvedMode),
       current,
       next,
     );
@@ -258,14 +285,19 @@ export async function actBossRaid(
           updatedAt: now,
         })
         .where(eq(playerProfilesTable.clerkUserId, userId));
-    await saveCampaign(tx, userId, {
-      ...settled.campaign,
-      earned: {
-        softCurrency: settled.campaign.earned.softCurrency + delta.softCurrency,
-        packTickets: settled.campaign.earned.packTickets + delta.packTickets,
-        styleShards: settled.campaign.earned.styleShards + delta.styleShards,
+    await saveCampaign(
+      tx,
+      userId,
+      {
+        ...settled.campaign,
+        earned: {
+          softCurrency: settled.campaign.earned.softCurrency + delta.softCurrency,
+          packTickets: settled.campaign.earned.packTickets + delta.packTickets,
+          styleShards: settled.campaign.earned.styleShards + delta.styleShards,
+        },
       },
-    });
+      resolvedMode,
+    );
     await tx
       .update(playerCollectionClaimsTable)
       .set({
@@ -275,6 +307,9 @@ export async function actBossRaid(
         },
       })
       .where(eq(playerCollectionClaimsTable.id, row.id));
-    return status(tx, userId, now);
+    if (resolvedMode === "kumite" && (next.phase !== "active" || next.hp === 0)) {
+      await reconcileKumiteRewards(tx, userId, now.getTime());
+    }
+    return status(tx, userId, now, resolvedMode);
   });
 }

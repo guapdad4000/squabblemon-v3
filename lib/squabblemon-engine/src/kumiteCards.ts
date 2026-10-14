@@ -13,6 +13,12 @@ export const KUMITE_CARD_REWARDS = [
   { id: 'kumite:card:yasuke:v1', cardId: 'yasuke', name: 'Yasuke', requirement: 'Win 3 full finals', metric: 'championships', required: 3 },
 ] as const;
 
+export const KUMITE_LINEUP_REWARDS = [
+  ...KUMITE_CARD_REWARDS.slice(0, 5),
+  { id: 'kumite:card:p-tang:v1', cardId: 'p-tang', name: 'P. Tang', requirement: 'Win 4 full fights', metric: 'matchWins' as const, required: 4 },
+  ...KUMITE_CARD_REWARDS.slice(5),
+] as const;
+
 const definitions = [
   ['bushedo-brown', 'Bushedo Brown', 'Rare', 'Air', 3, 3, 'Personal Security', 'On Reveal: Protect your weakest other ally here. If the strongest enemy here has more Hands than Bushedo Brown, give that enemy -1 Hand.', 'Support', '#c5daf5'],
   ['franklin-duke', 'Franklin Duke', 'Epic', 'Light', 4, 4, 'Read The Strike', 'On Reveal: If the strongest enemy here has more Hands than Franklin Duke, give that enemy -2 Hands and gain +2 Hands if the hit lands. Otherwise, give your weakest ally in another district +1 Hand.', 'Pressure', '#fbd85b'],

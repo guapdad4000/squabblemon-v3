@@ -26,7 +26,9 @@ import { DistrictAmbience } from './DistrictAmbience';
 import { KeyedVideo } from './KeyedVideo';
 import { setBattleActive } from '../lib/imageWarmup';
 import React, { useEffect, useRef, useState } from 'react';
-import { cards, getAssetUrl } from '../data';
+import { styleSetFor } from '@workspace/squabblemon-engine/cosmetics';
+import { computeHandsOverdrive, computeElementalOverdrivePerk } from '@workspace/squabblemon-engine/bossRaid';
+import { catalogCardByEngineId, catalogCardById, cards, getAssetUrl } from '../data';
 import { CardView } from './CardView';
 import type { CardInstance } from '../gameEngine';
 import { getCharacterDistrictMarks, type CharacterDistrictMark, getMatchDistricts, getMatchRoundLimit, getCardCostExplanation, getDistrictResults, getEffectiveCardPower, getLaneScoreForMatch, getLegalCardCost, getRivalIntent, Match, getStoryLockedLanes, getStoryModifierSummaries, getActiveStoryPhase, type EffectLogEntry, type Lane } from '../gameEngine';
@@ -693,6 +695,31 @@ export function Battle({
         {!replaying && !interactive && !blocksFastForward && <button type="button" data-testid="button-fast-forward" onClick={skipSequence} className="battle-fast-forward" aria-label="Fast forward" title="Fast forward"><ChevronsRight size={18} aria-hidden="true" /><span>Skip</span></button>}
       </div> : null;
   const guidanceMode = readingCue ? 'reading' : replaying ? 'replay' : tutorialCoach ? 'coach' : 'live';
+  const battleOverdrive = React.useMemo(() => {
+    const playerBoardCards = m.boards.flat().filter(c => c.owner === 'player' && !c.hazard);
+    const totalHands = districtResults.reduce((sum: number, r: { playerScore?: number }) => sum + (r.playerScore ?? 0), 0);
+    const od = computeHandsOverdrive(totalHands);
+    const sorted = [...playerBoardCards].sort((a, b) => getEffectiveCardPower(b) - getEffectiveCardPower(a));
+    const topCard = sorted[0];
+    const awakened = topCard && getEffectiveCardPower(topCard) >= 10;
+    if (od.tier === 0 && !awakened) return null;
+    for (const candidate of sorted) {
+      const cat = catalogCardByEngineId[candidate.cardId] ?? catalogCardById[candidate.cardId];
+      const banner = cat ? styleSetFor(cat.catalogId)?.banner : undefined;
+      if (cat && banner) {
+        const perk = computeElementalOverdrivePerk(candidate.type ?? 'Air');
+        return {
+          name: cat.name,
+          ability: candidate.ability,
+          banner,
+          callout: awakened ? `★ AWAKENED · ${getEffectiveCardPower(candidate)} HANDS` : od.callout,
+          perkLabel: `${perk.element.toUpperCase()} · ${perk.perkName}`,
+          tier: Math.max(1, od.tier),
+        };
+      }
+    }
+    return null;
+  }, [m.boards, districtResults]);
 
   return <div {...drag.rootProps} data-testid="battle-arena" data-hud-layout={stableHeader ? 'organized' : undefined} data-attack-caption={(showsAttackCaption && !readingCue) || undefined} data-chain-banner={(showsChainBanner && !readingCue) || undefined} data-reading-cue={readingCue ? readingCue.kind : undefined} data-replaying={showsAttack && replaying ? true : undefined} data-tutorial-focus={tutorialCoach && interactive ? (tutorialGuidance as TutorialGuidance | null)?.focus : undefined} data-presentation-phase={phase} data-engine-phase={m.phase} data-impact-strength={effectLanded && presentedEffect ? eventIntensity(presentedEffect) : 'none'} data-reduced-motion={reducedMotion ? 'true' : 'false'} data-battle-speed={fastBattleSpeed ? 'fast' : 'normal'} style={{ '--presentation-speed': presentationSpeed } as React.CSSProperties} data-venue={venue.id} data-venue-tone={venue.tone} className={`battle-arena battle-hud world-decor-host phase-${phase} ${squabble ? 'is-squabble-armed' : ''} flex flex-col h-full w-full max-w-full mx-auto overflow-hidden relative z-10 bg-[#0d0d0d]`} aria-label={`Battle phase: ${phaseMessage}`}>
     <PageDecor theme="battle" />
@@ -818,6 +845,16 @@ export function Battle({
       </div>;
     })}</div>
     <DiceGameOverlay result={m.diceResult} />
+    {battleOverdrive && !tutorialCoach && (
+      <aside className="battle-overdrive-banner" data-tier={battleOverdrive.tier} aria-hidden="true">
+        <img src={getAssetUrl(battleOverdrive.banner)} alt="" />
+        <div>
+          <span>{battleOverdrive.callout}</span>
+          <strong>{battleOverdrive.name.toUpperCase()} · {battleOverdrive.ability.toUpperCase()}</strong>
+          <small>{battleOverdrive.perkLabel}</small>
+        </div>
+      </aside>
+    )}
       <div data-testid="battle-command-deck" data-hand-peek={!tutorialCoach && selectedCard && interactive && !drag.drag ? 'true' : undefined} className="battle-command-deck shrink-0 relative z-40">
         {!tutorialCoach && selectedCard && interactive && !drag.drag && <BattleHandPeek card={selectedCard} cost={selectedCost ?? selectedCard.cost} baseCost={selectedLane === null} unavailable={!selectedHasLegalLane || (selectedLane !== null && (selectedLaneLocked || !selectedLaneAllowed || (selectedCost ?? 0) > m.playerMotion))} reducedMotion={reducedMotion} />}{timerEnabled && <div data-testid="decision-clock" data-state={timerState} className="decision-clock"><div><span>{clockRunning ? online && !online.yourTurn ? 'RIVAL TURN' : timerSeconds <= 5 ? 'LOCK IN NOW' : 'YOUR TURN' : 'TIMER PAUSED'}</span><strong>{clockRunning ? `${timerSeconds}s` : '—'}</strong><small>{clockRunning ? timerSeconds <= 5 ? (online ? 'Forfeit at zero' : 'Auto-play at zero') : online && !online.yourTurn ? 'Your rival is choosing' : 'Choose a card and district' : 'Resolving battle'}</small></div><div className="decision-clock-track" aria-hidden="true"><i style={{ transform: `scaleX(${clockRunning ? timerProgress : 0})` }} /></div></div>}<div id="hand-tray" data-testid="hand-tray" data-drag-hand className="battle-hand-tray"><div className="battle-hand-row">{m.playerHand.filter(c => c.instanceId !== stagedPlayer?.instanceId).map(c => { const playability = handPlayability.get(c.instanceId); const cardCost = playability?.cardCost ?? c.cost; const playableForChoice = playability?.playableForChoice ?? false; const reason = playability?.reason; return <BattleHandCard key={c.instanceId} layoutDependency={handLayout} card={c} playable={playableForChoice} onInspectCard={inspectHandCard} onSelectCard={selectHandCard} dragEnabled={!tutorialCoach && interactive && Boolean(onPlayCard) && tutorialCardPlayAllowed && c.kind !== 'blockbuster'} variantId={getEquippedVariant(equippedVariants, c.id)} queued={selectedInstanceId === c.instanceId} squabble={squabble && selectedInstanceId === c.instanceId} cost={cardCost} unavailable={interactive && !playableForChoice} disabledReason={reason} className="origin-bottom" portraitPop={isNewlyDrawn(c.instanceId)} />; })}</div></div>
       {canInvest && selectedLane !== null && interactive && <div className="wild-investment" data-testid="wild-investment">

@@ -9,11 +9,14 @@ import {
 } from "@workspace/api-client-react";
 import {
   bossForm,
+  bossFormForMode,
+  KUMITE_BOSS_FORMS,
   type BossStatus,
   type BossAction,
   type BossBlast,
+  type BossRaidMode,
 } from "@workspace/squabblemon-engine/bossRaid";
-import { type Deck } from "../../data";
+import { KUMITE_LINEUP_REWARDS, getCardImage, type Deck } from "../../data";
 import { CompactDeckPicker } from "../CompactDeckPicker";
 import { BossRaidView } from "./BossRaidView";
 import "../../styles/boss-raid.css";
@@ -27,11 +30,19 @@ export default function BossRaidGame({
   crews: Deck[];
   onExit: () => void;
 }) {
+  const [mode, setMode] = useState<BossRaidMode>(() =>
+    typeof window !== "undefined" &&
+    new URLSearchParams(window.location.search).get("raid") === "kumite"
+      ? "kumite"
+      : "precinct",
+  );
+  const modeEndpoint =
+    mode === "kumite" ? `${endpoint}?mode=kumite` : endpoint;
   const client = useQueryClient(),
-    key = ["boss-raid", bootstrap.profile.id];
+    key = ["boss-raid", bootstrap.profile.id, mode];
   const query = useQuery({
     queryKey: key,
-    queryFn: () => customFetch<BossStatus>(endpoint),
+    queryFn: () => customFetch<BossStatus>(modeEndpoint),
     refetchOnWindowFocus: false,
     retry: 1,
   });
@@ -99,9 +110,30 @@ export default function BossRaidGame({
   }
   const status = query.data,
     run = status?.run;
+  function switchMode(nextMode: BossRaidMode) {
+    if (busy || nextMode === mode) return;
+    setError("");
+    setBlast(null);
+    setMode(nextMode);
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      if (nextMode === "kumite") params.set("raid", "kumite");
+      else params.delete("raid");
+      const search = params.toString();
+      window.history.replaceState(
+        window.history.state,
+        "",
+        `${window.location.pathname}${search ? `?${search}` : ""}${window.location.hash}`,
+      );
+    }
+  }
   function action(action: BossAction) {
     if (!run || pending.current || blast) return;
-    void send(`${endpoint}/${run.id}/action`, {
+    const actionUrl =
+      mode === "kumite"
+        ? `${endpoint}/${run.id}/action?mode=kumite`
+        : `${endpoint}/${run.id}/action`;
+    void send(actionUrl, {
       revision: run.revision,
       actionId: crypto.randomUUID(),
       action,
@@ -121,6 +153,9 @@ export default function BossRaidGame({
     return (
       <BossRaidView
         status={status}
+        mode={mode}
+        onModeChange={switchMode}
+        ownedCardIds={bootstrap.profile.ownedCardIds}
         busy={busy}
         blast={blast}
         reducedMotion={bootstrap.profile.settings.reducedMotion}
@@ -138,42 +173,106 @@ export default function BossRaidGame({
         }}
       />
     );
+  const currentForm = bossFormForMode(status.campaign.tier, mode);
+  const kumiteForm = KUMITE_BOSS_FORMS[status.campaign.tier - 1];
+  const unlockedKumiteCount = KUMITE_LINEUP_REWARDS.filter((r) =>
+    bootstrap.profile.ownedCardIds.includes(r.cardId),
+  ).length;
   return (
     <main
       className="boss-raid raid-entry raid-entry-v4"
+      data-raid-mode={mode}
       data-reduced-motion={bootstrap.profile.settings.reducedMotion}
       style={
         {
-          "--raid-bg": `url("${getAssetUrl("assets/boss-raid/precinct-arena-v3.webp")}")`,
+          "--raid-bg": `url("${getAssetUrl(
+            mode === "kumite"
+              ? "assets/kumite/layers/backdrop.webp"
+              : "assets/boss-raid/precinct-arena-v3.webp",
+          )}")`,
         } as React.CSSProperties
       }
     >
-      <button onClick={onExit}>← Fadecade</button>
+      <div className="raid-entry-topbar">
+        <button onClick={onExit}>← Fadecade</button>
+        <div className="raid-mode-flip" role="tablist" aria-label="Choose Raid Operation">
+          <button
+            type="button"
+            role="tab"
+            aria-selected={mode === "precinct"}
+            onClick={() => switchMode("precinct")}
+          >
+            PRECINCT RAID · OINK
+          </button>
+          <button
+            type="button"
+            role="tab"
+            aria-selected={mode === "kumite"}
+            onClick={() => switchMode("kumite")}
+          >
+            KUMITE RAID · DOJO MASTERS
+          </button>
+        </div>
+      </div>
       <div className="raid-entry-content">
         <div className="raid-entry-hero-art">
           <img
-            src={getAssetUrl("assets/boss-raid/oink-splash-v4.webp")}
-            alt="Officer Oink challenging your crew"
+            src={
+              mode === "kumite"
+                ? getCardImage(kumiteForm.fighterId)
+                : getAssetUrl("assets/boss-raid/oink-splash-v4.webp")
+            }
+            alt={
+              mode === "kumite"
+                ? `${kumiteForm.bossTitle} challenging your crew`
+                : "Officer Oink challenging your crew"
+            }
           />
           <span className="raid-entry-siren-glow" />
         </div>
         <div className="raid-entry-story">
-          <small>DAILY BOSS / THE BLOCK FIGHTS BACK</small>
-          <h1 aria-label="Punch on Patrol">
-            PUNCH ON
-            <br />
-            PATROL
+          <small>
+            {mode === "kumite"
+              ? `KUMITE DOJO RAID · TIER ${status.campaign.tier}/5 · ${kumiteForm.name.toUpperCase()}`
+              : `DAILY BOSS · TIER ${status.campaign.tier}/5 · ${currentForm.name.toUpperCase()}`}
+          </small>
+          <h1 aria-label={mode === "kumite" ? "Way of the Fist" : "Punch on Patrol"}>
+            {mode === "kumite" ? (
+              <>
+                WAY OF
+                <br />
+                THE FIST
+              </>
+            ) : (
+              <>
+                PUNCH ON
+                <br />
+                PATROL
+              </>
+            )}
           </h1>
           <p>
-            Five evolving bosses. One daily attack. Your damage stays on Oink
-            between days—bring a deck that can break the precinct.
+            {mode === "kumite"
+              ? `Challenge ${kumiteForm.bossTitle} (${kumiteForm.hp} HP · ×${kumiteForm.multiplier} Hands). Every full raid, 50+ DMG win, and defeated tier advances your Kumite Fighter Unlocks (${unlockedKumiteCount}/${KUMITE_LINEUP_REWARDS.length} unlocked).`
+              : "Five evolving bosses. Your damage stays on Oink between days—and every completed raid, 50+ DMG win, and tier clear also advances your Kumite Fighter Unlocks."}
           </p>
-          <strong>ONE REWARDED ENTRY DAILY</strong>
+          <div className="raid-kumite-unlock-strip" aria-label="Kumite fighter unlock connection">
+            <span>KUMITE LINEUP UNLOCKS ({unlockedKumiteCount}/{KUMITE_LINEUP_REWARDS.length})</span>
+            <div className="raid-kumite-unlock-pills">
+              {KUMITE_LINEUP_REWARDS.map((item) => {
+                const owned = bootstrap.profile.ownedCardIds.includes(item.cardId);
+                return (
+                  <span key={item.id} className="raid-kumite-pill" data-owned={owned}>
+                    {owned ? "✓ " : ""}{item.name}
+                  </span>
+                );
+              })}
+            </div>
+          </div>
           <p>
             Tier {status.campaign.tier}/5 · {status.campaign.hp} HP remaining ·{" "}
-            {status.campaign.tierAttacks} attacks so far
-            <br />
-            Personal best: {status.bestScore} damage
+            {status.campaign.tierAttacks} attacks so far · Personal best:{" "}
+            {status.bestScore} DMG
           </p>
           <div className="raid-entry-launch">
             <small className="raid-entry-crew-label">BRING YOUR CREW</small>
@@ -200,17 +299,24 @@ export default function BossRaidGame({
                 busy || !crews.length || !!error || status.campaign.completed
               }
               onClick={() =>
-                void send(endpoint + "/start", {
-                  requestId: crypto.randomUUID(),
-                  cardIds: crews[choice].cards,
-                })
+                void send(
+                  mode === "kumite"
+                    ? `${endpoint}/start?mode=kumite`
+                    : `${endpoint}/start`,
+                  {
+                    requestId: crypto.randomUUID(),
+                    cardIds: crews[choice].cards,
+                  },
+                )
               }
             >
               {status.campaign.completed
                 ? "ALL FIVE TIERS DEFEATED"
                 : busy
                   ? "ENTERING…"
-                  : "FIGHT THE PRECINCT →"}
+                  : mode === "kumite"
+                    ? `CHALLENGE ${kumiteForm.bossTitle} →`
+                    : "FIGHT THE PRECINCT →"}
             </button>
           </div>
           {error && (

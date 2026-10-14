@@ -190,12 +190,10 @@ export function Market({ bootstrap, openPacks }: { bootstrap: PlayerBootstrap; o
         <LayeredVenue scene="training-club" />
       </div>
       <PageDecor theme="market" />
-      <div className="training-studio__board" aria-hidden="true"><span>OPEN LATE</span><b>01 / PUT IN WORK</b><span>OAKLAND ATHLETIC CLUB</span></div>
       <header className="market-hero">
         <div>
-          <span className="studio-eyebrow">DR. FADE’S · TRAINING CLUB</span>
+          <span className="studio-eyebrow">TRAINING CLUB</span>
           <h1>Put in <em>work.</em></h1>
-          <p>Get your reps. Level up. Learn a new move.</p>
         </div>
         <picture className="market-hero__fade-art">
           <img src={getAssetUrl('assets/training/dr-fade-coach.webp')} alt="Dr. Fade coaching at the training club" draggable={false} />
@@ -211,20 +209,9 @@ export function Market({ bootstrap, openPacks }: { bootstrap: PlayerBootstrap; o
             <strong>{profile.packTickets}</strong>
             <small>Tickets</small>
           </span>
-          <span>
-            <GameGlyph name="shards" />
-            <strong>{profile.styleShards}</strong>
-            <small>Universal Shards</small>
-          </span>
         </div>
       </header>
-      {preview && (
-        <p className="market-notice market-preview-label">
-          LOCAL PREVIEW · Purchases change this preview only; no account is charged.
-        </p>
-      )}
-      <Link href="/game/style" className="market-style-link">Signature collections · Stickers, banners & card scenes →</Link>
-      <StyleShardWallet wallet={profile} cardRarity={card?.rarity}/>
+      <StyleShardWallet wallet={profile} cardRarity={card?.rarity} />
       <nav className="market-offers" aria-label="Shop items">
         {SHOP_OFFERS.filter((item) => item.id !== 'ticket' && !item.id.startsWith('reaction-pack') && !item.id.startsWith('character-')).map((item) => (
           <button

@@ -2,21 +2,21 @@
 /* Use the bundled hand lettering so the labels also work without Google Fonts. */
 .corner-store, .corner-checkout { --font-hand: 'Market Hand', cursive; --font-marker: 'Market Hand', cursive; }
 /* The market is a row of lit, open display cubbies below the storefront. */
-.corner-store { background: #171916; }
+.corner-store { background: #171916; position: relative; isolation: isolate; }
 .corner-store img, .corner-checkout img { -webkit-user-drag: none; -webkit-touch-callout: none; user-select: none; }
-.corner-store::after { background: linear-gradient(180deg, #11191436 0, #11191475 230px, #171916f5 440px, #171916 680px); }
-.corner-store .layered-venue { max-height: 590px; }
-.corner-store__scroll { display: block; max-width: 1280px; margin: 0 auto; padding: 30px clamp(20px, 4vw, 54px) 40px; }
-.corner-store__heading { display: flex; align-items: center; justify-content: space-between; gap: 24px; min-height: 244px; padding: 0 8px 25px; }
+.corner-store::after { content: ''; position: fixed; inset: 0; z-index: -1; pointer-events: none; background: linear-gradient(180deg, #11191440 0, #11191480 45%, #171916c9 100%); }
+.corner-store .layered-venue { position: fixed; inset: 0; max-height: none; height: 100dvh; z-index: -2; pointer-events: none; }
+.corner-store__scroll { display: block; max-width: 1280px; margin: 0 auto; padding: 18px clamp(20px, 4vw, 54px) 40px; }
+.corner-store__heading { display: flex; align-items: center; justify-content: space-between; gap: 24px; min-height: 0; padding: 0 8px 8px; }
 .corner-store__hero-copy > span { font: 700 10px var(--font-mono); letter-spacing: .18em; color: #f7d695; }
-.corner-store__heading h1 { margin: 17px 0 13px; font-size: clamp(56px, 6.7vw, 90px); }
+.corner-store__heading h1 { margin: 4px 0 6px; font-size: clamp(34px, 4.2vw, 52px); }
 .corner-store__heading h1 br { display: none; }
 .corner-store__heading h1 em::before { content: none; }
 .corner-store__heading h1 em { margin-left: .12em; }
 .corner-store__heading p { max-width: none; color: #fff3da; font-size: 14px; }
 .corner-store__heading .corner-store__open-sign { display: block; flex: none; padding: 19px 25px; border: 3px solid #ddc9a2; outline: 2px solid #111c18; background: #16413c; color: #fff0ce; font: 32px/1.1 var(--font-hand); letter-spacing: 0; text-shadow: none; box-shadow: 5px 7px 0 #121915b3; transform: rotate(4deg); }
 .corner-store__open-sign small { display: block; margin-top: 9px; font: 700 8px var(--font-mono); letter-spacing: .2em; }
-.corner-store__counter { position: relative; background: none; border: 0; border-radius: 0; padding: 0; }
+html .corner-store .corner-store__counter, .corner-store__counter { position: relative; background: rgba(14, 22, 18, 0.56); backdrop-filter: blur(6px); border: 1px solid rgba(198, 173, 101, 0.28); border-radius: 6px; padding: 14px; }
 .corner-store__wallet { width: fit-content; border: 1px solid #d8c8a331; background: #111a17d9; padding: 8px 18px 8px 10px; border-radius: 5px; gap: 10px; }
 .corner-store__wallet > img { width: 36px; height: 36px; }
 .corner-store__wallet strong { font-size: 23px; line-height: 1.15; }

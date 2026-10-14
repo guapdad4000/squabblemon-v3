@@ -27,7 +27,8 @@ function failure(res: Response, e: unknown) {
 }
 router.get("/player/boss-raid", async (req, res) => {
   try {
-    res.json(await getBossRaid(getAuth(req).userId!));
+    const mode = req.query.mode === "kumite" ? "kumite" : "precinct";
+    res.json(await getBossRaid(getAuth(req).userId!, new Date(), mode));
   } catch (e) {
     failure(res, e);
   }
@@ -39,11 +40,14 @@ router.post("/player/boss-raid/start", async (req, res) => {
     return;
   }
   try {
+    const mode = req.query.mode === "kumite" ? "kumite" : "precinct";
     res.json(
       await startBossRaid(
         getAuth(req).userId!,
         body.data.requestId,
         body.data.cardIds,
+        new Date(),
+        mode,
       ),
     );
   } catch (e) {
@@ -58,6 +62,7 @@ router.post("/player/boss-raid/:id/action", async (req, res) => {
     return;
   }
   try {
+    const mode = req.query.mode === "kumite" ? "kumite" : "precinct";
     res.json(
       await actBossRaid(
         getAuth(req).userId!,
@@ -65,6 +70,8 @@ router.post("/player/boss-raid/:id/action", async (req, res) => {
         body.data.revision,
         body.data.actionId,
         body.data.action,
+        new Date(),
+        mode,
       ),
     );
   } catch (e) {

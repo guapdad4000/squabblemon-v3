@@ -9,13 +9,13 @@ export function ArsenalTabs() {
         href="/game/collection"
         aria-current={path.startsWith("/game/collection") ? "page" : undefined}
       >
-        <strong>Collection</strong><span>Every card. Every discovery.</span>
+        <strong>Collection</strong>
       </Link>
       <Link
         href="/game/decks"
         aria-current={path.startsWith("/game/decks") ? "page" : undefined}
       >
-        <strong>Decks</strong><span>Build your next ten.</span>
+        <strong>Decks</strong>
       </Link>
     </nav>
   );

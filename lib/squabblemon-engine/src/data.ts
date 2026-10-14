@@ -23,7 +23,7 @@ import { fairytaleCards, fairytaleRarities, fairytaleUpgradeEffects, FAIRYTALE_A
 import { afterHoursWaveCards, afterHoursWaveRarities, afterHoursWaveUpgradeEffects } from './afterHoursWave';
 import { elementalBondWaveCards, elementalBondWaveRarities, elementalBondWaveUpgradeEffects } from './elementalBondWave';
 import { kumiteCards, kumiteCardRarities, kumiteCardUpgradeEffects, isKumiteExclusiveCard } from './kumiteCards';
-export { KUMITE_EXCLUSIVE_CARD_IDS, KUMITE_CARD_REWARDS, isKumiteExclusiveCard } from './kumiteCards';
+export { KUMITE_EXCLUSIVE_CARD_IDS, KUMITE_CARD_REWARDS, KUMITE_LINEUP_REWARDS, isKumiteExclusiveCard } from './kumiteCards';
 import { sideOzWaveCards, sideOzWaveRarities, sideOzWaveUpgradeEffects, sideOzWaveFactions } from './sideOzWave';
 import { storyCharacterWaveCards, storyCharacterWaveRarities, storyCharacterWaveUpgradeEffects } from './storyCharacterWave';
 import { tripleOgCards, tripleOgRarities, tripleOgUpgradeEffects } from './tripleOgs';

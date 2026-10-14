@@ -1,7 +1,7 @@
 import { PersonalFadeRecord } from '../../components/social/PersonalFadeRecord';
 import { FadePark, FightTabs } from './FadePark';
 import { usePersistentDeckSelection } from '../../lib/deckSelection';
-import { useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { Link, useLocation, useSearch } from "wouter";
 import { ApiError, type PlayerBootstrap } from "@workspace/api-client-react";
 import { Check, Copy } from "lucide-react";
@@ -31,13 +31,15 @@ export function Multiplayer({ bootstrap, code }: { bootstrap: PlayerBootstrap; c
   useEventVoice(friends && !code ? 'friendly-fade' : null);
   const { profile } = bootstrap;
   const social = useSocial();
-  const saved = profile.savedDecks.filter(deck => validateSavedDeck(deck.cardIds, profile.ownedCardIds, deck.heroCardId).valid);
-  const recipes = starterRecipes.filter(deck => validateSavedDeck(deck.catalogCardIds, profile.ownedCardIds, deck.hero).valid);
-  const crews = [
-    ...saved.map(deck => ({ id: deck.id, name: deck.name, heroCardId: deck.heroCardId!, cardIds: deck.cardIds })),
-    ...recipes.filter(deck => !saved.some(s => s.id === deck.id))
-      .map(deck => ({ id: deck.id, name: deck.name, heroCardId: deck.hero, cardIds: deck.catalogCardIds })),
-  ];
+  const crews = useMemo(() => {
+    const saved = profile.savedDecks.filter(deck => validateSavedDeck(deck.cardIds, profile.ownedCardIds, deck.heroCardId).valid);
+    const recipes = starterRecipes.filter(deck => validateSavedDeck(deck.catalogCardIds, profile.ownedCardIds, deck.hero).valid);
+    return [
+      ...saved.map(deck => ({ id: deck.id, name: deck.name, heroCardId: deck.heroCardId!, cardIds: deck.cardIds })),
+      ...recipes.filter(deck => !saved.some(s => s.id === deck.id))
+        .map(deck => ({ id: deck.id, name: deck.name, heroCardId: deck.hero, cardIds: deck.catalogCardIds })),
+    ];
+  }, [profile.savedDecks, profile.ownedCardIds]);
   const [crewId, setCrewId] = usePersistentDeckSelection(profile.id, crews.map(crew => crew.id));
   const chosen = crews.find(crew => crew.id === crewId) ?? crews[0];
   const [enteredCode, setEnteredCode] = useState(code ?? "");

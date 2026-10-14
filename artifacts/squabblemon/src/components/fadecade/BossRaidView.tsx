@@ -12,16 +12,25 @@ import {
   applyBossAction,
   BOSS_NPCS,
   BOSS_FORMS,
+  KUMITE_BOSS_FORMS,
+  BOSS_TIERS,
   bossForm,
+  bossFormForMode,
   BOSS_ROUNDS,
   bossBlastPreview,
   bossCardCost,
+  computeHandsOverdrive,
+  computeElementalOverdrivePerk,
+  HANDS_OVERDRIVE_TIERS,
   type BossAction,
   type BossStatus,
   type BossBlast,
   type BossNpcId,
   type BossTier,
+  type BossRaidMode,
 } from "@workspace/squabblemon-engine/bossRaid";
+import { styleSetFor } from "@workspace/squabblemon-engine/cosmetics";
+import { KUMITE_LINEUP_REWARDS, catalogCardByEngineId, catalogCardById, getCardImage } from "../../data";
 import {
   getEffectiveCardPower,
   getMatchWinner,
@@ -93,6 +102,9 @@ function RaidFormationDialog({ lane, owner, cards, round, onClose, onInspect }: 
 
 export function BossRaidView({
   status,
+  mode,
+  onModeChange,
+  ownedCardIds = [],
   busy = false,
   blast = null,
   onAction,
@@ -103,6 +115,9 @@ export function BossRaidView({
   reducedMotion = false,
 }: {
   status: BossStatus;
+  mode?: BossRaidMode;
+  onModeChange?: (mode: BossRaidMode) => void;
+  ownedCardIds?: string[];
   busy?: boolean;
   blast?: BossBlast | null;
   onAction: (action: BossAction) => void;
@@ -113,7 +128,9 @@ export function BossRaidView({
   reducedMotion?: boolean;
 }) {
   const run = status.run!,
-    form = bossForm(run.bossTier),
+    activeMode: BossRaidMode = mode ?? run.mode ?? "precinct",
+    form = bossFormForMode(run.bossTier, activeMode),
+    kumiteForm = KUMITE_BOSS_FORMS[run.bossTier - 1],
     campaign = status.campaign;
   const [resultsDismissed, setResultsDismissed] = useState(false);
   const [formation, setFormation] = useState<{ lane: Lane; owner: "player" | "cpu" } | null>(null);
@@ -241,22 +258,86 @@ export function BossRaidView({
     setRetire(false);
     setForms(false);
   };
+  const bossPhase =
+    displayedHp <= 0
+      ? "defeated"
+      : displayedHp <= run.maxHp * 0.25
+        ? "critical"
+        : displayedHp <= run.maxHp * 0.5
+          ? "bloodied"
+          : "healthy";
+  const projectedLoss =
+    run.phase === "active" && !blast ? Math.min(displayedHp, preview.total) : 0;
+  const isLethalProjection = projectedLoss >= displayedHp && displayedHp > 0;
+  const totalBoardHands = preview.hands[0] + preview.hands[1] + preview.hands[2];
+  const overdrive = computeHandsOverdrive(totalBoardHands);
+  const leadBoardCard = useMemo(() => {
+    const playerCards = shownMatch.boards.flat().filter((c) => c.owner === "player" && !c.hazard);
+    const sorted = [...playerCards].sort((a, b) => getEffectiveCardPower(b) - getEffectiveCardPower(a));
+    for (const candidate of sorted) {
+      const cat = catalogCardByEngineId[candidate.cardId] ?? catalogCardById[candidate.cardId];
+      if (cat && styleSetFor(cat.catalogId)?.banner) {
+        return {
+          name: cat.name,
+          catalogId: cat.catalogId,
+          ability: candidate.ability,
+          element: candidate.type ?? "Air",
+          power: getEffectiveCardPower(candidate),
+          banner: styleSetFor(cat.catalogId)!.banner!,
+        };
+      }
+    }
+    return {
+      name: "P. Tang",
+      catalogId: "p-tang",
+      ability: "Belt Check",
+      element: "Air",
+      power: 12,
+      banner: styleSetFor("p-tang")?.banner ?? "assets/cosmetics/p-tang/banner-v3.webp",
+    };
+  }, [shownMatch.boards]);
+  const elementalPerk = computeElementalOverdrivePerk(leadBoardCard.element);
   return (
     <main
       className="boss-raid raid-v2 raid-v3 raid-combat-layout"
-      aria-label="Punch on Patrol battle"
+      aria-label={activeMode === "kumite" ? "Kumite Dojo Raid battle" : "Punch on Patrol battle"}
       data-testid="boss-raid-stage"
+      data-raid-mode={activeMode}
       data-round={shownMatch.round}
       data-tier={run.bossTier}
       data-reduced-motion={reducedMotion}
       style={
         {
-          "--raid-bg": `url("${getAssetUrl("assets/boss-raid/precinct-arena-v3.webp")}")`,
+          "--raid-bg": `url("${getAssetUrl(
+            activeMode === "kumite"
+              ? "assets/kumite/layers/backdrop.webp"
+              : "assets/boss-raid/precinct-arena-v3.webp",
+          )}")`,
         } as CSSProperties
       }
     >
       <header className="raid-top">
         <button onClick={onExit}>← Fadecade</button>
+        {onModeChange && (
+          <div className="raid-mode-flip raid-mode-flip--compact" role="tablist" aria-label="Switch Raid Operation">
+            <button
+              type="button"
+              role="tab"
+              aria-selected={activeMode === "precinct"}
+              onClick={() => onModeChange("precinct")}
+            >
+              PRECINCT
+            </button>
+            <button
+              type="button"
+              role="tab"
+              aria-selected={activeMode === "kumite"}
+              onClick={() => onModeChange("kumite")}
+            >
+              KUMITE DOJO
+            </button>
+          </div>
+        )}
         <div
           className="raid-round-pips"
           aria-label={`Round ${shownMatch.round} of ${BOSS_ROUNDS}`}
@@ -284,15 +365,23 @@ export function BossRaidView({
           className="raid-boss"
           data-hit={!!blast?.total && !policeRevealing}
           data-defeated={run.hp === 0}
+          data-boss-phase={bossPhase}
         >
           <span className="raid-tier-stamp" aria-hidden="true">
             0{run.bossTier}
           </span>
           <div className="raid-boss-title">
-            <button onClick={(e) => open(e, () => setForms(true))}>
-              TIER {run.bossTier} / 5 · {form.name}
-            </button>
-            <h1>OFFICER OINK</h1>
+            <div className="raid-boss-title__eyebrow-row">
+              <button onClick={(e) => open(e, () => setForms(true))}>
+                TIER {run.bossTier} / 5 · {form.name}
+              </button>
+              {(bossPhase === "bloodied" || bossPhase === "critical") && (
+                <span className="raid-phase-badge" data-phase={bossPhase}>
+                  {bossPhase === "critical" ? "CRITICAL · <25% HP" : "ENRAGED · <50% HP"}
+                </span>
+              )}
+            </div>
+            <h1>{activeMode === "kumite" ? kumiteForm.bossTitle : "OFFICER OINK"}</h1>
           </div>
           <div
             className="raid-boss-counter raid-damage-counter"
@@ -323,14 +412,22 @@ export function BossRaidView({
             <button
               className="raid-boss-inspect"
               onClick={(e) => open(e, () => setForms(true))}
-              aria-label="Inspect Officer Oink tiers"
+              aria-label={activeMode === "kumite" ? "Inspect Kumite Grandmaster tiers" : "Inspect Officer Oink tiers"}
             >
-              <BossIdleSprite
-                asset={form.art}
-                name={`Officer Oink, ${form.name}`}
-                paused={modal || resultsOpen || run.hp === 0}
-                reduced={reducedMotion}
-              />
+              {activeMode === "kumite" ? (
+                <img
+                  className="raid-kumite-boss-portrait"
+                  src={getCardImage(kumiteForm.fighterId)}
+                  alt={`${kumiteForm.bossTitle}, ${kumiteForm.name}`}
+                />
+              ) : (
+                <BossIdleSprite
+                  asset={form.art}
+                  name={`Officer Oink, ${form.name}`}
+                  paused={modal || resultsOpen || run.hp === 0}
+                  reduced={reducedMotion}
+                />
+              )}
             </button>
           </div>
           <div
@@ -358,15 +455,87 @@ export function BossRaidView({
                 <i className="raid-hp-glint" />
                 <i className="raid-hp-edge" />
               </span>
+              {projectedLoss > 0 && (
+                <span
+                  className="raid-hp-projected"
+                  aria-hidden="true"
+                  data-lethal={isLethalProjection}
+                  style={
+                    {
+                      "--projected-left": `${Math.max(0, ((displayedHp - projectedLoss) / run.maxHp) * 100)}%`,
+                      "--projected-width": `${(projectedLoss / run.maxHp) * 100}%`,
+                    } as CSSProperties
+                  }
+                />
+              )}
+            </div>
+            <div
+              className="raid-boss-multibar"
+              aria-label={`${6 - run.bossTier} boss health bars remaining`}
+            >
+              <b>×{6 - run.bossTier}</b>
+              <small>×{form.multiplier} DMG</small>
             </div>
             <div className="raid-scoreline">
               <b>
                 {displayedHp}
                 <small> / {run.maxHp} HP</small>
               </b>
+              {run.phase === "active" && !blast && (
+                <span
+                  className="raid-projected-strike"
+                  data-lethal={isLethalProjection}
+                >
+                  {isLethalProjection
+                    ? `★ TIER BREAK READY · −${preview.total} HP`
+                    : `PROJECTED STRIKE · −${preview.total} HP (×${form.multiplier})`}
+                </span>
+              )}
+            </div>
+            <div className="raid-score-tiers" aria-label="Daily damage reward milestones">
+              {BOSS_TIERS.map((t) => {
+                const earned = displayedDamage >= t.score;
+                const projected = !earned && displayedDamage + preview.total >= t.score;
+                return (
+                  <span
+                    key={t.score}
+                    className="raid-score-tier-pip"
+                    data-earned={earned}
+                    data-projected={projected}
+                  >
+                    <b>{t.score} DMG</b>
+                    <small>{t.score === 50 ? "★ KUMITE WIN" : `+${t.packTickets || t.softCurrency} ${t.packTickets ? "TIX" : "CLOUT"}`}</small>
+                  </span>
+                );
+              })}
+            </div>
+            <div className="raid-overdrive-bar" data-overdrive-tier={overdrive.tier} aria-label={`Hands Overdrive: ${totalBoardHands} total Hands, ${overdrive.callout}`}>
+              <span className="raid-overdrive-bar__status">
+                <b>⚡ {totalBoardHands} HANDS</b>
+                <small>{overdrive.tier > 0 ? `${overdrive.callout} (+${overdrive.bonusPct}% POWER)` : overdrive.callout}</small>
+              </span>
+              <div className="raid-overdrive-bar__pips">
+                {HANDS_OVERDRIVE_TIERS.map((t) => (
+                  <span key={t.tier} className="raid-overdrive-pip" data-active={totalBoardHands >= t.minHands}>
+                    {t.minHands}H · +{t.bonusPct}%
+                  </span>
+                ))}
+              </div>
             </div>
           </div>
         </section>
+        {overdrive.tier > 0 && (
+          <aside className="raid-overdrive-cutin" data-tier={overdrive.tier} aria-label={`${leadBoardCard.name} Overdrive Power-Up Active`}>
+            <img className="raid-overdrive-cutin__banner" src={getAssetUrl(leadBoardCard.banner)} alt={`${leadBoardCard.name} signature banner`} />
+            <div className="raid-overdrive-cutin__copy">
+              <span>{overdrive.callout}</span>
+              <strong>{leadBoardCard.name.toUpperCase()} · {leadBoardCard.ability.toUpperCase()}</strong>
+              <small className="raid-overdrive-perk" style={{ color: elementalPerk.accent }}>
+                {elementalPerk.element.toUpperCase()} PERK · {elementalPerk.perkName} (+{overdrive.bonusPct}%)
+              </small>
+            </div>
+          </aside>
+        )}
         <div className="raid-directive" aria-live="polite">
           {error ? (
             <div role="alert">
@@ -395,7 +564,9 @@ export function BossRaidView({
                   ? selectedLane === null
                     ? "Choose a highlighted lane below."
                     : `Deploy to ${["Checkpoint", "Barricade", "Lockup"][selectedLane]}.`
-                  : "Beat the police lanes. Round results attack Oink."}
+                  : activeMode === "kumite"
+                    ? `Conquer the Dojo lanes. Round results strike ${kumiteForm.bossTitle}.`
+                    : "Beat the police lanes. Round results attack Oink."}
               </span>
             </>
           )}
@@ -537,12 +708,16 @@ export function BossRaidView({
                   aria-label={laneDescription}
                   onClick={() => setSelectedLane(lane)}
                 >
-                  <h3>{["CHECKPOINT", "BARRICADE", "LOCKUP"][lane]}</h3>
+                  <h3>
+                    {(activeMode === "kumite"
+                      ? ["WEST DOJO", "CENTER RING", "EAST DOJO"]
+                      : ["CHECKPOINT", "BARRICADE", "LOCKUP"])[lane]}
+                  </h3>
                   <div>
                     <b className="raid-police-score">
                       {preview.policeHands[lane]}
                     </b>
-                    <span>POLICE</span>
+                    <span>{activeMode === "kumite" ? "DOJO" : "POLICE"}</span>
                     <strong>{preview.hands[lane]}</strong>
                     <span>YOU</span>
                   </div>
@@ -553,12 +728,34 @@ export function BossRaidView({
                     {preview.winners[lane] === "player"
                       ? "YOU LEAD"
                       : preview.winners[lane] === "cpu"
-                        ? "POLICE LEAD"
+                        ? "BOSS LEADS"
                         : "TIED"}
                     {blast && !policeRevealing
-                      ? ` · ${blast.damage[lane]} DAMAGE`
-                      : ""}
+                      ? ` · −${blast.damage[lane]} HP`
+                      : preview.damage[lane] > 0
+                        ? ` · −${preview.damage[lane]} HP`
+                        : ""}
                   </small>
+                  <span
+                    className="raid-lane-clash-bar"
+                    aria-hidden="true"
+                    data-winner={preview.winners[lane]}
+                    style={
+                      {
+                        "--player-share": `${
+                          preview.policeHands[lane] + preview.hands[lane] === 0
+                            ? 50
+                            : Math.round(
+                                (preview.hands[lane] /
+                                  (preview.policeHands[lane] + preview.hands[lane])) *
+                                  100,
+                              )
+                        }%`,
+                      } as CSSProperties
+                    }
+                  >
+                    <i />
+                  </span>
                   {card && <span className="raid-lane-choice">{targets[lane]
                     ? selectedLane === lane ? "✓ SELECTED" : `SELECT · ${bossCardCost(run, card, lane, squabble, investment)} ⚡`
                     : "BLOCKED"}</span>}
@@ -850,27 +1047,40 @@ export function BossRaidView({
               </>
             ) : forms ? (
               <>
-                <small>PUNCH ON PATROL · FIVE FORMS</small>
-                <h2>THE WHOLE PRECINCT</h2>
+                <small>{activeMode === "kumite" ? "KUMITE DOJO RAID · FIVE GRANDMASTERS" : "PUNCH ON PATROL · FIVE FORMS"}</small>
+                <h2>{activeMode === "kumite" ? "THE DOJO GAUNTLET" : "THE WHOLE PRECINCT"}</h2>
                 <div className="raid-form-cards">
-                  {BOSS_FORMS.map((f) => (
+                  {(activeMode === "kumite" ? KUMITE_BOSS_FORMS : BOSS_FORMS).map((f) => (
                     <article
                       key={f.tier}
                       data-unlocked={f.tier <= campaign.tier}
                     >
                       <img
-                        src={bossArt(f.art)}
-                        alt={`Officer Oink tier ${f.tier}`}
+                        src={"fighterId" in f ? getCardImage(f.fighterId) : bossArt(f.art)}
+                        alt={"bossTitle" in f ? `${f.bossTitle} tier ${f.tier}` : `Officer Oink tier ${f.tier}`}
                       />
                       <small>TIER {f.tier}</small>
-                      <h3>{f.name}</h3>
+                      <h3>{"bossTitle" in f ? `${f.bossTitle} · ${f.name}` : f.name}</h3>
                       <p>
                         {f.hp} HP · Hands ×{f.multiplier}
                       </p>
                       <p>{f.pressure}</p>
-                      <b>{f.reward.packTickets} tickets on defeat</b>
+                      <b>{f.reward.packTickets} tickets + Kumite Title Credit</b>
                     </article>
                   ))}
+                </div>
+                <div className="raid-kumite-unlock-strip" aria-label="Kumite fighter unlock status">
+                  <span>KUMITE FIGHTER UNLOCKS ({KUMITE_LINEUP_REWARDS.filter((r) => ownedCardIds.includes(r.cardId)).length}/{KUMITE_LINEUP_REWARDS.length})</span>
+                  <div className="raid-kumite-unlock-pills">
+                    {KUMITE_LINEUP_REWARDS.map((item) => {
+                      const isOwned = ownedCardIds.includes(item.cardId);
+                      return (
+                        <span key={item.id} className="raid-kumite-pill" data-owned={isOwned}>
+                          {isOwned ? "✓ " : ""}{item.name} · {item.requirement}
+                        </span>
+                      );
+                    })}
+                  </div>
                 </div>
               </>
             ) : (

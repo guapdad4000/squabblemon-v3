@@ -1,4 +1,4 @@
-import { useEffect, useId, useRef, useState, type CSSProperties, type KeyboardEvent } from 'react';
+import { useEffect, useId, useMemo, useRef, useState, type CSSProperties, type KeyboardEvent } from 'react';
 import { Link, useLocation } from 'wouter';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { ArrowLeft, ArrowRight, Check, HandFist, LoaderCircle, RefreshCw } from 'lucide-react';
@@ -54,10 +54,15 @@ export function Kumite({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   const match = current?.currentMatch;
   const now = clock + (current ? current.serverTime - query.dataUpdatedAt : 0);
   const earnedRewards = current?.progression?.rewards.filter(reward => reward.claimed).map(reward => reward.id).sort().join('|') ?? '';
-  const saved = profile.savedDecks.filter(d => validateSavedDeck(d.cardIds, profile.ownedCardIds, d.heroCardId).valid);
-  const decks = [...saved.map(d => ({ id: d.id, name: d.name, heroCardId: d.heroCardId!, cardIds: d.cardIds })),
-    ...starterRecipes.filter(d => !saved.some(s => s.id === d.id) && validateSavedDeck(d.catalogCardIds, profile.ownedCardIds, d.hero).valid)
-      .map(d => ({ id: d.id, name: d.name, heroCardId: d.hero, cardIds: d.catalogCardIds }))];
+  const decks = useMemo(() => {
+    const saved = profile.savedDecks.filter(d => validateSavedDeck(d.cardIds, profile.ownedCardIds, d.heroCardId).valid);
+    return [
+      ...saved.map(d => ({ id: d.id, name: d.name, heroCardId: d.heroCardId!, cardIds: d.cardIds })),
+      ...starterRecipes
+        .filter(d => !saved.some(s => s.id === d.id) && validateSavedDeck(d.catalogCardIds, profile.ownedCardIds, d.hero).valid)
+        .map(d => ({ id: d.id, name: d.name, heroCardId: d.hero, cardIds: d.catalogCardIds })),
+    ];
+  }, [profile.savedDecks, profile.ownedCardIds]);
   const [deckId, setDeckId] = usePersistentDeckSelection(profile.id, decks.map(d => d.id));
   const deck = decks.find(d => d.id === deckId) ?? decks[0];
 
@@ -114,10 +119,13 @@ export function Kumite({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   return <main className={`kumite ${inside ? 'kumite--arena' : 'kumite--entrance'}`} data-testid="kumite" data-reduced-motion={profile.settings.reducedMotion} style={{ '--kumite-panel-art': `url("${getAssetUrl('assets/kumite/panel-background.webp')}")` } as CSSProperties}>
     <Environment entrance={!inside} reducedMotion={profile.settings.reducedMotion} />
     <div className="kumite-shell">
-      <header className="kumite-topbar"><Link href="/game/online" className="kumite-back" aria-label="Back to fight modes"><ArrowLeft size={18} aria-hidden="true" /><span>Fight modes</span></Link><Link href="/game" className="kumite-home" aria-label="Squabblemon Safehouse"><KumiteLogo decorative /></Link><span className="kumite-topbar__stamp">WEEKLY · PVP</span></header>
+      <header className="kumite-topbar"><Link href="/game/online" className="kumite-back" aria-label="Back to fight modes"><ArrowLeft size={18} aria-hidden="true" /><span>Fight modes</span></Link><Link href="/game" className="kumite-home" aria-label="Squabblemon Safehouse"><KumiteLogo decorative /></Link><Link href="/game/challenges?game=punch-on-patrol&raid=kumite" className="kumite-raid-cta"><HandFist size={14} aria-hidden="true" /><span>Dojo Boss Raid</span></Link><span className="kumite-topbar__stamp">WEEKLY · PVP</span></header>
       {!inside ? <section className="kumite-entry" aria-label="Kumite entrance">
         <div className="kumite-entry__invitation"><h1>KUMITE</h1><p>Weekly PvP · 8 players · 3 rounds</p>
-          <button type="button" className="kumite-button" onClick={enterArena}><HandFist size={24} aria-hidden="true" />Enter Kumite<ArrowRight size={23} aria-hidden="true" /></button>
+          <div className="kumite-entry__actions">
+            <button type="button" className="kumite-button" onClick={enterArena}><HandFist size={24} aria-hidden="true" />Enter Kumite<ArrowRight size={23} aria-hidden="true" /></button>
+            <Link href="/game/challenges?game=punch-on-patrol&raid=kumite" className="kumite-text-button"><HandFist size={16} aria-hidden="true" />Play Dojo Boss Raid (Unlocks Kumite Fighters)<ArrowRight size={15} aria-hidden="true" /></Link>
+          </div>
         </div>
       </section> : <>
         <section className="kumite-arena-head" aria-label="Kumite weekly tournament">

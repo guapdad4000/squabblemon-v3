@@ -63,7 +63,124 @@ export const BOSS_FORMS = [
   },
 ] as const;
 export type BossTier = 1 | 2 | 3 | 4 | 5;
+export type BossRaidMode = "precinct" | "kumite";
+export const KUMITE_BOSS_FORMS = [
+  {
+    tier: 1,
+    name: "First Dan Gatekeeper",
+    bossTitle: "BUSHEDO BROWN",
+    fighterId: "bushedo-brown",
+    hp: 1200,
+    art: "oink-tier-1",
+    multiplier: 3,
+    pressure: "Perimeter guards and discipline checks",
+    unlockHint: "Unlocks Bushedo Brown (1 raid) & Franklin Duke (1 win)",
+    reward: { softCurrency: 500, packTickets: 5, styleShards: 50 },
+  },
+  {
+    tier: 2,
+    name: "Belt Check Grandmaster",
+    bossTitle: "P. TANG",
+    fighterId: "p-tang",
+    hp: 1500,
+    art: "oink-tier-2",
+    multiplier: 4,
+    pressure: "Belt Check knockbacks and positioning checks",
+    unlockHint: "Advances P. Tang (4 wins), Dragonfly Jones (3 wins) & Chonk Lee",
+    reward: { softCurrency: 700, packTickets: 7, styleShards: 70 },
+  },
+  {
+    tier: 3,
+    name: "Silent Grandmaster",
+    bossTitle: "DRAGONFLY JONES",
+    fighterId: "dragonfly-jones",
+    hp: 1575,
+    art: "oink-tier-3",
+    multiplier: 5,
+    pressure: "Rapid counter-strikes and lane lockdowns",
+    unlockHint: "Advances Undercova Brotha (5 wins) & Leroy (2 tier clears)",
+    reward: { softCurrency: 900, packTickets: 9, styleShards: 90 },
+  },
+  {
+    tier: 4,
+    name: "Iron Body Enforcer",
+    bossTitle: "CHONK LEE",
+    fighterId: "chonk-lee",
+    hp: 1875,
+    art: "oink-tier-4",
+    multiplier: 6,
+    pressure: "Cross-district shockwaves and trap sweeps",
+    unlockHint: "Advances Sho'Nuff (8 wins) & Yasuke (3 tier clears)",
+    reward: { softCurrency: 1200, packTickets: 12, styleShards: 120 },
+  },
+  {
+    tier: 5,
+    name: "The Shogun of the Dojo",
+    bossTitle: "SHO'NUFF",
+    fighterId: "sho-nuff",
+    hp: 2250,
+    art: "oink-tier-5",
+    multiplier: 7,
+    pressure: "Maximum dojo mastery and full grandmaster gauntlet",
+    unlockHint: "Completes the Grandmaster Gauntlet & Championship road",
+    reward: { softCurrency: 1600, packTickets: 15, styleShards: 150 },
+  },
+] as const;
 export const bossForm = (tier: BossTier = 1) => BOSS_FORMS[tier - 1];
+export const bossFormForMode = (tier: BossTier = 1, mode: BossRaidMode = "precinct") =>
+  mode === "kumite" ? KUMITE_BOSS_FORMS[tier - 1] : BOSS_FORMS[tier - 1];
+
+export const HANDS_OVERDRIVE_TIERS = [
+  { tier: 1 as const, minHands: 12, label: "STREET SURGE", callout: "OVERDRIVE I · STREET SURGE", bonusPct: 15 },
+  { tier: 2 as const, minHands: 20, label: "BELT CHECK", callout: "OVERDRIVE II · BELT CHECK", bonusPct: 30 },
+  { tier: 3 as const, minHands: 30, label: "MAX OVERDRIVE", callout: "MAX OVERDRIVE · SUPREME FINISHER", bonusPct: 50 },
+] as const;
+
+export type HandsOverdriveState = {
+  tier: 0 | 1 | 2 | 3;
+  totalHands: number;
+  label: string;
+  callout: string;
+  bonusPct: number;
+  nextThreshold: number | null;
+};
+
+export function computeHandsOverdrive(totalHands: number): HandsOverdriveState {
+  if (totalHands >= 30) {
+    return { tier: 3, totalHands, label: "MAX OVERDRIVE", callout: "MAX OVERDRIVE · SUPREME FINISHER", bonusPct: 50, nextThreshold: null };
+  }
+  if (totalHands >= 20) {
+    return { tier: 2, totalHands, label: "BELT CHECK", callout: "OVERDRIVE II · BELT CHECK", bonusPct: 30, nextThreshold: 30 };
+  }
+  if (totalHands >= 12) {
+    return { tier: 1, totalHands, label: "STREET SURGE", callout: "OVERDRIVE I · STREET SURGE", bonusPct: 15, nextThreshold: 20 };
+  }
+  return { tier: 0, totalHands, label: "BUILDING CHARGE", callout: "REACH 12 HANDS FOR OVERDRIVE", bonusPct: 0, nextThreshold: 12 };
+}
+
+export type ElementalOverdrivePerk = {
+  element: string;
+  perkName: string;
+  perkDescription: string;
+  accent: string;
+};
+
+export function computeElementalOverdrivePerk(element = "Air"): ElementalOverdrivePerk {
+  const normalized = element.toLowerCase();
+  if (normalized === "air") {
+    return { element: "Air", perkName: "TAILWIND SURGE", perkDescription: "Pierces 2 Boss Armor & accelerates lane strikes", accent: "#38bdf8" };
+  }
+  if (normalized === "fire" || normalized === "light") {
+    return { element, perkName: "SOLAR SCORCH", perkDescription: "Ignites bonus burn charge across winning lanes", accent: "#f97316" };
+  }
+  if (normalized === "earth") {
+    return { element: "Earth", perkName: "IRON STANCE", perkDescription: "Fortifies frontline fighters against Boss pressure", accent: "#eab308" };
+  }
+  if (normalized === "electric") {
+    return { element: "Electric", perkName: "HIGH VOLTAGE", perkDescription: "Chains overdrive current through all three districts", accent: "#a855f7" };
+  }
+  return { element, perkName: "STREET MOMENTUM", perkDescription: "Amplifies all active crew Hands on the board", accent: "#facc15" };
+}
 export const BOSS_HP = BOSS_FORMS[0].hp;
 export type BossCampaign = {
   version: 2;
@@ -183,6 +300,7 @@ export type BossRaid = {
   rulesVersion: 2;
   id: string;
   day: string;
+  mode?: BossRaidMode;
   revision: number;
   phase: "active" | "complete" | "retired";
   deckName: string;
@@ -332,6 +450,7 @@ export function createBossRaid(
   catalogIds: string[],
   deckName: string,
   encounter: { tier: BossTier; hp: number } = { tier: 1, hp: BOSS_HP },
+  mode: BossRaidMode = "precinct",
 ): BossRaid {
   const ids = catalogIdsToEngineIds(catalogIds);
   // The same date produces the same shuffle and police lane rotation for everyone.
@@ -371,6 +490,7 @@ export function createBossRaid(
     rulesVersion: 2,
     id,
     day,
+    ...(mode === "kumite" ? { mode: "kumite" as const } : {}),
     revision: 0,
     phase: "active",
     deckName,
@@ -381,7 +501,11 @@ export function createBossRaid(
     hp: encounter.hp,
     score: 0,
     blasts: [],
-    log: ["Officer Oink has called in the whole precinct."],
+    log: [
+      mode === "kumite"
+        ? `${KUMITE_BOSS_FORMS[encounter.tier - 1].bossTitle} awaits in the Kumite Dojo.`
+        : "Officer Oink has called in the whole precinct.",
+    ],
     used: [],
     temporarySilences: [],
   };

@@ -141,12 +141,11 @@ export function FriendlyFadesHub({ accountId, crews, crewId, onCrew, roomBusy, o
         <section className="fa-activity-panel" id="fa-rooms-panel" role="tabpanel" aria-labelledby="fa-rooms-tab" aria-label="Your rooms" hidden={activityTab !== 'rooms'}>
           {rooms.isError ? <p className="sq-empty">Rooms did not load. <button type="button" className="sq-btn" onClick={() => void rooms.refetch()}>Retry</button></p>
             : rooms.isPending ? <div className="sq-skeleton" aria-busy="true" aria-label="Loading rooms"><i /></div>
-            : !rooms.data.rooms.length ? <p className="sq-empty">No rooms yet.</p>
+            : !rooms.data?.rooms?.length ? <p className="sq-empty">No rooms yet.</p>
             : <FriendlyRoomList rooms={rooms.data.rooms} serverNow={rooms.data.serverNow} receivedAt={rooms.dataUpdatedAt} />}
         </section>
       </section>
     </div>
-    <FadeRules />
   </>;
 }
 
@@ -224,6 +223,5 @@ function InvitationView({ id, crewPicker, deckId, working }: { id: string; crewP
       {answerError && <p className="sq-flash sq-flash--bad" role="alert">{answerError}</p>}
     </section>
     <button type="button" className="sq-btn sq-btn--ghost" onClick={back}>Back to Friendly Fades</button>
-    <FadeRules />
   </>;
 }

@@ -2,9 +2,7 @@
   --collection-bottom-fade: clamp(48px, 7vh, 76px);
   --collection-bottom-clearance: 24px;
   padding: 0;
-  background:
-    radial-gradient(circle at 75% 0, rgb(193 88 35 / 14%), transparent 34%),
-    #0d0906;
+  background: transparent;
 }
 
 /* The cards pass through the same soft glass fade as the deck workbench. */
@@ -25,27 +23,34 @@
 .collection-stage__hero {
   position: relative;
   flex: none;
-  background-size: cover;
-  background-position: center top;
-  background-repeat: no-repeat;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  height: calc(208px + var(--city-header-height, 0px));
-  min-height: calc(208px + var(--city-header-height, 0px));
+  height: calc(168px + var(--city-header-height, 0px));
+  min-height: calc(168px + var(--city-header-height, 0px));
   padding: 14px var(--arsenal-gutter) 0;
-  border-bottom: 1px solid #e47e3b;
   isolation: isolate;
-  overflow: hidden;
+}
+
+.collection-stage__hero::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  background-image: var(--collection-bg);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 .collection-stage__hero-overlay {
-  position: absolute;
+  position: fixed;
   inset: 0;
+  pointer-events: none;
   background:
-    linear-gradient(90deg, rgb(8 7 6 / 88%) 0%, rgb(8 7 6 / 62%) 38%, rgb(8 7 6 / 18%) 70%),
-    linear-gradient(0deg, #0d0906 0%, rgb(13 9 6 / 76%) 35%, rgb(13 9 6 / 18%) 78%);
-  z-index: 1;
+    linear-gradient(180deg, rgb(8 7 6 / 45%) 0%, rgb(13 9 6 / 74%) 48%, rgb(13 9 6 / 88%) 100%);
+  z-index: -1;
 }
 
 /* Continue the hero above both layers of navigation, including the shared HUD. */

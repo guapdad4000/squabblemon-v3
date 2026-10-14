@@ -6,7 +6,7 @@ import { PlayerBootstrap, getGetPlayerBootstrapQueryKey } from '@workspace/api-c
 import { useDeckPersistence } from '../../lib/useDeckPersistence';
 import { useQueryClient } from '@tanstack/react-query';
 import { starterRecipes, validateSavedDeck } from '../../data';
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { PageDecor } from '../../components/venue/PageDecor';
 import { DeckCarousel } from '../../components/DeckCarousel';
 import { usePersistentDeckSelection } from '../../lib/deckSelection';
@@ -27,6 +27,24 @@ export function Decks({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   const selectedDeckRef = useRef('');
   const savedDeckIds = bootstrap.profile.savedDecks.map(deck => deck.id);
   const starterDeckIds = starterRecipes.map(recipe => recipe.id);
+  const validatedSavedDecks = useMemo(
+    () => bootstrap.profile.savedDecks.map(deck => ({
+      ...deck,
+      valid: validateSavedDeck(deck.cardIds, bootstrap.profile.ownedCardIds, deck.heroCardId).valid,
+    })),
+    [bootstrap.profile.savedDecks, bootstrap.profile.ownedCardIds],
+  );
+  const validatedStarterDecks = useMemo(
+    () => starterRecipes.map(recipe => ({
+      id: recipe.id,
+      name: recipe.name,
+      heroCardId: recipe.hero,
+      cardIds: recipe.catalogCardIds,
+      subtitle: recipe.archetype,
+      valid: validateSavedDeck(recipe.catalogCardIds, bootstrap.profile.ownedCardIds, recipe.hero).valid,
+    })),
+    [bootstrap.profile.ownedCardIds],
+  );
   const [selectedDeckId, setSelectedDeckId] = usePersistentDeckSelection(
     bootstrap.profile.id,
     [...savedDeckIds, ...starterDeckIds.filter(id => !savedDeckIds.includes(id))],
@@ -97,18 +115,14 @@ export function Decks({ bootstrap }: { bootstrap: PlayerBootstrap }) {
         {bootstrap.profile.savedDecks.length === 0 ? (
           <div className="venue-empty">
             <Layers size={48} aria-hidden="true" />
-            <h3>Every gang starts with you.</h3>
-            <p>Pick ten cards, find your chemistry, and make your mark on the block.</p>
+            <h3>No Saved Gangs</h3>
             <button type="button" className="venue-button venue-button--gold" disabled={creating || atCapacity} onClick={handleCreateNew}>
               Build your first gang
             </button>
           </div>
         ) : (
           <DeckCarousel
-            decks={bootstrap.profile.savedDecks.map(deck => ({
-              ...deck,
-              valid: validateSavedDeck(deck.cardIds, bootstrap.profile.ownedCardIds, deck.heroCardId).valid,
-            }))}
+            decks={validatedSavedDecks}
             selectedId={savedDeckIds.includes(selectedDeckId) ? selectedDeckId : savedDeckIds[0]}
             onSelect={setSelectedDeckId}
             onOpen={id => setLocation(deckEditorPath(id))}
@@ -119,18 +133,10 @@ export function Decks({ bootstrap }: { bootstrap: PlayerBootstrap }) {
     </div>
 
     <details className="decks-spectacle__examples">
-      <summary><ChevronDown size={14} aria-hidden="true" />Learning examples · find your starting point</summary>
+      <summary><ChevronDown size={14} aria-hidden="true" />Starter Deck Templates</summary>
       <div className="decks-spectacle__examples-content">
-        <p>Mix any owned cards. Saving an example creates your own gang.</p>
         <DeckCarousel
-          decks={starterRecipes.map(recipe => ({
-            id: recipe.id,
-            name: recipe.name,
-            heroCardId: recipe.hero,
-            cardIds: recipe.catalogCardIds,
-            subtitle: recipe.archetype,
-            valid: validateSavedDeck(recipe.catalogCardIds, bootstrap.profile.ownedCardIds, recipe.hero).valid,
-          }))}
+          decks={validatedStarterDecks}
           selectedId={starterDeckIds.includes(selectedDeckId) ? selectedDeckId : starterDeckIds[0]}
           onSelect={setSelectedDeckId}
           onOpen={id => setLocation(deckEditorPath(id))}

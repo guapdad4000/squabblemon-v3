@@ -151,7 +151,7 @@ export function Collection({ bootstrap }: { bootstrap: PlayerBootstrap }) {
 
   return (
     <ArsenalScreen rootRef={discoveryRootRef} className={`collection-stage world-decor-host ${tab === "road" ? "collection-stage--gang-wall" : ""}`} label="Card collection">
-      <div className="collection-stage__hero" style={{ backgroundImage: `url(${sunsetBg})` }}>
+      <div className="collection-stage__hero" style={{ '--collection-bg': `url(${sunsetBg})` } as React.CSSProperties}>
         <div className="collection-stage__hero-overlay" aria-hidden="true" />
         <div className="collection-stage__header">
           <nav className="collection-tabs" aria-label="Collection views">

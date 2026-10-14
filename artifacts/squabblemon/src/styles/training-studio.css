@@ -1,8 +1,10 @@
 /* Compact training desk. Keep the art fully colored even before selection. */
-.training-studio.market { padding: 10px clamp(16px, 4vw, 56px) 22px; }
+.training-studio.market { padding: 10px clamp(16px, 4vw, 56px) 22px; position: relative; isolation: isolate; background: transparent; }
+.training-studio__venue { position: fixed; inset: 0; width: 100vw; height: 100dvh; z-index: -2; pointer-events: none; }
+.training-studio__venue::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(14, 20, 14, 0.35) 0%, rgba(14, 20, 14, 0.72) 55%, rgba(14, 20, 14, 0.88) 100%); pointer-events: none; }
 .market.training-studio .training-studio__board { margin-bottom: 0; padding: 4px 0; }
 .market.training-studio .training-studio__board > span:first-child { padding: 3px 7px; }
-.market.training-studio .market-hero { min-height: 108px; gap: 18px; }
+.market.training-studio .market-hero { min-height: 82px; gap: 18px; }
 .market.training-studio .market-hero h1 { font-size: clamp(32px, 3.6vw, 50px); margin: 6px 0; }
 .market.training-studio .market-hero p { margin: 0; color: #dce3cd; }
 .market.training-studio .market-hero__fade-art { width: 116px; height: 112px; flex: none; }

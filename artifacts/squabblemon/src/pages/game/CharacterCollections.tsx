@@ -41,15 +41,11 @@ export function CharacterCollections({ bootstrap }: { bootstrap: PlayerBootstrap
   return <main className="character-styles extras-studio" data-testid="character-collections" data-reduced-motion={profile.settings.reducedMotion}>
     <header className="extras-hero">
       <img className="extras-hero__art" src={getAssetUrl('assets/extras/stylist-studio.webp')} alt="The Stylist at her customization workbench" />
-      <div className="extras-hero__copy"><p className="extras-eyebrow"><Scissors size={14}/> SQUABBLEMON / THE STYLIST’S STUDIO</p><h1>THE<br/><em>EXTRAS.</em></h1><p className="extras-hero__line">Same gang. <i>More you.</i></p><p className="extras-hero__intro">Stickers. Banners. Card scenes.<br/>Put your signature on the whole collection.</p><a className="extras-ticket" href="#extras-collections">Find your look <ArrowUpRight size={20}/></a></div>
-      <div className="extras-stamp" aria-hidden="true">PERSONAL<br/><strong>STYLE</strong><br/>NO STAT BOOSTS</div>
-      <div className="extras-hero__signature">Curated by <strong>The Stylist</strong><span>Good taste. Bad intentions.</span></div>
+      <div className="extras-hero__copy"><p className="extras-eyebrow"><Scissors size={14}/> SIGNATURE COLLECTIONS · {ownedCount}/{sets.length} OPEN</p><h1>THE<br/><em>EXTRAS.</em></h1></div>
     </header>
-    <section className="extras-counter" aria-label="Your style collection"><div><Sparkles size={20}/><span>YOUR OPEN COLLECTIONS<strong>{String(ownedCount).padStart(2,'0')} <small>/ {sets.length}</small></strong></span></div><p>Unlock the character.<br/><strong>Then make it personal.</strong></p><div className="style-wallet"><GameGlyph name="shards"/><strong>{profile.styleShards.toLocaleString()}</strong><span>Universal Shards</span></div></section>
     <StyleShardWallet wallet={profile}/>
-    <div className="extras-ribbon" aria-hidden="true"><span>STICK IT.</span><b>✦</b><span>REP IT.</span><b>✦</b><span>MAKE IT YOURS.</span><b>✦</b><span>STICK IT.</span><b>✦</b><span>REP IT.</span></div>
     <section id="extras-collections" className="extras-collections" aria-label="Signature collections">
-      <div className="extras-section-heading"><div><p className="extras-eyebrow">THE COLLECTION WALL / {String(visible.length).padStart(2,'0')} SERIES</p><h2>Pick your <em>signature.</em></h2></div><span className="extras-handnote">A little extra never hurt.</span></div>
+      <div className="extras-section-heading"><div><p className="extras-eyebrow">{String(visible.length).padStart(2,'0')} SERIES</p><h2>Signature <em>Collections</em></h2></div></div>
       <div className="style-library__tools extras-tools"><label><span>Find your character</span><div className="extras-search"><Search size={17}/><input type="search" aria-label="Search signature collections" placeholder="Who are you repping?" value={query} onChange={event => setQuery(event.target.value)}/></div></label><nav aria-label="Filter collections">{(['all','owned','Mythical','Legendary','Epic'] as const).map(value => <button type="button" key={value} aria-pressed={filter === value} onClick={() => setFilter(value)}>{value === 'all' ? 'All collections' : value === 'owned' ? 'My characters' : value === 'Legendary' ? 'Legendaries' : value === 'Epic' ? CARD_RARITY_DEFINITIONS.Epic.label : 'Mythicals'}</button>)}</nav></div>
       <div className="extras-grid">
         {visible.slice(0,shown).map((set,index) => {

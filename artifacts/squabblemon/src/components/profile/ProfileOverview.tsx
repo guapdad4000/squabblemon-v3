@@ -48,14 +48,12 @@ export function ProfileOverview({ bootstrap, onBusyChange }: { bootstrap: Player
   const xpRemaining = Math.max(0, nextLevelXp - profile.xp);
   if (editing) return <IdentityEditor bootstrap={bootstrap} onBusyChange={onBusyChange} onClose={text => { setMessage(text ?? ''); setEditing(false); }} />;
   return <div className="profile-overview">
-    <div className="profile-edition"><span>Oakland / Player file</span><span>No. {String(profile.level).padStart(3, '0')} · Certified original</span></div>
     <section className="id-card" aria-label="Your fighter identity">
       <div className="id-card__tape" aria-hidden="true" />
-      <div className="id-card__photo"><span className="id-card__photo-note">Face of the block</span><FighterPortrait cardId={portrait.card.catalogId} avatarKey={portrait.avatarKey} name={portrait.name} /><span className="id-card__photo-caption">{portrait.isSticker ? 'STICKER ID' : 'FIGHTER ID'} / SQUABBLEMON</span></div>
+      <div className="id-card__photo"><FighterPortrait cardId={portrait.card.catalogId} avatarKey={portrait.avatarKey} name={portrait.name} /><span className="id-card__photo-caption">{portrait.isSticker ? 'STICKER ID' : 'FIGHTER ID'}</span></div>
       <div className="id-card__info">
-        <span className="id-card__label">Remember the name.</span>
         <h1 className="id-card__name">{profile.displayName}</h1>
-        <p className="id-card__character">{portrait.name}<small>{portrait.isFallback ? 'Default portrait' : portrait.isSticker ? 'Your signature · Profile + PvP' : 'Character portrait · Profile + PvP'}</small></p>
+        <p className="id-card__character">{portrait.name}<small>{portrait.isFallback ? 'Default portrait' : portrait.isSticker ? 'Sticker portrait' : 'Character portrait'}</small></p>
         <div className="id-card__stats">
           <div className="id-card__level"><span className="id-card__label">Account level</span><strong className="id-card__stat-val">Level {profile.level}</strong></div>
           <div className="id-card__trophy" data-testid="profile-pvp-trophy"><RankTrophy tier={rank.tier} /><span><span className="id-card__label">PvP rank</span><strong className="id-card__stat-val">{ranked.isPending ? '…' : rank.tier}</strong><small>{ranked.isPending ? '' : `${rankStats.points.toLocaleString()} RP`}</small></span></div>
@@ -63,27 +61,23 @@ export function ProfileOverview({ bootstrap, onBusyChange }: { bootstrap: Player
         </div>
         <button ref={editButton} className="street-sign-btn" onClick={() => { setMessage(''); setEditing(true); }}>Edit Identity</button>
       </div>
-      <div className="id-card__stamp" aria-hidden="true">ONE OF<br />ONE.</div>
     </section>
     {message && <p role="status" className="profile-notice">{message}</p>}
     <div className="profile-flex-strip" aria-label="Your collection and achievements">
       <div><strong>{ownedCount.toLocaleString()}</strong><span>Characters</span></div>
       <div><strong>{mastered.length}</strong><span>Mastered</span></div>
       <div><strong>{events.length}</strong><span>Event badges</span></div>
-      <span className="profile-flex-note" aria-hidden="true">Built different.</span>
     </div>
     <div className="profile-paper-columns">
     <section className="panel-section profile-progress-paper" aria-labelledby="profile-progress-title">
-      <span className="profile-paper-number" aria-hidden="true">01 / THE COME UP</span>
-      <h2 className="profile-paper-title" id="profile-progress-title">Still climbing<span>.</span></h2>
+      <h2 className="profile-paper-title" id="profile-progress-title">Account Progress</h2>
       <div className="profile-xp-label" data-testid="text-account-xp-goal"><strong>{progress.toLocaleString()} / {ACCOUNT_XP_PER_LEVEL} account XP</strong><span>{xpRemaining.toLocaleString()} XP to level {profile.level + 1}</span></div>
       <progress className="profile-xp" max={ACCOUNT_XP_PER_LEVEL} value={progress} aria-label={`Account XP toward level ${profile.level + 1}`} />
-      <p className="profile-progress-note">{profile.xp.toLocaleString()} lifetime account XP. Every level adds to your story.</p>
+      <p className="profile-progress-note">{profile.xp.toLocaleString()} lifetime account XP.</p>
       <Link className="profile-ink-link" href="/game/collection">Open your collection <span aria-hidden="true">↗</span></Link>
     </section>
     <section className="panel-section profile-badges-paper" aria-labelledby="profile-badges-title">
-      <span className="profile-paper-number" aria-hidden="true">02 / THE RECEIPTS</span>
-      <h2 className="profile-paper-title" id="profile-badges-title">Earned. Never given<span>.</span></h2>
+      <h2 className="profile-paper-title" id="profile-badges-title">Achievements</h2>
       {mastered.length || events.length ? <ul className="badge-grid">
         {mastered.map(character => <li className="badge-item" key={character.catalogId}>
           <Award className="badge-icon" aria-hidden="true" />

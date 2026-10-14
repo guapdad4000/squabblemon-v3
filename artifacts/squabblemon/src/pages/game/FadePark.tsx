@@ -168,7 +168,7 @@ export function FadePark({ bootstrap }: { bootstrap: PlayerBootstrap }) {
     </div>
     <header className="park-topbar"><FightTabs searching={searching} /></header>
     <div className="park-content">
-      <div className="park-lobby-left"><section className="park-intro"><span className="park-eyebrow"><Radio size={13} /> Oakland · Bay Area & beyond</span><h1>FADE<br /><em>PARK.</em></h1><p>Your gang. An open challenge.<br />Pull up and claim your rank.</p><div className="park-ground-rules"><span>3 districts</span><span>6 rounds</span><span>Your next rival</span></div></section><GlobalStandings playerId={profile.id} /></div>
+      <div className="park-lobby-left"><section className="park-intro"><span className="park-eyebrow"><Radio size={13} /> Ranked PvP</span><h1>FADE<br /><em>PARK.</em></h1></section><GlobalStandings playerId={profile.id} /></div>
       <div className="park-board-wrapper park-layer--board">
         <section className="park-ticket" aria-label="Find a ranked match">
           <div className="park-rank"><RankTrophy tier={progress.tier} /><div><span className="park-eyebrow">Preseason · your rank</span><h2>{progress.tier}<strong><RPToken /><AnimatedNumber value={stats.points} /><small> RP</small></strong></h2></div></div>
@@ -223,7 +223,7 @@ export function FadePark({ bootstrap }: { bootstrap: PlayerBootstrap }) {
           <div className="park-search-status" role="status"><span className="park-pulse" /><h3>{connected ? 'Calling for a fade…' : 'Reconnecting…'}</h3><time>{String(Math.floor(elapsed / 60)).padStart(2, '0')}:{String(elapsed % 60).padStart(2, '0')}</time></div>
           <p>Finding your next rival. Hang up the phone to cancel. A Park Bot steps in after a short wait, with reduced rank rewards.</p>
           {!chosen && <button className="park-cancel" disabled={busy} onClick={() => void cancel()}>{busy ? 'Hanging up…' : 'Hang up — cancel search'}</button>}
-        </div> : !searching && <p className="park-smallprint">Players first. Park Bots fill quiet hours. Both count toward rank; bot wins earn 12 RP, player wins earn 25 RP.</p>}
+        </div> : null}
         <div className="park-floating-info">
           <RankLadder />
           <details className="park-rules"><summary>How ranked fades work</summary><p>Same board, same rules. Win two of three districts after six rounds. Each turn lasts 75 seconds; running out of time forfeits the match.</p><p>Base card strength keeps the matchup fair. One SQUABBLE per player. Player wins +25 RP, losses −15; bot wins +12, losses −6. Draws earn +5 against players or +2 against bots. Rank points never fall below zero.</p><p>After ranked matches, search again for a new opponent. Private friend fades have rematches and do not affect rank.</p></details>

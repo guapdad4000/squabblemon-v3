@@ -448,10 +448,8 @@ export function CornerStore({ bootstrap }: { bootstrap: PlayerBootstrap }) {
       <div className="corner-store__scroll">
         <header className="corner-store__heading">
           <div className="corner-store__hero-copy">
-          <span>OPEN LATE · GOOD COMPANY</span>
-          <h1>Fade<br /> <em>Market.</em></h1>
-          <p>A little Clout. A new look. Your next favorite.</p>
-          </div><span className="corner-store__open-sign">Come on in.<small>GOOD STUFF INSIDE</small></span>
+            <h1>Fade<br /> <em>Market.</em></h1>
+          </div>
         </header>
         
         <section className="corner-store__counter">
@@ -492,7 +490,6 @@ export function CornerStore({ bootstrap }: { bootstrap: PlayerBootstrap }) {
           ))}
         </nav>
         {department === 'reactions' ? <ReactionShop bootstrap={bootstrap} /> : <>
-          <div className="bodega-shelf-heading"><span>Fresh on the shelf</span><small>TAKE A LOOK AROUND ↔</small></div>
           <AnimatePresence mode="wait" initial={false}>
           <motion.div key={department} className={`corner-store__products ${department === 'clout' ? 'corner-store__products--clout' : ''}`} role="region" aria-label={`${department} shelf`} tabIndex={0}
             initial={reducedMotion ? false : { opacity: 0, x: 45 }} animate={{ opacity: 1, x: 0 }} exit={reducedMotion ? { opacity: 0 } : { opacity: 0, x: -45 }}

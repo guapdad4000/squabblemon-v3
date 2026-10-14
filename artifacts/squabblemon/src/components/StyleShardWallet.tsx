@@ -22,23 +22,12 @@ export function StyleShardWallet({
   const selected = cardRarity ? styleShardRarityForCard(cardRarity) : null;
   return (
     <section className="shard-wallet" aria-label="Your Style Shards">
-      <header>
-        <div>
-          <span>THE STYLE STASH</span>
-          <h2>Different rarity. Same drip.</h2>
-        </div>
-        <p>
-          Match the character’s rarity.
-          <br /> Universal covers the rest.
-        </p>
-      </header>
       <div className="shard-wallet__balances">
         <div className="shard-wallet__universal">
           <GameGlyph name="shards" />
           <div>
             <strong>{wallet.styleShards.toLocaleString()}</strong>
             <span>Universal</span>
-            <small>Works with every rarity</small>
           </div>
         </div>
         {STYLE_SHARD_RARITIES.map((rarity) => (
@@ -58,10 +47,6 @@ export function StyleShardWallet({
           </div>
         ))}
       </div>
-      <p className="shard-wallet__help">
-        Extra pack copies become matching shards. Common includes Super Common.
-        Your saved shards stay universal.
-      </p>
     </section>
   );
 }

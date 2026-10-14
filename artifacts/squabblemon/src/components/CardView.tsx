@@ -222,6 +222,7 @@ function CardViewComponent({
       data-instance-id={instance?.instanceId}
       data-card-cost={displayCost}
       data-card-power={displayPower}
+      data-awakened={isBoard && displayPower >= 10 && (card.kind ?? 'character') === 'character' ? 'true' : undefined}
       data-battle-draggable={dragEnabled && !presentationOnly ? true : undefined}
       data-card-zone={isBoard ? 'board' : 'hand'}
       data-card-presentation={combatPresentation ? 'combat' : 'full'}

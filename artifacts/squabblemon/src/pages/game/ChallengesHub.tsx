@@ -296,15 +296,6 @@ export function ChallengesHub({
             </ul>
           </div>
         )}
-
-        <ChromeBanner variant="footer">
-          <h3>No Shortcuts</h3>
-          <p>
-            Battle rewards are saved after each verified fight.
-            <br />
-            Your progress persists.
-          </p>
-        </ChromeBanner>
       </div>
     </main>
   );

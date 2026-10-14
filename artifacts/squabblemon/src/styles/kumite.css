@@ -592,3 +592,99 @@ html[data-reduce-motion='true'] .kumite-shortcut { transition: none; }
   .kumite-side-flag__fastest > span { font-size:12px; }
   .kumite-side-flag__fastest > strong { font-size:28px; }
 }
+
+/* Wave 8: Kumite Dojo Raid CTA & Interactive Fighter Dossier Preview */
+.kumite-raid-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 4px;
+  border: 1px solid #d7a64b;
+  background: linear-gradient(135deg, rgba(215, 166, 75, 0.24), rgba(146, 64, 14, 0.36));
+  color: #ffe7a8;
+  font: 800 10px/1.1 var(--font-mono, monospace);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: transform 0.16s ease, box-shadow 0.16s ease;
+}
+.kumite-raid-cta:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(215, 166, 75, 0.32);
+}
+.kumite-entry__actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+.kumite-roadmap__inspect-btn {
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+.kumite-roadmap__node[data-selected="true"] {
+  outline: 2px solid #f6d379;
+  outline-offset: 3px;
+}
+.kumite-dossier-preview {
+  display: grid;
+  grid-template-columns: 112px minmax(0, 1fr);
+  gap: 18px;
+  align-items: center;
+  margin: 0 auto 18px;
+  max-width: 860px;
+  padding: 14px 18px;
+  background: rgba(22, 15, 10, 0.92);
+  border: 1px solid #d7a64b;
+  border-radius: 6px;
+  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.65);
+}
+.kumite-dossier-preview__art {
+  width: 112px;
+  height: 112px;
+  object-fit: cover;
+  object-position: center top;
+  border-radius: 4px;
+  border: 1px solid rgba(215, 166, 75, 0.55);
+}
+.kumite-dossier-preview__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.kumite-dossier-preview__close {
+  border: 0;
+  background: transparent;
+  color: #e6d3ad;
+  cursor: pointer;
+  padding: 4px;
+}
+.kumite-dossier-preview__body h3 {
+  margin: 6px 0;
+  font: 900 italic 22px/1.1 var(--font-display, sans-serif);
+  color: #fff2d1;
+}
+.kumite-dossier-preview__body h3 small {
+  font: 700 13px/1.2 var(--font-sans, sans-serif);
+  color: #ebc87f;
+}
+.kumite-dossier-preview__body p {
+  margin: 0 0 10px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #dfd2b8;
+}
+.kumite-dossier-preview__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 14px;
+}
+.kumite-dossier-preview__req {
+  font: 700 10px/1.2 var(--font-mono, monospace);
+  color: #ebd094;
+}
