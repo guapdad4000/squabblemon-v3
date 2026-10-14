@@ -4,7 +4,7 @@ import { readFile } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 import sharp from 'sharp';
 import { cardCatalog, catalogCardById, getCardImage, decks } from './data';
-import { styleSetFor, hasCharacterStickers } from '@workspace/squabblemon-engine/cosmetics';
+import { styleSetFor, hasCharacterStickers, CHARACTER_SIGNATURE_ARTWORK } from '@workspace/squabblemon-engine/cosmetics';
 import { STREET_LEGENDS_STYLE_SCENES } from '../../../lib/squabblemon-engine/src/streetLegendsStyles';
 import revisions from './characterRevisions.json';
 
@@ -35,7 +35,7 @@ test('the thirty-entry release adds thirty unique identities while Nail Tech ret
     assert.equal(card.abilityUpgrades.length, 3);
     const style = styleSetFor(id);
     assert(style && hasCharacterStickers(style), id + ' has a real signature style');
-    assert.equal(style.deckCover, `assets/characters/${id}.webp${id === 'ms-mary-mack' ? '?v=15-cents' : ''}`);
+    assert.equal(style.deckCover, CHARACTER_SIGNATURE_ARTWORK[id].deckCover);
     if (id === 'ms-mary-mack') {
       for (const suffix of ['signature', 'emblem']) assert.equal(
         style.stickers.find(sticker => sticker.id === `${id}:street-legends-${suffix}`)?.image,

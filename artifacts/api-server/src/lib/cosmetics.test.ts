@@ -52,14 +52,23 @@ test('every completed collection has real unique stickers and isolated purchase 
   const ids=Object.keys(CHARACTER_STYLE_SETS),owner=wallet({ownedCardIds:ids,styleShards:100000});
   const stickerIds=new Set<string>(),series=new Set<string>();
   for(const [cardId,set] of Object.entries(CHARACTER_STYLE_SETS)) {
-    assert.equal(set.cardId,cardId);assert(hasCharacterStickers(set));assert(set.stickers.length >= 3);
+    assert.equal(set.cardId,cardId);
+    if (!hasCharacterStickers(set)) {
+      assert.equal(set.stickers.length, 0);
+      assert(set.banner && set.deckCover);
+      assert.equal(validateCosmeticLoadout(owner,{bannerCardId:cardId}),null);
+      assert.throws(()=>planShopPurchase(owner,{itemId:'character-stickers',cardId}),/not ready/);
+      assert(!series.has(set.series));series.add(set.series);
+      continue;
+    }
+    assert(set.stickers.length >= 3);
     if (set.stickerAtlas) assert.deepEqual(set.stickers.filter(s=>!s.image).map(s=>s.cell),[0,1,2,3]);
     assert(!series.has(set.series));series.add(set.series);
     for(const sticker of set.stickers){assert(!stickerIds.has(sticker.id));stickerIds.add(sticker.id);assert(sticker.id.startsWith(cardId+':'));}
     let bought=planShopPurchase(owner,{itemId:'character-stickers',cardId}).wallet;
     assert.equal(bought.styleShards,99900);
     assert.equal(validateCosmeticLoadout(bought,{bannerCardId:cardId,stickers:set.stickers.slice(0,3).map(s=>s.id)}),null);
-    const other=ids.find(id=>id!==cardId)!;
+    const other=ids.find(id=>id!==cardId && hasCharacterStickers(CHARACTER_STYLE_SETS[id]))!;
     assert.match(validateCosmeticLoadout(bought,{bannerCardId:cardId,stickers:[CHARACTER_STYLE_SETS[other].stickers[0].id]})!,/Unlock/);
     bought=planShopPurchase(bought,{itemId:'character-backdrop',cardId}).wallet;
     assert.equal(validateCosmeticLoadout(bought,{cardBackgrounds:{[cardId]:'blue-hour'}}),null);

@@ -1,3 +1,5 @@
+import { CHARACTER_SIGNATURE_ARTWORK } from './characterSignatureArtwork';
+export { CHARACTER_SIGNATURE_ARTWORK } from './characterSignatureArtwork';
 import { cardCatalog, catalogCardById } from './data';
 import { CHARACTER_STYLE_ARTWORK } from './characterStyleArtwork';
 import { STREET_LEGENDS_STYLE_SCENES } from './streetLegendsStyles';
@@ -98,6 +100,23 @@ for (const [cardId, [sceneName, location]] of Object.entries({ ...STREET_LEGENDS
     }],
   };
 }
+// Dedicated signatures take precedence over portrait fallbacks, without replacing stickers.
+for (const [cardId, artwork] of Object.entries(CHARACTER_SIGNATURE_ARTWORK)) {
+  const card = catalogCardById[cardId];
+  if (!card) throw new Error(`Unknown signature character: ${cardId}`);
+  const previous = CHARACTER_STYLE_SETS[cardId];
+  CHARACTER_STYLE_SETS[cardId] = {
+    ...(previous ?? {
+      cardId, series: String(nextSeries++).padStart(3, '0'),
+      title: `${card.name}. Your signature.`, tagline: card.ability,
+      sceneName: 'Signature', sceneDescription: `${card.name} on the block.`,
+      emblem: '✊', accent: card.portraitAccent ?? '#f0ce78',
+      background: 'assets/locations/vip-section.webp', stickerAtlas: null,
+      stickers: [],
+    }),
+    ...artwork,
+  };
+}
 export function hasCharacterStickers(set: CharacterStyleSet | undefined): boolean {
   return !!set?.stickers.length && set.stickers.every(sticker => !!sticker.image || (!!set.stickerAtlas && sticker.cell !== undefined));
 }
@@ -137,6 +156,6 @@ export function validateCosmeticLoadout(owner: CosmeticOwner, input: CosmeticLoa
   return null;
 }
 /** Production order: KYLE pilot, Mythicals, remaining Legendaries, then Super Rares. */
-export const CHARACTER_STYLE_ROLLOUT = cardCatalog.filter(card => Boolean(CHARACTER_STYLE_SETS[card.catalogId]) || ['Mythical','Legendary','Epic'].includes(card.rarity))
+export const CHARACTER_STYLE_ROLLOUT = cardCatalog.filter(card => (card.kind ?? 'character') === 'character' && (Boolean(CHARACTER_STYLE_SETS[card.catalogId]) || ['Mythical','Legendary','Epic'].includes(card.rarity)))
   .sort((a,b) => (a.catalogId === 'kyle' ? -1 : b.catalogId === 'kyle' ? 1 : ({Mythical:0,Legendary:1,Epic:2}[a.rarity as 'Mythical'] - {Mythical:0,Legendary:1,Epic:2}[b.rarity as 'Mythical']) || a.name.localeCompare(b.name)))
   .map(card => ({ cardId: card.catalogId, name: card.name, rarity: card.rarity, available: Boolean(CHARACTER_STYLE_SETS[card.catalogId]) }));

@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Link, useSearch } from 'wouter';
 import { useQueryClient } from '@tanstack/react-query';
 import { ApiError, customFetch, getGetPlayerBootstrapQueryKey, type PlayerBootstrap } from '@workspace/api-client-react';
-import { CHARACTER_STYLE_OFFERS, CHARACTER_STYLE_ROLLOUT, ownsStyle, styleSetFor, stickerById, validateCosmeticLoadout, type CosmeticLoadout, type CharacterStyleOfferId } from '@workspace/squabblemon-engine/cosmetics';
+import { CHARACTER_STYLE_OFFERS, CHARACTER_STYLE_ROLLOUT, hasCharacterStickers, ownsStyle, styleSetFor, stickerById, validateCosmeticLoadout, type CosmeticLoadout, type CharacterStyleOfferId } from '@workspace/squabblemon-engine/cosmetics';
 import { planShopPurchase, type ShopRequest } from '@workspace/squabblemon-engine/economy';
 import { catalogCardById, CARD_RARITY_DEFINITIONS } from '../../data';
 import { CharacterBanner, CharacterSticker } from '../../components/CharacterBanner';
@@ -25,7 +25,9 @@ export function CharacterStyles({ bootstrap, cardId = 'kyle' }: { bootstrap: Pla
   const set = styleSetFor(cardId), card = catalogCardById[cardId];
   useExtrasNotificationsSeen(cardId, Boolean(set && card && profile.ownedCardIds.includes(cardId)));
   const client = useQueryClient();
-  const [tab, setTab] = useViewMemory<'stickers' | 'banner' | 'scene'>(`style-tab:${profile.id}:${cardId}`, 'stickers');
+  const [savedTab, setTab] = useViewMemory<'stickers' | 'banner' | 'scene'>(`style-tab:${profile.id}:${cardId}`, 'stickers');
+  const hasStickers = hasCharacterStickers(set);
+  const tab = savedTab === 'stickers' && !hasStickers ? 'banner' : savedTab;
   const [finish, setFinish] = useState<'base' | 'silver'>('base');
   const search = useSearch();
   useEffect(() => { const params = new URLSearchParams(search); const requested = params.get('tab'); if (requested === 'stickers' || requested === 'banner' || requested === 'scene') setTab(requested); setFinish(params.get('finish') === 'silver' ? 'silver' : 'base'); }, [search]);
@@ -36,6 +38,7 @@ export function CharacterStyles({ bootstrap, cardId = 'kyle' }: { bootstrap: Pla
   const flight = useRef(false);
   const preview = e2eAuthEnabled && profile.id === 'e2e-player';
   if (!set || !card) return <main className="character-styles"><h1>This collection is still in the works.</h1></main>;
+  const upcomingStyles = CHARACTER_STYLE_ROLLOUT.filter(item => !item.available);
   const owned = profile.ownedCardIds.includes(cardId);
   if (!owned) return <main className="character-styles" data-testid="locked-character-style"><p className="style-kicker">THE EXTRAS / COLLECTION LOCKED</p><h1>Unlock {card.name} first.</h1><p className="style-notice">Their stickers, banners and card scenes become available once this character joins your collection.</p><Link className="style-button" href="/game/style">Back to The Extras</Link></main>;
   const equipped = profile.settings.cosmetics ?? {};
@@ -96,7 +99,7 @@ export function CharacterStyles({ bootstrap, cardId = 'kyle' }: { bootstrap: Pla
     <div className="character-styles__subline"><span>{set.title}</span><div><button className="style-link" type="button" onClick={() => setReveal(value => !value)}>{reveal ? 'Close reveal' : 'Replay unlock reveal'}</button>{clip && <button type="button" className="style-link" disabled={!owned} onClick={() => setPlaying(value => !value)}>{playing ? 'Close special' : 'Watch special'}</button>}</div></div>
     {playing && clip && <div className="style-special"><SpecialMove clip={clip}/><span>{clip.label}</span></div>}
     {reveal && <section className="style-reveal-preview" aria-label="Character unlock preview"><CharacterUnlock key={cardId} cardId={cardId}><div className="style-reveal-card"><CardView card={card} fillContainer presentationOnly disableLayout /></div></CharacterUnlock></section>}
-    <nav className="style-tabs" aria-label="Character cosmetics">{(['stickers','banner','scene'] as const).map(value => <button type="button" key={value} aria-pressed={tab === value} disabled={busy || !!pending} onClick={() => { setTab(value); setMessage(''); }}>{value === 'stickers' ? '01 / Sticker pack' : value === 'banner' ? '02 / Character banner' : '03 / Card scene'}</button>)}</nav>
+    <nav className="style-tabs" aria-label="Character cosmetics">{(['stickers','banner','scene'] as const).filter(value => value !== 'stickers' || hasStickers).map((value, index) => <button type="button" key={value} aria-pressed={tab === value} disabled={busy || !!pending} onClick={() => { setTab(value); setMessage(''); }}>{String(index + 1).padStart(2, '0')} / {value === 'stickers' ? 'Sticker pack' : value === 'banner' ? 'Character banner' : 'Card scene'}</button>)}</nav>
     {tab === 'stickers' && stickers.length > 0 && <section className="style-sticker-mix" aria-label="Your banner stickers"><div><strong>Your banner mix</strong><p>Mix any owned packs. Tap a sticker to free a slot.</p></div>{stickers.map(id => <button key={id} type="button" disabled={busy || !!pending} onClick={() => toggleSticker(id)} aria-label={'Remove ' + (stickerById(id)?.sticker.name ?? 'sticker')}><CharacterSticker id={id} decorative/><span aria-hidden="true">×</span></button>)}</section>}
     <div className="style-workbench"><section data-notification-id={tab === 'banner' && finish === 'base' ? `banner:${cardId}` : `style:style:${cardId}:${tab === 'stickers' ? 'stickers' : tab === 'scene' ? 'backdrop' : 'banner-finish'}`} className="style-workbench__art" aria-label="Cosmetic preview">
       {tab === 'stickers' ? <><div className="style-sticker-sheet">{set.stickers.map((sticker, index) => <button type="button" key={sticker.id} disabled={!unlocked || busy || !!pending || (!stickers.includes(sticker.id) && stickers.length >= 3)} aria-pressed={stickers.includes(sticker.id)} aria-label={sticker.name} onClick={() => toggleSticker(sticker.id)}><CharacterSticker id={sticker.id} decorative/><span>{sticker.name}</span><small>{stickers.includes(sticker.id) ? 'ON YOUR BANNER' : 'DIE-CUT / ' + String(index + 1).padStart(2,'0')}</small></button>)}</div><p>{set.stickers.length} designs. One complete pack. {unlocked ? stickers.length + ' / 3 banner slots filled.' : 'Every sticker shown is included.'}</p></> : tab === 'banner' ? <div className="style-banner-options"><CharacterBanner cardId={cardId} finish={finish} compact/><div>{(['base','silver'] as const).map(value => <button type="button" key={value} className="style-button" aria-pressed={finish === value} onClick={() => setFinish(value)}>{value === 'base' ? set.sceneName + ' · Included' : 'Silver Lining · 120 shards'}</button>)}</div><p>Your character banner for your profile and inventory bag.</p></div> : <div className="style-card-scene"><div><CardView card={card} backgroundUrl={getAssetUrl(set.background)} fillContainer presentationOnly disableLayout /></div><p>{set.sceneName}<br/><small>Preview on your actual card.</small></p></div>}
@@ -110,6 +113,6 @@ export function CharacterStyles({ bootstrap, cardId = 'kyle' }: { bootstrap: Pla
       <small className="style-cosmetic-note">Cosmetic only · Permanent unlock · No random contents</small><p role="status" className="style-status">{busy ? 'Saving…' : message}</p>
     </aside></div>
     {set.deckCover && <section className="style-deck-cover" aria-label={card.name + ' deck cover'}><img src={getAssetUrl(set.deckCover)} alt={card.name + ' deck cover'} loading="lazy" decoding="async" width={768} height={1152}/><div><span className="style-kicker">SIGNATURE DECK COVER</span><h2>Lead with {card.name}.</h2><p>This artwork appears on your deck box when {card.name} is its cover character.</p><Link className="style-link" href="/game/decks">Open your decks →</Link></div></section>}
-    <Link className="style-link style-all-link" href="/game/style">Browse all signature collections →</Link><details className="style-rollout"><summary>Up next · Mythicals, Legendaries, Super Rares</summary><p>More signature collections are in development.</p><div>{CHARACTER_STYLE_ROLLOUT.filter(item => !item.available).map(item => <span key={item.cardId}><strong>{item.name}</strong><small>{CARD_RARITY_DEFINITIONS[item.rarity].label} · In development</small></span>)}</div></details>
+    <Link className="style-link style-all-link" href="/game/style">Browse all signature collections →</Link>{upcomingStyles.length > 0 && <details className="style-rollout"><summary>Up next · Mythicals, Legendaries, Super Rares</summary><p>More signature collections are in development.</p><div>{upcomingStyles.map(item => <span key={item.cardId}><strong>{item.name}</strong><small>{CARD_RARITY_DEFINITIONS[item.rarity].label} · In development</small></span>)}</div></details>}
   </main>;
 }
