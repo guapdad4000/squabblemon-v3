@@ -74,7 +74,7 @@ export function BattleFormation({ children, count, inspectCount = count, crowded
       if (frame.current !== null) cancelAnimationFrame(frame.current);
       frame.current = null;
     };
-  }, [count]);
+  }, []);
 
   const scrollTo = (top: number) => {
     const stack = stackRef.current;

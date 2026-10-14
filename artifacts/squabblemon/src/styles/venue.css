@@ -391,3 +391,29 @@ html[data-reduce-motion="true"] .venue-button:after{display:none}
 .venue-page-heading h1 em{color:var(--venue-gold)}
 .venue-button:focus-visible,.station-tile:focus-visible,.venue-nav__item:focus-visible,.venue-icon-button:focus-visible{outline:2px solid var(--sq-paper);outline-offset:-5px}
 .venue-button--gold:focus-visible{outline-color:var(--sq-ink-925)}
+
+@keyframes sq-route-stage-in {
+  from {
+    opacity: 0.92;
+    transform: translate3d(0, 4px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.game-route-stage {
+  animation: sq-route-stage-in 180ms var(--sq-ease-out, cubic-bezier(0.16, 1, 0.3, 1));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .game-route-stage {
+    animation: none !important;
+  }
+}
+
+html[data-reduce-motion="true"] .game-route-stage,
+html[data-reduced-motion="true"] .game-route-stage {
+  animation: none !important;
+}

@@ -39,7 +39,7 @@ export function createMailDoor() {
   const notice=new T.Mesh(new T.SphereGeometry(.11,16,12),new T.MeshStandardMaterial({color:'#ff5141',emissive:'#d22718',emissiveIntensity:1.2})); notice.position.set(.9,3.68,.2); root.add(notice);
   notice.visible=false;
   let unread=0, opened=false, angle=0,night=false;
-  return { root, setUnread(value){unread=Math.max(0,Number(value)||0);notice.visible=unread>0;}, setOpen(value){opened=!!value;}, setNight(value){night=!!value;outsideMaterial.color.set(night?'#a18b75':'#d7c2a3');},
+  return { root, dynamicObjects: [hinge, leaf, notice, floorSpill], setUnread(value){unread=Math.max(0,Number(value)||0);notice.visible=unread>0;}, setOpen(value){opened=!!value;}, setNight(value){night=!!value;outsideMaterial.color.set(night?'#a18b75':'#d7c2a3');},
     update(t,dt,reduced){
       const previous=angle; angle+=( (opened?-1.52:0)-angle)*(reduced?1:1-Math.exp(-dt*6)); hinge.rotation.y=angle;
       const openness=Math.min(1,Math.abs(angle)/1.52);spill.intensity=openness*(night?17:13);spillMaterial.opacity=openness*(night?.29:.2);

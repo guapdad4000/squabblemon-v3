@@ -220,17 +220,36 @@
 
 /* Offscreen shells preserve the exact grid geometry and all inspection targets. */
 .collection-card-grid__deferred {
+  --deferred-accent: #71717a;
   display: flex;
-  align-items: flex-end;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
   width: 100%;
   height: 100%;
-  padding: 10px;
-  border: 2px solid #3f3f46;
-  background: linear-gradient(155deg, #272522, #09090b 70%);
-  color: #e4ddcd;
-  font: 800 11px var(--font-display);
+  padding: 8px 9px;
+  border: 1px solid color-mix(in srgb, var(--deferred-accent) 55%, #27272a);
+  background:
+    radial-gradient(circle at 50% 28%, color-mix(in srgb, var(--deferred-accent) 18%, transparent), transparent 68%),
+    linear-gradient(160deg, #1f1d1b, #09090b 75%);
+  box-shadow: inset 0 0 18px rgb(0 0 0 / 65%);
+  color: #f4efe4;
+  font: 800 11px/1.1 var(--font-display);
+  text-transform: uppercase;
   overflow-wrap: anywhere;
 }
+.collection-card-grid__deferred > b {
+  font: 800 9px/1 var(--font-mono);
+  color: var(--deferred-accent);
+  background: rgb(0 0 0 / 65%);
+  padding: 3px 5px;
+  border: 1px solid color-mix(in srgb, var(--deferred-accent) 40%, transparent);
+}
+.collection-card-grid__deferred[data-card-rarity="uncommon"] { --deferred-accent: #63dba0; }
+.collection-card-grid__deferred[data-card-rarity="rare"] { --deferred-accent: #64b5ff; }
+.collection-card-grid__deferred[data-card-rarity="epic"] { --deferred-accent: #c59aff; }
+.collection-card-grid__deferred[data-card-rarity="legendary"] { --deferred-accent: #ebc777; }
+.collection-card-grid__deferred[data-card-rarity="mythical"] { --deferred-accent: #ff6769; }
 
 .collection-card-grid > button[data-collection-bond="true"] {
   outline: 2px solid #f1b85f;

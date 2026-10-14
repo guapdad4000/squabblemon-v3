@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import layers from '../drFadeLayers.json';
 import { getAssetUrl } from '../lib/assets';
 import './dr-fade-card.css';
@@ -17,14 +17,15 @@ export function DrFadeArt({ className = '', animated = true }: { className?: str
 }
 
 export function DrFadeEntrance({ cueId, squabble = false }: { cueId: number; squabble?: boolean }) {
-  const [visible, setVisible] = useState(true);
+  const nodeRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    setVisible(true);
-    const timeout = window.setTimeout(() => setVisible(false), 1000);
+    if (nodeRef.current) nodeRef.current.style.display = '';
+    const timeout = window.setTimeout(() => {
+      if (nodeRef.current) nodeRef.current.style.display = 'none';
+    }, 1000);
     return () => window.clearTimeout(timeout);
   }, [cueId]);
-  if (!visible) return null;
-  return <div className={'dr-fade-entrance ' + (squabble ? 'dr-fade-entrance--squabble' : '')}
+  return <div ref={nodeRef} className={'dr-fade-entrance ' + (squabble ? 'dr-fade-entrance--squabble' : '')}
     data-testid="dr-fade-entrance" aria-hidden="true">
     <DrFadeArt animated={false} />
     <i className="dr-fade-entrance__impact" />

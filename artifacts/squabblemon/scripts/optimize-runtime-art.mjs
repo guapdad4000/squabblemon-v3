@@ -13,6 +13,18 @@ const sources = [
   'public/assets/characters/the-mailman-chibi.png',
   'public/assets/market/thank-you-fade-again-bag.png',
   'public/assets/e71f5189-861e-418d-8237-fa20713b9122.png',
+  'public/assets/fade-park/park.png',
+  'public/assets/fade-park/search-versus.png',
+  'public/assets/progression/brick.png',
+  'public/assets/progression/gang-wall.png',
+  'public/assets/progression/graffiti-paint-v2.png',
+  'public/assets/progression/hall-wallpaper.png',
+  'public/assets/progression/hall-of-hands.png',
+  'public/assets/NEW_ASSETS_ADDED/squabblemon_battle_fx_asset_sheet.png',
+  'public/assets/selection/underpass.png',
+  'public/assets/selection/dossier.png',
+  'public/assets/training/dr-fade-coach.png',
+  'public/assets/fade-alley/night.png',
 ];
 const report = [];
 for (const source of sources) {

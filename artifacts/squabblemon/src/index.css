@@ -1,6 +1,4 @@
 @layer theme, base, clerk, components, utilities;
-@import url('https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
 @import 'tailwindcss';
 @import './components/battle-presentation.css';
 @import './components/battle-readability.css';
@@ -71,7 +69,10 @@
   pointer-events: none; 
   z-index: 50; 
   opacity: 0.04;
+  contain: strict;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
+  background-repeat: repeat;
 }
 
 .hide-scrollbar::-webkit-scrollbar { 
@@ -609,7 +610,7 @@ html[data-reduce-motion="true"] .battle-start-smoke { display: none; }
   aspect-ratio:1.65;
   pointer-events:none;
   transform:translate(-50%,-50%) rotate(-3deg);
-  background-image:url("/assets/NEW_ASSETS_ADDED/squabblemon_battle_fx_asset_sheet.png");
+  background-image:url("/assets/NEW_ASSETS_ADDED/squabblemon_battle_fx_asset_sheet.webp");
   background-repeat:no-repeat;
   background-size:400% 300%;
   background-position:31% 0%;
@@ -624,8 +625,16 @@ html[data-reduce-motion="true"] .battle-start-smoke { display: none; }
 .lane-impact-art.kind-ability { background-position:63% 34%; }
 .district-squabble-impact::before {
   content:"SQUABBLE"; position:absolute; inset:8%; z-index:31; display:grid; place-items:center; pointer-events:none;
-  color:white; background:rgba(159,18,57,.3); border:3px solid #fb7185; font:900 italic clamp(.8rem,2.8vw,2rem)/1 var(--font-display);
-  text-shadow:0 3px #000,0 0 18px #fb7185; animation:squabble-impact calc(.48s / var(--presentation-speed, 1)) cubic-bezier(.2,.8,.2,1) forwards;
+  color:#fff8e7;
+  background:
+    radial-gradient(circle, rgba(244,63,94,.42), rgba(159,18,57,.78)),
+    repeating-linear-gradient(135deg, rgba(250,204,21,.16) 0 10px, transparent 10px 20px);
+  border:3px solid #fda4af;
+  box-shadow:0 0 32px rgba(244,63,94,.65), inset 0 0 18px rgba(250,204,21,.35);
+  font:900 italic clamp(.85rem,2.8vw,2.1rem)/1 var(--font-display);
+  letter-spacing:.04em;
+  text-shadow:0 3px #000,0 0 18px #fb7185;
+  animation:squabble-impact calc(.48s / var(--presentation-speed, 1)) cubic-bezier(.2,.8,.2,1) forwards;
 }
 .district-lane-0 { --impact-color: #fb923c; }
 .district-lane-1 { --impact-color: #c084fc; }

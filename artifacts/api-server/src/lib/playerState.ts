@@ -70,14 +70,16 @@ export async function ensurePlayer(clerkUserId: string): Promise<void> {
     .values({ clerkUserId })
     .onConflictDoNothing();
 
-  for (const template of MISSION_TEMPLATES) {
+  if (MISSION_TEMPLATES.length > 0) {
     await db
       .insert(playerMissionsTable)
-      .values({
-        clerkUserId,
-        ...template,
-        resetAt: resetForCadence(template.cadence),
-      })
+      .values(
+        MISSION_TEMPLATES.map((template) => ({
+          clerkUserId,
+          ...template,
+          resetAt: resetForCadence(template.cadence),
+        })),
+      )
       .onConflictDoNothing();
   }
 
@@ -172,18 +174,33 @@ export async function ensurePlayer(clerkUserId: string): Promise<void> {
       ]),
     );
 
-    await tx
-      .update(playerProfilesTable)
-      .set({
-        lastActiveAt: now,
-        ownedCardIds: normalizedOwned,
-        cardProgression,
-        discoveredCardIds: [...discovered],
-        collectionProgress: normalizedOwned.length,
-        savedDecks: normalizedDecks,
-        equippedVariants,
-      })
-      .where(eq(playerProfilesTable.clerkUserId, clerkUserId));
+    const discoveredList = [...discovered];
+    const normalizedChanged =
+      normalizedOwned.length !== current.ownedCardIds.length ||
+      normalizedOwned.some((id, idx) => id !== current.ownedCardIds[idx]) ||
+      discoveredList.length !== current.discoveredCardIds.length ||
+      discoveredList.some((id, idx) => id !== current.discoveredCardIds[idx]) ||
+      current.collectionProgress !== normalizedOwned.length ||
+      JSON.stringify(normalizedDecks) !== JSON.stringify(current.savedDecks) ||
+      JSON.stringify(equippedVariants) !== JSON.stringify(current.equippedVariants ?? {}) ||
+      JSON.stringify(cardProgression) !== JSON.stringify(current.cardProgression ?? {});
+    const lastActiveStale =
+      !current.lastActiveAt || now.getTime() - current.lastActiveAt.getTime() > 5 * 60_000;
+
+    if (normalizedChanged || lastActiveStale) {
+      await tx
+        .update(playerProfilesTable)
+        .set({
+          lastActiveAt: now,
+          ownedCardIds: normalizedOwned,
+          cardProgression,
+          discoveredCardIds: discoveredList,
+          collectionProgress: normalizedOwned.length,
+          savedDecks: normalizedDecks,
+          equippedVariants,
+        })
+        .where(eq(playerProfilesTable.clerkUserId, clerkUserId));
+    }
   });
 }
 
@@ -364,25 +381,28 @@ function getNextAction(
 
 export async function getPlayerBootstrap(clerkUserId: string) {
   await ensurePlayer(clerkUserId);
-  const [profile] = await db
-    .select()
-    .from(playerProfilesTable)
-    .where(eq(playerProfilesTable.clerkUserId, clerkUserId));
-  const missions = await db
-    .select()
-    .from(playerMissionsTable)
-    .where(eq(playerMissionsTable.clerkUserId, clerkUserId))
-    .orderBy(asc(playerMissionsTable.id));
-  const packHistory = await db
-    .select()
-    .from(playerPackOpeningsTable)
-    .where(eq(playerPackOpeningsTable.clerkUserId, clerkUserId))
-    .orderBy(desc(playerPackOpeningsTable.createdAt))
-    .limit(20);
-  const roadClaims = await db
-    .select({ milestoneKey: playerCollectionClaimsTable.milestoneKey })
-    .from(playerCollectionClaimsTable)
-    .where(eq(playerCollectionClaimsTable.clerkUserId, clerkUserId));
+  const [profileResult, missions, packHistory, roadClaims] = await Promise.all([
+    db
+      .select()
+      .from(playerProfilesTable)
+      .where(eq(playerProfilesTable.clerkUserId, clerkUserId)),
+    db
+      .select()
+      .from(playerMissionsTable)
+      .where(eq(playerMissionsTable.clerkUserId, clerkUserId))
+      .orderBy(asc(playerMissionsTable.id)),
+    db
+      .select()
+      .from(playerPackOpeningsTable)
+      .where(eq(playerPackOpeningsTable.clerkUserId, clerkUserId))
+      .orderBy(desc(playerPackOpeningsTable.createdAt))
+      .limit(20),
+    db
+      .select({ milestoneKey: playerCollectionClaimsTable.milestoneKey })
+      .from(playerCollectionClaimsTable)
+      .where(eq(playerCollectionClaimsTable.clerkUserId, clerkUserId)),
+  ]);
+  const [profile] = profileResult;
 
   if (!profile) {
     throw new Error("Player profile could not be provisioned");

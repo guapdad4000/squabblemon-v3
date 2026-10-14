@@ -2,7 +2,7 @@ import { useCollectionCardViewport } from '../lib/useCollectionCardViewport';
 import { AutoDeckDialog } from './AutoDeckDialog';
 import { ROOKIE_FOUNDATION_IDS } from '../data';
 import { crewInsights } from '@workspace/squabblemon-engine/insights';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { CoachSpotlight } from './CoachSpotlight';
 import { DrFadePortrait } from './DrFade';
 import { ArrowLeft, ArrowRight, ChartNoAxesColumn, Check, ChevronDown, Crown, Pencil, Plus, Save, Search, Trash2, Undo2, X, Zap } from 'lucide-react';
@@ -33,10 +33,19 @@ export function DeckWorkbench({ initial, ownedCardIds, equippedVariants, onSave,
   const [autoOpen, setAutoOpen] = useState(false);
   const [guideStep, setGuideStep] = useState(0);
   const [showLessonTip, setShowLessonTip] = useState(true);
-  const recruitPool = [...new Set(ownedCardIds)].filter(id => !lesson || ROOKIE_FOUNDATION_IDS.includes(id));
-  const recruit = workshopSuggestions.find(idea => recruitPool.includes(idea.cardId) && !draft.cardIds.includes(idea.cardId))?.cardId ?? recruitPool.find(id => !draft.cardIds.includes(id));
-  const ownedSet = new Set(ownedCardIds);
-  const uniqueOwnedCount = new Set(draft.cardIds.filter(id => ownedSet.has(id))).size;
+  const recruitPool = useMemo(
+    () => [...new Set(ownedCardIds)].filter(id => !lesson || ROOKIE_FOUNDATION_IDS.includes(id)),
+    [ownedCardIds, lesson],
+  );
+  const recruit = useMemo(
+    () => workshopSuggestions.find(idea => recruitPool.includes(idea.cardId) && !draft.cardIds.includes(idea.cardId))?.cardId ?? recruitPool.find(id => !draft.cardIds.includes(id)),
+    [recruitPool, draft.cardIds],
+  );
+  const ownedSet = useMemo(() => new Set(ownedCardIds), [ownedCardIds]);
+  const uniqueOwnedCount = useMemo(
+    () => new Set(draft.cardIds.filter(id => ownedSet.has(id))).size,
+    [draft.cardIds, ownedSet],
+  );
   const hasTenUniqueOwnedCards = draft.cardIds.length === DECK_SIZE && uniqueOwnedCount === DECK_SIZE;
   const [plannedCardId, setPlannedCardId] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
@@ -58,11 +67,20 @@ export function DeckWorkbench({ initial, ownedCardIds, equippedVariants, onSave,
   const collectionGridRef = useRef<HTMLDivElement>(null);
   const browseRef = useRef<HTMLDivElement>(null);
   const actionsRef = useRef<HTMLElement>(null);
-  const insights = crewInsights(draft.cardIds);
-  const legality = validateSavedDeck(draft.cardIds, ownedCardIds, draft.heroCardId);
-  const owned = (lesson ? recruitPool : ownedCardIds).map(id => catalogCardById[id]).filter(Boolean);
-  const visible = owned.filter(card => `${card.name} ${card.effect} ${card.type}`.toLowerCase().includes(search.toLowerCase())).sort((a,b) => a.cost - b.cost || a.name.localeCompare(b.name));
-  const nearbyCards = useCollectionCardViewport({ gridRef: collectionGridRef, scrollRef: cardScrollRef, catalogKey: visible.map(card => card.catalogId).join('|'), enabled: true, buffer: 120 });
+  const insights = useMemo(() => crewInsights(draft.cardIds), [draft.cardIds]);
+  const legality = useMemo(() => validateSavedDeck(draft.cardIds, ownedCardIds, draft.heroCardId), [draft.cardIds, ownedCardIds, draft.heroCardId]);
+  const owned = useMemo(
+    () => (lesson ? recruitPool : ownedCardIds).map(id => catalogCardById[id]).filter(Boolean),
+    [lesson, recruitPool, ownedCardIds],
+  );
+  const visible = useMemo(() => {
+    const query = search.trim().toLowerCase();
+    return owned
+      .filter(card => !query || `${card.name} ${card.effect} ${card.type}`.toLowerCase().includes(query))
+      .sort((a, b) => a.cost - b.cost || a.name.localeCompare(b.name));
+  }, [owned, search]);
+  const visibleCatalogKey = useMemo(() => visible.map(card => card.catalogId).join('|'), [visible]);
+  const nearbyCards = useCollectionCardViewport({ gridRef: collectionGridRef, scrollRef: cardScrollRef, catalogKey: visibleCatalogKey, enabled: true, buffer: 120 });
   const selected = slot === null ? null : catalogCardById[draft.cardIds[slot]];
   const dirty = draft.name !== savedDraft.name
     || draft.heroCardId !== savedDraft.heroCardId

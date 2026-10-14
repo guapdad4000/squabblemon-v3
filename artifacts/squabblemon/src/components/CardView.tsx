@@ -176,7 +176,18 @@ function CardViewComponent({
   const entryAccent = cardEntryAccent(card);
 
   const isLarge = isInspector || (!isBoard && !className.includes('w-[64px]'));
-  const MotionElement = presentationOnly ? motion.div : motion.button;
+  const useStaticShell = Boolean(presentationOnly && disableLayout && !inspectionLayout);
+  const MotionElement: React.ElementType = useStaticShell ? 'div' : presentationOnly ? motion.div : motion.button;
+  const motionProps = useStaticShell
+    ? {}
+    : {
+        layoutId: inspectionLayout,
+        layout: !disableLayout,
+        layoutDependency,
+        transition: { layout: { type: 'spring' as const, stiffness: 420, damping: 28 }, duration: 0.2 },
+        whileHover: presentationOnly ? undefined : !isBoard && !isInspector ? { y: -12, scale: 1.05, zIndex: 50 } : isBoard ? { scale: 1.05 } : {},
+        whileTap: presentationOnly ? undefined : !isInspector ? { scale: 0.95 } : {},
+      };
 
   const aliveClass = isBoard && !isFrozen && !isSilenced && !isBlocked
     ? (isEnemy ? 'is-alive-rival' : 'is-alive-owner')
@@ -205,10 +216,7 @@ function CardViewComponent({
   return (
     <><MotionElement
       {...inspection.props}
-      layoutId={inspectionLayout ?? (disableLayout ? undefined : instance?.instanceId)}
-      layout={!disableLayout}
-      layoutDependency={layoutDependency}
-      transition={{ layout: { type: 'spring', stiffness: 420, damping: 28 }, duration: 0.2 }}
+      {...motionProps}
       data-testid={testId ?? `card-${card.id}`}
       data-card-id={card.id}
       data-instance-id={instance?.instanceId}
@@ -242,8 +250,6 @@ function CardViewComponent({
       aria-pressed={!isBoard && !isInspector && !presentationOnly ? !!queued : undefined}
       title={disabledReason ?? (card.hazard ? fuseDescription.trim() : undefined)}
       onClick={presentationOnly ? undefined : onClick}
-      whileHover={presentationOnly ? undefined : !isBoard && !isInspector ? { y: -12, scale: 1.05, zIndex: 50 } : isBoard ? { scale: 1.05 } : {}}
-      whileTap={presentationOnly ? undefined : !isInspector ? { scale: 0.95 } : {}}
       className={`
         collector-card relative shrink-0 flex flex-col justify-end text-left group
         ${tactile ? 'collector-card--tactile' : ''}
@@ -287,7 +293,8 @@ function CardViewComponent({
             : <img
                 src={instance?.cardId === 'leroy' && instance.goldenGlow ? getAssetUrl('assets/kumite/fighters/bruce-leroy-glow.webp') : isBurntPlate ? getCardImage('burnt-plate') : isBuddyBud ? getCardImage('buddy') : buddyRockForm ? getBuddySquabbleImage() : instance?.maryElephant ? getCardImage('ms-mary-mack-elephant') : getCardImage(card.id, variantId)}
                 alt=""
-                 draggable={false}
+                decoding="async"
+                draggable={false}
                 className={`collector-portrait absolute inset-x-0 bottom-[10%] w-full h-[85%] object-contain object-bottom transition-transform duration-500 z-10 ${isSilenced ? 'grayscale' : ''} ${!isInspector && card.kind !== 'blockbuster' && 'group-hover/inner:scale-[1.03]'} ${isInspector ? 'collector-portrait--inspector' : ''}`}
               />}
 

@@ -1,4 +1,4 @@
-import { useRef, type CSSProperties } from "react";
+import { useMemo, useRef, type CSSProperties } from "react";
 import { useViewMemory } from "../lib/navigationMemory";
 import type { PlayerBootstrap } from "@workspace/api-client-react";
 import {
@@ -51,47 +51,50 @@ export function GangWall({
   const tags = useRef<HTMLElement>(null);
   const swipe = useRef<{ x: number; y: number } | null>(null);
   const members = useRef<HTMLElement>(null);
-  const owned = new Set(bootstrap.profile.ownedCardIds);
-  const groups: WallGroup[] =
-    mode === "elements"
-      ? [...new Set(cardCatalog.map((c) => canonicalElement(c.type)))].map(
-          (name) => ({
-            name,
-            cards: cardCatalog.filter((c) => canonicalElement(c.type) === name),
-          }),
-        )
-      : mode === "groups"
-        ? [...new Set(cardCatalog.map((c) => c.faction))].map((name) => ({
-            name,
-            cards: cardCatalog.filter((c) => c.faction === name),
-          }))
-        : mode === "bonds"
-          ? cardCatalog
-              .filter((c) => c.elementalBond)
-              .map((c) => ({
-                name: c.name,
-                cards: [
-                  c,
-                  ...cardCatalog.filter(
-                    (p) =>
-                      p.catalogId !== c.catalogId &&
-                      canonicalElement(p.type) === c.elementalBond,
-                  ),
-                ],
-                note: c.effect,
-              }))
-          : decks
-              .filter(
-                (d) =>
-                  d.archetype.includes("Combo") ||
-                  d.id === "voltage" ||
-                  d.id === "compound",
-              )
-              .map((d) => ({
-                name: d.name,
-                cards: cardCatalog.filter((c) => d.cards.includes(c.engineId)),
-                note: d.plan,
-              }));
+  const owned = useMemo(() => new Set(bootstrap.profile.ownedCardIds), [bootstrap.profile.ownedCardIds]);
+  const groups = useMemo<WallGroup[]>(
+    () =>
+      mode === "elements"
+        ? [...new Set(cardCatalog.map((c) => canonicalElement(c.type)))].map(
+            (name) => ({
+              name,
+              cards: cardCatalog.filter((c) => canonicalElement(c.type) === name),
+            }),
+          )
+        : mode === "groups"
+          ? [...new Set(cardCatalog.map((c) => c.faction))].map((name) => ({
+              name,
+              cards: cardCatalog.filter((c) => c.faction === name),
+            }))
+          : mode === "bonds"
+            ? cardCatalog
+                .filter((c) => c.elementalBond)
+                .map((c) => ({
+                  name: c.name,
+                  cards: [
+                    c,
+                    ...cardCatalog.filter(
+                      (p) =>
+                        p.catalogId !== c.catalogId &&
+                        canonicalElement(p.type) === c.elementalBond,
+                    ),
+                  ],
+                  note: c.effect,
+                }))
+            : decks
+                .filter(
+                  (d) =>
+                    d.archetype.includes("Combo") ||
+                    d.id === "voltage" ||
+                    d.id === "compound",
+                )
+                .map((d) => ({
+                  name: d.name,
+                  cards: cardCatalog.filter((c) => d.cards.includes(c.engineId)),
+                  note: d.plan,
+                })),
+    [mode],
+  );
   const milestones = bootstrap.collectionRoad;
   const index = Math.min(
     groupIndex,
@@ -139,13 +142,13 @@ export function GangWall({
       style={
         {
           "--mural-paint": paint,
-          "--brick": `url(${getAssetUrl("assets/progression/brick.png")})`,
+          "--brick": `url(${getAssetUrl("assets/progression/brick.webp")})`,
         } as CSSProperties
       }
     >
       <header className="gang-mural__header">
         <img
-          src={getAssetUrl("assets/progression/gang-wall.png")}
+          src={getAssetUrl("assets/progression/gang-wall.webp")}
           alt="The Gang Wall"
         />
         <p>
@@ -225,7 +228,7 @@ export function GangWall({
       >
         <img
           className="gang-mural__paint"
-          src={getAssetUrl("assets/progression/graffiti-paint-v2.png")}
+          src={getAssetUrl("assets/progression/graffiti-paint-v2.webp")}
           alt=""
           aria-hidden="true"
         />

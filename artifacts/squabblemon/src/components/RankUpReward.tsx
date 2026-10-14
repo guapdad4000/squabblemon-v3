@@ -52,7 +52,9 @@ export function RankUpReward({
             playsInline
             preload="metadata"
             onLoadedMetadata={(event) => {
-              event.currentTarget.currentTime = 50;
+              if (event.currentTarget.duration > 55) {
+                event.currentTarget.currentTime = 50;
+              }
             }}
             onError={() => setVideoFailed(true)}
           />

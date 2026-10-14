@@ -25,6 +25,11 @@ export function SpecialMove({ clip, onStatus, audioEnabled = false, speed = 1 }:
     const setReady = (ready: boolean) => { surface.dataset.ready = String(ready); };
     const setMuted = (muted: boolean) => { surface.dataset.muted = String(muted); };
     setReady(false);
+    const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    if (motion.matches || document.documentElement.dataset.reduceMotion === 'true') {
+      onStatus?.('Reduced motion — using the card effect.');
+      return;
+    }
     let renderer: ReturnType<typeof createChromaRenderer>;
     try { renderer = createChromaRenderer(surface, `move-${clip.chroma}`, pixels => keyChromaPixels(pixels, clip.chroma), useGpu); }
     catch { setUseGpu(false); return; }
@@ -32,7 +37,6 @@ export function SpecialMove({ clip, onStatus, audioEnabled = false, speed = 1 }:
     surface.dataset.renderer = renderer.kind;
     const contextLost = (event: Event) => { event.preventDefault(); setUseGpu(false); };
     surface.addEventListener('webglcontextlost', contextLost);
-    const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
     let video: HTMLVideoElement | undefined;
     let frame = 0, videoFrame = 0, lastFrame = 0, lastMediaTime = -1, stopped = false, revealed = false;
     const cancelDraw = () => {

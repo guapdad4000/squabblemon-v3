@@ -31,6 +31,7 @@ export function KeyedVideo({
   className,
   loop = false,
   maxWidth = 480,
+  paused = false,
   onEnded,
 }: {
   src: string;
@@ -38,15 +39,21 @@ export function KeyedVideo({
   className: string;
   loop?: boolean;
   maxWidth?: number;
+  paused?: boolean;
   onEnded?: () => void;
 }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [useGpu, setUseGpu] = useState(true);
   const onEndedRef = useRef(onEnded);
+  const pausedRef = useRef(paused);
 
   useEffect(() => {
     onEndedRef.current = onEnded;
   }, [onEnded]);
+
+  useEffect(() => {
+    pausedRef.current = paused;
+  }, [paused]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -106,11 +113,19 @@ export function KeyedVideo({
       if (frameVideo.requestVideoFrameCallback) {
         frameHandle = frameVideo.requestVideoFrameCallback(() => {
           draw();
+          if (pausedRef.current) {
+            video.pause();
+            return;
+          }
           schedule();
         });
       } else {
         fallbackHandle = requestAnimationFrame(() => {
           draw();
+          if (pausedRef.current) {
+            video.pause();
+            return;
+          }
           schedule();
         });
       }

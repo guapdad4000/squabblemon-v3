@@ -69,11 +69,18 @@ export function FadePark({ bootstrap }: { bootstrap: PlayerBootstrap }) {
     };
   }, []);
 
+  const parallaxFrame = useRef(0);
+  useEffect(() => () => cancelAnimationFrame(parallaxFrame.current), []);
   const handlePointerMove = (event: React.PointerEvent<HTMLElement>) => {
-    if (event.pointerType === 'touch') return;
-    const bounds = event.currentTarget.getBoundingClientRect();
-    event.currentTarget.style.setProperty('--mx', String((event.clientX - bounds.left) / bounds.width));
-    event.currentTarget.style.setProperty('--my', String((event.clientY - bounds.top) / bounds.height));
+    if (event.pointerType === 'touch' || profile.settings.reducedMotion) return;
+    const target = event.currentTarget;
+    const mx = Math.max(0, Math.min(1, event.clientX / Math.max(1, window.innerWidth))).toFixed(3);
+    const my = Math.max(0, Math.min(1, event.clientY / Math.max(1, window.innerHeight))).toFixed(3);
+    cancelAnimationFrame(parallaxFrame.current);
+    parallaxFrame.current = requestAnimationFrame(() => {
+      target.style.setProperty('--mx', mx);
+      target.style.setProperty('--my', my);
+    });
   };
 
   const room = query.data?.room;
@@ -147,7 +154,7 @@ export function FadePark({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   return <main className="fade-park" aria-label="Fade Park ranked lobby" data-testid="fade-park" onPointerMove={handlePointerMove}>
     <div className="park-environment" aria-hidden="true">
       <div className="park-layer park-layer--bg">
-        <img className="fade-park-wallpaper" src={getAssetUrl('assets/fade-park/park.png')} alt="" fetchPriority="high" />
+        <img className="fade-park-wallpaper" src={getAssetUrl('assets/fade-park/park.webp')} alt="" fetchPriority="high" />
       </div>
       <img
         className="park-street-sign"
@@ -198,7 +205,7 @@ export function FadePark({ bootstrap }: { bootstrap: PlayerBootstrap }) {
               />
               </div>
               {searching && <div className="park-search park-search-overlay" data-testid="ranked-search">
-                <div className="park-search-art"><img className="park-search-poster" src={getAssetUrl('assets/fade-park/search-versus.png')} alt="" /><img className="park-search-fighters" src={getAssetUrl('assets/fade-park/search.gif')} alt="Dr. Fade and Guap warming up" /><img className="park-search-phone" src={getAssetUrl('assets/props/sticker-phone.webp')} alt="" /></div>
+                <div className="park-search-art"><img className="park-search-poster" src={getAssetUrl('assets/fade-park/search-versus.webp')} alt="" /><img className="park-search-fighters" src={getAssetUrl('assets/fade-park/search.gif')} alt="Dr. Fade and Guap warming up" /><img className="park-search-phone" src={getAssetUrl('assets/props/sticker-phone.webp')} alt="" /></div>
                 <div className="park-search-status" role="status"><span className="park-pulse" /><h3>{connected ? 'Calling for a fade…' : 'Reconnecting…'}</h3><time>{String(Math.floor(elapsed / 60)).padStart(2, '0')}:{String(elapsed % 60).padStart(2, '0')}</time></div>
                 <p>Checking for players first. A Park Bot joins after 6 seconds. Hang up to cancel.</p>
               </div>}
@@ -209,7 +216,7 @@ export function FadePark({ bootstrap }: { bootstrap: PlayerBootstrap }) {
         </section>
         {searching && !chosen ? <div className="park-search" data-testid="ranked-search">
           <div className="park-search-art" aria-hidden="true">
-            <img className="park-search-poster" src={getAssetUrl('assets/fade-park/search-versus.png')} alt="" />
+            <img className="park-search-poster" src={getAssetUrl('assets/fade-park/search-versus.webp')} alt="" />
             <img className="park-search-fighters" src={getAssetUrl('assets/fade-park/search.gif')} alt="" />
             <img className="park-search-phone" src={getAssetUrl('assets/props/sticker-phone.webp')} alt="" />
           </div>

@@ -552,6 +552,7 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
       data-pull-size={pullSize}
       data-reduced-motion={reduced}
       data-round={isPunching ? beatIndex + 1 : undefined}
+      data-strike-intensity={isPunching ? fightBeat.intensity : undefined}
       data-omen={omenRarity.toLowerCase()}
     >
       <div className="gym__arena" ref={arena}>

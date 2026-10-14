@@ -52,6 +52,11 @@ export const asCard = (card: OnlinePublicCard): CardInstance => {
   };
 };
 
+export function computeTurnSecondsRemaining(deadline: number | null | undefined, nowMs: number, clockOffsetMs: number): number {
+  if (deadline == null) return 0;
+  return Math.max(0, Math.min(TURN_SECONDS, Math.ceil((deadline - nowMs - clockOffsetMs) / 1000)));
+}
+
 /** A display-only projection. Never simulate online actions or invent an opponent hand. */
 export function onlineBattleProjection(room: OnlineRoomView): { match: Match; presentation: Omit<OnlineBattlePresentation, 'status' | 'clockRunning' | 'yourTurn'> } {
   const rival = otherSeat(room.seat);
@@ -121,8 +126,10 @@ export function MultiplayerBattle({ room, busy, connected, reducedMotion: profil
   const pendingNavigation = useRef<(() => void) | null>(null);
   const [reviewBoard, setReviewBoard] = useState(false);
   const { celebrating, leaveResults } = useBattleResultExit();
-  const [now, setNow] = useState(Date.now);
   const clockOffset = useRef(room.serverTime - Date.now());
+  const [remaining, setRemaining] = useState(() =>
+    computeTurnSecondsRemaining(room.deadline, Date.now(), room.serverTime - Date.now()),
+  );
   const [preferences, setPreferences] = useFeedbackPreferences();
   const feedback = useRef<BattleFeedback | null>(null);
   const seen = useRef(room.events.at(-1)?.sequence ?? 0);
@@ -156,15 +163,26 @@ export function MultiplayerBattle({ room, busy, connected, reducedMotion: profil
   }, [room.status, room.code, room.gameNumber]);
   useEffect(() => { feedback.current = new BattleFeedback(preferences); return () => feedback.current?.reset(); }, []);
   useEffect(() => { feedback.current?.setPreferences(preferences); }, [preferences]);
-  useEffect(() => { clockOffset.current = room.serverTime - Date.now(); }, [room.serverTime]);
-  useEffect(() => { const timer = setInterval(() => setNow(Date.now()), 250); return () => clearInterval(timer); }, []);
+  useEffect(() => {
+    clockOffset.current = room.serverTime - Date.now();
+    setRemaining(computeTurnSecondsRemaining(room.deadline, Date.now(), clockOffset.current));
+  }, [room.serverTime, room.deadline, room.status]);
+  useEffect(() => {
+    if (room.status !== 'active' || room.deadline == null) return;
+    const timer = setInterval(() => {
+      setRemaining(prev => {
+        const next = computeTurnSecondsRemaining(room.deadline, Date.now(), clockOffset.current);
+        return prev === next ? prev : next;
+      });
+    }, 250);
+    return () => clearInterval(timer);
+  }, [room.status, room.deadline]);
   useEffect(() => {
     const event = room.events.filter(e => e.sequence > seen.current).find(e => e.type === 'play' || e.type === 'ability');
     seen.current = room.events.at(-1)?.sequence ?? seen.current;
     if (event && !document.hidden) feedback.current?.cue(event.note.includes('SQUABBLE') ? 'squabble' : event.type === 'play' ? 'play' : event.kind === 'move' ? 'move' : 'status', reducedMotion);
   }, [room.events, reducedMotion]);
   const rivalSeat = otherSeat(room.seat), rival = room.members[rivalSeat]!;
-  const remaining = Math.max(0, Math.min(TURN_SECONDS, Math.ceil(((room.deadline ?? now) - now - clockOffset.current) / 1000)));
   const myTurn = room.status === 'active' && room.activeSeat === room.seat;
   useTurnClockCues(remaining, myTurn, room.deadline, room.status === 'active' && connected);
   const clockDanger = myTurn && connected && room.status === 'active' && remaining > 0 && remaining <= 10;

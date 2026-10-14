@@ -51,9 +51,9 @@ export const CHARACTER_REACTION_PACKS = [
 ] as const;
 export const REACTION_PACKS = [{ id: REACTION_PACK_ID, name: 'Block Talk Reactions', unlock: REACTION_PACK_UNLOCK, price: 300, reactionIds: ['hold-that', 'too-smooth'] }, ...CHARACTER_REACTION_PACKS] as const;
 export const REACTIONS = [
-  { id: 'big-w', poster: 'assets/reactions/big-w.png', animatedWebp: null, packId: null, name: 'Big W', gif: 'assets/results/win-w.gif', starter: true },
+  { id: 'big-w', poster: 'assets/reactions/big-w.png', animatedWebp: 'assets/results/win-w.webp', packId: null, name: 'Big W', gif: 'assets/results/win-w.gif', starter: true },
   { id: 'lets-go', poster: 'assets/reactions/lets-go.png', animatedWebp: null, packId: null, name: "Let's go", gif: 'assets/training/inmate-quick.gif', starter: true },
-  { id: 'hold-that', poster: 'assets/reactions/hold-that.png', animatedWebp: null, packId: REACTION_PACK_ID, name: 'Hold that L', gif: 'assets/results/loss-l.gif', starter: false },
+  { id: 'hold-that', poster: 'assets/reactions/hold-that.png', animatedWebp: 'assets/results/loss-l.webp', packId: REACTION_PACK_ID, name: 'Hold that L', gif: 'assets/results/loss-l.gif', starter: false },
   { id: 'too-smooth', poster: 'assets/reactions/too-smooth.png', animatedWebp: null, packId: REACTION_PACK_ID, name: 'Too smooth', gif: 'assets/training/inmate-moves.gif', starter: false },
 {"id": "reaction:big-city-pigeon:laugh:v1", "name": "Big City Pigeon \u2014 Laugh", "gif": "assets/reactions/character-pack-v1/big-city-pigeon/laugh.gif", "animatedWebp": "assets/reactions/character-pack-v1/big-city-pigeon/laugh-animated.webp", "poster": "assets/reactions/character-pack-v1/big-city-pigeon/laugh.webp", "starter": false, "packId": "reaction-pack:big-city-pigeon:v1"},
 {"id": "reaction:big-city-pigeon:rage:v1", "name": "Big City Pigeon \u2014 Rage", "gif": "assets/reactions/character-pack-v1/big-city-pigeon/rage.gif", "animatedWebp": "assets/reactions/character-pack-v1/big-city-pigeon/rage-animated.webp", "poster": "assets/reactions/character-pack-v1/big-city-pigeon/rage.webp", "starter": false, "packId": "reaction-pack:big-city-pigeon:v1"},

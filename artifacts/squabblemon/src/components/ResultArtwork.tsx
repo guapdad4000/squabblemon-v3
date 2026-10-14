@@ -40,7 +40,7 @@ export function ResultArtwork({ victory, draw, results, districts, reward, isGue
     <img className="result-immersive__brand" src={asset('v3/wordmark')} alt="Squabblemon" />
     <div key={`${outcome}-${variant}`} className={`result-immersive__results ${!reduced && !draw ? 'result-immersive__results--slam' : ''}`}>
       <div className="result-immersive__title">
-        {!draw && <img draggable={false} className="result-immersive__mark" src={getAssetUrl(`assets/results/${victory ? 'win-w' : 'loss-l'}.gif`)} alt={victory ? 'Victory' : 'Defeat'} />}
+        {!draw && <img draggable={false} className="result-immersive__mark" src={getAssetUrl(`assets/results/${victory ? 'win-w' : 'loss-l'}.webp`)} alt={victory ? 'Victory' : 'Defeat'} />}
         {heading || <h2>{draw ? 'Dead heat' : victory ? 'You won the room' : 'Make your comeback'}</h2>}
         {storyStars !== undefined && <div className="result-immersive__stars" aria-label={`${storyStars} of 3 story stars earned`}>{[1,2,3].map(n => <Star key={n} fill={n <= storyStars ? 'currentColor' : 'none'} aria-hidden="true" />)}</div>}
       </div>

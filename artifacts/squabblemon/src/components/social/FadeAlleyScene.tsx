@@ -14,7 +14,7 @@ export function FadeAlleyScene({ rivalName, rivalHandle, joined = false, invited
   rivalName?: string; rivalHandle?: string; joined?: boolean; invited?: boolean; ready?: boolean; rivalReady?: boolean; seat?: 'player' | 'cpu';
 }) {
   return <section className="fa-scene" aria-label="Fade Alley">
-    <img className="fa-scene__image" src={getAssetUrl('assets/fade-alley/night.png')} alt="" />
+    <img className="fa-scene__image" src={getAssetUrl('assets/fade-alley/night.webp')} alt="" />
     <div className="fa-hud-logo"><img src={getAssetUrl('assets/fade-alley/fade-alley-logo.png')} alt="Squabblemon Fade Alley" /></div>
     <div className="fa-scene__copy">
       <div className="fa-eyebrow">PRIVATE 1V1 · UNRANKED</div>

@@ -182,24 +182,32 @@ function PowerScore({
 }) {
   const motionValue = useMotionValue(value);
   const rounded = useTransform(motionValue, latest => Math.round(latest).toString());
-  // Derived during render so each score change does not cost an extra battle commit.
-  const [change, setChange] = useState({ value, from: value, delta: 0, key: 0 });
-  if (change.value !== value) setChange({ value, from: change.value, delta: value - change.value, key: change.key + 1 });
-  const current = change.value === value ? change : { ...change, delta: 0 };
+  // Derived during render via ref so each score change does not cost an extra battle commit.
+  const changeRef = useRef({ value, from: value, delta: 0, key: 0 });
+  if (changeRef.current.value !== value) {
+    changeRef.current = {
+      value,
+      from: changeRef.current.value,
+      delta: value - changeRef.current.value,
+      key: changeRef.current.key + 1,
+    };
+  }
+  const current = changeRef.current;
   const changedKey = current.key;
   const deltaNode = useRef<HTMLElement>(null);
   const delta = current.delta;
   useEffect(() => {
     if (!changedKey) return;
+    if (deltaNode.current) deltaNode.current.style.display = '';
     // Expire the delta in the DOM; clearing state here re-rendered the whole battle.
     const clear = setTimeout(() => { if (deltaNode.current) deltaNode.current.style.display = 'none'; }, 1600);
     if (reducedMotion) {
-      motionValue.set(change.value);
+      motionValue.set(current.value);
       return () => clearTimeout(clear);
     }
-    const controls = animate(motionValue, change.value, { duration: 0.6, ease: [0.2, 0.8, 0.2, 1] });
+    const controls = animate(motionValue, current.value, { duration: 0.6, ease: [0.2, 0.8, 0.2, 1] });
     return () => { controls.stop(); clearTimeout(clear); };
-  }, [changedKey, motionValue, reducedMotion]);
+  }, [changedKey, current.value, motionValue, reducedMotion]);
   const colorClass = tone === 'leading'
     ? (side === 'player' ? 'text-primary' : 'text-accent')
     : 'text-white/55';
@@ -321,9 +329,19 @@ export function Battle({
   const bossMusic = m.storyEncounter?.activity?.kind === 'boss';
   useEffect(() => { setBattleActive(true); return () => setBattleActive(false); }, []);
   useEffect(() => { if (bossMusic) setBattleMusicMode('boss'); return () => { if (bossMusic) setBattleMusicMode(null); }; }, [bossMusic]);
+  const phase = presentationPhase as PresentationPhase;
+  const replaying = !!replay;
+  const interactive = !replaying && phase === 'player-ready' && m.phase === 'player';
   const districts = React.useMemo(() => online?.districts ?? getMatchDistricts(m), [m, online?.districts]);
   const roundLimit = getMatchRoundLimit(m);
-  const rivalIntent = React.useMemo(() => online ? { style: online.mode, tell: online.status, likelyLane: -1 } : getRivalIntent(m), [m, online]);
+  const rivalIntent = React.useMemo(
+    () => online
+      ? { style: online.mode, tell: online.status, likelyLane: -1 }
+      : interactive
+        ? getRivalIntent(m)
+        : { style: '', tell: 'Your gang is in action.', likelyLane: null },
+    [m, online, interactive],
+  );
   const selectedCard = selectedInstanceId ? m.playerHand.find(c => c.instanceId === selectedInstanceId) : null;
   const [investmentChoice, setInvestmentChoice] = useState({ key: '', amount: 0 });
   const investmentKey = selectedInstanceId + ':' + selectedLane + ':' + m.round;
@@ -343,10 +361,20 @@ export function Battle({
   const selectedCostDetail = !online && selectedCard && selectedLane !== null && isCardLaneAllowed(selectedCard, selectedLane as Lane)
     ? getCardCostExplanation(m, 'player', selectedCard, selectedLane as Lane)
     : null;
-  const districtResults = React.useMemo(() => online?.scores ?? getDistrictResults(m), [m, online?.scores]);
-  const playerClaims = districtResults.filter(result => result.winner === 'player').length;
-  const cpuClaims = districtResults.filter(result => result.winner === 'cpu').length;
-  const phase = presentationPhase as PresentationPhase;
+  const districtResults = React.useMemo(
+    () => online?.scores
+      ?? (presentationScores?.length === 3
+        ? presentationScores.map((s: { lane: Lane; player: number; cpu: number }) => ({
+          lane: s.lane,
+          player: s.player,
+          cpu: s.cpu,
+          winner: (s.player === s.cpu ? 'draw' : s.player > s.cpu ? 'player' : 'cpu') as 'player' | 'cpu' | 'draw',
+        }))
+        : getDistrictResults(m)),
+    [m, online?.scores, presentationScores],
+  );
+  const playerClaims = districtResults.filter((result: { winner: string }) => result.winner === 'player').length;
+  const cpuClaims = districtResults.filter((result: { winner: string }) => result.winner === 'cpu').length;
   const reducedMotion = useReducedMotion()
     || (typeof document !== 'undefined' && document.documentElement.dataset.reduceMotion === 'true');
   const presentedEffect = activeEffect as PresentationEffect | null;
@@ -355,11 +383,9 @@ export function Battle({
     && presentedEffect.owner === 'player'
     && presentedEffect.note.includes('SQUABBLE');
   const feedback = feedbackPreferences as FeedbackPreferences | undefined;
-  const replaying = !!replay;
   // PvE only: online battles follow server pacing, so they always present at 1x.
   const presentationSpeed = !online && Number(battleSpeed) === FAST_BATTLE_SPEED ? FAST_BATTLE_SPEED : 1;
   const fastBattleSpeed = presentationSpeed === FAST_BATTLE_SPEED;
-  const interactive = !replaying && phase === 'player-ready' && m.phase === 'player';
   useBattleAnnouncer({
     round: m.round,
     roundLimit,
@@ -444,7 +470,12 @@ export function Battle({
   const passive = m.storyEncounter?.passive;
   const allVisibleCards = [...m.playerHand, ...m.cpuHand, ...m.boards.flat()];
   const isCovered = (instanceId: string) => online ? online.covered.has(instanceId) : m.timedEffects.some(effect => (effect.kind === 'church-protection' || effect.kind === 'salon-protection') && effect.targetInstanceId === instanceId);
-  const recentActions = getRecentBattleActions(m, online?.history ?? authoritativeHistory);
+  const recentActions = React.useMemo(
+    () => (showHistory || (tutorialCoach && interactive))
+      ? getRecentBattleActions(m, online?.history ?? authoritativeHistory)
+      : [],
+    [m, online?.history, authoritativeHistory, showHistory, tutorialCoach, interactive],
+  );
   const cardName = (instanceId?: string, cardId?: string) =>
     allVisibleCards.find(card => card.instanceId === instanceId)?.name
     ?? cards[cardId ?? '']?.name
@@ -481,18 +512,41 @@ export function Battle({
     ? lockedLanes.includes(TRIPLE_OG_LANE[selectedCard.cardId])
     : false;
   const handIdentity = m.playerHand.map(card => card.instanceId).join('|');
-  const [handDraw, setHandDraw] = useState(() => ({
+  const handDrawRef = useRef<{ identity: string; members: Set<string>; fresh: Set<string> }>({
     identity: handIdentity,
     members: new Set(m.playerHand.map(card => card.instanceId)),
     fresh: new Set<string>(),
-  }));
-  if (handDraw.identity !== handIdentity) {
+  });
+  if (handDrawRef.current.identity !== handIdentity) {
     const members = new Set(m.playerHand.map(card => card.instanceId));
-    // Derive the new draw before committing instead of rendering the whole battle
-    // again in an effect. The CSS animation completes without a reset timer.
-    setHandDraw({ identity: handIdentity, members, fresh: new Set([...members].filter(id => !handDraw.members.has(id))) });
+    handDrawRef.current = {
+      identity: handIdentity,
+      members,
+      fresh: new Set([...members].filter(id => !handDrawRef.current.members.has(id))),
+    };
   }
-  const isNewlyDrawn = (instanceId: string) => handDraw.fresh.has(instanceId);
+  const isNewlyDrawn = (instanceId: string) => handDrawRef.current.fresh.has(instanceId);
+  const handPlayability = React.useMemo(() => {
+    const choiceLane = selectedLane as Lane | null;
+    return new Map(
+      m.playerHand.map((c) => {
+        const cardCost = choiceLane !== null && isCardLaneAllowed(c, choiceLane) ? legalCost(c, choiceLane) : c.cost;
+        const legalLanes = ([0, 1, 2] as Lane[]).filter(lane => isCardLaneAllowed(c, lane) && (!lockedLanes.includes(lane) || isMythicalTripleOg(c.cardId)));
+        const playableSomewhere = legalLanes.some(lane => legalCost(c, lane) <= m.playerMotion);
+        const playableForChoice = choiceLane === null ? playableSomewhere : isCardLaneAllowed(c, choiceLane) && (!lockedLanes.includes(choiceLane) || isMythicalTripleOg(c.cardId)) && cardCost <= m.playerMotion;
+        const cheapestCost = legalLanes.length ? Math.min(...legalLanes.map(lane => legalCost(c, lane))) : c.cost;
+        const neededCost = choiceLane !== null ? cardCost : cheapestCost;
+        const reason = choiceLane !== null && !isCardLaneAllowed(c, choiceLane)
+          ? `Cannot play: only the ${requiredDistrict(c)} is legal.`
+          : lockedLanes.length === districts.length && !isMythicalTripleOg(c.cardId)
+            ? 'Cannot play: every district is locked this round.'
+            : !playableForChoice
+              ? `Cannot play: costs ${neededCost} Motion${choiceLane !== null ? ` in ${districts[choiceLane].name}` : ''}; you have ${m.playerMotion} (${Math.max(0, neededCost - m.playerMotion)} short).`
+              : undefined;
+        return [c.instanceId, { cardCost, playableForChoice, reason }] as const;
+      }),
+    );
+  }, [m.playerHand, m.playerMotion, m.boards, m.round, selectedLane, squabble, investment, lockedLanes, districts]);
   const selectedLaneLocked = selectedLane !== null && lockedLanes.includes(selectedLane as Lane)
     && !(selectedCard && selectedLaneAllowed && isMythicalTripleOg(selectedCard.cardId));
   const handLayout = JSON.stringify([m.playerHand.filter(card => card.instanceId !== stagedPlayer?.instanceId).map(card => card.instanceId), selectedInstanceId]);
@@ -614,7 +668,7 @@ export function Battle({
   const failedAbility = !!presentedEffect && abilityFailed(presentedEffect);
   const effectProps = (card: any) => ({
     currentRound: m.round,
-    inspectionLayout: reducedMotion ? undefined : 'battle-inspect-' + card.instanceId,
+    inspectionLayout: reducedMotion || (!interactive && !reviewingFinalBoard) ? undefined : 'battle-inspect-' + card.instanceId,
     className: `${failedAbility && activeEffectId === card.instanceId ? 'ability-failed' : ''} ${previewTargets.includes(card.instanceId) ? 'preview-target' : ''} ${activeEffectId === card.instanceId && (phase === 'rival-reveal' || phase === 'player-reveal') && presentedEffect?.type === 'play' ? (card.cost >= 4 ? 'card-reveal-flip major-reveal' : 'card-reveal-flip') : ''} ${presentedEffect && (activeEffectId === card.instanceId || (!failedAbility && presentedEffect.targetIds.includes(card.instanceId))) ? (effectLanded ? 'beat-impact' : 'beat-windup') : ''}`,
     highlighted: activeEffectId === card.instanceId,
     effectRole: activeEffectId === card.instanceId
@@ -746,7 +800,7 @@ export function Battle({
       return <div key={i} data-testid={`lane-container-${i}`} data-location={d.id} data-drop-lane={i} data-drop-state={drag.laneState(i as Lane)} style={{ '--district-accent': d.accent } as React.CSSProperties} data-control={winner} data-contested={pScore > 0 && cScore > 0 && Math.abs(pScore-cScore) <= 3} data-rival-interest={interactive && rivalIntent.likelyLane === i} data-settled={phase === 'round-result'} data-squabble-impact={impactPhase && squabbleImpact && impactLane === i ? 'true' : 'false'} className={`district-lane district-lane-${i} min-w-0 relative group ${impactPhase && impactLane === i ? 'district-impact' : ''} ${impactPhase && squabbleImpact && impactLane === i ? 'district-squabble-impact' : ''} ${squabbleCinematicLaneValue === i ? 'district-cinematic' : ''} ${phase === 'round-result' || phase === 'match-finish' ? `district-verdict verdict-${winner}` : ''} ${selected ? 'is-selected' : ''} ${selectedCard && interactive ? legal ? 'is-legal' : 'is-illegal' : ''} ${activeEffectLane === i ? 'is-effect-lane' : ''} ${lockedLane ? 'is-locked' : ''}`}>
         <DistrictEffects winner={winner} locked={lockedLane} replaying={replaying} />
         {squabbleCinematicLaneValue === i && <div className={`victory-ring-overlay victory-ring-overlay--${presentedEffect?.owner === 'cpu' ? 'rival' : 'player'}`} aria-hidden="true" data-testid={`victory-ring-${i}`}><span className="squabble-confetti" /><span className="squabble-confetti" /><span className="squabble-confetti" /><span className="squabble-confetti" /><span className="squabble-confetti" /><span className="squabble-confetti" /></div>}
-        <div data-testid={`lane-${i}-cpu-zone`} className="battle-side battle-side-rival"><span className="side-mark side-mark-rival">Rival</span><BattleFormation count={cpuCards.length + (stagedRivalHere ? 1 : 0)} inspectCount={cpuCards.length} label={`Rival gang in ${d.name}`} onInspect={() => setCrewView({ lane: i, mode: 'formation' })} style={{ '--desktop-rows': Math.max(2, Math.ceil((cpuCards.length + (stagedRivalHere ? 1 : 0)) / 2)), '--wide-rows': Math.max(2, Math.ceil((cpuCards.length + (stagedRivalHere ? 1 : 0)) / 3)), '--mobile-rows': Math.max(2, Math.ceil((cpuCards.length + (stagedRivalHere ? 1 : 0)) / 2)) } as React.CSSProperties}>{stagedRivalHere && <motion.div key={`back-${stagedRival.instanceId}`} data-instance-id={stagedRival.instanceId} data-presentation-copy="staged" initial={{ y: -90, rotate: 12, scale: .7, opacity: 0, filter: 'brightness(1) drop-shadow(0 0 0 transparent)' }} animate={{ y: [ -90, -118, 0 ], rotate: [ 12, 2, -4 ], scale: [ .7, 1.08, 1 ], opacity: [ 0, 1, 1 ], filter: [ 'brightness(1) drop-shadow(0 0 0 transparent)', 'brightness(1.4) drop-shadow(0 8px 24px var(--color-accent))', 'brightness(1) drop-shadow(0 0 0 transparent)' ] }} transition={{ duration: reducedMotion ? 0.05 : 0.48, times: [0, 0.35, 1], ease: [0.2, 0.8, 0.2, 1] }} className="card-back battle-board-card"><span>S</span></motion.div>}{cpuCards.map((c, j) => <BattleBoardCard key={c.instanceId} card={c} inspect={setInspect} covered={isCovered(c.instanceId)} isBoard isEnemy disableLayout testId={`card-board-rival-${i}-${c.cardId}-${j}`} effectivePower={getEffectiveCardPower(c)} scoreStance={pScore > cScore ? 'leading' : cScore > pScore ? 'trailing' : 'tied'} entryBurst={activeEffectId === c.instanceId && (phase === 'rival-impact' || phase === 'rival-reveal')} {...effectProps(c)} />)}</BattleFormation></div>
+        <div data-testid={`lane-${i}-cpu-zone`} className="battle-side battle-side-rival"><span className="side-mark side-mark-rival">Rival</span><BattleFormation count={cpuCards.length + (stagedRivalHere ? 1 : 0)} inspectCount={cpuCards.length} label={`Rival gang in ${d.name}`} onInspect={() => setCrewView({ lane: i, mode: 'formation' })} style={{ '--desktop-rows': Math.max(2, Math.ceil((cpuCards.length + (stagedRivalHere ? 1 : 0)) / 2)), '--wide-rows': Math.max(2, Math.ceil((cpuCards.length + (stagedRivalHere ? 1 : 0)) / 3)), '--mobile-rows': Math.max(2, Math.ceil((cpuCards.length + (stagedRivalHere ? 1 : 0)) / 2)) } as React.CSSProperties}>{stagedRivalHere && <motion.div key={`back-${stagedRival.instanceId}`} data-instance-id={stagedRival.instanceId} data-presentation-copy="staged" initial={{ y: -90, rotate: 12, scale: .7, opacity: 0, filter: 'brightness(1) drop-shadow(0 0 0 transparent)' }} animate={{ y: [ -90, -118, 0 ], rotate: [ 12, 2, -4 ], scale: [ .7, 1.08, 1 ], opacity: [ 0, 1, 1 ], filter: [ 'brightness(1) drop-shadow(0 0 0 transparent)', 'brightness(1.4) drop-shadow(0 8px 24px var(--color-accent))', 'brightness(1) drop-shadow(0 0 0 transparent)' ] }} transition={{ duration: reducedMotion ? 0.05 : 0.48, times: [0, 0.35, 1], ease: [0.2, 0.8, 0.2, 1] }} className="card-back battle-board-card"><span>S</span></motion.div>}{cpuCards.map((c, j) => <BattleBoardCard key={c.instanceId} card={c} inspect={setInspect} covered={isCovered(c.instanceId)} isBoard isEnemy disableLayout testId={`card-board-rival-${i}-${c.cardId}-${j}`} effectivePower={getEffectiveCardPower(c)} scoreStance={cScore > pScore ? 'leading' : pScore > cScore ? 'trailing' : 'tied'} entryBurst={activeEffectId === c.instanceId && (phase === 'rival-impact' || phase === 'rival-reveal')} {...effectProps(c)} />)}</BattleFormation></div>
           <div className="battle-district-hub"><button type="button" className="mobile-district-open" data-testid={`district-details-${i}`} onClick={event => { event.currentTarget.focus({ preventScroll: true }); setCrewView({ lane: i, mode: 'location' }); }} aria-label={`View ${d.name} location details`} title="Location details"><span>{d.name}</span><span aria-hidden="true">↗</span></button>
           <button type="button" data-testid={`lane-${i}`} onClick={() => { decisionHandlers.selectDistrict(i, available); if (available) onFeedback?.('select'); }} aria-pressed={selected} aria-disabled={!available} tabIndex={interactive ? 0 : -1} aria-label={selectedCard ? !laneAllowed ? `Cannot deploy, only the ${requiredDistrict(selectedCard)} is legal for ${selectedCard.name}` : `${legal ? 'Deploy' : lockedLane && lockBlocksCard ? 'Cannot deploy, district locked' : `Cannot deploy, need ${laneCost} Motion`} ${selectedCard.name} to ${d.name}` : `${selected ? 'Selected' : lockedLane ? 'Cannot select, locked' : 'Select'} ${d.name} district first`} title={lockBlocksCard ? 'This district is locked this round.' : selectedCard && !laneAllowed ? `${selectedCard.name} can only be played in the ${requiredDistrict(selectedCard)}.` : selectedCard && !affordable ? `Need ${laneCost} Motion; you have ${m.playerMotion} (${laneCost! - m.playerMotion} short).` : d.rule} className="district-target focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"><LocationNode id={d.id} index={i} /><DistrictAmbience id={d.id} index={i} reducedMotion={reducedMotion} active={interactive && !replaying && !readingCue && !crewView} /><div className="district-marker">
             <div className="district-score-row">
@@ -765,7 +819,7 @@ export function Battle({
     })}</div>
     <DiceGameOverlay result={m.diceResult} />
       <div data-testid="battle-command-deck" data-hand-peek={selectedCard && interactive && !drag.drag ? 'true' : undefined} className="battle-command-deck shrink-0 relative z-40">
-        {selectedCard && interactive && !drag.drag && <BattleHandPeek card={selectedCard} cost={selectedCost ?? selectedCard.cost} baseCost={selectedLane === null} unavailable={!selectedHasLegalLane || (selectedLane !== null && (selectedLaneLocked || !selectedLaneAllowed || (selectedCost ?? 0) > m.playerMotion))} reducedMotion={reducedMotion} />}{timerEnabled && <div data-testid="decision-clock" data-state={timerState} className="decision-clock"><div><span>{clockRunning ? online && !online.yourTurn ? 'RIVAL TURN' : timerSeconds <= 5 ? 'LOCK IN NOW' : 'YOUR TURN' : 'TIMER PAUSED'}</span><strong>{clockRunning ? `${timerSeconds}s` : '—'}</strong><small>{clockRunning ? timerSeconds <= 5 ? (online ? 'Forfeit at zero' : 'Auto-play at zero') : online && !online.yourTurn ? 'Your rival is choosing' : 'Choose a card and district' : 'Resolving battle'}</small></div><div className="decision-clock-track" aria-hidden="true"><i style={{ transform: `scaleX(${clockRunning ? timerProgress : 0})` }} /></div></div>}<div id="hand-tray" data-testid="hand-tray" data-drag-hand className="battle-hand-tray"><div className="battle-hand-row">{m.playerHand.filter(c => c.instanceId !== stagedPlayer?.instanceId).map(c => { const choiceLane = selectedLane as Lane | null; const cardCost = choiceLane !== null && isCardLaneAllowed(c, choiceLane) ? legalCost(c, choiceLane) : choiceLane !== null ? c.cost : c.cost; const legalLanes = ([0, 1, 2] as Lane[]).filter(lane => isCardLaneAllowed(c, lane) && (!lockedLanes.includes(lane) || isMythicalTripleOg(c.cardId))); const playableSomewhere = legalLanes.some(lane => legalCost(c, lane) <= m.playerMotion); const playableForChoice = choiceLane === null ? playableSomewhere : isCardLaneAllowed(c, choiceLane) && (!lockedLanes.includes(choiceLane) || isMythicalTripleOg(c.cardId)) && cardCost <= m.playerMotion; const cheapestCost = legalLanes.length ? Math.min(...legalLanes.map(lane => legalCost(c, lane))) : c.cost; const neededCost = choiceLane !== null ? cardCost : cheapestCost; const reason = choiceLane !== null && !isCardLaneAllowed(c, choiceLane) ? `Cannot play: only the ${requiredDistrict(c)} is legal.` : lockedLanes.length === districts.length && !isMythicalTripleOg(c.cardId) ? 'Cannot play: every district is locked this round.' : !playableForChoice ? `Cannot play: costs ${neededCost} Motion${choiceLane !== null ? ` in ${districts[choiceLane].name}` : ''}; you have ${m.playerMotion} (${Math.max(0, neededCost - m.playerMotion)} short).` : undefined; return <BattleHandCard key={c.instanceId} layoutDependency={handLayout} card={c} playable={playableForChoice} onInspectCard={inspectHandCard} onSelectCard={selectHandCard} dragEnabled={!tutorialCoach && interactive && Boolean(onPlayCard) && tutorialCardPlayAllowed && c.kind !== 'blockbuster'} variantId={getEquippedVariant(equippedVariants, c.id)} queued={selectedInstanceId === c.instanceId} squabble={squabble && selectedInstanceId === c.instanceId} cost={cardCost} unavailable={interactive && !playableForChoice} disabledReason={reason} className="origin-bottom" portraitPop={isNewlyDrawn(c.instanceId)} />; })}</div></div>
+        {selectedCard && interactive && !drag.drag && <BattleHandPeek card={selectedCard} cost={selectedCost ?? selectedCard.cost} baseCost={selectedLane === null} unavailable={!selectedHasLegalLane || (selectedLane !== null && (selectedLaneLocked || !selectedLaneAllowed || (selectedCost ?? 0) > m.playerMotion))} reducedMotion={reducedMotion} />}{timerEnabled && <div data-testid="decision-clock" data-state={timerState} className="decision-clock"><div><span>{clockRunning ? online && !online.yourTurn ? 'RIVAL TURN' : timerSeconds <= 5 ? 'LOCK IN NOW' : 'YOUR TURN' : 'TIMER PAUSED'}</span><strong>{clockRunning ? `${timerSeconds}s` : '—'}</strong><small>{clockRunning ? timerSeconds <= 5 ? (online ? 'Forfeit at zero' : 'Auto-play at zero') : online && !online.yourTurn ? 'Your rival is choosing' : 'Choose a card and district' : 'Resolving battle'}</small></div><div className="decision-clock-track" aria-hidden="true"><i style={{ transform: `scaleX(${clockRunning ? timerProgress : 0})` }} /></div></div>}<div id="hand-tray" data-testid="hand-tray" data-drag-hand className="battle-hand-tray"><div className="battle-hand-row">{m.playerHand.filter(c => c.instanceId !== stagedPlayer?.instanceId).map(c => { const playability = handPlayability.get(c.instanceId); const cardCost = playability?.cardCost ?? c.cost; const playableForChoice = playability?.playableForChoice ?? false; const reason = playability?.reason; return <BattleHandCard key={c.instanceId} layoutDependency={handLayout} card={c} playable={playableForChoice} onInspectCard={inspectHandCard} onSelectCard={selectHandCard} dragEnabled={!tutorialCoach && interactive && Boolean(onPlayCard) && tutorialCardPlayAllowed && c.kind !== 'blockbuster'} variantId={getEquippedVariant(equippedVariants, c.id)} queued={selectedInstanceId === c.instanceId} squabble={squabble && selectedInstanceId === c.instanceId} cost={cardCost} unavailable={interactive && !playableForChoice} disabledReason={reason} className="origin-bottom" portraitPop={isNewlyDrawn(c.instanceId)} />; })}</div></div>
       {canInvest && selectedLane !== null && interactive && <div className="wild-investment" data-testid="wild-investment">
         {isConcert ? <><label htmlFor="concert-choice">Concert crowd</label><StreetSelect id="concert-choice" value={investment} onValueChange={event => setInvestmentChoice({ key: investmentKey, amount: Number(event) })}><option value={0}>Allies +3 · rivals +1</option><option value={1}>Rivals −3 · allies −1</option></StreetSelect></> : isDice ? <><label htmlFor="dice-wager">Wager Motion</label><StreetSelect id="dice-wager" value={investment || 1} onValueChange={event => setInvestmentChoice({ key: investmentKey, amount: Number(event) })}>{Array.from({length: Math.max(1,investmentLimit)},(_,i)=><option key={i+1} value={i+1}>{i+1} Motion each</option>)}</StreetSelect><span>Roll 3 D6 · best two win</span></> : baseSelectedCost === m.playerMotion ? <span>Nothing to Lose · last Motion: steal up to 2 Hands.</span> : <>
           <label htmlFor="wild-investment-choice">Extra Motion</label>
@@ -775,7 +829,7 @@ export function Battle({
           <span>{selectedCost} total · {m.playerMotion - (selectedCost ?? 0)} left</span>
         </>}
       </div>}
-      <div className="battle-actions"><div className="battle-motion-pair" role="group" aria-label="Available Motion"><div className="battle-motion" aria-label={`Your Motion: ${m.playerMotion}`}><GameGlyph name="motion" className="battle-motion__icon" /><MotionEnergy value={m.playerMotion} testId="motion-player" replaying={replaying} /><div>Your Motion</div></div><div className="battle-motion battle-rival-energy" aria-label={`Rival Motion: ${m.cpuMotion}`} title="Rival Motion"><GameGlyph name="motion" className="battle-motion__icon" /><MotionEnergy value={m.cpuMotion} testId="motion-rival" replaying={replaying} /><div>Rival Motion</div></div></div><button data-testid={action.testId} onClick={action.onClick} disabled={action.disabled} title={action.title} className={`battle-primary-action action-${action.type}`}><span>{action.label}</span>{action.type === 'primary' && <ArrowRight size={18} aria-hidden="true" />}</button><button data-testid="button-squabble" aria-pressed={squabble} aria-label={m.squabbleUsed ? 'Squabble spent' : squabble ? 'Disarm Squabble' : 'Arm Squabble'} title={m.squabbleUsed ? 'SQUABBLE has already been used.' : !selectedCard ? 'Choose a card first.' : 'Double this card’s base Hands once per fade.'} className={`battle-squabble ${squabble ? 'is-armed' : ''}`} onClick={() => decisionHandlers.toggleSquabble(selectedCard ?? null)} disabled={m.squabbleUsed || !interactive || !selectedCard || selectedCard.kind === 'blockbuster' || !tutorialSquabbleAllowed}><span className="battle-squabble__sigil" aria-hidden="true"><KeyedVideo src={getAssetUrl('assets/combat/squabble-button.webm')} mode="green" className="battle-squabble__video" loop maxWidth={96} /><b>×2</b></span><span className="battle-squabble__label">{m.squabbleUsed ? 'Spent' : squabble ? 'Armed' : 'Squabble'}</span></button></div>
+      <div className="battle-actions"><div className="battle-motion-pair" role="group" aria-label="Available Motion"><div className="battle-motion" aria-label={`Your Motion: ${m.playerMotion}`}><GameGlyph name="motion" className="battle-motion__icon" /><MotionEnergy value={m.playerMotion} testId="motion-player" replaying={replaying} /><div>Your Motion</div></div><div className="battle-motion battle-rival-energy" aria-label={`Rival Motion: ${m.cpuMotion}`} title="Rival Motion"><GameGlyph name="motion" className="battle-motion__icon" /><MotionEnergy value={m.cpuMotion} testId="motion-rival" replaying={replaying} /><div>Rival Motion</div></div></div><button data-testid={action.testId} onClick={action.onClick} disabled={action.disabled} title={action.title} className={`battle-primary-action action-${action.type}`}><span>{action.label}</span>{action.type === 'primary' && <ArrowRight size={18} aria-hidden="true" />}</button><button data-testid="button-squabble" aria-pressed={squabble} aria-label={m.squabbleUsed ? 'Squabble spent' : squabble ? 'Disarm Squabble' : 'Arm Squabble'} title={m.squabbleUsed ? 'SQUABBLE has already been used.' : !selectedCard ? 'Choose a card first.' : 'Double this card’s base Hands once per fade.'} className={`battle-squabble ${squabble ? 'is-armed' : ''}`} onClick={() => decisionHandlers.toggleSquabble(selectedCard ?? null)} disabled={m.squabbleUsed || !interactive || !selectedCard || selectedCard.kind === 'blockbuster' || !tutorialSquabbleAllowed}><span className="battle-squabble__sigil" aria-hidden="true"><KeyedVideo src={getAssetUrl('assets/combat/squabble-button.webm')} mode="green" className="battle-squabble__video" loop maxWidth={96} paused={Boolean(m.squabbleUsed || reducedMotion)} /><b>×2</b></span><span className="battle-squabble__label">{m.squabbleUsed ? 'Spent' : squabble ? 'Armed' : 'Squabble'}</span></button></div>
     </div>
   </div>;
 }
@@ -794,8 +848,8 @@ export function Battle({
   const selectedCard = selectedInstanceId ? m.playerHand.find(c => c.instanceId === selectedInstanceId) : null;
   const selectedCost = selectedCard && selectedLane !== null ? getLegalCardCost(m, 'player', selectedCard, selectedLane as Lane) : selectedCard?.cost;
   const districtResults = getDistrictResults(m);
-  const playerClaims = districtResults.filter(result => result.winner === 'player').length;
-  const cpuClaims = districtResults.filter(result => result.winner === 'cpu').length;
+  const playerClaims = districtResults.filter((result: { winner: string }) => result.winner === 'player').length;
+  const cpuClaims = districtResults.filter((result: { winner: string }) => result.winner === 'cpu').length;
   const phase = presentationPhase as PresentationPhase;
   const reducedMotion = useReducedMotion()
     || (typeof document !== 'undefined' && document.documentElement.dataset.reduceMotion === 'true');

@@ -179,14 +179,15 @@ function authenticatedUserId(req: Request, res: Response): string | null {
 router.get("/player/bootstrap", async (req, res): Promise<void> => {
   const userId = authenticatedUserId(req, res);
   if (!userId) return;
-  let state = await getPlayerBootstrap(userId);
+  await ensurePlayer(userId);
   // Players who joined after a patch was published receive its letter here.
   // A failure is logged and retried on the next visit rather than blocking play.
   try {
-    if (await deliverLatePatchLetters(userId)) state = await getPlayerBootstrap(userId);
+    await deliverLatePatchLetters(userId);
   } catch (error) {
     req.log.warn({ error }, "Late patch delivery failed");
   }
+  const state = await getPlayerBootstrap(userId);
   res.json(GetPlayerBootstrapResponse.parse(state));
 });
 

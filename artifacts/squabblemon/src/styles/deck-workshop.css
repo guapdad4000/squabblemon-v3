@@ -72,6 +72,8 @@
 .deck-workbench__collection{display:grid;grid-template-columns:repeat(auto-fill,minmax(115px,1fr));gap:20px 18px;position:relative;z-index:10;isolation:isolate}
 .deck-workbench__collection>button{position:relative;min-width:0;cursor:pointer;transition:transform .2s}
 .deck-workbench__collection>button:hover{transform:translateY(-4px)}
+.deck-workbench__card-placeholder{display:flex;flex-direction:column;justify-content:space-between;align-items:flex-start;width:100%;aspect-ratio:63/88;padding:8px;border:1px solid #d7c39140;background:radial-gradient(circle at 50% 30%,#d7c39118,transparent 65%),linear-gradient(160deg,#1a1d1a,#090b0a 75%);color:#f6f1e4;font:800 11px/1.1 var(--font-display);text-transform:uppercase;overflow-wrap:anywhere}
+.deck-workbench__card-placeholder>b{font:800 9px/1 var(--font-mono);color:#f1d28b;background:#0009;padding:3px 5px;border:1px solid #d7c39140}
 
 .deck-workbench__in-crew{position:absolute;right:6px;bottom:5px;display:grid;place-items:center;width:24px;height:24px;border-radius:50%;background:#d9bd77;color:#101510;box-shadow:0 2px 8px var(--sq-ink)}
 

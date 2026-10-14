@@ -3,7 +3,8 @@
 .game-shell:has(.safehouse-stage) .venue-hud{display:none}
 .game-shell:has(.safehouse-stage) .game-route-stage{height:100dvh;overflow:hidden}
 .safehouse-stage .venue-scene{z-index:0}
-.safehouse-stage .safehouse__shade{position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(180deg,#060d1266,transparent 23%,transparent 58%,#070e0a42 78%,#070c0b94 100%)}
+.safehouse-stage .safehouse__shade{position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(180deg,#060d1266,transparent 23%,transparent 58%,#070e0a42 78%,#070c0b94 100%);transition:background .32s ease}
+.safehouse-stage:not([data-view="room"]) .safehouse__shade{background:radial-gradient(ellipse at 50% 42%,transparent 26%,#050a0c99 68%,#040709eb 100%),linear-gradient(180deg,#060d1280,transparent 24%,transparent 54%,#070c0bde 100%)}
 .safehouse-stage .page-decor{pointer-events:none}
 .safehouse-room-header{position:absolute;z-index:3;top:28px;left:34px;right:34px;display:flex;justify-content:space-between;align-items:flex-start;gap:20px;pointer-events:none}
 .safehouse-room-title>span{display:flex;align-items:center;gap:8px;font:700 8px var(--font-mono,monospace);letter-spacing:.16em;color:#d4c1a0}

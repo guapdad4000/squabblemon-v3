@@ -198,7 +198,7 @@ export function Market({ bootstrap, openPacks }: { bootstrap: PlayerBootstrap; o
           <p>Get your reps. Level up. Learn a new move.</p>
         </div>
         <picture className="market-hero__fade-art">
-          <img src={getAssetUrl('assets/training/dr-fade-coach.png')} alt="Dr. Fade coaching at the training club" draggable={false} />
+          <img src={getAssetUrl('assets/training/dr-fade-coach.webp')} alt="Dr. Fade coaching at the training club" draggable={false} />
         </picture>
         <div className="market-wallet">
           <span>

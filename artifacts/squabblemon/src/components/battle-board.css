@@ -33,6 +33,15 @@
 .collector-card--combat [data-testid='card-charge'],
 .collector-card--combat .buddy-form-cue { top: 28px; left: 2px; right: 26px; padding: 2px 1px; font-size: 7px; line-height: 1.1; overflow-wrap: anywhere; }
 .collector-card--combat .battle-status-material { z-index: 18; }
+.collector-card--combat.is-leading.is-alive-owner .collector-frame {
+  box-shadow: 0 6px 14px #000a, 0 0 0 1px #f4cf8366, 0 0 12px #f4cf8326;
+}
+.collector-card--combat.is-leading.is-alive-rival .collector-frame {
+  box-shadow: 0 6px 14px #000a, 0 0 0 1px #85ddf166, 0 0 12px #85ddf126;
+}
+.collector-card--combat.is-trailing {
+  filter: saturate(.92) brightness(.95);
+}
 @container (max-width:60px) {
   .collector-card--combat .collector-card-copy h4 { -webkit-line-clamp: 1; }
   .collector-card--combat [data-testid="card-charge"], .collector-card--combat .buddy-form-cue { font-size: 6px; }
@@ -54,6 +63,26 @@
 }
 .battle-arena.battle-hud .district-lane:is(.is-selected,.is-legal,.is-effect-lane,[data-contested='true']):hover { transform: none; }
 .battle-arena.battle-hud .district-lane::after { display: none !important; }
+.battle-arena.battle-hud .district-lane[data-control='player']:not(.is-selected) {
+  background: linear-gradient(180deg, #07121b45, #07121b18 45%, #2a211052 100%);
+  box-shadow: inset 0 -2px 0 #f4cf8375, inset 0 0 0 1px #f4cf832e;
+}
+.battle-arena.battle-hud .district-lane[data-control='cpu']:not(.is-selected) {
+  background: linear-gradient(180deg, #0c263654, #07121b18 55%, #121b1945 100%);
+  box-shadow: inset 0 2px 0 #85ddf175, inset 0 0 0 1px #85ddf12e;
+}
+.battle-arena.battle-hud .district-lane[data-contested='true']:not(.is-selected) {
+  box-shadow: inset 0 2px 0 #85ddf188, inset 0 -2px 0 #f4cf8388, inset 0 0 0 1px #ffe3a53b;
+}
+.battle-arena.battle-hud .district-lane[data-rival-interest='true'] .battle-side-rival::before {
+  content: '';
+  position: absolute;
+  inset: 0 12% auto;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #85ddf1aa, transparent);
+  box-shadow: 0 0 10px #85ddf166;
+  pointer-events: none;
+}
 .battle-arena.battle-hud .district-lane.is-legal { box-shadow: inset 0 0 0 1px #f0cd8770; }
 .battle-arena.battle-hud .district-lane.is-selected,
 .battle-arena.battle-hud .district-lane.is-selected:hover {

@@ -23,7 +23,7 @@ export function StoryCrewSelect({ decks, selectedId, onSelect, editHref, onBack,
   measure();const observer=new ResizeObserver(measure);observer.observe(host);observer.observe(tiles);
   return ()=>observer.disconnect();
  },[selectedId,decks.length,columns]);
- return <section className="story-crew-select" style={{backgroundImage:`url(${getAssetUrl('assets/selection/underpass.png')})`}} aria-label="Select your story crew">
+ return <section className="story-crew-select" style={{backgroundImage:`url(${getAssetUrl('assets/selection/underpass.webp')})`}} aria-label="Select your story crew">
   <header><button className="crew-street-sign crew-street-sign--back" onClick={onBack}>Back</button><img src={getAssetUrl('assets/results/v3/wordmark.webp')} alt="Squabblemon" /><span>STORY / CREW SELECT</span></header>
   <div className="story-crew-select__body">
    <figure className="story-crew-select__hero">{selected && <><img key={selected.heroCardId} src={getCardImage(selected.heroCardId)} alt={catalogCardById[selected.heroCardId]?.name ?? selected.name} /><figcaption><small>PLAYER 1 / STREET FILE</small><h1>{selected.name}</h1><p>{catalogCardById[selected.heroCardId]?.name} · {selected.cardIds.length} cards</p><Link href={editHref(selected.id)} className="story-crew-select__edit" aria-label={`Edit deck: ${selected.name}`}><Pencil size={15} aria-hidden="true" /> Edit deck</Link></figcaption></>}</figure>
@@ -31,7 +31,7 @@ export function StoryCrewSelect({ decks, selectedId, onSelect, editHref, onBack,
     <svg className="crew-evidence-threads" aria-hidden="true">{threads.map((line,i)=><line key={i} {...line} />)}</svg>
     <div ref={grid} className="story-crew-select__grid" style={{gridTemplateColumns:`repeat(${columns},minmax(0,1fr))`}} role="group" aria-label="Available crews">{decks.map(deck => <button key={deck.id} aria-pressed={selected?.id === deck.id} onClick={() => onSelect(deck.id)}><img src={getCardImage(deck.heroCardId)} alt="" /><span>{deck.name}</span>{selected?.id === deck.id && <><b>P1</b><i className="crew-paperclip" aria-hidden="true" /></>}</button>)}</div>
     {selected && <div className="crew-case" aria-label="Selected crew evidence dossier">
-     <img className="crew-case__folder" src={getAssetUrl('assets/selection/dossier.png')} alt="" />
+     <img className="crew-case__folder" src={getAssetUrl('assets/selection/dossier.webp')} alt="" />
      <span className="crew-case__stamp">PERSONS OF INTEREST</span>
      {selected.cardIds.map((id,i)=> <figure className="crew-case__photo" key={`${id}-${i}`} style={{'--photo-x':`${12+(i%5)*18}%`,'--photo-y':`${i<5?27:66}%`,'--photo-angle':`${(i%5-2)*5+(i<5?-3:3)}deg`} as CSSProperties}><img src={getCardImage(id)} alt={catalogCardById[id]?.name ?? id}/><figcaption>{catalogCardById[id]?.name ?? id}</figcaption><i aria-hidden="true" /></figure>)}
     </div>}

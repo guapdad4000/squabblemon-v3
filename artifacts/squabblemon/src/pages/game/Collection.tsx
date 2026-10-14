@@ -48,7 +48,7 @@ const CollectionCard = memo(function CollectionCard({
     {show ? <>
       {mountFace
         ? <><CardView card={card} variantId={variantId} progress={progress} unavailable={!isOwned} isBoard fillContainer presentationOnly disableLayout /><ItemDot id={`card:${card.catalogId}`} /></>
-        : <span className="collection-card-grid__deferred" aria-hidden="true"><span>{card.name}</span></span>}
+        : <span className="collection-card-grid__deferred card-bevel" data-card-rarity={card.rarity.toLowerCase()} aria-hidden="true"><b>{card.cost} / {card.power}</b><span>{card.name}</span></span>}
       {isNew && <span className="collection-discovery__badge" aria-hidden="true">New</span>}
       {!isOwned && <LockKeyhole className="collection-card-grid__lock" size={20} aria-hidden="true" />}
     </> : <span className="collection-card-grid__unknown"><LockKeyhole size={24} aria-hidden="true" /><span>Undiscovered</span></span>}

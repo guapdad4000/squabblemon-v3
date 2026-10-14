@@ -57,10 +57,10 @@ function lowEndDevice() {
 export function CardFoil({ tier, variant, live = false }: { tier: number; variant?: CardVariantKind | null; live?: boolean }) {
   const host = useRef<HTMLSpanElement>(null);
   useEffect(() => {
+    if (!live) return;
     const element = host.current;
     if (!element) return;
     element.dataset.foilRenderer = 'css';
-    if (!live) return;
     let disposed = false, generation = 0, visible = false;
     let cleanup: (() => void) | undefined;
     let fallback = true;
@@ -93,5 +93,5 @@ export function CardFoil({ tier, variant, live = false }: { tier: number; varian
     sync();
     return () => { disposed = true; unmount(); unwatch(); unsubscribe(); unquality(); };
   }, [tier, variant, live]);
-  return <span ref={host} className="collector-webgl" aria-hidden="true" />;
+  return <span ref={host} className="collector-webgl" data-foil-renderer="css" aria-hidden="true" />;
 }

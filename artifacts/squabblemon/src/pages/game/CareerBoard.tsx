@@ -112,13 +112,13 @@ export function CareerBoard({ bootstrap }: { bootstrap: PlayerBootstrap }) {
     <section
       className="career-stage hall-of-hands hall-of-hands--spotlight"
       style={{
-        backgroundImage: `url(${getAssetUrl("assets/progression/hall-wallpaper.png")})`,
+        backgroundImage: `url(${getAssetUrl("assets/progression/hall-wallpaper.webp")})`,
       }}
       aria-label="Hall of Hands"
     >
       <header className="hall-heading">
         <img
-          src={getAssetUrl("assets/progression/hall-of-hands.png")}
+          src={getAssetUrl("assets/progression/hall-of-hands.webp")}
           alt="Hall of Hands"
         />
         <p>

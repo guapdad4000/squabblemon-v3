@@ -1,21 +1,22 @@
 import { CombatSprite } from './BattleArt';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import './battle-effects.css';
 
 const fragments = Array.from({ length: 12 }, (_, index) => ({ '--fx-angle': `${index * 30}deg`, '--fx-distance': `${42 + index % 3 * 18}px`, '--fx-delay': `${index % 4 * 24}ms` } as React.CSSProperties));
 
-/** Small, deterministic bursts: no animation loop or random render-time geometry. */
+/** Small, deterministic bursts: no animation loop, state commit, or random render-time geometry. */
 export function BattleBurst({ kind }: { kind: 'burn' | 'charge' | 'freeze' | 'snap' }) {
-  const [finished, setFinished] = useState(false);
+  const burstNode = useRef<HTMLSpanElement>(null);
   useEffect(() => {
-    setFinished(false);
+    if (burstNode.current) burstNode.current.style.display = '';
     // The last fragment ends at 872ms. Keep a margin, then release invisible
     // particles without disturbing persistent frozen/locked status artwork.
-    const timer = window.setTimeout(() => setFinished(true), 950);
+    const timer = window.setTimeout(() => {
+      if (burstNode.current) burstNode.current.style.display = 'none';
+    }, 950);
     return () => window.clearTimeout(timer);
   }, [kind]);
-  if (finished) return null;
-  return <span className={`battle-fx-burst fx-${kind}`} data-battle-fx={kind} aria-hidden="true">
+  return <span ref={burstNode} className={`battle-fx-burst fx-${kind}`} data-battle-fx={kind} aria-hidden="true">
     <span className="fx-shockwave" />
     {fragments.map((style, index) => <i key={index} style={style} />)}
     {kind === 'burn' && <><b className="fx-slash" /><b className="fx-slash fx-slash-second" /><span className="fx-scorch" /></>}
@@ -33,17 +34,22 @@ export function BattleStatus({ frozen, silenced, protected: shielded }: { frozen
 }
 
 export function DistrictEffects({ winner, locked, replaying }: { winner: 'player' | 'cpu' | 'draw'; locked: boolean; replaying: boolean }) {
-  // Derived during render so a district flip does not cost an extra battle commit.
-  const [state, setState] = useState({ winner, replaying, snap: 0 });
-  if (state.winner !== winner || state.replaying !== replaying) {
-    const changed = state.winner !== winner;
-    setState({ winner, replaying, snap: !changed || winner === 'draw' || replaying ? 0 : state.snap + 1 });
+  // Derived during render via ref so a district flip does not cost an extra battle commit.
+  const stateRef = useRef({ winner, replaying, snap: 0 });
+  if (stateRef.current.winner !== winner || stateRef.current.replaying !== replaying) {
+    const changed = stateRef.current.winner !== winner;
+    stateRef.current = {
+      winner,
+      replaying,
+      snap: !changed || winner === 'draw' || replaying ? 0 : stateRef.current.snap + 1,
+    };
   }
-  const snap = state.winner === winner && state.replaying === replaying ? state.snap : 0;
+  const snap = stateRef.current.snap;
   const snapNode = useRef<HTMLDivElement>(null);
   // Expire the burst in the DOM; clearing state here re-rendered the whole battle.
   useEffect(() => {
     if (!snap) return;
+    if (snapNode.current) snapNode.current.style.display = '';
     const timer = window.setTimeout(() => { if (snapNode.current) snapNode.current.style.display = 'none'; }, 1100);
     return () => window.clearTimeout(timer);
   }, [snap]);
@@ -54,19 +60,30 @@ export function DistrictEffects({ winner, locked, replaying }: { winner: 'player
 }
 
 export function MotionEnergy({ value, testId, replaying = false }: { value: number; testId: string; replaying?: boolean }) {
-  // Derived during render so a Motion gain does not cost an extra battle commit.
-  const [state, setState] = useState<{ value: number; replaying: boolean; key: number; gain: { amount: number; key: number } | null }>({ value, replaying, key: 0, gain: null });
-  if (state.value !== value || state.replaying !== replaying) {
-    const delta = value - state.value;
-    const key = delta > 0 && !replaying ? state.key + 1 : state.key;
-    setState({ value, replaying, key, gain: delta > 0 && !replaying ? { amount: delta, key } : null });
+  // Derived during render via ref so a Motion gain does not cost an extra battle commit.
+  const stateRef = useRef<{ value: number; replaying: boolean; key: number; gain: { amount: number; key: number } | null }>({
+    value,
+    replaying,
+    key: 0,
+    gain: null,
+  });
+  if (stateRef.current.value !== value || stateRef.current.replaying !== replaying) {
+    const delta = value - stateRef.current.value;
+    const key = delta > 0 && !replaying ? stateRef.current.key + 1 : stateRef.current.key;
+    stateRef.current = {
+      value,
+      replaying,
+      key,
+      gain: delta > 0 && !replaying ? { amount: delta, key } : null,
+    };
   }
-  const gain = state.value === value && state.replaying === replaying ? state.gain : null;
+  const gain = stateRef.current.gain;
   const gainKey = gain?.key;
   const gainNode = useRef<HTMLSpanElement>(null);
   // Expire the gain in the DOM; clearing state here re-rendered the whole battle.
   useEffect(() => {
     if (gainKey === undefined) return;
+    if (gainNode.current) gainNode.current.style.display = '';
     const timer = window.setTimeout(() => { if (gainNode.current) gainNode.current.style.display = 'none'; }, 1000);
     return () => window.clearTimeout(timer);
   }, [gainKey]);

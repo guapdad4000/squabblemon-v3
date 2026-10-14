@@ -53,3 +53,9 @@
 .battle-arena[data-reduced-motion='true'][data-impact-strength] .battlefield-grid { animation: none !important; }
 .battle-choreography.is-replay :is(.attack-beam-glow, .attack-beam-core, .attack-comet) { display: none; }
 .battle-arena[data-replaying] .battlefield-grid { animation: none !important; }
+.battle-arena.is-squabble-armed .battle-squabble {
+  box-shadow: 0 0 22px #fb718566, inset 0 0 12px #fde04744;
+}
+.battle-arena.is-squabble-armed .district-lane.is-legal:not(.is-selected) {
+  box-shadow: inset 0 0 0 1px #fb718599, inset 0 0 18px #fb718522;
+}

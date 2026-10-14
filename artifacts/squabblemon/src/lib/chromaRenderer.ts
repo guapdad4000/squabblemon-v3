@@ -108,6 +108,7 @@ export function createChromaRenderer(canvas: HTMLCanvasElement, mode: ChromaMode
       disposed = true;
       gl.deleteTexture(texture); gl.deleteBuffer(buffer); gl.deleteProgram(program);
       gl.deleteShader(vertex); gl.deleteShader(fragment);
+      gl.getExtension('WEBGL_lose_context')?.loseContext();
       staging.width = staging.height = 1;
     },
   };

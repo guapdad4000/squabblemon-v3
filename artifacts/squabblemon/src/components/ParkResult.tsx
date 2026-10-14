@@ -40,7 +40,7 @@ export function ParkResult({ outcome, ranked, rank, resultKey, description, titl
   const reduced = reducedMotion || systemReduced || (typeof document !== 'undefined' && document.documentElement.dataset.reduceMotion === 'true');
   const win = outcome === 'win';
   const hero = outcome === 'draw' ? 'assets/results/draw-mascot.webp' : `assets/pvp/dr-fade-${win ? 'win' : 'loss'}.webp`;
-  const mark = outcome === 'draw' ? 'assets/results/draw-tie.webp' : `assets/results/${win ? 'win-w' : 'loss-l'}.gif`;
+  const mark = outcome === 'draw' ? 'assets/results/draw-tie.webp' : `assets/results/${win ? 'win-w' : 'loss-l'}.webp`;
   useEffect(() => {
     if (outcome === 'draw') return;
     setBattleMusicMode(win ? 'victory' : 'defeat');
@@ -67,7 +67,7 @@ export function ParkResult({ outcome, ranked, rank, resultKey, description, titl
   }}><RankUpReward rank={rank} reduced={Boolean(reduced)} onDone={closePromotion} /></DialogContent>;
   return <>{weather}<DialogContent ref={panelRef} className={'park-result park-result--illustrated outcome-' + outcome} aria-describedby="park-result-description" data-testid="park-result-dialog">
     <DialogClose className="park-result-close" aria-label="Close result" data-park-result-close><span aria-hidden="true">×</span></DialogClose>
-    <div className="park-result-scene" style={{ backgroundImage: `linear-gradient(0deg,#18251f00,#09161455),url("${getAssetUrl('assets/fade-park/park.png')}")` }} aria-hidden="true"><div className="park-result-sun" /><motion.img draggable={false} src={getAssetUrl(hero)}
+    <div className="park-result-scene" style={{ backgroundImage: `linear-gradient(0deg,#18251f00,#09161455),url("${getAssetUrl('assets/fade-park/park.webp')}")` }} aria-hidden="true"><div className="park-result-sun" /><motion.img draggable={false} src={getAssetUrl(hero)}
       initial={reduced ? false : { y: 45, scale: .85, opacity: 0 }} animate={{ y: 0, scale: 1, opacity: 1 }} transition={{ type: 'spring', damping: 16, delay: .1 }} />
       <img draggable={false} className="park-result-outcome-mark" src={getAssetUrl(mark)} alt="" />
     </div>
