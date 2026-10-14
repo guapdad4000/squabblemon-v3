@@ -45,7 +45,7 @@
 .park-board-wrapper { position: relative; left: clamp(-48px, -3vw, -28px); z-index: 2; padding: 0; min-width: 0; }
 .park-layer--board { transform: translate(calc((var(--mx, 0.5) - 0.5) * 1.5%), calc((var(--my, 0.5) - 0.5) * 1.5%)); transition: transform 0.15s cubic-bezier(0.2, 0, 0.2, 1); }
 
-.park-ticket { background: linear-gradient(155deg,#172b26c0,#071510e5); backdrop-filter: blur(8px); border: 1px solid #ebd9a322; border-radius: 6px; box-shadow: inset 0 0 20px rgba(0,0,0,0.5); padding: 25px 25px 16px; min-width: 0; position: relative; z-index: 1; display: flex; flex-direction: column; }
+.park-ticket { background: linear-gradient(155deg,#172b26c0,#071510e5); backdrop-filter: blur(8px); border: 1px solid #ebd9a338; border-top-color: #ffe7a866; border-radius: 6px; box-shadow: inset 0 1px 0 rgba(255,244,213,0.18), inset 0 0 20px rgba(0,0,0,0.5), 0 18px 40px rgba(0,0,0,0.45); padding: 25px 25px 16px; min-width: 0; position: relative; z-index: 1; display: flex; flex-direction: column; }
 
 .park-dial-picker { position: relative; margin: 20px -25px 0; }
 .park-crew-carousel { margin: 0; }
@@ -67,7 +67,7 @@
 .park-rank h2 strong { font-size: 23px; font-variant-numeric: tabular-nums; display: flex; align-items: center; gap: 6px; white-space: nowrap; }
 .park-rank h2 small { font: 500 10px var(--font-sans); color: #dbd9bc; }
 .park-rank-track { height: 4px; border-radius: 4px; background: #e5dccb22; overflow: hidden; margin-top: 12px; }
-.park-rank-track i { display: block; height: 100%; background: #f4ce80; }
+.park-rank-track i { display: block; height: 100%; background: linear-gradient(90deg, #d8a648 0%, #f4ce80 65%, #fff0b8 100%); box-shadow: 0 0 10px rgba(244, 206, 128, 0.55); }
 .park-rank-caption { display: flex; justify-content: space-between; gap: 10px; margin: 9px 0 25px; font-size: 10px; color: #c5d1c2b3; }
 
 .park-crew-label { display: flex; flex-direction: column; gap: 9px; font-size: 11px; color: #efeddaaa; }
@@ -75,8 +75,8 @@
 .park-lineup { display: grid; grid-template-columns: repeat(10,minmax(0,1fr)); margin: 12px -3px 22px; height: 62px; gap: 0; }
 .park-lineup img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 12%; mask-image: linear-gradient(var(--sq-ink) 75%,transparent); }
 
-.park-find { display: flex; justify-content: space-between; gap: 12px; align-items: center; width: 100%; min-height: 60px; padding: 16px 20px; border-radius: 10px; background: #f8d18a; color: #15231b; font: 800 18px/1 var(--font-display); text-transform: uppercase; box-shadow: 0 4px 0 #af8951; transition: background .15s,transform .15s; }
-.park-find:hover { background: #ffe2a5; transform: translateY(-1px); }
+.park-find { display: flex; justify-content: space-between; gap: 12px; align-items: center; width: 100%; min-height: 60px; padding: 16px 20px; border-radius: 10px; border: 1px solid #ffebb3; background: linear-gradient(180deg, #ffe09e 0%, #f1c168 100%); color: #15231b; font: 800 18px/1 var(--font-display); text-transform: uppercase; box-shadow: inset 0 1px 0 rgba(255,255,255,0.55), 0 4px 0 #af8951, 0 10px 24px rgba(0,0,0,0.35); transition: background .15s,transform .15s,box-shadow .15s; }
+.park-find:hover { background: linear-gradient(180deg, #ffeaad 0%, #f8ce7a 100%); transform: translateY(-1px); box-shadow: inset 0 1px 0 rgba(255,255,255,0.65), 0 5px 0 #af8951, 0 12px 28px rgba(248, 209, 138, 0.28); }
 .park-find:disabled { opacity: .55; transform: none; }
 .park-edit { display: block; text-align: center; padding: 17px 0 8px; color: #ecd8acbd; font-size: 11px; text-decoration: underline; text-underline-offset: 3px; }
 .park-smallprint,.park-search p,.park-rules p { font-size: 11px; line-height: 1.7; color: #d7decd99; }

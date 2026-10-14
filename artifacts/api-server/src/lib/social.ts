@@ -68,11 +68,13 @@ async function invitationView(tx: SocialTx, row: typeof invites.$inferSelect, us
     player ?? await identity(tx, row.sender === userId ? row.recipient : row.sender));
 }
 async function state(tx: SocialTx, userId: string) {
-  const rows = await tx.select().from(relations).where(and(involved(userId), or(eq(relations.status, "pending"), eq(relations.status, "homie")))).orderBy(desc(relations.updatedAt)).limit(160);
-  const blockedRows = await tx.select().from(blocks).where(eq(blocks.userId, userId)).limit(100);
-  const invitationRows = await tx.select({ invitation: invites, roomCode: rooms.code }).from(invites)
-    .innerJoin(rooms, eq(rooms.id, invites.roomId)).where(invited(userId))
-    .orderBy(desc(sql`${invites.status} = 'pending'`), desc(invites.createdAt)).limit(40);
+  const [rows, blockedRows, invitationRows] = await Promise.all([
+    tx.select().from(relations).where(and(involved(userId), or(eq(relations.status, "pending"), eq(relations.status, "homie")))).orderBy(desc(relations.updatedAt)).limit(160),
+    tx.select().from(blocks).where(eq(blocks.userId, userId)).limit(100),
+    tx.select({ invitation: invites, roomCode: rooms.code }).from(invites)
+      .innerJoin(rooms, eq(rooms.id, invites.roomId)).where(invited(userId))
+      .orderBy(desc(sql`${invites.status} = 'pending'`), desc(invites.createdAt)).limit(40),
+  ]);
   const otherParty = (row: typeof invites.$inferSelect) => row.sender === userId ? row.recipient : row.sender;
   const players = await identityViews(tx, [userId,
     ...rows.map(row => row.low === userId ? row.high : row.low),

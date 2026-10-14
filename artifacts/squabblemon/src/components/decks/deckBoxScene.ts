@@ -175,14 +175,17 @@ export function mountDeckBox(host: HTMLElement, { name, image, fullCover = false
   thicknessContext.putImageData(thicknessData, 0, 0);
   const thickness = makeTexture(thicknessCanvas);
   const roughnessCanvas = makeCanvas(768, 1075);
-  const roughnessContext = roughnessCanvas.getContext('2d', { willReadFrequently: true })!;
+  const roughnessContext = roughnessCanvas.getContext('2d')!;
   const updateRoughness = () => {
+    roughnessContext.save();
+    roughnessContext.globalCompositeOperation = 'source-over';
+    roughnessContext.globalAlpha = 1;
+    roughnessContext.fillStyle = '#ffffff';
+    roughnessContext.fillRect(0, 0, 768, 1075);
+    roughnessContext.globalCompositeOperation = 'difference';
+    roughnessContext.globalAlpha = 0.72;
     roughnessContext.drawImage(cover.mask, 0, 0);
-    const pixels = roughnessContext.getImageData(0, 0, 768, 1075);
-    for (let index = 0; index < pixels.data.length; index += 4) {
-      pixels.data[index] = pixels.data[index + 1] = pixels.data[index + 2] = 255 - pixels.data[index] * 0.72;
-    }
-    roughnessContext.putImageData(pixels, 0, 0);
+    roughnessContext.restore();
   };
   updateRoughness();
   const roughness = makeTexture(roughnessCanvas);
@@ -300,9 +303,10 @@ export function mountDeckBox(host: HTMLElement, { name, image, fullCover = false
   const wake = () => {
     if (!disposed && !unavailable && !raf && !document.hidden) raf = requestAnimationFrame(render);
   };
+  let hostRect = host.getBoundingClientRect();
   const pointer = (event: PointerEvent) => {
     if (event.pointerType === 'touch') return;
-    const rect = host.getBoundingClientRect();
+    const rect = hostRect.width && hostRect.height ? hostRect : host.getBoundingClientRect();
     target.x = (event.clientX - rect.left) / rect.width - 0.5;
     target.y = (event.clientY - rect.top) / rect.height - 0.5;
     wake();
@@ -313,6 +317,7 @@ export function mountDeckBox(host: HTMLElement, { name, image, fullCover = false
   };
   const resize = () => {
     const rect = host.getBoundingClientRect();
+    hostRect = rect;
     if (!rect.width || !rect.height) return;
     renderer.setSize(rect.width, rect.height, false);
     camera.aspect = rect.width / rect.height;

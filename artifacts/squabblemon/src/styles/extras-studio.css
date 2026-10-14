@@ -21,3 +21,6 @@
 .extras-more{text-align:center;margin:34px 0 10px}.extras-more p{font:10px monospace;color:#acb89f;margin-bottom:14px}
 
 .extras-pack__portrait>img.extras-pack__fighter{object-fit:cover;object-position:center top}
+.extras-pack[data-complete=true]{border-color:#d8ad48;box-shadow:5px 7px 0 #0006,0 0 24px rgba(237,198,117,.26)}
+.extras-pack[data-complete=true]:before{background:linear-gradient(135deg,#f6d784,#c89632)}
+.extras-pack[data-complete=true] .extras-pack__bottom{color:#7c5211;font-weight:800}

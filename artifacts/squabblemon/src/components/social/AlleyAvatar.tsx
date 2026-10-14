@@ -67,6 +67,7 @@ export function AlleyAvatar({ animation = 'Idle_10', className = '' }: { animati
 
     let disposed = false;
     let frame = 0;
+    let lastRender = 0;
     let mixer: AnimationMixer | null = null;
     let model: Group | null = null;
     const clock = new Clock();
@@ -84,12 +85,28 @@ export function AlleyAvatar({ animation = 'Idle_10', className = '' }: { animati
     const observer = new ResizeObserver(resize);
     observer.observe(host);
     resize();
-    function render() {
-      if (disposed) return;
+    function render(now = performance.now()) {
+      frame = 0;
+      if (disposed || document.hidden) return;
+      if (lastRender && now - lastRender < 1000 / 30) {
+        if (!reduced) frame = requestAnimationFrame(render);
+        return;
+      }
+      lastRender = now;
       if (!reduced) mixer?.update(Math.min(clock.getDelta(), .05));
       renderer.render(scene, camera);
       if (!reduced) frame = requestAnimationFrame(render);
     }
+    const onVisibility = () => {
+      if (document.hidden) {
+        cancelAnimationFrame(frame);
+        frame = 0;
+      } else if (!disposed && loadedRef.current && !frame) {
+        clock.getDelta();
+        render();
+      }
+    };
+    document.addEventListener('visibilitychange', onVisibility);
     new GLTFLoader().load(modelUrl, gltf => {
       if (disposed) return;
       model = new Group();
@@ -112,6 +129,7 @@ export function AlleyAvatar({ animation = 'Idle_10', className = '' }: { animati
     return () => {
       disposed = true;
       cancelAnimationFrame(frame);
+      document.removeEventListener('visibilitychange', onVisibility);
       observer.disconnect();
       loadedRef.current = null;
       mixer?.stopAllAction();

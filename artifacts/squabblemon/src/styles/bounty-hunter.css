@@ -198,6 +198,23 @@
   filter: grayscale(0.4) brightness(0.9);
 }
 
+.bounty-poster[data-status='claimable'] {
+  border: 1px solid rgba(218, 168, 66, 0.72);
+  box-shadow: 0 0 24px rgba(242, 185, 75, 0.38), 4px 8px 24px rgba(0,0,0,0.65), inset 0 0 10px rgba(242, 185, 75, 0.18);
+}
+
+.bounty-poster[data-status='claimable']::before {
+  background: radial-gradient(circle at 35% 35%, #ffe699, #b88228);
+  box-shadow: 0 0 10px rgba(242, 185, 75, 0.65), 0 3px 6px rgba(0,0,0,0.6);
+}
+
+.bounty-poster[data-status='claimable'] .studio-action {
+  background: linear-gradient(180deg, #b82921, #7c1813);
+  color: #fff4dc;
+  border: 1px solid #f0c678;
+  box-shadow: 0 6px 16px rgba(184, 41, 33, 0.42);
+}
+
 .bounty-poster__header {
   display: flex;
   justify-content: space-between;

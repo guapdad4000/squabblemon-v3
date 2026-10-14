@@ -42,6 +42,13 @@
 .bodega-light-cone { position: absolute; inset: 7px 0 0; z-index: 0; background: linear-gradient(#fff0b326, #fff2b908 80%, transparent); clip-path: polygon(25% 0, 75% 0, 100% 100%, 0 100%); pointer-events: none; }
 .corner-product__display > img { position: relative; z-index: 2; width: 74%; height: 77%; object-fit: contain; max-height: 100%; filter: drop-shadow(0 12px 8px #000a); transition: transform .25s; }
 .corner-product:hover .corner-product__display > img { transform: translateY(-4px) rotate(-2deg); }
+.corner-product:is(:hover, :focus-within) .bodega-led { background: #fff9db; box-shadow: 0 0 6px 3px #fff9db, 0 9px 18px 7px #ffe59e, 0 26px 46px 22px #ffe6aa40; }
+.corner-product:is(:hover, :focus-within) .bodega-light-cone { background: linear-gradient(#fff3be3d, #fff2b914 82%, transparent); }
+.corner-product:is(:hover, :focus-within) .corner-product__label { transform: translateY(-2px); box-shadow: 3px 6px 0 #0007; }
+.corner-product__label { transition: transform .2s ease, box-shadow .2s ease; }
+@media (prefers-reduced-motion: reduce) {
+  .corner-product:is(:hover, :focus-within) .corner-product__label { transform: none; }
+}
 .bodega-shelf-number { position: absolute; left: 9px; bottom: 18px; z-index: 3; color: #d3b786; font: 10px var(--font-mono); opacity: .7; }
 .corner-product__label { display: flex; flex: 1; flex-direction: column; position: relative; padding: 20px 16px 14px; margin: 19px 5px 2px; background: #f2e9d5; color: #302b25; border: 1px solid #ffffe740; box-shadow: 2px 4px 0 #0005; }
 .corner-product__label::before { content: ''; position: absolute; top: -7px; left: calc(50% - 26px); width: 52px; height: 15px; background: #bf9e6880; transform: rotate(-3deg); }
