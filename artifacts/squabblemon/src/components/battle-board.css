@@ -319,3 +319,8 @@
   .battle-arena.battle-hud .district-preview { font-size: 9px; line-height: 10px; }
   .battle-arena.battle-hud .preview-caption { font-size: 8px; line-height: 8px; }
 }
+
+/* Coached explanations can grow. Scroll the field instead of allowing its
+   district controls to overflow behind the hand on short touch screens. */
+.battle-arena.battle-hud .battlefield-grid--tutorial { overflow-y: auto; overscroll-behavior: contain; }
+.battle-arena.battle-hud .battlefield-grid--tutorial .district-lane { min-height: 280px; }

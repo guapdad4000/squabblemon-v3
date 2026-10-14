@@ -1,6 +1,8 @@
+import { rookieEncounter, rookieDistricts } from '@workspace/squabblemon-engine/rookie';
+import { ROOKIE_CORE_IDS, ROOKIE_DECK_ID, catalogIdsToEngineIds } from '../data';
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { createMatch, playCard, type EffectLogEntry, type Match } from '../gameEngine';
+import { createMatch, createStoryMatch, playCard, type EffectLogEntry, type Match } from '../gameEngine';
 import {
   MECHANIC_LESSON_STORAGE_KEY,
   detectMechanicLessons,
@@ -87,4 +89,12 @@ test('seen mechanic lessons persist as a versioned, allowlisted set', () => {
   assert.equal(values.get(MECHANIC_LESSON_STORAGE_KEY), '["burn","movement"]');
   values.set(MECHANIC_LESSON_STORAGE_KEY, '["burn","private_value",7]');
   assert.deepEqual([...readSeenMechanicLessons(storage)], ['burn']);
+});
+
+test('coached card targets the exact hand instance instead of a matching board card', () => {
+  const match = createStoryMatch(rookieEncounter(), catalogIdsToEngineIds(ROOKIE_CORE_IDS), ROOKIE_DECK_ID, undefined, rookieDistricts());
+  const step = guidance(match);
+  assert(step.expectedCard);
+  assert.equal(step.target, '#hand-tray [data-instance-id=' + JSON.stringify(step.expectedCard) + ']');
+  assert(step.body.includes('costs 2 Motion'));
 });

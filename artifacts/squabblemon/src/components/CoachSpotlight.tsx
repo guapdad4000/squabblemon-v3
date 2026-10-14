@@ -11,6 +11,7 @@ export function CoachSpotlight({ target, title, children, step, onNext, nextLabe
 }) {
   useTutorialVoice(typeof children === 'string' ? children : null, narrate, voiceIds);
   const [rect, setRect] = useState<Rect | null>(null);
+  const [panelHeight, setPanelHeight] = useState(260);
   const [revealed, setRevealed] = useState(false);
   useEffect(() => { setRevealed(false); }, [target, step]);
   const panel = useRef<HTMLElement>(null);
@@ -21,6 +22,8 @@ export function CoachSpotlight({ target, title, children, step, onNext, nextLabe
     let element: HTMLElement | null = null;
     let frame = 0;
     const measure = () => {
+      const measuredPanel = panel.current?.scrollHeight;
+      if (measuredPanel) setPanelHeight(previous => previous === measuredPanel ? previous : measuredPanel);
       element = document.querySelector<HTMLElement>(target);
       if (!element) { setRect(null); return; }
       const r = element.getBoundingClientRect();
@@ -35,6 +38,7 @@ export function CoachSpotlight({ target, title, children, step, onNext, nextLabe
     });
     const observer = new ResizeObserver(measure);
     observer.observe(document.body);
+    if (panel.current) observer.observe(panel.current);
     // Style/class/hidden mutations move targets without touching childList —
     // the safehouse markers slide into place via inline style after the scene
     // projects them, and an unmeasured move leaves the mask covering the target.
@@ -81,10 +85,19 @@ export function CoachSpotlight({ target, title, children, step, onNext, nextLabe
       document.removeEventListener('click', clicked, true); document.removeEventListener('pointerdown', guard, true); document.removeEventListener('keydown', keys, true);
     };
   }, [target, step, interactiveTarget, nonBlocking]);
-  const battleDiagram = step.startsWith('ROUND') ? target.includes('squabble') ? 'double' : target.includes('lane-') ? 'districts' : target.includes('next-round') ? 'bank' : target.includes('card-') ? 'card' : 'play' : null;
-  const atBottom = rect ? rect.top < window.innerHeight * .48 : true;
+  const battleDiagram = step.startsWith('ROUND') ? target.includes('squabble') ? 'double' : target.includes('lane-') ? 'districts' : target.includes('next-round') ? 'bank' : (target.startsWith('#hand-tray ') || target.includes('card-')) ? 'card' : 'play' : null;
+  const gap = 12, margin = 16;
+  const roomAbove = rect ? Math.max(0, rect.top - gap - margin) : 0;
+  const roomBelow = rect ? Math.max(0, innerHeight - margin - rect.top - rect.height - gap) : 0;
+  const atBottom = rect ? roomBelow >= roomAbove : true;
   const beside = rect && innerWidth > 1000 ? rect.left + rect.width + 565 < innerWidth ? 'right' : rect.left > 565 ? 'left' : null : null;
   const sideStyle = rect && beside ? { left: beside === 'right' ? rect.left + rect.width + 24 : rect.left - 554, top: Math.max(16, Math.min(innerHeight - (panel.current?.offsetHeight ?? 260) - 16, rect.top)), bottom: 'auto', transform: 'none' } : undefined;
+  // Keep the guide's real buttons outside the highlighted control, even on
+  // short phones and landscape tablets. The guide scrolls when space is tight.
+  const verticalStyle = rect && !beside && Math.max(roomAbove, roomBelow) >= 80 ? {
+    top: atBottom ? rect.top + rect.height + gap : Math.max(margin, rect.top - gap - Math.min(panelHeight, roomAbove)),
+    bottom: 'auto', maxHeight: Math.max(1, atBottom ? roomBelow : roomAbove),
+  } : undefined;
   return createPortal(<div className="fade-spotlight" data-testid="fade-spotlight" data-coach-target={target} data-revealed={revealed} data-nonblocking={nonBlocking}>
     {rect ? <>
       <div className="fade-mask" style={{ inset: '0 0 auto', height: rect.top }} />
@@ -93,7 +106,7 @@ export function CoachSpotlight({ target, title, children, step, onNext, nextLabe
       <div className="fade-mask" style={{ top: rect.top + rect.height, insetInline: 0, bottom: 0 }} />
       <div className="fade-target" style={rect} />
     </> : <div className="fade-mask" style={{ inset: 0 }} />}
-    <section ref={panel} className={'fade-tip ' + (atBottom ? 'fade-tip--bottom' : 'fade-tip--top')} style={sideStyle} role="region" aria-label="Dr. Fade’s guide">
+    <section ref={panel} className={'fade-tip ' + (atBottom ? 'fade-tip--bottom' : 'fade-tip--top')} style={sideStyle ?? verticalStyle} role="region" aria-label="Dr. Fade’s guide">
       <DrFadePortrait pose={beside === 'right' ? 'left' : beside === 'left' ? 'right' : atBottom ? 'up' : 'down'} />
       <div><span className="fade-eyebrow">DR. FADE / {step}</span>
         {battleDiagram && <div className="fade-lesson-diagram" aria-label={battleDiagram === 'districts' ? 'Lead in two of three districts' : battleDiagram === 'double' ? 'Double base Hands once per match' : battleDiagram === 'bank' ? 'Carry up to one unused Motion' : 'Spend Motion to add Hands'}>

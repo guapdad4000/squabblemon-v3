@@ -90,7 +90,8 @@
     "test:rank-promotion-browser": "node e2e/run-rank-promotion.mjs",
     "test:player-notes": "node --import ../../scripts/battle-test-css.mjs --import tsx --test src/playerNotes.test.ts src/lib/challengeRunResponse.test.ts src/lib/communityCrew.test.ts src/lib/deckWorkshop.test.ts src/lib/collectionCardViewport.test.ts src/lib/rankedLobbyRecovery.test.ts src/lib/rankPromotion.test.ts",
     "test:character-signatures": "node --import ../../scripts/battle-test-css.mjs --import tsx --test src/cosmeticAssets.test.ts src/characterSignatures.test.ts src/streetLegendsPresentation.test.ts",
-    "test:character-signatures-browser": "node e2e/run-character-signatures.mjs"
+    "test:character-signatures-browser": "node e2e/run-character-signatures.mjs",
+    "test:rookie-touch": "node e2e/run-rookie-touch.mjs"
   },
   "devDependencies": {
     "@clerk/react": "^6.15.1",

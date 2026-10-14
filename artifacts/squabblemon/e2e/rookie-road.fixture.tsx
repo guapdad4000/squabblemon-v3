@@ -13,6 +13,7 @@ import { getTutorialGuidance } from '../src/components/tutorialGuidance';
 import '../src/index.css';
 import '../src/styles/venue.css';
 import '../src/styles/dr-fade.css';
+import '../src/styles/rookie-guide.css';
 
 // Real-click tutorial fixture: mounts the exact rookie-road-v2 lesson and drives
 // it with the same selection/commit gate PlayLoop uses, so browser tests can
