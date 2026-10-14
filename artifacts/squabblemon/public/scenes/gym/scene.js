@@ -62,33 +62,40 @@ const AudioEngine={
       bagSurfaceCanvas = canvas;
       bagSurfaceCtx = ctx;
       bagSurfaceTexture = texture;
-      bagBasePixels = ctx.getImageData(0, 0, canvas.width, canvas.height);
 
       const wrap = new Image();
       wrap.decoding = "async";
       wrap.onload = () => {
-        // The production panel includes dark presentation bands above and below
-        // the printable artwork. Crop those bands so the wrap reaches both ends
-        // of the bag instead of leaving an unbranded cap and base.
-        const cropY = Math.round(wrap.naturalHeight * 0.095);
-        const cropHeight = wrap.naturalHeight - cropY * 2;
-        ctx.drawImage(
-          wrap,
-          0,
-          cropY,
-          wrap.naturalWidth,
-          cropHeight,
-          0,
-          0,
-          canvas.width,
-          canvas.height,
-        );
-        bagBasePixels = ctx.getImageData(0, 0, canvas.width, canvas.height);
-        texture.needsUpdate = true;
+        bagWrapImage = wrap;
+        lastBagDamageStage = -1;
+        paintBagDamage(currentBagDamageStage);
       };
       wrap.onerror = () => emit({type:"error",message:"The bag wrap could not be loaded."});
       wrap.src = new URL("../../brand/prismatic/sheets/squabblemon-bag-wrap-standard-gold.webp", location.href).href;
       return texture;
+    }
+
+    function drawBagBaseWrap() {
+      if (!bagSurfaceCtx || !bagSurfaceCanvas) return;
+      bagSurfaceCtx.fillStyle = "#08090b";
+      bagSurfaceCtx.fillRect(0, 0, bagSurfaceCanvas.width, bagSurfaceCanvas.height);
+      if (!bagWrapImage) return;
+      // The production panel includes dark presentation bands above and below
+      // the printable artwork. Crop those bands so the wrap reaches both ends
+      // of the bag instead of leaving an unbranded cap and base.
+      const cropY = Math.round(bagWrapImage.naturalHeight * 0.095);
+      const cropHeight = bagWrapImage.naturalHeight - cropY * 2;
+      bagSurfaceCtx.drawImage(
+        bagWrapImage,
+        0,
+        cropY,
+        bagWrapImage.naturalWidth,
+        cropHeight,
+        0,
+        0,
+        bagSurfaceCanvas.width,
+        bagSurfaceCanvas.height,
+      );
     }
 
     function createGlovePatchTexture() {
@@ -105,7 +112,8 @@ const AudioEngine={
     let cardMeshStack = [];
     let sharedCardBackTexture;
     let spotLight, rimCyan, rimGold, heavyBagMaterial;
-    let bagSurfaceCanvas, bagSurfaceCtx, bagSurfaceTexture, bagBasePixels;
+    let bagSurfaceCanvas, bagSurfaceCtx, bagSurfaceTexture, bagWrapImage;
+    let lastBagDamageStage = -1, currentBagDamageStage = 0;
 
     function createAnimeOutline(geometry, thickness = 0.05) {
       const outlineGeo = geometry.clone();
@@ -392,9 +400,20 @@ const AudioEngine={
       document.body.classList.remove("impact-frame-active", "crimson-frame-active");
     }
 
+    let impactCanvasDirty = false;
+    let speedlinesDirty = false;
+
     function renderImpactFrameCanvas() {
       if (!impactCtx) return;
+      if (activeImpactFrameTimer <= 0) {
+        if (impactCanvasDirty) {
+          impactCtx.clearRect(0, 0, impactCanvas.width, impactCanvas.height);
+          impactCanvasDirty = false;
+        }
+        return;
+      }
       impactCtx.clearRect(0, 0, impactCanvas.width, impactCanvas.height);
+      impactCanvasDirty = true;
 
       if (activeImpactFrameTimer > 0) {
         activeImpactFrameTimer--;
@@ -424,9 +443,15 @@ const AudioEngine={
 
     function renderSpeedLines() {
       if (!speedlineCtx) return;
+      if (speedlineIntensity <= 0.02) {
+        if (speedlinesDirty) {
+          speedlineCtx.clearRect(0, 0, speedlineCanvas.width, speedlineCanvas.height);
+          speedlinesDirty = false;
+        }
+        return;
+      }
       speedlineCtx.clearRect(0, 0, speedlineCanvas.width, speedlineCanvas.height);
-
-      if (speedlineIntensity <= 0.02) return;
+      speedlinesDirty = true;
 
       const cx = speedlineCanvas.width * 0.5;
       const cy = speedlineCanvas.height * 0.5;
@@ -531,17 +556,16 @@ const AudioEngine={
       activeShockwaves.push(ring);
     }
 
+    const SPARK_GEOMETRY = new THREE.PlaneGeometry(0.35, 0.35);
+    const SPARK_MATERIALS = [0xfacc15, 0xffffff, 0xef4444, 0xf97316].map((color) =>
+      new THREE.MeshBasicMaterial({ color, side: THREE.DoubleSide }),
+    );
+
     function spawnHitSpark(x, y, z, isBig = false) {
       const sparkCount = Math.max(1,Math.round((isBig ? 24 : 10)*quality.particleDensity));
-      const geo = new THREE.PlaneGeometry(0.35, 0.35);
-      const colors = [0xfacc15, 0xffffff, 0xef4444, 0xf97316];
 
       for (let i = 0; i < sparkCount; i++) {
-        const mat = new THREE.MeshBasicMaterial({
-          color: colors[i % colors.length],
-          side: THREE.DoubleSide
-        });
-        const spark = new THREE.Mesh(geo, mat);
+        const spark = new THREE.Mesh(SPARK_GEOMETRY, SPARK_MATERIALS[i % SPARK_MATERIALS.length]);
         spark.position.set(
           x + (Math.random() - 0.5) * 0.6,
           y + (Math.random() - 0.5) * 0.8,
@@ -600,8 +624,11 @@ const AudioEngine={
     }
 
     function paintBagDamage(stage = 0) {
-      if (!bagSurfaceCtx || !bagSurfaceTexture || !bagBasePixels) return;
-      bagSurfaceCtx.putImageData(bagBasePixels, 0, 0);
+      currentBagDamageStage = stage;
+      if (!bagSurfaceCtx || !bagSurfaceTexture) return;
+      if (stage === lastBagDamageStage) return;
+      lastBagDamageStage = stage;
+      drawBagBaseWrap();
       const tears = [
         [[-145,-60],[-70,-20],[-115,25],[-20,62],[55,35],[128,82]],
         [[-120,-72],[-40,-28],[-85,18],[15,58],[96,24],[145,70]],
@@ -899,7 +926,7 @@ addEventListener('message',e=>{
         spark.scale.setScalar(Math.max(0.001, spark.userData.life * 3.0));
 
         if (spark.userData.life <= 0) {
-          scene.remove(spark); spark.geometry.dispose(); spark.material.dispose();
+          scene.remove(spark);
           activeSparks.splice(i, 1);
         }
       }

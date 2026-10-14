@@ -82,8 +82,10 @@ async function refreshTournament(tx: Tx, row: TournamentRow, now: number): Promi
         avatarKey: champion.member.avatarKey, entrantCount: state.entrants.length }, wonAt: new Date(now),
     }).onConflictDoNothing();
   }
-  await tx.update(kumiteTournamentsTable).set({ state: stored(state), updatedAt: new Date(now) })
-    .where(eq(kumiteTournamentsTable.id, state.id));
+  if (JSON.stringify(state) !== JSON.stringify(row.state)) {
+    await tx.update(kumiteTournamentsTable).set({ state: stored(state), updatedAt: new Date(now) })
+      .where(eq(kumiteTournamentsTable.id, state.id));
+  }
   return state;
 }
 
@@ -106,10 +108,13 @@ async function currentTransaction<T>(action: (tx: Tx, state: KumiteState, now: n
     // profiles in one global order to match existing online result settlement.
     // This avoids room/profile and cross-match deadlocks during concurrent polls.
     const states = [...previous, row].map(item => restore(item.state));
-    const codes = [...new Set(states.flatMap(item => item.rounds.flat().flatMap(match => match.roomCode ? [match.roomCode] : [])))];
+    const activeStates = states.filter(item =>
+      item.status === 'active' || (item.status === 'registration' && now >= item.startsAt),
+    );
+    const codes = [...new Set(activeStates.flatMap(item => item.rounds.flat().flatMap(match => match.roomCode && match.status !== 'complete' ? [match.roomCode] : [])))];
     if (codes.length) await tx.select({ code: onlineRoomsTable.code }).from(onlineRoomsTable)
       .where(inArray(onlineRoomsTable.code, codes)).orderBy(asc(onlineRoomsTable.code)).for('update');
-    const userIds = [...new Set(states.flatMap(item => item.entrants.map(entry => entry.member.userId)))];
+    const userIds = [...new Set(activeStates.flatMap(item => item.entrants.map(entry => entry.member.userId)))];
     if (userIds.length) await tx.select({ id: playerProfilesTable.clerkUserId }).from(playerProfilesTable)
       .where(inArray(playerProfilesTable.clerkUserId, userIds)).orderBy(asc(playerProfilesTable.clerkUserId)).for('update');
     for (const previousRow of previous) await refreshTournament(tx, previousRow, now);

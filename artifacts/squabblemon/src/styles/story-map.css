@@ -144,6 +144,27 @@
 .story-atlas__node.is-next .story-atlas__marker:before {
   border-color: #ead09a77;
   inset: -8px;
+  animation: story-node-beacon 2.1s ease-in-out infinite;
+}
+@keyframes story-node-beacon {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.78;
+    box-shadow: 0 0 0 0 rgba(239, 204, 101, 0.35);
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 1;
+    box-shadow: 0 0 18px 4px rgba(239, 204, 101, 0.42);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .story-atlas__node.is-next .story-atlas__marker:before {
+    animation: none;
+  }
+}
+html[data-reduce-motion="true"] .story-atlas__node.is-next .story-atlas__marker:before {
+  animation: none;
 }
 .story-atlas__node.is-locked {
   cursor: not-allowed;

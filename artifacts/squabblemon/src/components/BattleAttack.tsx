@@ -124,25 +124,30 @@ export function BattleAttack({ card, effect, impact, replaying = false, audioEna
     const focusIds = new Set(targetIds.length ? targetIds : [sourceId]);
     const measuredIds = new Set([sourceId, ...targetIds, ...changes.map(change => change.cardInstanceId)]);
     if (effect.chain?.fromId) measuredIds.add(effect.chain.fromId);
-    const scrolled = new Set<Element>();
-    const scrolls: { stack: HTMLElement; top: number }[] = [];
-    arena.querySelectorAll<HTMLElement>('[data-card-zone="board"][data-instance-id]').forEach(node => {
-      const stack = node.closest<HTMLElement>('[data-crowded="true"]');
-      if (!stack || scrolled.has(stack) || !focusIds.has(node.dataset.instanceId!)) return;
-      const cardBounds = node.getBoundingClientRect();
-      const stackBounds = stack.getBoundingClientRect();
-      if (cardBounds.top < stackBounds.top || cardBounds.bottom > stackBounds.bottom) {
-        scrolls.push({ stack, top: stack.scrollTop + cardBounds.top - stackBounds.top - 4 });
-      }
-      scrolled.add(stack);
-    });
-    scrolls.forEach(({ stack, top }) => { stack.scrollTop = top; });
+    let scrolledInitial = false;
     let measuredWidth = 0, measuredHeight = 0;
     const measure = () => {
+      const boardNodes = arena.querySelectorAll<HTMLElement>('[data-card-zone="board"][data-instance-id]');
+      if (!scrolledInitial) {
+        scrolledInitial = true;
+        const scrolled = new Set<Element>();
+        const scrolls: { stack: HTMLElement; top: number }[] = [];
+        boardNodes.forEach(node => {
+          const stack = node.closest<HTMLElement>('[data-crowded="true"]');
+          if (!stack || scrolled.has(stack) || !focusIds.has(node.dataset.instanceId!)) return;
+          const cardBounds = node.getBoundingClientRect();
+          const stackBounds = stack.getBoundingClientRect();
+          if (cardBounds.top < stackBounds.top || cardBounds.bottom > stackBounds.bottom) {
+            scrolls.push({ stack, top: stack.scrollTop + cardBounds.top - stackBounds.top - 4 });
+          }
+          scrolled.add(stack);
+        });
+        scrolls.forEach(({ stack, top }) => { stack.scrollTop = top; });
+      }
       const bounds = arena.getBoundingClientRect();
       measuredWidth = bounds.width; measuredHeight = bounds.height;
       const current = new Map<string, Point>();
-      arena.querySelectorAll<HTMLElement>('[data-card-zone="board"][data-instance-id]').forEach(node => {
+      boardNodes.forEach(node => {
         if (!measuredIds.has(node.dataset.instanceId!)) return;
         const rect = node.getBoundingClientRect();
         current.set(node.dataset.instanceId!, { x: rect.x - bounds.x + rect.width / 2, y: rect.y - bounds.y + rect.height / 2, width: rect.width, height: rect.height });

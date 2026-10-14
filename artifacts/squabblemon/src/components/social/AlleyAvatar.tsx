@@ -9,7 +9,7 @@ import { getAssetUrl } from '../../lib/assets';
 
 type Animation = 'Idle_10' | 'Boxing_Practice';
 const modelUrl = getAssetUrl('assets/fade-alley/street-sentinel.glb');
-const stillUrl = getAssetUrl('assets/fade-alley/street-sentinel-still.png');
+const stillUrl = getAssetUrl('assets/fade-alley/street-sentinel-still.webp');
 
 /** The still is a frame of this same model, used when WebGL cannot be created. */
 export function AlleyAvatar({ animation = 'Idle_10', className = '' }: { animation?: Animation; className?: string }) {

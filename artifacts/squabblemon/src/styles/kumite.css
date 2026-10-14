@@ -219,7 +219,15 @@
 .kumite-match__entrant.is-winner { background: #77602c3b; }
 .kumite-match__entrant.is-winner > span:not(.kumite-portrait) { color: #f9d18a; }
 .kumite-match__entrant > svg { margin-left: auto; color: #e3ba6a; flex: none; }
-.kumite-match[data-status='playing'] { border-color: #d68b50; box-shadow: 0 0 12px #af3b192e; }
+.kumite-match[data-status='playing'] { border-color: #d68b50; box-shadow: 0 0 12px #af3b192e; animation: kumite-live-match-pulse 2.2s ease-in-out infinite; }
+@keyframes kumite-live-match-pulse {
+  0%, 100% { border-color: #d68b50; box-shadow: 0 0 12px #af3b192e; }
+  50% { border-color: #ffbd6b; box-shadow: 0 0 20px #e858265c, inset 0 0 12px #ff9b421f; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .kumite-match[data-status='playing'] { animation: none; }
+}
+html[data-reduce-motion='true'] .kumite-match[data-status='playing'] { animation: none; }
 .kumite-match__state { position: absolute; bottom: -12px; right: 0; font: 500 7px/1 var(--font-mono); text-transform: uppercase; letter-spacing: .04em; color: #b59462; }
 .kumite-bracket__champion { display: flex; flex-direction: column; align-items: center; align-self: center; text-align: center; padding-top: 20px; color: #e5bd73; }
 .kumite-bracket__champion .kumite-fist-seal { width: 79px; height: 79px; color: #ebbd6a; box-shadow: 0 0 35px #e799263d; background: radial-gradient(circle, #4d3517, #17120c); }

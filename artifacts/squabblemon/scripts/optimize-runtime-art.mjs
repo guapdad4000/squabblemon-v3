@@ -25,6 +25,9 @@ const sources = [
   'public/assets/selection/dossier.png',
   'public/assets/training/dr-fade-coach.png',
   'public/assets/fade-alley/night.png',
+  'public/assets/fade-alley/fade-alley-logo.png',
+  'public/assets/fade-alley/add-homie-paper.png',
+  'public/assets/fade-alley/street-sentinel-still.png',
 ];
 const report = [];
 for (const source of sources) {

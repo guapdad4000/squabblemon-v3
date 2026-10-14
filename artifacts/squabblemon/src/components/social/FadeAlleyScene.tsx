@@ -3,7 +3,7 @@ import { UserRound } from 'lucide-react';
 import { getAssetUrl } from '../../lib/assets';
 
 const AlleyAvatar = lazy(() => import('./AlleyAvatar').then(module => ({ default: module.AlleyAvatar })));
-const stillUrl = getAssetUrl('assets/fade-alley/street-sentinel-still.png');
+const stillUrl = getAssetUrl('assets/fade-alley/street-sentinel-still.webp');
 function FighterLayer({ ready }: { ready: boolean }) {
   return <Suspense fallback={<img className="fa-avatar__still" src={stillUrl} alt="" aria-hidden="true" />}>
     <AlleyAvatar animation={ready ? 'Boxing_Practice' : 'Idle_10'} className="fa-avatar__model" />
@@ -15,7 +15,7 @@ export function FadeAlleyScene({ rivalName, rivalHandle, joined = false, invited
 }) {
   return <section className="fa-scene" aria-label="Fade Alley">
     <img className="fa-scene__image" src={getAssetUrl('assets/fade-alley/night.webp')} alt="" />
-    <div className="fa-hud-logo"><img src={getAssetUrl('assets/fade-alley/fade-alley-logo.png')} alt="Squabblemon Fade Alley" /></div>
+    <div className="fa-hud-logo"><img src={getAssetUrl('assets/fade-alley/fade-alley-logo.webp')} alt="Squabblemon Fade Alley" /></div>
     <div className="fa-scene__copy">
       <div className="fa-eyebrow">PRIVATE 1V1 · UNRANKED</div>
     </div>

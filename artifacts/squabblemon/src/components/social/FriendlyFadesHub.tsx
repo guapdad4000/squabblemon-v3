@@ -111,7 +111,7 @@ export function FriendlyFadesHub({ accountId, crews, crewId, onCrew, roomBusy, o
             {target && !selected && <p className="sq-bad" role="alert">That fighter is not on your homies list anymore.</p>}
           </>}
         <Link className="fa-add-homie" to="/game/settings#homies"
-          style={{ backgroundImage: `url("${getAssetUrl('assets/fade-alley/add-homie-paper.png')}")` }}>
+          style={{ backgroundImage: `url("${getAssetUrl('assets/fade-alley/add-homie-paper.webp')}")` }}>
           <UserPlus size={16} />Add a homie</Link>
         <div className="fa-step"><b>2</b> Choose a crew</div>
         {crewPicker}
