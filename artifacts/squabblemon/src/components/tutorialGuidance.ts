@@ -30,6 +30,8 @@ export type TutorialGuidance = {
   target?: string;
   expectedCard?: string;
   expectedLane?: number;
+  /** Disabled primary-action label while the selection differs from the coached move. */
+  redirectLabel?: string;
 };
 
 type TutorialGuidanceInput = {
@@ -132,13 +134,44 @@ function getBaseTutorialGuidance({
 export function getTutorialGuidance(input: TutorialGuidanceInput): TutorialGuidance {
   const guidance = getBaseTutorialGuidance(input);
   if (input.match.storyEncounter?.id !== "rookie-road-v2") return guidance;
-    const choice = guidance.focus === "end-turn" ? null : getTutorialPlay(input.match);
+  const selector = (id: string) => '[data-testid="' + id + '"]';
+  // Hand cards share test ids with matching board cards, so target the exact hand instance.
+  const handCard = (instanceId: string) => '#hand-tray [data-instance-id=' + JSON.stringify(instanceId) + ']';
+  const selectedCard = input.match.playerHand.find(c => c.instanceId === input.selectedInstanceId);
+  // Round three teaches banking: point at the card to clear, not at a play.
+  if (guidance.id === 'r3_bank_motion' && guidance.focus === 'card') {
+    return selectedCard ? { ...guidance, target: handCard(selectedCard.instanceId) } : guidance;
+  }
+  const choice = guidance.focus === "end-turn" || guidance.focus === "free" ? null : getTutorialPlay(input.match);
   const card = input.match.playerHand.find(c => c.instanceId === choice?.instanceId);
   const district = choice ? getMatchDistricts(input.match)[choice.lane] : null;
   const common = { ...guidance, expectedCard: choice?.instanceId, expectedLane: choice?.lane };
-  const selector = (id: string) => '[data-testid="' + id + '"]';
-  const handCardTarget = card ? '#hand-tray [data-instance-id=' + JSON.stringify(card.instanceId) + ']' : undefined;
-   if (card?.cardId === 'drfade' && input.match.round === 4) {
+  const handCardTarget = card ? handCard(card.instanceId) : undefined;
+  // The coached commit accepts only the highlighted move, so an off-script
+  // selection leads back to it instead of advancing to a Play that cannot land.
+  if (choice && card && district && input.selectedInstanceId) {
+    const expected = { expectedCard: choice.instanceId, expectedLane: choice.lane };
+    const cost = getLegalCardCost(input.match, 'player', card, choice.lane);
+    if (input.selectedInstanceId !== choice.instanceId) {
+      const chooseCard = getBaseTutorialGuidance({ ...input, selectedInstanceId: null, selectedLane: null, squabble: false });
+      return {
+        ...chooseCard, ...expected, target: handCardTarget,
+        title: `Switch to ${card.name}.`,
+        body: `This coached play uses ${card.name} in ${district.name}. It costs ${cost} Motion there; you have ${input.match.playerMotion}. Tap ${card.name} to switch. ${selectedCard?.name ?? 'Your current pick'} stays in your hand for later.`,
+        redirectLabel: `Switch to ${card.name}`,
+      };
+    }
+    if (input.selectedLane !== null && input.selectedLane !== choice.lane && guidance.focus !== 'squabble') {
+      const chooseDistrict = getBaseTutorialGuidance({ ...input, selectedLane: null });
+      return {
+        ...chooseDistrict, ...expected, target: selector('lane-' + choice.lane),
+        title: `Use ${district.name} instead.`,
+        body: `This coached play puts ${card.name} in ${district.name}. Tap ${district.name}. ${district.rule} ${card.name} costs ${cost} Motion there; you have ${input.match.playerMotion}.`,
+        redirectLabel: `Choose ${district.name}`,
+      };
+    }
+  }
+  if (card?.cardId === 'drfade' && input.match.round === 4) {
     if (guidance.focus === 'card') return { ...common, target: handCardTarget, title: 'Your Legendary is ready.', body: `Tap Dr. Fade. He costs ${getLegalCardCost(input.match, 'player', card, choice!.lane)} Motion here, brings ${card.basePower} Base Hands, then hits the strongest enemy here for −2 and coaches the weakest ally elsewhere for +2 if they are present.` };
     if (guidance.focus === 'squabble') return { ...common, target: selector('button-squabble'), title: 'Double Dr. Fade’s Base Hands.', body: `Tap SQUABBLE. It adds his ${card.basePower} Base Hands again (${card.basePower} → ${card.basePower * 2}), before location or ability effects. You can use it only once per match.` };
     if (guidance.focus === 'district' && choice && district) return { ...common, target: selector('lane-' + choice.lane), title: 'Put your coach to work.', body: `Tap ${district.name}. Rule: ${district.rule} Dr. Fade fights here and may help an ally in another district. Watch both scores.` };

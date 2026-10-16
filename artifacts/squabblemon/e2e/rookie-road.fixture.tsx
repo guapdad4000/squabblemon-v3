@@ -18,9 +18,13 @@ import '../src/styles/rookie-guide.css';
 // Real-click tutorial fixture: mounts the exact rookie-road-v2 lesson and drives
 // it with the same selection/commit gate PlayLoop uses, so browser tests can
 // follow the coach spotlight with genuine clicks instead of synthetic calls.
+// `?crew=id,id,...` replays a specific first gang (catalog ids, opening hand first).
+const crewParam = new URLSearchParams(window.location.search).get('crew');
+const fixtureCrew = crewParam ? crewParam.split(',') : ROOKIE_CORE_IDS;
+
 function RookieRoadBattle() {
   const [match, setMatch] = useState(() => createStoryMatch(
-    rookieEncounter(), catalogIdsToEngineIds(ROOKIE_CORE_IDS), ROOKIE_DECK_ID, undefined, rookieDistricts(),
+    rookieEncounter(), catalogIdsToEngineIds(fixtureCrew), ROOKIE_DECK_ID, undefined, rookieDistricts(),
   ));
   const [selected, setSelected] = useState<string | null>(null);
   const [lane, setLane] = useState<number | null>(null);
@@ -41,7 +45,9 @@ function RookieRoadBattle() {
     if (!endTurn && selected && !legal) { setRejection(`illegal ${selected}@${lane}`); return; }
     const gated = endTurn
       ? guidance.focus !== 'end-turn'
-      : guidance.focus !== 'play' || guidance.expectedCard !== selected || guidance.expectedLane !== lane || (match.round === 4 && !squabble);
+      : guidance.focus !== 'play'
+        || (guidance.expectedCard !== undefined && (guidance.expectedCard !== selected || guidance.expectedLane !== lane))
+        || (match.round === 4 && !squabble);
     if (gated) {
       setRejection(`gate focus=${guidance.focus} expected=${guidance.expectedCard}@${guidance.expectedLane} got=${selected}@${lane}`);
       return;

@@ -8,12 +8,12 @@ import test from 'node:test';
 import { readFileSync } from 'node:fs';
 import React from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { cards, catalogCardById, decks, districts, getCardImage } from '../data';
+import { ROOKIE_DECK_ID, ROOKIE_MENTOR_CORE_IDS, cards, catalogCardById, catalogIdsToEngineIds, decks, districts, getCardImage } from '../data';
 import characterRevisions from '../characterRevisions.json';
 import { createStoryMatch, type StoryEncounterSnapshot } from '@workspace/squabblemon-engine/gameEngine';
 import { getStoryBattle } from '@workspace/squabblemon-engine/story';
 import { makeActivityEncounter } from '@workspace/squabblemon-engine/activities';
-import { rookieEncounter } from '@workspace/squabblemon-engine/rookie';
+import { rookieDistricts, rookieEncounter } from '@workspace/squabblemon-engine/rookie';
 import { Battle, createBattleDecisionHandlers, getRecentBattleActions, tryLockInteraction } from './Battle';
 import { ResultScreen } from './ResultScreen';
 import { CardUpgrades } from './CardUpgrades';
@@ -655,6 +655,40 @@ test('guided rounds one and two require a play before either End Turn control en
     assert.doesNotMatch(openingButton(enabled, 'button-next-round'), /disabled/);
     assert.doesNotMatch(openingButton(enabled, 'button-menu-end-turn'), /disabled/);
   }
+});
+
+test('Rookie Road never shows an enabled Play for a move the coached commit would refuse', () => {
+  const crew = ROOKIE_MENTOR_CORE_IDS.map(id => id === 'wifey' ? 'bottle-girl' : id);
+  const match = createStoryMatch(rookieEncounter(), catalogIdsToEngineIds(crew), ROOKIE_DECK_ID, undefined, rookieDistricts());
+  const bottleGirl = match.playerHand.find(card => card.name === 'Bottle Girl')!;
+  const snowBunny = match.playerHand.find(card => card.name === 'Snow Bunny')!;
+  const render = (selectedInstanceId: string, selectedLane: number) => renderBattle(match, {
+    rivalDeck: decks[0],
+    tutorialCoach: true,
+    // The spotlight needs a live document; its target is covered by the browser fixture.
+    tutorialGuidance: { ...getTutorialGuidance({ match, selectedInstanceId, selectedLane, squabble: false, playsThisRound: 0 }), target: undefined },
+    selectedInstanceId,
+    selectedLane,
+    onPlayCard: noop,
+  });
+
+  // The reported production state: Bottle Girl selected for VIP SECTION in round one.
+  const offScript = render(bottleGirl.instanceId, 2);
+  assert.match(offScript, /data-testid="tutorial-step-r1_choose_card"/);
+  assert.match(offScript, /Switch to Snow Bunny/);
+  assert.match(openingButton(offScript, 'button-tutorial-follow-call'), /disabled/);
+  assert.doesNotMatch(offScript, /data-testid="button-lock"/);
+  assert.doesNotMatch(offScript, /Commit the play/);
+  assert.match(openingButton(offScript, 'button-squabble'), /disabled/);
+
+  const wrongDistrict = render(snowBunny.instanceId, 2);
+  assert.match(wrongDistrict, /data-testid="tutorial-step-r1_choose_district"/);
+  assert.match(wrongDistrict, /Choose BODEGA/);
+  assert.match(openingButton(wrongDistrict, 'button-tutorial-follow-call'), /disabled/);
+
+  const coached = render(snowBunny.instanceId, 0);
+  assert.match(coached, /Play card · 2 Motion/);
+  assert.doesNotMatch(openingButton(coached, 'button-lock'), /disabled/);
 });
 
 test('guided round three requires clearing a selected card before banking Motion', () => {

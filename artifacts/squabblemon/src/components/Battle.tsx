@@ -399,6 +399,14 @@ export function Battle({
     ? tutorialGuidance as TutorialGuidance
     : null;
   const [showCoachTip, setShowCoachTip] = useState(true);
+  // An off-script pick reopens a hidden tip so the spotlight shows the coached move.
+  const coachRedirect = activeTutorialGuidance?.redirectLabel
+    ? `${m.round}|${activeTutorialGuidance.id}|${activeTutorialGuidance.target}` : '';
+  const [shownCoachRedirect, setShownCoachRedirect] = useState(coachRedirect);
+  if (shownCoachRedirect !== coachRedirect) {
+    setShownCoachRedirect(coachRedirect);
+    if (coachRedirect) setShowCoachTip(true);
+  }
   const fadeHighlighted = m.playerHand.some(card =>
     card.instanceId === (activeTutorialGuidance?.expectedCard ?? selectedInstanceId) && card.cardId === 'drfade');
   const squabbleThisRound = m.effectLog.some(event =>
@@ -528,10 +536,13 @@ export function Battle({
     };
   }
   const isNewlyDrawn = (instanceId: string) => handDrawRef.current.fresh.has(instanceId);
+  const coachedSwitch = activeTutorialGuidance?.redirectLabel && activeTutorialGuidance.focus === 'card'
+    ? { card: activeTutorialGuidance.expectedCard, lane: activeTutorialGuidance.expectedLane } : null;
   const handPlayability = React.useMemo(() => {
-    const choiceLane = selectedLane as Lane | null;
     return new Map(
       m.playerHand.map((c) => {
+        // While the coach redirects an off-script pick, price the coached card in its coached district.
+        const choiceLane = (coachedSwitch?.card === c.instanceId ? coachedSwitch.lane ?? selectedLane : selectedLane) as Lane | null;
         const cardCost = choiceLane !== null && isCardLaneAllowed(c, choiceLane) ? legalCost(c, choiceLane) : c.cost;
         const legalLanes = ([0, 1, 2] as Lane[]).filter(lane => isCardLaneAllowed(c, lane) && (!lockedLanes.includes(lane) || isMythicalTripleOg(c.cardId)));
         const playableSomewhere = legalLanes.some(lane => legalCost(c, lane) <= m.playerMotion);
@@ -548,7 +559,7 @@ export function Battle({
         return [c.instanceId, { cardCost, playableForChoice, reason }] as const;
       }),
     );
-  }, [m.playerHand, m.playerMotion, m.boards, m.round, selectedLane, squabble, investment, lockedLanes, districts]);
+  }, [m.playerHand, m.playerMotion, m.boards, m.round, selectedLane, squabble, investment, lockedLanes, districts, coachedSwitch?.card, coachedSwitch?.lane]);
   const selectedLaneLocked = selectedLane !== null && lockedLanes.includes(selectedLane as Lane)
     && !(selectedCard && selectedLaneAllowed && isMythicalTripleOg(selectedCard.cardId));
   const handLayout = JSON.stringify([m.playerHand.filter(card => card.instanceId !== stagedPlayer?.instanceId).map(card => card.instanceId), selectedInstanceId]);
@@ -621,6 +632,7 @@ export function Battle({
     if (drag.drag) return { label: drag.drag.choice?.allowed ? 'Release to play' : 'Choose a valid lane', disabled: true, type: 'secondary', testId: 'button-dragging' };
     if (!interactive) return { label: online ? online.status : reviewingFinalBoard ? 'Match complete' : canSkip ? 'Continue' : 'Resolving...', disabled: !canSkip, onClick: canSkip ? skipSequence : undefined, type: canSkip ? 'secondary' : 'disabled', testId: 'button-resolving' };
     if (m.phase === 'complete') return { label: 'Archive Fade', disabled: false, onClick: archiveMatch, type: 'primary', testId: 'button-archive-match' };
+    if (selectedCard && activeTutorialGuidance?.redirectLabel) return { label: activeTutorialGuidance.redirectLabel, title: activeTutorialGuidance.body, disabled: true, type: 'disabled', testId: 'button-tutorial-follow-call' };
     if (selectedCard && selectedLane !== null && !selectedLaneAllowed) return { label: `Only ${requiredDistrict(selectedCard)}`, title: `${selectedCard.name} can only be played in the ${requiredDistrict(selectedCard)!.toLowerCase()}.`, disabled: true, type: 'error', testId: 'button-lock' };
     if (selectedCard && selectedLane === null && selectedHomeLaneLocked) return { label: `${requiredDistrict(selectedCard)} locked`, title: `Only the ${requiredDistrict(selectedCard)!.toLowerCase()} is legal for ${selectedCard.name}, but it is locked this round.`, disabled: true, type: 'disabled', testId: 'button-pick-district' };
     if (activeTutorialGuidance?.id === 'r3_bank_motion' && selectedCard) {

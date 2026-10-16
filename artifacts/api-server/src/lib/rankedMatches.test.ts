@@ -13,6 +13,41 @@ test('ranked points use reduced bot rewards, floor at zero and preserve records'
   assert.equal(awardRank(fresh, 'draw', 1000, true).stats.draws, 1);
 });
 
+test('ranked lobby and queue reads use the partial room indexes, never finished battle snapshots', { skip: !process.env.DATABASE_URL }, async t => {
+  const { db, playerProfilesTable: profiles, onlineRoomsTable: rooms } = await import('@workspace/db');
+  const { eq, sql } = await import('drizzle-orm');
+  const { openRankedRoomsFor, claimableRankedRooms, preferRankedRoomIndexes } = await import('./onlineMatches');
+  const user = `park-index-${randomUUID()}`;
+  await db.insert(profiles).values({ clerkUserId: user, displayName: 'Index tester', onboardingStep: 'complete' });
+  t.after(async () => { await db.delete(profiles).where(eq(profiles.clerkUserId, user)); });
+  // A few finished battles on a small table: the case where PostgreSQL would
+  // otherwise choose a sequential scan and unpack every stored snapshot.
+  const snapshot = 'x'.repeat(200_000);
+  await db.insert(rooms).values(Array.from({ length: 4 }, () => ({
+    code: randomUUID().replace(/-/g, '').slice(0, 12).toUpperCase(), hostUserId: user, createRequestId: randomUUID(),
+    expiresAt: new Date(Date.now() - 60_000), state: { status: 'complete', ranked: { heartbeatAt: 0 }, snapshot },
+  })));
+  type PlanNode = { 'Node Type': string; 'Relation Name'?: string; 'Index Name'?: string; Plans?: PlanNode[] };
+  const nodes = (node: PlanNode): PlanNode[] => [node, ...(node.Plans ?? []).flatMap(nodes)];
+  const plans = await db.transaction(async tx => {
+    await preferRankedRoomIndexes(tx);
+    const plan = async (query: ReturnType<typeof sql>) => {
+      const result = await tx.execute(sql`explain (format json) ${query}`);
+      return nodes((result.rows[0] as { 'QUERY PLAN': [{ Plan: PlanNode }] })['QUERY PLAN'][0].Plan);
+    };
+    return {
+      open: await plan(sql`select ${rooms.id} from ${rooms} where ${openRankedRoomsFor(user)} order by ${rooms.createdAt} desc for update`),
+      queue: await plan(sql`select ${rooms.id} from ${rooms} where ${claimableRankedRooms('someone-else', Date.now())} order by ${rooms.createdAt} limit 40 for update skip locked`),
+    };
+  });
+  for (const [read, expected] of [['open', /^online_rooms_ranked_open_(host|guest)$/], ['queue', /^online_rooms_ranked_queue$/]] as const) {
+    const plan = plans[read];
+    assert.ok(!plan.some(node => node['Node Type'] === 'Seq Scan' && node['Relation Name'] === 'online_rooms'), `${read} read scans every room`);
+    const indexes = plan.flatMap(node => node['Index Name'] ? [node['Index Name']] : []);
+    assert.ok(indexes.length && indexes.every(index => expected.test(index)), `${read} read used ${indexes.join(', ') || 'no index'}`);
+  }
+});
+
 test('ranked routes: human pairing, retries, cancellation race, bot completion, reconnect and exactly-once ranks', { skip: !process.env.DATABASE_URL }, async t => {
   const { default: express } = await import('express');
   const { db, pool, playerProfilesTable: profiles, onlineRoomsTable: rooms, playerCollectionClaimsTable } = await import('@workspace/db');

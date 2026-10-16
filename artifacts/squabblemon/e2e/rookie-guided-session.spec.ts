@@ -563,9 +563,97 @@ test('coaching stays reachable by keyboard and does not cover targets in portrai
     await expect(page.getByTestId('button-rules-battle')).toBeVisible();
     await page.locator('details.battle-tools > summary').click();
   }
+  // A keyboard pick other than the coached card is redirected, never advanced.
   await page.getByTestId('card-plug').focus();
   await page.keyboard.press('Enter');
+  await expect(arena).toHaveAttribute('data-tutorial-focus', 'card');
+  await expect(page.getByTestId('button-tutorial-follow-call')).toHaveText('Switch to Snow Bunny');
+  await page.getByTestId('card-snow-bunny').focus();
+  await page.keyboard.press('Enter');
   await expect(arena).toHaveAttribute('data-tutorial-focus', 'district');
-  await expect(page.getByRole('region', { name: 'Dr. Fade’s guide' })).toContainText('district');
+  await expect(page.getByRole('region', { name: 'Dr. Fade’s guide' })).toContainText('BODEGA');
   await expect(page.getByRole('button', { name: 'Reopen coach tip' }).or(page.getByRole('button', { name: 'Hide coach tip' }))).toBeVisible();
+});
+
+test('an off-script pick is led back to Dr. Fade’s move instead of a Play that never lands', async ({ page }, testInfo) => {
+  test.setTimeout(120_000);
+  // The production first gang with Bottle Girl recruited into the opening hand:
+  // the reported iPad state was Bottle Girl → VIP SECTION with the tip hidden.
+  const crew = ROOKIE_MENTOR_CORE_IDS.map(id => id === 'wifey' ? 'bottle-girl' : id);
+  await page.goto(`/squabblemon/e2e/rookie-road.fixture.html?crew=${crew.join(',')}`);
+  const arena = page.getByTestId('battle-arena');
+  const spotlight = page.getByTestId('fade-spotlight');
+  const followCall = page.getByTestId('button-tutorial-follow-call');
+  const signature = page.getByTestId('match-sig');
+  const rejection = page.getByTestId('commit-rejection');
+  // Card coaching points at the exact hand instance; confirm which card it is.
+  const expectCoachOnHandCard = async (testId: string) => {
+    await expect(spotlight).toHaveAttribute('data-coach-target', /^#hand-tray \[data-instance-id=/);
+    await expect(page.locator((await spotlight.getAttribute('data-coach-target'))!)).toHaveAttribute('data-testid', testId);
+  };
+  await expect(arena).toBeVisible({ timeout: 30_000 });
+  await expectCoachOnHandCard('card-snow-bunny');
+  await page.getByRole('button', { name: 'Hide coach tip' }).click();
+  await expect(spotlight).toBeHidden();
+
+  await page.getByTestId('card-bottle-girl').click();
+  // Going off script reopens the hidden tip on the coached card.
+  await expectCoachOnHandCard('card-snow-bunny');
+  await page.getByRole('button', { name: 'Hide coach tip' }).click();
+  await page.getByTestId('lane-2').click();
+  await expect(signature).toHaveText(/^1\|player\|.+\|2\|0\|0$/);
+  await expect(arena).toHaveAttribute('data-tutorial-focus', 'card');
+  await expect(page.getByTestId('tutorial-step-r1_choose_card')).toContainText('Switch to Snow Bunny.');
+  await expect(followCall).toBeDisabled();
+  await expect(followCall).toHaveText('Switch to Snow Bunny');
+  await expect(page.getByTestId('button-lock')).toHaveCount(0);
+  await expect(page.getByTestId('button-squabble')).toBeDisabled();
+  // The coached card is priced for the coached district, not the stray VIP pick.
+  await expect(page.getByTestId('card-snow-bunny')).not.toHaveClass(/\bgrayscale\b/);
+  await expect(page.getByTestId('card-snow-bunny')).toHaveAttribute('data-card-cost', '2');
+  await page.screenshot({ path: testInfo.outputPath('off-script-redirect.png') });
+
+  await page.getByTestId('card-snow-bunny').click();
+  await expect(spotlight).toHaveAttribute('data-coach-target', '[data-testid="lane-0"]');
+  await expect(arena).toHaveAttribute('data-tutorial-focus', 'district');
+  await expect(followCall).toHaveText('Choose BODEGA');
+  await page.getByTestId('lane-0').click();
+  await expect(page.getByTestId('button-lock')).toBeEnabled();
+  await expect(page.getByTestId('button-lock')).toContainText('Play card · 2 Motion');
+  await page.getByTestId('button-lock').click();
+  await expect(signature).toHaveText('1|player|||0|1');
+  await expect(rejection).toHaveText('');
+
+  // Follow the coach to the finish, detouring once onto a non-coached round-four card.
+  let detoured = false;
+  for (let step = 0; step < 40; step += 1) {
+    if (await page.getByTestId('button-complete-tutorial').isVisible().catch(() => false)) break;
+    const lesson = page.getByTestId('mechanic-lesson');
+    if (await lesson.isVisible().catch(() => false)) {
+      await page.getByTestId('button-dismiss-mechanic-lesson').click();
+      continue;
+    }
+    if (!detoured && await page.getByTestId('tutorial-step-r4_choose_card').isVisible().catch(() => false)) {
+      detoured = true;
+      await page.getByTestId('card-cornball').click();
+      await expectCoachOnHandCard('card-dr-fade');
+      await expect(followCall).toHaveText('Switch to Dr. Fade');
+      await expect(followCall).toBeDisabled();
+      await expect(page.getByTestId('button-squabble')).toBeDisabled();
+    }
+    const target = await spotlight.getAttribute('data-coach-target');
+    expect(target, `coach lost its target; sig=${await signature.textContent()}`).toBeTruthy();
+    await expect(rejection, 'no coached commit may be refused').toHaveText('');
+    const before = `${target}|${await signature.textContent()}`;
+    await page.locator(target!).first().click();
+    // The final End Turn swaps the battle for the result screen, removing the fixture markers.
+    const rejectedAfter = await rejection.textContent({ timeout: 1_000 }).catch(() => '(battle closed)');
+    await expect.poll(async () => {
+      if (await page.getByTestId('button-complete-tutorial').isVisible().catch(() => false)) return 'done';
+      if (await lesson.isVisible().catch(() => false)) return 'lesson';
+      return `${await spotlight.getAttribute('data-coach-target', { timeout: 1_000 }).catch(() => null)}|${await signature.textContent({ timeout: 1_000 }).catch(() => '')}`;
+    }, { message: `no progress after clicking ${target}; rejection=${rejectedAfter}` }).not.toBe(before);
+  }
+  expect(detoured, 'the round-four detour must be exercised').toBe(true);
+  await expect(page.getByTestId('button-complete-tutorial')).toBeVisible();
 });

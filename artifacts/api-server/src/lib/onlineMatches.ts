@@ -347,6 +347,24 @@ type RoomRow = typeof onlineRoomsTable.$inferSelect;
 const isRanked = sql`${onlineRoomsTable.state} ? 'ranked'`;
 const isOpen = sql`${onlineRoomsTable.state}->>'status' in ('waiting', 'active')`;
 const belongsTo = (userId: string) => or(eq(onlineRoomsTable.hostUserId, userId), eq(onlineRoomsTable.guestUserId, userId));
+// The JSON predicates below must keep matching the partial index predicates in
+// lib/db/src/schema/onlineRooms.ts, or PostgreSQL cannot use those indexes.
+/** A player's waiting or active ranked rooms (online_rooms_ranked_open_host/guest). */
+export const openRankedRoomsFor = (userId: string) => and(isRanked, isOpen, belongsTo(userId));
+/** Waiting searches another player may claim (online_rooms_ranked_queue). */
+export const claimableRankedRooms = (hostUserId: string, now: number) => and(isRanked,
+  sql`${onlineRoomsTable.state}->>'status' = 'waiting'`, ne(onlineRoomsTable.hostUserId, hostUserId),
+  gt(onlineRoomsTable.expiresAt, new Date(now)),
+  sql`(${onlineRoomsTable.state}->'ranked'->>'heartbeatAt')::bigint >= ${now - RANKED_QUEUE_IDLE_MS}`);
+/**
+ * Finished rooms keep their full battle snapshot, often megabytes once unpacked.
+ * PostgreSQL does not count that unpacking, so while the table is small it may
+ * pick a sequential scan that unpacks every finished room just to read its
+ * status. Ranked lobby and queue transactions must use the partial indexes.
+ */
+export async function preferRankedRoomIndexes(tx: Tx) {
+  await tx.execute(sql`set local enable_seqscan = off`);
+}
 
 async function saveRoom(tx: Tx, row: RoomRow, room: OnlineRoom, now: number) {
   await tx.update(onlineRoomsTable).set({ state: stored(room),
@@ -443,11 +461,8 @@ async function matchWaitingRoom(tx: Tx, own: RoomRow, input: OnlineRoom, now: nu
   room = { ...room, ranked: { ...room.ranked!, heartbeatAt: now } };
   // Queue transactions share one short advisory lock. Row locks also coordinate
   // cancellations and normal match commands; another request can never claim a seat twice.
-  const candidates = await tx.select().from(onlineRoomsTable).where(and(isRanked,
-    sql`${onlineRoomsTable.state}->>'status' = 'waiting'`, ne(onlineRoomsTable.hostUserId, own.hostUserId),
-    gt(onlineRoomsTable.expiresAt, new Date(now)),
-    sql`(${onlineRoomsTable.state}->'ranked'->>'heartbeatAt')::bigint >= ${now - RANKED_QUEUE_IDLE_MS}`,
-  )).orderBy(asc(onlineRoomsTable.createdAt)).limit(40).for('update', { skipLocked: true });
+  const candidates = await tx.select().from(onlineRoomsTable).where(claimableRankedRooms(own.hostUserId, now))
+    .orderBy(asc(onlineRoomsTable.createdAt)).limit(40).for('update', { skipLocked: true });
   for (const candidate of candidates) {
     const rival = restore(candidate.state);
     if (!rival.ranked || rival.members.cpu) continue;
@@ -488,17 +503,21 @@ export async function rankedLobby(userId: string, search?: { deckId: string; req
   // This hint chooses a path only. Both paths recheck under their own locks.
   // Waiting polls go straight to matchmaking rather than paying for two full
   // transactions each time; active and empty lobbies avoid the queue entirely.
-  const [hint] = search ? [] : await db.select({ status: sql<string>`${onlineRoomsTable.state}->>'status'` })
-    .from(onlineRoomsTable).where(and(isRanked, isOpen, belongsTo(userId)))
-    .orderBy(desc(onlineRoomsTable.createdAt)).limit(1);
+  const [hint] = search ? [] : await db.transaction(async tx => {
+    await preferRankedRoomIndexes(tx);
+    return tx.select({ status: sql<string>`${onlineRoomsTable.state}->>'status'` })
+      .from(onlineRoomsTable).where(openRankedRoomsFor(userId))
+      .orderBy(desc(onlineRoomsTable.createdAt)).limit(1);
+  });
   if (!search && hint?.status !== 'waiting') {
     // An idle lobby or an already-paired battle cannot claim another queue seat.
     // Keep these reads off the global matchmaking lock so a busy match/result
     // cannot hold every unrelated player's search behind its room/profile locks.
     const current = await db.transaction(async tx => {
+      await preferRankedRoomIndexes(tx);
       let stats = await rankProfile(tx, userId);
       const open = await tx.select().from(onlineRoomsTable)
-        .where(and(isRanked, isOpen, belongsTo(userId)))
+        .where(openRankedRoomsFor(userId))
         .orderBy(desc(onlineRoomsTable.createdAt)).for('update');
       for (const row of open) {
         if (restore(row.state).status === 'waiting') return { retryQueue: true as const };
@@ -517,6 +536,7 @@ export async function rankedLobby(userId: string, search?: { deckId: string; req
   }
   return db.transaction(async tx => {
     await tx.execute(sql`select pg_advisory_xact_lock(72613401)`);
+    await preferRankedRoomIndexes(tx);
     const now = Date.now();
     await rankProfile(tx, userId);
     // Search retries resolve the original room even if this player joined as guest.
@@ -536,7 +556,7 @@ export async function rankedLobby(userId: string, search?: { deckId: string; req
         return { stats, progress: rankProgress(stats.points), room: onlineRoomView(found.room, found.row.code, userId, now) };
       }
     }
-    const open = await tx.select().from(onlineRoomsTable).where(and(isRanked, isOpen, belongsTo(userId))).orderBy(desc(onlineRoomsTable.createdAt)).for('update');
+    const open = await tx.select().from(onlineRoomsTable).where(openRankedRoomsFor(userId)).orderBy(desc(onlineRoomsTable.createdAt)).for('update');
     let found: { row: RoomRow; room: OnlineRoom } | undefined;
     for (const row of open) {
       const room = await refreshRankedRoom(tx, row, now);

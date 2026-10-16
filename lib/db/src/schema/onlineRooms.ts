@@ -1,3 +1,4 @@
+import { sql } from "drizzle-orm";
 import {
   index,
   boolean,
@@ -43,6 +44,18 @@ export const onlineRoomsTable = pgTable(
     ),
     index("online_rooms_host").on(table.hostUserId),
     index("online_rooms_guest").on(table.guestUserId),
+    // Fade Park filters on JSON status. Finished battles keep large snapshots,
+    // so these partial indexes stop lobby and queue reads from unpacking them.
+    // Predicates must match the ranked queries in onlineMatches.ts exactly.
+    index("online_rooms_ranked_queue")
+      .on(table.createdAt)
+      .where(sql`(state->>'status') = 'waiting' AND (state ? 'ranked')`),
+    index("online_rooms_ranked_open_host")
+      .on(table.hostUserId, table.createdAt)
+      .where(sql`(state->>'status') IN ('waiting', 'active') AND (state ? 'ranked')`),
+    index("online_rooms_ranked_open_guest")
+      .on(table.guestUserId, table.createdAt)
+      .where(sql`(state->>'status') IN ('waiting', 'active') AND (state ? 'ranked')`),
   ],
 );
 

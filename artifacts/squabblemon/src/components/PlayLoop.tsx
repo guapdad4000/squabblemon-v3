@@ -672,7 +672,9 @@ export function PlayLoop({ mode = 'practice', onExit, onTutorialComplete, onVeri
     const playsCard = !endTurn && selectedIsLegal;
     if (mode === "tutorial" && match.storyEncounter?.id === "rookie-road-v2") {
       const guide = getTutorialGuidance({ match, selectedInstanceId: cardId, selectedLane: targetLane, squabble: armed, playsThisRound: tutorialPlaysByRound[match.round] ?? 0 });
-      if (endTurn ? guide.focus !== "end-turn" : guide.focus !== "play" || guide.expectedCard !== cardId || guide.expectedLane !== targetLane || (match.round === 4 && !armed)) return;
+      // Without a coached pick, any legal play may proceed rather than leaving a Play button that never lands.
+      const offScript = guide.expectedCard !== undefined && (guide.expectedCard !== cardId || guide.expectedLane !== targetLane);
+      if (endTurn ? guide.focus !== "end-turn" : guide.focus !== "play" || offScript || (match.round === 4 && !armed)) return;
     }
     feedback.current.unlockAudio(); locked.current = true; cancelTimers();
     const id = timeline.current.id;
