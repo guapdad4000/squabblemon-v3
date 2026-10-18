@@ -5,6 +5,7 @@ import type { KumiteProgression } from '../../lib/kumite';
 import { KumitePortrait } from './KumiteWinnerCard';
 import { catalogPortrait } from '../profile/FighterPortrait';
 import { cards, catalogCardById, getAssetUrl, getCardImage } from '../../data';
+import { KumiteFilmReplay } from './KumiteFilmPlayer';
 
 /** Reward receipts and progress come only from the authenticated server profile. */
 export function KumiteRewards({ progression }: { progression?: KumiteProgression | null }) {
@@ -37,6 +38,7 @@ export function KumiteRewards({ progression }: { progression?: KumiteProgression
             <span className="kumite-dossier-preview__req">{selectedReward.claimed ? '✓ Unlocked via Kumite' : `${selectedReward.requirement} (${Math.min(selectedReward.required, selectedReward.progress)} / ${selectedReward.required})`}</span>
             <Link href="/game/challenges?game=punch-on-patrol&raid=kumite" className="kumite-raid-cta">Fight Dojo Raid →</Link>
             <Link href={`/game/collection?card=${encodeURIComponent(selectedReward.cardId)}`} className="kumite-text-button">Open in Collection →</Link>
+            {selectedReward.claimed && selectedReward.owned && <KumiteFilmReplay cardId={selectedReward.cardId} ownedCardIds={[selectedReward.cardId]} />}
           </div>
         </div>
       </aside>

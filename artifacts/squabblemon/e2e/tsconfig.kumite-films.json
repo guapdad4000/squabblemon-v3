@@ -1,0 +1,5 @@
+{
+  "extends": "../tsconfig.json",
+  "include": ["../src/components/kumite/KumiteFilmPlayer.tsx", "../src/lib/kumiteFilms.ts", "./kumite-films.fixture.tsx"],
+  "references": []
+}

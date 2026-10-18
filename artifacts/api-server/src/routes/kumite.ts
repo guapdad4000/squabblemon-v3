@@ -2,6 +2,7 @@ import { getAuth } from '@clerk/express';
 import { Router, type Request, type Response } from 'express';
 import { OnlineError } from '@workspace/squabblemon-engine/multiplayer';
 import { currentKumite, enterKumiteMatch, kumiteWinners, registerKumite, withdrawKumite } from '../lib/kumite';
+import { claimKumiteFilm, pendingKumiteFilms } from '../lib/kumiteFilmReceipts';
 
 const router = Router();
 const endpoint = (authenticated: boolean, action: (req: Request, userId: string | null) => Promise<unknown>) =>
@@ -24,6 +25,12 @@ function bodyOf(req: Request, keys: string[]) {
 }
 router.get('/kumite/current', endpoint(false, (_req, userId) => currentKumite(userId)));
 router.get('/kumite/winners', endpoint(false, () => kumiteWinners()));
+router.get('/kumite/film-receipts', endpoint(true, (_req, userId) => pendingKumiteFilms(userId!)));
+router.post('/kumite/film-receipts/claim', endpoint(true, (req, userId) => {
+  const body = bodyOf(req, ['receiptId']);
+  if (typeof body.receiptId !== 'string' || body.receiptId.length > 120) throw new OnlineError('Invalid fighter receipt.', 400);
+  return claimKumiteFilm(userId!, body.receiptId);
+}));
 router.post('/kumite/register', endpoint(true, (req, userId) => {
   const body = bodyOf(req, ['deckId']);
   if (typeof body.deckId !== 'string' || body.deckId.length < 1 || body.deckId.length > 100)

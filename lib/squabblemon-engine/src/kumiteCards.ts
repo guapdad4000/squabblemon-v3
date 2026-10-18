@@ -7,17 +7,15 @@ export const KUMITE_CARD_REWARDS = [
   { id: 'kumite:card:franklin-duke:v1', cardId: 'franklin-duke', name: 'Franklin Duke', requirement: 'Win 1 full fight', metric: 'matchWins', required: 1 },
   { id: 'kumite:card:chonk-lee:v1', cardId: 'chonk-lee', name: 'Chonk Lee', requirement: 'Win 1 full final', metric: 'championships', required: 1 },
   { id: 'kumite:card:dragonfly-jones:v1', cardId: 'dragonfly-jones', name: 'Dragonfly Jones', requirement: 'Win 3 full fights', metric: 'matchWins', required: 3 },
+  { id: 'kumite:card:p-tang:v1', cardId: 'p-tang', name: 'P. Tang', requirement: 'Win 4 full fights', metric: 'matchWins', required: 4 },
   { id: 'kumite:card:undercova-brotha:v1', cardId: 'undercova-brotha', name: 'Undercova Brotha', requirement: 'Win 5 full fights', metric: 'matchWins', required: 5 },
   { id: 'kumite:card:sho-nuff:v1', cardId: 'sho-nuff', name: "Sho'Nuff", requirement: 'Win 8 full fights', metric: 'matchWins', required: 8 },
   { id: 'kumite:card:leroy:v1', cardId: 'leroy', name: 'Leroy', requirement: 'Win 2 full finals', metric: 'championships', required: 2 },
   { id: 'kumite:card:yasuke:v1', cardId: 'yasuke', name: 'Yasuke', requirement: 'Win 3 full finals', metric: 'championships', required: 3 },
 ] as const;
 
-export const KUMITE_LINEUP_REWARDS = [
-  ...KUMITE_CARD_REWARDS.slice(0, 5),
-  { id: 'kumite:card:p-tang:v1', cardId: 'p-tang', name: 'P. Tang', requirement: 'Win 4 full fights', metric: 'matchWins' as const, required: 4 },
-  ...KUMITE_CARD_REWARDS.slice(5),
-] as const;
+/** The illustrated lineup and server grants share one milestone contract. */
+export const KUMITE_LINEUP_REWARDS = KUMITE_CARD_REWARDS;
 
 const definitions = [
   ['bushedo-brown', 'Bushedo Brown', 'Rare', 'Air', 3, 3, 'Personal Security', 'On Reveal: Protect your weakest other ally here. If the strongest enemy here has more Hands than Bushedo Brown, give that enemy -1 Hand.', 'Support', '#c5daf5'],

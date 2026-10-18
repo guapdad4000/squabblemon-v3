@@ -7,6 +7,7 @@ import { CityHeader } from '../../components/venue/CityHeader';
 import { rewardReceipts } from '../../lib/rewardReceipts';
 import { CosmeticProvider } from '../../components/CosmeticContext';
 import { RewardRevealGate } from '../../components/RewardRevealGate';
+import { KumiteUnlockGate } from '../../components/kumite/KumiteUnlockGate';
 import { clearAfterSignIn, e2eAuthEnabled, useAppAuth } from '../../lib/auth';
 import { LoadingScreen } from '../../components/LoadingScreen';
 import { readPreviewDecks } from '../../lib/previewDecks';
@@ -121,6 +122,7 @@ function GameRoutes({ bootstrap }: { bootstrap: PlayerBootstrap }) {
     <CosmeticProvider profile={bootstrap.profile}>
     <NotificationProvider key={bootstrap.profile.id} bootstrap={bootstrap}>
     <RewardRevealGate />
+    <KumiteUnlockGate key={bootstrap.profile.id} bootstrap={bootstrap} />
     <PlayerLevelCelebration profile={bootstrap.profile} />
     <Suspense fallback={<LoadingScreen phase="scene" />}>
     <Switch>

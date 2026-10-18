@@ -12,6 +12,8 @@ import { DepthReveal } from './DepthReveal';
 import { DeferredRewardStinger as RewardStinger } from './DeferredRewardStinger';
 import { selectRewardClip } from '../lib/rewardBroadcast';
 import { useBattleSpeed } from '../hooks/useBattleSpeed';
+import { KUMITE_FILMS } from '../lib/kumiteFilms';
+import { KumiteFilmPlayer, KumiteFilmReplay } from './kumite/KumiteFilmPlayer';
 
 function StoryReceipt({ receipt, reduced }: { receipt: RewardReceipt; reduced: boolean }) {
   const wallet = useRef<HTMLDivElement>(null);
@@ -108,6 +110,9 @@ export function RewardReveal() {
   const [speed] = useBattleSpeed();
   const dialog = useRef<HTMLDialogElement>(null);
   const [stingerOwner, setStingerOwner] = useState<string | null>(null);
+  const film = receipt?.kumiteFilmKey && !reduced && !rewardReceipts.stingerWasConsumed(receipt.id)
+    && (!rewardReceipts.stingerWasStarted(receipt.id) || stingerOwner === receipt.id)
+    ? KUMITE_FILMS.find(item => item.key === receipt.kumiteFilmKey) : undefined;
   useEffect(() => { if (receipt && !dialog.current?.open) dialog.current?.showModal(); }, [receipt]);
   const mayPresentClip = receipt && canPresentRewardStinger(receipt, Boolean(reduced))
     && (!rewardReceipts.stingerWasStarted(receipt.id) || stingerOwner === receipt.id);
@@ -115,10 +120,12 @@ export function RewardReveal() {
     ? rewardReceipts.stingerSelection(receipt.id, () => selectRewardClip('reward'))
     : undefined;
   useEffect(() => {
-    if (!receipt || !clip || stingerOwner === receipt.id) return;
+    if (!receipt || (!clip && !film) || stingerOwner === receipt.id) return;
     if (rewardReceipts.beginStinger(receipt.id)) setStingerOwner(receipt.id);
-  }, [receipt, clip, stingerOwner]);
+  }, [receipt, clip, film, stingerOwner]);
   if (!receipt) return null;
+  if (film) return <KumiteFilmPlayer key={receipt.id} film={film}
+    onClose={() => rewardReceipts.consumeStinger(receipt.id)} onComplete={() => rewardReceipts.consumeStinger(receipt.id)} />;
   if (receipt.characterId) return <CharacterRecruitment key={receipt.id} id={receipt.characterId} items={receipt.items} reduced={Boolean(reduced)} onClose={() => rewardReceipts.dismiss(receipt.id)} />;
   const showReceipt = () => receipt.story ? <StoryReceipt key={receipt.id} receipt={receipt} reduced={Boolean(reduced)} />
     : <div className="reward-reveal__stage">
@@ -132,6 +139,7 @@ export function RewardReveal() {
           {item.amount !== undefined && <strong><AnimatedNumber value={item.amount} prefix="+" delay={i * .12} /></strong>}<span>{item.label}</span>
         </motion.div>)}</div>
         <p>{receipt.achievement ? 'You read the districts, banked your Motion, and landed your first SQUABBLE. Go make the block remember.' : receipt.preview ? 'Saved to this preview only.' : 'Your rewards are saved. Keep building your legend.'}</p>
+        {receipt.kumiteFilmKey && (() => { const unlocked = KUMITE_FILMS.find(item => item.key === receipt.kumiteFilmKey); return unlocked ? <KumiteFilmReplay cardId={unlocked.cardId} ownedCardIds={[unlocked.cardId]} /> : null; })()}
         <button autoFocus className="studio-action studio-action--gold" onClick={() => rewardReceipts.dismiss(receipt.id)}>Keep going →</button>
       </motion.div>
     </div>;

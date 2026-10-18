@@ -30,6 +30,23 @@ test('reward presentation eligibility is explicit and only confirmed producers o
   rewardReceipts.reset();
 });
 
+test('a Kumite unlock owns its presentation and cannot stack a generic reward cinematic', () => {
+  rewardReceipts.reset();
+  const receipt = { id: 'fighter:p-tang', title: 'P. Tang unlocked', kumiteFilmKey: 'ptang',
+    presentation: 'collection' as const, items: [{ label: 'P. Tang' }] };
+  assert.equal(canPresentRewardStinger(receipt), false);
+  rewardReceipts.show(receipt);
+  assert.equal(rewardReceipts.beginStinger(receipt.id), true);
+  assert.equal(rewardReceipts.beginStinger(receipt.id), false);
+  rewardReceipts.consumeStinger(receipt.id);
+  assert.equal(rewardReceipts.current()?.kumiteFilmKey, 'ptang', 'skip keeps the saved card receipt and replay identity');
+  assert.equal(rewardReceipts.stingerWasConsumed(receipt.id), true);
+  rewardReceipts.dismiss(receipt.id);
+  rewardReceipts.show(receipt);
+  assert.equal(rewardReceipts.current(), null);
+  rewardReceipts.reset();
+});
+
 test('story receipt derives the token counter from the confirmed wallet and only newly delivered grants', () => {
   rewardReceipts.reset();
   const rewards = [

@@ -11,6 +11,9 @@ import { z } from "zod/v4";
 import { playerProfilesTable } from "./playerProfiles";
 
 export type CollectionRoadRewardRecord = {
+  /** Presentation metadata is recorded atomically with the earned card grant. */
+  kumiteUnlock?: { newlyOwned: boolean };
+  kumitePresentation?: { receiptId: string };
   kumite?: { tournamentId: string; matchId: string; roomCode?: string; event: 'completed' | 'win' | 'champion'; at: number };
   /** Alert receipts are durable account state, not rewards. They share this
    * per-player idempotent ledger so logout, a new browser, or a new deploy

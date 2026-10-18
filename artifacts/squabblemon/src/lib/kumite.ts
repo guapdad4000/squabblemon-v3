@@ -95,6 +95,9 @@ export const getKumiteWinners = (signal?: AbortSignal) => kumiteRequest<KumiteAr
 export const registerKumite = (deckId: string) => kumiteRequest<KumiteCurrent>('/register', { deckId });
 export const withdrawKumite = () => kumiteRequest<KumiteCurrent>('/withdraw', {});
 export const enterKumiteMatch = () => kumiteRequest<{ room: OnlineRoomView | null; current: KumiteCurrent }>('/match', {});
+export interface KumiteFilmReceipt { id: string; cardId: string; name: string }
+export const getKumiteFilmReceipts = (signal?: AbortSignal) => kumiteRequest<{ receipts: KumiteFilmReceipt[] }>('/film-receipts', undefined, signal);
+export const claimKumiteFilmReceipt = (receiptId: string) => kumiteRequest<{ receipt: KumiteFilmReceipt | null }>('/film-receipts/claim', { receiptId });
 
 export function kumiteCountdown(target: number, now: number): string {
   const minutes = Math.ceil(Math.max(0, target - now) / 60000);

@@ -22,6 +22,7 @@ import { CardUpgrades } from './CardUpgrades';
 import { snapshotUpgradesForCard } from '@workspace/squabblemon-engine/abilityUpgrades';
 import { CARD_FINISH, cardMotionReduced, cardFinishLabel, VARIANT_FINISH, getCardWallpaper } from '../lib/cardFinish';
 import { getAssetUrl } from '../lib/assets';
+import { KumiteFilmReplay } from './kumite/KumiteFilmPlayer';
 import '../styles/collection-inspector.css';
 import '../styles/fighter-resume.css';
 
@@ -160,6 +161,7 @@ export function CardInspector({ card, onClose, bootstrap, variantId, initialPrev
             <em>{finishLabel} · {rarityLabel}</em>
           </div>
           <p className="card-touch-hint">Drag the card to catch the light</p>
+          {!isBattleMode && isCardOwned && bootstrap && catalogCard && <KumiteFilmReplay cardId={catalogCard.catalogId} ownedCardIds={bootstrap.profile.ownedCardIds} />}
           <div className="collector-display-caption sr-only">
             <span>{catalogCard ? CARD_FINISH[catalogCard.rarity] : 'Collector edition'}</span>
             <small>Move across the card to catch the light</small>

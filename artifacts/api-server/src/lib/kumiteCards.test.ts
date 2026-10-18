@@ -22,9 +22,12 @@ function cast(id: string, owner: Owner, boards: Match['boards']) {
 }
 const get = (match: Match, id: string) => match.boards.flat().find(card => card.cardId === id)!;
 
-test('eight roadmap milestones preserve canonical existing fighters and authored rarities', () => {
-  assert.equal(KUMITE_CARD_REWARDS.length, 8);
-  assert.equal(new Set(KUMITE_CARD_REWARDS.map(reward => reward.id)).size, 8);
+test('nine roadmap milestones preserve canonical existing fighters and authored rarities', () => {
+  assert.equal(KUMITE_CARD_REWARDS.length, 9);
+  assert.equal(new Set(KUMITE_CARD_REWARDS.map(reward => reward.id)).size, 9);
+  assert.deepEqual(KUMITE_CARD_REWARDS.find(reward => reward.cardId === 'p-tang'), {
+    id: 'kumite:card:p-tang:v1', cardId: 'p-tang', name: 'P. Tang', requirement: 'Win 4 full fights', metric: 'matchWins', required: 4,
+  });
   const expected = [['dragonfly-jones', 'dragonflyjones', 'Legendary'], ['undercova-brotha', 'undercova', 'Rare'],
     ['sho-nuff', 'shonuff', 'Legendary'], ['leroy', 'leroy', 'Mythical'], ['yasuke', 'yasuke', 'Mythical']];
   for (const [id, engineId, rarity] of expected) {

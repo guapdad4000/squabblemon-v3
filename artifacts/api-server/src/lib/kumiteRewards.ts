@@ -60,7 +60,7 @@ async function recordEvents(tx: Tx, userId: string, events: { key: string; rewar
   const newlyEarned = progress.rewards.filter(reward => !reward.claimed && reward.progress >= reward.required);
   if (!newlyEarned.length) return;
   for (const reward of newlyEarned) await tx.insert(playerCollectionClaimsTable).values({ clerkUserId: userId,
-    milestoneKey: reward.id, reward: { cardId: reward.cardId }, createdAt: new Date(now) }).onConflictDoNothing();
+    milestoneKey: reward.id, reward: { cardId: reward.cardId, kumiteUnlock: { newlyOwned: !profile.ownedCardIds.includes(reward.cardId) } }, createdAt: new Date(now) }).onConflictDoNothing();
   const cardIds = newlyEarned.map(reward => reward.cardId);
   const ownedCardIds = [...new Set([...profile.ownedCardIds, ...cardIds])];
   await tx.update(playerProfilesTable).set({ ownedCardIds,

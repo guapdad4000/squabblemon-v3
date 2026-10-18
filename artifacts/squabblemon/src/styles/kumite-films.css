@@ -1,0 +1,18 @@
+.kumite-film,.kumite-film *{box-sizing:border-box}
+.kumite-film{position:fixed;inset:0;margin:auto;width:min(100%,1440px);max-width:100vw;height:min(100dvh,980px);max-height:100dvh;padding:0;border:1px solid #bd8c3f;color:#f6e9ce;background:#10151b;overflow:hidden;overscroll-behavior:contain}
+.kumite-film[open]{display:flex;flex-direction:column}
+.kumite-film::backdrop{background:rgb(0 0 0 / .94)}
+.kumite-film__toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px max(16px,env(safe-area-inset-right)) 12px max(16px,env(safe-area-inset-left));flex:0 0 auto}
+.kumite-film__toolbar h2{margin:0;font:700 clamp(16px,3vw,24px)/1.2 sans-serif}
+.kumite-film__toolbar button,.kumite-film-replays button{min-height:44px;padding:10px 16px;border:1px solid #d7a947;background:#e7c57f;color:#11151b;font:700 14px/1.2 sans-serif;cursor:pointer;flex-shrink:0}
+.kumite-film button:focus-visible,.kumite-film-replays button:focus-visible{outline:3px solid #fff;outline-offset:3px}
+.kumite-film__screen{position:relative;flex:1;min-height:0;background:#060809;display:grid;place-items:center;overflow:hidden}
+.kumite-film__screen video{display:block;width:100%;height:100%;min-height:0;object-fit:contain}
+.kumite-film__screen [role=alert]{position:absolute;inset:auto 16px 30px;margin:0;padding:16px;background:#10151b;text-align:center}
+.kumite-film__description{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}
+.kumite-film footer{padding-bottom:max(12px,env(safe-area-inset-bottom));justify-content:flex-end}
+.kumite-film-replays{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:12px 0}
+.kumite-roadmap__node .kumite-film-replays{margin:6px 0}
+.kumite-roadmap__node .kumite-film-replays button{font-size:12px;padding:8px 10px}
+@media(max-height:500px){.kumite-film__toolbar{padding-top:6px;padding-bottom:6px}.kumite-film__description{font-size:12px}}
+@media(max-width:480px){.kumite-film__description{font-size:12px}.kumite-film__toolbar{gap:8px}.kumite-film__toolbar button{padding:9px 11px}}
