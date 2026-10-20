@@ -95,7 +95,18 @@ export function autoBuildDeck(draft: DeckDraft, ownedIds: readonly string[], ele
         - (c.kind === 'support' && supports >= 2 ? 24 : 0)
         + c.power / Math.max(1, c.cost);
     };
-    const next = pool.filter(id => !chosen.includes(id)).sort((a, z) => score(z) - score(a) || a.localeCompare(z))[0];
+    // Only the winner is needed. Score each remaining card once instead of
+    // rescoring the whole pool in a sort comparator for every open slot.
+    let next: string | undefined;
+    let nextScore = -Infinity;
+    for (const id of pool) {
+      if (chosen.includes(id)) continue;
+      const candidateScore = score(id);
+      if (next === undefined || (nextScore - candidateScore || id.localeCompare(next)) < 0) {
+        next = id;
+        nextScore = candidateScore;
+      }
+    }
     if (!next) break;
     chosen.push(next);
   }

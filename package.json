@@ -18,7 +18,8 @@
     "test:campaign:cleanup": "pnpm --filter @workspace/api-server exec tsx ../../scripts/campaign-cleanup.mjs",
     "test:fade-park": "node scripts/test-api-database.mjs fade-park",
     "test:cosmetics": "node scripts/test-api-database.mjs cosmetics",
-    "test:park-chess:db": "node scripts/test-api-database.mjs park-chess"
+    "test:park-chess:db": "node scripts/test-api-database.mjs park-chess",
+    "test:performance:db": "node scripts/test-api-database.mjs performance"
   },
   "private": true,
   "dependencies": {

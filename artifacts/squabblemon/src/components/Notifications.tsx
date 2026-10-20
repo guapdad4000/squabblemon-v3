@@ -9,8 +9,7 @@ import { useLocation } from 'wouter';
 import { ArrowUpRight, Bell, Check, X } from 'lucide-react';
 import { useSafehouseMail } from './SafehouseMail';
 import { getAssetUrl } from '../lib/assets';
-import { cardCatalog } from '../data';
-import { CHARACTER_STYLE_SETS } from '@workspace/squabblemon-engine/cosmetics';
+import { collectionNotifications } from '../lib/notificationCatalog';
 import { CORNER_OFFERS } from '../lib/cornerStore';
 import '../styles/notifications.css';
 import { NotificationArrival } from './NotificationArrival';
@@ -116,34 +115,7 @@ function PlayerNotifications({ bootstrap, children }: { bootstrap: PlayerBootstr
   const notices: Notice[] = [];
   for (const request of social?.query.data?.incomingRequests ?? []) notices.push({ id: `friend:${request.id}`, section: 'friends', title: `${request.player.displayName} sent a friend request`, href: '/game/settings#homies', sticky: true });
   for (const invite of social?.query.data?.invitations ?? []) if (invite.direction === 'incoming' && invite.status === 'pending' && Date.parse(invite.expiresAt) > Date.now()) notices.push({ id: `fade:${invite.id}`, section: 'friendly fade', title: `${invite.player.displayName} wants a Friendly Fade`, href: `/game/online?tab=friends&invite=${encodeURIComponent(invite.id)}`, sticky: true });
-  for (const id of p.ownedCardIds) notices.push({ id: `card:${id}`, section: 'cards', title: `New card · ${cardCatalog.find(c => c.catalogId === id)?.name ?? id}`, href: `/game/collection?card=${encodeURIComponent(id)}` });
-  for (const set of Object.values(CHARACTER_STYLE_SETS)) if (p.ownedCardIds.includes(set.cardId)) notices.push({ id: `banner:${set.cardId}`, section: 'style', title: `New banner · ${cardCatalog.find(c => c.catalogId === set.cardId)?.name ?? set.cardId}`, href: `/game/style/${set.cardId}?tab=banner` });
-  for (const id of p.unlockedCosmeticIds) {
-    const [kind, cardId, cosmetic] = id.split(':');
-    const name = cardCatalog.find(card => card.catalogId === cardId)?.name ?? cardId;
-    const label = id.replaceAll(/[-:]/g, ' ');
-    const notice: Notice = { id: `style:${id}`, section: 'style', title: `New unlock · ${label}`, href: '/game/style' };
-    if (kind === 'style' && Object.hasOwn(CHARACTER_STYLE_SETS, cardId) && ['stickers', 'backdrop', 'banner-finish'].includes(cosmetic)) {
-      const tab = cosmetic === 'stickers' ? 'stickers' : cosmetic === 'backdrop' ? 'scene' : 'banner';
-      const item = cosmetic === 'stickers' ? 'Sticker pack' : cosmetic === 'backdrop' ? 'Card scene' : 'Silver Lining';
-      notice.title = `New style · ${name} · ${item}`;
-      notice.href = `/game/style/${encodeURIComponent(cardId)}?tab=${tab}${cosmetic === 'banner-finish' ? '&finish=silver' : ''}`;
-    } else if ((kind === 'mastery' || kind === 'badge') && cardId) {
-      const badges: Record<string, string> = { 'after-hours': 'After-hours champion', 'street-draft': 'Street draft winner', neighborhood: 'Neighborhood champion' };
-      notice.section = 'profile';
-      notice.title = kind === 'mastery' ? `Mastery earned · ${name}` : `Badge earned · ${badges[cardId] ?? cardId.replaceAll('-', ' ')}`;
-      notice.href = '/game/settings#overview';
-    } else if ((kind === 'story-key' && cardId) || ['side-alley-tagged-cardback', 'block-party-crowned'].includes(id)) {
-      notice.section = 'story';
-      notice.title = kind === 'story-key' ? `Chapter unlocked · ${cardId.replaceAll('-', ' ')}` : `Story reward · ${label}`;
-      notice.href = '/game/story' + (kind === 'story-key' ? '' : `?node=${id === 'block-party-crowned' ? 'block-crowned' : 'side-alley-challenge'}`);
-    }
-    notices.push(notice);
-  }
-  for (const id of p.ownedVariants) {
-    const card = cardCatalog.find(c => c.variantSlots.some(v => v.id === id));
-    if (card) notices.push({ id: `style:${id}`, section: 'style', title: `New finish · ${card.name} · ${card.variantSlots.find(v => v.id === id)?.name}`, href: `/game/collection?card=${encodeURIComponent(card.catalogId)}&variant=${encodeURIComponent(id)}` });
-  }
+  notices.push(...collectionNotifications(p));
   for (const reward of account.data?.pending ?? []) notices.push({ id: `reward:${reward.key}`, section: 'growth', title: reward.title, href: '/game?notice=growth', sticky: true });
   if (account.data?.growth?.ready) notices.push({ id: 'growth:water', dismissalKey: `growth:water:${account.data.date}`, section: 'growth', title: 'Your garden is ready to grow', href: '/game?notice=growth', sticky: true });
   if (johnHenry.data?.state === 'ready') notices.push({id:'mythic:john-henry',section:'missions',title:'Steel Driver · claim John Henry',href:'/game/missions?mythic=john-henry',sticky:true});

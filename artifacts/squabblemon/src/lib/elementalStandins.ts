@@ -18,9 +18,15 @@ const standins: Record<string, [string, string, string, string]> = {
   'skyline-captain': ['#a78bfa', 'SKYLINE CAPTAIN', '04', 'AIR'],
 };
 
+// These 16 portraits are static. Build only the ones actually requested, then
+// reuse their exact data URLs instead of rebuilding/encoding SVG on card renders.
+const standinUrls = new Map<string, string>();
+
 export function elementalStandin(cardId: string): string | null {
   const spec = standins[cardId];
   if (!spec) return null;
+  const cachedUrl = standinUrls.get(cardId);
+  if (cachedUrl !== undefined) return cachedUrl;
   const [color, label, number, element] = spec;
   const icon = element === 'WATER'
     ? '<path d="M180 102c-21 42-48 63-48 91a48 48 0 0 0 96 0c0-28-27-49-48-91Z" />'
@@ -44,5 +50,7 @@ export function elementalStandin(cardId: string): string | null {
     <text x="180" y="330" fill="#fff5da" stroke="#15131b" stroke-width="3" paint-order="stroke" font-family="sans-serif" font-weight="900" font-size="24" text-anchor="middle">${label}</text>
     <text x="180" y="451" fill="#fff5da" font-family="sans-serif" font-weight="900" font-size="19" text-anchor="middle">ARCADE EDITION / ${number}</text>
   </svg>`;
-  return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
+  const url = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
+  standinUrls.set(cardId, url);
+  return url;
 }

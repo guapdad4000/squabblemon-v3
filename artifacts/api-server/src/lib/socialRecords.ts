@@ -12,16 +12,38 @@ import {
   type OnlineRoom,
 } from "@workspace/squabblemon-engine/multiplayer";
 export type FadeRecord = { wins: number; losses: number; draws: number };
+type FadeRecordRow = {
+  hostUserId: string;
+  guestUserId: string | null;
+  state: Record<string, unknown>;
+};
+const emptyFadeRecord = (): FadeRecord => ({ wins: 0, losses: 0, draws: 0 });
+
+function addFadeRecord(
+  total: FadeRecord,
+  room: OnlineRoom,
+  seat: "player" | "cpu",
+) {
+  if (room.ranked) {
+    if (!room.ranked.settlement || !Object.keys(room.ranked.settlement).length)
+      return;
+    if (room.winner === "draw") total.draws++;
+    else if (room.winner === seat) total.wins++;
+    else if (room.winner) total.losses++;
+  } else {
+    const series = roomSeries(room);
+    total.wins += series[seat];
+    total.losses += series[seat === "player" ? "cpu" : "player"];
+    total.draws += series.draws;
+  }
+}
+
 export function tallyFadeRecords(
-  rows: {
-    hostUserId: string;
-    guestUserId: string | null;
-    state: Record<string, unknown>;
-  }[],
+  rows: FadeRecordRow[],
   userId: string,
   opponent?: string,
 ): FadeRecord {
-  const total = { wins: 0, losses: 0, draws: 0 };
+  const total = emptyFadeRecord();
   for (const row of rows) {
     const seat =
       row.hostUserId === userId
@@ -35,25 +57,47 @@ export function tallyFadeRecords(
         (seat === "player" ? row.guestUserId : row.hostUserId) !== opponent)
     )
       continue;
-    const room = row.state as unknown as OnlineRoom;
-    if (room.ranked) {
-      if (
-        !room.ranked.settlement ||
-        !Object.keys(room.ranked.settlement).length
-      )
-        continue;
-      if (room.winner === "draw") total.draws++;
-      else if (room.winner === seat) total.wins++;
-      else if (room.winner) total.losses++;
-    } else {
-      const series = roomSeries(room);
-      total.wins += series[seat];
-      total.losses += series[seat === "player" ? "cpu" : "player"];
-      total.draws += series.draws;
-    }
+    addFadeRecord(total, row.state as unknown as OnlineRoom, seat);
   }
   return total;
 }
+
+/** Request-local totals avoid scanning all history again for every visible player. */
+export function tallySocialFadeRecords(
+  rows: FadeRecordRow[],
+  userId: string,
+  playerIds: readonly string[],
+) {
+  const players = new Map(playerIds.map(id => [
+    id, { overall: emptyFadeRecord(), personal: emptyFadeRecord() },
+  ] as const));
+  // With no visible players the original single self tally is already optimal.
+  if (!players.size) return { self: tallyFadeRecords(rows, userId), players };
+  const self = emptyFadeRecord();
+  for (const row of rows) {
+    const hostId = row.hostUserId;
+    const guestId = row.guestUserId;
+    const seat = hostId === userId ? "player" : guestId === userId ? "cpu" : null;
+    const host = players.get(hostId);
+    // A legacy room with the same ID in both seats counts only its host seat.
+    const guest = guestId !== null && guestId !== hostId ? players.get(guestId) : undefined;
+    if (!seat && !host && !guest) continue;
+    const room = row.state as unknown as OnlineRoom;
+    if (seat) addFadeRecord(self, room, seat);
+    if (host) addFadeRecord(host.overall, room, "player");
+    if (guest) addFadeRecord(guest.overall, room, "cpu");
+    if (seat) {
+      const opponentId = seat === "player" ? guestId : hostId;
+      const opponent = opponentId === null ? undefined : players.get(opponentId);
+      if (opponent) addFadeRecord(opponent.personal, room, seat);
+    }
+  }
+  // The existing optional-opponent tally treats an empty ID as no filter.
+  const emptyId = players.get("");
+  if (emptyId) Object.assign(emptyId.personal, self);
+  return { self, players };
+}
+
 export async function getSocialRecords(userId: string, roomCode?: string) {
   const relationships = await db
     .select()
@@ -109,13 +153,14 @@ export async function getSocialRecords(userId: string, roomCode?: string) {
         .from(identities)
         .where(inArray(identities.userId, allowed))
     : [];
+  const totals = tallySocialFadeRecords(history, userId, people.map(p => p.userId));
   return {
-    self: tallyFadeRecords(history, userId),
+    self: totals.self,
     players: people.map((p) => ({
       friendCode: p.friendCode,
       homie: homies.has(p.userId),
-      overall: tallyFadeRecords(history, p.userId),
-      personal: tallyFadeRecords(history, userId, p.userId),
+      overall: totals.players.get(p.userId)!.overall,
+      personal: totals.players.get(p.userId)!.personal,
     })),
     opponentCode: people.find((p) => p.userId === opponent)?.friendCode ?? null,
   };

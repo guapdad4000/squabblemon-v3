@@ -53,6 +53,9 @@ export function batchStaticMeshes(scene, keep = []) {
       mesh.castShadow = objects[0].castShadow;
       mesh.receiveShadow = objects[0].receiveShadow;
       mesh.name = root === scene ? 'static-room-batch' : `static-group-batch-${root.name || 'group'}`;
+      // Merged vertices are already in root-local space. Only their parent
+      // moves; keep world-matrix propagation without recomposing this identity.
+      mesh.matrixAutoUpdate = false;
       root.add(mesh);
       for (const object of objects) {
         retired.add(object.geometry);
