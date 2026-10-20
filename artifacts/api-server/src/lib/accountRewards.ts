@@ -1,4 +1,4 @@
-import { and, eq, like } from "drizzle-orm";
+import { and, eq, like, sql } from "drizzle-orm";
 import {
   db,
   playerCollectionClaimsTable,
@@ -17,7 +17,11 @@ import { lockPlayerProfile } from "./playerRewardTransactions";
 
 export async function getAccountRewards(clerkUserId: string, now = new Date()) {
   const [profile] = await db
-    .select()
+    .select({
+      level: playerProfilesTable.level,
+      createdAt: playerProfilesTable.createdAt,
+      growthDaily: sql<unknown>`${playerProfilesTable.storyProgress}->'growthDaily'`,
+    })
     .from(playerProfilesTable)
     .where(eq(playerProfilesTable.clerkUserId, clerkUserId));
   if (!profile) throw new Error("Player profile not found");
@@ -38,7 +42,7 @@ export async function getAccountRewards(clerkUserId: string, now = new Date()) {
     ),
     now,
     await db.select().from(playerMissionsTable).where(eq(playerMissionsTable.clerkUserId, clerkUserId)),
-    profile.storyProgress.growthDaily,
+    profile.growthDaily,
   );
 }
 

@@ -47,6 +47,7 @@ import { starterRecipes, catalogCardById, catalogIdsToEngineIds, ROOKIE_FOUNDATI
 import { storyContent } from "@workspace/squabblemon-engine/story";
 import {
   ensurePlayer,
+  getInitializedPlayerBootstrap,
   getPlayerBootstrap,
   hasVerifiedTutorialMatch,
 } from "../lib/playerState";
@@ -187,7 +188,7 @@ router.get("/player/bootstrap", async (req, res): Promise<void> => {
   } catch (error) {
     req.log.warn({ error }, "Late patch delivery failed");
   }
-  const state = await getPlayerBootstrap(userId);
+  const state = await getInitializedPlayerBootstrap(userId);
   res.json(GetPlayerBootstrapResponse.parse(state));
 });
 
@@ -201,7 +202,7 @@ router.patch("/player/profile", async (req, res): Promise<void> => {
     return;
   }
 
-  await getPlayerBootstrap(userId);
+  await ensurePlayer(userId);
   const profileError = await db.transaction(async tx => {
     await lockPlayerProfile(tx, userId);
     const [current] = await tx.select().from(playerProfilesTable).where(eq(playerProfilesTable.clerkUserId, userId));
@@ -491,7 +492,10 @@ router.post("/player/matches", async (req, res): Promise<void> => {
   }
   let playerEngineCardIds: string[] = [...rosterCardIds];
   let playerCardProgressionSnapshot: CardProgressionSnapshot;
-  const [previous] = parsed.data.mode === 'practice' ? await db.select().from(playerMatchesTable)
+  const [previous] = parsed.data.mode === 'practice' ? await db.select({
+    rivalDeckId: playerMatchesTable.rivalDeckId,
+    playerEngineCardIds: playerMatchesTable.playerEngineCardIds,
+  }).from(playerMatchesTable)
     .where(and(eq(playerMatchesTable.clerkUserId, userId), eq(playerMatchesTable.mode, 'practice'), isNotNull(playerMatchesTable.completedAt)))
     .orderBy(desc(playerMatchesTable.completedAt)).limit(1) : [];
   const seed = challengeRun
@@ -1131,7 +1135,7 @@ router.post(
       res.status(400).json({ error: params.error.message });
       return;
     }
-    await getPlayerBootstrap(userId);
+    await ensurePlayer(userId);
     try {
       await claimMissionReward(userId, params.data.missionId);
     } catch (error) {

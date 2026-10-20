@@ -29,6 +29,7 @@ import { setBattleActive } from "../../lib/imageWarmup";
 import "../../styles/arcade-games.css";
 import { AnimatedSprite, motionSpriteUrl } from "./AnimatedSprite";
 import { arcadeSpriteAnimation, blockSpriteAnimation } from "./motionSpriteCatalog";
+import { useArcadeClock, useArcadeNow, type ArcadeClock } from "./arcadeClock";
 export type ArcadeGameStatus = {
   kind: ArcadeKind;
   period: string;
@@ -170,7 +171,6 @@ export default function ArcadeGame({
   const [busy, setBusy] = useState(false),
     [error, setError] = useState(""),
     [choice, setChoice] = useState(0),
-    [clock, setClock] = useState(Date.now),
     [confirm, setConfirm] = useState(false),
     [helpOpen, setHelpOpen] = useState(false),
     [sound, setSound] = useState(() => {
@@ -191,8 +191,6 @@ export default function ArcadeGame({
     player = useRef(bootstrap.profile.id),
     retry = useRef<{ path: string; body: unknown } | null>(null),
     startId = useRef<string | null>(null),
-    offset = useRef(0),
-    reset = useRef(""),
     helpDialog = useRef<HTMLDialogElement>(null),
     retireDialog = useRef<HTMLDialogElement>(null);
   player.current = bootstrap.profile.id;
@@ -204,26 +202,7 @@ export default function ArcadeGame({
       setBattleActive(false);
     };
   }, []);
-  useEffect(() => {
-    if (status) {
-      offset.current = status.serverNow - Date.now();
-      setClock(status.serverNow);
-    }
-  }, [status]);
-  useEffect(() => {
-    const t = setInterval(() => setClock(Date.now() + offset.current), 120);
-    return () => clearInterval(t);
-  }, []);
-  useEffect(() => {
-    if (
-      status &&
-      clock >= Date.parse(status.resetsAt) &&
-      reset.current !== status.resetsAt
-    ) {
-      reset.current = status.resetsAt;
-      void query.refetch();
-    }
-  }, [clock, status?.resetsAt]);
+  const clock = useArcadeClock(status, query.refetch);
   useEffect(() => {
     if (helpOpen) {
       setPaused(true);
@@ -575,7 +554,7 @@ export default function ArcadeGame({
                 run={animation?.run ?? run}
                 beat={animation?.beats[animation.index] ?? null}
                 animating={Boolean(animation)}
-                now={clock}
+                clock={clock}
                 disabled={
                   busy ||
                   Boolean(retry.current) ||
@@ -699,17 +678,18 @@ function GirlFight({
   run,
   beat,
   animating,
-  now,
+  clock,
   disabled,
   act,
 }: {
   run: GirlRun;
   beat: BoxBeat | null;
   animating: boolean;
-  now: number;
+  clock: ArcadeClock;
   disabled: boolean;
   act: (action: ArcadeAction) => void;
 }) {
+  const now = useArcadeNow(clock, 120, run.box.stage === "pattern" && !animating);
   useEffect(() => {
     const urls = [
       [run.box.fighter, "back"],

@@ -5,7 +5,7 @@ import test from 'node:test';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { getStoryNode, storyContent, storySeasons } from '@workspace/squabblemon-engine/story';
-import { CHAPTER_TWO_STAGES, createDialogueRevealRun, formatDialogueText, plainDialogueText, resolveDialoguePortrait, resolveDialogueTap, resolveStoryStage } from './StoryStage';
+import { CHAPTER_TWO_STAGES, createDialogueRevealRun, formatDialogueText, formatPreparedDialogueText, plainDialogueText, prepareDialogueText, resolveDialoguePortrait, resolveDialogueTap, resolveStoryStage } from './StoryStage';
 
 const expectedChapterTwoStages = {
   'red-tapes-open-the-envelope': ['assets/layered/crown-court.webp', 'crown rooftop'],
@@ -120,5 +120,39 @@ test('all shipped Season One dialogue tuples render without markdown delimiter l
   assert.equal(sections.length, 113);
   for (const line of lines) {
     assert.equal(plainDialogueText(line.text), line.text.replaceAll('*', ''), line.text);
+  }
+});
+
+
+test('prepared dialogue preserves every formatting boundary, split marker and escaped literal', () => {
+  const samples = [
+    '', 'Plain text.', '*(Quietly, *almost*.)* A **bold *little* thought**.',
+    'They said *don’t tell her,', 'minute* one.', '**Strong** then *soft*.',
+    'A <script>alert("no")</script> & **literal**.', '🦐 **café** e\u0301.',
+    '***', '*(*nested*)*', 'A **broken * boundary',
+  ];
+  for (const text of samples) {
+    const prepared = prepareDialogueText(text);
+    assert.equal(prepared.plainText, plainDialogueText(text), text);
+    for (let visible = -1; visible <= prepared.plainText.length + 1; visible += 1) {
+      const expected = renderToStaticMarkup(createElement('p', null, formatDialogueText(text, visible)));
+      const actual = renderToStaticMarkup(createElement('p', null, formatPreparedDialogueText(prepared, visible)));
+      assert.equal(actual, expected, `${text}, visible characters: ${visible}`);
+    }
+  }
+  const prepared = prepareDialogueText('A **B *C* D** E');
+  assert.equal(renderToStaticMarkup(createElement('p', null, formatPreparedDialogueText(prepared, 5))),
+    '<p>A <strong class="story-dialogue-strong">B <em class="story-dialogue-emphasis">C</em></strong></p>');
+});
+
+test('prepared dialogue matches the transcript formatter for every shipped dialogue line', () => {
+  const lines = storyContent.chapters.flatMap(chapter => chapter.nodes.flatMap(node => node.kind === 'battle'
+    ? [...node.preDialogue, ...node.postDialogue] : node.scenes));
+  assert(lines.length >= 2765);
+  for (const line of lines) {
+    const prepared = prepareDialogueText(line.text);
+    assert.equal(prepared.plainText, plainDialogueText(line.text), line.text);
+    assert.equal(renderToStaticMarkup(createElement('p', null, formatPreparedDialogueText(prepared))),
+      renderToStaticMarkup(createElement('p', null, formatDialogueText(line.text))), line.text);
   }
 });

@@ -5,6 +5,7 @@ import {
   asc,
   desc,
   eq,
+  inArray,
   isNotNull,
   sql,
 } from "drizzle-orm";
@@ -381,6 +382,16 @@ function getNextAction(
 
 export async function getPlayerBootstrap(clerkUserId: string) {
   await ensurePlayer(clerkUserId);
+  return getInitializedPlayerBootstrap(clerkUserId);
+}
+
+/**
+ * Serialize an already initialized player without repeating economy recovery.
+ * Call ensurePlayer first in this request. This is a read-only step, so delivery
+ * of inbox letters between initialization and serialization remains visible
+ * without another profile-lock/receipt-recovery pass.
+ */
+export async function getInitializedPlayerBootstrap(clerkUserId: string) {
   const [profileResult, missions, packHistory, roadClaims] = await Promise.all([
     db
       .select()
@@ -400,7 +411,10 @@ export async function getPlayerBootstrap(clerkUserId: string) {
     db
       .select({ milestoneKey: playerCollectionClaimsTable.milestoneKey })
       .from(playerCollectionClaimsTable)
-      .where(eq(playerCollectionClaimsTable.clerkUserId, clerkUserId)),
+      .where(and(
+        eq(playerCollectionClaimsTable.clerkUserId, clerkUserId),
+        inArray(playerCollectionClaimsTable.milestoneKey, COLLECTION_ROAD.map(milestone => milestone.id)),
+      )),
   ]);
   const [profile] = profileResult;
 
