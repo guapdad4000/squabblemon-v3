@@ -1,5 +1,6 @@
 import path from 'path';
 import { readFileSync } from 'node:fs';
+import { createRequire } from 'node:module';
 import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 import { defineConfig, type Plugin } from 'vite';
@@ -123,6 +124,34 @@ function brandedNotFoundPage(): Plugin {
   };
 }
 
+/** Keep npm scene helpers on the same runtime as the public GPU scenes. */
+function sharedThreeRuntime(): Plugin {
+  let base = '/';
+  let building = false;
+  return {
+    name: 'squabblemon-shared-three-runtime',
+    enforce: 'pre',
+    configResolved(config) {
+      base = config.base;
+      building = config.command === 'build';
+      // Addon code and its public runtime must stay on the same Three release.
+      const installedBuild = path.dirname(createRequire(import.meta.url).resolve('three'));
+      for (const file of ['three.core.js', 'three.module.js']) {
+        const installed = readFileSync(path.join(installedBuild, file));
+        const served = readFileSync(path.resolve(import.meta.dirname, 'public/scenes/shared', file));
+        if (!installed.equals(served)) {
+          throw new Error(`Three runtime mismatch: update public/scenes/shared/${file} alongside the frontend three dependency.`);
+        }
+      }
+    },
+    resolveId(source) {
+      if (source !== 'three') return;
+      // Dev import analysis adds config.base after resolving this root URL.
+      return { id: `${building ? base : '/'}scenes/shared/three.module.js`, external: true };
+    },
+  };
+}
+
 export default defineConfig({
   // Keep nested preview paths canonical for Vite's public asset rewriting.
   base: basePath.endsWith('/') ? basePath : `${basePath}/`,
@@ -130,6 +159,7 @@ export default defineConfig({
   // Never let it (or a test server) replace the React files of a running preview.
   cacheDir: path.resolve(import.meta.dirname, 'node_modules/.vite-runtime', String(process.pid)),
   plugins: [
+    sharedThreeRuntime(),
     {
       name: 'squabblemon-social-metadata',
       transformIndexHtml(html) {
@@ -157,6 +187,8 @@ export default defineConfig({
         ]
       : []),
   ],
+  // Addons must keep their bare Three imports for the singleton resolver.
+  optimizeDeps: { exclude: ['three'] },
   resolve: {
     alias: {
       ...engineAliases,

@@ -1,34 +1,92 @@
 /* Squabblemon offline shell: instant revisits for code and art; the API is never cached. */
-// Bumping VERSION clears the old oversized art/media cache on activate.
-const VERSION = 'sq-v2';
+// A new namespace retires potentially damaged caches from the previous worker.
+const VERSION = 'sq-v3';
 const CODE = `${VERSION}-code`;
 const ART = `${VERSION}-art`;
 const SHELL = `${VERSION}-shell`;
+const CURRENT_CACHES = new Set([CODE, ART, SHELL]);
 const ART_LIMIT = 240;
-// Images and fonts only. Video/audio stay with the browser HTTP cache so large
-// special-move clips are never duplicated into Cache Storage or re-downloaded
-// in the background during play.
+// Large media and range requests belong to the browser's HTTP cache.
 const ART_EXT = /\.(?:png|jpe?g|webp|avif|gif|svg|woff2?)$/i;
 const MEDIA_EXT = /\.(?:mp4|webm|mov|mp3|ogg|wav|m4a)$/i;
+const revalidated = new Set();
+const failedReads = new Set();
+const failedWrites = new Set();
+const writeQueues = new Map();
+
+async function readCache(name, request) {
+  if (failedReads.has(name)) return;
+  try {
+    return await (await caches.open(name)).match(request);
+  } catch {
+    // Storage is optional. Avoid repeatedly hitting a broken database this lifetime.
+    failedReads.add(name);
+    failedWrites.add(name);
+  }
+}
+
+function writeCache(name, request, response) {
+  if (failedWrites.has(name)) return Promise.resolve();
+  // Concurrent requests must not race put/trim on the same cache database.
+  const write = (writeQueues.get(name) || Promise.resolve()).then(async () => {
+    if (failedWrites.has(name)) return;
+    try {
+      const cache = await caches.open(name);
+      await cache.put(request, response);
+      if (name === ART) {
+        const keys = await cache.keys();
+        for (let i = 0; i < keys.length - ART_LIMIT; i++) await cache.delete(keys[i]);
+      }
+    } catch {
+      // Quota, duplicate-entry and internal storage errors must never reject a fetch.
+      // Keep existing cache reads available for offline use; retry writes next lifetime.
+      failedWrites.add(name);
+    }
+  });
+  writeQueues.set(name, write);
+  return write;
+}
+
+// Register the lifetime promise synchronously. A cached art response may finish
+// before its refresh has fetched and scheduled a write; include those writes too.
+function serve(event, handler) {
+  const background = [];
+  const response = handler(task => background.push(task));
+  event.respondWith(response);
+  event.waitUntil((async () => {
+    try { await response; } catch { /* Network failures still reach respondWith. */ }
+    for (let i = 0; i < background.length; i++) await background[i];
+  })());
+}
+
+async function fetchAndCache(request, name, key, keepAlive) {
+  const response = await fetch(request);
+  if (response.status === 200) keepAlive(writeCache(name, key, response.clone()));
+  return response;
+}
 
 self.addEventListener('install', event => {
-  event.waitUntil(caches.open(SHELL).then(cache => cache.add(new Request('/', { cache: 'reload' }))).catch(() => {}));
-  self.skipWaiting();
+  event.waitUntil((async () => {
+    try {
+      const response = await fetch(new Request(new URL('/', self.location.origin), { cache: 'reload' }));
+      if (response.status === 200) await writeCache(SHELL, '/', response);
+    } catch { /* Installing must also work offline or without available storage. */ }
+    await self.skipWaiting();
+  })());
 });
 
 self.addEventListener('activate', event => {
   event.waitUntil((async () => {
-    for (const key of await caches.keys()) if (!key.startsWith(VERSION)) await caches.delete(key);
+    try {
+      for (const key of await caches.keys()) {
+        if (/^sq-v\d+-(?:code|art|shell)$/.test(key) && !CURRENT_CACHES.has(key)) {
+          try { await caches.delete(key); } catch { /* Leave inaccessible old caches alone. */ }
+        }
+      }
+    } catch { /* Claim clients even when Cache Storage is unavailable. */ }
     await self.clients.claim();
   })());
 });
-
-const revalidated = new Set();
-
-async function trim(cache) {
-  const keys = await cache.keys();
-  for (let i = 0; i < keys.length - ART_LIMIT; i++) await cache.delete(keys[i]);
-}
 
 self.addEventListener('fetch', event => {
   const { request } = event;
@@ -38,45 +96,39 @@ self.addEventListener('fetch', event => {
   if (request.headers.has('range') || MEDIA_EXT.test(url.pathname)) return;
 
   if (request.mode === 'navigate') {
-    event.respondWith((async () => {
+    serve(event, async keepAlive => {
       try {
-        const response = await fetch(request);
-        if (response.ok) { const cache = await caches.open(SHELL); cache.put('/', response.clone()); }
-        return response;
+        return await fetchAndCache(request, SHELL, '/', keepAlive);
       } catch {
-        return (await caches.match('/')) || Response.error();
+        return (await readCache(SHELL, '/')) || Response.error();
       }
-    })());
+    });
     return;
   }
 
   if (url.pathname.startsWith('/assets/') && /-[A-Za-z0-9_-]{8,}\.(?:js|mjs|css)$/.test(url.pathname)) {
-    // Content-hashed build files never change: cache-first.
-    event.respondWith((async () => {
-      const cached = await caches.match(request);
-      if (cached) return cached;
-      const response = await fetch(request);
-      if (response.ok) (await caches.open(CODE)).put(request, response.clone());
-      return response;
-    })());
+    serve(event, async keepAlive => {
+      const cached = await readCache(CODE, request);
+      return cached || fetchAndCache(request, CODE, request, keepAlive);
+    });
     return;
   }
 
   if (ART_EXT.test(url.pathname)) {
-    // Art: cached only once actually requested. Serve from cache and revalidate
-    // each URL at most once per worker lifetime instead of on every request.
-    event.respondWith((async () => {
-      const cache = await caches.open(ART);
-      const cached = await cache.match(request);
-      const refresh = () => fetch(request).then(response => {
-        if (response.ok && response.status === 200) cache.put(request, response.clone()).then(() => trim(cache));
-        return response;
-      }).catch(() => cached || Response.error());
+    serve(event, async keepAlive => {
+      const cached = await readCache(ART, request);
+      const refresh = () => fetchAndCache(request, ART, request, keepAlive)
+        .catch(() => cached || Response.error());
       if (cached) {
-        if (!revalidated.has(request.url)) { revalidated.add(request.url); event.waitUntil(refresh()); }
+        if (!revalidated.has(request.url) && !failedWrites.has(ART)) {
+          // Bound this bookkeeping as well as the stored artwork.
+          if (revalidated.size >= ART_LIMIT) revalidated.delete(revalidated.values().next().value);
+          revalidated.add(request.url);
+          keepAlive(refresh());
+        }
         return cached;
       }
       return refresh();
-    })());
+    });
   }
 });

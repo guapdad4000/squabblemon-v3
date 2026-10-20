@@ -351,3 +351,13 @@ test('Simmy has no opaque black matte, while Foodz retains the supplied portrait
     'stockz',
   ]);
 });
+
+test('Buddy Bud tokens reuse the revisioned Buddy portrait in every image consumer', async () => {
+  const portrait = getCardImage('buddy-bud');
+  assert.equal(portrait, getCardImage('buddy'));
+  const url = new URL(portrait, 'https://squabblemon.test');
+  assert.equal(url.pathname, '/assets/characters/buddy.webp');
+  assert.equal(url.searchParams.get('v'), characterRevisions.buddy);
+  const bytes = await readFile(join(CHARACTER_DIRECTORY, 'buddy.webp'));
+  assert.equal(createHash('sha256').update(bytes).digest('hex').slice(0, 16), url.searchParams.get('v'));
+});

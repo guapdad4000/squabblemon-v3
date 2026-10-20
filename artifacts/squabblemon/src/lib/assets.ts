@@ -13,8 +13,9 @@ export const getAssetUrl = (path: string) => {
   return revision ? `${url}?v=${revision}` : url;
 };
 
-// Older saved battles used the gameplay ID for these summoned portraits.
+// Battle-only tokens and older saved battles use gameplay IDs for these portraits.
 const legacyPortraitIds: Record<string, string> = {
+  'buddy-bud': 'buddy',
   shiesty: 'shiesty-yn',
   grin: 'cheshire',
   cardguard: 'queen-of-hearts',
