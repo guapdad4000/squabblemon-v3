@@ -77,6 +77,8 @@ export function createChromaRenderer(canvas: HTMLCanvasElement, mode: ChromaMode
   gl.uniform1i(gl.getUniformLocation(program, 'frame'), 0);
   gl.uniform1i(gl.getUniformLocation(program, 'mode'), ['green', 'light', 'move-green', 'move-cyan', 'move-none'].indexOf(mode));
   const cropUniform = gl.getUniformLocation(program, 'crop');
+  // Cropping is performed by the staging canvas; GPU UVs always cover it all.
+  gl.uniform4f(cropUniform, 0, 0, 1, 1);
   const staging = document.createElement('canvas');
   const stagingContext = staging.getContext('2d')!;
   let textureWidth = 0, textureHeight = 0;
@@ -94,10 +96,9 @@ export function createChromaRenderer(canvas: HTMLCanvasElement, mode: ChromaMode
       const height = source instanceof HTMLVideoElement ? source.videoHeight : source.height;
       stagingContext.clearRect(0, 0, staging.width, staging.height);
       stagingContext.drawImage(source, crop[0] * width, crop[1] * height, crop[2] * width, crop[3] * height, 0, 0, staging.width, staging.height);
-      gl.viewport(0, 0, canvas.width, canvas.height);
-      gl.uniform4f(cropUniform, 0, 0, 1, 1);
       if (textureWidth !== canvas.width || textureHeight !== canvas.height) {
         textureWidth = canvas.width; textureHeight = canvas.height;
+        gl.viewport(0, 0, textureWidth, textureHeight);
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, textureWidth, textureHeight, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
       }
       gl.texSubImage2D(gl.TEXTURE_2D, 0, 0, 0, gl.RGBA, gl.UNSIGNED_BYTE, staging);

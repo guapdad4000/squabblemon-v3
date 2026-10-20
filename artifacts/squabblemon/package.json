@@ -34,6 +34,7 @@
     "test:crew-authority": "tsx --test src/fourCrewAuthority.test.ts",
     "test:balance-patch": "tsx --test src/balancePatch.test.ts src/typeTempo.test.ts",
     "test:pack-opening": "node --test src/lib/packJournal.test.ts",
+    "test:battery": "node --import tsx --test src/lib/chromaBattery.test.ts && node --test e2e/gym-battery.test.mjs e2e/lobby-battery.test.mjs e2e/safehouse-battery.test.mjs",
     "test:performance": "node scripts/battle-performance.mjs",
     "validate:brand": "node scripts/validate-brand-metadata.mjs",
     "validate:bundle": "node scripts/check-entry-bundle.mjs",
