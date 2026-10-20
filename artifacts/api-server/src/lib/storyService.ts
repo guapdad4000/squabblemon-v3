@@ -59,9 +59,11 @@ function nodeStatus(
   node: StoryNode,
   progress: PlayerStoryNodeRecord | undefined,
   clearedNodeIds: ReadonlySet<string>,
+  chapter: StoryChapter,
 ) {
   if (progress?.cleared) return "cleared" as const;
-  return isStoryNodeAvailable(node, clearedNodeIds)
+  return chapter.prerequisites.every((id) => clearedNodeIds.has(id)) &&
+    node.prerequisites.every((id) => clearedNodeIds.has(id))
     ? ("available" as const)
     : ("locked" as const);
 }
@@ -72,8 +74,10 @@ export function buildStoryCampaign(rows: PlayerStoryNodeRecord[]) {
   const orderedChapters = [...storyContent.chapters].sort(
     (a, b) => a.order - b.order,
   );
-  const nodes = orderedChapters.flatMap((chapter) =>
-    chapter.nodes.map((node) => {
+  // Group once while serializing. All indexes are scoped to this response.
+  const chapterEntries = orderedChapters.map((chapter) => ({
+    chapter,
+    nodes: chapter.nodes.map((node) => {
       const row = byNode.get(node.id);
       return {
         chapterId: chapter.id,
@@ -81,7 +85,7 @@ export function buildStoryCampaign(rows: PlayerStoryNodeRecord[]) {
         title: node.title,
         kind: node.kind,
         optional: node.optional,
-        status: nodeStatus(node, row, cleared),
+        status: nodeStatus(node, row, cleared, chapter),
         mapPosition: node.mapPosition,
         prerequisites: [...node.prerequisites],
         rewards: node.rewards.map((reward) => ({ ...reward })),
@@ -96,16 +100,19 @@ export function buildStoryCampaign(rows: PlayerStoryNodeRecord[]) {
         lastPlayedAt: row?.lastPlayedAt?.toISOString() ?? null,
       };
     }),
+  }));
+  const nodes = chapterEntries.flatMap((entry) => entry.nodes);
+  const nodesByChapter = new Map(
+    chapterEntries.map((entry) => [entry.chapter.id, entry.nodes]),
   );
-  const chapters = orderedChapters.map((chapter) => {
-    const chapterNodes = nodes.filter((node) => node.chapterId === chapter.id);
+  const chapters = chapterEntries.map(({ chapter, nodes: chapterNodes }) => {
     const boss = chapter.nodes.find(
       (node) => node.kind === "battle" && node.battleType === "boss",
     );
     const bossNode = boss
       ? chapterNodes.find((node) => node.nodeId === boss.id)
       : undefined;
-    const requiredNodes = chapterNodes.filter((node) => !chapter.nodes.find((item) => item.id === node.nodeId)?.optional);
+    const requiredNodes = chapterNodes.filter((node) => !node.optional);
     const completedNodes = chapterNodes.filter((node) => node.cleared).length;
     const completedRequiredNodes = requiredNodes.filter((node) => node.cleared).length;
     const chapterAvailable = chapter.prerequisites.every((id) =>
@@ -149,12 +156,6 @@ export function buildStoryCampaign(rows: PlayerStoryNodeRecord[]) {
       ? "cleared"
       : "locked");
   const chaptersById = new Map(chapters.map((chapter) => [chapter.id, chapter]));
-  const nodesByChapter = new Map(
-    orderedChapters.map((chapter) => [
-      chapter.id,
-      nodes.filter((node) => node.chapterId === chapter.id),
-    ]),
-  );
   const seasons = storySeasons.map((season) => {
     const seasonChapters = season.chapterIds
       .map((chapterId) => chaptersById.get(chapterId))
@@ -162,12 +163,7 @@ export function buildStoryCampaign(rows: PlayerStoryNodeRecord[]) {
     const seasonNodes = season.chapterIds.flatMap(
       (chapterId) => nodesByChapter.get(chapterId) ?? [],
     );
-    const requiredSeasonNodes = seasonNodes.filter((progress) => {
-      const chapter = storyContent.chapters.find(
-        (item) => item.id === progress.chapterId,
-      );
-      return !chapter?.nodes.find((item) => item.id === progress.nodeId)?.optional;
-    });
+    const requiredSeasonNodes = seasonNodes.filter((node) => !node.optional);
     const recommendedNodeId =
       seasonNodes.find(
         (node) =>

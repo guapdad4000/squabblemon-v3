@@ -16,6 +16,47 @@ import { OnlineError } from "@workspace/squabblemon-engine/multiplayer";
 export function communityWeek(now = new Date()) {
   return eventWeek(now);
 }
+async function listCommunityDecks(
+  userId: string,
+  targetWeek: string,
+  limit: number,
+  pageOffset = 0,
+) {
+  const rows = await db
+    .select({
+      id: decks.id,
+      week: decks.week,
+      name: decks.name,
+      strategy: decks.strategy,
+      cardIds: decks.cardIds,
+      heroCardId: decks.heroCardId,
+      author: profiles.displayName,
+      avatarKey: profiles.avatarKey,
+      friendCode: identities.friendCode,
+      createdAt: decks.createdAt,
+      isOwn: sql<boolean>`${decks.clerkUserId} = ${userId}`,
+      votes: sql<number>`(select count(*)::int from ${votes} where ${votes.deckId} = ${decks.id})`,
+      voted: sql<boolean>`exists(select 1 from ${votes} where ${votes.deckId} = ${decks.id} and ${votes.clerkUserId} = ${userId})`,
+    })
+    .from(decks)
+    .innerJoin(profiles, eq(profiles.clerkUserId, decks.clerkUserId))
+    .leftJoin(identities, eq(identities.userId, decks.clerkUserId))
+    .where(eq(decks.week, targetWeek))
+    .orderBy(
+      desc(
+        sql`(select count(*) from ${votes} where ${votes.deckId} = ${decks.id})`,
+      ),
+      asc(decks.createdAt),
+      asc(decks.id),
+    )
+    .limit(limit)
+    .offset(pageOffset);
+  return rows.map((row) => ({
+    ...row,
+    createdAt: row.createdAt.toISOString(),
+  }));
+}
+
 export async function communityDeckFeed(
   userId: string,
   now = new Date(),
@@ -23,44 +64,9 @@ export async function communityDeckFeed(
 ) {
   const week = communityWeek(now),
     previousWeek = communityWeek(new Date(now.getTime() - 7 * 86400000));
-  const list = async (targetWeek: string, limit: number, pageOffset = 0) => {
-    const rows = await db
-      .select({
-        id: decks.id,
-        week: decks.week,
-        name: decks.name,
-        strategy: decks.strategy,
-        cardIds: decks.cardIds,
-        heroCardId: decks.heroCardId,
-        author: profiles.displayName,
-        avatarKey: profiles.avatarKey,
-        friendCode: identities.friendCode,
-        createdAt: decks.createdAt,
-        isOwn: sql<boolean>`${decks.clerkUserId} = ${userId}`,
-        votes: sql<number>`(select count(*)::int from ${votes} where ${votes.deckId} = ${decks.id})`,
-        voted: sql<boolean>`exists(select 1 from ${votes} where ${votes.deckId} = ${decks.id} and ${votes.clerkUserId} = ${userId})`,
-      })
-      .from(decks)
-      .innerJoin(profiles, eq(profiles.clerkUserId, decks.clerkUserId))
-      .leftJoin(identities, eq(identities.userId, decks.clerkUserId))
-      .where(eq(decks.week, targetWeek))
-      .orderBy(
-        desc(
-          sql`(select count(*) from ${votes} where ${votes.deckId} = ${decks.id})`,
-        ),
-        asc(decks.createdAt),
-        asc(decks.id),
-      )
-      .limit(limit)
-      .offset(pageOffset);
-    return rows.map((row) => ({
-      ...row,
-      createdAt: row.createdAt.toISOString(),
-    }));
-  };
   const [submissions, weeklyPicks, own, counts] = await Promise.all([
-    list(week, 40, offset),
-    list(previousWeek, 3),
+    listCommunityDecks(userId, week, 40, offset),
+    listCommunityDecks(userId, previousWeek, 3),
     db
       .select({ id: decks.id })
       .from(decks)
@@ -168,11 +174,12 @@ export async function voteCommunityDeck(
 export async function communityDeckArchive(userId: string, now = new Date()) {
   const weeks = await Promise.all(
     [1, 2, 3, 4].map(async (ago) => {
-      const feed = await communityDeckFeed(
-        userId,
-        new Date(now.getTime() - ago * 7 * 86400000),
-      );
-      return { week: feed.week, picks: feed.weeklyPicks };
+      const weekAt = new Date(now.getTime() - ago * 7 * 86400000);
+      const week = communityWeek(weekAt);
+      // Keep the archive's existing label: picks belong to the preceding week.
+      const previousWeek = communityWeek(new Date(weekAt.getTime() - 7 * 86400000));
+      const picks = await listCommunityDecks(userId, previousWeek, 3);
+      return { week, picks };
     }),
   );
   return { weeks: weeks.filter((entry) => entry.picks.length) };

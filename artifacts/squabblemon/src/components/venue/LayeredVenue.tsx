@@ -32,6 +32,11 @@ export function LayeredVenue({ scene }: { scene: 'fade-market' | 'gatcha-bg' | '
     let currentX = 0, currentY = 0;
     let hasPointer = false;
     let time = 0;
+    // Pointer events can outnumber display frames. Reuse one geometry sample
+    // until the next frame, or an actual resize/scroll changes its position.
+    // Event handling and the existing interpolation still run in their original
+    // order, including touch/outside transitions between animation frames.
+    let pointerBounds: DOMRect | null = null;
 
     const disabled = () => reduced || document.documentElement.dataset.reduceMotion === 'true';
 
@@ -43,6 +48,7 @@ export function LayeredVenue({ scene }: { scene: 'fade-market' | 'gatcha-bg' | '
     };
 
     const fit = () => {
+      pointerBounds = null;
       const aspect = data ? data.width / data.height : 16 / 9;
       const overscan = scene === 'gatcha-bg' ? 1.08 : 1.15;
       const width = Math.max(node.clientWidth, node.clientHeight * aspect) * overscan;
@@ -51,6 +57,7 @@ export function LayeredVenue({ scene }: { scene: 'fade-market' | 'gatcha-bg' | '
     };
 
     const loop = () => {
+      pointerBounds = null;
       if (!visible || disabled() || document.hidden) {
         if (disabled()) resetTransforms();
         frame = 0;
@@ -87,7 +94,7 @@ export function LayeredVenue({ scene }: { scene: 'fade-market' | 'gatcha-bg' | '
         hasPointer = false;
         return;
       }
-      const rect = node.getBoundingClientRect();
+      const rect = pointerBounds ??= node.getBoundingClientRect();
       const inBounds = e.clientX >= rect.left && e.clientX <= rect.right &&
                        e.clientY >= rect.top && e.clientY <= rect.bottom;
 
@@ -107,11 +114,13 @@ export function LayeredVenue({ scene }: { scene: 'fade-market' | 'gatcha-bg' | '
     };
 
     const scroll = () => {
+      pointerBounds = null;
       // Scrolling can also act as an interaction hint
       startLoop();
     };
 
     const visibilityChange = () => {
+      pointerBounds = null;
       if (!document.hidden && visible) startLoop();
     };
 
@@ -120,6 +129,7 @@ export function LayeredVenue({ scene }: { scene: 'fade-market' | 'gatcha-bg' | '
     fit();
 
     const intersection = new IntersectionObserver(([entry]) => {
+      pointerBounds = null;
       visible = entry.isIntersecting;
       node.dataset.paused = String(!visible);
       if (visible) startLoop();
@@ -127,6 +137,7 @@ export function LayeredVenue({ scene }: { scene: 'fade-market' | 'gatcha-bg' | '
     intersection.observe(node);
 
     const preferences = new MutationObserver(() => {
+      pointerBounds = null;
       if (disabled()) {
          resetTransforms();
          // loop will naturally exit on the next frame due to disabled()
@@ -138,6 +149,9 @@ export function LayeredVenue({ scene }: { scene: 'fade-market' | 'gatcha-bg' | '
 
     window.addEventListener('pointermove', pointer, { passive: true });
     window.addEventListener('scroll', scroll, { passive: true, capture: true });
+    window.addEventListener('resize', scroll, { passive: true });
+    window.visualViewport?.addEventListener('resize', scroll, { passive: true });
+    window.visualViewport?.addEventListener('scroll', scroll, { passive: true });
     document.addEventListener('visibilitychange', visibilityChange);
 
     // Initial setup check
@@ -154,6 +168,9 @@ export function LayeredVenue({ scene }: { scene: 'fade-market' | 'gatcha-bg' | '
       preferences.disconnect();
       window.removeEventListener('pointermove', pointer);
       window.removeEventListener('scroll', scroll, true);
+      window.removeEventListener('resize', scroll);
+      window.visualViewport?.removeEventListener('resize', scroll);
+      window.visualViewport?.removeEventListener('scroll', scroll);
       document.removeEventListener('visibilitychange', visibilityChange);
     };
   }, [data, reduced, scene]);

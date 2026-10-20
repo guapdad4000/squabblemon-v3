@@ -35,6 +35,7 @@
     "test:balance-patch": "tsx --test src/balancePatch.test.ts src/typeTempo.test.ts",
     "test:pack-opening": "node --test src/lib/packJournal.test.ts",
     "test:performance": "node scripts/battle-performance.mjs",
+    "test:work-reuse": "node --import ../../scripts/battle-test-css.mjs --import tsx --test src/lib/deckWorkshop.test.ts src/lib/deckWorkshopPerformance.test.ts src/lib/gangWallGroups.test.ts src/components/venue/LayeredVenue.performance.test.tsx",
     "validate:brand": "node scripts/validate-brand-metadata.mjs",
     "validate:bundle": "node scripts/check-entry-bundle.mjs",
     "test:battle": "node --import ../../scripts/battle-test-css.mjs --import tsx --test src/components/Battle.test.tsx src/districtBattleCue.test.ts src/battleDestruction.test.ts src/gameEngine.test.ts src/districts.test.ts src/subwayArrival.test.ts src/multiCardTurns.test.ts src/botBalance.test.ts src/gameplayUpgrade.test.ts src/neighborhoodCommons.test.ts src/superCommonCards.test.ts src/battleChoreography.test.ts src/abilityOutcome.test.ts src/specialMoves.test.ts src/battlePreview.test.ts src/battleFeedback.test.ts src/presentationTimeline.test.ts src/battleVisibility.test.ts",
@@ -164,7 +165,9 @@
     "vaul": "^1.1.2",
     "vite": "catalog:",
     "wouter": "^3.3.5",
-    "zod": "catalog:"
+    "zod": "catalog:",
+    "react-test-renderer": "19.1.0",
+    "@types/react-test-renderer": "19.1.0"
   },
   "dependencies": {
     "three": "^0.185.1"
