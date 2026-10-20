@@ -22,6 +22,8 @@ import { setBattleActive } from "../../lib/imageWarmup";
 import "../../styles/waffle-run.css";
 import { AnimatedSprite } from "./AnimatedSprite";
 import { waffleSpriteAnimation } from "./motionSpriteCatalog";
+import { useArcadeClock, useArcadeNow, type ArcadeClock } from "./arcadeClock";
+import { createWaffleAudio } from "./waffleAudio";
 export type WaffleRunStatus = {
   date: string;
   attemptsRemaining: number;
@@ -124,41 +126,6 @@ function Sprite({
 function HP({ hp, max, label }: { hp: number; max: number; label: string }) {
   return <ArcadeGauge value={hp} max={max} label={label} className="wr-hp" />;
 }
-function playSound(
-  kind: "hop" | "battle" | "move" | "win" | "end",
-  enabled: boolean,
-) {
-  if (!enabled) return;
-  try {
-    const Context = window.AudioContext;
-    if (!Context) return;
-    const audio = new Context(),
-      gain = audio.createGain();
-    gain.connect(audio.destination);
-    gain.gain.value = 0.025;
-    const notes =
-      kind === "hop"
-        ? [440, 660, 880]
-        : kind === "win"
-          ? [523, 659, 784, 1046]
-          : kind === "battle"
-            ? [196, 147, 98]
-            : kind === "end"
-              ? [330, 247, 165]
-              : [220, 110];
-    notes.forEach((note, i) => {
-      const oscillator = audio.createOscillator();
-      oscillator.type = "square";
-      oscillator.frequency.value = note;
-      oscillator.connect(gain);
-      oscillator.start(audio.currentTime + i * 0.075);
-      oscillator.stop(audio.currentTime + i * 0.075 + 0.065);
-    });
-    window.setTimeout(() => void audio.close(), notes.length * 75 + 100);
-  } catch {
-    /* Silent play remains fully functional. */
-  }
-}
 export function WaffleRunGame({
   bootstrap,
   onExit,
@@ -179,7 +146,6 @@ export function WaffleRunGame({
     run = status?.run ?? null;
   const [busy, setBusy] = useState(false),
     [error, setError] = useState(""),
-    [clock, setClock] = useState(Date.now),
     [animatedPlate, setAnimatedPlate] = useState<number | null>(null),
     [effect, setEffect] = useState("");
   const [sound, setSound] = useState(() => {
@@ -195,8 +161,11 @@ export function WaffleRunGame({
     retry = useRef<{ body: unknown; path: string } | null>(null),
     startId = useRef<string | null>(null),
     active = useRef(true);
-  const clockOffset = useRef(0),
-    retireDialog = useRef<HTMLDialogElement>(null);
+  const retireDialog = useRef<HTMLDialogElement>(null);
+  const audio = useRef<ReturnType<typeof createWaffleAudio> | null>(null);
+  if (!audio.current) audio.current = createWaffleAudio();
+  useEffect(() => () => audio.current?.dispose(), []);
+  const clock = useArcadeClock(status, query.refetch);
   useEffect(() => {
     if (confirmRetire) retireDialog.current?.showModal();
     else retireDialog.current?.close();
@@ -209,36 +178,10 @@ export function WaffleRunGame({
       setBattleActive(false);
     };
   }, []);
-  useEffect(() => {
-    if (status) {
-      clockOffset.current = status.serverNow - Date.now();
-      setClock(status.serverNow);
-    }
-  }, [status]);
-  useEffect(() => {
-    const timer = setInterval(
-      () => setClock(Date.now() + clockOffset.current),
-      150,
-    );
-    return () => clearInterval(timer);
-  }, []);
-  const refreshedReset = useRef<string | null>(null);
-  useEffect(() => {
-    if (
-      status &&
-      clock >= Date.parse(status.resetsAt) &&
-      refreshedReset.current !== status.resetsAt
-    ) {
-      refreshedReset.current = status.resetsAt;
-      void query.refetch();
-    }
-  }, [clock, status?.resetsAt, query.refetch]);
-  const watched = run ? waffleWatchedPlate(run, clock) : 0;
-  const targets = run ? waffleHopTargets(run) : [];
   const lastPhase = useRef(run?.phase);
   useEffect(() => {
     if (run?.phase && lastPhase.current !== run.phase) {
-      playSound(
+      audio.current?.play(
         run.phase === "learning"
           ? "battle"
           : run.phase === "ended"
@@ -309,11 +252,11 @@ export function WaffleRunGame({
     if (!run || busy || retry.current) return;
     if (action.type === "hop") {
       setAnimatedPlate(action.plate);
-      playSound("hop", sound);
+      audio.current?.play("hop", sound);
     }
     if (action.type === "move") {
       setEffect(`${action.move}-${Date.now()}`);
-      playSound("move", sound);
+      audio.current?.play("move", sound);
     }
     void send(`${endpoint}/${run.id}/action`, {
       revision: run.revision,
@@ -329,6 +272,9 @@ export function WaffleRunGame({
       data-reduce-motion={bootstrap.profile.settings.reducedMotion}
       data-motion-paused={confirmRetire}
       aria-label="Squabblehouse Waffle Run"
+      onPointerDownCapture={() => { if (sound) audio.current?.unlock(); }}
+      onClickCapture={() => { if (sound) audio.current?.unlock(); }}
+      onKeyDownCapture={() => { if (sound) audio.current?.unlock(); }}
     >
       <header className="wr-top">
         <button onClick={onExit} aria-label="Leave Squabblehouse">
@@ -342,6 +288,7 @@ export function WaffleRunGame({
           aria-pressed={sound}
           onClick={() => {
             const next = !sound;
+            if (next) audio.current?.unlock();
             setSound(next);
             try {
               localStorage.setItem(
@@ -479,31 +426,12 @@ export function WaffleRunGame({
                   />
                   <b>{run.alarm}%</b>
                 </div>
-                {positions.map(([x, y], i) => (
-                  <button
-                    key={i}
-                    className="wr-plate"
-                    data-current={run.plate === i}
-                    data-target={targets.includes(i)}
-                    data-watched={watched === i}
-                    style={{ left: `${x}%`, top: `${y}%` }}
-                    disabled={
-                      busy ||
-                      clock - run.phaseStartedAt < 260 ||
-                      !targets.includes(i) ||
-                      Boolean(retry.current)
-                    }
-                    aria-label={`Hop to plate ${i + 1}${watched === i ? " · staff watching" : ""}`}
-                    onClick={() => act({ type: "hop", plate: i })}
-                  >
-                    <Sprite
-                      name={run.plate === i ? "plate-empty" : "plate-waffle"}
-                    />
-                    {targets.includes(i) && (
-                      <span>{watched === i ? "WATCHED" : "HOP HERE"}</span>
-                    )}
-                  </button>
-                ))}
+                <WaffleHopPlates
+                  run={run}
+                  clock={clock}
+                  disabled={busy || Boolean(retry.current)}
+                  act={act}
+                />
                 <Sprite
                   name={animatedPlate === null ? "pigeon-idle" : "pigeon-hop"}
                   className={`wr-hopping-bird ${animatedPlate !== null ? "is-hopping" : ""}`}
@@ -723,6 +651,37 @@ export function WaffleRunGame({
       </dialog>
     </main>
   );
+}
+function WaffleHopPlates({
+  run,
+  clock,
+  disabled,
+  act,
+}: {
+  run: WaffleRun;
+  clock: ArcadeClock;
+  disabled: boolean;
+  act: (action: WaffleAction) => void;
+}) {
+  const now = useArcadeNow(clock, 150);
+  const watched = waffleWatchedPlate(run, now);
+  const targets = waffleHopTargets(run);
+  return <>{positions.map(([x, y], i) => (
+    <button
+      key={i}
+      className="wr-plate"
+      data-current={run.plate === i}
+      data-target={targets.includes(i)}
+      data-watched={watched === i}
+      style={{ left: `${x}%`, top: `${y}%` }}
+      disabled={disabled || now - run.phaseStartedAt < 260 || !targets.includes(i)}
+      aria-label={`Hop to plate ${i + 1}${watched === i ? " · staff watching" : ""}`}
+      onClick={() => act({ type: "hop", plate: i })}
+    >
+      <Sprite name={run.plate === i ? "plate-empty" : "plate-waffle"} />
+      {targets.includes(i) && <span>{watched === i ? "WATCHED" : "HOP HERE"}</span>}
+    </button>
+  ))}</>;
 }
 export function WaffleMachine({ onOpen }: { onOpen: () => void }) {
   return (

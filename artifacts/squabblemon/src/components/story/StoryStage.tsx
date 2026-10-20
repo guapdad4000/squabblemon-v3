@@ -1,5 +1,5 @@
 import { StoryEnvironmentProp } from './StoryEnvironmentProp';
-import { useEffect, useRef, useState, type MouseEvent, type ReactNode } from 'react';
+import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState, type MouseEvent, type ReactNode } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import {
   getStoryNode,
@@ -139,10 +139,23 @@ export function tokenizeDialogueMarkup(text: string): DialogueMarkupToken[] {
   return tokens;
 }
 
+function plainDialogueTokens(tokens: readonly DialogueMarkupToken[]): string {
+  return tokens.map(token => token.children ? plainDialogueTokens(token.children) : token.text).join('');
+}
+
+export type PreparedDialogueText = {
+  tokens: readonly DialogueMarkupToken[];
+  plainText: string;
+};
+
+/** Prepare once per authored text, not once per character reveal. */
+export function prepareDialogueText(text: string): PreparedDialogueText {
+  const tokens = tokenizeDialogueMarkup(text);
+  return { tokens, plainText: plainDialogueTokens(tokens) };
+}
+
 export function plainDialogueText(text: string): string {
-  const plainTokens = (tokens: readonly DialogueMarkupToken[]): string =>
-    tokens.map(token => token.children ? plainTokens(token.children) : token.text).join('');
-  return plainTokens(tokenizeDialogueMarkup(text));
+  return plainDialogueTokens(tokenizeDialogueMarkup(text));
 }
 
 export function resolveDialoguePortrait(speaker: string, portraitAssetId: string, isListener: boolean): string {
@@ -150,7 +163,7 @@ export function resolveDialoguePortrait(speaker: string, portraitAssetId: string
   return `assets/characters/${isListener ? 'player-rear' : 'player'}.webp`;
 }
 
-export function formatDialogueText(text: string, visibleCharacters = Number.POSITIVE_INFINITY): ReactNode[] {
+function renderDialogueTokens(tokens: readonly DialogueMarkupToken[], visibleCharacters: number): ReactNode[] {
   const renderTokens = (tokens: readonly DialogueMarkupToken[], limit: number, prefix: string): { nodes: ReactNode[]; used: number } => {
     const nodes: ReactNode[] = [];
     let used = 0;
@@ -171,7 +184,15 @@ export function formatDialogueText(text: string, visibleCharacters = Number.POSI
     });
     return { nodes, used };
   };
-  return renderTokens(tokenizeDialogueMarkup(text), Math.max(0, visibleCharacters), 'dialogue').nodes;
+  return renderTokens(tokens, Math.max(0, visibleCharacters), 'dialogue').nodes;
+}
+
+export function formatDialogueText(text: string, visibleCharacters = Number.POSITIVE_INFINITY): ReactNode[] {
+  return renderDialogueTokens(tokenizeDialogueMarkup(text), visibleCharacters);
+}
+
+export function formatPreparedDialogueText(dialogue: PreparedDialogueText, visibleCharacters = Number.POSITIVE_INFINITY): ReactNode[] {
+  return renderDialogueTokens(dialogue.tokens, visibleCharacters);
 }
 
 export function createDialogueRevealRun({
@@ -183,7 +204,18 @@ export function createDialogueRevealRun({
   onReveal: (value: number) => void;
   schedule: (tick: () => void) => () => void;
 }): DialogueRevealRun {
-  const visibleText = plainDialogueText(text);
+  return createPreparedDialogueRevealRun({ length: plainDialogueText(text).length, onReveal, schedule });
+}
+
+function createPreparedDialogueRevealRun({
+  length,
+  onReveal,
+  schedule,
+}: {
+  length: number;
+  onReveal: (value: number) => void;
+  schedule: (tick: () => void) => () => void;
+}): DialogueRevealRun {
   let index = 0;
   let active = true;
   let stop: () => void = () => {};
@@ -196,13 +228,13 @@ export function createDialogueRevealRun({
     if (!active) return;
     index += 1;
     onReveal(index);
-    if (index >= visibleText.length) cancel();
+    if (index >= length) cancel();
   });
   return {
     cancel,
     complete: () => {
       cancel();
-      onReveal(visibleText.length);
+      onReveal(length);
     },
   };
 }
@@ -223,17 +255,30 @@ export function resolveDialogueTap({
   return revealComplete ? 'advance' : 'reveal';
 }
 
-export function StoryStage({ nodeId, section, line, position, total, pending, error, onNext, onSkip, onClose, onHistory, historyDisabled }: StoryStageProps) {
-  const [still, setStill] = useState(false);
-  const systemReducedMotion = useReducedMotion();
-  const lineKey = `${nodeId}:${section}:${position}`;
-  const fullText = plainDialogueText(line.text);
-  const [revealed, setRevealed] = useState(systemReducedMotion ? fullText.length : 0);
+const isolate = (action: () => void) => (event: MouseEvent) => {
+  event.stopPropagation();
+  action();
+};
+
+type StoryDialogueHandle = { advance: () => void };
+type StoryDialogueProps = Pick<StoryStageProps, 'position' | 'total' | 'pending' | 'error' | 'onNext' | 'onSkip' | 'onHistory' | 'historyDisabled'> & {
+  lineKey: string;
+  text: string;
+  dialogue: PreparedDialogueText;
+  motionOff: boolean | null;
+};
+
+// The 18 ms clock only updates the line and its controls. Backdrops, portraits,
+// environment props and scene metadata do not participate in character ticks.
+const StoryDialogue = forwardRef<StoryDialogueHandle, StoryDialogueProps>(function StoryDialogue({
+  lineKey, text, dialogue, motionOff, position, total, pending, error, onNext, onSkip, onHistory, historyDisabled,
+}, ref) {
+  const fullText = dialogue.plainText;
+  const [revealed, setRevealed] = useState(motionOff ? fullText.length : 0);
   const lastTap = useRef(0);
   const lineRef = useRef(lineKey);
   const revealRun = useRef<DialogueRevealRun | null>(null);
   const revealComplete = revealed >= fullText.length;
-  const motionOff = still || systemReducedMotion;
 
   // Keep the reveal local to the authored line key. This is intentionally not
   // tied to the line object identity: replay and campaign hydration can create
@@ -245,8 +290,8 @@ export function StoryStage({ nodeId, section, line, position, total, pending, er
     lastTap.current = 0;
     setRevealed(motionOff ? fullText.length : 0);
     if (motionOff) return;
-    const run = createDialogueRevealRun({
-      text: line.text,
+    const run = createPreparedDialogueRevealRun({
+      length: fullText.length,
       onReveal: setRevealed,
       schedule: (tick) => {
         const timer = window.setInterval(tick, 18);
@@ -258,7 +303,7 @@ export function StoryStage({ nodeId, section, line, position, total, pending, er
       run.cancel();
       if (revealRun.current === run) revealRun.current = null;
     };
-  }, [lineKey, line.text, fullText.length, motionOff]);
+  }, [lineKey, text, fullText.length, motionOff]);
 
   const advanceFromSurface = () => {
     if (pending || lineRef.current !== lineKey) return;
@@ -273,10 +318,29 @@ export function StoryStage({ nodeId, section, line, position, total, pending, er
     }
     onNext();
   };
-  const isolate = (action: () => void) => (event: MouseEvent) => {
-    event.stopPropagation();
-    action();
-  };
+  // Surface taps read the latest reveal state without lifting the clock back
+  // into the scene. Native button clicks use the same guarded action.
+  useImperativeHandle(ref, () => ({ advance: advanceFromSurface }));
+
+  return <>
+    <motion.p key={lineKey} className="story-stage__line" aria-live="polite" initial={motionOff ? false : { opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: motionOff ? 0 : .22 }}>{formatPreparedDialogueText(dialogue, revealed)}<span className="story-stage__caret" aria-hidden="true">{revealComplete ? '' : '▌'}</span></motion.p>
+    {error && <p className="story-stage__error" role="alert">{error}</p>}
+    <footer>
+      <div><button type="button" onClick={isolate(onHistory ?? (() => undefined))} disabled={!onHistory || historyDisabled}>Transcript</button><button type="button" onClick={isolate(onSkip)} disabled={pending}>Skip scene</button></div>
+      <button className="story-stage__next" type="button" onClick={isolate(advanceFromSurface)} disabled={pending}>{pending ? 'Saving…' : !revealComplete ? 'Complete line' : position === total ? 'Continue →' : 'Next →'}</button>
+    </footer>
+  </>;
+});
+
+export function StoryStage({ nodeId, section, line, position, total, pending, error, onNext, onSkip, onClose, onHistory, historyDisabled }: StoryStageProps) {
+  const [still, setStill] = useState(false);
+  const systemReducedMotion = useReducedMotion();
+  const lineKey = `${nodeId}:${section}:${position}`;
+  const dialogue = useMemo(() => prepareDialogueText(line.text), [line.text]);
+  const fullText = dialogue.plainText;
+  const dialogueRef = useRef<StoryDialogueHandle | null>(null);
+  const motionOff = still || systemReducedMotion;
+  const advanceFromSurface = () => dialogueRef.current?.advance();
   const node = getStoryNode(nodeId);
   const chapter = storyContent.chapters.find((item) => item.nodes.some((entry) => entry.id === nodeId));
   const houseScene = chapter?.id.startsWith('squabble-house-') ?? false;
@@ -320,12 +384,9 @@ export function StoryStage({ nodeId, section, line, position, total, pending, er
             <span className={`story-stage__speaker-name${line.speaker.toLowerCase() === 'player' ? ' story-stage__speaker-name--player' : ''}`}>{line.speaker}</span><small>{section === 'post' ? 'AFTERMATH' : 'ON THE BLOCK'} · {position.toString().padStart(2, '0')} / {total.toString().padStart(2, '0')}</small>
           </motion.div>
         </AnimatePresence>
-        <motion.p key={lineKey} className="story-stage__line" aria-live="polite" initial={motionOff ? false : { opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: motionOff ? 0 : .22 }}>{formatDialogueText(line.text, revealed)}<span className="story-stage__caret" aria-hidden="true">{revealComplete ? '' : '▌'}</span></motion.p>
-        {error && <p className="story-stage__error" role="alert">{error}</p>}
-        <footer>
-          <div><button type="button" onClick={isolate(onHistory ?? (() => undefined))} disabled={!onHistory || historyDisabled}>Transcript</button><button type="button" onClick={isolate(onSkip)} disabled={pending}>Skip scene</button></div>
-          <button className="story-stage__next" type="button" onClick={isolate(advanceFromSurface)} disabled={pending}>{pending ? 'Saving…' : !revealComplete ? 'Complete line' : position === total ? 'Continue →' : 'Next →'}</button>
-        </footer>
+        <StoryDialogue ref={dialogueRef} lineKey={lineKey} text={line.text} dialogue={dialogue} motionOff={motionOff}
+          position={position} total={total} pending={pending} error={error} onNext={onNext} onSkip={onSkip}
+          onHistory={onHistory} historyDisabled={historyDisabled} />
       </div>
     </section>
   );

@@ -107,6 +107,9 @@ const AudioEngine={
     let scene, camera, renderer;
     let gymGroup, bagAssembly, heavyBagMesh;
     let bagOriginalPositions, bagVertexDents;
+    // Only vertices touched by a punch can need recovery. Keep the original
+    // Float32 dent values and settling threshold, including the final residual.
+    const activeBagDents = new Set();
     let leftGloveMesh, rightGloveMesh;
     let gloveGhosts = [];
     let cardMeshStack = [];
@@ -244,6 +247,7 @@ const AudioEngine={
 
       bagOriginalPositions = new Float32Array(pos.array);
       bagVertexDents = new Float32Array(pos.count * 3);
+      activeBagDents.clear();
 
       const bagTex = createPunchingBagTexture();
       heavyBagMaterial = new THREE.MeshStandardMaterial({
@@ -597,6 +601,7 @@ const AudioEngine={
           const dist = Math.abs(y - hitY);
           const factor = Math.max(0, 1 - dist / 1.1);
           bagVertexDents[i * 3 + 2] = -intensity * factor;
+          activeBagDents.add(i);
         }
       }
     }
@@ -846,17 +851,19 @@ addEventListener('message',e=>{
         bagAssembly.rotation.y = reduced ? 0 : Math.sin(time * 0.8) * 0.025;
       }
 
-      if (heavyBagMesh && bagOriginalPositions) {
+      if (heavyBagMesh && bagOriginalPositions && activeBagDents.size) {
         const pos = heavyBagMesh.geometry.attributes.position;
         let needsUpdate = false;
         const reboundSpeed = 4.5;
 
-        for (let i = 0; i < pos.count; i++) {
+        for (const i of activeBagDents) {
           const dentZ = bagVertexDents[i * 3 + 2];
           if (Math.abs(dentZ) > 0.001) {
             bagVertexDents[i * 3 + 2] *= Math.max(0, 1 - reboundSpeed * delta);
             pos.setZ(i, bagOriginalPositions[i * 3 + 2] + bagVertexDents[i * 3 + 2]);
             needsUpdate = true;
+          } else {
+            activeBagDents.delete(i);
           }
         }
         if (needsUpdate) {

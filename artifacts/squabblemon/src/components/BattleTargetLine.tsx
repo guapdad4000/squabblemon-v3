@@ -10,6 +10,11 @@ export function BattleTargetLine({ instanceId, lane }: { instanceId: string; lan
     const source = hand?.querySelector<HTMLElement>(`[data-instance-id="${CSS.escape(instanceId)}"]`);
     const target = arena?.querySelector<HTMLElement>(`[data-testid="lane-${lane}"]`);
     if (!node || !arena || !hand || !source || !target) return;
+    // These SVG children are fixed for the lifetime of this selection. Capture
+    // them once instead of querying the same subtree on every settling frame.
+    const paths = node.querySelectorAll('path');
+    const origin = node.querySelector('[data-origin]');
+    const destination = node.querySelector('[data-destination]');
     let frame = 0, until = 0;
     const draw = () => {
       frame = 0;
@@ -24,11 +29,11 @@ export function BattleTargetLine({ instanceId, lane }: { instanceId: string; lan
         const tx = t.left + t.width / 2 - a.left, ty = t.bottom - a.top;
         const bend = Math.max(24, Math.abs(y - ty) * .45);
         const d = `M ${x} ${y} C ${x} ${y - bend}, ${tx} ${ty + bend}, ${tx} ${ty}`;
-        node.querySelectorAll('path').forEach(path => path.setAttribute('d', d));
-        node.querySelector('[data-origin]')?.setAttribute('cx', String(x));
-        node.querySelector('[data-origin]')?.setAttribute('cy', String(y));
-        node.querySelector('[data-destination]')?.setAttribute('cx', String(tx));
-        node.querySelector('[data-destination]')?.setAttribute('cy', String(ty));
+        paths.forEach(path => path.setAttribute('d', d));
+        origin?.setAttribute('cx', String(x));
+        origin?.setAttribute('cy', String(y));
+        destination?.setAttribute('cx', String(tx));
+        destination?.setAttribute('cy', String(ty));
       }
       if (performance.now() < until && !document.hidden) frame = requestAnimationFrame(draw);
     };

@@ -43,14 +43,16 @@ export function LobbyDepth() {
         }
         const { width, height } = surface;
         context.clearRect(0, 0, width, height);
+        // Layout and fill color are shared by every mote in this same frame.
+        const moteScale = width / root.clientWidth || 1;
+        context.fillStyle = '#ffd89a';
         for (const mote of motes) {
           mote.y -= mote.vy * dt * 6; mote.x += mote.vx * dt * 6;
           if (mote.y < -0.05) { mote.y = 1.05; mote.x = Math.random(); }
           const x = (mote.x + tx * -0.02 * mote.layer) * width;
           const y = (mote.y + ty * -0.015 * mote.layer) * height;
           context.globalAlpha = mote.a * (0.6 + 0.4 * Math.sin(now / 900 + mote.x * 20));
-          context.fillStyle = '#ffd89a';
-          context.beginPath(); context.arc(x, y, mote.r * mote.layer * (width / root.clientWidth || 1), 0, Math.PI * 2); context.fill();
+          context.beginPath(); context.arc(x, y, mote.r * mote.layer * moteScale, 0, Math.PI * 2); context.fill();
         }
       }
       raf = requestAnimationFrame(frame);
