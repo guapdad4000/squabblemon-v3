@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { ApiError } from "@workspace/api-client-react";
-import { isOnlineConnectionFresh, isTransientOnlineError, ONLINE_READ_TIMEOUT_MS,
+import { friendMatchPollInterval, isOnlineConnectionFresh, isOnlineSnapshotSynchronized, isTransientOnlineError, ONLINE_READ_TIMEOUT_MS,
   ONLINE_WRITE_TIMEOUT_MS, request, searchRanked } from "./multiplayer";
 
 const json = (value: unknown, status = 200) => new Response(JSON.stringify(value), {
@@ -177,4 +177,26 @@ test("auth, access and missing-room errors disable even a recently fetched board
   for (const status of [400, 401, 403, 404, 409, 429])
     assert.equal(isOnlineConnectionFresh({ online: true, hasData: true,
       dataUpdatedAt: 20_000, now: 21_000, error: apiError(status) }), false);
+});
+
+test("foreground recovery requires a GET from the current generation, not a fresh cache timestamp", () => {
+  const scope = 'account-a:room-a';
+  assert.equal(isOnlineSnapshotSynchronized(null, scope, 0, 3), false);
+  assert.equal(isOnlineSnapshotSynchronized({ scope, generation: 0, revision: 3 }, scope, 1, 3), false, "late pre-hide GET cannot unlock turns");
+  assert.equal(isOnlineSnapshotSynchronized({ scope, generation: 0, revision: 3 }, scope, 1, 4), false, "late mutation acknowledgement cannot unlock turns");
+  assert.equal(isOnlineSnapshotSynchronized({ scope, generation: 1, revision: 5 }, scope, 1, 3), false, "wait for the confirmed snapshot to reach the cache");
+  assert.equal(isOnlineSnapshotSynchronized({ scope, generation: 1, revision: 5 }, scope, 1, 5), true);
+  assert.equal(isOnlineSnapshotSynchronized({ scope, generation: 1, revision: 5 }, scope, 1, 6), true, "never roll back a newer acknowledged move");
+  for (const changedScope of ['account-b:room-a', 'account-a:room-b'])
+    assert.equal(isOnlineSnapshotSynchronized({ scope, generation: 1, revision: 5 }, changedScope, 1, 6), false, "another room/account must synchronize independently");
+});
+
+test("visible active turns keep their original cadence and terminal rooms stop", () => {
+  assert.equal(friendMatchPollInterval("active", null), 800);
+  for (const status of ["waiting", "complete", undefined] as const)
+    assert.equal(friendMatchPollInterval(status, null), 2000);
+  assert.equal(friendMatchPollInterval("closed", null), false);
+  for (const status of [400, 401, 403, 404])
+    assert.equal(friendMatchPollInterval("active", apiError(status)), false);
+  assert.equal(friendMatchPollInterval("active", apiError(503)), 800);
 });

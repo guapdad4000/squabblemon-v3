@@ -44,6 +44,18 @@ export function isOnlineConnectionFresh({ online, hasData, dataUpdatedAt, now, e
     now - dataUpdatedAt < ONLINE_FRESH_MS;
 }
 
+type ConfirmedOnlineRead = { scope: string; generation: number; revision: number };
+export function isOnlineSnapshotSynchronized(read: ConfirmedOnlineRead | null, scope: string, generation: number, revision?: number): boolean {
+  return !!read && read.scope === scope && read.generation === generation && revision !== undefined && revision >= read.revision;
+}
+
+export function friendMatchPollInterval(status: OnlineRoomView["status"] | undefined, error: unknown): number | false {
+  if (error instanceof ApiError && [400, 401, 403, 404].includes(error.status)) return false;
+  if (status === "closed") return false;
+  // Do not slow active turns, waiting-room pairing, or rematch recovery.
+  return status === "active" ? 800 : 2000;
+}
+
 // A stalled mobile request must release the poll/mutation so reconnection can recover.
 export const request = async <T>(
   path: string,
@@ -104,7 +116,15 @@ export function onlineErrorMessage(error: unknown) {
 export function useFriendMatch(accountId: string, code?: string) {
   const client = useQueryClient();
   const key = ["friend-match", accountId, code];
-  const [online, setOnline] = useState(() => navigator.onLine);
+  const scope = JSON.stringify([accountId, code]);
+  const currentScope = useRef(scope);
+  currentScope.current = scope;
+  const [connectivity, setConnectivity] = useState(() => ({
+    online: navigator.onLine, visible: !document.hidden,
+  }));
+  const { online, visible } = connectivity;
+  const readGeneration = useRef(0);
+  const confirmedRead = useRef<ConfirmedOnlineRead | null>(null);
   const [now, setNow] = useState(Date.now);
   const newer = (incoming: OnlineRoomView): OnlineRoomView => {
     const current = client.getQueryData<OnlineRoomView>(key);
@@ -112,24 +132,22 @@ export function useFriendMatch(accountId: string, code?: string) {
   };
   const query = useQuery({
     queryKey: key,
-    enabled: !!code,
-    queryFn: async ({ signal }) =>
-      newer(await request<OnlineRoomView>(`/${code}`, undefined, signal)),
+    enabled: !!code && online && visible,
+    queryFn: async ({ signal }) => {
+      const generation = readGeneration.current;
+      const incoming = await request<OnlineRoomView>(`/${code}`, undefined, signal);
+      // Cache timestamps also change on mutation acknowledgements. Only a GET
+      // started in this foreground generation can unlock resumed turn controls.
+      if (scope === currentScope.current && generation === readGeneration.current && !document.hidden && navigator.onLine)
+        confirmedRead.current = { scope, generation, revision: incoming.revision };
+      return newer(incoming);
+    },
     retry: (attempt, error) => isTransientOnlineError(error) && attempt < 1,
     retryDelay: 250,
-    refetchInterval: (state) => {
-      const error = state.state.error;
-      if (
-        error instanceof ApiError &&
-        [400, 401, 403, 404].includes(error.status)
-      )
-        return false;
-      if (state.state.data?.status === "closed") return false;
-      return state.state.data?.status === "active" ? 800 : 2000;
-    },
+    refetchInterval: (state) => friendMatchPollInterval(state.state.data?.status, state.state.error),
     refetchOnWindowFocus: "always",
     refetchOnReconnect: "always",
-    refetchIntervalInBackground: true,
+    refetchIntervalInBackground: false,
   });
   const mutation = useMutation({
     mutationFn: (input: {
@@ -145,32 +163,45 @@ export function useFriendMatch(accountId: string, code?: string) {
       client.setQueryData(key, newer(data));
     },
     onError: () => {
-      void query.refetch();
+      // A failed write may still have committed. Reconcile now if visible,
+      // otherwise on return, without restarting hidden polling.
+      void client.invalidateQueries({ queryKey: key });
     },
   });
   useEffect(() => {
     const recover = () => {
-      setOnline(navigator.onLine);
-      if (navigator.onLine && code)
-        void client.invalidateQueries({
-          queryKey: ["friend-match", accountId, code],
-        });
-    };
-    const offline = () => setOnline(false);
-    const visible = () => {
-      if (!document.hidden) recover();
+      const generation = ++readGeneration.current;
+      setNow(Date.now());
+      // Stay disabled until cancellation settles. Otherwise an old request's
+      // cancellation handler can overwrite the next request's fetch state.
+      setConnectivity({ online: navigator.onLine, visible: false });
+      void (async () => {
+        // Supersede only reads, never an in-flight move. Do not roll back a newer
+        // acknowledged mutation to the snapshot from when an old GET began.
+        await client.cancelQueries({
+          queryKey: ["friend-match", accountId, code], exact: true,
+        }, { revert: false });
+        if (scope !== currentScope.current || generation !== readGeneration.current) return;
+        const online = navigator.onLine, visible = !document.hidden;
+        setConnectivity({ online, visible });
+        if (online && visible && code)
+          void client.invalidateQueries({
+            queryKey: ["friend-match", accountId, code],
+          }, { cancelRefetch: false });
+      })();
     };
     window.addEventListener("online", recover);
-    window.addEventListener("offline", offline);
+    window.addEventListener("offline", recover);
     window.addEventListener("pageshow", recover);
-    document.addEventListener("visibilitychange", visible);
+    document.addEventListener("visibilitychange", recover);
     const tick = window.setInterval(() => setNow(Date.now()), 1000);
     return () => {
+      readGeneration.current++;
       clearInterval(tick);
       window.removeEventListener("online", recover);
-      window.removeEventListener("offline", offline);
+      window.removeEventListener("offline", recover);
       window.removeEventListener("pageshow", recover);
-      document.removeEventListener("visibilitychange", visible);
+      document.removeEventListener("visibilitychange", recover);
     };
   }, [accountId, code, client]);
   const settledReceipt = useRef('');
@@ -186,8 +217,8 @@ export function useFriendMatch(accountId: string, code?: string) {
     void client.invalidateQueries({ queryKey: ['fade-park', accountId] });
   }, [query.data?.status, query.data?.gameNumber, query.data?.ranked?.result, accountId, code, client]);
   return {
-    connected: isOnlineConnectionFresh({
-      online, hasData: !!query.data, dataUpdatedAt: query.dataUpdatedAt, now,
+    connected: isOnlineSnapshotSynchronized(confirmedRead.current, scope, readGeneration.current, query.data?.revision) && isOnlineConnectionFresh({
+      online: online && visible, hasData: !!query.data, dataUpdatedAt: query.dataUpdatedAt, now,
       error: query.error,
     }),
     query,
