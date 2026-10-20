@@ -92,7 +92,9 @@
     "test:character-signatures": "node --import ../../scripts/battle-test-css.mjs --import tsx --test src/cosmeticAssets.test.ts src/characterSignatures.test.ts src/streetLegendsPresentation.test.ts",
     "test:character-signatures-browser": "node e2e/run-character-signatures.mjs",
     "test:rookie-touch": "node e2e/run-rookie-touch.mjs",
-    "test:kumite-films": "node --import ../../scripts/battle-test-css.mjs --import tsx --test src/lib/kumiteFilms.test.ts src/lib/rewardReceipts.test.ts"
+    "test:kumite-films": "node --import ../../scripts/battle-test-css.mjs --import tsx --test src/lib/kumiteFilms.test.ts src/lib/rewardReceipts.test.ts",
+    "test:safe-passes": "node --import ../../scripts/battle-test-css.mjs --import tsx --test src/lib/imageWarmup.test.ts src/lib/imageWarmup.lifecycle.test.ts src/lib/deferredModule.test.ts src/lib/deferredComponent.test.ts src/lib/pageNavigation.test.ts src/lib/navigationMemory.test.ts src/lib/elementalStandins.test.ts src/lib/notificationCatalog.test.ts && node --test scripts/battle-target-line-host-parity.test.mjs",
+    "test:target-line-browser": "node --test scripts/battle-target-line-lifecycle.test.mjs"
   },
   "devDependencies": {
     "@clerk/react": "^6.15.1",
@@ -164,7 +166,9 @@
     "vaul": "^1.1.2",
     "vite": "catalog:",
     "wouter": "^3.3.5",
-    "zod": "catalog:"
+    "zod": "catalog:",
+    "react-test-renderer": "19.1.0",
+    "@types/react-test-renderer": "19.1.0"
   },
   "dependencies": {
     "three": "^0.185.1"
