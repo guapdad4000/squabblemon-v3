@@ -10,12 +10,24 @@ encoding. It does not establish a measured Netlify credit saving.
   retain their 2 s cadence for pairing and rematches. Returning players must
   reconcile a new server snapshot before commands are enabled. Writes keep their
   existing request IDs, retries, timeouts, and server-authoritative validation.
-- Chapter movies render only their existing poster until the player presses
-  Play. Closing a movie releases the source instead of leaving a media download
-  running.
-- Decorative story cinematics use the existing optional-media policy before
-  requesting video, including reduced motion, Data Saver, slow connections and
-  hidden tabs. Their original files and playback quality are unchanged.
+## Media readiness and pacing are unchanged
+
+An earlier version of this draft deferred chapter movie source loading and applied
+optional-media gating to decorative story cinematics. Those changes were removed
+because they could delay Play readiness, replace an expected video with a poster,
+or restart a clip while its completion timer kept running after a hidden tab
+resumed. Neither media optimization remains in this draft.
+
+`StoryMovie.tsx` and `StoryCinematic.tsx` are restored byte-for-byte to the base
+commit `56f48cd253185c79f85499950ea4a5cdc692263e`. Chapter movies retain their
+initial source and metadata preloading, existing Play/Close/Continue behavior,
+audio ducking, and controls. Decorative cinematics retain their original loading,
+reduced-motion handling, and completion timing. No source-release or new
+visibility/bandwidth gating behavior is retained. The media-only tests and
+fixtures added for the reverted behavior are removed.
+
+Exact source parity is not evidence of device-level playback validation. No
+real-device or preview playback success is claimed by this correction.
 
 ## Deliberately unchanged
 
@@ -63,14 +75,12 @@ Run from the repository root:
 ```sh
 pnpm --filter @workspace/squabblemon test:online
 pnpm --filter @workspace/squabblemon test:broadcast
-pnpm --filter @workspace/squabblemon test:media-loading
 pnpm --filter @workspace/squabblemon test:online-polling-browser
-pnpm --filter @workspace/squabblemon test:media-loading-browser
 pnpm --filter @workspace/squabblemon typecheck
 pnpm --filter @workspace/api-server typecheck
 ```
 
-The browser tests use local fixtures and mocked match responses, not real
+The polling browser test uses a local fixture and mocked match responses, not real
 accounts or database writes. Set `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` when using
 an existing compatible Chromium installation.
 

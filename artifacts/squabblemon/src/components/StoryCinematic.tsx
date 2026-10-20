@@ -2,12 +2,6 @@ import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { getAssetUrl } from '../data';
 import { Loader2 } from 'lucide-react';
-import { canPlayOptionalBroadcast } from '../lib/optionalBroadcastMedia';
-
-const reducedMotionRequested = () => typeof window !== 'undefined' && (
-  window.matchMedia('(prefers-reduced-motion: reduce)').matches ||
-  document.documentElement.dataset.reduceMotion === 'true'
-);
 
 export interface StoryCinematicProps {
   source: string;
@@ -30,45 +24,16 @@ export function StoryCinematic({
 }: StoryCinematicProps) {
   const [isVideoLoaded, setIsVideoLoaded] = useState(false);
   const [hasError, setHasError] = useState(false);
-  const [isReducedMotion, setIsReducedMotion] = useState(reducedMotionRequested);
-  // Decide before the first render: checking in an effect already allowed the
-  // autoplay element to request a video that the player would never see.
-  const [allowVideo, setAllowVideo] = useState(canPlayOptionalBroadcast);
+  const [isReducedMotion, setIsReducedMotion] = useState(false);
   
   const videoRef = useRef<HTMLVideoElement>(null);
   const timerRef = useRef<number | null>(null);
 
   useEffect(() => {
-    const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
-    const connection = (navigator as Navigator & { connection?: EventTarget }).connection;
-    const refresh = () => {
-      setIsReducedMotion(reducedMotionRequested());
-      setAllowVideo(canPlayOptionalBroadcast());
-    };
-    document.addEventListener('visibilitychange', refresh);
-    motion.addEventListener('change', refresh);
-    connection?.addEventListener?.('change', refresh);
-    const observer = new MutationObserver(refresh);
-    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-reduce-motion'] });
-    refresh();
-    return () => {
-      document.removeEventListener('visibilitychange', refresh);
-      motion.removeEventListener('change', refresh);
-      connection?.removeEventListener?.('change', refresh);
-      observer.disconnect();
-    };
+    const isReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches || 
+      document.documentElement.dataset.reduceMotion === 'true';
+    setIsReducedMotion(isReduced);
   }, []);
-
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video || !allowVideo || hasError || !canPlayOptionalBroadcast()) return;
-    video.src = getAssetUrl(source);
-    return () => {
-      video.pause();
-      video.removeAttribute('src');
-      video.load();
-    };
-  }, [allowVideo, hasError, source]);
 
   useEffect(() => {
     if (duration && duration > 0 && onComplete) {
@@ -91,14 +56,14 @@ export function StoryCinematic({
   return (
     <div className="fixed inset-0 z-50 bg-background flex flex-col justify-end text-foreground overflow-hidden">
       <div className="absolute inset-0 z-0 bg-black">
-        {(allowVideo && !hasError) ? (
+        {(!isReducedMotion && !hasError) ? (
           <video
             ref={videoRef}
+            src={getAssetUrl(source)}
             poster={getAssetUrl(poster)}
             autoPlay
             muted
             playsInline
-            preload="none"
             loop={!duration}
             onCanPlay={handleVideoCanPlay}
             onError={handleVideoError}
@@ -112,7 +77,7 @@ export function StoryCinematic({
           />
         )}
         
-        {!isVideoLoaded && !hasError && allowVideo && (
+        {!isVideoLoaded && !hasError && !isReducedMotion && (
           <div className="absolute inset-0 flex items-center justify-center bg-black/50 z-10">
             <Loader2 className="w-8 h-8 text-primary animate-spin" />
           </div>

@@ -6,15 +6,9 @@ import { setMusicDucked } from '../../../musicStore';
 import { useStoryModalFocus } from './useStoryModalFocus';
 import '../../../styles/squabble-house.css';
 
-type StoryMovieProps = {
+export function StoryMovie({ cinematic, title, onContinue, onClose }: {
   cinematic: StoryCinematic; title: string; onContinue: () => void; onClose: () => void;
-};
-
-export function StoryMovie(props: StoryMovieProps) {
-  return createPortal(<StoryMovieScreen {...props} />, document.body);
-}
-
-export function StoryMovieScreen({ cinematic, title, onContinue, onClose }: StoryMovieProps) {
+}) {
   const host = useRef<HTMLDivElement>(null);
   const video = useRef<HTMLVideoElement>(null);
   const [started, setStarted] = useState(false);
@@ -26,30 +20,16 @@ export function StoryMovieScreen({ cinematic, title, onContinue, onClose }: Stor
     window.addEventListener('keydown', escape);
     return () => { window.removeEventListener('keydown', escape); setMusicDucked(false); };
   }, [onClose]);
-  useEffect(() => {
-    const player = video.current;
-    return () => {
-      // Pausing alone can leave the browser downloading an abandoned chapter.
-      player?.pause();
-      player?.removeAttribute('src');
-      player?.load();
-    };
-  }, []);
   const play = async () => {
-    const player = video.current;
-    if (!player) return;
-    // Even metadata preloads can fetch a large part of a movie. Keep the poster
-    // alone until Play, and set the source inside the gesture for mobile audio.
-    if (!player.hasAttribute('src')) player.src = getAssetUrl(cinematic.videoAssetId);
     setStarted(true); setPlayBlocked(false);
-    try { await player.play(); } catch { setPlayBlocked(true); }
+    try { await video.current?.play(); } catch { setPlayBlocked(true); }
   };
-  return (
+  return createPortal(
     <div className="house-movie" ref={host} role="dialog" aria-modal="true" aria-labelledby="house-movie-title" data-testid="story-movie">
       <header><div><span>Squabble House · The Last Waffle</span><h2 id="house-movie-title">{title}</h2></div><button onClick={onClose} type="button">Back to map</button></header>
       <div className="house-movie__screen">
-        <video ref={video} poster={getAssetUrl(cinematic.posterAssetId)}
-          controls={started && !failed} playsInline preload="none" aria-label={`${title} cinematic`}
+        <video ref={video} src={getAssetUrl(cinematic.videoAssetId)} poster={getAssetUrl(cinematic.posterAssetId)}
+          controls={started && !failed} playsInline preload="metadata" aria-label={`${title} cinematic`}
           onPlay={() => setMusicDucked(true)} onPause={() => setMusicDucked(false)} onEnded={onContinue}
           onError={() => { setFailed(true); setMusicDucked(false); }} />
         {(!started || playBlocked || failed) && <div className="house-movie__start">
@@ -60,6 +40,6 @@ export function StoryMovieScreen({ cinematic, title, onContinue, onClose }: Stor
         </div>}
       </div>
       <footer><p>Movie → Dialogue → Puzzle → Battle → Reward</p><button type="button" onClick={onContinue}>Continue to dialogue →</button></footer>
-    </div>
+    </div>, document.body,
   );
 }
