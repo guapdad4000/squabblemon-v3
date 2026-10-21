@@ -1,0 +1,75 @@
+import assert from 'node:assert/strict';
+import { chromium, expect } from '@playwright/test';
+import { createServer } from 'vite';
+import { mkdir, writeFile } from 'node:fs/promises';
+const port = 4221;
+process.env.PORT = String(port); process.env.BASE_PATH = '/';
+const output = process.env.HEADER_REVIEW_CAPTURE || '/tmp/battle-header-feedback';
+await mkdir(output, { recursive: true });
+const server = await createServer({ server: { host: '127.0.0.1', port, strictPort: true } });
+await server.listen();
+const browser = await chromium.launch();
+const report = [];
+const layout = (page, selector) => page.locator(selector).first().evaluate(el => ({x:el.offsetLeft,y:el.offsetTop,width:el.offsetWidth,height:el.offsetHeight}));
+const rect = (page, selector) => page.locator(selector).first().boundingBox();
+const overlap = (a,b) => a.x < b.x+b.width-1 && b.x < a.x+a.width-1 && a.y < b.y+b.height-1 && b.y < a.y+a.height-1;
+try {
+ for (const reducedMotion of ['reduce','no-preference']) for (const [width,height] of [[320,568],[390,844],[768,1024],[1024,768],[844,390],[1280,800]]) {
+  if(process.env.HEADER_REVIEW_WIDTH && width !== Number(process.env.HEADER_REVIEW_WIDTH)) continue;
+  const page = await browser.newPage({viewport:{width,height}, reducedMotion, hasTouch:width<1000});
+  const errors=[]; page.on('pageerror',e=>errors.push(e.message));
+  await page.goto(`http://127.0.0.1:${port}/e2e/art-recovery/fixture.html?feedback=1`, {waitUntil:'networkidle'});
+  await page.evaluate(()=>document.fonts.ready);
+  await expect(page.getByTestId('ability-chain')).toHaveAttribute('aria-label','Combo 1 of 3');
+  await expect(page.getByTestId('score-player-0')).toHaveText('6');
+  const beforeHeader=await layout(page,'.battle-command-header'), beforeField=await layout(page,'.battlefield-grid');
+  const left=await rect(page,'.battle-live-move'),right=await rect(page,'.battle-live-combo');
+  assert.equal(overlap(left,right),false,'Move and combo never overlap');
+  for(const selector of ['.battle-rival','.battle-round-clock','.battle-match-meta','.battle-live-feedback']) {
+   const box=await rect(page,selector);
+   assert.ok(box.x>=0 && box.x+box.width<=width+1,selector+' is inside viewport');
+  }
+  assert.equal(overlap(await rect(page,'.battle-rival'),await rect(page,'.battle-round-clock')),false,'Rival and round stay separate');
+  assert.equal(await page.locator('.ability-chain-banner,.attack-caption,.round-recap').count(),0,'No duplicate overlay');
+  const frame=async(stage,index)=>{ await page.evaluate(({stage,index})=>window.dispatchEvent(new CustomEvent('review-feedback',{detail:{stage,index}})),{stage,index}); await expect(page.getByTestId('review-frame')).toHaveText(`${stage}:${index}`); };
+  await page.screenshot({path:`${output}/windup-${width}-${reducedMotion}.png`});
+  await frame('impact',0);
+  await expect(page.getByTestId('score-player-0')).toHaveText('9');
+  const delta=page.getByTestId('score-player-0').locator('..').locator('.score-delta');
+  await expect(delta).toHaveText('+3');
+  await expect(delta).toBeVisible();
+  const afterHeader=await layout(page,'.battle-command-header'),afterField=await layout(page,'.battlefield-grid');
+  assert.deepEqual(afterHeader,beforeHeader,'No header shift at impact');
+  assert.deepEqual(afterField,beforeField,'No field shift at impact');
+  if(reducedMotion==='reduce') assert.equal(await page.getByTestId('score-player-0').evaluate(el=>getComputedStyle(el).animationName),'none');
+  await page.screenshot({path:`${output}/impact-${width}-${reducedMotion}.png`});
+  await frame('windup',1); await expect(page.getByTestId('score-player-0')).toHaveText('9');
+  await frame('impact',1); await expect(page.getByTestId('score-player-0')).toHaveText('12');
+  await expect(page.getByTestId('ability-chain')).toHaveAttribute('aria-label','Combo 2 of 3');
+  await frame('windup',2); await expect(page.getByTestId('score-player-2')).toHaveText('3');
+  await frame('impact',2); await expect(page.getByTestId('score-player-2')).toHaveText('6');
+  await expect(page.getByTestId('ability-chain')).toHaveAttribute('aria-label','Combo 3 of 3');
+  await frame('round',2);
+  await expect(page.getByTestId('battle-guidance')).toHaveText('Round 5 settled');
+  assert.equal(await page.locator('.round-recap').count(),0);
+  assert.deepEqual(await layout(page,'.battlefield-grid'),beforeField,'Round result keeps field geometry');
+  await page.screenshot({path:`${output}/round-${width}-${reducedMotion}.png`});
+  await frame('ready',2); await expect(page.getByTestId('battle-guidance')).toHaveText('Choose a fighter');
+  await page.goto(`http://127.0.0.1:${port}/e2e/art-recovery/fixture.html`,{waitUntil:'networkidle'});
+  const rule=await rect(page,'[data-testid="district-rule-0"]'),items=await rect(page,'[data-testid="lane-0"] + .battle-item-badges');
+  assert.ok(items.y>=rule.y+rule.height-1 && items.y-(rule.y+rule.height)<=5,'Items immediately below rules');
+  assert.equal(overlap(items,await rect(page,'[data-testid="lane-0-player-zone"]')),false,'Items clear player cards');
+  await page.locator('.battle-item-badge').first().click();
+  await expect(page.getByRole('region', { name: 'Active items' })).toBeVisible();
+  await page.goto(`http://127.0.0.1:${port}/e2e/art-recovery/fixture.html?feedback=1&pvp=1`,{waitUntil:'networkidle'});
+  assert.equal(overlap(await rect(page,'.battle-header--pvp'),await rect(page,'.battle-live-feedback')),false,'PvP header clears feedback');
+  await expect(page.getByTestId('ability-chain')).toHaveAttribute('aria-label','Combo 1 of 3');
+  await page.screenshot({path:`${output}/pvp-combo-${width}-${reducedMotion}.png`});
+  assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);
+  assert.deepEqual(errors,[]);
+  report.push({width,height,reducedMotion,realAbilitySequence:true,exactImpactTotals:true,stableGeometry:true});
+  console.log(`PASS ${width}x${height} ${reducedMotion}: three-step chain, impact totals/deltas, round result, item placement and inspection, PvP`);
+  await page.close();
+ }
+ await writeFile(`${output}/header-checks.json`,JSON.stringify(report,null,2));
+} finally { await browser.close(); await server.close(); }

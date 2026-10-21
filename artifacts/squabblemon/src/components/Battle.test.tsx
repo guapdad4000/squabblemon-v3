@@ -1514,7 +1514,7 @@ test('mechanic lesson portrait is boxed separately from its text', () => {
   assert.match(html, /mechanic-lesson-copy/);
 });
 
-test('PvE battles offer a 1.5x speed pill that scales presentation beats but not reading or the clock', async () => {
+test('PvE speed control scales presentation beats but not reading or the clock', async () => {
   const { scaleBattleBeat, normalizeBattleSpeed, FAST_BATTLE_SPEED } = await import('../battleSpeed');
   const { broadcastDelay } = await import('../broadcastPresentation');
   const { guidedNoteDuration } = await import('../lib/playerControlledPresentation');
@@ -1540,8 +1540,9 @@ test('PvE battles offer a 1.5x speed pill that scales presentation beats but not
   assert.match(fast, /data-battle-speed="fast"/);
   assert.match(fast, /--presentation-speed:1\.5/);
   assert.match(fast, /data-testid="button-battle-speed"[^>]*aria-pressed="true"/);
-  // The pill precedes Skip in the control row, matching visual and keyboard order.
-  assert.match(fast, /data-testid="button-battle-speed"[^]*?data-testid="button-fast-forward"/);
+  // Speed lives in the menu; Skip remains directly available in the header.
+  assert.match(fast, /battle-tools[^]*?data-testid="button-battle-speed"/);
+  assert.match(fast, /data-testid="button-fast-forward"[^]*?battle-tools/);
 });
 
 test('PvP battles never show the speed pill and keep normal presentation timing', () => {

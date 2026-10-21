@@ -102,7 +102,7 @@ function applyGeometry(root: HTMLElement, geometry: Geometry, sourceId: string) 
   });
 }
 
-export function BattleAttack({ card, effect, impact, replaying = false, audioEnabled = false, playedSpecialMoves = null, speed = 1 }: { card: Card; effect: PresentationEffect; impact: boolean; replaying?: boolean; audioEnabled?: boolean; playedSpecialMoves?: Set<string> | null; speed?: number }) {
+export function BattleAttack({ card, effect, impact, replaying = false, audioEnabled = false, playedSpecialMoves = null, speed = 1, showCaption = true }: { card: Card; effect: PresentationEffect; impact: boolean; replaying?: boolean; audioEnabled?: boolean; playedSpecialMoves?: Set<string> | null; speed?: number; showCaption?: boolean }) {
   const root = useRef<HTMLDivElement>(null);
   const original = useRef(new Map<string, Point>());
   const sourceId = effect.source?.cardInstanceId ?? effect.cardInstanceId;
@@ -180,7 +180,7 @@ export function BattleAttack({ card, effect, impact, replaying = false, audioEna
     {card.id === 'dr-fade' && effect.type === 'ability' && !effect.abilityMetadata?.upgradeId
       && <DrFadeEntrance key={effect.sequence} cueId={effect.sequence}
         squabble={!!effect.source?.after && effect.source.after.powerModifier >= effect.source.after.basePower} />}
-    {showPortrait && card.id !== 'dr-fade' && <div className="attack-caption">
+    {showCaption && showPortrait && card.id !== 'dr-fade' && <div className="attack-caption">
       <img className="attack-caption__scene" src={getCardWallpaper(card.type)} alt="" />
       <img className="attack-caption__fighter" src={getCardImage(effect.source?.after?.maryElephant ? 'ms-mary-mack-elephant' : getCardArtworkId({ ...card, cardId: effect.source?.after?.cardId ?? effect.cardId }))} alt="" />
       <div className="attack-caption__copy"><span>{intensity === 'squabble' ? 'SQUABBLE · DOUBLE HANDS' : card.name}</span>
