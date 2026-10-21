@@ -18,9 +18,9 @@ export const KUMITE_CARD_REWARDS = [
 export const KUMITE_LINEUP_REWARDS = KUMITE_CARD_REWARDS;
 
 const definitions = [
-  ['bushedo-brown', 'Bushedo Brown', 'Rare', 'Air', 3, 3, 'Personal Security', 'On Reveal: Protect your weakest other ally here. If the strongest enemy here has more Hands than Bushedo Brown, give that enemy -1 Hand.', 'Support', '#c5daf5'],
-  ['franklin-duke', 'Franklin Duke', 'Epic', 'Light', 4, 4, 'Read The Strike', 'On Reveal: If the strongest enemy here has more Hands than Franklin Duke, give that enemy -2 Hands and gain +2 Hands if the hit lands. Otherwise, give your weakest ally in another district +1 Hand.', 'Pressure', '#fbd85b'],
-  ['chonk-lee', 'Chonk Lee', 'Legendary', 'Earth', 5, 5, 'No Mercy', 'On Reveal: Give the strongest enemy in each other district -1 Hand. Gain +1 Hand for each enemy actually hit, up to +2. Protection and immunity can block the hit and its gain.', 'Disruption', '#d75943'],
+  ['bushedo-brown', 'Bushedo Brown', 'Rare', 'Air', 3, 4, 'Personal Security', 'On Reveal: Give your weakest other ally here +2 Hands and Protection. Confiscate up to 4 removable bonus Hands from the enemy here with the most bonus; if no enemy has bonus, hit the strongest enemy here for 2. Confiscation never takes printed Hands or creates healing credit. Protection and immunity apply.', 'Support', '#c5daf5'],
+  ['franklin-duke', 'Franklin Duke', 'Epic', 'Light', 4, 6, 'Read The Strike', 'On Reveal: If the strongest enemy here has more Hands than Franklin Duke or has removable bonus Hands, hit it for 4 and gain +3 Hands only if damage lands. Otherwise, give your weakest ally in another district +3 Hands and Protection.', 'Pressure', '#fbd85b'],
+  ['chonk-lee', 'Chonk Lee', 'Legendary', 'Earth', 5, 7, 'No Mercy', 'On Reveal: Hit the strongest enemy in each district for 2. Gain +1 Hand for each enemy actually damaged, up to +3. Protection and immunity block both the hit and its reward.', 'Disruption', '#d75943'],
 ] as const;
 
 export const kumiteCardRarities: Record<string, CardRarity> = Object.fromEntries(definitions.map(([id, , rarity]) => [id, rarity]));
@@ -31,5 +31,5 @@ export const kumiteCards: Record<string, Card> = Object.fromEntries(definitions.
     entryVfx: { accent }, portraitAccent: accent,
     abilityUpgrades: [2, 5, 8].map((unlockLevel, index) => ({ id: `${id}:upgrade:${index + 1}`,
       name: `${ability} ${['Practice', 'Discipline', 'Mastery'][index]}`, unlockLevel,
-      description: 'After the printed ability succeeds, gain +1 Hand.', effect: kumiteCardUpgradeEffects[id][index] })),
+      description: 'Once per match, after the printed ability succeeds, gain +1 Hand.', effect: kumiteCardUpgradeEffects[id][index] })),
   }]));

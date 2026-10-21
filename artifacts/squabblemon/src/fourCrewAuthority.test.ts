@@ -32,15 +32,15 @@ test('revised recommendations remain legal collectibles, not new starters or bat
   }
   assert.equal(cards['inmate-crafty'].cost, 2);
   assert.equal(cards['inmate-crafty'].power, 4);
-  assert.equal(cards.watson.cost, 2);
+  assert.equal(cards.watson.cost, 1);
   assert.equal(cards.watson.power, 2);
   assert.equal(cards.demario.cost, 2);
   assert.equal(cards.demario.power, 3);
   assert.equal(cards.luigion.cost, 2);
   assert.equal(cards.luigion.power, 3);
   assert.equal(MAX_MOTION, 9);
-  assert.equal(CARD_BALANCE_VERSION, 60);
-  assert.equal(ONLINE_RULES_VERSION, 60);
+  assert.equal(CARD_BALANCE_VERSION, 62);
+  assert.equal(ONLINE_RULES_VERSION, 62);
 });
 
 for (const crewId of crewIds) for (let tier = 0; tier <= 3; tier++) {

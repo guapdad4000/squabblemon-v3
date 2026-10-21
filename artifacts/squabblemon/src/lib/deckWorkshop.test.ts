@@ -54,7 +54,7 @@ test('custom deck transcript replays the issued roster even if the saved deck ch
 test('workshop teaches each affected archetype without creating or replacing decks', () => {
   assert.deepEqual(
     workshopSuggestions.map(lesson => lesson.cardId),
-    ['landlord', 'dorothy', 'alice', 'sherlock', 'guap', 'bottle-girl', 'inmate-crafty', 'demario', 'the-opening-act', 'personal-trainer', 'boo-boo-the-fool', 'side-chick', 'ms-mary-mack', 'counter'],
+    ['landlord', 'dorothy', 'alice', 'sherlock', 'guap', 'bottle-girl', 'inmate-crafty', 'demario', 'the-opening-act', 'community-cook', 'personal-trainer', 'boo-boo-the-fool', 'side-chick', 'ms-mary-mack', 'counter'],
   );
   for (const lesson of workshopSuggestions) {
     assert.ok(lesson.title.length > 0);

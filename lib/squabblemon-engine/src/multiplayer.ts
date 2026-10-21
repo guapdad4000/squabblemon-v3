@@ -30,13 +30,13 @@ import {
 } from "./gameEngine";
 
 /** Bumped whenever a persisted online room can no longer be replayed safely. */
-export const ONLINE_RULES_VERSION = 60;
+export const ONLINE_RULES_VERSION = 62;
 /**
  * Card values and trigger semantics are part of a reward match's issued
  * snapshot.  Keep this separate from the transport rules version so a
  * cosmetic/network change does not invalidate an in-progress reward fade.
  */
-export const CARD_BALANCE_VERSION = 60;
+export const CARD_BALANCE_VERSION = 62;
 export const TURN_SECONDS = 75;
 export const ROOM_LIFETIME_MS = 30 * 60 * 1000;
 export type Seat = Owner;
@@ -477,10 +477,12 @@ export type PublicEvent = {
   participants?: PublicParticipant[];
   scores?: EffectLogEntry['scores'];
 };
-export type PublicParticipantState = { lane: Lane; power: number; basePower: number; powerModifier: number; continuousPower?: number; goldenGlow?: boolean; maryCents?: number; maryElephant?: boolean; moved: boolean; statuses: Statuses };
+/** Frame-specific controller; legacy public events can omit it. */
+export type PublicParticipantState = { owner?: Seat; lane: Lane; power: number; basePower: number; powerModifier: number; continuousPower?: number; goldenGlow?: boolean; maryCents?: number; maryElephant?: boolean; moved: boolean; statuses: Statuses };
 export type PublicParticipant = { cardInstanceId: string; cardId: string; owner: Seat; before: PublicParticipantState | null; after: PublicParticipantState | null; departureCause?: 'aura-loss' | 'transformation' };
-const publicParticipantState = (state: { lane: Lane | null; power: number; basePower: number; powerModifier: number; continuousPower?: number; goldenGlow?: boolean; maryCents?: number; maryElephant?: boolean; moved: boolean; statuses: Statuses } | null): PublicParticipantState | null =>
-  state && state.lane !== null ? { lane: state.lane, power: state.power, basePower: state.basePower, powerModifier: state.powerModifier,
+const publicParticipantState = (state: { owner?: Seat; lane: Lane | null; power: number; basePower: number; powerModifier: number; continuousPower?: number; goldenGlow?: boolean; maryCents?: number; maryElephant?: boolean; moved: boolean; statuses: Statuses } | null): PublicParticipantState | null =>
+  state && state.lane !== null ? { ...(state.owner !== undefined ? { owner: state.owner } : {}),
+    lane: state.lane, power: state.power, basePower: state.basePower, powerModifier: state.powerModifier,
     ...(state.continuousPower ? { continuousPower: state.continuousPower } : {}),
     ...(state.goldenGlow ? { goldenGlow: true } : {}),
     ...(state.maryCents !== undefined ? { maryCents: state.maryCents } : {}),

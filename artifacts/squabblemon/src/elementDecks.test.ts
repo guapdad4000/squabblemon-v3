@@ -110,7 +110,7 @@ test('Promoter also sees district rides and settles before the next player actio
   m.districtRuntime = { plays: { player: [0,0,0], cpu: [0,0,0] }, roundPlays: { player: [0,0,0], cpu: [0,0,0] },
     trailing: { player: [false,false,false], cpu: [false,false,false] }, trappedCardIds: [], detainedCardIds: [] };
   const { after, source } = cast(m, 'dragonflyjones');
-  assert.equal(find(after, source).lane, 1); assert.equal(find(after, source).powerModifier, 3);
+  assert.equal(find(after, source).lane, 1); assert.equal(find(after, source).powerModifier, 2);
   assert.equal(after.pendingLeaderReactions?.length, 0);
 });
 

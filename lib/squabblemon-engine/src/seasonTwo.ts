@@ -183,9 +183,9 @@ function encounterFor(
           {
             id: `${beat.id}-late-arrival`,
             name: "Late Arrival",
-            description: `At round ${beat.rounds}, one supporter reinforces the opponent.`,
+            description: `At round ${beat.rounds}, the opponent draws one card from its remaining ten-card deck. If the deck is empty, no card is added.`,
             trigger: { kind: "round", atLeast: beat.rounds },
-            onEnter: [{ kind: "reinforcement", owner: "cpu", cardId: "snow" }],
+            onEnter: [{ kind: "draw", owner: "cpu", amount: 1 }],
           },
         ]
       : [];

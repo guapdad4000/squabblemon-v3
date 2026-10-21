@@ -21,7 +21,7 @@ export const BLOCK_EXPANSION = [
   ['conductor', 'last-train-conductor', 'Last Train Conductor', 'Mythical', 'Water', 4, 3, 'Last Stop', 'Move your lowest-Hands other ally here to your weakest other district. If moved, Cleanse it and give it +2 Hands, or +3 if it is Water.', 'Movement'],
   ['midnightmayor', 'midnight-mayor', 'Midnight Mayor', 'Mythical', 'Dark', 3, 2, 'Keys to the City', 'Gain +1 Hands for each different friendly card type here, up to +3.', 'Pressure'],
   ['bigzoey', 'big-zoey', 'Big Zoey', 'Legendary', 'Earth', 3, 3, 'Hold the Block', 'Give your lowest-Hands other ally here +2 Hands and the lowest-Hands enemy here -2 Hands.', 'Disruption'],
-  ['leroy', 'leroy', 'Leroy', 'Mythical', 'Light', 3, 4, 'Golden Glow', 'If your board has at least three different friendly card types, gain +1 Hands and give the highest-Hands enemy here -2 Hands.', 'Disruption'],
+  ['leroy', 'leroy', 'Leroy', 'Mythical', 'Light', 3, 4, 'Golden Glow', 'On Reveal: Confiscate up to 4 removable bonus Hands from the enemy here with the most bonus, then hit that enemy for 2; with no bonus target, hit the strongest enemy here for 2. If your board has at least three friendly elements, gain +3 Hands and Protection. Confiscation never takes printed Hands or creates healing credit. Protection and immunity block the hostile package.', 'Disruption'],
   ['partytitan', 'block-party-titan', 'Block Party Titan', 'Mythical', 'Earth', 6, 7, 'Everybody Outside', 'Give your weakest other friendly card in each district +1 Hand.', 'Support'],
 ] as const;
 
@@ -39,7 +39,9 @@ export const expansionCards: Record<string, Card> = Object.fromEntries(BLOCK_EXP
       id: `${engineId}:upgrade:${index + 1}`, name: `${ability} ${['Practice', 'Confidence', 'Mastery'][index]}`,
       description: elementalBond && effect.startsWith('Ongoing:')
         ? 'While this card is in your hand, one bonded ally gains an additional +1 Hand at round end.'
-        : 'After the base ability succeeds, this card gains +1 Hands.',
+        : engineId === 'leroy'
+          ? 'Once per match, after the base ability succeeds, this card gains +1 Hand.'
+          : 'After the base ability succeeds, this card gains +1 Hands.',
       unlockLevel, effect: expansionUpgradeEffects[engineId][index],
     })),
   }],

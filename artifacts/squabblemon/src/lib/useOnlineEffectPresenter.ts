@@ -10,7 +10,7 @@ export function toPresentationEffect(event: PublicEvent, seat: Seat, scores: Pre
   if ((!event.sourceId && !event.artCues?.length) || event.type === 'pass' || event.type === 'reveal' || event.kind === 'story') return null;
   const owner = (s: Seat) => s === seat ? 'player' as const : 'cpu' as const;
   const participant = (p: PublicParticipant): EventParticipant => {
-    const state = (s: PublicParticipant['before']) => s ? { ...s, cardInstanceId: p.cardInstanceId, cardId: p.cardId, owner: owner(p.owner), lastEffectNote: '' } : null;
+    const state = (s: PublicParticipant['before']) => s ? { ...s, cardInstanceId: p.cardInstanceId, cardId: p.cardId, owner: owner(s.owner ?? p.owner), lastEffectNote: '' } : null;
     return { cardInstanceId: p.cardInstanceId, cardId: p.cardId, owner: owner(p.owner), before: state(p.before), after: state(p.after), ...(p.departureCause ? { departureCause: p.departureCause } : {}) };
   };
   const all = (event.participants ?? []).map(participant);

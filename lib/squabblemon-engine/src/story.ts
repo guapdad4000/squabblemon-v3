@@ -2,7 +2,7 @@ import { withStoryEnvironments } from "./storyEnvironments";
 import { cards, DECK_SIZE, completeEngineCrew } from "./data";
 import chapterOneDialogue from "./chapterOneDialogue";
 import { sequelChapters } from "./seasonChapters";
-import type { StoryEncounterSnapshot, StoryStarObjective as EngineStoryStarObjective } from "./gameEngine";
+import type { StoryEffect, StoryEncounterSnapshot, StoryStarObjective as EngineStoryStarObjective } from "./gameEngine";
 import { validateStoryPuzzle, type StoryPuzzleDefinition } from "./storyPuzzles";
 import { seasonTwoChapters } from "./seasonTwo";
 import { extendedStoryChapters } from "./storyExpansions";
@@ -207,6 +207,17 @@ const validObjective = (objective: StoryStarObjective): boolean => {
     case "cards-moved": return ownerIsValid(criterion.owner) && Number.isInteger(criterion.atLeast) && criterion.atLeast >= 1;
   }
 };
+const validReinforcement = (effect: { readonly owner: string; readonly cardId: string; readonly allowDuplicate?: boolean }): boolean =>
+  (effect.owner === "player" || effect.owner === "cpu") && !!cards[effect.cardId]
+  && (effect.allowDuplicate === undefined || typeof effect.allowDuplicate === "boolean");
+const validStoryPhaseEffect = (effect: StoryEffect): boolean => {
+  if (effect.kind === "reinforcement") return validReinforcement(effect);
+  if (effect.kind === "draw") return (effect.owner === "player" || effect.owner === "cpu")
+    && Number.isInteger(effect.amount) && effect.amount >= 1 && effect.amount <= DECK_SIZE;
+  if (effect.kind === "lane-lock") return effect.lanes.every((lane) => [0, 1, 2].includes(lane));
+  if (effect.kind === "lane-power") return [0, 1, 2].includes(effect.lane);
+  return true;
+};
 export function validateStoryContent(content: StoryContent): StoryContent {
   if (!Number.isInteger(content.version) || content.version < 1 || !content.chapters.length) fail("version or chapters is invalid");
   const chapterIds = new Set<string>(), nodeIds = new Set<string>(), chapterOrders = new Set<number>();
@@ -236,9 +247,9 @@ export function validateStoryContent(content: StoryContent): StoryContent {
           (modifiers.laneLocks ?? []).some((lock) => !Number.isInteger(lock.round) || lock.round < 1 || lock.round > roundLimit || !lock.lanes.length || lock.lanes.some((lane) => ![0, 1, 2].includes(lane))) ||
           (modifiers.roundMotionDeltas ?? []).some((item) => !Number.isInteger(item.round) || item.round < 1 || item.round > roundLimit || !Number.isInteger(item.amount)) ||
           (modifiers.lanePowerBonuses ?? []).some((item) => ![0, 1, 2].includes(item.lane) || !Number.isInteger(item.amount)) ||
-          (modifiers.reinforcements ?? []).some((item) => !Number.isInteger(item.round) || item.round < 1 || item.round > roundLimit || !cards[item.cardId])
+          (modifiers.reinforcements ?? []).some((item) => !Number.isInteger(item.round) || item.round < 1 || item.round > roundLimit || !validReinforcement(item))
         ) fail(`battle ${node.id} has invalid modifiers`);
-        if (new Set(phases.map((phase) => phase.id)).size !== phases.length || phases.some((phase) => !phase.id || !phase.name || !phase.description || phase.trigger.atLeast < 1 || (phase.trigger.kind === "round" && phase.trigger.atLeast > roundLimit) || (phase.onEnter ?? []).some((effect) => (effect.kind === "reinforcement" && !cards[effect.cardId]) || ((effect.kind === "lane-lock" && effect.lanes.some((lane) => ![0, 1, 2].includes(lane))) || (effect.kind === "lane-power" && ![0, 1, 2].includes(effect.lane)))))) fail(`battle ${node.id} has invalid phases`);
+        if (new Set(phases.map((phase) => phase.id)).size !== phases.length || phases.some((phase) => !phase.id || !phase.name || !phase.description || phase.trigger.atLeast < 1 || (phase.trigger.kind === "round" && phase.trigger.atLeast > roundLimit) || (phase.onEnter ?? []).some((effect) => !validStoryPhaseEffect(effect)))) fail(`battle ${node.id} has invalid phases`);
       } else if (!node.scenes.length || node.scenes.some((scene) => !scene.speaker || !scene.portraitAssetId || !scene.text)) fail(`node ${node.id} needs dialogue`);
     }
     for (const node of chapter.nodes) for (const prerequisite of node.prerequisites) if (local.get(prerequisite)?.optional && !node.optional) fail(`optional node ${prerequisite} gates required node ${node.id}`);

@@ -32,6 +32,6 @@ for(const owner of ['player','cpu'] as const){
   }
  });
  test(`${owner}: Dark reactions and cheaper Air route keep their printed Hands`,()=>{
-  for(const [id,cost,power] of [['redpill',3,2],['shonuff',3,1],['cloudbreak',3,2]] as const){const c=createCardInstance(id,owner);assert.equal(c.cost,cost);assert.equal(c.basePower,power)}
+  for(const [id,cost,power] of [['redpill',3,2],['shonuff',3,4],['cloudbreak',3,2]] as const){const c=createCardInstance(id,owner);assert.equal(c.cost,cost);assert.equal(c.basePower,power)}
  });
 }

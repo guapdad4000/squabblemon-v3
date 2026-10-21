@@ -29,7 +29,7 @@ function shield(m: Match, target: CardInstance) {
 const advance = (m: Match) => nextRound({ ...m, phase: 'resolved', playerHand: [], cpuHand: [] });
 
 test('all twelve retain collection, rarity, artwork, cosmetics and training IDs at the approved costs', () => {
-  const costs = [3, 1, 3, 2, 3, 3, 3, 3, 4, 4, 4, 3];
+  const costs = [3, 1, 3, 2, 3, 3, 3, 2, 4, 4, 4, 3];
   assert.equal(CHARACTER_WAVE.length, 12);
   assert.equal(cardCatalog.filter(c => (c.kind ?? 'character') === 'character').length, 278);
   CHARACTER_WAVE.forEach(([id, art, name, rarity], index) => {
@@ -165,15 +165,15 @@ test('hostile forced movement can route an enemy into Lingering Scent', () => {
   assert.equal(find(after, target).lane, 1); assert.equal(find(after, target).statuses.burnStacks, 2);
 });
 
-test('Passport Bro cleanses a Water passenger only when leaving a losing district, without a refund', () => {
+test('Passport Bro rewards travel and adds its losing-Water passive without a refund', () => {
   for (const losing of [false, true]) {
     const m = blank(), water = unit('alchy', 'player', 0), hostile = unit('hooper', 'cpu', 0, 2);
     water.statuses.weakened = true; hostile.powerModifier = losing ? 20 : -4; m.boards[0] = [water, hostile];
     const after = cast(m, 'passportbro').after;
     assert.notEqual(find(after, water).lane, 0);
-    assert.equal(find(after, water).statuses.weakened, !losing);
-    assert.equal(find(after, water).powerModifier, losing ? 2 : 0);
-    assert.equal(after.playerMotion, 6);
+    assert.equal(find(after, water).statuses.weakened, false);
+    assert.equal(find(after, water).powerModifier, losing ? 5 : 2);
+    assert.equal(after.playerMotion, 9 - cards.passportbro.cost);
   }
 });
 

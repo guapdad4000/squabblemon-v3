@@ -5,6 +5,7 @@ import { streetLegendsCards } from './streetLegendsWave';
 export type StreetLegendsTools = CreativeTools & {
   buff(m: Match, id: string, amount: number, copiedGain?: boolean): Match;
   hostile(m: Match, source: CardInstance, target: CardInstance, apply: (m: Match, actual: CardInstance) => Match): Match;
+  trimBonus(m: Match, source: CardInstance, target: CardInstance, cap: number, note?: string): { match: Match; removed: number; recipientId?: string };
   damage(m: Match, target: CardInstance, amount: number, note: string): Match;
   unlock(m: Match, id: string): Match;
   maryLand(m: Match, card: CardInstance, lane: Lane): Match;
@@ -41,6 +42,8 @@ export function streetLegendsReveal(m: Match, s: CardInstance, t: StreetLegendsT
   if (!Object.hasOwn(streetLegendsCards, identity(s))) return null;
   const before = m, id = identity(s), targets: string[] = [];
   let detail = 'No eligible target or legal route.';
+  let bonusSeizureSucceeded = false;
+  let relationshipHitSucceeded = false;
   const add = (c: CardInstance, amount: number) => { targets.push(c.instanceId); m = t.buff(m, c.instanceId, amount); };
   if (id === 'boo-boo-the-fool') {
     if (!used(m, s, 'decoy')) { m = replace(use(m, s, 'decoy'), mark(s, 'sl-decoy', m)); detail = 'A public Decoy waits here through next round.'; }
@@ -68,8 +71,7 @@ export function streetLegendsReveal(m: Match, s: CardInstance, t: StreetLegendsT
   } else if (id === 'ms-mary-mack') {
     detail = 'At round end, collect 3¢ per enemy card toward 15¢; no immediate slam.';
   } else if (id === 'pimp-swookie') {
-    const target = sorted(enemies(m, s), t, true)[0];
-    if (target) { targets.push(target.instanceId); m = t.hostile(m, s, target, (state, actual) => { const changed = t.modify(state, actual.instanceId, c => ({ ...c, statuses: { ...c.statuses, weakened: true }, lastEffectNote: 'Say the Whole Name: Weakened; next gain reduced by up to 2.' })); return replace(t.disruption(state, changed, s, actual.instanceId), mark(s, 'sl-name-check', state, [actual.instanceId], actual.lane!)); }); detail = 'Weaken and one next-gain Name Check targeted the strongest enemy.'; }
+    detail = 'Ongoing: watching for an enemy Snow Bunny; recruitment respects the shared round and match limits.';
   } else if (id === 'og-uncle-harley-davidson' || id === 'gas-station-window-wiper') {
     const destination = open(m, s, t)[0];
     if (destination !== undefined) { m = t.move(m, s, destination, s.ability + ': taking the open road.'); const arrived = find(m, s.instanceId); if (arrived?.lane === destination) {
@@ -81,9 +83,36 @@ export function streetLegendsReveal(m: Match, s: CardInstance, t: StreetLegendsT
     const target = sorted(allies(m, s, false), t)[0];
     if (target) { add(target, 2); m = t.cleanse(m, target.instanceId); const client = find(m, target.instanceId); if (client && t.score(m, client.owner, client.lane!) < t.score(m, client.owner === 'player' ? 'cpu' : 'player', client.lane!)) m = t.protect(m, s, client.instanceId); detail = 'The weakest ally received +2 and Cleanse; a trailing client receives Protection.'; }
   } else if (id === 'side-chick') {
-    const baby = sorted(enemies(m, s, false).filter(c => c.cardId === 'baby'), t, true)[0];
-    const target = baby ?? sorted(enemies(m, s), t, true)[0];
-    if (target) { targets.push(target.instanceId); if (baby) m = t.hostile(m, s, baby, (state, actual) => { let result = t.damage(state, actual, 3, 'Not Your Family: 3 damage.'); const survivor = find(result, actual.instanceId); if (survivor) result = t.disruption(result, t.modify(result, survivor.instanceId, c => ({ ...c, statuses: { ...c.statuses, weakened: true }, lastEffectNote: 'Not Your Family: Weakened.' })), s, survivor.instanceId); return result; }); else m = t.hit(m, s, target, -1, 'Not Your Family: no enemy Baby Momma; 1 damage.'); detail = baby ? 'Enemy Baby Momma targeted for 3 and Weaken in one defended package.' : 'No enemy Baby Momma; strongest local enemy targeted for 1.'; }
+    const relationship = sorted(enemies(m, s, false)
+      .filter(c => ['snow', 'wifey', 'baby', 'suga-mama'].includes(c.cardId)), t, true)[0];
+    const target = relationship ?? sorted(enemies(m, s), t, true)[0];
+    if (target) {
+      targets.push(target.instanceId);
+      let recipient: CardInstance | undefined;
+      const beforePackage = m;
+      m = t.hostile(m, s, target, (state, actual) => {
+        recipient = actual;
+        let result = t.damage(state, actual, relationship ? 3 : 1,
+          relationship ? 'Not Your Family: 3 damage.' : 'Not Your Family: 1 local damage.');
+        const survivor = find(result, actual.instanceId);
+        if (relationship && survivor) result = t.disruption(result,
+          t.modify(result, survivor.instanceId, c => ({ ...c,
+            statuses: { ...c.statuses, weakened: true }, lastEffectNote: 'Not Your Family: Weakened.',
+          })), s, survivor.instanceId);
+        return result;
+      });
+      if (recipient) {
+        const current = find(m, recipient.instanceId);
+        const committed = (state: Match) => (state.laneDamage ?? [])
+          .filter(hit => hit.round === beforePackage.round && hit.instanceId === recipient!.instanceId)
+          .reduce((total, hit) => total + hit.amount, 0);
+        relationshipHitSucceeded = committed(m) > committed(beforePackage)
+          || !!current && (!recipient.statuses.weakened && current.statuses.weakened);
+        if (recipient.instanceId !== target.instanceId) targets.push(recipient.instanceId);
+      }
+      detail = relationship ? `${target.name} targeted for 3 damage and Weaken in one defended package.`
+        : 'No enemy Snow Bunny, Wifey, Baby Momma or Suga Mama; strongest local enemy targeted for 1.';
+    }
   } else if (id === 'parole-officer') {
     const target = sorted(enemies(m, s), t, true)[0];
     if (target) { targets.push(target.instanceId); m = t.hostile(m, s, target, (state, actual) => replace(state, mark(s, 'sl-curfew', state, [actual.instanceId], actual.lane!), 'target')); }
@@ -101,8 +130,15 @@ export function streetLegendsReveal(m: Match, s: CardInstance, t: StreetLegendsT
   } else if (id === 'uncle-sam') {
     const eligible = enemies(m, s).filter(c => c.powerModifier > 0).sort((a, b) => b.powerModifier - a.powerModifier || a.instanceId.localeCompare(b.instanceId));
     const target = eligible[0];
-    if (target) { targets.push(target.instanceId); const prior = target.powerModifier; m = t.trim(m, s, target, 3); const current = find(m, target.instanceId); const taken = current ? Math.max(0, Math.min(3, prior - current.powerModifier)) : 0; if (taken) add(s, taken); detail = `Confiscated ${taken} actual removable bonus Hands.`; }
-    else { m = replace(m, mark(s, 'sl-audit', m)); detail = 'No removable local bonus; one public +1 Motion Audit posted.'; }
+    if (target) {
+      targets.push(target.instanceId);
+      const result = t.trimBonus(m, s, target, 6, 'PAY WHAT YOU OWE: confiscated up to 6 bonus Hands.');
+      m = result.match;
+      if (result.recipientId && result.recipientId !== target.instanceId) targets.push(result.recipientId);
+      if (result.removed) add(s, result.removed);
+      bonusSeizureSucceeded = result.removed > 0;
+      detail = `Confiscated ${result.removed} actual removable bonus Hands.`;
+    } else { m = replace(m, mark(s, 'sl-audit', m)); bonusSeizureSucceeded = true; detail = 'No removable local bonus; one public +2 Motion Audit posted.'; }
   } else if (id === 'apartment-maintenance-sage') {
     const client = sorted(allies(m, s), t)[0];
     if (client) { targets.push(client.instanceId); m = t.unlock(t.cleanse(m, client.instanceId), client.instanceId); const live = find(m, client.instanceId); const destination = live && open(m, live, t)[0]; if (live && destination !== undefined) { m = t.move(m, live, destination, 'I GOT A KEY FOR THAT: route reopened.'); if (find(m, live.instanceId)?.lane === destination) m = t.protect(m, s, live.instanceId); } detail = 'The client was cleansed and its timed movement restriction removed; a real arrival earns Protection.'; }
@@ -110,7 +146,10 @@ export function streetLegendsReveal(m: Match, s: CardInstance, t: StreetLegendsT
     const client = sorted(allies(m, s), t)[0];
     if (client && !used(m, s, 'bail')) { targets.push(client.instanceId); m = replace(use(m, s, 'bail'), mark(s, 'sl-bail', m, [client.instanceId])); detail = 'One Bail Bond protects a client by redirecting the next targeted ability.'; }
   }
-  const succeeded = meaningful(before, m) && id !== 'ms-mary-mack';
+  const succeeded = id === 'uncle-sam' ? bonusSeizureSucceeded
+    : id === 'side-chick' ? relationshipHitSucceeded
+    : id === 'pimp-swookie' ? false
+    : meaningful(before, m) && id !== 'ms-mary-mack';
   if (!echoed && id !== 'ms-mary-mack') m = t.modify(m, s.instanceId, c => ({ ...c, creativeEntranceSucceeded: succeeded }));
   m = t.event(before, m, s, targets, `${s.ability}: ${detail}`);
   return !echoed && succeeded ? t.train(m, s.instanceId) : m;
@@ -125,8 +164,8 @@ export function streetLegendsPreventGain(m: Match, target: CardInstance, amount:
 export function streetLegendsGain(before: Match, m: Match, target: CardInstance, t: StreetLegendsTools, copied = false): Match {
   if (copied || !marks(m).some(x => x.kind === 'sl-lunch')
     || !find(m, target.instanceId) || find(m, target.instanceId)!.powerModifier <= target.powerModifier) return m;
-  for (const bond of marks(m).filter(x => x.kind === 'sl-lunch' && x.targets.includes(target.instanceId))) {
-    const hubby = find(m, bond.source.instanceId); if (!active(hubby)) continue;
+  for (const bond of marks(m).filter(x => x.kind === 'sl-lunch' && x.owner === target.owner && x.targets.includes(target.instanceId))) {
+    const hubby = find(m, bond.source.instanceId); if (!active(hubby) || hubby.owner !== target.owner) continue;
     const start = m; m = remove(m, bond.id); m = t.buff(m, hubby.instanceId, 1, true); m = t.train(m, hubby.instanceId);
     m = t.event(start, m, hubby, [hubby.instanceId], 'Lunch Break Loyalty: the client grew; Work Hubby gained +1 Hand.');
   }
@@ -173,7 +212,7 @@ export function streetLegendsRoundStart(m: Match, t: StreetLegendsTools): Match 
 }
 export function streetLegendsCanMove(m: Match, id: string): boolean { return !marks(m).some(x => x.kind === 'sl-curfew' && x.targets.includes(id)); }
 export function streetLegendsCleansed(m: Match, id: string): Match { return { ...m, creativeMarks: (m.creativeMarks ?? []).filter(x => !((x.kind === 'sl-curfew' || x.kind === 'sl-name-check') && x.targets.includes(id))) }; }
-export function streetLegendsTax(m: Match, owner: Owner, lane: Lane, card: CardInstance): number { return !card.hazard && (card.kind ?? 'character') === 'character' && marks(m).some(x => x.kind === 'sl-audit' && x.owner !== owner && x.lane === lane) ? 1 : 0; }
+export function streetLegendsTax(m: Match, owner: Owner, lane: Lane, card: CardInstance): number { return !card.hazard && (card.kind ?? 'character') === 'character' && marks(m).some(x => x.kind === 'sl-audit' && x.owner !== owner && x.lane === lane) ? 2 : 0; }
 export function streetLegendsPaidAudit(m: Match, owner: Owner, lane: Lane, card: CardInstance): Match { return streetLegendsTax(m, owner, lane, card) ? { ...m, creativeMarks: (m.creativeMarks ?? []).filter(x => !(x.kind === 'sl-audit' && x.owner !== owner && x.lane === lane && x.expires >= m.round)) } : m; }
 export function streetLegendsIntercept(m: Match, target: CardInstance): { match: Match; interceptor?: CardInstance } {
   const bond = marks(m).find(x => x.kind === 'sl-bail' && x.owner === target.owner && x.targets.includes(target.instanceId) && x.source.instanceId !== target.instanceId && active(find(m, x.source.instanceId)));
@@ -187,7 +226,7 @@ export function streetLegendsFinishIntercept(before: Match, m: Match, auntie: Ca
   return t.event(before, m, auntie, [auntie.instanceId], harmful ? 'Sign Here: Auntie took the hostile ability; one cross-district Poison credit armed.' : 'Sign Here: redirected ability was blocked; no credit armed.');
 }
 export function streetLegendsDistrictMarks(m: Match): CharacterDistrictMark[] {
-  const labels: Record<string, string> = { 'sl-decoy': 'Decoy · next enemy arrival: 1 damage', 'sl-name-check': 'Name Check · next Hands gain reduced by up to 2', 'sl-curfew': 'Curfew · target cannot move', 'sl-check-in': 'Check-In · first enemy movement here each round: 2 damage', 'sl-lunch': 'Lunch Bond · next client gain rewards Work Hubby', 'sl-chase': 'You Up? · one chase at next round start', 'sl-audit': 'Audit · next enemy character here: +1 Motion', 'sl-bail': 'Bail Bond · next targeted ability redirected to Auntie', 'sl-bail-credit': 'Bond credit · next Poison in another district: successful entrance refunds 1 Motion' };
+  const labels: Record<string, string> = { 'sl-decoy': 'Decoy · next enemy arrival: 1 damage', 'sl-name-check': 'Name Check · next Hands gain reduced by up to 2', 'sl-curfew': 'Curfew · target cannot move', 'sl-check-in': 'Check-In · first enemy movement here each round: 2 damage', 'sl-lunch': 'Lunch Bond · next client gain rewards Work Hubby', 'sl-chase': 'You Up? · one chase at next round start', 'sl-audit': 'Audit · next enemy character here: +2 Motion', 'sl-bail': 'Bail Bond · next targeted ability redirected to Auntie', 'sl-bail-credit': 'Bond credit · next Poison in another district: successful entrance refunds 1 Motion' };
   const maryMarks: CharacterDistrictMark[] = marks(m).filter(x => x.kind === 'sl-mary-return').map(x => ({ owner: x.owner, lane: x.lane, artworkId: x.source.id, text: `15¢ · elephant landing from R${x.amount}` }));
   return [...maryMarks, ...marks(m).filter(x => labels[x.kind]).map(x => ({ owner: x.owner, lane: x.lane, artworkId: x.source.id, text: `${labels[x.kind]}${x.kind === 'sl-check-in' && x.usedRound === m.round ? ' · spent this round' : ''} · through R${x.expires}` }))];
 }

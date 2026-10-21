@@ -98,7 +98,7 @@ for (const owner of ['player', 'cpu'] as const) {
       assert.equal(abilityTookEffect(event(result.after, result.source)), !guarded);
     }
   });
-  test(`${owner}: Side Chick hits only enemy Baby Momma across districts and respects one shield`, () => {
+  test(`${owner}: Side Chick's relationship counter still hits enemy Baby Momma across districts and respects one shield`, () => {
     const friendly = { ...unit('baby', owner, 0), basePower: 8 }, rival = { ...unit('baby', enemy, 2), basePower: 8 };
     const m = blank(); m.boards = [[friendly], [], [rival]];
     const hit = cast(m, 'side-chick', owner).after;
@@ -110,12 +110,14 @@ for (const owner of ['player', 'cpu'] as const) {
     assert.equal(find(blocked.after, rival)?.powerModifier, 0); assert(!find(blocked.after, rival)?.statuses.weakened);
     assert.equal(find(blocked.after, blocked.source)?.powerModifier, 0); assert(!abilityTookEffect(event(blocked.after, blocked.source)));
   });
-  test(`${owner}: Name Check withholds a gain without damage or injury`, () => {
-    const victim = { ...unit('og', enemy, 0), basePower: 12 }; const m = blank(); m.boards[0] = [victim];
-    let after = cast(m, 'pimp-swookie', owner).after;
-    assert(find(after, victim)?.statuses.weakened); assert(kinds(after).includes('sl-name-check'));
-    after = cast(after, 'nail', enemy).after;
-    assert.equal(find(after, victim)?.powerModifier, 0); assert.equal(find(after, victim)?.recoverableDamage ?? 0, 0);
+  test(`${owner}: Swookie recruits Snow Bunny and she Freezes an enemy without adding damage or injury`, () => {
+    const snow = unit('snow', enemy, 0), victim = { ...unit('og', enemy, 0), basePower: 12 };
+    const m = blank(); m.boards[0] = [snow, victim];
+    const after = cast(m, 'pimp-swookie', owner).after;
+    assert.equal(find(after, snow)?.owner, owner);
+    assert.equal(find(after, victim)?.statuses.frozen, true);
+    assert.equal(find(after, victim)?.powerModifier, 0);
+    assert.equal(find(after, victim)?.recoverableDamage ?? 0, 0);
     assert(!kinds(after).includes('sl-name-check')); assert(!after.laneDamage?.length);
   });
   test(`${owner}: Mary no longer copies ally growth; Lunch Bond still pays once`, () => {
@@ -127,13 +129,13 @@ for (const owner of ['player', 'cpu'] as const) {
     assert(!kinds(after).includes('sl-ledger-rhythm'));
   });
   test(`${owner}: Uncle Sam confiscates bonuses without damage and charges exactly one Audit`, () => {
-    const m = blank(), rival = { ...unit('og', enemy, 0), basePower: 12, powerModifier: 4 }; m.boards[0] = [rival];
+    const m = blank(), rival = { ...unit('og', enemy, 0), basePower: 12, powerModifier: 8 }; m.boards[0] = [rival];
     const result = cast(m, 'uncle-sam', owner);
-    assert.equal(find(result.after, rival)?.powerModifier, 1); assert.equal(find(result.after, rival)?.recoverableDamage ?? 0, 0);
-    assert.equal(result.after.laneDamage?.length, 0); assert.equal(find(result.after, result.source)?.powerModifier, 3);
+    assert.equal(find(result.after, rival)?.powerModifier, 2); assert.equal(find(result.after, rival)?.recoverableDamage ?? 0, 0);
+    assert.equal(result.after.laneDamage?.length, 0); assert.equal(find(result.after, result.source)?.powerModifier, 6);
     let audit = cast(blank(), 'uncle-sam', owner).after;
     const guest = createCardInstance('hooper', enemy);
-    assert.equal(getLegalCardCost(audit, enemy, guest, 0), guest.cost + 1);
+    assert.equal(getLegalCardCost(audit, enemy, guest, 0), guest.cost + 2);
     audit = cast(audit, 'hooper', enemy).after; assert(!kinds(audit).includes('sl-audit'));
     assert.equal(getLegalCardCost(audit, enemy, guest, 0), guest.cost);
   });
@@ -163,7 +165,7 @@ for (const owner of ['player', 'cpu'] as const) {
     assert.equal(find(after, client)?.powerModifier, 0); assert.equal(find(after, auntie.source)?.powerModifier, -1);
     assert(kinds(after).includes('sl-bail-credit')); assert(!kinds(after).includes('sl-bail'));
     const target = { ...unit('og', enemy, 1), basePower: 12 }; after.boards[1].push(target);
-    const paid = cast(after, 'pimp-swookie', owner, 1).after;
+    const paid = cast(after, 'the-battle-rapper', owner, 1).after;
     assert.equal(owner === 'player' ? paid.playerMotion : paid.cpuMotion, 7); assert(!kinds(paid).includes('sl-bail-credit'));
   });
   test(`${owner}: Evil Manager's expiry transfers bonuses without injury or counter triggers`, () => {
