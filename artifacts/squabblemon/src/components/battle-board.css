@@ -54,21 +54,23 @@
   gap: clamp(6px,1.4vw,24px); align-items: stretch;
 }
 .battle-arena.battle-hud .district-lane {
+  --lane-surface: rgb(12 12 10 / 18%);
   --hub-name-height: 30px; --hub-body-height: 120px; --hub-score-height: 38px;
   position: relative; grid-template-rows: minmax(0,1fr) calc(var(--hub-name-height) + var(--hub-body-height)) minmax(0,1fr);
   border: 0; border-radius: 8px; transform: none; backdrop-filter: none;
-  background: linear-gradient(#07121b45,#07121b16 45% 55%,#121b1945);
+  background: linear-gradient(#07121b45,#07121b16 45% 55%,#121b1945) var(--lane-surface);
   box-shadow: inset 0 0 0 1px #b8d4e322;
   transition: background-color 140ms ease, box-shadow 140ms ease;
 }
-.battle-arena.battle-hud .district-lane:is(.is-selected,.is-legal,.is-effect-lane,[data-contested='true']):hover { transform: none; }
+.battle-arena.battle-hud .district-lane[data-control='draw'] { background-color: var(--lane-surface); }
+.battle-arena.battle-hud .district-lane:is(.is-selected,.is-legal,.is-effect-lane,[data-contested='true']):hover { transform: none; background: linear-gradient(#07121b45,#07121b16 45% 55%,#121b1945) var(--lane-surface); }
 .battle-arena.battle-hud .district-lane::after { display: none !important; }
 .battle-arena.battle-hud .district-lane[data-control='player']:not(.is-selected) {
-  background: linear-gradient(180deg, #07121b45, #07121b18 45%, #2a211052 100%);
+  background: linear-gradient(180deg, #07121b45, #07121b18 45%, #2a211052 100%) var(--lane-surface);
   box-shadow: inset 0 -2px 0 #f4cf8375, inset 0 0 0 1px #f4cf832e;
 }
 .battle-arena.battle-hud .district-lane[data-control='cpu']:not(.is-selected) {
-  background: linear-gradient(180deg, #0c263654, #07121b18 55%, #121b1945 100%);
+  background: linear-gradient(180deg, #0c263654, #07121b18 55%, #121b1945 100%) var(--lane-surface);
   box-shadow: inset 0 2px 0 #85ddf175, inset 0 0 0 1px #85ddf12e;
 }
 .battle-arena.battle-hud .district-lane[data-contested='true']:not(.is-selected) {
@@ -87,7 +89,7 @@
 .battle-arena.battle-hud .district-lane.is-selected,
 .battle-arena.battle-hud .district-lane.is-selected:hover {
   box-shadow: inset 0 0 0 2px #ffe3a5, inset 0 0 22px #f4c56522;
-  background: linear-gradient(#ffd67b14,#0b141b66 45% 55%,#ffd67b18);
+  background: linear-gradient(#ffd67b14,#0b141b66 45% 55%,#ffd67b18) var(--lane-surface);
 }
 .battle-arena.battle-hud .district-prompt.is-ready {
   box-shadow: 0 0 14px rgba(242, 185, 75, 0.38);

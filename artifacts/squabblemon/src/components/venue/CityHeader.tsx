@@ -32,7 +32,7 @@ export function CityHeader({ bootstrap }: { bootstrap: PlayerBootstrap }) {
     </Link>
     <div className="city-header__wallet">
       <Link href="/game/shop?view=corner" className="city-header__balance" title={profile.softCurrency.toLocaleString() + ' Clout'} aria-label={profile.softCurrency + ' Clout. Open Fade Market'}><GameGlyph name="clout" /><b>{profile.softCurrency.toLocaleString()}</b></Link>
-      <Link href="/game/style" className="city-header__balance city-header__shards" title={(profile.styleShards ?? 0).toLocaleString() + ' Universal Style Shards'} aria-label={(profile.styleShards ?? 0) + ' Universal Style Shards. Open character styles and all shard balances'}><GameGlyph name="shards" /><b>{(profile.styleShards ?? 0).toLocaleString()}</b></Link>
+      <Link href="/game/style" className="city-header__balance city-header__shards" title={(profile.styleShards ?? 0).toLocaleString() + ' Universal Style Shards'} aria-label={(profile.styleShards ?? 0) + ' Universal Style Shards. Open Style: player mats, character styles and shard balances'}><GameGlyph name="shards" /><b>{(profile.styleShards ?? 0).toLocaleString()}</b></Link>
     </div>
     <NotificationInbox />
     <MusicControls compact variant="dj" className="city-header__music" wrapperClassName="city-header__dj" />

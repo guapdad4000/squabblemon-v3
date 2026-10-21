@@ -2,20 +2,24 @@ import { StyleShardWallet } from '../../components/StyleShardWallet';
 import { ItemDot, useNotifications } from '../../components/Notifications';
 import { useViewMemory } from '../../lib/navigationMemory';
 import { useExtrasNotificationsSeen } from '../../lib/useExtrasNotificationsSeen';
-import { Link } from 'wouter';
-import { useEffect, useMemo, useState } from 'react';
-import { LockKeyhole, ArrowUpRight, Scissors, Search, Sparkles } from 'lucide-react';
+import { Link, useSearch } from 'wouter';
+import { lazy, Suspense, useEffect, useMemo, useState } from 'react';
+import { LockKeyhole, ArrowUpRight, Scissors, Search } from 'lucide-react';
 import type { PlayerBootstrap } from '@workspace/api-client-react';
 import { CHARACTER_STYLE_SETS, CHARACTER_STYLE_OFFERS, hasCharacterStickers, ownsStyle } from '@workspace/squabblemon-engine/cosmetics';
 import { catalogCardById, CARD_RARITY_DEFINITIONS } from '../../data';
+import { PlayerMatImage } from '../../components/PlayerMatImage';
 import { CharacterSticker } from '../../components/CharacterBanner';
 import { GameGlyph } from '../../components/venue/GameGlyph';
 import { getAssetUrl, getCardImage } from '../../lib/assets';
 import '../../styles/character-styles.css';
 import '../../styles/extras-studio.css';
+import '../../styles/style-hub.css';
+const PlayerMats = lazy(() => import('./PlayerMats').then(module => ({default: module.PlayerMats})));
 
 export function CharacterCollections({ bootstrap }: { bootstrap: PlayerBootstrap }) {
-  useExtrasNotificationsSeen();
+  const view = new URLSearchParams(useSearch()).get('view') === 'characters' ? 'characters' : 'mats';
+  useExtrasNotificationsSeen(undefined, view === 'characters');
   const { notices } = useNotifications();
   const { profile } = bootstrap;
   const [query, setQuery] = useViewMemory(`styles-search:${profile.id}`, '');
@@ -29,7 +33,6 @@ export function CharacterCollections({ bootstrap }: { bootstrap: PlayerBootstrap
     ),
     [ownedCardSet],
   );
-  const ownedCount = useMemo(() => sets.filter(set => ownedCardSet.has(set.cardId)).length, [sets, ownedCardSet]);
   const visible = useMemo(() => {
     const normalizedQuery = query.toLowerCase().trim();
     return sets.filter(set => {
@@ -38,13 +41,17 @@ export function CharacterCollections({ bootstrap }: { bootstrap: PlayerBootstrap
         && (filter === 'all' || (filter === 'owned' ? ownedCardSet.has(set.cardId) : card.rarity === filter));
     });
   }, [sets, query, filter, ownedCardSet]);
-  return <main className="character-styles extras-studio" data-testid="character-collections" data-reduced-motion={profile.settings.reducedMotion}>
-    <header className="extras-hero">
-      <img className="extras-hero__art" src={getAssetUrl('assets/extras/stylist-studio.webp')} alt="The Stylist at her customization workbench" />
-      <div className="extras-hero__copy"><p className="extras-eyebrow"><Scissors size={14}/> SIGNATURE COLLECTIONS · {ownedCount}/{sets.length} OPEN</p><h1>THE<br/><em>EXTRAS.</em></h1></div>
+  return <main className="character-styles extras-studio style-hub" data-testid="character-collections" data-reduced-motion={profile.settings.reducedMotion}>
+    <header className="extras-hero style-hub__hero">
+      <img className="extras-hero__art" src={getAssetUrl('assets/extras/stylist-studio.webp')} alt="" />
+      <div className="extras-hero__copy"><p className="extras-eyebrow"><Scissors size={14}/> THE STYLIST</p><h1>YOUR <em>STYLE.</em></h1></div>
+      <details className="style-hub__wallet"><summary><GameGlyph name="shards"/><span><strong>{profile.styleShards.toLocaleString()}</strong> Universal</span><span aria-hidden="true">⌄</span></summary><StyleShardWallet wallet={profile}/></details>
     </header>
-    <Link href="/game/mats" className="extras-ticket" style={{display:"flex",justifyContent:"space-between",margin:"18px 0",padding:"18px"}}>PLAYER MATS <span>Build your home turf ↗</span></Link>
-    <StyleShardWallet wallet={profile}/>
+    <nav className="style-categories" aria-label="Style categories">
+      <Link href="/game/style?view=mats" className="style-category" aria-current={view==='mats'?'page':undefined}><PlayerMatImage src="assets/player-mats/v4/guap-illustration.webp" thumbnail eager/><span><strong>Player mats</strong><small>Battle backgrounds</small></span><span className="style-category__arrow" aria-hidden="true">↗</span></Link>
+      <Link href="/game/style?view=characters" className="style-category" aria-current={view==='characters'?'page':undefined}><img src={getAssetUrl(sets[0]?.banner ?? 'assets/extras/stylist-studio.webp')} alt=""/><span><strong>Character styles</strong><small>Banners · decks · stickers</small></span><span className="style-category__arrow" aria-hidden="true">↗</span></Link>
+    </nav>
+    {view === 'mats' ? <Suspense fallback={<p className="style-hub__loading" role="status">Loading player mats…</p>}><PlayerMats bootstrap={bootstrap}/></Suspense> : <>
     <section id="extras-collections" className="extras-collections" aria-label="Signature collections">
       <div className="extras-section-heading"><div><p className="extras-eyebrow">{String(visible.length).padStart(2,'0')} SERIES</p><h2>Signature <em>Collections</em></h2></div></div>
       <div className="style-library__tools extras-tools"><label><span>Find your character</span><div className="extras-search"><Search size={17}/><input type="search" aria-label="Search signature collections" placeholder="Who are you repping?" value={query} onChange={event => setQuery(event.target.value)}/></div></label><nav aria-label="Filter collections">{(['all','owned','Mythical','Legendary','Epic'] as const).map(value => <button type="button" key={value} aria-pressed={filter === value} onClick={() => setFilter(value)}>{value === 'all' ? 'All collections' : value === 'owned' ? 'My characters' : value === 'Legendary' ? 'Legendaries' : value === 'Epic' ? CARD_RARITY_DEFINITIONS.Epic.label : 'Mythicals'}</button>)}</nav></div>
@@ -59,6 +66,6 @@ export function CharacterCollections({ bootstrap }: { bootstrap: PlayerBootstrap
       {shown < visible.length && <div className="extras-more"><p>{Math.min(shown,visible.length)} of {visible.length} collections on the wall</p><button className="extras-ticket" type="button" onClick={()=>setShown(count=>count+12)}>Show more collections <ArrowUpRight size={18}/></button></div>}
       {visible.length === 0 && <div role="status" className="extras-empty"><Scissors size={30}/><h3>No looks on this rack.</h3><p>Try another character or reset your filters.</p><button className="extras-ticket" onClick={()=>{setQuery('');setFilter('all');}}>Show all collections</button></div>}
     </section>
-    <footer className="extras-footer"><Scissors size={22}/><p>Made for your gang. Styled by you.<span>Every sticker pack includes all its designs. Mix up to three owned stickers on your banner.</span></p><strong>THE EXTRAS.</strong></footer>
+    </>}
   </main>;
 }

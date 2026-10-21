@@ -11,20 +11,31 @@ try {
   for(const mode of ['pvp','training']) {
    await p.goto(`http://127.0.0.1:4228/e2e/art-recovery/fixture.html?${mode==='pvp'?'pvp&':''}playerMat=${playerMat}&rivalMat=${rivalMat}`,{waitUntil:'networkidle'});
    await p.locator('.battlefield-grid').waitFor();
-   await p.locator('.battle-mat-characters img').first().waitFor();
-   await p.locator('.battle-mat-characters img').evaluateAll(async imgs=>await Promise.all(imgs.map(img=>img.decode())));
+   await p.locator('.battle-player-mats img').evaluateAll(async imgs=>await Promise.all(imgs.map(img=>img.decode())));
    const geometry=await p.evaluate(()=>{
     const rect=el=>{const r=el.getBoundingClientRect();return {x:r.x,y:r.y,w:r.width,h:r.height,b:r.bottom,r:r.right}};
-    return {field:rect(document.querySelector('.battlefield-grid')),lanes:[...document.querySelectorAll('.district-lane')].map(el=>({lane:rect(el),art:[...el.querySelectorAll('.battle-lane-mat svg')].map(s=>({box:rect(s),view:s.getAttribute('viewBox'),aspect:s.getAttribute('preserveAspectRatio'),side:s.dataset.side}))})),characters:[...document.querySelectorAll('.battle-mat-characters img')].map(el=>({box:rect(el),side:el.dataset.side,fit:getComputedStyle(el).objectFit})),overflow:document.documentElement.scrollWidth>innerWidth+1};
+    const root=document.querySelector('.battle-player-mats'), field=document.querySelector('.battlefield-grid'), lane=field.querySelector('.district-lane');
+    return {root:rect(root),field:rect(field),lane:rect(lane),split:parseFloat(root.style.getPropertyValue('--mat-split')),layers:[...root.querySelectorAll('.player-mat-art')].map(el=>({box:rect(el),side:el.dataset.side,src:el.querySelector('img').currentSrc,fit:getComputedStyle(el.querySelector('img')).objectFit,position:getComputedStyle(el.querySelector('img')).objectPosition,visibleWidthFraction:Math.min(1,el.clientWidth/(el.clientHeight*el.querySelector('img').naturalWidth/el.querySelector('img').naturalHeight)),mask:getComputedStyle(el.parentElement).maskImage})),laneCopies:document.querySelectorAll('.battle-lane-mat').length,stickers:document.querySelectorAll('.player-mat-character,.battle-mat-characters').length,overflow:document.documentElement.scrollWidth>innerWidth+1};
    });
-   assert(!geometry.overflow);assert.equal(geometry.characters.length,mode==='pvp'?2:1);
-   for(const [i,l] of geometry.lanes.entries()) for(const a of l.art) {
-    assert(Math.abs(a.box.x+a.box.w/2-l.lane.x-l.lane.w/2)<1,`${width}: lane${i} center`);
-    assert(Math.abs(a.box.h-l.lane.h/(mode==='pvp'?2:1))<2,`${width}: equal halves`);
-    assert.equal(a.view,`${i*512} 0 512 1024`);assert.equal(a.aspect,'xMidYMid slice');
-   }
-   for(const c of geometry.characters) {assert(c.box.x>=-1&&c.box.r<=width+1&&c.box.y>=0&&c.box.b<=height,`${width}: corner in viewport`);assert.equal(c.fit,'contain');}
-   assert(Math.abs(geometry.characters.find(c=>c.side==='player').box.b-geometry.field.b)<2,`${width}: player stays above hand`);
+   assert(!geometry.overflow);assert.equal(geometry.laneCopies,0);assert.equal(geometry.stickers,0);
+   assert.equal(geometry.layers.length,mode==='pvp'?2:1);
+   for(const layer of geometry.layers){assert.equal(layer.fit,'cover');assert.equal(layer.position,'50% 50%');assert(Math.abs(layer.box.w-geometry.root.w)<1);}
+   if(mode==='pvp'){
+    const [a,b]=geometry.layers;
+    if(width<=600&&height>width){
+     assert(Math.abs(a.box.y-geometry.root.y)<1,'phone rival art starts at true top');
+     assert(Math.abs(b.box.b-geometry.root.b)<1,'phone player art reaches true bottom');
+     assert(Math.abs(a.box.h-b.box.h)<1,'phone halves retain a shared scale');
+    }else{
+     assert.deepEqual(a.box,b.box,'both worlds share one canvas');
+     assert(Math.abs(a.box.y+a.box.h/2-geometry.root.y-geometry.split)<1,'source midpoint aligned to split');
+    }
+    assert(a.mask.includes('linear-gradient')&&b.mask.includes('linear-gradient'));
+    assert.equal(a.side,'rival');assert.equal(b.side,'player');
+   }else if(width<=600&&height>width){
+    const art=geometry.layers[0].box;assert(Math.abs(art.y+art.h/2-geometry.field.y-geometry.field.h/2)<1,'training frames visible play area');
+   }else assert.deepEqual(geometry.layers[0].box,geometry.root,'wide training has one full background');
+   if(width<=600&&height>width)for(const layer of geometry.layers)assert(layer.visibleWidthFraction>=.45,'portrait shows at least 45% of the wide scene');
    await p.screenshot({path:`${out}/${mode}-${width}.png`});
    if(mode==='pvp') {
     const trigger=p.getByRole('button',{name:'Choose a reaction'});await trigger.waitFor();
@@ -36,7 +47,9 @@ try {
     await trigger.click();assert(await p.getByRole('button',{name:'Send Big W',exact:true}).isDisabled());await p.keyboard.press('Escape');assert.equal(await trigger.getAttribute('aria-expanded'),'false');
    }
    await p.locator('.battlefield-grid').evaluate(el=>el.scrollTop=el.scrollHeight);await p.waitForTimeout(100);
-   const still=await p.locator('.battle-mat-character-anchor--player img').boundingBox();assert(Math.abs(still.y+still.height-geometry.field.b)<2);
+   const scrolled=await p.locator('.battle-player-mats').evaluate(el=>{const b=el.getBoundingClientRect(),lane=document.querySelector('.district-lane').getBoundingClientRect();return {actual:parseFloat(el.style.getPropertyValue('--mat-split')),expected:Math.max(0,Math.min(b.height,lane.top+lane.height/2-b.top))};});
+   assert(Math.abs(scrolled.actual-scrolled.expected)<1,'split follows field scroll');
+   if(width<=600&&height>width){const heightAfter=await p.locator('.battle-player-mats .player-mat-art').first().evaluate(el=>el.getBoundingClientRect().height);assert(Math.abs(heightAfter-geometry.layers[0].box.h)<1,'mobile camera scale stays steady while scrolling');}
    await p.locator('.battlefield-grid').evaluate(el=>el.scrollTop=0);
    await p.locator('.battle-hand-row [data-card-id="buddy"]').click();await p.getByTestId('lane-0').click({position:{x:25,y:25}});await p.getByRole('button',{name:/^Play card/}).click();assert.equal(await p.getByTestId('review-commits').textContent(),'1');
    results.push({width,height,mode,geometry});
@@ -47,5 +60,5 @@ try {
  await p.goto('http://127.0.0.1:4228/e2e/art-recovery/fixture.html?pvp&seat-cpu&playerMat=signature-kyle&rivalMat=signature-buddy',{waitUntil:'networkidle'});
  await p.getByRole('button',{name:'Choose a reaction'}).click();await p.getByRole('button',{name:'Send Big W',exact:true}).click();await p.locator('.pvp-reaction-bubble--you').waitFor();
  await p.goto('http://127.0.0.1:4228/e2e/art-recovery/fixture.html?pvp&offline&playerMat=signature-buddy',{waitUntil:'networkidle'});await p.getByRole('button',{name:'Choose a reaction'}).click();assert(await p.getByText('Reconnect to send reactions.',{exact:true}).isVisible());
- await p.close();await writeFile(`${out}/checks.json`,JSON.stringify({passed:true,results,extra:['cpu seat emote send','offline state']},null,2));console.log(`Passed ${results.length} viewport/mode cases + CPU seat/offline emote checks`);
+ await p.close();await writeFile(`${out}/checks.json`,JSON.stringify({passed:true,results,extra:['cpu seat emote send','offline state']},null,2));console.log(`Passed ${results.length} continuous-background viewport/mode cases + CPU seat/offline emote checks`);
 } finally {await browser.close();}

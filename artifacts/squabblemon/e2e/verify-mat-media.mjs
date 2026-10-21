@@ -24,14 +24,14 @@ for(const [name,url,width,height,dpr,fallback]of [
   await p.locator('.mat-card img').evaluateAll(async imgs=>await Promise.all(imgs.map(i=>i.decode())));
   for(const info of await p.locator('.mat-card img').evaluateAll(imgs=>imgs.map(i=>({src:i.currentSrc,width:i.naturalWidth})))){assert(info.src.endsWith('-thumb.avif'));assert.equal(info.width,640);}
  }else{
-  await p.locator('.battle-player-mats').waitFor();if(name==='decode-recovery')await p.waitForFunction(()=>[...document.querySelectorAll('.battle-player-mats img,.battle-lane-mat img')].every(i=>i.complete&&i.naturalWidth>0&&i.currentSrc.endsWith('.webp')));await p.locator('.battle-player-mats img,.battle-lane-mat img,.battle-mat-characters img').evaluateAll(async imgs=>await Promise.all(imgs.map(i=>i.decode())));
-  if(name==='decode-recovery')await p.waitForFunction(()=>[...document.querySelectorAll('.battle-player-mats img,.battle-lane-mat img')].every(i=>i.complete&&i.naturalWidth>0&&i.currentSrc.endsWith('.webp')));
-  for(const src of await p.locator('.battle-player-mats img,.battle-lane-mat img').evaluateAll(imgs=>imgs.map(i=>i.currentSrc)))assert(src.endsWith(fallback||name==='decode-recovery'?'.webp':'.avif'),src);
+  await p.locator('.battle-player-mats').waitFor();if(name==='decode-recovery')await p.waitForFunction(()=>[...document.querySelectorAll('.battle-player-mats img')].every(i=>i.complete&&i.naturalWidth>0&&i.currentSrc.endsWith('.webp')));await p.locator('.battle-player-mats img').evaluateAll(async imgs=>await Promise.all(imgs.map(i=>i.decode())));
+  if(name==='decode-recovery')await p.waitForFunction(()=>[...document.querySelectorAll('.battle-player-mats img')].every(i=>i.complete&&i.naturalWidth>0&&i.currentSrc.endsWith('.webp')));
+  for(const src of await p.locator('.battle-player-mats img').evaluateAll(imgs=>imgs.map(i=>i.currentSrc)))assert(src.endsWith(fallback||name==='decode-recovery'?'.webp':'.avif'),src);
  }
  await p.waitForLoadState('networkidle');
  const requests=await p.evaluate(()=>performance.getEntriesByType('resource').filter(r=>/\.(avif|webp|png|jpg|jpeg)(\?|$)/.test(r.name)).map(r=>({url:new URL(r.name).pathname,bytes:r.encodedBodySize,transfer:r.transferSize,type:r.initiatorType})));
  const media=requests.filter(r=>r.url.includes('/assets/player-mats/'));assert(media.length>0);assert(media.every(r=>r.bytes>0),'uncached cold payload is measurable');if(name!=='decode-recovery')assert.equal(new Set(media.map(r=>r.url)).size,media.length,'one request per mat image');
- if(['pvp','training','webp-fallback'].includes(name))assert.equal(media.length,name==='training'?2:4,'scenes shared by backdrop and three lanes');
+ if(['pvp','training','webp-fallback'].includes(name))assert.equal(media.length,name==='training'?1:2,'one scene per background, no lane copies or cutouts');
  assert.deepEqual(errors,[]);await p.screenshot({path:`${out}/${name}.png`});
  results.push({name,width,height,dpr,fallback,requests,matBytes:media.reduce((n,r)=>n+r.bytes,0),imageBytes:requests.reduce((n,r)=>n+r.bytes,0)});await p.close();
 }

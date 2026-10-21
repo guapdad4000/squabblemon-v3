@@ -1,12 +1,12 @@
 # Player mats — Collection 01
 
-Players bring their own half of the battlefield. The opponent’s mat occupies the upper side; the local player’s mat occupies the lower side. The join tracks the district score row as the viewport or field scroll changes. Artwork uses proportional cover/contain sizing, with existing character illustrations at the outer edges.
+Players bring their own half of the battlefield. The opponent’s mat occupies the upper side; the local player’s mat occupies the lower side. The join tracks the district score row as the viewport or field scroll changes. Artwork uses one proportionally cropped background per side. Wide views share a full-board canvas: the rival reveals the upper source half and the player reveals the lower source half. Portrait phones use a wider crop anchored to the top and bottom edges. No mat artwork is repeated inside district lanes and no floating character cutouts are rendered.
 
 ## Collection
 
-Five original venues are free: The Corner, Harbor After Dark, Civic Steps, Red Fence, and Rooftop Champions. Existing internal venue IDs are preserved. When both players select the same default, it renders as one continuous scene.
+Five original venues are free: The Corner, Harbor After Dark, Civic Steps, Red Fence, and Rooftop Champions. Existing internal venue IDs are preserved. When both players select the same mat, it renders as one continuous scene.
 
-Twenty characters launch in the first signature collection. All twenty have newly generated character-specific illustrations and clean environment layers in the approved cel-shaded anime style. Each world authors three open play regions; the runtime keeps a single character visible at the lower corner.
+Twenty characters launch in the first signature collection. All twenty have newly generated character-specific illustrations and clean environment layers in the approved cel-shaded anime style. Each world authors three open play regions. The normal lane controls sit over the continuous scenery; the runtime does not duplicate those regions as lane images.
 
 | Character | Mat | Unlock |
 | --- | --- | --- |
@@ -35,8 +35,9 @@ Matching rarity shards are spent first; Universal shards cover the remainder. Th
 
 ## Player flow
 
-- The Stylist and Fade Market both link to `/game/mats`, a single collection and purchase flow.
-- Preview any local/rival combination, filter by rarity, ownership or unlock method, and search by character or mat name.
+- Style opens the mat catalog at `/game/style` (or `/game/style?view=mats`). Character collections share the same hub at `/game/style?view=characters`; old `/game/mats` links redirect there. Express has a direct Style stop, and the Market, inventory and Collection link to this hub.
+- Browse the catalog immediately, with All mats / Shop / Owned / Story filters and character or mat-name search. Rarity filtering and shard balances expand on demand. Search and filter choices survive category changes and refresh.
+- Select a mat for a full-scene or PvP split preview in a focus-trapped dialog, with its rarity, exact shard payment and unlock/equip action together. Phone previews scroll within a bottom sheet while the action remains visible; closing restores the catalog focus and scroll position.
 - Unlock using the existing server purchase transaction, then equip. A lost response retains its original request key and offers purchase recovery.
 - Equipment persists in `settings.cosmetics.playerMatId`. Invalid, unknown, or unowned selections cannot be equipped. Legacy profiles resolve to The Corner.
 - PvP snapshots the validated mat ID with each member on room entry. Both seats project their own mat to the lower half. Reconnecting preserves that room’s pairing; later equipment changes apply when entering a new room.
@@ -49,7 +50,7 @@ Matching rarity shards are spent first; Universal shards cover the remainder. Th
 - The existing cosmetic endpoint validates equipment; OpenAPI and generated clients include the new field and purchase kind.
 - No database schema migration is required: ownership and equipment use existing JSON fields. No gameplay rules version changes.
 - Only the mat ID is exposed through online member metadata. No wallet or story history is sent to the opponent.
-- Mat rendering is memoized, uses passive scroll observation, and never captures pointer input. The collection is loaded as a separate route.
+- Mat rendering is memoized, uses passive scroll observation, and never captures pointer input. The Style hub and its mat catalog are lazy-loaded; character collections share the same route and category navigation.
 
 ## Validation
 
@@ -72,9 +73,9 @@ For browser checks, start the frontend Vite server on port 4228, then run `node 
 
 ## Character scene refinement
 
-See player-mat-art-direction.md for the approved cel-shaded style, three-lane geometry and 20 ability-based scene briefs. All 20 original collection scenes now have generated character-specific artwork. Hooper remains an additional concept outside the catalog. Illustrated review exports place characters in the lower corners; clean scene and transparent character variants support responsive runtime composition without stretching. Training uses the full equipped mat; PvP retains one half per player.
+See player-mat-art-direction.md for the approved cel-shaded style, three-lane geometry and 20 ability-based scene briefs. All 20 original collection scenes now have generated character-specific artwork. Hooper remains an additional concept outside the catalog. Illustrated review exports place characters in the lower corners; clean scene variants support responsive backgrounds without stretching. Transparent cutouts are retained as source assets for possible future cosmetics; they are not used in the mat presentation. Training uses the full equipped mat; PvP retains one half per player.
 
-Generated assets are under public/assets/player-mats/v4. The exact built-in image prompts and durable illustrations are in output/player-mats-20261021/collection-v4 (remaining 18) and art-direction-v3 (approved pilots) in the shared project directory. Live lanes use source thirds via SVG proportional crops. Corner layers track the visible battlefield, including short-screen scrolling.
+Generated assets are under public/assets/player-mats/v4. The exact built-in image prompts and durable illustrations are in output/player-mats-20261021/collection-v4 (remaining 18) and art-direction-v3 (approved pilots) in the shared project directory. The battle renders only full-board scene layers, clipped at the score row. Their center line tracks field scrolling. Character cutouts remain archived assets and are not fetched by the battle. The Stylist pairing preview uses clean scenes with the same upper/lower treatment; catalog thumbnails retain the illustrated collection art.
 
 PvP reactions moved from the closed tools menu to immediately left of player Motion. The picker portals to the document body to avoid footer containment/clipping, with 44px trigger, focus return, Escape, cooldown and reconnect messaging retained. The local fixture exercises the real reaction component against a local-only mock channel.
 
@@ -86,7 +87,7 @@ Collection 01 contains 1 Common, 3 Rare, 2 Super Rare (internal Epic), 5 Legenda
 
 ## Media delivery
 
-All 20 character mats and five default venues have AVIF sources and WebP fallbacks in a versioned `assets/player-mats/v4` directory. The catalog still exposes WebP asset IDs for compatibility. Native `<picture>` sources select the supported format before requesting an image. The three SVG lane crops embed the same picture sources as the backdrop, so a scene is fetched once per match rather than once per lane.
+All 20 character mats and five default venues have AVIF sources and WebP fallbacks in a versioned `assets/player-mats/v4` directory. The catalog still exposes WebP asset IDs for compatibility. Native `<picture>` sources select the supported format before requesting an image. The battle uses one picture source per distinct background, with no pictures or SVG crops inside the lanes.
 
 The collection uses 640px thumbnails instead of full wallpapers. Character corner cutouts are 256px wide with lossless alpha and preserved proportions; full-size fighter assets remain unchanged elsewhere. Full character wallpapers keep their 1536×1024 geometry. Gallery loading remains lazy, while active battlefield art loads immediately. Unused Hooper concepts and v3 masters are archived outside the deployable public directory.
 
@@ -97,3 +98,27 @@ Run `pnpm --filter @workspace/squabblemon test:player-mat-media` for image contr
 Measured cold-cache local browser image payload for the gallery fell from 11,493,688 to 1,717,651 bytes (85.06%). Full mat art files are 54.04% smaller in the preferred AVIF format; transparent corner images are 93.36% smaller than their full fighter sources. The tested PvP pairing uses 495,766 bytes for two scenes plus two cutouts. Unchanged card and effect images remain part of the larger match payload; these percentages do not describe all battle downloads.
 
 The optimized release passed two asset contract/budget tests and seven media browser cases, including DPR 3 thumbnails, default portrait selection, unsupported-format fallback and failed-decode recovery. All 20 mats were rechecked in phone PvP and desktop training (40 cases), alongside the six-viewport lane/emote matrix. Approved source exports remain outside the public deployment directory.
+
+## Continuous-background refinement
+
+Local follow-up to the published 6b839b98 release: remove per-lane artwork and floating character stickers, center both source images at the district score row, clip the rival to the upper half and the player to the lower half, and reuse the clean-scene pairing in the Stylist. Training and identical mat pairings render one full scene. No acquisition rules, rarity prices, gameplay or emote behavior changed.
+
+The continuous backgrounds and Stylist pairing preview use a 24% neutral black overlay on scenery only. Cards, district illustrations, scores and controls retain their original brightness. The opacity is controlled by `--mat-dim` in player-mats.css; gallery thumbnails retain the original illustration brightness.
+
+## Phone framing
+
+Portrait phones up to 600px wide frame landscape signature art around the playable field instead of scaling it to the entire screen, header and hand included. The scene height is capped at 1.45 times the field width, with proportional `object-fit: cover` sizing. On portrait phones, rival scenery starts at the true top edge and player scenery ends at the true bottom edge, behind the hand and action button. Both scenes retain the same scale; their reveal masks meet at the district score row. A single scene centers on the visible field. Scale and outer-edge anchoring stay fixed during field scrolling, while the split follows the lanes.
+
+At 390×844, the distinct-mat PvP fixture shows about 49% of the source width instead of 28%, roughly 74% more scenery across the screen. Soft inner-edge masks blend toward the middle without pulling either PvP scene away from its outer edge. The approved 24% shade remains. Defaults with portrait artwork, desktop, tablet and landscape framing are unchanged. No extra images or duplicated scenery are introduced.
+
+Local verification: 12 viewport/mode cases cover framing, proportional image sizing, split alignment, stable scale during scroll, card play and reaction controls. Frontend TypeScript, 76 focused Battle tests, the production build and configured bundle budgets pass. Browser captures are fixtures, not physical-device or live multiplayer proof.
+
+## Lane surface refinement
+
+District lanes use an additional 18% neutral charcoal fill under their existing state gradients. This increases separation from the scenery without reducing the opacity of cards, scores or district artwork. The fill is retained for neutral, controlled, selected and hovered lanes; mat shade and mobile edge anchoring are unchanged.
+
+## Unified Style store refinement
+
+The mat store now lives inside Style, with immediate catalog browsing and two persistent category links: Player mats and Character styles. Signature artwork, rarity and prices are visible on each card. The equipped mat is accessible above the filters. Buying and equipping remain separate explicit actions; existing server-authoritative prices, receipts, Story ownership and character-style requirements are preserved. Mat shopping does not require owning its fighter.
+
+Local validation covers five viewport flows (320×568, 390×844, 768×1024, 844×390, 1280×800), preview/body scrolling, persistent actions, focus return, exact shard spending, equip/reload, Story locks, existing Story clears, category switching, saved filters, recovery after a lost purchase reply, insufficient funds and the legacy redirect. The Express Style entry and character-detail return route are also checked. Review captures use isolated components and mocked API transport with the real purchase planner; they are not production transactions or physical-device proof.

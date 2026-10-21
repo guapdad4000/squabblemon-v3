@@ -21,6 +21,6 @@ export function Inventory({ bootstrap }: { bootstrap: PlayerBootstrap }) {
       </section>
     </div>
     <StyleShardWallet wallet={profile}/>
-    <section className="inventory-style-entry"><CharacterBanner cardId={styleSetFor(profile.settings.cosmetics?.bannerCardId)?.cardId ?? "kyle"} finish={profile.settings.cosmetics?.bannerFinish} stickers={profile.settings.cosmetics?.stickers} displayName={profile.settings.cosmetics?.bannerCardId ? profile.displayName : "KYLE / SIGNATURE SERIES 001"} compact/><Link href="/game/style">Browse all collections · Stickers, banners & card scenes →<Attention section="style" micro /></Link></section>
+    <section className="inventory-style-entry"><CharacterBanner cardId={styleSetFor(profile.settings.cosmetics?.bannerCardId)?.cardId ?? "kyle"} finish={profile.settings.cosmetics?.bannerFinish} stickers={profile.settings.cosmetics?.stickers} displayName={profile.settings.cosmetics?.bannerCardId ? profile.displayName : "KYLE / SIGNATURE SERIES 001"} compact/><Link href="/game/style">Style shop · Player mats, banners & more →<Attention section="style" micro /></Link></section>
   </main>;
 }

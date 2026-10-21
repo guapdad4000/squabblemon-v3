@@ -34,7 +34,7 @@ export function routeFallback(path: string): string {
   if (/\/game\/story[?#]/.test(path)) return '/game/story';
   if (/\/game\/decks\/[^/]+\/test/.test(path)) return path.replace(/\/test.*$/, '');
   if (/\/game\/decks\//.test(path)) return '/game/decks';
-  if (/\/game\/style\//.test(path)) return '/game/style';
+  if (/\/game\/style\//.test(path)) return '/game/style?view=characters';
   if (/\/game\/story\/play\//.test(path)) return '/game/story';
   if (/\/game\/online\//.test(path)) return '/game/online';
   return '/game';

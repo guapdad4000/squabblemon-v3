@@ -5,7 +5,7 @@ import { routeFallback, readMemory, writeMemory } from './navigationMemory';
 test('direct entries return to their logical parent without leaving the app', () => {
   assert.equal(routeFallback('/game/decks/my-crew/test'), '/game/decks/my-crew');
   assert.equal(routeFallback('/game/decks/my-crew'), '/game/decks');
-  assert.equal(routeFallback('/game/style/kyle'), '/game/style');
+  assert.equal(routeFallback('/game/style/kyle'), '/game/style?view=characters');
   assert.equal(routeFallback('/game/online/ABCD'), '/game/online');
   assert.equal(routeFallback('/game/story/play/chapter-one'), '/game/story');
   assert.equal(routeFallback('/game/story?season=one'), '/game/story');

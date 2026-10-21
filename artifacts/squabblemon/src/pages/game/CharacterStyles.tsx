@@ -40,7 +40,7 @@ export function CharacterStyles({ bootstrap, cardId = 'kyle' }: { bootstrap: Pla
   if (!set || !card) return <main className="character-styles"><h1>This collection is still in the works.</h1></main>;
   const upcomingStyles = CHARACTER_STYLE_ROLLOUT.filter(item => !item.available);
   const owned = profile.ownedCardIds.includes(cardId);
-  if (!owned) return <main className="character-styles" data-testid="locked-character-style"><p className="style-kicker">THE EXTRAS / COLLECTION LOCKED</p><h1>Unlock {card.name} first.</h1><p className="style-notice">Their stickers, banners and card scenes become available once this character joins your collection.</p><Link className="style-button" href="/game/style">Back to The Extras</Link></main>;
+  if (!owned) return <main className="character-styles" data-testid="locked-character-style"><p className="style-kicker">THE EXTRAS / COLLECTION LOCKED</p><h1>Unlock {card.name} first.</h1><p className="style-notice">Their stickers, banners and card scenes become available once this character joins your collection.</p><Link className="style-button" href="/game/style?view=characters">Back to character styles</Link></main>;
   const equipped = profile.settings.cosmetics ?? {};
   const offerId: CharacterStyleOfferId = tab === 'stickers' ? 'character-stickers' : tab === 'scene' ? 'character-backdrop' : 'character-banner-finish';
   const offer = CHARACTER_STYLE_OFFERS.find(item => item.id === offerId)!;
@@ -113,6 +113,6 @@ export function CharacterStyles({ bootstrap, cardId = 'kyle' }: { bootstrap: Pla
       <p role="status" className="style-status">{busy ? 'Saving…' : message}</p>
     </aside></div>
     {set.deckCover && <section className="style-deck-cover" aria-label={card.name + ' deck cover'}><img src={getAssetUrl(set.deckCover)} alt={card.name + ' deck cover'} loading="lazy" decoding="async" width={768} height={1152}/><div><span className="style-kicker">SIGNATURE DECK COVER</span><h2>Lead with {card.name}.</h2><p>This artwork appears on your deck box when {card.name} is its cover character.</p><Link className="style-link" href="/game/decks">Open your decks →</Link></div></section>}
-    <Link className="style-link style-all-link" href="/game/style">Browse all signature collections →</Link>{upcomingStyles.length > 0 && <details className="style-rollout"><summary>Up next · Mythicals, Legendaries, Super Rares</summary><p>More signature collections are in development.</p><div>{upcomingStyles.map(item => <span key={item.cardId}><strong>{item.name}</strong><small>{CARD_RARITY_DEFINITIONS[item.rarity].label} · In development</small></span>)}</div></details>}
+    <Link className="style-link style-all-link" href="/game/style?view=characters">Browse all signature collections →</Link>{upcomingStyles.length > 0 && <details className="style-rollout"><summary>Up next · Mythicals, Legendaries, Super Rares</summary><p>More signature collections are in development.</p><div>{upcomingStyles.map(item => <span key={item.cardId}><strong>{item.name}</strong><small>{CARD_RARITY_DEFINITIONS[item.rarity].label} · In development</small></span>)}</div></details>}
   </main>;
 }

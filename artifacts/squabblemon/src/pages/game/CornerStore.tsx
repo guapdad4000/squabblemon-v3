@@ -483,7 +483,7 @@ export function CornerStore({ bootstrap }: { bootstrap: PlayerBootstrap }) {
           </p>
         )}
 
-        <Link href="/game/mats" className="corner-store__mat-link">PLAYER MATS <span>Style Shards · The Stylist ↗</span></Link>
+        <Link href="/game/style?view=mats" className="corner-store__mat-link">PLAYER MATS <span>Style Shards · The Stylist ↗</span></Link>
         <nav className="corner-store__departments" aria-label="Fade Market shelves">
           {(['clout', 'pack', 'style', 'shards', 'reactions'] as const).map(d => (
             <button key={d} aria-pressed={department === d} onClick={() => selectDepartment(d)}>

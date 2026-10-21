@@ -18,6 +18,8 @@ const routes = [
   { path: '/game/shop', label: 'Shop', detail: 'Train, recruit, pull', art: 'shop', primary: true, glyph: 'bag' },
 ] as const;
 
+const expressRoutes = [...routes, { path: '/game/style', label: 'Style', detail: 'Player mats & character styles', art: 'style' }] as const;
+
 const safehouseDestinations = routes.filter(route => route.path !== '/game');
 
 function pathnameFor(location: string) {
@@ -182,7 +184,7 @@ export function CinemaNavSheet({
             <path d="M82 53H306V164H95V281H303V398H94" fill="none" stroke="#99642e80" strokeWidth="3" strokeDasharray="3 7" strokeLinecap="round" />
           </svg>
           <div className="express-map__stops">
-            {routes.map((route, index) => {
+            {expressRoutes.map((route, index) => {
               const selected = active(route.path);
               return <button key={route.path} type="button"
                 className={`express-sign ${index % 2 ? 'express-sign--right' : 'express-sign--left'} ${selected ? 'is-active' : ''}`}
