@@ -263,7 +263,7 @@ export function MultiplayerBattle({ room, busy, connected, reducedMotion: profil
   return <main className="h-[100dvh] bg-black text-white font-sans flex flex-col relative overflow-hidden game-bg" style={room.kumite ? { '--kumite-platform': `url("${getAssetUrl('assets/kumite/layers/platform.webp')}")` } as CSSProperties : undefined} data-kumite={Boolean(room.kumite)} data-testid="online-battle" data-turn={myTurn ? 'you' : 'rival'} data-round={room.round} data-revision={room.revision} data-status={room.status} data-connected={connected}>
     {room.kumite && <KumiteArena reducedMotion={Boolean(reducedMotion)} platform={false} className="kumite-arena-scene--battle" />}
     {clockDanger && <div className="pvp-clock-glow" aria-hidden="true" data-testid="pvp-clock-glow" />}
-    {!surrender && (room.status === 'active' || reviewBoard) && <button type="button" className="pvp-exit-control" data-testid="pvp-exit" onClick={() => room.status === 'complete' ? exitResults() : openExit()}>{room.status === 'complete' ? room.kumite ? 'Back to Kumite' : !room.ranked ? 'Back to the room' : 'Leave battle' : 'Leave battle'}</button>}
+    {!surrender && arrival && room.status === 'active' && <button type="button" className="pvp-exit-control" data-testid="pvp-exit" onClick={openExit}>Leave battle</button>}
     <AnimatePresence>{arrival && <MatchArrival player={room.members[room.seat]!} rival={rival} label={room.ranked?.opponent === 'bot' ? 'Park Bot found · ranked sparring' : 'Your fade is ready'} onContinue={() => setArrival(false)} />}</AnimatePresence>
     {battleStartEffectVisible && !arrival && room.status === 'active' && !reducedMotion && (
       <BattleStartSmoke onComplete={() => setBattleStartEffectVisible(false)} />

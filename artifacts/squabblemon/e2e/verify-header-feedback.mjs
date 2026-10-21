@@ -62,6 +62,8 @@ try {
   await page.locator('.battle-item-badge').first().click();
   await expect(page.getByRole('region', { name: 'Active items' })).toBeVisible();
   await page.goto(`http://127.0.0.1:${port}/e2e/art-recovery/fixture.html?feedback=1&pvp=1`,{waitUntil:'networkidle'});
+  assert.deepEqual(await layout(page,'.battle-command-header'),beforeHeader,'PvP reserves exactly the same header space as PvE');
+  assert.deepEqual(await layout(page,'.battlefield-grid'),beforeField,'PvP does not push the board down');
   assert.equal(overlap(await rect(page,'.battle-header--pvp'),await rect(page,'.battle-live-feedback')),false,'PvP header clears feedback');
   await expect(page.getByTestId('ability-chain')).toHaveAttribute('aria-label','Combo 1 of 3');
   await page.screenshot({path:`${output}/pvp-combo-${width}-${reducedMotion}.png`});

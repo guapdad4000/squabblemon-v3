@@ -67,7 +67,11 @@ export function BattleReactions({ room, connected, reducedMotion }: { room: Onli
   const [slot, setSlot] = useState<HTMLElement | null>(null);
   useEffect(() => { setSlot(document.querySelector<HTMLElement>('.pvp-reaction-slot')); }, [room.status]);
   if (room.status !== 'active') return null;
-  const controls = <div className={'pvp-reaction-controls' + (slot ? ' is-docked' : '')}>
+  const controls = <div className={'pvp-reaction-controls' + (slot ? ' is-docked' : '')} onKeyDown={event => {
+    if (event.key === 'Escape' && open) {
+      event.preventDefault(); event.stopPropagation(); setOpen(false); trigger.current?.focus();
+    }
+  }}>
       <button ref={trigger} type="button" className="pvp-reaction-trigger" onClick={() => { if (!open) { setCollection(false); mutation.reset(); } setOpen(v => !v); }} aria-expanded={open} aria-controls="pvp-reaction-picker" aria-label="Choose a reaction"><MessageCircle size={22} /><span>React</span></button>
       {open && <div ref={picker} className="pvp-reaction-picker" id="pvp-reaction-picker" role="region" aria-label="Your reaction collection">
         <header><div><small>BLOCK TALK / PvP</small><h3>{collection ? 'Owned collection' : 'Battle tray'}</h3></div><button type="button" aria-label="Close reactions" onClick={() => { setOpen(false); trigger.current?.focus(); }}><X size={18} /></button></header>

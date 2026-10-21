@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import type { Card } from '../data';
 import { getAssetUrl, getCardImage } from '../data';
 import { abilityFailed } from '../abilityOutcome';
@@ -6,16 +7,17 @@ import { BattlePhaseStatusChip, describeBattlePhase } from './BattleReadingCue';
 import type { PresentationEffect, PresentationPhase } from './PlayLoop';
 
 /** Presentation only: source/chain stay in the header; totals stay on their districts. */
-export function BattleHeaderFeedback({ phase, round, complete, effect, actor, landed, decision, phaseMessage, onlineLabel, detail, upgradeName }: {
+export function BattleHeaderFeedback({ phase, round, complete, effect, actor, landed, decision, phaseMessage, onlineLabel, detail, upgradeName, claims }: {
   phase: PresentationPhase; round: number; complete: boolean;
   effect: PresentationEffect | null; actor?: Card | null; landed: boolean;
   decision: string; detail: string; phaseMessage: string; onlineLabel?: string; upgradeName?: string | null;
+  claims?: ReactNode;
 }) {
   const status = describeBattlePhase(phase, complete, round, effect, actor?.name);
   const failed = effect ? abilityFailed(effect) : false;
   const chain = effect?.chain && effect.chain.total > 1 ? effect.chain : null;
   const resolving = phase === 'round-result' || phase === 'district-flipped';
-  const showMove = !!effect && !!actor && !resolving && !['round-intro', 'rival-thinking'].includes(phase);
+  const showMove = !!effect && !!actor && !resolving && !['round-intro', 'match-finish'].includes(phase);
   const move = showMove ? upgradeName ?? effect.abilityMetadata?.upgradeName ?? (effect.type === 'play' ? actor.name : actor.ability) : undefined;
   const guidance = phase === 'player-ready' ? decision : resolving ? `Round ${round} settled` : phase === 'round-intro' ? `Round ${round}` : phaseMessage;
   return <div className="battle-live-feedback" data-testid="battle-live-feedback">
@@ -30,6 +32,7 @@ export function BattleHeaderFeedback({ phase, round, complete, effect, actor, la
         {showMove && <span className="sr-only"><BattlePhaseStatusChip status={status} onlineLabel={onlineLabel} /></span>}
       </div>
     </div>
+    {claims && <div className="battle-live-claims">{claims}</div>}
     <div className="battle-live-combo" data-testid="battle-live-combo">
       {chain && showMove ? <div data-testid="ability-chain" aria-label={`Combo ${chain.index} of ${chain.total}`}>
         <span className="battle-live-kicker">Combo</span>

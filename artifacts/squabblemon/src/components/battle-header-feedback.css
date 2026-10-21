@@ -20,9 +20,6 @@
 .battle-arena.battle-hud[data-feedback-layout='split'] .battle-command-header :is(.battle-claims,.battle-playback-controls,.battle-tools) {
   position: relative; inset: auto; align-self: center;
 }
-.battle-arena.battle-hud[data-feedback-layout='split'] .battle-command-header .battle-header--pvp {
-  grid-template-columns: minmax(0,1fr) 120px minmax(0,1fr) auto;
-}
 .battle-live-feedback {
   display: grid; grid-template-columns: minmax(0,1fr) 136px minmax(0,1fr);
   align-items: center; gap: 12px; height: 52px; min-height: 52px; min-width: 0;
@@ -87,10 +84,6 @@
   .battle-live-move { gap: 5px; }
   .battle-live-move > img { width: 28px; height: 36px; }
   .battle-live-combo b { font-size: 22px; }
-  .battle-arena.battle-hud[data-feedback-layout='split'] .battle-command-header .battle-header--pvp { grid-template-columns: minmax(0,1fr) 68px minmax(0,1fr); height: 106px; min-height: 106px; }
-  .battle-arena.battle-hud[data-feedback-layout='split']:has(.battle-header--pvp) .battle-command-header { height: calc(158px + env(safe-area-inset-top)); }
-  .battle-arena.battle-hud[data-feedback-layout='split'] .battle-header--pvp .battle-match-meta { grid-column: 1 / -1; grid-row: 2; justify-content: end; height: 44px; }
-  .battle-arena.battle-hud[data-feedback-layout='split'] .battle-header--pvp .battle-round-clock { width: 68px; }
 }
 @media(min-width:601px) and (max-height:580px) {
   .battle-arena.battle-hud[data-feedback-layout='split'] .battle-command-header { height: 94px; }
@@ -111,9 +104,6 @@
 .battle-arena.battle-hud[data-feedback-layout='split'] .battle-command-header .battle-header { grid-template-areas: none; }
 .battle-arena.battle-hud[data-feedback-layout='split'] .battle-command-header :is(.battle-rival,.battle-round-clock,.battle-match-meta,.pvp-topbar__center,.pvp-plate) { grid-area: auto; }
 .battle-arena.battle-hud[data-feedback-layout='split'] .battle-live-feedback { grid-area: auto; width: 100%; }
-@media(max-width:600px) {
- .battle-arena.battle-hud[data-feedback-layout='split'] .battle-header--pvp .battle-match-meta { grid-column: 1 / -1; grid-row: 2; }
-}
 
 /* Anchor the mobile menu to the header edge, not the inset PvP tools button. */
 @media(max-width:1024px), (pointer:coarse) {
@@ -123,4 +113,78 @@
     right: 0; top: 100%; max-width: calc(100vw - 24px - env(safe-area-inset-left) - env(safe-area-inset-right));
     max-height: calc(100dvh - 130px - env(safe-area-inset-top) - env(safe-area-inset-bottom)); overflow-y: auto;
   }
+}
+
+/* PvP shares the same two header rows as PvE: identities, then live feedback.
+   Tools occupy the feedback row's right edge; they never create a third row. */
+.battle-arena.battle-hud[data-feedback-layout='split'] .battle-command-header:has(.battle-header--pvp) {
+  --pvp-feedback-top: 60px; --pvp-tools-width: 44px;
+}
+.battle-arena.battle-hud[data-feedback-layout='split'] .battle-command-header:has(.battle-match-meta > .music-trigger) { --pvp-tools-width: 96px; }
+.battle-arena.battle-hud[data-feedback-layout='split'] .battle-command-header .battle-header--pvp { grid-template-columns: minmax(0,1fr) 136px minmax(0,1fr); }
+.battle-arena.battle-hud[data-feedback-layout='split'] .battle-command-header .battle-header--pvp .battle-match-meta {
+  position: absolute; top: calc(var(--pvp-feedback-top) + 4px); right: 0;
+  width: var(--pvp-tools-width); height: 44px; min-height: 44px; padding: 0; margin: 0;
+  gap: 8px; justify-content: end; grid-area: auto;
+}
+.battle-arena.battle-hud[data-feedback-layout='split'] .battle-header--pvp .battle-tools { margin: 0; flex: none; }
+.battle-arena.battle-hud[data-feedback-layout='split'] .battle-header--pvp .pvp-plate { min-height: 52px; height: 52px; padding: 4px 8px; gap: 6px; }
+.battle-arena.battle-hud[data-feedback-layout='split'] .pvp-plate__avatar { width: 34px; height: 34px; }
+.battle-arena.battle-hud[data-feedback-layout='split'] .pvp-plate__copy > strong { font-size: 13px; -webkit-line-clamp: 1; }
+/* Keep the live PvP clock legible beneath the round, not behind its digits. */
+.battle-arena.battle-hud[data-feedback-layout='split'] .battle-header--pvp .battle-round-clock {
+  display: flex; flex-direction: column; justify-content: center; gap: 2px;
+}
+.battle-arena.battle-hud[data-feedback-layout='split'] .battle-header--pvp .battle-round { gap: 2px; }
+.battle-arena.battle-hud[data-feedback-layout='split'] .battle-header--pvp .battle-round > span { gap: 2px; font-size: 6px; }
+.battle-arena.battle-hud[data-feedback-layout='split'] .battle-header--pvp .battle-round b { font-size: 20px; }
+.battle-arena.battle-hud[data-feedback-layout='split'] .battle-header--pvp .battle-round small { font-size: 6px; }
+.battle-arena.battle-hud[data-feedback-layout='split'] .battle-header--pvp .turn-timer {
+  order: 2; position: relative; inset: auto; width: 48px; height: 18px; flex: none;
+  color: #f4cf83; border: 0; background: none; box-shadow: none;
+}
+.battle-arena.battle-hud[data-feedback-layout='split'] .battle-header--pvp .turn-timer-copy { transform: none; justify-content: center; }
+.battle-arena.battle-hud[data-feedback-layout='split'] .battle-header--pvp .turn-timer-copy strong {
+  font-size: 14px; line-height: 1; letter-spacing: 0; -webkit-text-stroke: 0;
+}
+.battle-arena.battle-hud[data-feedback-layout='split'] .battle-header--pvp .turn-timer-copy strong::after { content: 's'; font-size: 9px; margin-left: 2px; }
+.battle-arena.battle-hud[data-feedback-layout='split'] .battle-header--pvp .turn-timer-track { inset: auto 4px 0; }
+.battle-arena.battle-hud[data-feedback-layout='split'] .battle-header--pvp .turn-timer.state-paused { color: #a5b0be; }
+.battle-arena.battle-hud[data-feedback-layout='split'] .battle-header--pvp .turn-timer.state-paused strong::after { content: ''; }
+.battle-arena.battle-hud[data-feedback-layout='split'] .battle-header--pvp .turn-timer.state-warning { color: #ffd574; }
+.battle-arena.battle-hud[data-feedback-layout='split'] .battle-header--pvp .turn-timer.state-urgent { color: #ff8293; }
+.battle-live-claims { grid-column: 2; display: grid; place-items: center; }
+.battle-arena.battle-hud[data-feedback-layout='split'] .battle-live-claims .battle-claims { width: auto; gap: 3px; font-size: 13px; }
+.battle-command-header:has(.battle-header--pvp) .battle-live-combo { padding-right: calc(var(--pvp-tools-width) + 8px); }
+.battle-command-header:has(.battle-header--pvp) .battle-combo-track { width: min(76px,100%); }
+.battle-command-header .pvp-reaction-slot--menu { display: block; }
+.battle-command-header .pvp-reaction-slot--menu .pvp-reaction-controls { width: 100%; }
+html .battle-command-header .pvp-reaction-slot--menu .pvp-reaction-trigger {
+  display: flex; justify-content: start; gap: 12px; width: 100%; min-height: 44px;
+  padding: 8px; border: 0; border-radius: 6px; box-shadow: none; background: transparent; color: #28302a;
+  font: 500 12px/1.3 var(--font-sans);
+}
+html .battle-command-header .pvp-reaction-slot--menu .pvp-reaction-trigger span { display: inline; }
+html .battle-command-header .pvp-reaction-slot--menu .pvp-reaction-trigger svg { width: 17px; height: 17px; fill: none; stroke: currentColor; }
+@media(max-width:1000px) {
+  .battle-arena.battle-hud[data-feedback-layout='split'] .battle-command-header .battle-header--pvp { grid-template-columns: minmax(0,1fr) 104px minmax(0,1fr); }
+}
+@media(max-width:600px) {
+  .battle-arena.battle-hud[data-feedback-layout='split'] .battle-command-header:has(.battle-header--pvp) { --pvp-feedback-top: 54px; }
+  .battle-arena.battle-hud[data-feedback-layout='split'] .battle-command-header .battle-header--pvp { grid-template-columns: minmax(0,1fr) 68px minmax(0,1fr); }
+  .battle-arena.battle-hud[data-feedback-layout='split'] .battle-header--pvp :is(.pvp-topbar__center,.battle-round-clock) { min-width: 0; width: 68px; }
+  .battle-arena.battle-hud[data-feedback-layout='split'] .battle-header--pvp .pvp-plate { height: 50px; min-height: 50px; padding: 3px 4px; gap: 4px; }
+  .battle-arena.battle-hud[data-feedback-layout='split'] .pvp-plate__avatar { width: 24px; height: 24px; }
+  .battle-arena.battle-hud[data-feedback-layout='split'] .pvp-plate__copy { gap: 1px; }
+  .battle-arena.battle-hud[data-feedback-layout='split'] .pvp-plate__copy > strong { font-size: 10px; -webkit-line-clamp: 2; }
+  .battle-arena.battle-hud[data-feedback-layout='split'] .pvp-plate__copy small { font-size: 7px; letter-spacing: .04em; }
+  .battle-arena.battle-hud[data-feedback-layout='split'] .pvp-plate__copy .pvp-level { font-size: 7px; padding: 0 2px; }
+  .battle-command-header:has(.battle-header--pvp) .battle-live-feedback { grid-template-columns: minmax(0,1fr) 48px minmax(0,1fr); gap: 4px; }
+  .battle-command-header:has(.battle-header--pvp) .battle-live-combo { grid-column: 3; }
+}
+@media(min-width:601px) and (max-height:580px) {
+  .battle-arena.battle-hud[data-feedback-layout='split'] .battle-command-header:has(.battle-header--pvp) { --pvp-feedback-top: 50px; }
+  .battle-arena.battle-hud[data-feedback-layout='split'] .battle-header--pvp .battle-round-clock { height: 46px; }
+  .battle-arena.battle-hud[data-feedback-layout='split'] .battle-header--pvp .pvp-plate { min-height: 46px; height: 46px; }
+  .battle-arena.battle-hud[data-feedback-layout='split'] .battle-header--pvp .battle-match-meta { top: var(--pvp-feedback-top); }
 }

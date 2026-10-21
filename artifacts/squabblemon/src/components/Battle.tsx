@@ -800,13 +800,13 @@ export function Battle({
       {roundClockNode}
       </>}
       <div className="battle-match-meta">
-        {(stableHeader || splitFeedback) && claimsNode}
+        {(stableHeader || splitFeedback) && !(online && splitFeedback) && claimsNode}
         {(stableHeader || splitFeedback) && playbackNode}
         {online?.playerIdentity && !online.rivalIdentity && <div className="pvp-player-identity"><div className="pvp-avatar pvp-avatar--you" data-testid="pvp-player-avatar"><FighterPortrait cardId={online.playerIdentity.hero} avatarKey={online.playerIdentity.avatarKey} name={online.playerIdentity.name} /></div><span title={online.playerIdentity.name}><small>Your corner {online.playerIdentity.level !== undefined && <b className="pvp-level">Lv. {online.playerIdentity.level}</b>}</small>{online.playerIdentity.name}</span></div>}
         {!musicInMenu && <MusicControls compact logo={!!online} />}
-        {online && <span className="pvp-reaction-slot" />}
         <details className="battle-tools" onToggle={event => { if (!event.currentTarget.open) { setShowHistory(false); setShowStatuses(false); setShowModifiers(false); } }} onKeyDown={event => { if (event.key === 'Escape') { event.currentTarget.open = false; event.currentTarget.querySelector('summary')?.focus(); } }}><summary aria-label="Battle menu" title="Battle menu"><MoreHorizontal size={22} aria-hidden="true" /></summary><div className="battle-tools__panel referee-clipboard"><DrFadeReferee />
         {musicInMenu && <MusicControls className="battle-header-music" />}
+        {online && <span className="pvp-reaction-slot pvp-reaction-slot--menu" />}
         {splitFeedback && !online && onToggleBattleSpeed && <button type="button" className="battle-utility" data-testid="button-battle-speed" aria-pressed={fastBattleSpeed} onClick={onToggleBattleSpeed}>Battle speed · {fastBattleSpeed ? '1.5×' : 'Normal'}</button>}
         {passive && (
           <div className="hidden lg:block border border-purple-500/50 bg-purple-500/10 px-2 py-1 text-right max-w-xs">
@@ -829,8 +829,9 @@ export function Battle({
     </div>
     {interactive && !mechanicLesson && !helpOpen && !showHistory && showCoachTip && activeTutorialGuidance?.target && <CoachSpotlight nonBlocking onDismiss={() => setShowCoachTip(false)} narrate={false} target={activeTutorialGuidance.target} title={activeTutorialGuidance.title} step={"ROUND " + m.round + " / 4"}>{activeTutorialGuidance.body}</CoachSpotlight>}
     {splitFeedback ? <BattleHeaderFeedback
+      claims={online ? claimsNode : undefined}
       phase={phase} round={m.round} complete={m.phase === 'complete'}
-      effect={interactive ? null : presentedEffect} actor={actor} landed={effectLanded}
+      effect={!online && (interactive || phase === 'rival-thinking') ? null : presentedEffect} actor={actor} landed={effectLanded}
       decision={drag.drag ? drag.drag.choice?.allowed ? 'Release to play' : 'Choose a valid district' : selectedCard ? !selectedHasLegalLane ? 'Cannot play this fighter' : selectedLane === null ? 'Choose a district' : selectedLaneLocked ? 'District locked' : (selectedCost ?? 0) > m.playerMotion ? 'Not enough Motion' : 'Ready to play' : 'Choose a fighter'}
       detail={coachedDecision} upgradeName={presentedEffect ? triggeredUpgradeName(presentedEffect) : undefined}
       phaseMessage={phaseMessage} onlineLabel={online?.status ? String(online.status) : undefined}

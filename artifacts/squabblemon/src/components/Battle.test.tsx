@@ -1493,6 +1493,20 @@ test('phase status names the actual presentation phase in plain language', () =>
   assert.match(html, /Effects resolve<\/b><span>Rival /);
 });
 
+test('live PvP effects stay visible while the server turn status is ready or rival-thinking', () => {
+  const match = createMatch('block', 'combo');
+  const card = match.cpuHand[0]!;
+  const effect = { sequence: 5, kind: 'normal', type: 'ability', cardInstanceId: card.instanceId, cardId: card.cardId, owner: 'cpu', lane: 0, targetIds: [], targets: [], note: 'x', source: null, round: 1, scores: { before: [], after: [] } };
+  for (const presentationPhase of ['player-ready', 'rival-thinking']) {
+    const html = renderBattle(match, { online: onlinePresentationFor(match), presentationPhase, activeEffect: effect });
+    assert.match(html, /class="battle-live-kicker">Rival move · /);
+    assert.ok(html.includes(`<strong data-testid="battle-guidance"><span>${card.ability}</span>`));
+    assert.doesNotMatch(html, /class="attack-caption"/);
+  }
+  const ready = renderBattle(match, { online: onlinePresentationFor(match) });
+  assert.match(ready, /Choose a fighter/);
+});
+
 test('reviewing the final board suppresses the finish cinematic but keeps a compact status', () => {
   const match = createMatch('block', 'combo');
   const cinematic = renderBattle(match, { presentationPhase: 'match-finish', phaseMessage: 'FINAL DISTRICTS' });

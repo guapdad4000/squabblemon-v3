@@ -7,6 +7,8 @@ import { decks } from '../src/data';
 import { Multiplayer } from '../src/pages/game/Multiplayer';
 import { fadecadeBootstrap } from './fadecade.fixture';
 import { guardDeckRouteNavigation } from '../src/lib/deckExitGuard';
+import { AppAuthProvider } from '../src/lib/auth';
+import { SocialProvider } from '../src/lib/social';
 import '../src/index.css';
 
 const params = new URLSearchParams(location.search);
@@ -54,13 +56,18 @@ history.replaceState({}, '', `/squabblemon/game/online${ranked ? '' : '?tab=frie
 history.pushState({}, '', `/squabblemon/game/online/${code}`);
 const bootstrap = fadecadeBootstrap();
 bootstrap.profile.settings.reducedMotion = params.get('motion') !== 'full';
+localStorage.setItem('squabblemon_e2e_user', 'signed-in');
 createRoot(document.getElementById('root')!).render(
+  <AppAuthProvider publishableKey="pk_test_fixture">
   <Router base="/squabblemon" aroundNav={guardDeckRouteNavigation}>
     <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false }, mutations: { retry: false } } })}>
+      <SocialProvider accountId="host" enabled={false}>
       <Switch>
         <Route path="/game/online/:code">{() => <Multiplayer bootstrap={bootstrap} code={code} />}</Route>
         <Route path="/game/online">{() => <div data-testid="pvp-hub">{ranked ? 'Fade Park' : 'Friend fades'}</div>}</Route>
       </Switch>
+      </SocialProvider>
     </QueryClientProvider>
-  </Router>,
+  </Router>
+  </AppAuthProvider>,
 );

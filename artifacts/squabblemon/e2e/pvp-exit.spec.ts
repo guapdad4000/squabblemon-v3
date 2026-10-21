@@ -18,6 +18,16 @@ async function hit(locator: Locator, page: Page) {
   })).toBe(true);
 }
 
+async function openBattleExit(page: Page) {
+  const arrivalExit = page.getByTestId('pvp-exit');
+  if (await arrivalExit.isVisible()) { await arrivalExit.tap(); return; }
+  const tools = page.locator('.battle-tools');
+  if (!(await tools.evaluate(element => element.hasAttribute('open')))) await page.getByLabel('Battle menu').tap();
+  const exit = tools.getByRole('button', { name: 'Leave battle', exact: true });
+  await hit(exit, page);
+  await exit.tap();
+}
+
 for (const kind of ['ranked', 'friend'] as const) {
   for (const viewport of [{ width: 390, height: 844 }, { width: 667, height: 375 }]) {
     test(`${kind} exit at ${viewport.width}x${viewport.height}`, async ({ page }) => {
@@ -28,7 +38,7 @@ for (const kind of ['ranked', 'friend'] as const) {
       const exit = page.getByTestId('pvp-exit');
       await hit(exit, page); // arrival remains mounted during this tap
       await page.screenshot({ path: `test-results/pvp-exit/${kind}-${viewport.width}-arrival.png` });
-      await exit.tap();
+      await openBattleExit(page);
       const dialog = page.getByRole('dialog', { name: 'Leave this fade?' });
       await expect(dialog).toContainText(kind === 'ranked' ? 'ranked loss' : 'gives your rival the win');
       await hit(dialog.getByRole('button', { name: 'Keep playing' }), page);
@@ -39,7 +49,22 @@ for (const kind of ['ranked', 'friend'] as const) {
 
       const menu = page.getByLabel('Battle menu');
       await hit(menu, page);
-      await menu.tap();
+      const header = await page.locator('.battle-command-header').boundingBox();
+      expect(header!.height).toBe(viewport.width <= 600 ? 106 : 94);
+      const round = await page.locator('.battle-round > span').boundingBox();
+      const clock = await page.getByTestId('turn-timer').boundingBox();
+      expect(clock!.y).toBeGreaterThanOrEqual(round!.y + round!.height);
+      expect(clock!.y + clock!.height).toBeLessThanOrEqual(header!.y + (viewport.width <= 600 ? 54 : 50));
+      await expect(page.getByTestId('pvp-exit')).toBeHidden();
+      if (!(await page.locator('.battle-tools').evaluate(element => element.hasAttribute('open')))) await menu.tap();
+      await hit(page.getByRole('button', { name: 'Music controls', exact: true }), page);
+      const react = page.getByRole('button', { name: 'Choose a reaction', exact: true });
+      await hit(react, page);
+      await react.tap();
+      await expect(page.getByRole('region', { name: 'Your reaction collection' })).toBeVisible();
+      await page.keyboard.press('Escape');
+      await expect(page.getByRole('region', { name: 'Your reaction collection' })).toBeHidden();
+      await expect(react).toBeFocused();
       const menuExit = page.getByRole('button', { name: 'Leave battle', exact: true }).last();
       await hit(menuExit, page);
       await menuExit.tap();
@@ -54,7 +79,7 @@ for (const kind of ['ranked', 'friend'] as const) {
       await dialog.getByRole('button', { name: 'Keep playing' }).tap();
       await expect(battle).toBeVisible();
 
-      await exit.tap();
+      await openBattleExit(page);
       await page.evaluate(() => window.pvpFixture.fail(true));
       await dialog.getByRole('button', { name: 'Surrender', exact: true }).tap();
       await expect(dialog.getByText('Surrender could not be confirmed.', { exact: false })).toBeVisible();
@@ -71,7 +96,7 @@ test('offline return is explicit; reconnect and surrender settle once; completed
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/squabblemon/e2e/pvp-exit.fixture.html?kind=ranked');
   await expect(page.getByTestId('online-battle')).toBeVisible();
-  await page.getByTestId('pvp-exit').tap();
+  await openBattleExit(page);
   const dialog = page.getByRole('dialog', { name: 'Leave this fade?' });
   await page.evaluate(() => window.pvpFixture.disconnect());
   await expect(dialog.getByText(/Connection lost/)).toBeVisible();
@@ -86,8 +111,7 @@ test('offline return is explicit; reconnect and surrender settle once; completed
   await expect.poll(() => page.evaluate(() => window.pvpFixture.status())).toBe('complete');
   await expect(page.getByTestId('park-result-dialog')).toBeVisible();
   await page.getByRole('button', { name: 'Inspect final board' }).tap();
-  await hit(page.getByTestId('pvp-exit'), page);
-  await page.getByTestId('pvp-exit').tap();
+  await openBattleExit(page);
   await expect(page.getByTestId('pvp-hub')).toBeVisible();
 });
 
@@ -95,7 +119,7 @@ test('offline friend return does not submit a surrender', async ({ page }) => {
   await page.goto('/squabblemon/e2e/pvp-exit.fixture.html?kind=friend');
   await expect(page.getByTestId('online-battle')).toBeVisible();
   await page.evaluate(() => window.pvpFixture.disconnect());
-  await page.getByTestId('pvp-exit').tap();
+  await openBattleExit(page);
   const dialog = page.getByRole('dialog', { name: 'Leave this fade?' });
   await expect(dialog).toContainText('server clock keeps running');
   const returnButton = dialog.getByRole('button', { name: /Return to friend fades without surrender confirmation/ });
@@ -120,7 +144,7 @@ test('arrival poster offers a reachable exit before presentation clears', async 
   await expect(page.getByTestId('online-battle')).toBeVisible();
 });
 
-test('completed friend match can use its result return action', async ({ page }) => {
+test('completed friend match can leave its room through the result action', async ({ page }) => {
   await page.goto('/squabblemon/e2e/pvp-exit.fixture.html?kind=friend');
   await expect(page.getByTestId('online-battle')).toBeVisible();
   await page.evaluate(() => {
@@ -129,9 +153,9 @@ test('completed friend match can use its result return action', async ({ page })
   });
   const result = page.getByTestId('park-result-dialog');
   await expect(result).toBeVisible();
-  const returnButton = result.getByRole('button', { name: 'Back to friend fades' });
+  const returnButton = result.getByRole('button', { name: 'Leave this room' });
   await hit(returnButton, page);
   await returnButton.tap();
   await expect(page.getByTestId('pvp-hub')).toBeVisible();
-  expect(await page.evaluate(() => window.pvpFixture.requests())).toBe(0);
+  expect(await page.evaluate(() => window.pvpFixture.requests())).toBe(1);
 });
