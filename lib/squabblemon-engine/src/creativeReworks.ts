@@ -1,3 +1,4 @@
+import { ITEM_ARTWORK } from './battleArtwork';
 import { PVP_SUPPORT } from './basePvpBalance';
 import type { Card } from "./data";
 import type {
@@ -476,18 +477,6 @@ function discount(
   };
 }
 export function creativeDistrictMarks(m: Match): CharacterDistrictMark[] {
-  const itemArtwork: Record<string, string> = {
-    stash: "contraband",
-    boarding: "boarding-pass",
-    lunch: "packed-lunch",
-    queue: "queue-ticket",
-    seed: "seed",
-    encore: "encore",
-    watch: "watch",
-    verse: "verse",
-    treat: "treat",
-    kit: "emergency-kit",
-  };
   const labels: Record<string, string> = {
     "home-parcel": "next friendly play or move here: +1 (+2 if Earth) and cleanse",
     "home-dinner": "return home at round end: +1 if successful",
@@ -545,7 +534,7 @@ export function creativeDistrictMarks(m: Match): CharacterDistrictMark[] {
   const visible = marks(m).map((x) => ({
     owner: x.owner,
     lane: x.lane,
-    ...(itemArtwork[x.kind] ? { artworkId: itemArtwork[x.kind] } : {}),
+    ...(ITEM_ARTWORK[x.kind] ? { artworkId: ITEM_ARTWORK[x.kind], id: x.id, sourceId: x.source.instanceId, targetIds: [...x.targets], expiresRound: x.expires, ...(x.kind === 'stash' ? { progress: { current: x.seen?.length ?? 0, total: 3 } } : {}) } : {}),
     text: `${x.source.ability} · ${x.kind === "pending-appeal" ? "pending " + Object.keys(x.pending ?? {}).join(", ") : x.kind === "goal" ? `reach ${x.amount ?? 5} Hands: Protection and +2` : x.kind === "chill" ? `next other friendly arrival: +${x.amount ?? 0}` : (labels[x.kind] ?? x.kind)}${["project", "jobs", "stash"].includes(x.kind) ? " · " + (x.seen?.length ?? 0) + "/" + (x.kind === "stash" ? 3 : 2) : ""}${x.kind === "tab" && x.amount ? " · Tip earned" : ""}${x.targets.length ? ": " + x.targets.map((id) => card(m, id)?.name ?? "departed target").join(", ") : ""}${x.ready ? " · ready" : ""}${x.expires === 99 ? " · until used" : " · through R" + x.expires}`,
   }));
   for (const c of board(m)) {

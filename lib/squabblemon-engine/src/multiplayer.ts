@@ -1,3 +1,4 @@
+import { getBattleArtCues, type BattleArtCue } from './battleArtwork';
 import type { ReactionChannel } from './reactions';
 import type { RankedResult } from './ranked';
 export { RANKED_BOT_WAIT_MS, RANKED_QUEUE_IDLE_MS, RANKED_SEASON, RANK_TIERS, rankedStats, rankProgress, awardRank } from './ranked';
@@ -462,6 +463,7 @@ export type PublicCard = {
   costs: [number, number, number];
 };
 export type PublicEvent = {
+  artCues?: BattleArtCue[];
   round: number;
   sequence: number;
   type: EventType;
@@ -522,7 +524,7 @@ export type OnlineRoomView = {
   rematch: Record<Seat, boolean>;
 };
 /** Explicit allowlist: full engine snapshots, event replays, user IDs and rival hands NEVER cross this boundary. */
-function publicPresentation(event: EffectLogEntry): Pick<PublicEvent, 'sourceId' | 'participants' | 'scores'> {
+function publicPresentation(event: EffectLogEntry): Pick<PublicEvent, 'sourceId' | 'participants' | 'scores' | 'artCues'> {
   const participants = [event.source, ...event.targets].flatMap((p) => {
     if (!p) return [];
     const before = publicParticipantState(p.before), after = publicParticipantState(p.after);
@@ -530,7 +532,7 @@ function publicPresentation(event: EffectLogEntry): Pick<PublicEvent, 'sourceId'
       ...(p.departureCause ? { departureCause: p.departureCause } : {}) }] : [];
   });
   const sourceOnBoard = event.source && participants.some((p) => p.cardInstanceId === event.source!.cardInstanceId);
-  return { ...(sourceOnBoard ? { sourceId: event.source!.cardInstanceId } : {}), participants, scores: event.scores };
+  return { ...(sourceOnBoard ? { sourceId: event.source!.cardInstanceId } : {}), participants, scores: event.scores, artCues: getBattleArtCues(event) };
 }
 export function onlineRoomView(
   room: OnlineRoom,

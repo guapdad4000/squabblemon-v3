@@ -4,6 +4,7 @@ import React from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { CardView } from './CardView';
 import { BattleVictory } from './BattleVictory';
+import { SummonDetails } from './SummonDetails';
 import { asCard } from './MultiplayerBattle';
 import { getCardImage } from '../data';
 import { createArtworkReviewMatch, artworkReviewMarks } from '../../e2e/art-recovery/state';
@@ -34,4 +35,18 @@ test('Abuela and Kingpin expose the surviving dedicated item art with actual own
   const marks = artworkReviewMarks(createArtworkReviewMatch());
   assert.ok(marks.some(mark => mark.artworkId === 'packed-lunch' && mark.owner === 'player' && mark.lane === 0));
   assert.ok(marks.some(mark => mark.artworkId === 'contraband' && mark.owner === 'cpu' && mark.lane === 0));
+});
+
+test('summon inspector identifies its creator and battle state without collectible controls', () => {
+  const match=createArtworkReviewMatch();
+  const guard=match.boards.flat().find(c=>c.cardId==='cardguard')!;
+  const markup=renderToStaticMarkup(<SummonDetails card={guard} match={match}/>);
+  assert.match(markup,/Created by Queen of Hearts/);
+  assert.match(markup,/Lane Hands/);
+  assert.match(markup,/Until removed/);
+  assert.doesNotMatch(markup,/Mythical|Legendary|Finish|Craft|Equip|Upgrade|foil/i);
+  const bud=match.boards.flat().find(c=>c.buddyBud)!;
+  const budMarkup=renderToStaticMarkup(<SummonDetails card={bud} match={match}/>);
+  assert.match(budMarkup,/Sprouts in 2 rounds/);
+  assert.match(budMarkup,/Adds no lane Hands/);
 });

@@ -10,11 +10,11 @@ import './battle-location-details.css';
 
 type District = { id: string; name: string; rule: string; strategy?: string; accent?: string; status?: string };
 type ViewMode = 'location' | 'formation';
-export function BattleDistrictView({ districts, boards, scores, lane, mode = 'formation', onMode, onLane, onClose, onInspect, variantFor, covered, targetIds = [], districtMarks = [] }: {
+export function BattleDistrictView({ districts, boards, scores, lane, mode = 'formation', onMode, onLane, onClose, onInspect, variantFor, covered, targetIds = [], districtMarks = [], focusItemId }: {
   districts: District[]; boards: CardInstance[][]; scores: { player: number; cpu: number }[];
   lane: number; mode?: ViewMode; onMode?: (mode: ViewMode) => void; onLane: (lane: number) => void; onClose: () => void;
   onInspect: (card: CardInstance) => void; variantFor: (card: CardInstance) => string | undefined;
-  covered: (id: string) => boolean; targetIds?: string[]; districtMarks?: CharacterDistrictMark[];
+  covered: (id: string) => boolean; targetIds?: string[]; districtMarks?: CharacterDistrictMark[]; focusItemId?: string;
 }) {
   const dialog = useRef<HTMLDialogElement>(null);
   const content = useRef<HTMLDivElement>(null);
@@ -24,7 +24,10 @@ export function BattleDistrictView({ districts, boards, scores, lane, mode = 'fo
     node?.showModal();
     return () => { node?.close(); if (opener?.isConnected) opener.focus({ preventScroll: true }); };
   }, []);
-  useEffect(() => { content.current?.scrollTo({ top: 0 }); }, [lane, mode]);
+  useEffect(() => {
+    const item = focusItemId && [...(content.current?.querySelectorAll<HTMLElement>('[data-item-id]') ?? [])].find(node => node.dataset.itemId === focusItemId);
+    if (item) item.scrollIntoView({ block: 'center' }); else content.current?.scrollTo({ top: 0 });
+  }, [lane, mode, focusItemId]);
   const district = districts[lane];
   const art = getLocationArtwork(district.id);
   const details = getLocationDetails(district.id);
@@ -68,7 +71,7 @@ export function BattleDistrictView({ districts, boards, scores, lane, mode = 'fo
       </div>
       {items.length > 0 && <section className="battle-location-items" aria-label="Active items">
         <h3>Active items</h3>
-        <ul>{items.map((mark, index) => <li key={`${mark.owner}-${mark.artworkId}-${index}`}>
+        <ul>{items.map((mark, index) => <li key={mark.id ?? `${mark.owner}-${mark.artworkId}-${index}`} data-item-id={mark.id} className={mark.id && mark.id === focusItemId ? 'is-selected' : undefined}>
           <img src={getAssetUrl(`assets/items/${mark.artworkId}.webp`)} alt={mark.artworkId!.replaceAll('-', ' ')} width="80" height="112" decoding="async" />
           <div><h4>{mark.artworkId!.replaceAll('-', ' ')}</h4><small>{mark.owner === 'player' ? 'Yours' : 'Rival’s'}</small><p>{mark.text}</p></div>
         </li>)}</ul>

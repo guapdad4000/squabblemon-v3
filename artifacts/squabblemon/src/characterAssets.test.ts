@@ -356,6 +356,7 @@ test('Buddy Bud and Royal Guard retain their recovered dedicated artwork and rev
   for (const [token, artwork, parent, width, height] of [
     ['buddy-bud', 'buddy-bud', 'buddy', 1254, 1254],
     ['cardguard', 'card-guard', 'queen-of-hearts', 1024, 1536],
+    ['grin', 'grin', 'cheshire', 1254, 1254],
   ] as const) {
     const portrait = getCardImage(token);
     assert.notEqual(portrait, getCardImage(parent));

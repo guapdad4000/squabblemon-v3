@@ -1,0 +1,9 @@
+.battle-art-effects { position:absolute; inset:0; z-index:42; pointer-events:none; overflow:hidden; }
+.battle-art-cue { position:absolute; width:72px; height:76px; margin:-38px 0 0 -36px; display:grid; justify-items:center; align-content:center; animation:battle-art-arrive .48s ease-out both; }
+.battle-art-cue img { width:52px; height:54px; object-fit:contain; filter:drop-shadow(0 2px 3px #000); }
+.battle-art-cue span { white-space:nowrap; font:700 12px/1.3 system-ui,sans-serif; padding:3px 6px; border:1px solid #d7b66f; border-radius:4px; background:#111e; color:#fff0cb; }
+.battle-art-cue--plant span,.battle-art-cue--sprout span { color:#caffb1; border-color:#86b76d; }
+.battle-art-cue--heal span { color:#b8eeff; border-color:#7caebd; }
+@keyframes battle-art-arrive { 0%{opacity:0;transform:translate(var(--cue-x),var(--cue-y)) scale(.65)} 55%{opacity:1;transform:translate(0,0) scale(1.08)} 80%{opacity:1;transform:scale(1)} 100%{opacity:0;transform:translateY(-8px) scale(1)} }
+.battle-art-effects[data-reduced-motion="true"] .battle-art-cue { animation:none; }
+@media(prefers-reduced-motion:reduce) { .battle-art-cue { animation:none; } }

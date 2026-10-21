@@ -40,7 +40,8 @@
     "./parkChessLessons": "./src/parkChessLessons.ts",
     "./parkChessRating": "./src/parkChessRating.ts",
     "./parkBots": "./src/parkBots.ts",
-    "./ranked": "./src/ranked.ts"
+    "./ranked": "./src/ranked.ts",
+    "./battleArtwork": "./src/battleArtwork.ts"
   },
   "dependencies": {
     "chess.js": "1.4.0"

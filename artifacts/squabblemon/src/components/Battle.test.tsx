@@ -365,7 +365,8 @@ test('Buddy keeps plant collectible art and uses rock art for its Squabbled batt
   assert.ok(bud, 'normal Buddy On Reveal plants battle-only Bud instances');
   const budHtml = renderToStaticMarkup(<CardView card={bud} isBoard presentationOnly currentRound={plantedMatch.round} />);
   assert.match(budHtml, /BUD PLANTED · 2T · \+3 LAST SUMMON/);
-  assert.match(budHtml, /R3/);
+  assert.match(budHtml, /2T/);
+  assert.match(budHtml, /round 3/);
   assert.match(budHtml, /last eligible friendly card summoned here/);
   assert.doesNotMatch(budHtml, /Explodes|random enemy here/);
   const budReplayEvent = plantedMatch.effectLog.find(event => event.cardInstanceId === plantBuddy.instanceId && event.type === 'ability' && event.note.includes('Buddy Buds: planted'))!;

@@ -132,7 +132,7 @@ function CardViewComponent({
   const displayCost = cost ?? card.cost;
   const motionLabel = isBurntPlate ? 'This round' : isBuddyBud ? 'Matures' : card.hazard ? 'Explodes' : 'Motion';
   const motionValue = isBuddyBud && instance?.buddyBud
-    ? `R${instance.buddyBud.sproutsAtRound}`
+    ? buddyBudTurns === null ? `R${instance.buddyBud.sproutsAtRound}` : `${buddyBudTurns}T`
     : isBurntPlate ? 'Burn' : card.hazard ? fuseRound ? `R${fuseRound}` : 'Next' : displayCost;
 
   const isFrozen = instance?.statuses?.frozen;

@@ -7,7 +7,7 @@ import type { PresentationEffect } from '../components/PlayLoop';
 export const ONLINE_EFFECT_TIMING = { windupMs: 225, impactMs: 325 } as const;
 
 export function toPresentationEffect(event: PublicEvent, seat: Seat, scores: PresentationEffect['scores']['before']): PresentationEffect | null {
-  if (!event.sourceId || event.type === 'pass' || event.type === 'reveal' || event.kind === 'story') return null;
+  if ((!event.sourceId && !event.artCues?.length) || event.type === 'pass' || event.type === 'reveal' || event.kind === 'story') return null;
   const owner = (s: Seat) => s === seat ? 'player' as const : 'cpu' as const;
   const participant = (p: PublicParticipant): EventParticipant => {
     const state = (s: PublicParticipant['before']) => s ? { ...s, cardInstanceId: p.cardInstanceId, cardId: p.cardId, owner: owner(p.owner), lastEffectNote: '' } : null;
@@ -23,8 +23,9 @@ export function toPresentationEffect(event: PublicEvent, seat: Seat, scores: Pre
     sequence: event.sequence, round: event.round, type: event.type, timing: 'instant', duration: null,
     source, targets, scores: event.scores ? { before: seatScores(event.scores.before), after: seatScores(event.scores.after) } : { before: scores, after: scores },
     resources: undefined as never, state: undefined as never, replay: undefined as never,
-    cardInstanceId: event.sourceId, cardId: source?.cardId ?? event.cardId ?? '', owner: owner(event.owner), lane, kind: event.kind, note: event.note,
+    cardInstanceId: event.sourceId ?? '', cardId: source?.cardId ?? event.cardId ?? '', owner: owner(event.owner), lane, kind: event.kind, note: event.note,
     targetIds: targets.map(t => t.cardInstanceId), impact: false,
+    artCues: event.artCues?.map(cue => ({ ...cue, owner: owner(cue.owner) })),
   };
 }
 

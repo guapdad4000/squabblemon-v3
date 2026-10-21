@@ -1,3 +1,4 @@
+import { SummonDetails } from './SummonDetails';
 import { BOSS_NPCS } from "@workspace/squabblemon-engine/bossNpcCards";
 import { quoteStyleShards } from '@workspace/squabblemon-engine/styleShards';
 import { StyleShardCost } from './StyleShardWallet';
@@ -61,7 +62,8 @@ export function CardInspector({ card, onClose, bootstrap, variantId, initialPrev
   }, []);
   const instance = isInstance ? card as CardInstance : null;
   const isCovered = Boolean(instance && match?.timedEffects?.some((effect: any) => (effect.kind === 'church-protection' || effect.kind === 'salon-protection') && effect.targetInstanceId === instance.instanceId));
-  const catalogCard = catalogCardById[card.catalogId || card.id] ?? catalogCardByEngineId[card.cardId || card.id] ?? null;
+  const isSummon = card.kind === 'token';
+  const catalogCard = isSummon ? null : catalogCardById[card.catalogId || card.id] ?? catalogCardByEngineId[card.cardId || card.id] ?? null;
 
   const craftVariant = useCraftPlayerVariant();
   const equipVariant = useEquipPlayerVariant();
@@ -129,7 +131,7 @@ export function CardInspector({ card, onClose, bootstrap, variantId, initialPrev
       <div className="collector-inspector-backdrop" style={{ backgroundImage: `url("${getCardWallpaper(card.type)}")` }} aria-hidden="true" />
       <button type="button" className="card-inspector-close" data-testid="button-close-inspector" aria-label="Close card details" onClick={event => { event.stopPropagation(); onClose(); }}><X size={22} aria-hidden="true" /><span>{match ? 'Back to battle' : 'Close details'}</span></button>
       <div className="card-inspector-scroll">
-      <motion.div
+      {isSummon ? <SummonDetails card={card} match={match} /> : <motion.div
         initial={{ opacity: 0, y: reduceMotion ? 0 : 20 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: reduceMotion ? 0 : -20 }}
@@ -430,7 +432,7 @@ export function CardInspector({ card, onClose, bootstrap, variantId, initialPrev
 
           {catalogCard && <CardRarityTreatment rarity={catalogCard.rarity} />}
         </div>
-      </motion.div>
+      </motion.div>}
       </div>
     </div>
   );
