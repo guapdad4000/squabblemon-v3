@@ -60,18 +60,20 @@ for (const owner of ['player', 'cpu'] as const) {
     const ally = unit(owner, 1, 0, 2), strong = unit(enemy, 2, 0, 7);
     const brown = cast('bushedo-brown', owner, [[ally, strong], [], []]);
     assert.equal(brown.boards[0].find(card => card.instanceId === ally.instanceId)!.statuses.protected, true);
-    assert.equal(brown.boards[0].find(card => card.instanceId === strong.instanceId)!.powerModifier, -1);
+    assert.equal(brown.boards[0].find(card => card.instanceId === ally.instanceId)!.powerModifier, 2);
+    assert.equal(brown.boards[0].find(card => card.instanceId === strong.instanceId)!.powerModifier, -2);
     const duke = cast('franklin-duke', owner, [[strong], [], []]);
-    assert.equal(get(duke, 'franklin-duke').powerModifier, 2);
-    assert.equal(duke.boards[0].find(card => card.instanceId === strong.instanceId)!.powerModifier, -2);
+    assert.equal(get(duke, 'franklin-duke').powerModifier, 3);
+    assert.equal(duke.boards[0].find(card => card.instanceId === strong.instanceId)!.powerModifier, -4);
     const away = unit(owner, 3, 1, 2);
     const coach = cast('franklin-duke', owner, [[], [away], []]);
-    assert.equal(coach.boards[1][0].powerModifier, 1);
+    assert.equal(coach.boards[1][0].powerModifier, 3);
+    assert.equal(coach.boards[1][0].statuses.protected, true);
     const other1 = unit(enemy, 4, 1, 6), other2 = unit(enemy, 5, 2, 6);
     const chonk = cast('chonk-lee', owner, [[], [other1], [other2]]);
     assert.equal(get(chonk, 'chonk-lee').powerModifier, 2);
-    assert.equal(chonk.boards[1][0].powerModifier, -1);
-    assert.equal(chonk.boards[2][0].powerModifier, -1);
+    assert.equal(chonk.boards[1][0].powerModifier, -2);
+    assert.equal(chonk.boards[2][0].powerModifier, -2);
   });
 }
 test('protected targets block Franklin and Chonk self gains; empty districts grant no free power', () => {

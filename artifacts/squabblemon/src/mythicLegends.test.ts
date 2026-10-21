@@ -113,9 +113,9 @@ for (const owner of ['player', 'cpu'] as const) test(`all nine City Legend revea
     const after = playCard(m, owner, source.instanceId, 0);
     const self = onBoard(after, source);
     const rival = onBoard(after, foe);
-    if (id === 'dragonflyjones') { assert.equal(self.powerModifier, 1); assert.equal(rival.powerModifier, 0); }
+    if (id === 'dragonflyjones') { assert.equal(self.powerModifier, 1); assert.equal(rival.powerModifier, -2); }
     if (id === 'shonuff') { assert.equal(self.powerModifier, 2); assert.equal(rival.powerModifier, 0); }
-    if (id === 'yasuke') { assert.equal(onBoard(after, ally).statuses.protected, true); assert.equal(rival.powerModifier, 1); }
+    if (id === 'yasuke') { assert.equal(onBoard(after, ally).statuses.protected, true); assert.equal(onBoard(after, ally).powerModifier, 2); assert.equal(rival.powerModifier, 0); }
     if (id === 'mansamusa') {
       assert.equal(onBoard(after, ally).powerModifier, 1);
       assert.equal(onBoard(after, remoteA).powerModifier, 1);
@@ -203,13 +203,13 @@ test('new effects respect conditions, guard and direct protection', () => {
   const dragonfly = setup('dragonflyjones');
   dragonfly.m.boards[0] = dragonfly.m.boards[0].filter(c => c.instanceId !== dragonfly.foe.instanceId);
   const unopposed = playCard(dragonfly.m, 'player', dragonfly.source.instanceId, 0);
-  assert.equal(onBoard(unopposed, dragonfly.source).powerModifier, 1);
+  assert.equal(onBoard(unopposed, dragonfly.source).powerModifier, 0);
 
   const shonuff = setup('shonuff');
   shonuff.foe.powerModifier = 0;
   const noBoost = playCard(shonuff.m, 'player', shonuff.source.instanceId, 0);
   assert.equal(onBoard(noBoost, shonuff.source).powerModifier, 0);
-  assert.equal(onBoard(noBoost, shonuff.foe).powerModifier, -2);
+  assert.equal(onBoard(noBoost, shonuff.foe).powerModifier, -3);
   const guard = unit('wifey', 'cpu', 8);
   guard.statuses.protected = true;
   shonuff.foe.powerModifier = 2;

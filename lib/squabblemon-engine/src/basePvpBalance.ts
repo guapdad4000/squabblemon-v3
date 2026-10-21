@@ -1,5 +1,5 @@
 import type { Card } from './data';
-/** v52: base-card budgets. Mechanic identities and collection IDs remain stable. */
+/** v62: Kumite, relationship counterplay and community budgets. Collection IDs remain stable. */
 export const BASE_PVP_VALUES: Readonly<Record<string, Partial<Pick<Card,'cost'|'power'>>>> = {
   "blueside2":{"power":1},
   "blueside3":{"power":3},
@@ -113,14 +113,16 @@ export const BASE_PVP_VALUES: Readonly<Record<string, Partial<Pick<Card,'cost'|'
   "oink":{"cost":4,"power":4},
   "one-man-band":{"power":4},
   "oz":{"cost":4,"power":5},
+  "passportbro":{"cost":2},
   "personal-trainer":{"power":4},
   "pinaynurse":{"cost":2,"power":2},
   "piratedj":{"power":2},
   "plate-auntie":{"power":3},
   "plug":{"cost":2,"power":2},
   "promoter":{"power":2},
-  "ptang":{"power":3},
+  "ptang":{"power":4},
   "queenofhearts":{"power":1},
+  "rainmaker":{"cost":3},
   "rastamon":{"power":2},
   "redneck-evil":{"cost":4},
   "track-suit-auntie":{"power":2},
@@ -136,7 +138,7 @@ export const BASE_PVP_VALUES: Readonly<Record<string, Partial<Pick<Card,'cost'|'
   "seafoodassassin":{"power":4},
   "second-plate-cousin":{"power":3},
   "sherlock":{"power":2},
-  "shonuff":{"power":1},
+  "shonuff":{"power":4},
   "side-chick":{"power":2},
   "simmy":{"power":5},
   "slipstream":{"power":2},
@@ -167,18 +169,18 @@ export const BASE_PVP_VALUES: Readonly<Record<string, Partial<Pick<Card,'cost'|'
   "the-og-rap-legend":{"cost":5,"power":6},
   "the-opening-act":{"power":2},
   "the-rapper":{"cost":3,"power":3},
-  "thefeds":{"power":1},
+  "thefeds":{"power":3},
   "tinman":{"power":3},
   "torta":{"power":1},
   "triple-og-red":{"cost":4,"power":4},
   "tron":{"power":2},
   "uncle-sam":{"power":6},
   "vibe":{"power":3},
-  "watson":{"power":2},
+  "watson":{"cost":1,"power":2},
   "wifey":{"cost":3,"power":3},
   "wiretap":{"power":1},
   "work-hubby":{"power":3},
-  "yasuke":{"power":1},
+  "yasuke":{"power":3},
   "youngbull":{"power":4},
 };
 export const PVP_SUPPORT = { transfer:2, soulFood:3, cognac:3, fireCognac:4, wristCheck:1 } as const;
@@ -192,7 +194,7 @@ export function applyBasePvpBalance(cards:Record<string,Card>) {
   cards['cane-corso-red'].effect=cards['cane-corso-red'].effect.replace('the strongest enemy here loses', 'the strongest enemy here that can lose Hands loses');
   cards.monsoonanchor.effect='Ongoing: While in your hand, your weakest other Water character in each district gains +1 Hand at round end. On Reveal: Weaken the strongest enemy here.';
   cards.godofhookah.effect='On Reveal: Apply 1 Burn to the weakest unburned enemy character in another district. Ongoing: At round end, the first enemy damaged by Burn in each district passes 1 Burn to the weakest unburned enemy in the next district. New Burn waits until next round. If that district has enemies but all were already burning, gain +1 Hand, at most once per round.';
-  cards.foodz.effect='On Reveal: Cleanse every other friendly character on your board. Give your weakest other character in each district +2 Hands. Give an extra +2 to the weakest Light ally actually cleansed.';
+  cards.foodz.effect='On Reveal: Cleanse every other friendly character on your board. Give your weakest other character in each district +2 Hands. Give an extra +2 to the weakest Light ally actually cleansed. Community Serving: once per side per match, also give your weakest Homeless ally in each district +2 Hands and Protection, including Cracked Head. The serving is spent only when a Homeless ally is present; copies and repeated reveals share it.';
   cards.tayaty.effect='On Reveal: Gain +1 Hand, then repeat the last resolved On Reveal if it is repeatable, using Tayaty as its source. If it cannot be repeated, gain Protection instead. Persistent creative contracts cannot be re-armed.';
   cards.buspass.effect=`On Reveal: Issue a Transfer Ticket. Your next character costs 1 less Motion and arrives with +${PVP_SUPPORT.transfer} Hands. Supports cannot spend the ticket.`;
   cards.soulfood.effect=`On Reveal: Cleanse your weakest afflicted friendly character here, or your weakest if nobody is afflicted, and give it +${PVP_SUPPORT.soulFood} Hands.`;

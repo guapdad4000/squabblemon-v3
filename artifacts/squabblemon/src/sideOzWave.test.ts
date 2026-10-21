@@ -448,8 +448,9 @@ test('the ten-card Oz deck plays Witch and Monkeys against Alice and Queen from 
   }
   for (const seat of ['a-player', 'b-player'] as const) {
     let aliceReturned = false;
+    // Watson's one-Motion cost changes greedy spending; this order still exercises every payoff in both seats.
     const input = { deckA: oz, deckB: alice, districtSeed: 'card-audit-oz-0',
-      rotation: 8, tier: 0 as const, seat,
+      rotation: 1, tier: 0 as const, seat,
       observeComplete: (match: Match) => {
         assert.equal(match.phase, 'complete');
         aliceReturned = match.effectLog.some(event => event.note === 'Alice returned to hand.');

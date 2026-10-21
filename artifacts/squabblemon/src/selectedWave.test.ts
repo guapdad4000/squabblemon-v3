@@ -120,10 +120,10 @@ for (const o of ['player', 'cpu'] as const) {
     const h = { ...unit('homelessguy', o, 0), powerModifier: -2 };
     m.boards[0] = [h];
     let a = cast(m, 'community-cook', o);
-    assert.equal(find(a.m, h)?.powerModifier, 0);
+    assert.equal(find(a.m, h)?.powerModifier, 2, 'the meal restores injury before the explicit Homeless +2');
     assert.equal(find(a.m, h)?.statuses.protected, true);
     const b = cast(a.m, 'community-cook', o);
-    assert.equal(find(b.m, h)?.powerModifier, 0);
+    assert.equal(find(b.m, h)?.powerModifier, 2, 'another Cook cannot refeed the same recipient');
   });
   test(`${o}: bag movement is shared per side per round and only legal arrival pays`, () => {
     const m = blank(),
@@ -475,8 +475,8 @@ for (const owner of ['player', 'cpu'] as const) {
     const m = blank(), injured = {...unit('homelesslegend', owner, 0), powerModifier: -4};
     m.boards[0] = [injured];
     const first = cast(m, 'community-cook', owner).m;
-    assert.equal(find(first, injured)?.powerModifier, 0);
-    assert.equal(find(cast(first, 'community-cook', owner).m, injured)?.powerModifier, 0);
+    assert.equal(find(first, injured)?.powerModifier, 2, 'up to four injury recovered plus two explicit Homeless Hands');
+    assert.equal(find(cast(first, 'community-cook', owner).m, injured)?.powerModifier, 2);
     const healthy = blank(), ally = unit('cornball', owner, 0);
     healthy.boards[0] = [ally];
     assert.equal(find(cast(healthy, 'community-cook', owner).m, ally)?.powerModifier, 3);

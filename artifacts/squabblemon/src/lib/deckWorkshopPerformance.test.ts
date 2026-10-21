@@ -22,7 +22,7 @@ function referenceAutoBuildDeck(draft: DeckDraft, ownedIds: readonly string[], e
   const preferredCrew = anchor?.faction === 'Music Industry' ? recommendedWorkshopCrews.music
     : anchor?.faction === 'Fitness' ? recommendedWorkshopCrews.fitness
     : anchor?.faction === 'Family' ? recommendedWorkshopCrews.family
-    : anchor?.faction === 'Community' || anchor?.artworkId?.startsWith('homeless-') ? recommendedWorkshopCrews.community : [];
+    : anchor?.faction === 'Community' || anchor?.artworkId?.startsWith('homeless-') || anchor?.engineId === 'cracked-head' ? recommendedWorkshopCrews.community : [];
   const preferred = new Set(catalogCrew(preferredCrew));
   while (chosen.length < 10) {
     const supports = chosen.filter(id => catalogCardById[id].kind === 'support').length;

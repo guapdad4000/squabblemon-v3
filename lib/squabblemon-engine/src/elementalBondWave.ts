@@ -5,7 +5,7 @@ export const ELEMENTAL_BOND_WAVE = [
   ["riptidebruiser", "riptide-bruiser", "Gator Boy", "Common", "Water", 1, 2, "Emotional Support Gator", "On Reveal: Give the highest-Hands enemy here -1 Hands. If its Hands fall, gain +1 Hand.", "Pressure"],
   ["stillwatermedic", "stillwater-medic", "Hot Tub Hottie", "Uncommon", "Water", 2, 3, "Soak Your Problems", "On Reveal: Cleanse your lowest-Hands frozen or silenced ally here and give it +1 Hand. If cleansed, gain +1 Hand.", "Support"],
   ["monsoonanchor", "monsoon-anchor", "Gas Station Sushi Chef", "Rare", "Water", 3, 2, "Trust the Cooler", "Ongoing: While in your hand, your other Water characters gain +1 Hand at round end. On Reveal: Weaken the strongest enemy here.", "Disruption", "Water"],
-  ["rainmaker", "rainmaker", "Energy Drink Freak", "Epic", "Water", 4, 4, "Fourth Can, No Plan", "On Reveal: Lose 2 Hands, then restore 3 Motion, up to 9.", "Tempo"],
+  ["rainmaker", "rainmaker", "Energy Drink Freak", "Epic", "Water", 3, 4, "Fourth Can, No Plan", "On Reveal: Restore 2 Motion, up to 9, once per card per match. Echoes cannot refund. In Hand: From round 2, at round start gain 1 Motion, up to 9, and lose 1 base Hand, minimum 1. One successful hand payout per side per round, at most three per side per match; copies share both limits. Returning never resets its lost base Hands or entrance refund.", "Tempo"],
   ["batteryback", "battery-back", "Game Developer", "Common", "Electric", 1, 2, "Works on My Machine", "On Reveal: Repair your lowest-Hands ally in another district with a negative Hands modifier: give it +1 Hand and restore 1 Motion, up to 9.", "Support"],
   ["circuitcaptain", "circuit-captain", "Electrician Foreman", "Epic", "Electric", 4, 4, "Everybody on the Clock", "Ongoing: While in your hand, your other Electric characters gain +1 Hand at round end.", "Tempo", "Electric"],
   ["wiretap", "wiretap", "E.V. Enthusiast", "Rare", "Electric", 2, 2, "Actually, It Charges Free", "On Reveal: Your next card in another district costs 1 less Motion.", "Tempo"],
@@ -44,7 +44,9 @@ export const elementalBondWaveCards: Record<string, Card> = Object.fromEntries(
         name: `${ability} ${['Practice', 'Confidence', 'Mastery'][index]}`,
         description: elementalBond
           ? 'While this card is in your hand, one bonded ally gains an additional +1 Hand at round end.'
-          : `After ${ability} succeeds, this card gains +1 Hand.`,
+          : id === 'rainmaker'
+            ? 'Once per match, after its entrance actually refunds Motion, this card gains +1 Hand. Hand income does not train.'
+            : `After ${ability} succeeds, this card gains +1 Hand.`,
         unlockLevel,
         effect: elementalBondWaveUpgradeEffects[id][index],
       })),

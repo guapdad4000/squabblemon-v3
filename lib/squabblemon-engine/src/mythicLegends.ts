@@ -2,9 +2,9 @@ import type { AbilityUpgradeEffect, Card, CardRarity } from './data';
 
 // Standalone City Legends keep the first block expansion's 10/5/5 rarity split intact.
 export const MYTHIC_LEGENDS = [
-  ['dragonflyjones', 'dragonfly-jones', 'Dragonfly Jones', 'Air', 2, 3, 'Secret Technique', 'If an enemy here costs 4 or more, give the highest-cost enemy -2 Hands and gain +1 Hands. Otherwise gain +1 Hands.', 'Disruption'],
-  ['shonuff', 'sho-nuff', "Sho'Nuff", 'Dark', 3, 4, "Who's the Master?", 'Take up to 3 bonus Hands from the enemy here with the most bonus Hands. If no enemy has bonus Hands, give the highest-Hands enemy here -2 Hands instead.', 'Disruption'],
-  ['yasuke', 'yasuke', 'Yasuke', 'Light', 2, 4, 'Black Blade', 'Protect your lowest-Hands unprotected other ally here from one targeted hostile ability. Give the highest-Hands enemy here -1 Hands.', 'Support'],
+  ['dragonflyjones', 'dragonfly-jones', 'Dragonfly Jones', 'Air', 2, 3, 'Secret Technique', 'Target the enemy here with the most removable bonus Hands, otherwise the highest-cost enemy costing 4 or more, otherwise the strongest enemy. Hit it for 4 if it has bonus Hands or costs 4 or more; otherwise hit it for 2. Gain +1 Hand only if damage lands.', 'Disruption'],
+  ['shonuff', 'sho-nuff', "Sho'Nuff", 'Dark', 3, 4, "Who's the Master?", 'Confiscate up to 5 removable bonus Hands from the enemy here with the most bonus Hands and gain the amount actually taken. If no enemy has bonus Hands, hit the strongest enemy here for 3. Confiscation never takes printed Hands or creates healing credit. Protection and immunity apply.', 'Disruption'],
+  ['yasuke', 'yasuke', 'Yasuke', 'Light', 2, 4, 'Black Blade', 'Give your weakest unprotected other ally here +2 Hands and Protection, then hit the strongest enemy here for 2. Protection and immunity apply to the hit.', 'Support'],
   ['mansamusa', 'mansa-musa', 'Mansa Musa', 'Earth', 4, 4, 'Gold Road', 'Give your weakest other friendly character in each district +1 Hand, or +2 if that ally is Earth. Your next card in another district costs 1 less Motion.', 'Support'],
   ['tron', 'tron', 'TRON', 'Electric', 3, 2, 'For the Hood', 'Give up to three lowest-Hands other friendly characters here +1 Hands each. If all three gained Hands, restore 1 Motion.', 'Support'],
   ['johnhenry', 'john-henry', 'John Henry', 'Earth', 5, 6, 'Steel Driver', 'Gain +1 Hand for each other friendly Earth character across the board, up to +4. If at least two are here, give the strongest enemy here -2 Hands.', 'Pressure'],
@@ -35,7 +35,9 @@ export const mythicLegendCards: Record<string, Card> = Object.fromEntries(MYTHIC
         ? mythicLegendUpgradeEffects[engineId][index].target === 'friendly'
           ? 'After the base ability succeeds, one affected ally gains +1 Hand.'
           : 'After the base ability succeeds, one affected enemy loses 1 Hand.'
-        : 'After the base ability succeeds, this card gains +1 Hand.',
+        : ['dragonflyjones', 'shonuff', 'yasuke'].includes(engineId)
+          ? 'Once per match, after the base ability succeeds, this card gains +1 Hand.'
+          : 'After the base ability succeeds, this card gains +1 Hand.',
       unlockLevel, effect: mythicLegendUpgradeEffects[engineId][index],
     })),
   }],

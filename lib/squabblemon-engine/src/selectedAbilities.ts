@@ -6,6 +6,7 @@ import {
 } from './musicIndustryAbilities';
 import type { CardInstance, Match, Lane } from './gameEngine';
 import type { CreativeMark } from './creativeReworks';
+import { isHomelessCharacter } from './homelessFamily';
 export type SelectedTools = MusicTools & {
   marriage(m: Match, s: CardInstance): Match;
 };
@@ -19,10 +20,6 @@ const active = (c: CardInstance) =>
   !c.statuses.silenced && !c.statuses.frozen && !c.statuses.weakened;
 const family = (c: CardInstance) =>
   c.type === 'Fire' || FAMILY_IDS.includes(c.cardId);
-const homeless = (c: CardInstance) =>
-  ['homelessguy', 'homelessyn', 'homelesslegend', 'homelesswiseman'].includes(
-    c.cardId,
-  ) || c.id.startsWith('homeless-');
 const weak = (cs: CardInstance[], t: MusicTools) =>
   [...cs].sort(
     (a, b) =>
@@ -322,9 +319,20 @@ export function selectedReveal(
       local((c) => eligible(c) && c.powerModifier < 0) ?? local(eligible);
     if (c) {
       m = consume(m, s, `meal:${c.instanceId}`);
-      if (c.powerModifier < 0) m = recovery(m, c, 4, t);
-      else grant(c, 3);
-      if (homeless(c)) shield(find(m, c.instanceId));
+      if (c.powerModifier < 0) {
+        const restored = Math.min(4, -c.powerModifier);
+        m = recovery(m, c, 4, t);
+        const actualRestored = Math.min(restored,
+          Math.max(0, (find(m, c.instanceId)?.powerModifier ?? c.powerModifier) - c.powerModifier));
+        m = t.modify(m, c.instanceId, card => ({ ...card,
+          recoverableDamage: Math.max(0, (card.recoverableDamage ?? 0) - actualRestored),
+        }));
+      } else grant(c, 3);
+      if (isHomelessCharacter(c)) {
+        m = t.cleanse(m, c.instanceId);
+        grant(find(m, c.instanceId), 2);
+        shield(find(m, c.instanceId));
+      }
       targets.push(c.instanceId);
       success = true;
     }

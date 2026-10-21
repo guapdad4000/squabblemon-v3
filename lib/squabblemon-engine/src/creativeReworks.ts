@@ -206,7 +206,7 @@ export const CREATIVE_KITS: Record<string, readonly [string, string]> = {
   ],
   icecream: [
     "Neighborhood Route",
-    "On Reveal: Give your weakest other ally here a +2-Hand Treat, or leave it for the next friendly arrival if alone. Ongoing: First visit to each other district leaves one +2 Treat for a later friendly arrival. One Treat per district per side; each district once per truck.",
+    "On Reveal: Serve a +2-Hand Treat to your weakest other ally here, or leave it for the next friendly character arriving here. Ongoing: At round start, move to your weakest legal unvisited district and serve its weakest other ally, or leave a Treat if alone. Any successful first visit serves that district. One pending Treat per district per side; each district once per truck. Movement locks apply.",
   ],
   torta: [
     "Hold Our Ground",
@@ -441,6 +441,20 @@ function mark(
       },
     ],
   };
+}
+function serveTruckTreat(m: Match, truck: CardInstance, t: CreativeTools): Match {
+  const lane = truck.lane;
+  if (lane === null || truck.creativeVisits?.includes(lane)) return m;
+  m = t.modify(m, truck.instanceId, c => ({
+    ...c, creativeVisits: [...new Set([...(c.creativeVisits ?? []), lane])],
+  }));
+  const target = sorted(allies(m, truck), t)[0];
+  if (target) {
+    m = { ...m, creativeMarks: (m.creativeMarks ?? []).filter(x =>
+      !(x.kind === "treat" && x.owner === truck.owner && x.lane === lane)) };
+    return buff(m, target.instanceId, 2, t);
+  }
+  return mark(m, truck, "treat", [], lane, { expires: 99 }, "lane");
 }
 function discount(
   m: Match,
@@ -1000,14 +1014,7 @@ export function creativeReveal(
       break;
     }
     case "icecream":
-      if (!s.creativeVisits?.includes(l)) {
-        m = t.modify(m, s.instanceId, (c) => ({
-          ...c,
-          creativeVisits: [...new Set([...(c.creativeVisits ?? []), l])],
-        }));
-        if (a[0]) give(a[0], 2);
-        else put("treat", [], l, { expires: 99 }, "lane");
-      }
+      m = serveTruckTreat(m, s, t);
       break;
     case "torta": {
       const p = [s, ...a.filter((c) => element(c) === "Earth").slice(0, 1)];
@@ -1315,11 +1322,11 @@ export function creativeMoved(
     identity(current) === "icecream" &&
     !current.creativeVisits?.includes(current.lane!)
   ) {
-    m = t.modify(m, id, (c) => ({
-      ...c,
-      creativeVisits: [...(c.creativeVisits ?? []), current.lane!],
-    }));
-    m = mark(m, current, "treat", [], current.lane!, { expires: 99 }, "lane");
+    const beforeTreat = m.effectLog.length === before.effectLog.length ? before : m;
+    m = serveTruckTreat(m, card(m, id) ?? current, t);
+    m = t.train(m, id);
+    m = t.event(beforeTreat, m, current, [id],
+      "Neighborhood Route: first visit served a +2-Hand Treat or left one for a later arrival.");
   }
   for (const watcher of board(m).filter(
     (c) => c.owner === current.owner && c.instanceId !== id && active(c),
@@ -2170,6 +2177,24 @@ export function creativeRoundStart(m: Match, t: CreativeTools): Match {
     );
   }
   return { ...m, creativeMarks: marks(m) };
+}
+
+/** Automatic movement runs after this round's authored district locks settle. */
+export function creativeAutomaticRoutes(m: Match, t: CreativeTools): Match {
+  for (const previous of board(m).filter(c => identity(c) === "icecream")) {
+    const truck = card(m, previous.instanceId);
+    if (!truck || !active(truck) || truck.creativeRound === m.round) continue;
+    const destination = open(m, truck, t)
+      .find(lane => !truck.creativeVisits?.includes(lane));
+    if (destination === undefined) continue;
+    const beforeRoute = m;
+    m = t.modify(m, truck.instanceId, c => ({ ...c, creativeRound: m.round }));
+    m = t.move(m, card(m, truck.instanceId)!, destination, "Neighborhood Route: driving to an unvisited district.");
+    if (card(m, truck.instanceId)?.lane === destination)
+      m = t.event(beforeRoute, m, truck, [truck.instanceId],
+        "Neighborhood Route: completed its automatic round-start stop.");
+  }
+  return m;
 }
 
 export function creativeAbilityResolved(

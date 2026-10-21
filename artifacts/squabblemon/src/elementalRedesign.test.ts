@@ -47,10 +47,11 @@ for (const owner of ['player', 'cpu'] as const) {
     assert.equal(find(low.after, low.source).powerModifier, 0);
     assert.equal(find(low.after, ally).statuses.frozen, false);
   });
-  test(`Energy crash pays its cost and Developer only repairs damaged remote allies: ${owner}`, () => {
+  test(`Freak refunds without a reveal crash and Developer only repairs damaged remote allies: ${owner}`, () => {
     const energy = cast(blank(), 'rainmaker', owner);
     assert.equal(energy.after[motionKey], 8);
-    assert.equal(find(energy.after, energy.source).powerModifier, -2);
+    assert.equal(find(energy.after, energy.source).powerModifier, 0);
+    assert.equal(find(energy.after, energy.source).basePower, 4);
     for (const damaged of [false, true]) {
       const m = blank(), ally = unit('cornball', owner, 1, 1);
       ally.powerModifier = damaged ? -2 : 0; m.boards[1] = [ally];

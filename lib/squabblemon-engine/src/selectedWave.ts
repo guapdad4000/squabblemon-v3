@@ -236,7 +236,7 @@ export const SELECTED_WAVE = [
     2,
     3,
     'Everybody Eats',
-    'On Reveal: Recover up to 4 lost Hands on your weakest injured other ally here; otherwise give your weakest other ally here +3 Hands. A Homeless recipient also gains Protection. One meal per recipient per match.',
+    'On Reveal: Recover up to 4 lost Hands on your weakest injured other ally here; otherwise give your weakest other ally here +3 Hands. A Homeless recipient is also cleansed, gains +2 Hands and Protection. Cracked Head counts as Homeless. One meal per recipient per side per match; copies and returns cannot refeed the same recipient.',
     'Community',
     'Sustain',
   ],

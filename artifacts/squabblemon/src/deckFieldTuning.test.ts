@@ -22,8 +22,8 @@ for(const owner of ['player','cpu'] as const){
  });
  test(`${owner}: Cook heals bounded damage and keeps homeless Protection`,()=>{
   let m=blank();const ally={...unit('homelessguy',owner,0,1),powerModifier:-4};m.boards[0]=[ally];let r=cast(m,'community-cook',owner,0);
-  assert.equal(find(r.m,ally)?.powerModifier,0);assert.equal(find(r.m,ally)?.statuses.protected,true);
-  m=blank();m.boards[0]=[{...ally,powerModifier:0}];r=cast(m,'community-cook',owner,0);assert.equal(find(r.m,ally)?.powerModifier,3);
+  assert.equal(find(r.m,ally)?.powerModifier,2);assert.equal(find(r.m,ally)?.statuses.protected,true);
+  m=blank();m.boards[0]=[{...ally,powerModifier:0}];r=cast(m,'community-cook',owner,0);assert.equal(find(r.m,ally)?.powerModifier,5);
  });
  test(`${owner}: bus bonus requires arrival and pays once per driver`,()=>{
   let m=blank();const ally=unit('homelessguy',owner,1,1);m.boards[1]=[ally];let r=cast(m,'night-bus-driver',owner,0);assert.equal(find(r.m,ally)?.powerModifier,2);assert.equal(find(r.m,ally)?.lane,0);
@@ -41,7 +41,7 @@ for(const owner of ['player','cpu'] as const){
   m={...r.m,playerMotion:9,cpuMotion:9};const second=cast(m,'studio-couch-yn',owner,2,102);assert.equal(find(second.m,second.s)?.powerModifier,0);assert.equal(find(second.m,second.s)?.statuses.protected,false);
  });
  test(`${owner}: Shonuff steals actual bonus and cannot profit through Protection`,()=>{
-  let m=blank();const foe={...unit('guap',rival,0,1),powerModifier:5};m.boards[0]=[foe];let r=cast(m,'shonuff',owner,0);assert.equal(find(r.m,foe)?.powerModifier,2);assert.equal(find(r.m,r.s)?.powerModifier,3);
+  let m=blank();const foe={...unit('guap',rival,0,1),powerModifier:5};m.boards[0]=[foe];let r=cast(m,'shonuff',owner,0);assert.equal(find(r.m,foe)?.powerModifier,0);assert.equal(find(r.m,r.s)?.powerModifier,5);
   m=blank();m.boards[0]=[foe];m=cast(m,'church-aunties-rival',rival,0,90).m;assert.equal(find(m,foe)?.statuses.protected,true);r=cast(m,'shonuff',owner,0);assert.equal(find(r.m,foe)?.powerModifier,6);assert.equal(find(r.m,r.s)?.powerModifier,0);
  });
 }

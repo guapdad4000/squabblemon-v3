@@ -451,7 +451,7 @@ test('DMV queue replaces the surcharge, does not stack, and expires', () => {
 test('Watson restores actual damage only; Fresh Pot removes Burn and Freeze without unrelated buffs', () => {
   const m=blank(), ally=unit('hooper','player',0);ally.powerModifier=6;m.boards[0]=[ally];
   const damaged=cast(m,'ptang','cpu').after, victim=find(damaged,ally);
-  assert.equal(victim.recoverableDamage,2);
+  assert.equal(victim.recoverableDamage,3);
   const healed=cast(damaged,'watson','player',victim.lane!).after;
   assert.equal(find(healed,ally).recoverableDamage,0);assert.equal(find(healed,ally).powerModifier,6);assert(find(healed,ally).statuses.protected);
   const clean=blank(), dirty=unit('hooper','player',0);dirty.statuses={...dirty.statuses,burnStacks:3,frozen:true,boosted:true,locked:true};clean.boards[0]=[dirty];
@@ -493,23 +493,23 @@ for (const owner of ['player', 'cpu'] as const) test(`Watson pairs with an activ
   }
   assert.match(cards.watson.effect, /Protect a friendly Sherlock anywhere and give him \+2 Hands/);
 });
-test('Undercover waits until entrance resolves, steals once and escapes into the weakest open district', () => {
+test('Undercova waits for the entrance and cannot steal or escape through Protection', () => {
   const m=blank(), spy=unit('undercova','player',0);m.boards[0]=[spy];
   const {source,after}=cast(m,'lion','cpu');
-  assert(find(after,spy).waveOnce?.undercova);assert.equal(find(after,spy).lane,1);
+  assert.equal(find(after,spy).lane,0);
   // Lion is alone on his side and protects himself before Inside Man can steal.
   assert.equal(find(after,source).powerModifier,0);assert(!find(after,source).statuses.protected);assert.equal(find(after,spy).powerModifier,0);
 });
 test('The Feds seize bonus Hands without creating healing debt or triggering damage reactions', () => {
   const m=blank(), victim=unit('hooper','cpu',0), bonnet=unit('bonnetgirl','cpu',0);victim.powerModifier=6;m.boards[0]=[victim,bonnet];
   const {after}=cast(m,'thefeds');
-  assert.equal(find(after,victim).powerModifier,2);assert(find(after,victim).statuses.locked);
+  assert.equal(find(after,victim).powerModifier,0);assert(find(after,victim).statuses.locked);
   assert.equal(find(after,victim).recoverableDamage,undefined);assert.equal(find(after,bonnet).powerModifier,0);
 });
 test('P. Tang damage and push are one protected package; locked survivors stay put', () => {
   for(const status of ['protected','locked'] as const) {
     const m=blank(), victim=unit('hooper','cpu',0);victim.powerModifier=4;m.boards[0]=[victim];if(status==='protected')cover(m,victim);else victim.statuses.locked=true;
-    const {after}=cast(m,'ptang');assert.equal(find(after,victim).lane,0);assert.equal(find(after,victim).powerModifier,status==='protected'?4:2);
+    const {after}=cast(m,'ptang');assert.equal(find(after,victim).lane,0);assert.equal(find(after,victim).powerModifier,status==='protected'?4:1);
   }
 });
 for (const owner of ['player', 'cpu'] as const) test(`P. Tang pays only for landed damage whose survivor cannot be knocked back for ${owner}`, () => {
@@ -520,16 +520,16 @@ for (const owner of ['player', 'cpu'] as const) test(`P. Tang pays only for land
   m.boards = [[victim], blockers.slice(0, 4), blockers.slice(4)];
   const { source, after } = cast(m, 'ptang', owner);
   assert.equal(find(after, victim).lane, 0, 'both enemy destinations are full');
-  assert.equal(find(after, victim).powerModifier, 6, 'the damage is preserved');
-  assert.equal(find(after, source).powerModifier, 1, 'surviving damage with failed knockback pays once');
+  assert.equal(find(after, victim).powerModifier, 5, 'the damage is preserved');
+  assert.equal(find(after, source).powerModifier, 2, 'surviving damage with failed knockback pays once');
 
   const locked = blank(), lockedVictim = unit('hooper', opponent, 0);
   lockedVictim.powerModifier = 8; lockedVictim.statuses.locked = true; locked.boards[0] = [lockedVictim];
   const lockedTang = cast(locked, 'ptang', owner);
   const blockedMove = lockedTang.after;
-  assert.equal(find(blockedMove, lockedVictim).powerModifier, 6);
+  assert.equal(find(blockedMove, lockedVictim).powerModifier, 5);
   assert.equal(find(blockedMove, lockedVictim).lane, 0);
-  assert.equal(find(blockedMove, lockedTang.source).powerModifier, 1, 'locked survivor pays the fallback');
+  assert.equal(find(blockedMove, lockedTang.source).powerModifier, 2, 'locked survivor pays the fallback');
 
   const noEnemy = cast(blank(), 'ptang', owner);
   assert.equal(find(noEnemy.after, noEnemy.source).powerModifier, 0);
@@ -704,7 +704,7 @@ for (const owner of ['player', 'cpu'] as const) {
     assert.equal(find(treated, injured).powerModifier, injured.powerModifier + 3, 'Watson restores exactly three of the four lost Hands');
     assert.equal(getEffectiveCardPower(find(treated, injured)), 4);
     assert(find(treated, injured).statuses.protected);
-    assert.equal(cards.watson.power, 2); assert.equal(cards.watson.cost, 2);
+    assert.equal(cards.watson.power, 2); assert.equal(cards.watson.cost, 1);
   });
 }
 

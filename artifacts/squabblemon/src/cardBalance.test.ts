@@ -10,7 +10,7 @@ const approvedBodyCaps: Record<string, number> = {
  sportsprodigy:5,stud:5,homelessguy:4,homelesslegend:5,'gym-spotter-yn':4,
  'calisthenics-yn':4,'community-cook':4,'group-chat-instigator':5,
  'inmate-crafty':4,'inmate-contraband':4,'triple-og-blue':8,'block-spinner':3,
- 'crazy-ex-boyfriend':5,'uncle-sam':6,'demon-trainer':6,
+ 'crazy-ex-boyfriend':5,'uncle-sam':6,'demon-trainer':6,'franklin-duke':6,'chonk-lee':7,
 };
 const mythicals = cardCatalog.filter(card => card.rarity === 'Mythical');
 const characters = cardCatalog.filter(card => (card.kind ?? 'character') === 'character');
@@ -22,8 +22,8 @@ const totalHands = (match: Match, owner: Owner) => match.boards.flat()
   .reduce((total, card) => total + getEffectiveCardPower(card), 0);
 
 test('Mythicals span early and late Motion without inflated printed Hands', () => {
-  assert.equal(CARD_BALANCE_VERSION, 60);
-  assert.equal(ONLINE_RULES_VERSION, 60);
+  assert.equal(CARD_BALANCE_VERSION, 62);
+  assert.equal(ONLINE_RULES_VERSION, 62);
   assert.equal(mythicals.length, 25);
   const costs = mythicals.map(card => card.cost);
   assert(costs.filter(cost => cost <= 3).length >= 3, 'early-round Mythicals need more than one cost option');
@@ -70,7 +70,7 @@ test('Mythical reveal swings stay bounded in a favorable contested board', () =>
     // the printed-body limits above. This fixture covers a favorable board.
     // v59 Ashlee earns a 13-Hand swing here with Plant presence in two districts.
     if (mythic.engineId !== 'guap') {
-      assert(swing <= (({ashlee:13,leroy:8,foodz:9,simmy:10,'triple-og-red':15} as Record<string,number>)[mythic.engineId] ?? Math.ceil(Math.max(mythic.cost * 2.25, 6))), `${mythic.name} swung ${swing} Hands for ${mythic.cost} Motion`);
+      assert(swing <= (({ashlee:13,leroy:10,yasuke:7,foodz:9,simmy:10,'triple-og-red':15} as Record<string,number>)[mythic.engineId] ?? Math.ceil(Math.max(mythic.cost * 2.25, 6))), `${mythic.name} swung ${swing} Hands for ${mythic.cost} Motion`);
     } else {
       assert(swing <= 18, `GUAP exceeded its approved 18-Hand global swing: ${swing}`);
     }
