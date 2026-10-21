@@ -58,7 +58,8 @@ export type StoryTrigger =
   | { readonly kind: "districts-held"; readonly owner: Owner; readonly atLeast: number };
 export type StoryEffect =
   | { readonly kind: "motion"; readonly owner: Owner; readonly amount: number }
-  | { readonly kind: "reinforcement"; readonly owner: Owner; readonly cardId: string }
+  | { readonly kind: "reinforcement"; readonly owner: Owner; readonly cardId: string; readonly allowDuplicate?: boolean }
+  | { readonly kind: "draw"; readonly owner: Owner; readonly amount: number }
   | { readonly kind: "lane-power"; readonly owner: Owner | "both"; readonly lane: Lane; readonly amount: number }
   | { readonly kind: "lane-lock"; readonly owner: Owner | "both"; readonly lanes: readonly Lane[] };
 export const DEFAULT_MATCH_ROUND_LIMIT = 6;
@@ -107,7 +108,7 @@ export type StoryEncounterSnapshot = {
     readonly laneLocks?: readonly { readonly round: number; readonly owner: Owner | "both"; readonly lanes: readonly Lane[] }[];
     readonly roundMotionDeltas?: readonly { readonly round: number; readonly owner: Owner; readonly amount: number }[];
     readonly lanePowerBonuses?: readonly { readonly owner: Owner | "both"; readonly lane: Lane; readonly amount: number }[];
-    readonly reinforcements?: readonly { readonly round: number; readonly owner: Owner; readonly cardId: string }[];
+    readonly reinforcements?: readonly { readonly round: number; readonly owner: Owner; readonly cardId: string; readonly allowDuplicate?: boolean }[];
   };
   readonly phases?: readonly {
     readonly id: string;
@@ -123,6 +124,10 @@ export type StoryRuntime = {
   appliedEffectIds: string[];
   lanePowerBonuses: { owner: Owner | "both"; lane: Lane; amount: number }[];
   laneLocks: { owner: Owner | "both"; lanes: Lane[] }[];
+  /** Deck slots already dealt early by a named reinforcement. */
+  drawnReserveIndexes?: Partial<Record<Owner, number[]>>;
+  /** Outside-deck character reinforcements remain one identity after leaving play. */
+  reinforcedCharacterIds?: Partial<Record<Owner, string[]>>;
 };
 export type Statuses = { frozen: boolean; silenced: boolean; protected: boolean; blocked: boolean; uncounterable: boolean; weakened: boolean; locked: boolean; boosted: boolean; burnStacks: number };
 export type CardInstance = Card & {
@@ -2912,6 +2917,28 @@ function resolveFairytaleAbility(m: Match, source: CardInstance, echoed: boolean
     note: source.ability + (succeeded ? ' resolved.' : ': waiting for its condition or blocked.') });
 }
 
+/** All deck draws share a cursor so a tutored reserve can never be dealt twice. */
+function drawDeckCard(m: Match, owner: Owner, reserveIndex?: number): { match: Match; card?: CardInstance } {
+  const hand = owner === 'player' ? 'playerHand' : 'cpuHand';
+  const indexKey = owner === 'player' ? 'playerDrawIndex' : 'cpuDrawIndex';
+  const deck = owner === 'player' ? m.playerDeck : m.cpuDeck;
+  const ids = owner === 'player' ? m.playerCardIds : m.cpuCardIds;
+  const reserved = m.storyRuntime?.drawnReserveIndexes?.[owner] ?? [];
+  let cursor = m[indexKey];
+  while (reserved.includes(cursor)) cursor++;
+  const index = reserveIndex ?? cursor;
+  if (index < cursor || reserved.includes(index) || !ids[index]) return { match: m };
+  const card = createCardInstance(ids[index], owner, deck, index);
+  const taken = index > cursor ? [...reserved, index] : reserved;
+  let next = index === cursor ? cursor + 1 : cursor;
+  while (taken.includes(next)) next++;
+  return { card, match: { ...m, [hand]: [...m[hand], card], [indexKey]: next,
+    ...(m.storyRuntime && taken.length ? { storyRuntime: { ...m.storyRuntime,
+      drawnReserveIndexes: { ...m.storyRuntime.drawnReserveIndexes, [owner]: taken },
+    } } : {}),
+  } };
+}
+
 const storyLog = (before: Match, after: Match, id: string, owner: Owner, note: string): Match => {
   const logged = addEvent(before, after, { type: 'ability', owner, lane: 0, kind: 'story', note });
   if (logged[SUPPRESS_PRESENTATION_EVENTS]) return logged;
@@ -2947,19 +2974,49 @@ const applyStoryEffect = (match: Match, effect: StoryEffect, effectId: string): 
       appliedEffectIds: [...match.storyRuntime.appliedEffectIds, effectId],
     },
   };
+  let detail = `Story effect ${effectId}: ${effect.kind}.`;
   if (effect.kind === "motion") {
     const key = effect.owner === "player" ? "playerMotion" : "cpuMotion";
     m = { ...m, [key]: Math.min(MAX_MOTION, Math.max(0, m[key] + effect.amount)) };
   } else if (effect.kind === "reinforcement") {
     const key = effect.owner === "player" ? "playerHand" : "cpuHand";
-    const card = createCardInstance(effect.cardId, effect.owner, `story:${m.storyEncounter!.id}:${effectId}`, 0);
-    m = { ...m, [key]: [...m[key], card] };
+    const ids = effect.owner === 'player' ? m.playerCardIds : m.cpuCardIds;
+    const character = (cards[effect.cardId]?.kind ?? 'character') === 'character';
+    const reserveIndex = ids.indexOf(effect.cardId);
+    if (character && !effect.allowDuplicate && reserveIndex >= 0) {
+      const drawn = drawDeckCard(m, effect.owner, reserveIndex);
+      m = drawn.match;
+      detail += drawn.card ? ' Brought an existing character from the remaining deck.'
+        : ' That character was already dealt; no duplicate created.';
+    } else if (character && !effect.allowDuplicate
+      && m.storyRuntime!.reinforcedCharacterIds?.[effect.owner]?.includes(effect.cardId)) {
+      detail += ' That character already reinforced this side; no duplicate created.';
+    } else {
+      const card = createCardInstance(effect.cardId, effect.owner, `story:${m.storyEncounter!.id}:${effectId}`, 0);
+      m = { ...m, [key]: [...m[key], card],
+        ...(character && !effect.allowDuplicate ? { storyRuntime: { ...m.storyRuntime!,
+          reinforcedCharacterIds: { ...m.storyRuntime!.reinforcedCharacterIds,
+            [effect.owner]: [...(m.storyRuntime!.reinforcedCharacterIds?.[effect.owner] ?? []), effect.cardId],
+          },
+        } } : {}),
+      };
+    }
+  } else if (effect.kind === 'draw') {
+    let count = 0;
+    for (let i = 0; i < Math.min(DECK_SIZE, effect.amount); i++) {
+      const drawn = drawDeckCard(m, effect.owner);
+      m = drawn.match;
+      if (!drawn.card) break;
+      count++;
+    }
+    detail += count ? ` Drew ${count} remaining deck card${count === 1 ? '' : 's'}.`
+      : ' Deck empty; no card drawn.';
   } else if (effect.kind === "lane-power") {
     m = { ...m, storyRuntime: { ...m.storyRuntime!, lanePowerBonuses: [...m.storyRuntime!.lanePowerBonuses, { ...effect }] } };
   } else {
     m = { ...m, storyRuntime: { ...m.storyRuntime!, laneLocks: [...m.storyRuntime!.laneLocks, { owner: effect.owner, lanes: [...effect.lanes] }] } };
   }
-  return storyLog(before, m, effectId, effect.kind === "motion" || effect.kind === "reinforcement" ? effect.owner : "cpu", `Story effect ${effectId}: ${effect.kind}.`);
+  return storyLog(before, m, effectId, effect.kind === "motion" || effect.kind === "reinforcement" || effect.kind === 'draw' ? effect.owner : "cpu", detail);
 };
 function applyStoryEffects(match: Match, roundStartOnly = false): Match {
   if (!match.storyEncounter || !match.storyRuntime) return match;
@@ -2969,7 +3026,7 @@ function applyStoryEffects(match: Match, roundStartOnly = false): Match {
     if (item.round === m.round) m = applyStoryEffect(m, { kind: "motion", owner: item.owner, amount: item.amount }, `round-motion:${index}:${item.round}`);
   }
   for (const [index, item] of (snapshot.modifiers?.reinforcements ?? []).entries()) {
-    if (item.round === m.round) m = applyStoryEffect(m, { kind: "reinforcement", owner: item.owner, cardId: item.cardId }, `reinforcement:${index}:${item.round}`);
+    if (item.round === m.round) m = applyStoryEffect(m, { kind: "reinforcement", owner: item.owner, cardId: item.cardId, ...(item.allowDuplicate ? { allowDuplicate: true } : {}) }, `reinforcement:${index}:${item.round}`);
   }
   const phases = snapshot.phases ?? [];
   let next = match.storyRuntime.activePhaseIndex + 1;
@@ -3034,8 +3091,20 @@ export function getStoryModifierSummaries(value: Match | StoryEncounterSnapshot)
   for (const lock of modifiers?.laneLocks ?? []) summaries.push(`Round ${lock.round}: ${lock.owner} cannot play lane${lock.lanes.length === 1 ? "" : "s"} ${lock.lanes.join(", ")}`);
   for (const delta of modifiers?.roundMotionDeltas ?? []) summaries.push(`Round ${delta.round}: ${delta.owner} Motion ${delta.amount >= 0 ? "+" : ""}${delta.amount}`);
   for (const bonus of modifiers?.lanePowerBonuses ?? []) summaries.push(`${bonus.owner} lane ${bonus.lane} Hands ${bonus.amount >= 0 ? "+" : ""}${bonus.amount}`);
-  for (const reinforcement of modifiers?.reinforcements ?? []) summaries.push(`Round ${reinforcement.round}: ${reinforcement.owner} reinforces with ${reinforcement.cardId}`);
-  for (const phase of snapshot.phases ?? []) summaries.push(`Phase ${phase.name}: ${phase.trigger.kind}`);
+  for (const reinforcement of modifiers?.reinforcements ?? []) summaries.push(`Round ${reinforcement.round}: ${reinforcement.owner} reinforces with ${reinforcement.cardId}${reinforcement.allowDuplicate ? " (temporary practice copy)" : ""}`);
+  for (const phase of snapshot.phases ?? []) {
+    const trigger = phase.trigger.kind === "round" ? `At round ${phase.trigger.atLeast}`
+      : phase.trigger.kind === "districts-held" ? `When ${phase.trigger.owner} holds at least ${phase.trigger.atLeast} districts`
+      : `When ${phase.trigger.owner} has at least ${phase.trigger.atLeast} total Hands`;
+    const effects = (phase.onEnter ?? []).map(effect => {
+      if (effect.kind === "draw") return `${effect.owner} draws up to ${effect.amount} remaining card${effect.amount === 1 ? "" : "s"} from their deck; an empty deck adds no cards`;
+      if (effect.kind === "motion") return `${effect.owner} Motion ${effect.amount >= 0 ? "+" : ""}${effect.amount}`;
+      if (effect.kind === "reinforcement") return `${effect.owner} receives ${cards[effect.cardId]?.name ?? effect.cardId}${effect.allowDuplicate ? " as a temporary practice copy" : " if still available"}`;
+      if (effect.kind === "lane-power") return `${effect.owner} district ${effect.lane + 1} Hands ${effect.amount >= 0 ? "+" : ""}${effect.amount}`;
+      return `${effect.owner} cannot play district${effect.lanes.length === 1 ? "" : "s"} ${effect.lanes.map(lane => lane + 1).join(", ")}`;
+    });
+    summaries.push(`Phase ${phase.name}: ${phase.description?.trim() || `${trigger}${effects.length ? `: ${effects.join("; ")}` : ""}.`}`);
+  }
   return summaries;
 }
 
@@ -5049,14 +5118,10 @@ function applyDistrictArrival(match: Match, owner: Owner, instanceId: string, ta
     } else note = district.name + ': no other ally to trade.';
   }
   if (runtime.roundPlays[owner][targetLane] === 1 && effect.kind === 'market-draw') {
-    const hand = owner === 'player' ? 'playerHand' : 'cpuHand';
-    const index = owner === 'player' ? 'playerDrawIndex' : 'cpuDrawIndex';
-    const deck = owner === 'player' ? after.playerDeck : after.cpuDeck;
-    const ids = owner === 'player' ? after.playerCardIds : after.cpuCardIds;
-    const id = ids[after[index]];
+    const drawn = drawDeckCard(after, owner);
     // Keep the identity out of public event notes and targets.
-    note = district.name + (id ? ': drew one card.' : ': deck empty; no card drawn.');
-    if (id) after = { ...after, [hand]: [...after[hand], createCardInstance(id, owner, deck, after[index])], [index]: after[index] + 1 };
+    note = district.name + (drawn.card ? ': drew one card.' : ': deck empty; no card drawn.');
+    after = drawn.match;
   }
   if (runtime.roundPlays[owner][targetLane] === 1 && effect.kind === 'feed-neighbors') {
     targetIds = after.boards.flat().filter(c => !c.hazard && c.owner === owner && c.lane !== targetLane).map(c => c.instanceId);
@@ -5763,10 +5828,6 @@ function settleNextRound(match: Match, onRoundSettled?: (settled: Match) => Matc
     const complete = applyStoryEffects({ ...roundEnded, phase: 'complete' as const });
     return addEvent(match, complete, { type: 'match-complete', owner: 'player', note: 'The match is complete.' });
   }
-  const draw = (owner: Owner, deckId: string, deckCards: string[], index: number) =>
-    index < deckCards.length ? createCardInstance(deckCards[index], owner, deckId, index) : null;
-  const p = draw('player', match.playerDeck, match.playerCardIds, match.playerDrawIndex);
-  const c = draw('cpu', match.cpuDeck, match.cpuCardIds, match.cpuDrawIndex);
   const next = match.round + 1;
   const expiring = roundEnded.timedEffects.filter((effect) => effect.expiresAtRound === next);
   let m: Match = {
@@ -5818,13 +5879,10 @@ function settleNextRound(match: Match, onRoundSettled?: (settled: Match) => Matc
     });
   }
   const beforeRoundStart = expiring.length ? m : match;
-  m = {
-    ...m,
-    playerHand: p ? [...m.playerHand, p] : m.playerHand,
-    cpuHand: c ? [...m.cpuHand, c] : m.cpuHand,
-    playerDrawIndex: m.playerDrawIndex + (p ? 1 : 0),
-    cpuDrawIndex: m.cpuDrawIndex + (c ? 1 : 0),
-  };
+  const playerDraw = drawDeckCard(m, 'player');
+  const cpuDraw = drawDeckCard(playerDraw.match, 'cpu');
+  const p = playerDraw.card, c = cpuDraw.card;
+  m = cpuDraw.match;
   m = musicRoundStart(streetLegendsRoundStart(creativeRoundStart(m, creativeTools()), waveTools()), waveTools());
   m = resolveBuddyGrowthAtRoundStart(m);
   m = sproutBuddyBuds(m);

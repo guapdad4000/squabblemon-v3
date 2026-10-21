@@ -1015,9 +1015,12 @@ test('replay frames do not mutate live fade and rewind later actions', () => {
 
 test('story replay snapshots retain reinforcements and lane rules', () => {
   const base = getStoryBattle('welcome-to-the-block')!.encounter;
-  const snapshot: StoryEncounterSnapshot = { ...base, modifiers: { ...base.modifiers, reinforcements: [{ round: 1, owner: 'cpu', cardId: 'snow' }] }, phases: [{ id: 'rules', name: 'Rules', trigger: { kind: 'round', atLeast: 1 }, onEnter: [{ kind: 'lane-power', owner: 'cpu', lane: 1, amount: 2 }] }] };
+  // Snow starts in the reserve: reinforcement draws her existing deck slot.
+  const snapshot: StoryEncounterSnapshot = { ...base, modifiers: { ...base.modifiers, handSize: { ...base.modifiers?.handSize, cpu: 1 }, reinforcements: [{ round: 1, owner: 'cpu', cardId: 'snow' }] }, phases: [{ id: 'rules', name: 'Rules', trigger: { kind: 'round', atLeast: 1 }, onEnter: [{ kind: 'lane-power', owner: 'cpu', lane: 1, amount: 2 }] }] };
   const live = createStoryMatch(snapshot, 'block'), reinforcement = live.effectLog.find(e => e.note.includes('reinforcement'))!, rule = live.effectLog.find(e => e.note.includes('lane-power'))!;
   assert.equal(buildReplayFrame(live, reinforcement, 'after').cpuHand.filter(c => c.cardId === 'snow').length, buildReplayFrame(live, reinforcement, 'before').cpuHand.filter(c => c.cardId === 'snow').length + 1);
+  assert.equal(live.cpuHand.filter(c => c.cardId === 'snow').length, 1);
+  assert.equal(live.cpuHand.find(c => c.cardId === 'snow')?.instanceId, `cpu:${snapshot.enemy.deckId}:1:snow`);
   assert.deepEqual(buildReplayFrame(live, rule, 'after').storyRuntime?.lanePowerBonuses.map(({ owner, lane, amount }) => ({ owner, lane, amount })), [{ owner: 'cpu', lane: 1, amount: 2 }]);
   const results = renderToStaticMarkup(<ResultScreen match={live} districts={districts} equippedVariants={{ 'officer-oink': 'officer-oink:chrome' }} onRestart={noop} onChangeDeck={noop} onGoHome={noop} onRetryReward={noop} isGuest />);
   assert.match(results, /battle outcome artwork/i);
