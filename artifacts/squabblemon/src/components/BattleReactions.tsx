@@ -10,7 +10,7 @@ import { ReactionArt } from './ReactionArt';
 import '../styles/battle-reactions.css';
 import '../styles/pvp-reactions-v2.css';
 
-export function BattleReactions({ room, connected, reducedMotion }: { room: OnlineRoomView; connected: boolean; reducedMotion: boolean }) {
+export function BattleReactions({ room, connected, reducedMotion }: { room: Pick<OnlineRoomView, 'code' | 'seat' | 'gameNumber' | 'status' | 'serverTime' | 'members'>; connected: boolean; reducedMotion: boolean }) {
   const [collection, setCollection] = useState(false);
   const [open, setOpen] = useState(false);
   const [muted, setMuted] = useState(() => { try { return localStorage.getItem('squabblemon:mute-reactions') === 'true'; } catch { return false; } });
@@ -65,7 +65,14 @@ export function BattleReactions({ room, connected, reducedMotion }: { room: Onli
     return () => { observer.disconnect(); window.removeEventListener('resize', place); document.documentElement.style.removeProperty('--pvp-bubble-top'); document.documentElement.style.removeProperty('--pvp-bar-bottom'); };
   }, [room.status]);
   const [slot, setSlot] = useState<HTMLElement | null>(null);
-  useEffect(() => { setSlot(document.querySelector<HTMLElement>('.pvp-reaction-slot')); }, [room.status]);
+  useEffect(() => {
+    const find = () => setSlot(document.querySelector<HTMLElement>('.pvp-reaction-slot--actions'));
+    find();
+    // Arrival and reconnect can replace the battle tree while this controller stays mounted.
+    const observer = new MutationObserver(find);
+    observer.observe(document.getElementById('root') ?? document.body, { childList: true, subtree: true });
+    return () => observer.disconnect();
+  }, [room.status]);
   if (room.status !== 'active') return null;
   const controls = <div className={'pvp-reaction-controls' + (slot ? ' is-docked' : '')} onKeyDown={event => {
     if (event.key === 'Escape' && open) {
@@ -73,7 +80,7 @@ export function BattleReactions({ room, connected, reducedMotion }: { room: Onli
     }
   }}>
       <button ref={trigger} type="button" className="pvp-reaction-trigger" onClick={() => { if (!open) { setCollection(false); mutation.reset(); } setOpen(v => !v); }} aria-expanded={open} aria-controls="pvp-reaction-picker" aria-label="Choose a reaction"><MessageCircle size={22} /><span>React</span></button>
-      {open && <div ref={picker} className="pvp-reaction-picker" id="pvp-reaction-picker" role="region" aria-label="Your reaction collection">
+      {open && createPortal(<div ref={picker} className="pvp-reaction-picker" id="pvp-reaction-picker" role="region" aria-label="Your reaction collection">
         <header><div><small>BLOCK TALK / PvP</small><h3>{collection ? 'Owned collection' : 'Battle tray'}</h3></div><button type="button" aria-label="Close reactions" onClick={() => { setOpen(false); trigger.current?.focus(); }}><X size={18} /></button></header>
         <div className="pvp-reaction-views" role="group" aria-label="Reaction views">
           <button type="button" aria-pressed={!collection} onClick={() => setCollection(false)}>Quick tray</button>
@@ -91,7 +98,7 @@ export function BattleReactions({ room, connected, reducedMotion }: { room: Onli
         {(query.error || mutation.error) && <p role="alert">{onlineErrorMessage(mutation.error ?? query.error)}</p>}
         <label><input type="checkbox" checked={muted} onChange={e => { setMuted(e.target.checked); try { localStorage.setItem('squabblemon:mute-reactions', String(e.target.checked)); } catch { /* Session-only preference. */ } }} /> Hide opponent reactions</label>
         <p className="pvp-reaction-customize">Customize your quick tray before queueing in <strong>Fighter ID → Style → PvP Reactions</strong>. All owned reactions can still be sent here.</p>
-      </div>}
+      </div>, document.body)}
     </div>;
   return <>
     {slot ? createPortal(controls, slot) : controls}

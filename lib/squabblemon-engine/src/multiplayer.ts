@@ -55,7 +55,8 @@ export type OnlineMember = {
   avatarKey?: string;
   level?: number;
   streetRep?: number;
-  /** Display-only equipped banner; never affects play. */
+  /** Display-only equipment, captured when joining the room; never affects play. */
+  playerMatId?: string;
   banner?: OnlineBanner;
   deck: OnlineDeck;
   ready: boolean;
@@ -501,7 +502,7 @@ export type OnlineRoomView = {
   startedAt: number | null;
   completedAt: number | null;
   seat: Seat;
-  members: Record<Seat, { name: string; hero: string; avatarKey?: string; level?: number; streetRep?: number; rp?: number; banner?: OnlineBanner; ready: boolean } | null>;
+  members: Record<Seat, { name: string; hero: string; avatarKey?: string; level?: number; streetRep?: number; rp?: number; playerMatId?: string; banner?: OnlineBanner; ready: boolean } | null>;
   ownDeck: OnlineDeck;
   revealedDecks: Record<Seat, OnlineDeck> | null;
   activeSeat: Seat;
@@ -586,7 +587,7 @@ export function onlineRoomView(
   const publicMember = (member: OnlineMember | null, memberSeat: Seat) =>
     member
       ? { name: member.name, hero: member.deck.hero, avatarKey: member.avatarKey, level: member.level,
-          streetRep: member.streetRep, rp: room.ranked?.ratings[memberSeat], ...(member.banner ? { banner: member.banner } : {}), ready: member.ready }
+          streetRep: member.streetRep, rp: room.ranked?.ratings[memberSeat], ...(member.banner ? { banner: member.banner } : {}), ...(member.playerMatId ? { playerMatId: member.playerMatId } : {}), ready: member.ready }
       : null;
   return {
     ...(room.kumite ? { kumite: { ...room.kumite } } : {}),

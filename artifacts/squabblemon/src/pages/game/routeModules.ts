@@ -6,6 +6,7 @@ const loaders = {
   Events: () => import('./Events').then(m => ({ default: m.Events })),
   PatchDesk: () => import('./PatchDesk').then(m => ({ default: m.PatchDesk })),
   Inventory: () => import('./Inventory').then(m => ({ default: m.Inventory })),
+  PlayerMats: () => import('./PlayerMats').then(m => ({ default: m.PlayerMats })),
   CharacterStyles: () => import('./CharacterStyles').then(m => ({ default: m.CharacterStyles })),
   CharacterCollections: () => import('./CharacterCollections').then(m => ({ default: m.CharacterCollections })),
   Collection: () => import('./Collection').then(m => ({ default: m.Collection })),
@@ -23,6 +24,7 @@ const loaders = {
   ChallengesHub: () => import('./ChallengesHub').then(m => ({ default: m.ChallengesHub })),
 };
 
+export const PlayerMats = lazy(loaders.PlayerMats);
 export const Home = lazy(loaders.Home);
 export const Events = lazy(loaders.Events);
 export const PatchDesk = lazy(loaders.PatchDesk);
@@ -45,6 +47,7 @@ export const ChallengesHub = lazy(loaders.ChallengesHub);
 
 export function gameRouteKey(path: string): keyof typeof loaders | undefined {
   const pathname = path.split(/[?#]/, 1)[0].replace(/\/+$/, '');
+  if (pathname === '/game/mats') return 'PlayerMats';
   if (pathname === '/game') return 'Home';
   if (pathname === '/game/events') return 'Events';
   if (pathname === '/game/admin/patches') return 'PatchDesk';

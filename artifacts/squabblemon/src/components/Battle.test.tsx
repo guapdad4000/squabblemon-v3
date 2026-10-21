@@ -1641,3 +1641,17 @@ test('hand peek respects a playable district discount before selecting a distric
   const expensive = renderBattle(match, { selectedInstanceId: card.instanceId, selectedLane: 1 });
   assert.match(expensive, /data-testid="battle-hand-peek" data-unavailable="true"/);
 });
+
+
+test('player mats follow both seats through reconnect and stay out of Kumite', async () => {
+  const { onlineBattleProjection } = await import('./MultiplayerBattle');
+  const { createOnlineRoom, joinOnlineRoom, onlineRoomView } = await import('@workspace/squabblemon-engine/multiplayer');
+  let room = createOnlineRoom({userId:'mat-a',name:'A',ready:false,deck:decks[0],playerMatId:'signature-kyle'}, 'player', Date.now());
+  room = joinOnlineRoom(room,{userId:'mat-b',name:'B',ready:false,deck:decks[1],playerMatId:'signature-guap'},Date.now());
+  const restored = JSON.parse(JSON.stringify(room));
+  for (const [id,player,rival] of [['mat-a','signature-kyle','signature-guap'],['mat-b','signature-guap','signature-kyle']]) {
+    const view=onlineRoomView(restored,'MATTEST12345',id,Date.now());
+    assert.deepEqual(onlineBattleProjection(view).presentation.playerMats,{player,rival});
+    assert.equal(onlineBattleProjection({...view,kumite:{tournamentId:'t',matchId:'m',roundDeadline:Date.now()+10000}}).presentation.playerMats,undefined);
+  }
+});

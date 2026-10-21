@@ -25,7 +25,7 @@ import { cardCatalog, starterRecipes } from '../../data';
 import { STREET_PACK_RULES } from '@workspace/squabblemon-engine/packRules';
 import { Home, Events, PatchDesk, Inventory, CharacterStyles, CharacterCollections, Collection,
   DeckEditor, Decks, DeckTest, PlayerDeckPlay, Missions, Onboarding, Settings,
-  Shop, Story, Multiplayer, Kumite, ChallengesHub, preloadGameRoute } from './routeModules';
+  PlayerMats, Shop, Story, Multiplayer, Kumite, ChallengesHub, preloadGameRoute } from './routeModules';
 import { Redirect, Route, Switch, useLocation, useSearch } from 'wouter';
 import '../../styles/paper-tabs.css';
 
@@ -139,6 +139,7 @@ function GameRoutes({ bootstrap }: { bootstrap: PlayerBootstrap }) {
       <Route path="/game/inventory"><GameShell bootstrap={bootstrap} location={location}><Inventory bootstrap={bootstrap} /></GameShell></Route>
       <Route path="/game/events"><GameShell bootstrap={bootstrap} location={location}><Events key={bootstrap.profile.id} playerId={bootstrap.profile.id} bootstrap={bootstrap} /></GameShell></Route>
       <Route path="/game/admin/patches"><GameShell bootstrap={bootstrap} location={location}><PatchDesk /></GameShell></Route>
+      <Route path="/game/mats"><GameShell bootstrap={bootstrap} location={location}><PlayerMats bootstrap={bootstrap} /></GameShell></Route>
       <Route path="/game/style"><GameShell bootstrap={bootstrap} location={location}><CharacterCollections bootstrap={bootstrap} /></GameShell></Route>
       <Route path="/game/style/:cardId">{params => <GameShell bootstrap={bootstrap} location={location}><CharacterStyles key={params.cardId} cardId={params.cardId} bootstrap={bootstrap} /></GameShell>}</Route>
       <Route path="/game/collection">

@@ -45,6 +45,9 @@ import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { getEquippedVariant, getVariantKind } from './CardVariantTreatment';
 import { getTurnTimerProgress, getTurnTimerState } from '../turnTimer';
 import { getAuthoredCardUpgrades } from './CardUpgrades';
+import { BattlePlayerMats, BattleMatCharacters } from './BattlePlayerMats';
+import { BattleLaneMat } from './BattleLaneMat';
+import { useEquippedPlayerMat } from './CosmeticContext';
 import { resolveBattleArtwork, resolveBattleVenue } from '../battleVenues';
 import { ArrowRight, Check, ChevronsRight, CircleHelp, Flag, History, LockKeyhole, MoreHorizontal, Shield, Swords, Volume2, VolumeX, X } from 'lucide-react';
 import './battle-hud.css';
@@ -70,6 +73,7 @@ import './battle-header-feedback.css';
 
 export type BattleHistoryEntry = Pick<EffectLogEntry, 'sequence' | 'round' | 'type' | 'owner' | 'note' | 'cardId'> & Partial<EffectLogEntry>;
 export type OnlineBattlePresentation = {
+  playerMats?: { player: string; rival: string };
   playerIdentity?: PvpIdentity;
   rivalIdentity?: PvpIdentity;
   districts: ReturnType<typeof getMatchDistricts>;
@@ -483,7 +487,9 @@ export function Battle({
   const historyTransitionRef = React.useRef(false);
   React.useEffect(() => { squabbleTransitionRef.current = false; }, [squabble]);
   React.useEffect(() => { historyTransitionRef.current = false; }, [showHistory]);
+  const equippedMat = useEquippedPlayerMat();
   const venue = resolveBattleVenue(m);
+  const mats = online ? online.playerMats : !m.storyEncounter && !tutorialCoach && equippedMat ? { player: equippedMat, rival: venue.id } : undefined;
   const artwork = resolveBattleArtwork(m);
   const battlefield = getAssetUrl(artwork.landscapeAssetId);
   const passive = m.storyEncounter?.passive;
@@ -760,14 +766,15 @@ export function Battle({
     <BattleArtPreload />
     <AnimatePresence>{mechanicLesson && <MechanicLessonOverlay lesson={mechanicLesson as MechanicLesson} onDismiss={onDismissMechanicLesson} />}</AnimatePresence>
     <div className="battle-venue absolute inset-0 z-0 pointer-events-none perspective-1000 overflow-hidden">
-      <picture className="battle-venue__art absolute inset-0">
+      {mats ? <BattlePlayerMats playerId={mats.player} rivalId={mats.rival} full={!online}/> : <picture className="battle-venue__art absolute inset-0">
         <source media="(orientation: portrait)" srcSet={getAssetUrl(artwork.portraitAssetId)} />
         <img src={battlefield} alt="" decoding="async" draggable={false} />
-      </picture>
+      </picture>}
       <div className="battle-venue__contrast absolute inset-0" />
       <div className="battle-venue__atmosphere" aria-hidden="true" />
     </div>
 
+    {mats && <BattleMatCharacters playerId={mats.player} rivalId={mats.rival} full={!online}/>}
     <AnimatePresence>
       {phaseBanner && (
         <motion.div data-testid="story-phase-warning" role="status" initial={{ opacity: 0, scale: reducedMotion ? 1 : 0.9, y: reducedMotion ? 0 : -20 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: reducedMotion ? 1 : 1.1 }} transition={{ duration: reducedMotion ? 0 : 0.18 }} className="absolute inset-0 z-50 pointer-events-none grid place-items-center bg-black/70 backdrop-blur-md border-y-2 border-accent">
@@ -806,7 +813,6 @@ export function Battle({
         {!musicInMenu && <MusicControls compact logo={!!online} />}
         <details className="battle-tools" onToggle={event => { if (!event.currentTarget.open) { setShowHistory(false); setShowStatuses(false); setShowModifiers(false); } }} onKeyDown={event => { if (event.key === 'Escape') { event.currentTarget.open = false; event.currentTarget.querySelector('summary')?.focus(); } }}><summary aria-label="Battle menu" title="Battle menu"><MoreHorizontal size={22} aria-hidden="true" /></summary><div className="battle-tools__panel referee-clipboard"><DrFadeReferee />
         {musicInMenu && <MusicControls className="battle-header-music" />}
-        {online && <span className="pvp-reaction-slot pvp-reaction-slot--menu" />}
         {splitFeedback && !online && onToggleBattleSpeed && <button type="button" className="battle-utility" data-testid="button-battle-speed" aria-pressed={fastBattleSpeed} onClick={onToggleBattleSpeed}>Battle speed · {fastBattleSpeed ? '1.5×' : 'Normal'}</button>}
         {passive && (
           <div className="hidden lg:block border border-purple-500/50 bg-purple-500/10 px-2 py-1 text-right max-w-xs">
@@ -867,6 +873,7 @@ export function Battle({
       const forecast = (selectedLane === null ? previews[i] : previews[selectedLane])?.after[i];
       const forecastCost = (selectedLane === null ? previews[i] : previews[selectedLane])?.cost;
       return <div key={i} data-testid={`lane-container-${i}`} data-location={d.id} data-drop-lane={i} data-drop-state={drag.laneState(i as Lane)} style={{ '--district-accent': d.accent } as React.CSSProperties} data-control={winner} data-contested={pScore > 0 && cScore > 0 && Math.abs(pScore-cScore) <= 3} data-rival-interest={interactive && rivalIntent.likelyLane === i} data-settled={phase === 'round-result'} data-squabble-impact={impactPhase && squabbleImpact && impactLane === i ? 'true' : 'false'} className={`district-lane district-lane-${i} min-w-0 relative group ${impactPhase && impactLane === i ? 'district-impact' : ''} ${impactPhase && squabbleImpact && impactLane === i ? 'district-squabble-impact' : ''} ${squabbleCinematicLaneValue === i ? 'district-cinematic' : ''} ${phase === 'round-result' || phase === 'match-finish' ? `district-verdict verdict-${winner}` : ''} ${selected ? 'is-selected' : ''} ${selectedCard && interactive ? legal ? 'is-legal' : 'is-illegal' : ''} ${activeEffectLane === i ? 'is-effect-lane' : ''} ${lockedLane ? 'is-locked' : ''}`}>
+        {mats && <BattleLaneMat playerId={mats.player} rivalId={mats.rival} lane={i} full={!online}/>}
         <DistrictEffects winner={winner} locked={lockedLane} replaying={replaying} />
         {squabbleCinematicLaneValue === i && <div className={`victory-ring-overlay victory-ring-overlay--${presentedEffect?.owner === 'cpu' ? 'rival' : 'player'}`} aria-hidden="true" data-testid={`victory-ring-${i}`}><span className="squabble-confetti" /><span className="squabble-confetti" /><span className="squabble-confetti" /><span className="squabble-confetti" /><span className="squabble-confetti" /><span className="squabble-confetti" /></div>}
         <div data-testid={`lane-${i}-cpu-zone`} className="battle-side battle-side-rival"><span className="side-mark side-mark-rival">Rival</span><BattleFormation count={cpuCards.length + (stagedRivalHere ? 1 : 0)} inspectCount={cpuCards.length} label={`Rival gang in ${d.name}`} onInspect={() => setCrewView({ lane: i, mode: 'formation' })} style={{ '--desktop-rows': Math.max(2, Math.ceil((cpuCards.length + (stagedRivalHere ? 1 : 0)) / 2)), '--wide-rows': Math.max(2, Math.ceil((cpuCards.length + (stagedRivalHere ? 1 : 0)) / 3)), '--mobile-rows': Math.max(2, Math.ceil((cpuCards.length + (stagedRivalHere ? 1 : 0)) / 2)) } as React.CSSProperties}>{stagedRivalHere && <motion.div key={`back-${stagedRival.instanceId}`} data-instance-id={stagedRival.instanceId} data-presentation-copy="staged" initial={{ y: -90, rotate: 12, scale: .7, opacity: 0, filter: 'brightness(1) drop-shadow(0 0 0 transparent)' }} animate={{ y: [ -90, -118, 0 ], rotate: [ 12, 2, -4 ], scale: [ .7, 1.08, 1 ], opacity: [ 0, 1, 1 ], filter: [ 'brightness(1) drop-shadow(0 0 0 transparent)', 'brightness(1.4) drop-shadow(0 8px 24px var(--color-accent))', 'brightness(1) drop-shadow(0 0 0 transparent)' ] }} transition={{ duration: reducedMotion ? 0.05 : 0.48, times: [0, 0.35, 1], ease: [0.2, 0.8, 0.2, 1] }} className="card-back battle-board-card"><span>S</span></motion.div>}{cpuCards.map((c, j) => <BattleBoardCard key={c.instanceId} card={c} inspect={setInspect} covered={isCovered(c.instanceId)} isBoard isEnemy disableLayout testId={`card-board-rival-${i}-${c.cardId}-${j}`} effectivePower={getEffectiveCardPower(c)} scoreStance={cScore > pScore ? 'leading' : pScore > cScore ? 'trailing' : 'tied'} entryBurst={activeEffectId === c.instanceId && (phase === 'rival-impact' || phase === 'rival-reveal')} {...effectProps(c)} />)}</BattleFormation></div>
@@ -908,7 +915,8 @@ export function Battle({
           <span>{selectedCost} total · {m.playerMotion - (selectedCost ?? 0)} left</span>
         </>}
       </div>}
-      <div className="battle-actions">
+      <div className="battle-actions" data-online={online ? true : undefined}>
+        {online && <span className="pvp-reaction-slot pvp-reaction-slot--actions" />}
         <div className="battle-motion battle-player-motion" aria-label={`Your Motion: ${m.playerMotion}`}>
           <GameGlyph name="motion" className="battle-motion__icon" /><MotionEnergy value={m.playerMotion} testId="motion-player" replaying={replaying} /><div>Your Motion</div>
         </div>

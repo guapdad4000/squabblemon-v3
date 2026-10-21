@@ -213,7 +213,7 @@ export function Market({ bootstrap, openPacks }: { bootstrap: PlayerBootstrap; o
       </header>
       <StyleShardWallet wallet={profile} cardRarity={card?.rarity} />
       <nav className="market-offers" aria-label="Shop items">
-        {SHOP_OFFERS.filter((item) => item.id !== 'ticket' && !item.id.startsWith('reaction-pack') && !item.id.startsWith('character-')).map((item) => (
+        {SHOP_OFFERS.filter((item) => item.id !== 'ticket' && item.id !== 'player-mat' && !item.id.startsWith('reaction-pack') && !item.id.startsWith('character-')).map((item) => (
           <button
             key={item.id}
             disabled={!!pending || working}

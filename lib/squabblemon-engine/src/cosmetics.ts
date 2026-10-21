@@ -1,3 +1,4 @@
+import { ownsPlayerMat, type PlayerMatOwner } from './playerMats';
 import { CHARACTER_SIGNATURE_ARTWORK } from './characterSignatureArtwork';
 export { CHARACTER_SIGNATURE_ARTWORK } from './characterSignatureArtwork';
 import { cardCatalog, catalogCardById } from './data';
@@ -122,8 +123,8 @@ export function hasCharacterStickers(set: CharacterStyleSet | undefined): boolea
 }
 const stickerIndex = new Map(Object.values(CHARACTER_STYLE_SETS).flatMap(set => set.stickers.map(sticker => [sticker.id, { set, sticker }] as const)));
 /** blue-hour remains the saved default-scene key for compatibility with existing KYLE purchases. */
-export type CosmeticLoadout = { bannerCardId?: string | null; bannerFinish?: 'base' | 'silver'; stickers?: string[]; cardBackgrounds?: Record<string, 'blue-hour'> };
-export type CosmeticOwner = { ownedCardIds: string[]; unlockedCosmeticIds?: string[] };
+export type CosmeticLoadout = { playerMatId?: string | null; bannerCardId?: string | null; bannerFinish?: 'base' | 'silver'; stickers?: string[]; cardBackgrounds?: Record<string, 'blue-hour'> };
+export type CosmeticOwner = PlayerMatOwner & { ownedCardIds: string[]; unlockedCosmeticIds?: string[] };
 export const cosmeticId = (cardId: string, kind: CharacterStyleOfferId) => 'style:' + cardId + ':' + kind.replace('character-', '');
 export function ownsStyle(owner: CosmeticOwner, cardId: string, kind: CharacterStyleOfferId) {
   return owner.ownedCardIds.includes(cardId) && (owner.unlockedCosmeticIds ?? []).includes(cosmeticId(cardId, kind));
@@ -142,6 +143,7 @@ export function avatarSticker(key: string | undefined) {
   return found && (found.sticker.image || (found.set.stickerAtlas && found.sticker.cell !== undefined)) ? found : undefined;
 }
 export function validateCosmeticLoadout(owner: CosmeticOwner, input: CosmeticLoadout): string | null {
+  if (input.playerMatId != null && !ownsPlayerMat(owner, input.playerMatId)) return 'Unlock this player mat first.';
   if (input.bannerCardId && (!styleSetFor(input.bannerCardId) || !owner.ownedCardIds.includes(input.bannerCardId))) return 'Unlock this character before equipping their banner.';
   if (input.bannerFinish === 'silver' && (!input.bannerCardId || !ownsStyle(owner, input.bannerCardId, 'character-banner-finish'))) return 'Unlock Silver Lining for this character first.';
   if ((input.stickers?.length ?? 0) > 3 || new Set(input.stickers).size !== (input.stickers?.length ?? 0)) return 'Choose up to three different stickers.';

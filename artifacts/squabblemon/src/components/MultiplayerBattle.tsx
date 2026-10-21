@@ -16,6 +16,7 @@ import { KumiteArena } from './kumite/KumiteArena';
 import { KumiteResult } from './kumite/KumiteResult';
 import { SUMMON_TEMPLATES, type CardInstance, type Lane, type Match } from '../gameEngine';
 import { otherSeat, TURN_SECONDS, type OnlineCommand, type OnlineRoomView, type PublicCard, type Seat } from '@workspace/squabblemon-engine/multiplayer';
+import { DEFAULT_PLAYER_MAT_ID } from '@workspace/squabblemon-engine/playerMats';
 import { Battle, type OnlineBattlePresentation } from './Battle';
 import { useOnlineEffectPresenter } from '../lib/useOnlineEffectPresenter';
 import { BattleStartSmoke } from './BattleStartSmoke';
@@ -81,6 +82,7 @@ export function onlineBattleProjection(room: OnlineRoomView): { match: Match; pr
     abilityUpgradeSnapshot: { version: 1, player: [], cpu: [] },
   };
   return { match, presentation: {
+    playerMats: room.kumite ? undefined : { player: room.members[room.seat]?.playerMatId ?? DEFAULT_PLAYER_MAT_ID, rival: room.members[rival]?.playerMatId ?? DEFAULT_PLAYER_MAT_ID },
     districts: room.districts, scores, costs: Object.fromEntries(room.hand.map(c => [c.instanceId, c.costs])),
     districtMarks: room.districtMarks?.map(mark => ({ ...mark, owner: owner(mark.owner) })),
     covered: new Set(room.boards.flat().filter(c => c.covered).map(c => c.instanceId)), lockedLanes: room.lockedLanes ?? [],

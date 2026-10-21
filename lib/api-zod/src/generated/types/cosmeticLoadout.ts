@@ -10,6 +10,12 @@ import type { CosmeticLoadoutCardBackgrounds } from './cosmeticLoadoutCardBackgr
 
 export interface CosmeticLoadout {
   /**
+     * Owned player mat for PvP and training. Null restores the free venue.
+     * @maxLength 80
+     * @nullable
+     */
+  playerMatId?: string | null;
+  /**
      * @maxLength 64
      * @nullable
      */

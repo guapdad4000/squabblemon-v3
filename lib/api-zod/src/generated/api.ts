@@ -1465,6 +1465,8 @@ export const getPlayerBootstrapResponseProfileStyleShardBalancesLegendaryMax = 2
 export const getPlayerBootstrapResponseProfileStyleShardBalancesMythicalMin = 0;
 export const getPlayerBootstrapResponseProfileStyleShardBalancesMythicalMax = 2147483647;
 
+export const getPlayerBootstrapResponseProfileSettingsCosmeticsPlayerMatIdMax = 80;
+
 export const getPlayerBootstrapResponseProfileSettingsCosmeticsBannerCardIdMax = 64;
 
 export const getPlayerBootstrapResponseProfileSettingsCosmeticsStickersItemMax = 80;
@@ -1515,6 +1517,7 @@ export const GetPlayerBootstrapResponse = zod.object({
   "termsAcceptedAt": zod.coerce.date().nullable(),
   "settings": zod.object({
   "cosmetics": zod.object({
+  "playerMatId": zod.string().max(getPlayerBootstrapResponseProfileSettingsCosmeticsPlayerMatIdMax).nullish().describe('Owned player mat for PvP and training. Null restores the free venue.'),
   "bannerCardId": zod.string().max(getPlayerBootstrapResponseProfileSettingsCosmeticsBannerCardIdMax).nullish(),
   "bannerFinish": zod.enum(['base', 'silver']).optional(),
   "stickers": zod.array(zod.string().max(getPlayerBootstrapResponseProfileSettingsCosmeticsStickersItemMax)).max(getPlayerBootstrapResponseProfileSettingsCosmeticsStickersMax).optional(),
@@ -1645,6 +1648,8 @@ export const getPlayerStoryResponseCatchUpBootstrapProfileStyleShardBalancesLege
 export const getPlayerStoryResponseCatchUpBootstrapProfileStyleShardBalancesMythicalMin = 0;
 export const getPlayerStoryResponseCatchUpBootstrapProfileStyleShardBalancesMythicalMax = 2147483647;
 
+export const getPlayerStoryResponseCatchUpBootstrapProfileSettingsCosmeticsPlayerMatIdMax = 80;
+
 export const getPlayerStoryResponseCatchUpBootstrapProfileSettingsCosmeticsBannerCardIdMax = 64;
 
 export const getPlayerStoryResponseCatchUpBootstrapProfileSettingsCosmeticsStickersItemMax = 80;
@@ -1767,6 +1772,7 @@ export const GetPlayerStoryResponse = zod.object({
   "termsAcceptedAt": zod.coerce.date().nullable(),
   "settings": zod.object({
   "cosmetics": zod.object({
+  "playerMatId": zod.string().max(getPlayerStoryResponseCatchUpBootstrapProfileSettingsCosmeticsPlayerMatIdMax).nullish().describe('Owned player mat for PvP and training. Null restores the free venue.'),
   "bannerCardId": zod.string().max(getPlayerStoryResponseCatchUpBootstrapProfileSettingsCosmeticsBannerCardIdMax).nullish(),
   "bannerFinish": zod.enum(['base', 'silver']).optional(),
   "stickers": zod.array(zod.string().max(getPlayerStoryResponseCatchUpBootstrapProfileSettingsCosmeticsStickersItemMax)).max(getPlayerStoryResponseCatchUpBootstrapProfileSettingsCosmeticsStickersMax).optional(),
@@ -1907,6 +1913,8 @@ export const resetPlayerStoryDevelopmentResponseCatchUpBootstrapProfileStyleShar
 export const resetPlayerStoryDevelopmentResponseCatchUpBootstrapProfileStyleShardBalancesMythicalMin = 0;
 export const resetPlayerStoryDevelopmentResponseCatchUpBootstrapProfileStyleShardBalancesMythicalMax = 2147483647;
 
+export const resetPlayerStoryDevelopmentResponseCatchUpBootstrapProfileSettingsCosmeticsPlayerMatIdMax = 80;
+
 export const resetPlayerStoryDevelopmentResponseCatchUpBootstrapProfileSettingsCosmeticsBannerCardIdMax = 64;
 
 export const resetPlayerStoryDevelopmentResponseCatchUpBootstrapProfileSettingsCosmeticsStickersItemMax = 80;
@@ -2029,6 +2037,7 @@ export const ResetPlayerStoryDevelopmentResponse = zod.object({
   "termsAcceptedAt": zod.coerce.date().nullable(),
   "settings": zod.object({
   "cosmetics": zod.object({
+  "playerMatId": zod.string().max(resetPlayerStoryDevelopmentResponseCatchUpBootstrapProfileSettingsCosmeticsPlayerMatIdMax).nullish().describe('Owned player mat for PvP and training. Null restores the free venue.'),
   "bannerCardId": zod.string().max(resetPlayerStoryDevelopmentResponseCatchUpBootstrapProfileSettingsCosmeticsBannerCardIdMax).nullish(),
   "bannerFinish": zod.enum(['base', 'silver']).optional(),
   "stickers": zod.array(zod.string().max(resetPlayerStoryDevelopmentResponseCatchUpBootstrapProfileSettingsCosmeticsStickersItemMax)).max(resetPlayerStoryDevelopmentResponseCatchUpBootstrapProfileSettingsCosmeticsStickersMax).optional(),
@@ -2184,6 +2193,8 @@ export const completePlayerStoryNodeResponseCampaignCatchUpBootstrapProfileStyle
 export const completePlayerStoryNodeResponseCampaignCatchUpBootstrapProfileStyleShardBalancesMythicalMin = 0;
 export const completePlayerStoryNodeResponseCampaignCatchUpBootstrapProfileStyleShardBalancesMythicalMax = 2147483647;
 
+export const completePlayerStoryNodeResponseCampaignCatchUpBootstrapProfileSettingsCosmeticsPlayerMatIdMax = 80;
+
 export const completePlayerStoryNodeResponseCampaignCatchUpBootstrapProfileSettingsCosmeticsBannerCardIdMax = 64;
 
 export const completePlayerStoryNodeResponseCampaignCatchUpBootstrapProfileSettingsCosmeticsStickersItemMax = 80;
@@ -2216,6 +2227,8 @@ export const completePlayerStoryNodeResponseBootstrapProfileStyleShardBalancesLe
 
 export const completePlayerStoryNodeResponseBootstrapProfileStyleShardBalancesMythicalMin = 0;
 export const completePlayerStoryNodeResponseBootstrapProfileStyleShardBalancesMythicalMax = 2147483647;
+
+export const completePlayerStoryNodeResponseBootstrapProfileSettingsCosmeticsPlayerMatIdMax = 80;
 
 export const completePlayerStoryNodeResponseBootstrapProfileSettingsCosmeticsBannerCardIdMax = 64;
 
@@ -2340,6 +2353,7 @@ export const CompletePlayerStoryNodeResponse = zod.object({
   "termsAcceptedAt": zod.coerce.date().nullable(),
   "settings": zod.object({
   "cosmetics": zod.object({
+  "playerMatId": zod.string().max(completePlayerStoryNodeResponseCampaignCatchUpBootstrapProfileSettingsCosmeticsPlayerMatIdMax).nullish().describe('Owned player mat for PvP and training. Null restores the free venue.'),
   "bannerCardId": zod.string().max(completePlayerStoryNodeResponseCampaignCatchUpBootstrapProfileSettingsCosmeticsBannerCardIdMax).nullish(),
   "bannerFinish": zod.enum(['base', 'silver']).optional(),
   "stickers": zod.array(zod.string().max(completePlayerStoryNodeResponseCampaignCatchUpBootstrapProfileSettingsCosmeticsStickersItemMax)).max(completePlayerStoryNodeResponseCampaignCatchUpBootstrapProfileSettingsCosmeticsStickersMax).optional(),
@@ -2482,6 +2496,7 @@ export const CompletePlayerStoryNodeResponse = zod.object({
   "termsAcceptedAt": zod.coerce.date().nullable(),
   "settings": zod.object({
   "cosmetics": zod.object({
+  "playerMatId": zod.string().max(completePlayerStoryNodeResponseBootstrapProfileSettingsCosmeticsPlayerMatIdMax).nullish().describe('Owned player mat for PvP and training. Null restores the free venue.'),
   "bannerCardId": zod.string().max(completePlayerStoryNodeResponseBootstrapProfileSettingsCosmeticsBannerCardIdMax).nullish(),
   "bannerFinish": zod.enum(['base', 'silver']).optional(),
   "stickers": zod.array(zod.string().max(completePlayerStoryNodeResponseBootstrapProfileSettingsCosmeticsStickersItemMax)).max(completePlayerStoryNodeResponseBootstrapProfileSettingsCosmeticsStickersMax).optional(),
@@ -2646,6 +2661,8 @@ export const completePlayerStoryPuzzleResponseCampaignCatchUpBootstrapProfileSty
 export const completePlayerStoryPuzzleResponseCampaignCatchUpBootstrapProfileStyleShardBalancesMythicalMin = 0;
 export const completePlayerStoryPuzzleResponseCampaignCatchUpBootstrapProfileStyleShardBalancesMythicalMax = 2147483647;
 
+export const completePlayerStoryPuzzleResponseCampaignCatchUpBootstrapProfileSettingsCosmeticsPlayerMatIdMax = 80;
+
 export const completePlayerStoryPuzzleResponseCampaignCatchUpBootstrapProfileSettingsCosmeticsBannerCardIdMax = 64;
 
 export const completePlayerStoryPuzzleResponseCampaignCatchUpBootstrapProfileSettingsCosmeticsStickersItemMax = 80;
@@ -2678,6 +2695,8 @@ export const completePlayerStoryPuzzleResponseBootstrapProfileStyleShardBalances
 
 export const completePlayerStoryPuzzleResponseBootstrapProfileStyleShardBalancesMythicalMin = 0;
 export const completePlayerStoryPuzzleResponseBootstrapProfileStyleShardBalancesMythicalMax = 2147483647;
+
+export const completePlayerStoryPuzzleResponseBootstrapProfileSettingsCosmeticsPlayerMatIdMax = 80;
 
 export const completePlayerStoryPuzzleResponseBootstrapProfileSettingsCosmeticsBannerCardIdMax = 64;
 
@@ -2802,6 +2821,7 @@ export const CompletePlayerStoryPuzzleResponse = zod.object({
   "termsAcceptedAt": zod.coerce.date().nullable(),
   "settings": zod.object({
   "cosmetics": zod.object({
+  "playerMatId": zod.string().max(completePlayerStoryPuzzleResponseCampaignCatchUpBootstrapProfileSettingsCosmeticsPlayerMatIdMax).nullish().describe('Owned player mat for PvP and training. Null restores the free venue.'),
   "bannerCardId": zod.string().max(completePlayerStoryPuzzleResponseCampaignCatchUpBootstrapProfileSettingsCosmeticsBannerCardIdMax).nullish(),
   "bannerFinish": zod.enum(['base', 'silver']).optional(),
   "stickers": zod.array(zod.string().max(completePlayerStoryPuzzleResponseCampaignCatchUpBootstrapProfileSettingsCosmeticsStickersItemMax)).max(completePlayerStoryPuzzleResponseCampaignCatchUpBootstrapProfileSettingsCosmeticsStickersMax).optional(),
@@ -2944,6 +2964,7 @@ export const CompletePlayerStoryPuzzleResponse = zod.object({
   "termsAcceptedAt": zod.coerce.date().nullable(),
   "settings": zod.object({
   "cosmetics": zod.object({
+  "playerMatId": zod.string().max(completePlayerStoryPuzzleResponseBootstrapProfileSettingsCosmeticsPlayerMatIdMax).nullish().describe('Owned player mat for PvP and training. Null restores the free venue.'),
   "bannerCardId": zod.string().max(completePlayerStoryPuzzleResponseBootstrapProfileSettingsCosmeticsBannerCardIdMax).nullish(),
   "bannerFinish": zod.enum(['base', 'silver']).optional(),
   "stickers": zod.array(zod.string().max(completePlayerStoryPuzzleResponseBootstrapProfileSettingsCosmeticsStickersItemMax)).max(completePlayerStoryPuzzleResponseBootstrapProfileSettingsCosmeticsStickersMax).optional(),
@@ -3108,6 +3129,8 @@ export const savePlayerStoryDialogueResponseCampaignCatchUpBootstrapProfileStyle
 export const savePlayerStoryDialogueResponseCampaignCatchUpBootstrapProfileStyleShardBalancesMythicalMin = 0;
 export const savePlayerStoryDialogueResponseCampaignCatchUpBootstrapProfileStyleShardBalancesMythicalMax = 2147483647;
 
+export const savePlayerStoryDialogueResponseCampaignCatchUpBootstrapProfileSettingsCosmeticsPlayerMatIdMax = 80;
+
 export const savePlayerStoryDialogueResponseCampaignCatchUpBootstrapProfileSettingsCosmeticsBannerCardIdMax = 64;
 
 export const savePlayerStoryDialogueResponseCampaignCatchUpBootstrapProfileSettingsCosmeticsStickersItemMax = 80;
@@ -3140,6 +3163,8 @@ export const savePlayerStoryDialogueResponseBootstrapProfileStyleShardBalancesLe
 
 export const savePlayerStoryDialogueResponseBootstrapProfileStyleShardBalancesMythicalMin = 0;
 export const savePlayerStoryDialogueResponseBootstrapProfileStyleShardBalancesMythicalMax = 2147483647;
+
+export const savePlayerStoryDialogueResponseBootstrapProfileSettingsCosmeticsPlayerMatIdMax = 80;
 
 export const savePlayerStoryDialogueResponseBootstrapProfileSettingsCosmeticsBannerCardIdMax = 64;
 
@@ -3264,6 +3289,7 @@ export const SavePlayerStoryDialogueResponse = zod.object({
   "termsAcceptedAt": zod.coerce.date().nullable(),
   "settings": zod.object({
   "cosmetics": zod.object({
+  "playerMatId": zod.string().max(savePlayerStoryDialogueResponseCampaignCatchUpBootstrapProfileSettingsCosmeticsPlayerMatIdMax).nullish().describe('Owned player mat for PvP and training. Null restores the free venue.'),
   "bannerCardId": zod.string().max(savePlayerStoryDialogueResponseCampaignCatchUpBootstrapProfileSettingsCosmeticsBannerCardIdMax).nullish(),
   "bannerFinish": zod.enum(['base', 'silver']).optional(),
   "stickers": zod.array(zod.string().max(savePlayerStoryDialogueResponseCampaignCatchUpBootstrapProfileSettingsCosmeticsStickersItemMax)).max(savePlayerStoryDialogueResponseCampaignCatchUpBootstrapProfileSettingsCosmeticsStickersMax).optional(),
@@ -3406,6 +3432,7 @@ export const SavePlayerStoryDialogueResponse = zod.object({
   "termsAcceptedAt": zod.coerce.date().nullable(),
   "settings": zod.object({
   "cosmetics": zod.object({
+  "playerMatId": zod.string().max(savePlayerStoryDialogueResponseBootstrapProfileSettingsCosmeticsPlayerMatIdMax).nullish().describe('Owned player mat for PvP and training. Null restores the free venue.'),
   "bannerCardId": zod.string().max(savePlayerStoryDialogueResponseBootstrapProfileSettingsCosmeticsBannerCardIdMax).nullish(),
   "bannerFinish": zod.enum(['base', 'silver']).optional(),
   "stickers": zod.array(zod.string().max(savePlayerStoryDialogueResponseBootstrapProfileSettingsCosmeticsStickersItemMax)).max(savePlayerStoryDialogueResponseBootstrapProfileSettingsCosmeticsStickersMax).optional(),
@@ -3582,6 +3609,8 @@ export const updatePlayerProfileResponseProfileStyleShardBalancesLegendaryMax = 
 export const updatePlayerProfileResponseProfileStyleShardBalancesMythicalMin = 0;
 export const updatePlayerProfileResponseProfileStyleShardBalancesMythicalMax = 2147483647;
 
+export const updatePlayerProfileResponseProfileSettingsCosmeticsPlayerMatIdMax = 80;
+
 export const updatePlayerProfileResponseProfileSettingsCosmeticsBannerCardIdMax = 64;
 
 export const updatePlayerProfileResponseProfileSettingsCosmeticsStickersItemMax = 80;
@@ -3632,6 +3661,7 @@ export const UpdatePlayerProfileResponse = zod.object({
   "termsAcceptedAt": zod.coerce.date().nullable(),
   "settings": zod.object({
   "cosmetics": zod.object({
+  "playerMatId": zod.string().max(updatePlayerProfileResponseProfileSettingsCosmeticsPlayerMatIdMax).nullish().describe('Owned player mat for PvP and training. Null restores the free venue.'),
   "bannerCardId": zod.string().max(updatePlayerProfileResponseProfileSettingsCosmeticsBannerCardIdMax).nullish(),
   "bannerFinish": zod.enum(['base', 'silver']).optional(),
   "stickers": zod.array(zod.string().max(updatePlayerProfileResponseProfileSettingsCosmeticsStickersItemMax)).max(updatePlayerProfileResponseProfileSettingsCosmeticsStickersMax).optional(),
@@ -3777,6 +3807,8 @@ export const advancePlayerOnboardingResponseProfileStyleShardBalancesLegendaryMa
 export const advancePlayerOnboardingResponseProfileStyleShardBalancesMythicalMin = 0;
 export const advancePlayerOnboardingResponseProfileStyleShardBalancesMythicalMax = 2147483647;
 
+export const advancePlayerOnboardingResponseProfileSettingsCosmeticsPlayerMatIdMax = 80;
+
 export const advancePlayerOnboardingResponseProfileSettingsCosmeticsBannerCardIdMax = 64;
 
 export const advancePlayerOnboardingResponseProfileSettingsCosmeticsStickersItemMax = 80;
@@ -3827,6 +3859,7 @@ export const AdvancePlayerOnboardingResponse = zod.object({
   "termsAcceptedAt": zod.coerce.date().nullable(),
   "settings": zod.object({
   "cosmetics": zod.object({
+  "playerMatId": zod.string().max(advancePlayerOnboardingResponseProfileSettingsCosmeticsPlayerMatIdMax).nullish().describe('Owned player mat for PvP and training. Null restores the free venue.'),
   "bannerCardId": zod.string().max(advancePlayerOnboardingResponseProfileSettingsCosmeticsBannerCardIdMax).nullish(),
   "bannerFinish": zod.enum(['base', 'silver']).optional(),
   "stickers": zod.array(zod.string().max(advancePlayerOnboardingResponseProfileSettingsCosmeticsStickersItemMax)).max(advancePlayerOnboardingResponseProfileSettingsCosmeticsStickersMax).optional(),
@@ -3965,6 +3998,8 @@ export const claimExperimentCardResponseProfileStyleShardBalancesLegendaryMax = 
 export const claimExperimentCardResponseProfileStyleShardBalancesMythicalMin = 0;
 export const claimExperimentCardResponseProfileStyleShardBalancesMythicalMax = 2147483647;
 
+export const claimExperimentCardResponseProfileSettingsCosmeticsPlayerMatIdMax = 80;
+
 export const claimExperimentCardResponseProfileSettingsCosmeticsBannerCardIdMax = 64;
 
 export const claimExperimentCardResponseProfileSettingsCosmeticsStickersItemMax = 80;
@@ -4015,6 +4050,7 @@ export const ClaimExperimentCardResponse = zod.object({
   "termsAcceptedAt": zod.coerce.date().nullable(),
   "settings": zod.object({
   "cosmetics": zod.object({
+  "playerMatId": zod.string().max(claimExperimentCardResponseProfileSettingsCosmeticsPlayerMatIdMax).nullish().describe('Owned player mat for PvP and training. Null restores the free venue.'),
   "bannerCardId": zod.string().max(claimExperimentCardResponseProfileSettingsCosmeticsBannerCardIdMax).nullish(),
   "bannerFinish": zod.enum(['base', 'silver']).optional(),
   "stickers": zod.array(zod.string().max(claimExperimentCardResponseProfileSettingsCosmeticsStickersItemMax)).max(claimExperimentCardResponseProfileSettingsCosmeticsStickersMax).optional(),
@@ -4245,6 +4281,8 @@ export const completePlayerMatchResponseProfileStyleShardBalancesLegendaryMax = 
 export const completePlayerMatchResponseProfileStyleShardBalancesMythicalMin = 0;
 export const completePlayerMatchResponseProfileStyleShardBalancesMythicalMax = 2147483647;
 
+export const completePlayerMatchResponseProfileSettingsCosmeticsPlayerMatIdMax = 80;
+
 export const completePlayerMatchResponseProfileSettingsCosmeticsBannerCardIdMax = 64;
 
 export const completePlayerMatchResponseProfileSettingsCosmeticsStickersItemMax = 80;
@@ -4277,6 +4315,8 @@ export const completePlayerMatchResponseCampaignOneCatchUpBootstrapProfileStyleS
 
 export const completePlayerMatchResponseCampaignOneCatchUpBootstrapProfileStyleShardBalancesMythicalMin = 0;
 export const completePlayerMatchResponseCampaignOneCatchUpBootstrapProfileStyleShardBalancesMythicalMax = 2147483647;
+
+export const completePlayerMatchResponseCampaignOneCatchUpBootstrapProfileSettingsCosmeticsPlayerMatIdMax = 80;
 
 export const completePlayerMatchResponseCampaignOneCatchUpBootstrapProfileSettingsCosmeticsBannerCardIdMax = 64;
 
@@ -4328,6 +4368,7 @@ export const CompletePlayerMatchResponse = zod.object({
   "termsAcceptedAt": zod.coerce.date().nullable(),
   "settings": zod.object({
   "cosmetics": zod.object({
+  "playerMatId": zod.string().max(completePlayerMatchResponseProfileSettingsCosmeticsPlayerMatIdMax).nullish().describe('Owned player mat for PvP and training. Null restores the free venue.'),
   "bannerCardId": zod.string().max(completePlayerMatchResponseProfileSettingsCosmeticsBannerCardIdMax).nullish(),
   "bannerFinish": zod.enum(['base', 'silver']).optional(),
   "stickers": zod.array(zod.string().max(completePlayerMatchResponseProfileSettingsCosmeticsStickersItemMax)).max(completePlayerMatchResponseProfileSettingsCosmeticsStickersMax).optional(),
@@ -4532,6 +4573,7 @@ export const CompletePlayerMatchResponse = zod.object({
   "termsAcceptedAt": zod.coerce.date().nullable(),
   "settings": zod.object({
   "cosmetics": zod.object({
+  "playerMatId": zod.string().max(completePlayerMatchResponseCampaignOneCatchUpBootstrapProfileSettingsCosmeticsPlayerMatIdMax).nullish().describe('Owned player mat for PvP and training. Null restores the free venue.'),
   "bannerCardId": zod.string().max(completePlayerMatchResponseCampaignOneCatchUpBootstrapProfileSettingsCosmeticsBannerCardIdMax).nullish(),
   "bannerFinish": zod.enum(['base', 'silver']).optional(),
   "stickers": zod.array(zod.string().max(completePlayerMatchResponseCampaignOneCatchUpBootstrapProfileSettingsCosmeticsStickersItemMax)).max(completePlayerMatchResponseCampaignOneCatchUpBootstrapProfileSettingsCosmeticsStickersMax).optional(),
@@ -4701,6 +4743,8 @@ export const savePlayerDeckResponseProfileStyleShardBalancesLegendaryMax = 21474
 export const savePlayerDeckResponseProfileStyleShardBalancesMythicalMin = 0;
 export const savePlayerDeckResponseProfileStyleShardBalancesMythicalMax = 2147483647;
 
+export const savePlayerDeckResponseProfileSettingsCosmeticsPlayerMatIdMax = 80;
+
 export const savePlayerDeckResponseProfileSettingsCosmeticsBannerCardIdMax = 64;
 
 export const savePlayerDeckResponseProfileSettingsCosmeticsStickersItemMax = 80;
@@ -4751,6 +4795,7 @@ export const SavePlayerDeckResponse = zod.object({
   "termsAcceptedAt": zod.coerce.date().nullable(),
   "settings": zod.object({
   "cosmetics": zod.object({
+  "playerMatId": zod.string().max(savePlayerDeckResponseProfileSettingsCosmeticsPlayerMatIdMax).nullish().describe('Owned player mat for PvP and training. Null restores the free venue.'),
   "bannerCardId": zod.string().max(savePlayerDeckResponseProfileSettingsCosmeticsBannerCardIdMax).nullish(),
   "bannerFinish": zod.enum(['base', 'silver']).optional(),
   "stickers": zod.array(zod.string().max(savePlayerDeckResponseProfileSettingsCosmeticsStickersItemMax)).max(savePlayerDeckResponseProfileSettingsCosmeticsStickersMax).optional(),
@@ -4890,6 +4935,8 @@ export const deletePlayerDeckResponseProfileStyleShardBalancesLegendaryMax = 214
 export const deletePlayerDeckResponseProfileStyleShardBalancesMythicalMin = 0;
 export const deletePlayerDeckResponseProfileStyleShardBalancesMythicalMax = 2147483647;
 
+export const deletePlayerDeckResponseProfileSettingsCosmeticsPlayerMatIdMax = 80;
+
 export const deletePlayerDeckResponseProfileSettingsCosmeticsBannerCardIdMax = 64;
 
 export const deletePlayerDeckResponseProfileSettingsCosmeticsStickersItemMax = 80;
@@ -4940,6 +4987,7 @@ export const DeletePlayerDeckResponse = zod.object({
   "termsAcceptedAt": zod.coerce.date().nullable(),
   "settings": zod.object({
   "cosmetics": zod.object({
+  "playerMatId": zod.string().max(deletePlayerDeckResponseProfileSettingsCosmeticsPlayerMatIdMax).nullish().describe('Owned player mat for PvP and training. Null restores the free venue.'),
   "bannerCardId": zod.string().max(deletePlayerDeckResponseProfileSettingsCosmeticsBannerCardIdMax).nullish(),
   "bannerFinish": zod.enum(['base', 'silver']).optional(),
   "stickers": zod.array(zod.string().max(deletePlayerDeckResponseProfileSettingsCosmeticsStickersItemMax)).max(deletePlayerDeckResponseProfileSettingsCosmeticsStickersMax).optional(),
@@ -5084,6 +5132,8 @@ export const openPlayerPackResponseBootstrapProfileStyleShardBalancesLegendaryMa
 export const openPlayerPackResponseBootstrapProfileStyleShardBalancesMythicalMin = 0;
 export const openPlayerPackResponseBootstrapProfileStyleShardBalancesMythicalMax = 2147483647;
 
+export const openPlayerPackResponseBootstrapProfileSettingsCosmeticsPlayerMatIdMax = 80;
+
 export const openPlayerPackResponseBootstrapProfileSettingsCosmeticsBannerCardIdMax = 64;
 
 export const openPlayerPackResponseBootstrapProfileSettingsCosmeticsStickersItemMax = 80;
@@ -5135,6 +5185,7 @@ export const OpenPlayerPackResponse = zod.object({
   "termsAcceptedAt": zod.coerce.date().nullable(),
   "settings": zod.object({
   "cosmetics": zod.object({
+  "playerMatId": zod.string().max(openPlayerPackResponseBootstrapProfileSettingsCosmeticsPlayerMatIdMax).nullish().describe('Owned player mat for PvP and training. Null restores the free venue.'),
   "bannerCardId": zod.string().max(openPlayerPackResponseBootstrapProfileSettingsCosmeticsBannerCardIdMax).nullish(),
   "bannerFinish": zod.enum(['base', 'silver']).optional(),
   "stickers": zod.array(zod.string().max(openPlayerPackResponseBootstrapProfileSettingsCosmeticsStickersItemMax)).max(openPlayerPackResponseBootstrapProfileSettingsCosmeticsStickersMax).optional(),
@@ -5298,6 +5349,8 @@ export const craftPlayerVariantResponseBootstrapProfileStyleShardBalancesLegenda
 export const craftPlayerVariantResponseBootstrapProfileStyleShardBalancesMythicalMin = 0;
 export const craftPlayerVariantResponseBootstrapProfileStyleShardBalancesMythicalMax = 2147483647;
 
+export const craftPlayerVariantResponseBootstrapProfileSettingsCosmeticsPlayerMatIdMax = 80;
+
 export const craftPlayerVariantResponseBootstrapProfileSettingsCosmeticsBannerCardIdMax = 64;
 
 export const craftPlayerVariantResponseBootstrapProfileSettingsCosmeticsStickersItemMax = 80;
@@ -5349,6 +5402,7 @@ export const CraftPlayerVariantResponse = zod.object({
   "termsAcceptedAt": zod.coerce.date().nullable(),
   "settings": zod.object({
   "cosmetics": zod.object({
+  "playerMatId": zod.string().max(craftPlayerVariantResponseBootstrapProfileSettingsCosmeticsPlayerMatIdMax).nullish().describe('Owned player mat for PvP and training. Null restores the free venue.'),
   "bannerCardId": zod.string().max(craftPlayerVariantResponseBootstrapProfileSettingsCosmeticsBannerCardIdMax).nullish(),
   "bannerFinish": zod.enum(['base', 'silver']).optional(),
   "stickers": zod.array(zod.string().max(craftPlayerVariantResponseBootstrapProfileSettingsCosmeticsStickersItemMax)).max(craftPlayerVariantResponseBootstrapProfileSettingsCosmeticsStickersMax).optional(),
@@ -5492,6 +5546,8 @@ export const equipPlayerVariantResponseProfileStyleShardBalancesLegendaryMax = 2
 export const equipPlayerVariantResponseProfileStyleShardBalancesMythicalMin = 0;
 export const equipPlayerVariantResponseProfileStyleShardBalancesMythicalMax = 2147483647;
 
+export const equipPlayerVariantResponseProfileSettingsCosmeticsPlayerMatIdMax = 80;
+
 export const equipPlayerVariantResponseProfileSettingsCosmeticsBannerCardIdMax = 64;
 
 export const equipPlayerVariantResponseProfileSettingsCosmeticsStickersItemMax = 80;
@@ -5542,6 +5598,7 @@ export const EquipPlayerVariantResponse = zod.object({
   "termsAcceptedAt": zod.coerce.date().nullable(),
   "settings": zod.object({
   "cosmetics": zod.object({
+  "playerMatId": zod.string().max(equipPlayerVariantResponseProfileSettingsCosmeticsPlayerMatIdMax).nullish().describe('Owned player mat for PvP and training. Null restores the free venue.'),
   "bannerCardId": zod.string().max(equipPlayerVariantResponseProfileSettingsCosmeticsBannerCardIdMax).nullish(),
   "bannerFinish": zod.enum(['base', 'silver']).optional(),
   "stickers": zod.array(zod.string().max(equipPlayerVariantResponseProfileSettingsCosmeticsStickersItemMax)).max(equipPlayerVariantResponseProfileSettingsCosmeticsStickersMax).optional(),
@@ -5681,6 +5738,8 @@ export const claimCollectionRoadMilestoneResponseBootstrapProfileStyleShardBalan
 export const claimCollectionRoadMilestoneResponseBootstrapProfileStyleShardBalancesMythicalMin = 0;
 export const claimCollectionRoadMilestoneResponseBootstrapProfileStyleShardBalancesMythicalMax = 2147483647;
 
+export const claimCollectionRoadMilestoneResponseBootstrapProfileSettingsCosmeticsPlayerMatIdMax = 80;
+
 export const claimCollectionRoadMilestoneResponseBootstrapProfileSettingsCosmeticsBannerCardIdMax = 64;
 
 export const claimCollectionRoadMilestoneResponseBootstrapProfileSettingsCosmeticsStickersItemMax = 80;
@@ -5732,6 +5791,7 @@ export const ClaimCollectionRoadMilestoneResponse = zod.object({
   "termsAcceptedAt": zod.coerce.date().nullable(),
   "settings": zod.object({
   "cosmetics": zod.object({
+  "playerMatId": zod.string().max(claimCollectionRoadMilestoneResponseBootstrapProfileSettingsCosmeticsPlayerMatIdMax).nullish().describe('Owned player mat for PvP and training. Null restores the free venue.'),
   "bannerCardId": zod.string().max(claimCollectionRoadMilestoneResponseBootstrapProfileSettingsCosmeticsBannerCardIdMax).nullish(),
   "bannerFinish": zod.enum(['base', 'silver']).optional(),
   "stickers": zod.array(zod.string().max(claimCollectionRoadMilestoneResponseBootstrapProfileSettingsCosmeticsStickersItemMax)).max(claimCollectionRoadMilestoneResponseBootstrapProfileSettingsCosmeticsStickersMax).optional(),
@@ -5875,6 +5935,8 @@ export const claimPlayerMissionResponseProfileStyleShardBalancesLegendaryMax = 2
 export const claimPlayerMissionResponseProfileStyleShardBalancesMythicalMin = 0;
 export const claimPlayerMissionResponseProfileStyleShardBalancesMythicalMax = 2147483647;
 
+export const claimPlayerMissionResponseProfileSettingsCosmeticsPlayerMatIdMax = 80;
+
 export const claimPlayerMissionResponseProfileSettingsCosmeticsBannerCardIdMax = 64;
 
 export const claimPlayerMissionResponseProfileSettingsCosmeticsStickersItemMax = 80;
@@ -5925,6 +5987,7 @@ export const ClaimPlayerMissionResponse = zod.object({
   "termsAcceptedAt": zod.coerce.date().nullable(),
   "settings": zod.object({
   "cosmetics": zod.object({
+  "playerMatId": zod.string().max(claimPlayerMissionResponseProfileSettingsCosmeticsPlayerMatIdMax).nullish().describe('Owned player mat for PvP and training. Null restores the free venue.'),
   "bannerCardId": zod.string().max(claimPlayerMissionResponseProfileSettingsCosmeticsBannerCardIdMax).nullish(),
   "bannerFinish": zod.enum(['base', 'silver']).optional(),
   "stickers": zod.array(zod.string().max(claimPlayerMissionResponseProfileSettingsCosmeticsStickersItemMax)).max(claimPlayerMissionResponseProfileSettingsCosmeticsStickersMax).optional(),
@@ -6037,6 +6100,8 @@ export const ClaimPlayerMissionResponse = zod.object({
 /**
  * @summary Save an owned banner, stickers, and character card scenes
  */
+export const equipPlayerCosmeticsBodyPlayerMatIdMax = 80;
+
 export const equipPlayerCosmeticsBodyBannerCardIdMax = 64;
 
 export const equipPlayerCosmeticsBodyStickersItemMax = 80;
@@ -6046,6 +6111,7 @@ export const equipPlayerCosmeticsBodyStickersMax = 3;
 
 
 export const EquipPlayerCosmeticsBody = zod.object({
+  "playerMatId": zod.string().max(equipPlayerCosmeticsBodyPlayerMatIdMax).nullish().describe('Owned player mat for PvP and training. Null restores the free venue.'),
   "bannerCardId": zod.string().max(equipPlayerCosmeticsBodyBannerCardIdMax).nullish(),
   "bannerFinish": zod.enum(['base', 'silver']).optional(),
   "stickers": zod.array(zod.string().max(equipPlayerCosmeticsBodyStickersItemMax)).max(equipPlayerCosmeticsBodyStickersMax).optional(),
@@ -6069,6 +6135,8 @@ export const equipPlayerCosmeticsResponseProfileStyleShardBalancesLegendaryMax =
 
 export const equipPlayerCosmeticsResponseProfileStyleShardBalancesMythicalMin = 0;
 export const equipPlayerCosmeticsResponseProfileStyleShardBalancesMythicalMax = 2147483647;
+
+export const equipPlayerCosmeticsResponseProfileSettingsCosmeticsPlayerMatIdMax = 80;
 
 export const equipPlayerCosmeticsResponseProfileSettingsCosmeticsBannerCardIdMax = 64;
 
@@ -6120,6 +6188,7 @@ export const EquipPlayerCosmeticsResponse = zod.object({
   "termsAcceptedAt": zod.coerce.date().nullable(),
   "settings": zod.object({
   "cosmetics": zod.object({
+  "playerMatId": zod.string().max(equipPlayerCosmeticsResponseProfileSettingsCosmeticsPlayerMatIdMax).nullish().describe('Owned player mat for PvP and training. Null restores the free venue.'),
   "bannerCardId": zod.string().max(equipPlayerCosmeticsResponseProfileSettingsCosmeticsBannerCardIdMax).nullish(),
   "bannerFinish": zod.enum(['base', 'silver']).optional(),
   "stickers": zod.array(zod.string().max(equipPlayerCosmeticsResponseProfileSettingsCosmeticsStickersItemMax)).max(equipPlayerCosmeticsResponseProfileSettingsCosmeticsStickersMax).optional(),
@@ -6245,7 +6314,7 @@ export const purchasePlayerShopItemBodyCardIdMax = 100;
 
 export const PurchasePlayerShopItemBody = zod.object({
   "idempotencyKey": zod.string().regex(purchasePlayerShopItemBodyIdempotencyKeyRegExp),
-  "itemId": zod.enum(['training', 'training-intensive', 'move-training', 'ticket', 'deck-slot', 'common-recruit', 'tagged-style', 'chrome-style', 'character-stickers', 'character-backdrop', 'character-banner-finish', 'reaction-pack', 'reaction-pack:big-city-pigeon:v1', 'reaction-pack:dr-fade:v1', 'reaction-pack:buddy:v1', 'reaction-pack:ashlee:v1', 'reaction-pack:buttahs:v1', 'reaction-pack:guap:v1', 'reaction-pack:cologne-criminal:v1', 'reaction-pack:kyle:v1', 'reaction-pack:church-auntie:v1']),
+  "itemId": zod.enum(['player-mat', 'training', 'training-intensive', 'move-training', 'ticket', 'deck-slot', 'common-recruit', 'tagged-style', 'chrome-style', 'character-stickers', 'character-backdrop', 'character-banner-finish', 'reaction-pack', 'reaction-pack:big-city-pigeon:v1', 'reaction-pack:dr-fade:v1', 'reaction-pack:buddy:v1', 'reaction-pack:ashlee:v1', 'reaction-pack:buttahs:v1', 'reaction-pack:guap:v1', 'reaction-pack:cologne-criminal:v1', 'reaction-pack:kyle:v1', 'reaction-pack:church-auntie:v1']),
   "cardId": zod.string().min(1).max(purchasePlayerShopItemBodyCardIdMax).optional()
 })
 
@@ -6266,6 +6335,8 @@ export const purchasePlayerShopItemResponseBootstrapProfileStyleShardBalancesLeg
 
 export const purchasePlayerShopItemResponseBootstrapProfileStyleShardBalancesMythicalMin = 0;
 export const purchasePlayerShopItemResponseBootstrapProfileStyleShardBalancesMythicalMax = 2147483647;
+
+export const purchasePlayerShopItemResponseBootstrapProfileSettingsCosmeticsPlayerMatIdMax = 80;
 
 export const purchasePlayerShopItemResponseBootstrapProfileSettingsCosmeticsBannerCardIdMax = 64;
 
@@ -6326,6 +6397,7 @@ export const PurchasePlayerShopItemResponse = zod.object({
   "termsAcceptedAt": zod.coerce.date().nullable(),
   "settings": zod.object({
   "cosmetics": zod.object({
+  "playerMatId": zod.string().max(purchasePlayerShopItemResponseBootstrapProfileSettingsCosmeticsPlayerMatIdMax).nullish().describe('Owned player mat for PvP and training. Null restores the free venue.'),
   "bannerCardId": zod.string().max(purchasePlayerShopItemResponseBootstrapProfileSettingsCosmeticsBannerCardIdMax).nullish(),
   "bannerFinish": zod.enum(['base', 'silver']).optional(),
   "stickers": zod.array(zod.string().max(purchasePlayerShopItemResponseBootstrapProfileSettingsCosmeticsStickersItemMax)).max(purchasePlayerShopItemResponseBootstrapProfileSettingsCosmeticsStickersMax).optional(),
@@ -6471,6 +6543,8 @@ export const redeemPlayerPromoCodeResponseBootstrapProfileStyleShardBalancesLege
 export const redeemPlayerPromoCodeResponseBootstrapProfileStyleShardBalancesMythicalMin = 0;
 export const redeemPlayerPromoCodeResponseBootstrapProfileStyleShardBalancesMythicalMax = 2147483647;
 
+export const redeemPlayerPromoCodeResponseBootstrapProfileSettingsCosmeticsPlayerMatIdMax = 80;
+
 export const redeemPlayerPromoCodeResponseBootstrapProfileSettingsCosmeticsBannerCardIdMax = 64;
 
 export const redeemPlayerPromoCodeResponseBootstrapProfileSettingsCosmeticsStickersItemMax = 80;
@@ -6530,6 +6604,7 @@ export const RedeemPlayerPromoCodeResponse = zod.object({
   "termsAcceptedAt": zod.coerce.date().nullable(),
   "settings": zod.object({
   "cosmetics": zod.object({
+  "playerMatId": zod.string().max(redeemPlayerPromoCodeResponseBootstrapProfileSettingsCosmeticsPlayerMatIdMax).nullish().describe('Owned player mat for PvP and training. Null restores the free venue.'),
   "bannerCardId": zod.string().max(redeemPlayerPromoCodeResponseBootstrapProfileSettingsCosmeticsBannerCardIdMax).nullish(),
   "bannerFinish": zod.enum(['base', 'silver']).optional(),
   "stickers": zod.array(zod.string().max(redeemPlayerPromoCodeResponseBootstrapProfileSettingsCosmeticsStickersItemMax)).max(redeemPlayerPromoCodeResponseBootstrapProfileSettingsCosmeticsStickersMax).optional(),

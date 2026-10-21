@@ -98,3 +98,20 @@
 }
 @media(prefers-reduced-motion:reduce) { .battle-arena.battle-hud .battle-street-sign { transition: none; } }
 .battle-arena.battle-hud[data-reduced-motion='true'] .battle-street-sign { transition: none; }
+
+/* The reaction trigger is directly left of player Motion, never hidden in tools. */
+.battle-arena.battle-hud .battle-actions[data-online] { grid-template-columns:44px 54px minmax(0,260px) 80px; max-width:596px; }
+.battle-actions .pvp-reaction-slot--actions { grid-column:1; grid-row:1; justify-content:center; min-width:44px; min-height:44px; }
+.battle-arena.battle-hud .battle-actions[data-online] .battle-player-motion { grid-column:2; }
+.battle-arena.battle-hud .battle-actions[data-online] .battle-street-sign { grid-column:3; }
+.battle-arena.battle-hud .battle-actions[data-online] .battle-squabble { grid-column:4; }
+@media(max-width:600px) {
+ .battle-arena.battle-hud .battle-actions[data-online] { grid-template-columns:44px 44px minmax(0,1fr) 58px; gap:4px; padding-inline:6px; }
+ .battle-arena.battle-hud .battle-actions[data-online] .battle-squabble { width:58px; }
+ .battle-arena.battle-hud .battle-actions[data-online] .battle-street-sign { font-size:11px; padding-inline:11px; gap:3px; }
+}
+@media(min-width:601px) and (max-height:580px) {
+ .battle-arena.battle-hud .battle-actions[data-online] { grid-template-columns:44px 44px minmax(44px,1fr); gap:4px; }
+ .battle-arena.battle-hud .battle-actions[data-online] .battle-squabble { grid-column:3; width:50px; }
+ .battle-arena.battle-hud .battle-actions[data-online] .battle-street-sign { grid-column:1/-1; grid-row:2; }
+}

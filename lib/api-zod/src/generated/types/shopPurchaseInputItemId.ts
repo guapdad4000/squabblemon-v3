@@ -10,6 +10,7 @@ export type ShopPurchaseInputItemId = typeof ShopPurchaseInputItemId[keyof typeo
 
 
 export const ShopPurchaseInputItemId = {
+  'player-mat': 'player-mat',
   training: 'training',
   'training-intensive': 'training-intensive',
   'move-training': 'move-training',

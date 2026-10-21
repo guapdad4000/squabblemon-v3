@@ -10,7 +10,7 @@ import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod/v4";
 
 export type PlayerSettings = {
-  cosmetics?: { bannerCardId?: string | null; bannerFinish?: "base" | "silver"; stickers?: string[]; cardBackgrounds?: Record<string, 'blue-hour'> };
+  cosmetics?: { playerMatId?: string | null; bannerCardId?: string | null; bannerFinish?: "base" | "silver"; stickers?: string[]; cardBackgrounds?: Record<string, 'blue-hour'> };
   reactionTray?: string[];
   reducedMotion: boolean;
   turnTimerEnabled: boolean;

@@ -43,6 +43,7 @@ export function CharacterCollections({ bootstrap }: { bootstrap: PlayerBootstrap
       <img className="extras-hero__art" src={getAssetUrl('assets/extras/stylist-studio.webp')} alt="The Stylist at her customization workbench" />
       <div className="extras-hero__copy"><p className="extras-eyebrow"><Scissors size={14}/> SIGNATURE COLLECTIONS · {ownedCount}/{sets.length} OPEN</p><h1>THE<br/><em>EXTRAS.</em></h1></div>
     </header>
+    <Link href="/game/mats" className="extras-ticket" style={{display:"flex",justifyContent:"space-between",margin:"18px 0",padding:"18px"}}>PLAYER MATS <span>Build your home turf ↗</span></Link>
     <StyleShardWallet wallet={profile}/>
     <section id="extras-collections" className="extras-collections" aria-label="Signature collections">
       <div className="extras-section-heading"><div><p className="extras-eyebrow">{String(visible.length).padStart(2,'0')} SERIES</p><h2>Signature <em>Collections</em></h2></div></div>

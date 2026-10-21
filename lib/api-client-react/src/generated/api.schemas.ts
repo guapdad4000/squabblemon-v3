@@ -643,6 +643,12 @@ export type CosmeticLoadoutCardBackgrounds = {[key: string]: 'blue-hour'};
 
 export interface CosmeticLoadout {
   /**
+     * Owned player mat for PvP and training. Null restores the free venue.
+     * @maxLength 80
+     * @nullable
+     */
+  playerMatId?: string | null;
+  /**
      * @maxLength 64
      * @nullable
      */
@@ -933,6 +939,7 @@ export type ShopPurchaseInputItemId = typeof ShopPurchaseInputItemId[keyof typeo
 
 
 export const ShopPurchaseInputItemId = {
+  'player-mat': 'player-mat',
   training: 'training',
   'training-intensive': 'training-intensive',
   'move-training': 'move-training',

@@ -1,0 +1,24 @@
+.player-mat-art { position: absolute; inset: 0; overflow: hidden; background: #16130f; isolation: isolate; }
+.player-mat-art picture, .player-mat-art__scene { position: absolute; inset: 0; width: 100%; height: 100%; }
+.player-mat-art__scene { object-fit: cover; }
+.player-mat-art__shade { position: absolute; inset: 0; background: linear-gradient(90deg,#0005,transparent 60%),linear-gradient(0deg,#0006,transparent 50%); }
+.battle-player-mats { position: absolute; inset: 0; pointer-events: none; --mat-split: 50%; }
+.player-mat-half { position: absolute; left: 0; right: 0; overflow: hidden; }
+.player-mat-half--rival { top: 0; height: calc(var(--mat-split,50%) + 24px); mask-image: linear-gradient(#000 calc(100% - 48px),transparent); }
+.player-mat-half--player { top: calc(var(--mat-split,50%) - 24px); bottom: 0; mask-image: linear-gradient(transparent,#000 48px); }
+
+.battle-lane-mat { position:absolute; inset:0; z-index:0; pointer-events:none; overflow:hidden; border-radius:inherit; }
+.battle-lane-mat__half { position:absolute; left:0; width:100%; height:50%; filter:brightness(.75); }
+.battle-lane-mat__half--rival { top:0; }
+.battle-lane-mat__half--player { top:50%; }
+.battle-lane-mat:has(svg)::after { content:''; position:absolute; inset:0; background:linear-gradient(transparent 32%,#0809076b 49%,#0809076b 51%,transparent 68%); }
+.battle-lane-mat__half--full { top:0; height:100%; }
+.battle-lane-mat .player-mat-media, .battle-lane-mat img { display:block; width:100%; height:100%; }
+.player-mat-character { position:absolute; bottom:2%; right:1%; width:24%; height:46%; object-fit:contain; object-position:right bottom; pointer-events:none; filter:drop-shadow(0 3px 3px #0007); }
+.player-mat-character[data-corner='left'] { right:auto; left:1%; object-position:left bottom; }
+.battle-mat-characters { position:absolute; inset:0; pointer-events:none; z-index:24; }
+.battle-mat-character-anchor { position:absolute; left:var(--mat-field-left,0px); width:var(--mat-field-width,100%); height:clamp(72px,12vh,134px); bottom:var(--mat-field-bottom,260px); }
+.battle-mat-character-anchor--rival { bottom:auto; top:calc(var(--mat-visible-join,50%) - clamp(72px,12vh,134px)); }
+.battle-mat-character-anchor .player-mat-character { bottom:0; right:0; height:100%; width:clamp(48px,8vw,100px); }
+.battle-mat-character-anchor .player-mat-character[data-corner='left'] { left:0; right:auto; }
+@media(max-width:600px) { .battle-mat-character-anchor { height:78px; } .battle-mat-character-anchor--rival { top:calc(var(--mat-visible-join,50%) - 78px); } .battle-mat-character-anchor .player-mat-character { width:52px; } }

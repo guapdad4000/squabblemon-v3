@@ -33,7 +33,7 @@ router.put('/player/cosmetics', async (req, res) => {
   const userId = getAuth(req).userId;
   if (!userId) { res.status(401).json({ error: 'Authentication required' }); return; }
   const parsed = EquipPlayerCosmeticsBody.strict().safeParse(req.body);
-  if (!parsed.success) { res.status(400).json({ error: 'Choose a valid banner, up to three stickers, and owned card scenes.' }); return; }
+  if (!parsed.success) { res.status(400).json({ error: 'Choose a valid player mat, banner, up to three stickers, and owned card scenes.' }); return; }
   try {
     await getPlayerBootstrap(userId);
     await equipCosmetics(userId, parsed.data);

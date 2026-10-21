@@ -1,3 +1,4 @@
+import { equippedPlayerMat } from '@workspace/squabblemon-engine/playerMats';
 import { PARK_BOT_PERSONAS, parkBotPersona, parkBotUsesSquabble, reactParkBot } from '@workspace/squabblemon-engine/parkBots';
 import { RANKED_SEASON, rankMilestoneRewards } from '@workspace/squabblemon-engine/ranked';
 import { addReaction, ownedReactions, resolveReactionTray, ReactionError } from '@workspace/squabblemon-engine/reactions';
@@ -76,6 +77,7 @@ export async function loadMember(
     level: profile.level,
     streetRep: profile.streetRep,
     ...equippedBanner(profile),
+    playerMatId: equippedPlayerMat(profile),
     ready: false,
     deck: {
       id: deckId,

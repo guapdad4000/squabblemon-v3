@@ -1,3 +1,4 @@
+import { playerMatForCharacter, playerMatUnlockId } from './playerMats';
 import { REACTION_PACKS } from './reactions';
 import { spendStyleShards, type StyleShardBalances } from './styleShards';
 import { catalogCardById, isKumiteExclusiveCard } from './data';
@@ -33,6 +34,7 @@ export const MISSION_TEMPLATES = [
 export const MAX_DECK_SLOTS = 24;
 export const SHOP_OFFERS = [
   ...CHARACTER_STYLE_OFFERS,
+  { id: 'player-mat', name: 'Signature Player Mat', description: 'Your half of the battlefield. Permanent cosmetic.', price: 140, currency: 'styleShards', needsCard: true },
   ...REACTION_PACKS.map(pack => ({ id: pack.id, name: pack.name, description: 'Permanent animated PvP reactions. Cosmetic only.', price: pack.price, currency: 'softCurrency' as const, needsCard: false })),
   { id: 'training', name: 'Practice Session', description: '+100 XP for one owned character.', price: 100, currency: 'softCurrency', needsCard: true },
   { id: 'training-intensive', name: 'Intensive Training', description: '+250 XP for one owned character.', price: 225, currency: 'softCurrency', needsCard: true },
@@ -80,11 +82,19 @@ export function planShopPurchase(wallet: ShopWallet, input: Pick<ShopRequest, 'i
   const card = input.cardId ? catalogCardById[input.cardId] : undefined;
   if (offer.needsCard && !card) throw new ShopRuleError('Choose a character first.');
   if (!offer.needsCard && input.cardId) throw new ShopRuleError('This purchase does not target a character.');
-  if (card && offer.id !== 'common-recruit' && !wallet.ownedCardIds.includes(card.catalogId)) throw new ShopRuleError('Unlock this character first.');
+  if (card && offer.id !== 'common-recruit' && offer.id !== 'player-mat' && !wallet.ownedCardIds.includes(card.catalogId)) throw new ShopRuleError('Unlock this character first.');
   const next = { ...wallet, cardProgression: { ...wallet.cardProgression } };
   let cost: number = offer.price;
   let summary: string = offer.name;
-  if (offer.id === 'training' || offer.id === 'training-intensive') {
+  if (offer.id === 'player-mat') {
+    const mat = playerMatForCharacter(card!.catalogId);
+    if (!mat || mat.source !== 'shop') throw new ShopRuleError('This mat is not sold in the shop.');
+    const unlock = playerMatUnlockId(mat.id);
+    if (wallet.unlockedCosmeticIds?.includes(unlock)) throw new ShopRuleError('You already own this player mat.');
+    cost = mat.price;
+    next.unlockedCosmeticIds = [...(wallet.unlockedCosmeticIds ?? []), unlock];
+    summary = `${mat.name} player mat unlocked.`;
+  } else if (offer.id === 'training' || offer.id === 'training-intensive') {
     const previous = normalizeCardProgress(wallet.cardProgression[card!.catalogId]);
     if (previous.xp >= CARD_XP_CAP) throw new ShopRuleError('This character is already at maximum level.');
     const gain = Math.min(offer.id === 'training' ? 100 : 250, CARD_XP_CAP - previous.xp);
@@ -141,7 +151,7 @@ export function planShopPurchase(wallet: ShopWallet, input: Pick<ShopRequest, 'i
   let shardPayment: ShopReceipt['shardPayment'];
   if (offer.currency === 'styleShards') {
     try {
-      const spent = spendStyleShards(wallet, card!.rarity, cost);
+      const spent = spendStyleShards(wallet, offer.id === 'player-mat' ? playerMatForCharacter(card!.catalogId)!.rarity : card!.rarity, cost);
       next.styleShards = spent.styleShards;
       next.styleShardBalances = spent.styleShardBalances;
       shardPayment = spent.payment;
