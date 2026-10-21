@@ -114,3 +114,13 @@
 @media(max-width:600px) {
  .battle-arena.battle-hud[data-feedback-layout='split'] .battle-header--pvp .battle-match-meta { grid-column: 1 / -1; grid-row: 2; }
 }
+
+/* Anchor the mobile menu to the header edge, not the inset PvP tools button. */
+@media(max-width:1024px), (pointer:coarse) {
+  .battle-arena.battle-hud .battle-command-header .battle-header { position: relative; }
+  .battle-arena.battle-hud .battle-command-header .battle-header :is(.battle-match-meta,.battle-tools) { position: static; }
+  .battle-arena.battle-hud .battle-command-header .battle-tools__panel.referee-clipboard {
+    right: 0; top: 100%; max-width: calc(100vw - 24px - env(safe-area-inset-left) - env(safe-area-inset-right));
+    max-height: calc(100dvh - 130px - env(safe-area-inset-top) - env(safe-area-inset-bottom)); overflow-y: auto;
+  }
+}

@@ -31,3 +31,9 @@ ART_LAYOUT_ONLY=1 node e2e/verify-restored-art.mjs
 Set `HEADER_REVIEW_CAPTURE` or `ART_REVIEW_CAPTURE` to choose a screenshot directory. The scripts start their own local Vite server: header feedback uses port 4221; restored art uses port 4217 (or `ART_REVIEW_PORT`).
 
 Local visual review: `output/battle-header-feedback-20261021/REVIEW.html` in the primary workspace. The implementation is on `codex/battle-header-feedback-20261021`; this pass has not been pushed.
+
+## Mobile music follow-up
+
+On phone/tablet layouts and touch devices, the single Music control now lives inside the three-dot battle menu, including PvP and tutorial battles. Wide desktop PvP keeps its existing shortcut. The mobile menu anchors to the header edge so the inset PvP button cannot push the clipboard offscreen.
+
+TypeScript, all 74 Battle tests, the production build and bundle budgets passed again. Local browser checks covered PvE and PvP at six sizes (320–1280px), confirming one Music control, menu placement and bounds, volume state through the real music controller, Close/Escape dismissal, and restored keyboard focus. This does not verify audible playback or physical devices.

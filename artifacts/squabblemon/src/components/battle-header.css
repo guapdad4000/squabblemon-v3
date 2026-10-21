@@ -7,16 +7,16 @@
 .battle-arena.battle-hud .battle-playback-controls[data-has-speed='false'] .battle-fast-forward { grid-column: 1; }
 
 /* Offline matches borrow the PvP portrait and clear identity hierarchy. */
-.battle-command-header--organized .battle-header-music {
+.battle-command-header .battle-header-music {
   display: flex; align-items: center; justify-content: flex-start; gap: 12px;
   width: 100%; min-height: 44px; padding: 8px; border: 0;
   border-radius: 6px; background: none; box-shadow: none;
   font: 500 12px/1.3 var(--font-sans); color: #dce4ee;
 }
-.battle-command-header--organized .battle-header-music:hover { background: #ffffff0d; }
-.battle-command-header--organized .referee-clipboard > .battle-header-music { color: #28302a; text-shadow: none; }
-.battle-command-header--organized .referee-clipboard > .battle-header-music:hover { background: #151b1810; }
-.battle-command-header--organized .battle-tools__panel > .music-dialog { width: min(420px,calc(100vw - 24px)); }
+.battle-command-header .battle-header-music:hover { background: #ffffff0d; }
+.battle-command-header .referee-clipboard > .battle-header-music { color: #28302a; text-shadow: none; }
+.battle-command-header .referee-clipboard > .battle-header-music:hover { background: #151b1810; }
+.battle-command-header .battle-tools__panel > .music-dialog { width: min(420px,calc(100vw - 24px)); }
 .battle-command-header--organized .battle-rival-avatar { width: 40px; height: 40px; }
 .battle-command-header--organized .battle-rival-avatar.is-thinking { border-color: #86d5ec; box-shadow: 0 0 12px rgba(134, 213, 236, 0.42); animation: rival-thinking-pulse 1.6s ease-in-out infinite; }
 @keyframes rival-thinking-pulse {

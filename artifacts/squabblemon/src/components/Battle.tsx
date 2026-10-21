@@ -302,6 +302,15 @@ function useLatestCallback<Args extends unknown[]>(callback: (...args: Args) => 
   return React.useCallback((...args: Args) => ref.current(...args), []);
 }
 
+const MENU_MUSIC_QUERY = '(max-width: 1024px), (pointer: coarse)';
+const menuMusicOnServer = () => false;
+const menuMusicOnScreen = () => window.matchMedia(MENU_MUSIC_QUERY).matches;
+function subscribeMenuMusic(onChange: () => void) {
+  const query = window.matchMedia(MENU_MUSIC_QUERY);
+  query.addEventListener('change', onChange);
+  return () => query.removeEventListener('change', onChange);
+}
+
 export function Battle({
   match, deck, rivalDeck, tutorialCoach = false, tutorialGuidance, mechanicLesson, onDismissMechanicLesson,
   selectedInstanceId, setSelectedInstanceId, selectedLane, setSelectedLane,
@@ -318,6 +327,7 @@ export function Battle({
   const squabbleCinematicLaneValue = squabbleCinematicLane as Lane | null | undefined;
   const m = match as Match;
   const online = onlineInput as OnlineBattlePresentation | undefined;
+  const compactMusic = React.useSyncExternalStore(subscribeMenuMusic, menuMusicOnScreen, menuMusicOnServer);
   const isCardLaneAllowed = (card: Match['playerHand'][number], lane: Lane) =>
     TRIPLE_OG_LANE[card.cardId] === undefined || TRIPLE_OG_LANE[card.cardId] === lane;
   const requiredDistrict = (card: Match['playerHand'][number]) =>
@@ -677,6 +687,7 @@ export function Battle({
   const effectLanded = presentedEffect?.impact ?? (phase === 'player-impact' || phase === 'rival-impact' || (phase === 'effects' && presentationScores === presentedEffect?.scores.after));
   const actor = presentedEffect ? allVisibleCards.find(card => card.instanceId === (presentedEffect.source?.cardInstanceId ?? presentedEffect.cardInstanceId)) ?? cards[presentedEffect.cardId] : null;
   const organizedHeader = !online && !tutorialCoach;
+  const musicInMenu = organizedHeader || compactMusic;
   const stableHeader = organizedHeader && !reviewingFinalBoard;
   const splitFeedback = !tutorialCoach && !readingCue && !replaying && !reviewingFinalBoard;
   const failedAbility = !!presentedEffect && abilityFailed(presentedEffect);
@@ -792,10 +803,10 @@ export function Battle({
         {(stableHeader || splitFeedback) && claimsNode}
         {(stableHeader || splitFeedback) && playbackNode}
         {online?.playerIdentity && !online.rivalIdentity && <div className="pvp-player-identity"><div className="pvp-avatar pvp-avatar--you" data-testid="pvp-player-avatar"><FighterPortrait cardId={online.playerIdentity.hero} avatarKey={online.playerIdentity.avatarKey} name={online.playerIdentity.name} /></div><span title={online.playerIdentity.name}><small>Your corner {online.playerIdentity.level !== undefined && <b className="pvp-level">Lv. {online.playerIdentity.level}</b>}</small>{online.playerIdentity.name}</span></div>}
-        {!organizedHeader && <MusicControls compact logo={!!online} />}
+        {!musicInMenu && <MusicControls compact logo={!!online} />}
         {online && <span className="pvp-reaction-slot" />}
         <details className="battle-tools" onToggle={event => { if (!event.currentTarget.open) { setShowHistory(false); setShowStatuses(false); setShowModifiers(false); } }} onKeyDown={event => { if (event.key === 'Escape') { event.currentTarget.open = false; event.currentTarget.querySelector('summary')?.focus(); } }}><summary aria-label="Battle menu" title="Battle menu"><MoreHorizontal size={22} aria-hidden="true" /></summary><div className="battle-tools__panel referee-clipboard"><DrFadeReferee />
-        {organizedHeader && <MusicControls className="battle-header-music" />}
+        {musicInMenu && <MusicControls className="battle-header-music" />}
         {splitFeedback && !online && onToggleBattleSpeed && <button type="button" className="battle-utility" data-testid="button-battle-speed" aria-pressed={fastBattleSpeed} onClick={onToggleBattleSpeed}>Battle speed · {fastBattleSpeed ? '1.5×' : 'Normal'}</button>}
         {passive && (
           <div className="hidden lg:block border border-purple-500/50 bg-purple-500/10 px-2 py-1 text-right max-w-xs">
