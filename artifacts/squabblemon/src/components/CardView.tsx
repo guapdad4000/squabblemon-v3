@@ -18,6 +18,7 @@ import { tryStartGyro } from '../lib/depthQuality';
 import { useCardInspection } from './CardInspection';
 import './card-finish.css';
 import { useCardScene } from './CosmeticContext';
+import { getCardArtworkId } from '../lib/assets';
 
 interface CardViewProps {
   card: Card | CardInstance;
@@ -292,7 +293,7 @@ function CardViewComponent({
           {card.id === 'dr-fade' && (!isBoard || fillContainer || isInspector)
             ? <DrFadeArt className={'collector-portrait ' + (isSilenced ? 'grayscale' : '')} animated={!isSilenced && !isFrozen} />
             : <img
-                src={instance?.cardId === 'leroy' && instance.goldenGlow ? getAssetUrl('assets/kumite/fighters/bruce-leroy-glow.webp') : isBurntPlate ? getCardImage('burnt-plate') : isBuddyBud ? getCardImage('buddy') : buddyRockForm ? getBuddySquabbleImage() : instance?.maryElephant ? getCardImage('ms-mary-mack-elephant') : getCardImage(card.id, variantId)}
+                src={instance?.cardId === 'leroy' && instance.goldenGlow ? getAssetUrl('assets/kumite/fighters/bruce-leroy-glow.webp') : isBurntPlate ? getCardImage('burnt-plate') : buddyRockForm ? getBuddySquabbleImage() : instance?.maryElephant ? getCardImage('ms-mary-mack-elephant') : getCardImage(getCardArtworkId(card), variantId)}
                 alt=""
                 decoding="async"
                 draggable={false}

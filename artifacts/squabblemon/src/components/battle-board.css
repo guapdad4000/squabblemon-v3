@@ -181,7 +181,8 @@
 .battle-arena.battle-hud .district-rule-status { color: #e7eef7; }
 .battle-arena.battle-hud .district-rule-status[data-state='active'] { color: #e1d0ff; }
 .battle-arena.battle-hud .district-rule-status[data-state='blocked'] { color: #ffcf9c; }
-.battle-arena.battle-hud .district-marker .character-district-mark { display: flex; justify-content: center; gap: 3px; background: transparent; }
+.battle-arena.battle-hud .district-marker .character-district-mark { display: flex; align-items: center; justify-content: center; height: 100%; padding: 0; gap: 3px; background: transparent; }
+.battle-arena.battle-hud .district-marker .character-district-mark img { flex: 0 0 auto; width: auto; height: 100%; max-width: 22px; margin: 0; object-fit: contain; }
 .battle-arena.battle-hud .district-prompt { grid-row: 5; grid-column: 1; align-self: center; justify-content: center; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font: 700 10px/16px var(--font-sans); }
 .battle-arena.battle-hud .district-lane.is-selected .district-target::after { display: block; content: ''; position: absolute; inset: 0 8px auto; height: 2px; background: #ffe3a5; width: auto; transform: none; }
 

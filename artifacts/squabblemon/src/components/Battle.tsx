@@ -767,7 +767,7 @@ export function Battle({
       scores={districts.map((_: unknown, i: number) => presentationScores?.find((score: { lane: number }) => score.lane === i) ?? { player: getLaneScoreForMatch(m, m.boards[i].filter(c => c.owner === 'player'), i as Lane, 'player'), cpu: getLaneScoreForMatch(m, m.boards[i].filter(c => c.owner === 'cpu'), i as Lane, 'cpu') })}
       onLane={lane => setCrewView({ ...crewView, lane })} onMode={mode => setCrewView({ ...crewView, mode })} onClose={() => setCrewView(null)} onInspect={setInspect}
       variantFor={card => card.owner === 'player' ? getEquippedVariant(equippedVariants, card.id) : undefined} covered={isCovered}
-      targetIds={failedAbility ? [] : presentedEffect?.targetIds ?? previewTargets} />}
+      targetIds={failedAbility ? [] : presentedEffect?.targetIds ?? previewTargets} districtMarks={districtMarks} />}
     <div data-guidance-mode={reviewingFinalBoard ? undefined : guidanceMode} className={`battle-command-header ${organizedHeader ? 'battle-command-header--organized' : ''} ${stableHeader ? 'battle-command-header--stable' : ''}`}>
     <div className={`battle-header ${online ? 'battle-header--pvp pvp-topbar ' : ''}relative z-30 shrink-0`}>
       {online?.playerIdentity && online.rivalIdentity ? <>

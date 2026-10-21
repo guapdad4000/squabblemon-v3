@@ -15,10 +15,9 @@ export const getAssetUrl = (path: string) => {
 
 // Battle-only tokens and older saved battles use gameplay IDs for these portraits.
 const legacyPortraitIds: Record<string, string> = {
-  'buddy-bud': 'buddy',
   shiesty: 'shiesty-yn',
   grin: 'cheshire',
-  cardguard: 'queen-of-hearts',
+  cardguard: 'card-guard',
   sideofhands: 'a-side-of-hands',
 };
 export const getCardImage = (cardId: string, variantId?: string | null) => {
@@ -31,3 +30,9 @@ export const getCardImage = (cardId: string, variantId?: string | null) => {
     : alternates.includes(baseId) && variantId === baseId + ':alternate' ? baseId + '-alternate' : baseId;
   return getAssetUrl(`assets/characters/${id}.webp`);
 };
+
+// Older match snapshots borrow their summoner's artwork ID. Resolve the token
+// identity first without changing saved matches or the summoner's own portrait.
+export const getCardArtworkId = (card: { id: string; cardId?: string; buddyBud?: unknown }) =>
+  card.buddyBud || card.cardId === 'buddy-bud' ? 'buddy-bud'
+    : card.cardId === 'cardguard' ? 'card-guard' : card.id;

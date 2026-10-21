@@ -1,6 +1,7 @@
 import React from 'react';
 import { getEquippedVariant, getVariantKind } from './CardVariantTreatment';
 import { getCardImage } from '../data';
+import { getCardArtworkId } from '../lib/assets';
 import { getEffectiveCardPower, type Match } from '../gameEngine';
 
 export function BattleVictory({
@@ -26,7 +27,7 @@ export function BattleVictory({
         <figure key={card.instanceId} style={{ '--crew-delay': `${index * 100}ms` } as React.CSSProperties}>
           <img
             className={`variant-portrait-${winner === 'player' ? (getVariantKind(getEquippedVariant(equippedVariants, card.id)) ?? 'base') : 'base'}`}
-            src={getCardImage(card.id, winner === 'player' ? getEquippedVariant(equippedVariants, card.id) : undefined)}
+            src={getCardImage(getCardArtworkId(card), winner === 'player' ? getEquippedVariant(equippedVariants, card.id) : undefined)}
             alt={card.name}
           />
           <figcaption>

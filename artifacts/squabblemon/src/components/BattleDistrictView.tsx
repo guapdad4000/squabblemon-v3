@@ -2,18 +2,19 @@ import React, { useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { X, ArrowLeft, ArrowUpRight, Swords } from 'lucide-react';
 import { CardView } from './CardView';
-import { getEffectiveCardPower, type CardInstance } from '../gameEngine';
+import { getEffectiveCardPower, type CardInstance, type CharacterDistrictMark } from '../gameEngine';
+import { getAssetUrl } from '../lib/assets';
 import { getLocationArtwork } from '../locationArtwork';
 import { getLocationDetails } from '../locationDetails';
 import './battle-location-details.css';
 
 type District = { id: string; name: string; rule: string; strategy?: string; accent?: string; status?: string };
 type ViewMode = 'location' | 'formation';
-export function BattleDistrictView({ districts, boards, scores, lane, mode = 'formation', onMode, onLane, onClose, onInspect, variantFor, covered, targetIds = [] }: {
+export function BattleDistrictView({ districts, boards, scores, lane, mode = 'formation', onMode, onLane, onClose, onInspect, variantFor, covered, targetIds = [], districtMarks = [] }: {
   districts: District[]; boards: CardInstance[][]; scores: { player: number; cpu: number }[];
   lane: number; mode?: ViewMode; onMode?: (mode: ViewMode) => void; onLane: (lane: number) => void; onClose: () => void;
   onInspect: (card: CardInstance) => void; variantFor: (card: CardInstance) => string | undefined;
-  covered: (id: string) => boolean; targetIds?: string[];
+  covered: (id: string) => boolean; targetIds?: string[]; districtMarks?: CharacterDistrictMark[];
 }) {
   const dialog = useRef<HTMLDialogElement>(null);
   const content = useRef<HTMLDivElement>(null);
@@ -29,6 +30,7 @@ export function BattleDistrictView({ districts, boards, scores, lane, mode = 'fo
   const details = getLocationDetails(district.id);
   const score = scores[lane];
   const formation = mode === 'formation';
+  const items = districtMarks.filter(mark => mark.lane === lane && mark.artworkId);
   return createPortal(<dialog ref={dialog} className="battle-district-view" data-mode={mode} data-location={district.id}
     style={{ '--location-accent': district.accent || '#e9c675' } as React.CSSProperties}
     aria-label={`${district.name} district view`}
@@ -64,6 +66,13 @@ export function BattleDistrictView({ districts, boards, scores, lane, mode = 'fo
           </div>}
         </div>
       </div>
+      {items.length > 0 && <section className="battle-location-items" aria-label="Active items">
+        <h3>Active items</h3>
+        <ul>{items.map((mark, index) => <li key={`${mark.owner}-${mark.artworkId}-${index}`}>
+          <img src={getAssetUrl(`assets/items/${mark.artworkId}.webp`)} alt={mark.artworkId!.replaceAll('-', ' ')} width="80" height="112" decoding="async" />
+          <div><h4>{mark.artworkId!.replaceAll('-', ' ')}</h4><small>{mark.owner === 'player' ? 'Yours' : 'Rival’s'}</small><p>{mark.text}</p></div>
+        </li>)}</ul>
+      </section>}
       {formation && <div className="battle-location-formations">
         {(['cpu', 'player'] as const).map(owner => <section key={owner} aria-label={owner === 'cpu' ? 'Rival fighters' : 'Your fighters'}>
           <h3>{owner === 'cpu' ? 'Rival' : 'Your gang'} <span>{boards[lane].filter(c => c.owner === owner).length} fighters</span></h3>

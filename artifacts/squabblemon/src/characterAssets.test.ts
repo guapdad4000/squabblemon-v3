@@ -352,12 +352,19 @@ test('Simmy has no opaque black matte, while Foodz retains the supplied portrait
   ]);
 });
 
-test('Buddy Bud tokens reuse the revisioned Buddy portrait in every image consumer', async () => {
-  const portrait = getCardImage('buddy-bud');
-  assert.equal(portrait, getCardImage('buddy'));
-  const url = new URL(portrait, 'https://squabblemon.test');
-  assert.equal(url.pathname, '/assets/characters/buddy.webp');
-  assert.equal(url.searchParams.get('v'), characterRevisions.buddy);
-  const bytes = await readFile(join(CHARACTER_DIRECTORY, 'buddy.webp'));
-  assert.equal(createHash('sha256').update(bytes).digest('hex').slice(0, 16), url.searchParams.get('v'));
+test('Buddy Bud and Royal Guard retain their recovered dedicated artwork and revisions', async () => {
+  for (const [token, artwork, parent, width, height] of [
+    ['buddy-bud', 'buddy-bud', 'buddy', 1254, 1254],
+    ['cardguard', 'card-guard', 'queen-of-hearts', 1024, 1536],
+  ] as const) {
+    const portrait = getCardImage(token);
+    assert.notEqual(portrait, getCardImage(parent));
+    const url = new URL(portrait, 'https://squabblemon.test');
+    assert.equal(url.pathname, `/assets/characters/${artwork}.webp`);
+    const bytes = await readFile(join(CHARACTER_DIRECTORY, `${artwork}.webp`));
+    assert.equal(createHash('sha256').update(bytes).digest('hex').slice(0, 16), url.searchParams.get('v'));
+    const metadata = await sharp(bytes).metadata();
+    assert.deepEqual([metadata.width, metadata.height], [width, height]);
+    assertUsefulCutout(`${artwork}.webp`, await readAlphaChannel(bytes));
+  }
 });

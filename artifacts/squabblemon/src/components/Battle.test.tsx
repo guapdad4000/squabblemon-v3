@@ -1442,6 +1442,7 @@ test('online Buddy cards and Buds survive both-seat room reconnect projection', 
     assert.match(html, /BUD PLANTED · 2T · \+3 LAST SUMMON/);
     assert.match(html, /buddy-squabble\.webp\?v=/);
     assert.match(html, /data-card-id="buddy-bud"/);
+    assert.match(html, /buddy-bud\.webp\?v=/);
     assert.doesNotMatch(html, /Explodes|random enemy here/);
   }
 });
