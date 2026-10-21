@@ -30,7 +30,7 @@ The `evil-mushroom.png` concept was excluded: its source manifest identifies a p
 - Browser checks at 320×568, 390×844, 768×1024, 844×390 and 1280×800: correct art, owner/district filtering, direct item details, summon inspector, no horizontal page overflow, and access to the last card in formations with more than twelve fighters.
 - Five effect kinds checked under both motion preferences, including no burst during windup and a non-interactive overlay. Visual captures reviewed for phone layout, source art, inspector identity and effect placement.
 
-Local review and evidence: `output/console-reliability-20261020/refinement/REVIEW.html` in the original workspace. These are local browser-emulation checks, not authenticated production or physical iPad evidence. No deploy or remote push is included in this refinement.
+Local review and evidence: `output/console-reliability-20261020/refinement/REVIEW.html` in the original workspace. These are local browser-emulation checks, not authenticated production or physical iPad evidence. Remote release status is recorded in the workspace validation report; deployment and authenticated production play remain separate checks.
 
 ## Mobile art and number-type correction
 
@@ -49,3 +49,9 @@ Squabble keeps the existing fist video, with a soft glow and no box. Arming stre
 Card selection previews have a neutral, uniform border and no colored inset edge, including unavailable-card states. No card cost, targeting, turn, tutorial or Squabble rule changed.
 
 Verification: all 74 Battle checks passed using the direct Node test-file invocation; frontend typecheck and production build/bundle checks passed. Chromium checks passed at all five viewport sizes in PvE and PvP fixtures: player Motion position, single header-only rival Motion, readable resource bounds, End Turn callback, Pick District gating, Squabble arm/disarm/spent state, 44px controls, and no preview inset stripe. Existing summon/item/crowded-board checks and all five event effects under both motion settings passed. These remain local browser fixtures, not authenticated live PvP or physical-device testing.
+
+## Main integration validation
+
+Integrated main through `8138bc2e`, preserving the Kumite/roster changes and story reinforcement fairness fix. The combined source passed 560 focused battle, multiplayer, artwork, creative-rework, roster and story checks, plus all 19 service-worker regressions. Engine declarations and frontend/API typechecks passed. All five battle viewport checks and both effect-motion preferences passed again.
+
+The combined build initially exceeded the unchanged 900 KiB game-shell budget by 1.2 KiB. Extracting the existing mail query hook into `lib/safehouseMail.ts` keeps the full mail dialog out of the global notification import path while preserving its query key, polling, validation and public hook export. The production build now passes at 212.9 KiB public entry, 895.9 KiB GameApp and 975.8 KiB Home. Public media copying was disabled for the local build.

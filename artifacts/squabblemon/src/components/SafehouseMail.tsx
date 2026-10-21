@@ -1,19 +1,14 @@
 import { Link, useSearch } from 'wouter';
 import { useEffect, useRef, useState } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { customFetch, getGetPlayerBootstrapQueryKey } from '@workspace/api-client-react';
 import { getAssetUrl } from '../lib/assets';
 import { getMailEventPresentation } from '../lib/mailEvents';
 import '../styles/safehouse-mail.css';
 
-type Letter = { id: string; title: string; body: string; sender: string; sentAt: string; readAt: string | null; claimedAt: string | null; gift: { softCurrency: number; packTickets: number; styleShards: number } };
-export function useSafehouseMail(playerId: string) {
-  return useQuery({ queryKey: ['player-mail', playerId], queryFn: async ({ signal }) => {
-    const result = await customFetch<{ messages: Letter[] }>('/api/player/mail', { signal });
-    if (!result || !Array.isArray(result.messages)) throw new Error('Mail is unavailable');
-    return result;
-  }, refetchInterval: 30000, refetchOnWindowFocus: true, retry: 1 });
-}
+import { useSafehouseMail, type Letter } from '../lib/safehouseMail';
+export { useSafehouseMail } from '../lib/safehouseMail';
+
 export function SafehouseMail({ playerId, open, onClose }: { playerId: string; open: boolean; onClose: () => void }) {
   const query = useSafehouseMail(playerId), client = useQueryClient();
   const dialog = useRef<HTMLDialogElement>(null);

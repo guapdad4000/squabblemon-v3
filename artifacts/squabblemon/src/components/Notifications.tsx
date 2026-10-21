@@ -7,7 +7,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { customFetch, getGetPlayerBootstrapQueryKey, type PlayerBootstrap } from '@workspace/api-client-react';
 import { useLocation } from 'wouter';
 import { ArrowUpRight, Bell, Check, X } from 'lucide-react';
-import { useSafehouseMail } from './SafehouseMail';
+import { useSafehouseMail } from '../lib/safehouseMail';
 import { getAssetUrl } from '../lib/assets';
 import { collectionNotifications } from '../lib/notificationCatalog';
 import { CORNER_OFFERS } from '../lib/cornerStore';
