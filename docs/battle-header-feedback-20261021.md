@@ -53,3 +53,9 @@ Full Multiplayer captures at 390×844, 844×390 and 1280×800 include the runnin
 ```sh
 STORY_TEST_PORT=4231 pnpm exec playwright test -c e2e/playwright.config.ts e2e/pvp-exit.spec.ts --project=chromium-phone --reporter=line
 ```
+
+## Transparent edges follow-up
+
+The header, hand dock and venue contrast layer stacked several dark blue gradients. They now use one neutral feathered scrim per edge, following the city header's masked transparency treatment. The scene retains its color, and the blur tapers out before reaching the field. Only the decorative pseudo-elements fade; UI text and cards retain full opacity. Short landscape turns the dock fade sideways and removes its dividing edge. Layout, imagery and gameplay are unchanged.
+
+Local browser review covers PvE/PvP at 320×568, 390×844, 768×1024, 844×390 and 1280×800, checking transparent parent surfaces, non-interactive scrims, menu bounds and bottom-action placement. The production Vite build and entry bundle budgets passed. Existing move/score checks passed at six viewport sizes with normal and reduced motion. The review page now defaults to the updated phone view. This styling pass does not claim physical-device or authenticated production testing.

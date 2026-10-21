@@ -2,7 +2,7 @@
 .battle-arena.battle-hud[data-feedback-layout='split'] .battle-command-header {
   display: flex; flex-direction: column; position: relative; flex: none;
   height: 112px; padding: 0 clamp(12px,2vw,24px); gap: 0;
-  background: linear-gradient(#06101ce8,#06101cb8 72%,#06101c25);
+  background: transparent;
 }
 .battle-arena.battle-hud[data-feedback-layout='split'] .battle-command-header .battle-header {
   display: grid; grid-template-columns: minmax(0,1fr) 136px minmax(0,1fr);
@@ -97,6 +97,31 @@
 }
 .battle-arena.battle-hud[data-reduced-motion='true'] :is(.score-tick--changed,.district-score-row) { animation: none !important; }
 .battle-arena[data-reduced-motion='true'] .battle-combo-track i { transition: none; }
+
+/* Match the city header's feathered transparency without tinting the venue blue.
+   Only the decorative scrims fade; text, cards and hit targets stay opaque. */
+.battle-arena.battle-hud .battle-venue__contrast {
+  background: radial-gradient(ellipse, transparent 35%, rgb(0 0 0 / 24%));
+}
+.battle-arena.battle-hud :is(.battle-command-header,.battle-command-deck) {
+  isolation: isolate; background: transparent; box-shadow: none;
+}
+.battle-arena.battle-hud .battle-command-header { z-index: 45; }
+.battle-arena.battle-hud .battle-command-header:has(.battle-tools[open]) { z-index: 70; }
+.battle-arena.battle-hud .battle-command-header .battle-header { background: transparent; }
+.battle-arena.battle-hud :is(.battle-command-header,.battle-command-deck)::before {
+  content: ''; position: absolute; z-index: -1; pointer-events: none;
+  background: linear-gradient(var(--battle-edge-direction,180deg), rgb(0 0 0 / 50%) 0%, rgb(0 0 0 / 28%) 24%, rgb(0 0 0 / 10%) 52%, rgb(0 0 0 / 2.5%) 74%, transparent 100%);
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  mask-image: linear-gradient(var(--battle-edge-direction,180deg), #000 0%, rgb(0 0 0 / 88%) 24%, rgb(0 0 0 / 50%) 52%, rgb(0 0 0 / 16%) 76%, transparent 100%);
+  -webkit-mask-image: linear-gradient(var(--battle-edge-direction,180deg), #000 0%, rgb(0 0 0 / 88%) 24%, rgb(0 0 0 / 50%) 52%, rgb(0 0 0 / 16%) 76%, transparent 100%);
+}
+.battle-arena.battle-hud .battle-command-header::before { inset: 0 0 -40px; }
+.battle-arena.battle-hud .battle-command-deck::before { --battle-edge-direction: 0deg; inset: -36px 0 0; }
+@media(min-width:601px) and (max-height:580px) {
+  .battle-arena.battle-hud .battle-command-deck { border-left: 0; }
+  .battle-arena.battle-hud .battle-command-deck::before { --battle-edge-direction: 270deg; inset: 0 0 0 -36px; }
+}
 
 .battle-arena.battle-hud[data-feedback-layout='split'] .battle-command-header .battle-playback-controls { width: 44px; grid-template-columns: 44px; }
 .battle-arena.battle-hud[data-feedback-layout='split'] .battle-playback-controls .battle-fast-forward { grid-column: 1; }
