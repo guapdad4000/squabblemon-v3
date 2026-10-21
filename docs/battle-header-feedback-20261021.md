@@ -30,7 +30,7 @@ ART_LAYOUT_ONLY=1 node e2e/verify-restored-art.mjs
 
 Set `HEADER_REVIEW_CAPTURE` or `ART_REVIEW_CAPTURE` to choose a screenshot directory. The scripts start their own local Vite server: header feedback uses port 4221; restored art uses port 4217 (or `ART_REVIEW_PORT`).
 
-Local visual review: `output/battle-header-feedback-20261021/REVIEW.html` in the primary workspace. The implementation is on `codex/battle-header-feedback-20261021`; this pass has not been pushed.
+Local visual review: `output/battle-header-feedback-20261021/REVIEW.html` in the primary workspace. The implementation was validated on `codex/battle-header-feedback-20261021`. These checks do not confirm production deployment.
 
 ## Mobile music follow-up
 
