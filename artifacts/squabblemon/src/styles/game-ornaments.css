@@ -47,7 +47,7 @@
 }
 
 :is(.studio-page, .studio-results) .studio-action--gold,
-.battle-arena.battle-hud .battle-actions .battle-primary-action.action-primary {
+.battle-arena.battle-hud .battle-actions .battle-primary-action:not(.battle-street-sign).action-primary {
   position: relative;
   isolation: isolate;
   background: url('/assets/ui/action-gold.webp') center / 100% 100% no-repeat;
@@ -63,7 +63,7 @@
     filter 160ms ease;
 }
 :is(.studio-page, .studio-results) .studio-action--gold::after,
-.battle-arena.battle-hud .battle-actions .battle-primary-action.action-primary::after {
+.battle-arena.battle-hud .battle-actions .battle-primary-action:not(.battle-street-sign).action-primary::after {
   content: '';
   position: absolute;
   inset: 5px 18px;
@@ -76,15 +76,15 @@
 :is(.studio-page, .studio-results) .studio-action--gold:is(:hover, :focus-visible):not(:disabled)::after,
 .battle-arena.battle-hud
   .battle-actions
-  .battle-primary-action.action-primary:is(:hover, :focus-visible):not(:disabled)::after {
+  .battle-primary-action:not(.battle-street-sign).action-primary:is(:hover, :focus-visible):not(:disabled)::after {
   animation: game-button-gleam 550ms ease-out;
 }
 :is(.studio-page, .studio-results) .studio-action:active:not(:disabled),
-.battle-arena.battle-hud .battle-actions .battle-primary-action:active:not(:disabled) {
+.battle-arena.battle-hud .battle-actions .battle-primary-action:not(.battle-street-sign):active:not(:disabled) {
   transform: translateY(1px) scale(0.98);
 }
 :is(.studio-page, .studio-results) .studio-action--gold:disabled,
-.battle-arena.battle-hud .battle-actions .battle-primary-action.action-primary:disabled {
+.battle-arena.battle-hud .battle-actions .battle-primary-action:not(.battle-street-sign).action-primary:disabled {
   opacity: 0.45;
   filter: grayscale(0.55);
 }

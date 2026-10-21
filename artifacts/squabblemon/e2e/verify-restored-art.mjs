@@ -19,7 +19,8 @@ try {
     await new Promise(resolve => setTimeout(resolve, 100));
   }
   browser = await chromium.launch({ headless: true });
-  for (const [width, height] of process.env.ART_EFFECTS_ONLY ? [] : [[320, 568], [390, 844], [768, 1024], [844, 390], [1280, 800]]) {
+  const viewports = [[320, 568], [390, 844], [768, 1024], [844, 390], [1280, 800]].filter(([width]) => !process.env.ART_REVIEW_WIDTH || width === Number(process.env.ART_REVIEW_WIDTH));
+  for (const [width, height] of process.env.ART_EFFECTS_ONLY ? [] : viewports) {
     const page = await browser.newPage({ viewport: { width, height }, hasTouch: width <= 600, reducedMotion: 'reduce' });
     page.setDefaultTimeout(15000);
     const errors = [];
@@ -39,6 +40,24 @@ try {
       assert.equal(await portrait(id).first().evaluate(image => image.complete && image.naturalWidth > 0), true);
     }
     const field = page.locator('.battlefield-grid');
+    const actions = page.locator('.battle-actions');
+    const mainAction = actions.locator('.battle-street-sign');
+    const squabble = page.getByTestId('button-squabble');
+    assert.equal(await page.getByTestId('motion-rival').count(), 1);
+    assert.equal(await actions.getByTestId('motion-rival').count(), 0, 'Rival Motion leaves the player dock');
+    assert.equal(await page.locator('.battle-command-header').getByTestId('motion-rival').count(), 1);
+    assert.match(await mainAction.innerText(), /End Turn/i);
+    assert.match(await mainAction.evaluate(el => getComputedStyle(el).backgroundImage), /rgb\(23, 99, 78\)/, 'Street sign keeps its green enamel on mobile');
+    assert.equal(await squabble.isDisabled(), true, 'Squabble still requires a card');
+    const actionGeometry = await actions.evaluate(el => {
+      const rect = selector => {const r=el.querySelector(selector).getBoundingClientRect();return {x:r.x,right:r.right,y:r.y,bottom:r.bottom,width:r.width,height:r.height};};
+      return {motion:rect('.battle-player-motion'),sign:rect('.battle-street-sign'),squabble:rect('.battle-squabble')};
+    });
+    for (const control of [actionGeometry.sign,actionGeometry.squabble]) assert.ok(control.width >= 44 && control.height >= 44 && control.bottom <= height, 'Touch actions fit the viewport');
+    assert.ok(actionGeometry.motion.x < actionGeometry.squabble.x, 'Your Motion stays left, Squabble right');
+    if (height > 580 || width <= 600) assert.ok(actionGeometry.motion.right <= actionGeometry.sign.x && actionGeometry.sign.right <= actionGeometry.squabble.x, 'Your Motion sits left of the main street sign');
+    await mainAction.click();
+    assert.equal(await page.getByTestId('review-commits').textContent(), '1', 'End Turn keeps its callback');
     await page.screenshot({ path: path.join(output, `board-${width}.png`) });
     await field.evaluate(el => { el.scrollTop = el.scrollHeight; });
     await page.screenshot({ path: path.join(output, `board-lower-${width}.png`) });
@@ -78,7 +97,15 @@ try {
         return box.top >= tray.top-1 && box.bottom <= tray.bottom+1 && box.left >= tray.left-1 && box.right <= tray.right+1;
       });
       assert.ok(visible, 'Selected last card is reachable and fully visible');
+      assert.equal(await page.getByTestId('button-pick-district').isDisabled(), true, 'A district is still required');
+      assert.doesNotMatch(await page.getByTestId('battle-hand-peek').evaluate(el => getComputedStyle(el).boxShadow), /inset/, 'No colored lip on the preview');
       await page.screenshot({path:path.join(output, `hand-selected-${width}.png`)});
+      await squabble.tap();
+      assert.equal(await squabble.getAttribute('aria-pressed'), 'true');
+      assert.equal(await squabble.evaluate(el => getComputedStyle(el).backgroundColor), 'rgba(0, 0, 0, 0)', 'Armed Squabble stays unboxed');
+      await page.screenshot({path:path.join(output, `squabble-armed-${width}.png`)});
+      await squabble.tap();
+      assert.equal(await squabble.getAttribute('aria-pressed'), 'false');
       await last.tap();
       await tray.evaluate(el => {el.scrollLeft=0;});
     }
@@ -132,8 +159,27 @@ try {
     assert.ok(visibility.lastVisible,`${width}: last crowded card reachable ${JSON.stringify(visibility)}`);
     if(width<=600) assert.ok(visibility.cardWidth>=78 && visibility.cardHeight>=98,'Readable phone combat cards');
     await page.screenshot({path:path.join(output,`crowded-${width}.png`)});
+    await page.goto(url + '&pvp=1', {waitUntil:'networkidle'});
+    const rivalPlate=page.getByTestId('pvp-plate-rival');
+    assert.equal(await rivalPlate.getByLabel('Rival hand: 4 cards', {exact:true}).count(),1);
+    assert.equal(await rivalPlate.getByTestId('motion-rival').textContent(),'9');
+    assert.equal(await page.locator('.battle-actions').getByTestId('motion-rival').count(),0);
+    const resourceBounds=await rivalPlate.locator('.battle-rival-resources').evaluate(el=>{
+      const r=el.getBoundingClientRect(),plate=el.closest('.pvp-plate').getBoundingClientRect();
+      return r.left>=plate.left && r.right<=plate.right && r.bottom<=plate.bottom && el.scrollWidth<=el.clientWidth+1;
+    });
+    assert.ok(resourceBounds, `${width}: rival card count and Motion fit their identity plate`);
+    assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),true);
+    await page.screenshot({path:path.join(output,`pvp-actions-${width}.png`)});
+    if(width===320) {
+      await page.goto(url+'&spent=1',{waitUntil:'networkidle'});
+      const spent=page.getByRole('button',{name:'Squabble spent'});
+      assert.equal(await spent.isDisabled(),true);
+      assert.equal(await spent.evaluate(el=>getComputedStyle(el,'::before').display),'none','Spent Squabble loses its available glow');
+    }
     assert.deepEqual(errors, []);
     assert.deepEqual(failures, []);
+    console.log(`PASS ${width}: street-sign action, player Motion left, rival resources in header, PvP resource bounds`);
     await page.close();
   }
   for(const reducedMotion of process.env.ART_LAYOUT_ONLY ? [] : ['reduce','no-preference']) {

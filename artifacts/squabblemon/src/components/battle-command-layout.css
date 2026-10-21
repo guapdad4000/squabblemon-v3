@@ -56,37 +56,6 @@
 .battle-arena.battle-hud .battle-command-header--stable .battle-tools { order: 3; }
 .battle-arena.battle-hud .battle-command-header--stable .battle-tools summary { width: 44px; height: 44px; }
 
-/* Both economies share one quiet light pool above the bottom action line. */
-.battle-arena.battle-hud .battle-actions { display: grid; grid-template-columns: minmax(0,1fr) minmax(160px,240px) minmax(0,1fr); max-width: 680px; gap: 18px; padding: 5px 16px 2px; }
-.battle-arena.battle-hud .battle-motion-pair {
-  position: relative; isolation: isolate; display: flex; align-items: center;
-  gap: 17px; flex: none; justify-self: end; padding: 0 5px; min-height: 44px;
-}
-.battle-arena.battle-hud .battle-motion-pair::before {
-  content: ''; position: absolute; z-index: -1; inset: -15px -16px -3px;
-  pointer-events: none; background: radial-gradient(ellipse at 25% 58%,#f4cf8325,transparent 55%),radial-gradient(ellipse at 78% 58%,#86d5ec1e,transparent 55%);
-}
-.battle-arena.battle-hud .battle-motion-pair::after {
-  content: ''; position: absolute; left: 50%; top: 8px; bottom: 8px; width: 1px;
-  background: linear-gradient(transparent,#d9deed30,transparent); pointer-events: none;
-}
-.battle-arena.battle-hud .battle-motion-pair .battle-motion {
-  display: grid; grid-template-columns: auto auto; justify-content: center;
-  min-width: 54px; min-height: 44px; width: auto; gap: 0 4px; color: var(--hud-gold);
-}
-.battle-arena.battle-hud .battle-motion-pair .battle-motion strong { font-size: 27px; font-variant-numeric: tabular-nums; }
-.battle-arena.battle-hud .battle-motion-pair .battle-motion > div { text-align: center; font-size: 7px; line-height: 12px; }
-.battle-arena.battle-hud .battle-motion-pair .battle-rival-energy { color: var(--hud-rival); }
-.battle-arena.battle-hud .battle-motion-pair .battle-rival-energy strong { color: var(--hud-rival); }
-.battle-arena.battle-hud .battle-motion-pair .battle-rival-energy::before { display: none; }
-.battle-arena.battle-hud .battle-motion-pair .battle-rival-energy .battle-motion__icon { color: var(--hud-rival); filter: hue-rotate(145deg) drop-shadow(0 0 8px #86d5ec55); }
-.battle-arena.battle-hud .battle-squabble { justify-self: start; order: 2; min-height: 44px; min-width: 44px; padding: 0 4px; gap: 4px; }
-.battle-arena.battle-hud .battle-squabble__sigil { width: 30px; height: 30px; }
-.battle-arena.battle-hud .battle-squabble__sigil .battle-squabble__video { width: 40px; height: 40px; }
-.battle-arena.battle-hud .battle-squabble__sigil b { font-size: 8px; right: 3px; bottom: 1px; }
-.battle-arena.battle-hud .battle-squabble__label { font-size: 8px; letter-spacing: .03em; }
-.battle-arena.battle-hud .battle-primary-action { width: 100%; order: 1; min-height: 44px; max-width: 240px; padding: 7px 18px; font-size: 11px; gap: 8px; }
-
 @media (min-width: 601px) and (max-width: 700px) {
   .battle-arena.battle-hud .battle-command-header--stable .battle-match-meta { gap: 4px; }
   .battle-arena.battle-hud .battle-command-header--stable .battle-claims { width: 54px; gap: 3px; font-size: 14px; }
@@ -142,27 +111,8 @@
   .battle-arena.battle-hud .battle-command-header--organized:not(.battle-command-header--stable) .battle-playback-controls { position: absolute; top: calc(40px + env(safe-area-inset-top)); right: 4px; width: 92px; grid-template-columns: 44px 44px; grid-area: auto; }
   .battle-arena.battle-hud .battle-command-header--organized:not(.battle-command-header--stable) .battle-guidance { display: contents; }
   .battle-arena.battle-hud .battle-command-header--organized:not(.battle-command-header--stable) .battle-guidance-copy { position: absolute; top: calc(84px + env(safe-area-inset-top)); left: 10px; right: 10px; width: auto; padding: 0; }
-  .battle-arena.battle-hud .battle-actions { display: flex; gap: 7px; padding-inline: 10px; }
-  .battle-arena.battle-hud .battle-motion-pair { gap: 10px; padding: 0; }
-  .battle-arena.battle-hud .battle-motion-pair .battle-motion { min-width: 49px; gap: 0 2px; }
-  .battle-arena.battle-hud .battle-motion-pair .battle-motion strong { font-size: 23px; }
-  .battle-arena.battle-hud .battle-motion-pair .battle-motion > div { font-size: 6px; letter-spacing: .02em; }
-  .battle-arena.battle-hud .battle-squabble { flex-direction: column; gap: 0; padding: 0; }
-  .battle-arena.battle-hud .battle-squabble__label { font-size: 7px; }
-  .battle-arena.battle-hud .battle-primary-action { min-width: 0; padding-inline: 8px; font-size: 10px; }
-}
-@media (min-width: 601px) and (max-height: 580px) {
-  .battle-arena.battle-hud .battle-actions { grid-template-columns: minmax(0,1fr) 44px; gap: 3px; padding: 3px; }
-  .battle-arena.battle-hud .battle-motion-pair { grid-column: 1 / -1; justify-self: center; gap: 14px; }
-  .battle-arena.battle-hud .battle-motion-pair .battle-motion strong { font-size: 23px; }
-  .battle-arena.battle-hud .battle-squabble { grid-column: 2; grid-row: 2; flex-direction: column; justify-self: stretch; gap: 0; }
-  .battle-arena.battle-hud .battle-squabble__label { font-size: 6px; letter-spacing: 0; }
-  .battle-arena.battle-hud .battle-primary-action { grid-column: 1; grid-row: 2; padding-inline: 4px; font-size: 9px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .battle-arena.battle-hud .battle-round-clock .turn-timer-track span { transition: none; }
 }
 .battle-arena.battle-hud[data-reduced-motion='true'] .battle-round-clock .turn-timer-track span { transition: none; }
-/* Mobile players need a real SQUABBLE target and a subordinate rival meter. */
-@media(max-width:600px){.battle-arena.battle-hud .battle-actions{display:grid;grid-template-columns:90px minmax(0,1fr) 100px;gap:8px;padding:5px 10px}.battle-arena.battle-hud .battle-motion-pair{grid-column:1;grid-row:1;justify-self:start;flex-direction:row;gap:5px;align-items:center}.battle-arena.battle-hud .battle-motion-pair .battle-motion{min-width:52px}.battle-arena.battle-hud .battle-motion-pair .battle-rival-energy{min-width:28px;gap:0 1px;opacity:.85}.battle-arena.battle-hud .battle-motion-pair .battle-rival-energy strong{font-size:15px}.battle-arena.battle-hud .battle-motion-pair .battle-rival-energy .battle-motion__icon{width:10px;height:10px}.battle-arena.battle-hud .battle-motion-pair .battle-rival-energy>div{font-size:5px;letter-spacing:0}.battle-arena.battle-hud .battle-primary-action{grid-column:2;grid-row:1;padding:8px 6px}.battle-arena.battle-hud .battle-squabble{grid-column:3;grid-row:1;justify-self:stretch;min-height:58px;flex-direction:column;gap:3px;padding:5px 3px;background:linear-gradient(150deg,#723546,#2c1827);border:2px solid #ffc07c;border-radius:8px;box-shadow:0 0 12px #fba45040;color:#fff3cb;opacity:1}.battle-arena.battle-hud .battle-squabble__sigil{width:35px;height:30px;border:0;background:none}.battle-arena.battle-hud .battle-squabble__sigil .battle-squabble__video{width:44px;height:44px}.battle-arena.battle-hud .battle-squabble__label{font-size:10px;font-weight:950;letter-spacing:.04em}.battle-arena.battle-hud .battle-squabble:disabled{opacity:.75;filter:none}.battle-arena.battle-hud .battle-squabble.is-armed{background:#a4435d;box-shadow:0 0 16px #ffd16f88}.battle-arena.battle-hud .battle-motion-pair::after{left:60%}}@media(max-width:360px){.battle-arena.battle-hud .battle-actions{grid-template-columns:80px minmax(0,1fr) 94px;gap:5px;padding:4px 6px}.battle-arena.battle-hud .battle-motion-pair .battle-motion{min-width:45px}}
-@media(max-width:600px){.battle-arena.battle-hud .battle-squabble__label{font-size:11px;color:#fff2cf;text-shadow:0 1px 2px #000}.battle-arena.battle-hud .battle-squabble:disabled{opacity:.9;background:linear-gradient(150deg,#78394b,#391b2b)}.battle-arena.battle-hud .battle-squabble:disabled .battle-squabble__label{color:#ffe4ac;opacity:1}}

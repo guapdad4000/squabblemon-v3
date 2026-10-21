@@ -7,15 +7,15 @@
   translate: -50% 0;
   width: min(410px, calc(100% - 24px));
   padding: 9px 12px 10px;
-  border: 1px solid #f4d497b3;
-  border-radius: 5px 12px 5px 5px;
+  border: 1px solid #d9e0e538;
+  border-radius: 8px;
   background: linear-gradient(125deg, #12232bf5, #07121bf5 78%);
   color: #fff4dd;
-  box-shadow: 0 6px 22px #0008, inset 3px 0 #ecc782;
+  box-shadow: 0 6px 22px #0008;
   pointer-events: none;
   animation: hand-peek-enter 140ms ease-out both;
 }
-.battle-arena.battle-hud .battle-hand-peek[data-unavailable='true'] { border-color: #ebada38c; box-shadow: 0 6px 22px #0008, inset 3px 0 #ebada3; }
+.battle-arena.battle-hud .battle-hand-peek[data-unavailable='true'] { color: #e3e5e8; }
 .battle-arena.battle-hud .battle-hand-peek__heading { display: flex; align-items: center; gap: 12px; min-width: 0; }
 .battle-arena.battle-hud .battle-hand-peek__heading > strong {
   flex: 1;

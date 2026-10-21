@@ -64,6 +64,7 @@ import './battle-mobile.css';
 import './battle-header.css';
 import './battle-board.css';
 import './battle-command-layout.css';
+import './battle-actions.css';
 
 export type BattleHistoryEntry = Pick<EffectLogEntry, 'sequence' | 'round' | 'type' | 'owner' | 'note' | 'cardId'> & Partial<EffectLogEntry>;
 export type OnlineBattlePresentation = {
@@ -703,6 +704,15 @@ export function Battle({
   const showsChainBanner = !!(presentedEffect?.chain && presentedEffect.chain.total > 1 && actor);
   const showsAttackCaption = showsAttack && !!presentedEffect && actor?.id !== 'dr-fade'
     && ((presentedEffect.type === 'ability' && (presentedEffect.chain?.total ?? 0) < 2) || eventIntensity(presentedEffect) === 'squabble');
+  const rivalHandCount = online?.rivalHandCount ?? m.cpuHand.length;
+  const rivalResources = <span className="battle-rival-resources">
+    <span className="battle-rival-hand" aria-label={`Rival hand: ${rivalHandCount} cards`} title="Rival cards">
+      <i aria-hidden="true" />{rivalHandCount}<span className="sr-only"> cards</span>
+    </span>
+    <span className="battle-rival-motion" aria-label={`Rival Motion: ${m.cpuMotion}`} title="Rival Motion">
+      <GameGlyph name="motion" /><MotionEnergy value={m.cpuMotion} testId="motion-rival" replaying={replaying} />
+    </span>
+  </span>;
   const claimsNode = <span data-testid="claims-live" className="battle-claims" aria-label={`District claims: you ${playerClaims}, rival ${cpuClaims}. Win two districts.`} title="Win two districts"><Flag size={13} aria-hidden="true" /><b className="claims-player">{playerClaims}</b><span className="claims-divider">/</span><b className="claims-rival">{cpuClaims}</b><span className="sr-only"> district claims</span></span>;
   const playbackNode = !online ? <div className="battle-playback-controls" data-has-speed={Boolean(onToggleBattleSpeed)}>
         {!replaying && onToggleBattleSpeed && <button type="button" data-testid="button-battle-speed" aria-pressed={fastBattleSpeed} aria-label={fastBattleSpeed ? 'Battle speed 1.5x, tap for normal speed' : 'Battle speed normal, tap for 1.5x'} title="Battle speed" onClick={event => { event.stopPropagation(); onToggleBattleSpeed(); }} className="battle-speed-toggle" data-speed={fastBattleSpeed ? 'fast' : 'normal'}>1.5×</button>}
@@ -776,9 +786,9 @@ export function Battle({
       {online?.playerIdentity && online.rivalIdentity ? <>
         <PvpPlate side="you" identity={online.playerIdentity} />
         <div className="pvp-topbar__center">{roundClockNode}</div>
-        <PvpPlate side="rival" identity={online.rivalIdentity} detail={<>{online.rivalHandCount} cards</>} />
+        <PvpPlate side="rival" identity={online.rivalIdentity} detail={rivalResources} />
       </> : <>
-      <div className="battle-rival" title={online ? online.rivalIdentity?.name : rivalIntent.tell}>{online?.rivalIdentity ? <div className="pvp-avatar" data-testid="pvp-rival-avatar"><FighterPortrait cardId={online.rivalIdentity.hero} avatarKey={online.rivalIdentity.avatarKey} name={online.rivalIdentity.name} /></div> : organizedHeader ? <div className={`pvp-avatar battle-rival-avatar ${phase === 'rival-thinking' ? 'is-thinking' : ''}`}><FighterPortrait cardId={rivalDeck.hero} name={rivalDeck.name} /><span className="sr-only">Rival tell: {rivalIntent.tell}. This is a hint, not a committed move.</span></div> : <RivalTell hero={rivalDeck.hero} tell={rivalIntent.tell} thinking={phase === 'rival-thinking'} />}<div className="battle-rival-mark" aria-hidden="true">VS</div><div className="battle-rival-copy"><div className="text-[9px] font-mono tracking-widest text-accent uppercase truncate">Rival {online?.rivalIdentity?.level !== undefined && <b className="pvp-level">Lv. {online.rivalIdentity.level}</b>} // {online ? `${online.rivalHandCount} cards` : rivalIntent.style}</div><div className="font-display font-black text-sm md:text-2xl uppercase leading-none truncate">{rivalDeck.name}</div>{!online && <div data-testid="rival-intent" className="hidden xl:block max-w-64 truncate text-[8px] text-white/55">{rivalIntent.tell}</div>}</div></div>
+      <div className="battle-rival" title={online ? online.rivalIdentity?.name : rivalIntent.tell}>{online?.rivalIdentity ? <div className="pvp-avatar" data-testid="pvp-rival-avatar"><FighterPortrait cardId={online.rivalIdentity.hero} avatarKey={online.rivalIdentity.avatarKey} name={online.rivalIdentity.name} /></div> : organizedHeader ? <div className={`pvp-avatar battle-rival-avatar ${phase === 'rival-thinking' ? 'is-thinking' : ''}`}><FighterPortrait cardId={rivalDeck.hero} name={rivalDeck.name} /><span className="sr-only">Rival tell: {rivalIntent.tell}. This is a hint, not a committed move.</span></div> : <RivalTell hero={rivalDeck.hero} tell={rivalIntent.tell} thinking={phase === 'rival-thinking'} />}<div className="battle-rival-mark" aria-hidden="true">VS</div><div className="battle-rival-copy"><div className="text-[9px] font-mono tracking-widest text-accent uppercase truncate">Rival {online?.rivalIdentity?.level !== undefined && <b className="pvp-level">Lv. {online.rivalIdentity.level}</b>}{!online && ` // ${rivalIntent.style}`}</div><div className="font-display font-black text-sm md:text-2xl uppercase leading-none truncate">{rivalDeck.name}</div>{rivalResources}{!online && <div data-testid="rival-intent" className="hidden xl:block max-w-64 truncate text-[8px] text-white/55">{rivalIntent.tell}</div>}</div></div>
       {roundClockNode}
       </>}
       <div className="battle-match-meta">
@@ -881,7 +891,20 @@ export function Battle({
           <span>{selectedCost} total · {m.playerMotion - (selectedCost ?? 0)} left</span>
         </>}
       </div>}
-      <div className="battle-actions"><div className="battle-motion-pair" role="group" aria-label="Available Motion"><div className="battle-motion" aria-label={`Your Motion: ${m.playerMotion}`}><GameGlyph name="motion" className="battle-motion__icon" /><MotionEnergy value={m.playerMotion} testId="motion-player" replaying={replaying} /><div>Your Motion</div></div><div className="battle-motion battle-rival-energy" aria-label={`Rival Motion: ${m.cpuMotion}`} title="Rival Motion"><GameGlyph name="motion" className="battle-motion__icon" /><MotionEnergy value={m.cpuMotion} testId="motion-rival" replaying={replaying} /><div>Rival Motion</div></div></div><button data-testid={action.testId} onClick={action.onClick} disabled={action.disabled} title={action.title} className={`battle-primary-action action-${action.type}`}><span>{action.label}</span>{action.type === 'primary' && <ArrowRight size={18} aria-hidden="true" />}</button><button data-testid="button-squabble" aria-pressed={squabble} aria-label={m.squabbleUsed ? 'Squabble spent' : squabble ? 'Disarm Squabble' : 'Arm Squabble'} title={m.squabbleUsed ? 'SQUABBLE has already been used.' : !selectedCard ? 'Choose a card first.' : 'Double this card’s base Hands once per fade.'} className={`battle-squabble ${squabble ? 'is-armed' : ''}`} onClick={() => decisionHandlers.toggleSquabble(selectedCard ?? null)} disabled={m.squabbleUsed || !interactive || !selectedCard || selectedCard.kind === 'blockbuster' || !tutorialSquabbleAllowed}><span className="battle-squabble__sigil" aria-hidden="true"><KeyedVideo src={getAssetUrl('assets/combat/squabble-button.webm')} mode="green" className="battle-squabble__video" loop maxWidth={96} paused={Boolean(m.squabbleUsed || reducedMotion)} /><b>×2</b></span><span className="battle-squabble__label">{m.squabbleUsed ? 'Spent' : squabble ? 'Armed' : 'Squabble'}</span></button></div>
+      <div className="battle-actions">
+        <div className="battle-motion battle-player-motion" aria-label={`Your Motion: ${m.playerMotion}`}>
+          <GameGlyph name="motion" className="battle-motion__icon" /><MotionEnergy value={m.playerMotion} testId="motion-player" replaying={replaying} /><div>Your Motion</div>
+        </div>
+
+        <button data-testid={action.testId} onClick={action.onClick} disabled={action.disabled} title={action.title} className={`battle-primary-action battle-street-sign action-${action.type}`}>
+          <span>{action.label}</span><ArrowRight size={18} aria-hidden="true" />
+        </button>
+
+        <button data-testid="button-squabble" data-spent={m.squabbleUsed || undefined} aria-pressed={squabble} aria-label={m.squabbleUsed ? 'Squabble spent' : squabble ? 'Disarm Squabble' : 'Arm Squabble'} title={m.squabbleUsed ? 'SQUABBLE has already been used.' : !selectedCard ? 'Choose a card first.' : 'Double this card’s base Hands once per fade.'} className={`battle-squabble ${squabble ? 'is-armed' : ''}`} onClick={() => decisionHandlers.toggleSquabble(selectedCard ?? null)} disabled={m.squabbleUsed || !interactive || !selectedCard || selectedCard.kind === 'blockbuster' || !tutorialSquabbleAllowed}>
+          <span className="battle-squabble__sigil" aria-hidden="true"><KeyedVideo src={getAssetUrl('assets/combat/squabble-button.webm')} mode="green" className="battle-squabble__video" loop maxWidth={96} paused={Boolean(m.squabbleUsed || reducedMotion)} /><b>×2</b></span>
+          <span className="battle-squabble__label">{m.squabbleUsed ? 'Spent' : squabble ? 'Armed' : 'Squabble'}</span>
+        </button>
+      </div>
     </div>
   </div>;
 }

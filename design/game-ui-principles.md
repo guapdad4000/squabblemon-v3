@@ -8,6 +8,8 @@ Give each screen one clear visual entry point. Group the subject, name, primary 
 
 Keep information related to the current activity. Remove duplicated labels, repeated-purpose components, redundant buttons, and explanations already conveyed by an interaction. Use icons for familiar concepts, with accessible names and enough context for unfamiliar ones.
 
+Avoid colored edge strips or inset-shadow lips on components. Keep card previews neutral; communicate state through their content and controls rather than an accent stripe.
+
 Put secondary lore, edge cases, and extended explanations in inspection. Keep essential rules visible when understanding them is the screen's purpose: district detail popups present their explanation directly, and the battle retains a concise district summary. Progressive disclosure must not hide the primary content.
 
 ## Preserve the game and the artwork
