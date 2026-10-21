@@ -200,9 +200,6 @@
   .battle-arena.battle-hud .battle-board-card.collector-card--combat .card-stat-pair .card-stat--motion .card-stat-value { font-size: clamp(14px,21cqw,20px); }
   .battle-arena.battle-hud .battle-board-card.collector-card--combat .collector-card-copy h4 { font-size: clamp(8px,13cqw,13px); }
 }
-@media (max-width:600px) and (max-height:680px) {
-  .battle-arena.battle-hud { --battle-hand-width: 82px; }
-}
 /* Short landscape protects the field by docking the hand beside it. */
 @media (min-width:601px) and (max-height:580px) {
   .battle-arena.battle-hud {
@@ -282,10 +279,9 @@
 /* The crowd footer stays reserved while scrolling through the same crew. */
 .battle-arena.battle-hud .battle-side:has(.battle-formation-stack[data-inspectable='true']) { padding-bottom: 36px; }
 
-/* A short phone uses a compact hand, preserving one complete combat row per
-   side and the touch-size crew footer instead of clipping every fighter. */
+/* Short-phone district labels remain compact; the field scrolls independently
+   of the art-first hand dock defined below. */
 @media (max-width:600px) and (max-height:620px) {
-  .battle-arena.battle-hud { --battle-hand-width: 64px; }
   .battle-arena.battle-hud .district-lane { --hub-name-height: 24px; --hub-body-height: 100px; --hub-score-height: 34px; }
   .battle-arena.battle-hud .district-marker { grid-template-rows: 34px 18px 24px 12px 12px; }
   .battle-arena.battle-hud .district-score-row { font-size: 24px; }
@@ -296,10 +292,6 @@
   .battle-arena.battle-hud .district-marker :is(.district-rule-status,.character-district-mark),
   .battle-arena.battle-hud .district-prompt { height: 12px; line-height: 12px; }
   .battle-arena.battle-hud .district-marker :is(.district-rule-status,.character-district-mark) { font-size: 9px; }
-  .battle-arena.battle-hud #hand-tray { height: 100px; padding: 6px 8px 3px; }
-  .battle-arena.battle-hud .battle-hand-row { height: 91px; }
-  .battle-arena.battle-hud .battle-hand-card,
-  .battle-arena.battle-hud .battle-hand-card[aria-pressed='true'] { width: 64px !important; scale: 1; }
   .battle-arena.battle-hud .decision-clock { padding-block: 1px; height: 19px; }
   .battle-arena.battle-hud .battle-actions { padding-top: 2px; }
   .battle-arena.battle-hud .battle-side:has(.battle-formation-stack[data-inspectable='true']) { padding-bottom: 32px; }
@@ -393,12 +385,11 @@
 .battle-arena.battle-hud .district-lane { grid-template-rows: minmax(0,1fr) calc(var(--hub-name-height) + var(--hub-body-height) + 44px) minmax(0,1fr); }
 .battle-arena.battle-hud .battle-district-hub { grid-template-rows: var(--hub-name-height) var(--hub-body-height) 44px; height: calc(var(--hub-name-height) + var(--hub-body-height) + 44px); }
 .battle-item-badges { display: flex; align-items: center; justify-content: flex-start; gap: 3px; height: 44px; min-width: 0; overflow-x: auto; scrollbar-width: thin; overscroll-behavior: contain; }
-.battle-item-badge { position: relative; flex: 0 0 44px; width: 44px; height: 44px; padding: 1px 8px 8px 1px; border: 1px solid #ffe099; border-radius: 5px; background: #101910ed; color: #ffe099; touch-action: manipulation; }
-.battle-item-badge[data-owner='cpu'] { border-color: #85ddf1; color: #a9e7ff; background: #09151fed; }
-.battle-item-badge img { width: 30px; height: 33px; object-fit: contain; }
-.battle-item-badge span { position: absolute; right: 1px; top: 1px; background: #08111df2; padding: 2px; border-radius: 3px; font: 800 10px/1 var(--font-sans); }
-.battle-item-badge small { position: absolute; bottom: 2px; inset-inline: 1px; font: 800 8px/1 var(--font-sans); letter-spacing: .03em; }
-.battle-item-badge:focus-visible { outline: 2px solid white; outline-offset: -3px; }
+.battle-item-badge { --item-glow:#ffe09980; position: relative; display:grid; place-items:center; flex:0 0 44px; width:44px; height:44px; padding:2px; border:0; border-radius:0; background:transparent; box-shadow:none; color:#fff0c9; touch-action:manipulation; }
+.battle-item-badge[data-owner='cpu'] { --item-glow:#85ddf180; color:#c8f3ff; }
+.battle-item-badge img { width:40px; height:40px; object-fit:contain; filter:drop-shadow(0 0 4px var(--item-glow)); }
+.battle-item-badge span { position:absolute; right:1px; top:0; font:700 14px/1 var(--font-display); text-shadow:0 1px 2px #000,1px 0 2px #000,-1px 0 2px #000; }
+.battle-item-badge:focus-visible { outline:2px solid white; outline-offset:-2px; border-radius:4px; }
 .battle-location-items li.is-selected { outline: 2px solid #89651c; outline-offset: 2px; }
 @media(max-width:600px) {
   .battle-arena.battle-hud .battle-card-stack[data-count] { --combat-row: clamp(100px,15dvh,130px); display: grid; grid-template-columns: minmax(0,1fr); grid-template-rows: none; grid-auto-rows: var(--combat-row); align-content: start; overflow-y: auto; overflow-x: hidden; }
@@ -415,4 +406,23 @@
 @media(min-width:601px) and (max-height:460px) {
   .battle-arena.battle-hud .battlefield-grid { overflow-y:auto; overscroll-behavior-y:contain; }
   .battle-arena.battle-hud .district-lane { min-height:460px; }
+}
+
+/* Mobile hand art gets a full card face; copy stays below the complete pose. */
+@media(max-width:600px) {
+  .battle-arena.battle-hud { --battle-hand-width:116px; }
+  .battle-arena.battle-hud #hand-tray { height:186px; padding:16px 10px 4px; scroll-padding-inline:10px; }
+  .battle-arena.battle-hud .battle-hand-row { height:166px; gap:10px; }
+  .battle-arena.battle-hud .battle-hand-card { scale:1; }
+  .battle-arena.battle-hud .battle-hand-card .collector-portrait { inset-inline:0; width:100%; max-width:100%; bottom:42px; height:calc(100% - 44px); object-fit:contain; object-position:center bottom; }
+  .battle-arena.battle-hud .battle-hand-card .collector-art-shade { height:44px; }
+  .battle-arena.battle-hud .battle-hand-card .collector-card-copy { padding:3px 5px; }
+  .battle-arena.battle-hud .battle-hand-card .collector-card-copy > div:first-child { flex-wrap:nowrap; gap:2px; margin-bottom:2px; white-space:nowrap; }
+  .battle-arena.battle-hud .battle-hand-card .collector-card-copy h4 { display:-webkit-box; -webkit-box-orient:vertical; -webkit-line-clamp:2; font-size:11px; line-height:1.05; overflow:hidden; overflow-wrap:normal; }
+  .battle-arena.battle-hud .battle-hand-card .card-stat-pair > div { padding:3px 4px; min-width:25px; }
+}
+@media(max-width:600px) and (max-height:620px) {
+  .battle-arena.battle-hud { --battle-hand-width:100px; }
+  .battle-arena.battle-hud #hand-tray { height:162px; }
+  .battle-arena.battle-hud .battle-hand-row { height:142px; }
 }

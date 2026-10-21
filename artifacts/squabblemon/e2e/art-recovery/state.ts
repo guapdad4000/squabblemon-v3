@@ -14,7 +14,7 @@ export function createArtworkReviewMatch(): Match {
   cast('abuela', 'player', 0);
   match.boards[2].push({ ...createCardInstance('bonnetgirl', 'cpu', 'guard-target', 99), lane: 2 });
   cast('queenofhearts', 'player', 2);
-  return { ...match, phase: 'player', playerMotion: 3, playerHand: [createCardInstance('hooper', 'player', 'review-hand')] };
+  return { ...match, phase: 'player', playerMotion: 3, playerHand: ['hooper','queenofhearts','buddy','og','transplant'].map((id,i)=>createCardInstance(id,'player','review-hand',i)) };
 }
 export const artworkReviewMarks = (match: Match) => getCharacterDistrictMarks(match);
 

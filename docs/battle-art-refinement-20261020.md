@@ -2,7 +2,7 @@
 
 Summon inspection now reads the live token instead of its summoner's collectible record. It shows creator, current lane Hands, duration and current ability/status text, without collectible ownership, rarity or crafting controls. The existing inspector dismissal and focus handling remains shared.
 
-Illustrated district effects have independent 44px buttons outside the district play target. Tapping opens and highlights that exact item in district details. The badge identifies its owner and either expiry, active count or Contraband carrier progress. These optional fields are projected from current engine marks and preserve opponent-seat ownership mapping.
+Illustrated district effects have independent, invisible 44px tap targets outside the district play target. Only the original artwork, a soft glow and an overlaid expiry/count/Contraband-progress value are drawn. Tapping opens and highlights that exact item in district details, including ownership. Accessible labels also retain ownership. These optional fields are projected from current engine marks and preserve opponent-seat ownership mapping.
 
 Phone formations use larger individual combat cards and retain unlimited crews. On short phones and landscape screens the battlefield scrolls instead of clipping every card. The hand and turn controls remain anchored. The existing background compositions and proportions are unchanged.
 
@@ -31,3 +31,11 @@ The `evil-mushroom.png` concept was excluded: its source manifest identifies a p
 - Five effect kinds checked under both motion preferences, including no burst during windup and a non-interactive overlay. Visual captures reviewed for phone layout, source art, inspector identity and effect placement.
 
 Local review and evidence: `output/console-reliability-20261020/refinement/REVIEW.html` in the original workspace. These are local browser-emulation checks, not authenticated production or physical iPad evidence. No deploy or remote push is included in this refinement.
+
+## Mobile art and number-type correction
+
+The local artwork fixture omitted the production font links, so earlier captures displayed fallback numerals. It now loads the same Clash Display, Plus Jakarta Sans and companion fonts as the application. The production number family is unchanged. Browser checks explicitly load Clash Display's digits and verify the stat family instead of accepting a silent fallback.
+
+Phone hand cards are 116px wide, or 100px on screens at most 620px tall, replacing the former 64px short-phone presentation. A contained portrait occupies the area above a compact, two-line name strip; the dark gradient is restricted to that strip. Selection keeps the same width, horizontal scrolling reaches the entire hand, and the full name and move remain available in the selection preview and normal inspector. Short battlefields retain independent scrolling.
+
+The revised browser pass covers all five viewports above. Phone checks use a five-card hand including Racially Ambiguous Transplant; verify portrait/name separation and dimensions; and tap the final card to check its full-name preview, selected bounds and deselection. Item checks verify transparent backgrounds, zero borders/shadows, contained art with glow, and 44px targets before exercising item details. Frontend typecheck and production build/bundle checks passed again, with the same rounded JavaScript totals. No game rules or reward logic changed in this correction.

@@ -300,7 +300,7 @@ function CardViewComponent({
                 className={`collector-portrait absolute inset-x-0 bottom-[10%] w-full h-[85%] object-contain object-bottom transition-transform duration-500 z-10 ${isSilenced ? 'grayscale' : ''} ${!isInspector && card.kind !== 'blockbuster' && 'group-hover/inner:scale-[1.03]'} ${isInspector ? 'collector-portrait--inspector' : ''}`}
               />}
 
-          <div className="absolute inset-x-0 bottom-0 h-[50%] bg-gradient-to-t from-black via-black/80 to-transparent z-10 pointer-events-none" />
+          <div className="collector-art-shade absolute inset-x-0 bottom-0 h-[50%] bg-gradient-to-t from-black via-black/80 to-transparent z-10 pointer-events-none" />
 
           {combatPresentation && <BattleStatus frozen={isFrozen} silenced={isSilenced} protected={isProtected || covered} />}
           <div className="card-stat-pair absolute top-0 inset-x-0 flex justify-between z-20 pointer-events-none">
