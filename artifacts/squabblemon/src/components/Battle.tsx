@@ -342,7 +342,7 @@ export function Battle({
     ? online.costs[card.instanceId]?.[lane] ?? Number.POSITIVE_INFINITY
     : getLegalCardCost(m, 'player', card, lane);
   const bossMusic = m.storyEncounter?.activity?.kind === 'boss';
-  useEffect(() => { setBattleActive(true); void warmImages([getAssetUrl('assets/combat/supplied/attack-impact-atlas.webp')]); return () => setBattleActive(false); }, []);
+  useEffect(() => { setBattleActive(true); void warmImages([getAssetUrl('assets/combat/supplied/attack-impact-atlas.webp'), getAssetUrl('assets/combat/supplied/defeat-tombstone-atlas.webp'), getAssetUrl('assets/combat/supplied/defeat-impact-atlas.webp')]); return () => setBattleActive(false); }, []);
   useEffect(() => { if (bossMusic) setBattleMusicMode('boss'); return () => { if (bossMusic) setBattleMusicMode(null); }; }, [bossMusic]);
   const phase = presentationPhase as PresentationPhase;
   const replaying = !!replay;

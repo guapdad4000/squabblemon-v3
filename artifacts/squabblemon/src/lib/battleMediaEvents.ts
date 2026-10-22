@@ -14,3 +14,14 @@ export function squabbledCardIds(events: readonly EffectLogEntry[], throughSeque
   return new Set(events.filter(event => event.sequence <= throughSequence && event.type === 'play'
     && event.note.includes('SQUABBLE')).map(event => event.cardInstanceId));
 }
+
+export const DEFEAT_CONTACT_MS = 2920;
+export const DEFEAT_GHOST_MS = 2760;
+/** Neutral departures (return, transformation, aura loss) are not defeated fighters. */
+export function hasDefeatedCard(effect: Pick<EffectLogEntry, 'source' | 'targets'>) {
+  return [effect.source, ...effect.targets].some(p => p?.before && !p.after && !p.departureCause);
+}
+/** Hold presentation only; 80ms lets the final painted pose settle before cleanup. */
+export function completeDefeatBeat(effect: Pick<EffectLogEntry, 'source' | 'targets'>, normalMs: number, contactMs = DEFEAT_CONTACT_MS) {
+  return hasDefeatedCard(effect) ? Math.max(normalMs, contactMs) + DEFEAT_GHOST_MS + 80 : normalMs;
+}

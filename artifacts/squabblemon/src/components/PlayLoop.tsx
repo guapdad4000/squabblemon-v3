@@ -1,3 +1,4 @@
+import { completeDefeatBeat } from '../lib/battleMediaEvents';
 import type { BattleArtCue } from '@workspace/squabblemon-engine/battleArtwork';
 import { shareEqual } from '../lib/structuralShare';
 import { useFeedbackPreferences } from '../hooks/useFeedbackPreferences';
@@ -571,8 +572,8 @@ export function PlayLoop({ mode = 'practice', onExit, onTutorialComplete, onVeri
       })();
       const canReadNote = mode === 'tutorial' && !needsReading && effect.type !== 'reveal' && !fast && !fastForwardRef.current;
       const finishedBeat = canReadNote
-        ? await wait(guidedNoteDuration(effect.note, afterMs), id)
-        : await waitForBeat(afterMs, EFFECT_PRESENTATION_TIMING.reduced.afterMs, id, fast);
+        ? await wait(guidedNoteDuration(effect.note, completeDefeatBeat(effect, afterMs)), id)
+        : await waitForBeat(completeDefeatBeat(effect, afterMs), EFFECT_PRESENTATION_TIMING.reduced.afterMs, id, fast);
       if (!finishedBeat) return false;
       setSquabbleCinematicLane(null);
       setStagedPlayer(null); setStagedRival(null);
@@ -998,7 +999,7 @@ export function PlayLoop({ mode = 'practice', onExit, initialDeckId = 'block', i
         if (!await waitForBeat(160, 40, id, fast)) return false;
       }
       frame = applyEventState(frame, resolved, effect, 'after'); setVisualFrame(frame); setPresentationScores(effect.scores.after); setPresentationPhase(isPlay ? effect.owner === 'player' ? 'player-impact' : 'rival-impact' : phase);
-      if (!await waitForBeat(abilityFailed(effect) ? FAILED_ABILITY_BEAT_MS : specialMoveForEvent(effect, readMoveOverrides())?.durationMs ?? 380, 90, id, fast)) return false;
+      if (!await waitForBeat(completeDefeatBeat(effect, abilityFailed(effect) ? FAILED_ABILITY_BEAT_MS : specialMoveForEvent(effect, readMoveOverrides())?.durationMs ?? 380), 90, id, fast)) return false;
       setStagedPlayer(null); setStagedRival(null);
     }
     setActiveEffectId(null); setActiveEffectLane(null); setActiveEffect(null); setImpactLane(null); return true;
@@ -1210,7 +1211,7 @@ export function PlayLoop({ mode = 'practice', onExit, initialDeckId = 'block', i
       }
       if (!await waitForBeat(abilityFailed(effect) ? 90 : 190, 70, id, fast)) return false;
       frame = applyEventState(frame, resolved, effect, 'after'); setVisualFrame(frame); setPresentationScores(effect.scores.after); setPresentationPhase(isPlay ? effect.owner === 'player' ? 'player-impact' : 'rival-impact' : phase);
-      if (!await waitForBeat(abilityFailed(effect) ? FAILED_ABILITY_BEAT_MS : specialMoveForEvent(effect, readMoveOverrides())?.durationMs ?? 380, 90, id, fast)) return false;
+      if (!await waitForBeat(completeDefeatBeat(effect, abilityFailed(effect) ? FAILED_ABILITY_BEAT_MS : specialMoveForEvent(effect, readMoveOverrides())?.durationMs ?? 380), 90, id, fast)) return false;
       setStagedPlayer(null); setStagedRival(null);
     }
     setActiveEffectId(null); setActiveEffectLane(null); setActiveEffect(null); setImpactLane(null); return true;

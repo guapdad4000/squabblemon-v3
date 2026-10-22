@@ -1,7 +1,7 @@
-import { CombatSprite, DefeatCross } from './BattleArt';
+import { CombatSprite } from './BattleArt';
 import { BattleBurst } from './BattleEffects';
 import { BattleFxImage } from './BattleFxImage';
-import { fireAttackTargetIds } from '../lib/battleMediaEvents';
+import { DEFEAT_CONTACT_MS, fireAttackTargetIds } from '../lib/battleMediaEvents';
 import React, { useLayoutEffect, useMemo, useRef } from 'react';
 import { SpecialMove } from './SpecialMove';
 import { readMoveOverrides, specialMoveForEvent, gateSpecialMoveReplay } from '../specialMoves';
@@ -107,6 +107,8 @@ function applyGeometry(root: HTMLElement, geometry: Geometry, sourceId: string) 
 export function BattleAttack({ card, effect, impact, replaying = false, audioEnabled = false, playedSpecialMoves = null, speed = 1, showCaption = true }: { card: Card; effect: PresentationEffect; impact: boolean; replaying?: boolean; audioEnabled?: boolean; playedSpecialMoves?: Set<string> | null; speed?: number; showCaption?: boolean }) {
   const root = useRef<HTMLDivElement>(null);
   const original = useRef(new Map<string, Point>());
+  const originalArea = useRef({ width: 0, height: 0 });
+  const defeatAnchors = useRef(new Map<string, { x: number; y: number }>());
   const sourceId = effect.source?.cardInstanceId ?? effect.cardInstanceId;
   const move = useMemo(() => {
     const clip = specialMoveForEvent(effect, readMoveOverrides());
@@ -116,6 +118,7 @@ export function BattleAttack({ card, effect, impact, replaying = false, audioEna
   const changes = battleChanges(effect);
   const intensity = eventIntensity(effect);
   const fireTargets = fireAttackTargetIds(effect);
+  const defeatedIds = new Set(changes.filter(c => c.before && !c.after && !isNeutralDeparture(c)).map(c => c.cardInstanceId));
   const targetIds = effect.targets.length
     ? effect.targets.filter(target => !isNeutralDeparture(target)).map(target => target.cardInstanceId)
     : [sourceId];
@@ -156,7 +159,28 @@ export function BattleAttack({ card, effect, impact, replaying = false, audioEna
         const rect = node.getBoundingClientRect();
         current.set(node.dataset.instanceId!, { x: rect.x - bounds.x + rect.width / 2, y: rect.y - bounds.y + rect.height / 2, width: rect.width, height: rect.height });
       });
-      if (!original.current.size) original.current = new Map(current);
+      if (!original.current.size) {
+        original.current = new Map(current);
+        originalArea.current = { width: bounds.width, height: bounds.height };
+      }
+      const resized = originalArea.current.width !== bounds.width || originalArea.current.height !== bounds.height;
+      for (const participant of [effect.source, ...effect.targets]) {
+        if (!participant?.before || participant.after || participant.departureCause) continue;
+        const zone = arena.querySelector<HTMLElement>(`[data-testid="lane-${participant.before.lane}-${participant.owner}-zone"]`);
+        const zoneBox = zone?.getBoundingClientRect();
+        if (!zoneBox || !zoneBox.width || !zoneBox.height) continue;
+        const previous = original.current.get(participant.cardInstanceId);
+        if (previous && !defeatAnchors.current.has(participant.cardInstanceId)) {
+          defeatAnchors.current.set(participant.cardInstanceId, { x: (previous.x + bounds.left - zoneBox.left) / zoneBox.width, y: (previous.y + bounds.top - zoneBox.top) / zoneBox.height });
+        }
+        if (previous && !resized) continue;
+        const sample = zone?.querySelector<HTMLElement>('[data-card-zone="board"]') ?? boardNodes[0];
+        const size = sample?.getBoundingClientRect();
+        const width = size?.width ?? Math.min(96, zoneBox.width), height = size?.height ?? width * 1.4;
+        const anchor = defeatAnchors.current.get(participant.cardInstanceId) ?? { x: .5, y: Math.min(zoneBox.height, height) / (2 * zoneBox.height) };
+        defeatAnchors.current.set(participant.cardInstanceId, anchor);
+        original.current.set(participant.cardInstanceId, { x: zoneBox.left + zoneBox.width * anchor.x - bounds.left, y: zoneBox.top + zoneBox.height * anchor.y - bounds.top, width, height });
+      }
       const source = original.current.get(sourceId) ?? current.get(sourceId);
       applyGeometry(overlay, { source, current, before: original.current }, sourceId);
     };
@@ -178,7 +202,7 @@ export function BattleAttack({ card, effect, impact, replaying = false, audioEna
   return <div ref={root} className={`battle-choreography battle-choreography--legible kind-${effect.kind} intensity-${intensity} ${impact ? 'is-impact' : 'is-winding-up'} ${replaying ? 'is-replay' : ''}`}
     data-mary-landing={effect.source?.after?.maryElephant && !effect.source?.before ? true : undefined}
     data-testid="character-attack" data-character={card.id} data-owner={effect.owner} data-impact={impact}
-    style={{ '--attack-color': cardEntryAccent(card) } as React.CSSProperties} aria-hidden="true">
+    style={{ '--attack-color': cardEntryAccent(card), '--defeat-delay': `${Math.max(DEFEAT_CONTACT_MS, move?.durationMs ?? 0)}ms` } as React.CSSProperties} aria-hidden="true">
     {move && <div className="battle-special-move" data-geo="special" data-move-id={move.id} style={hidden}><SpecialMove clip={move} audioEnabled={audioEnabled} speed={speed} /></div>}
     {card.id === 'dr-fade' && effect.type === 'ability' && !effect.abilityMetadata?.upgradeId
       && <DrFadeEntrance key={effect.sequence} cueId={effect.sequence}
@@ -208,7 +232,7 @@ export function BattleAttack({ card, effect, impact, replaying = false, audioEna
               ? <path className="attack-shield" />
               : <><circle className="attack-flash" /><polygon className="attack-star" /><circle data-geo="ring-outer" /><circle data-geo="ring-inner" />{SPARK_ANGLES.map(angle => <line key={angle} className="attack-spark" />)}</>}
       </svg>
-      {fireTargets.has(id) && <span className="attack-fire-media" data-battle-media="fire-impact" data-fire-playback="once" aria-hidden="true"><img className="attack-fire-frames" src={getAssetUrl('assets/combat/supplied/fire-impact-once.webp')} width={2928} height={150} alt="" decoding="async" draggable={false} /></span>}
+      {fireTargets.has(id) && !defeatedIds.has(id) && <span className="attack-fire-media" data-battle-media="fire-impact" data-fire-playback="once" aria-hidden="true"><img className="attack-fire-frames" src={getAssetUrl('assets/combat/supplied/fire-impact-once.webp')} width={2928} height={150} alt="" decoding="async" draggable={false} /></span>}
     </div>)}
     {impact && changes.map(change => {
       const id = change.cardInstanceId;
@@ -226,8 +250,8 @@ export function BattleAttack({ card, effect, impact, replaying = false, audioEna
       const powerGained = change.permanentDelta > 0;
       return <React.Fragment key={id}>
         {neutralDeparture && <img className="attack-moving-card" data-testid="neutral-departure" src={getCardImage((change.after ?? change.before)?.maryElephant ? 'ms-mary-mack-elephant' : cards[change.cardId]?.id ?? change.cardId)} alt="" data-geo-change={id} data-geo-role="moved" style={hidden} />}
-        {destroyed && <div className="attack-destroyed-card" data-testid="destroyed-card" data-geo-change={id} data-geo-role="box" style={hidden}><img className="defeated-portrait" src={getCardImage((change.after ?? change.before)?.maryElephant ? 'ms-mary-mack-elephant' : cards[change.cardId]?.id ?? change.cardId)} alt="" /><DefeatCross /></div>}
-        {(powerLost || powerGained) && <div className="attack-material" data-geo-change={id} data-geo-role="box" style={hidden}><span className={powerLost ? (fireTargets.has(id) ? undefined : "attack-contact-media") : undefined}>{!powerLost && <BattleBurst kind="charge" />}</span></div>}
+        {destroyed && <div className="attack-destroyed-card has-tombstone" data-testid="destroyed-card" data-geo-change={id} data-geo-role="box" style={hidden}><img className="defeated-portrait" src={getCardImage((change.after ?? change.before)?.maryElephant ? 'ms-mary-mack-elephant' : cards[change.cardId]?.id ?? change.cardId)} alt="" /><span className="defeat-tombstone" data-defeat-playback="once" /></div>}
+        {(powerLost || powerGained) && <div className="attack-material" data-geo-change={id} data-geo-role="box" style={hidden}><span className={destroyed ? "attack-contact-media is-finisher" : powerLost ? (fireTargets.has(id) ? undefined : "attack-contact-media") : undefined}>{!powerLost && <BattleBurst kind="charge" />}</span></div>}
         {(thawed || shieldSpent || restored) && <div data-testid="status-release" className={'status-release ' + (thawed ? 'is-thawing is-unlocking' : shieldSpent ? 'is-shattering' : 'is-restoring is-unlocking')} data-geo-change={id} data-geo-role="box" style={hidden}>{thawed || restored ? <><CombatSprite asset="lock-chain-strand" className="unlock-chain" /><CombatSprite asset="lock-chain-strand" className="unlock-chain" /><CombatSprite asset="lock-padlock" className="unlock-padlock" />{thawed && <CombatSprite asset="freeze-rim" className="unlock-ice" />}</> : Array.from({length:6},(_,index)=><i key={index} style={{'--shard-angle':index*60+'deg'} as React.CSSProperties}/>)}</div>}
         {moved && <>
           <div className="attack-movement-dust is-departure" data-geo-change={id} data-geo-role="departure" style={hidden}><BattleFxImage kind="movement-dust" /></div>

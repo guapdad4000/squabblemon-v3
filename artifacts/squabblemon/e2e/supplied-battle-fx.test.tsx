@@ -6,10 +6,12 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { createMatch, createCardInstance, playTurnCard, type Lane } from '../src/gameEngine';
 import { GameGlyph } from '../src/components/venue/GameGlyph';
 import { SquabbleSigil } from '../src/components/SquabbleSigil';
+import { readMoveOverrides, specialMoveForEvent } from '../src/specialMoves';
+import { onlineEffectImpactMs } from '../src/lib/useOnlineEffectPresenter';
 import { BattleAttack } from '../src/components/BattleAttack';
 import { CardView } from '../src/components/CardView';
 import { BattleFxImage, BATTLE_MEDIA } from '../src/components/BattleFxImage';
-import { fireAttackTargetIds, squabbledCardIds } from '../src/lib/battleMediaEvents';
+import { completeDefeatBeat, hasDefeatedCard, fireAttackTargetIds, squabbledCardIds } from '../src/lib/battleMediaEvents';
 
 test('Motion glyph uses the supplied orb with a static server fallback',()=>{
   const html=renderToStaticMarkup(<GameGlyph name="motion"/>);
@@ -90,12 +92,40 @@ test('supplied contact follows actual hostile damage, excluding windup, buffs, f
   const event=resolved.effectLog.find(e=>e.type==='ability'&&e.cardId==='roaster')!;assert.ok(event);
   const effect={...event,targetIds:event.targets.map(t=>t.cardInstanceId)};
   const render=(entry=effect,impact=true)=>renderToStaticMarkup(<BattleAttack card={attacker} effect={entry} impact={impact}/>);
-  assert.match(render(),/class="attack-contact-media"/);
-  assert.doesNotMatch(render(effect,false),/class="attack-contact-media"/);
-  assert.doesNotMatch(render({...effect,kind:'fire'}),/class="attack-contact-media"/);
-  assert.doesNotMatch(render({...effect,targets:effect.targets.map(t=>({...t,after:t.before}))}),/class="attack-contact-media"/);
-  assert.doesNotMatch(render({...effect,targets:effect.targets.map(t=>({...t,owner:'player'}))}),/class="attack-contact-media"/);
+  assert.match(render(),/class="attack-contact-media(?: is-finisher)?"/);
+  assert.doesNotMatch(render(effect,false),/class="attack-contact-media(?: is-finisher)?"/);
+  assert.doesNotMatch(render({...effect,kind:'fire'}),/class="attack-contact-media(?: is-finisher)?"/);
+  assert.doesNotMatch(render({...effect,targets:effect.targets.map(t=>({...t,after:t.before}))}),/class="attack-contact-media(?: is-finisher)?"/);
+  assert.doesNotMatch(render({...effect,targets:effect.targets.map(t=>({...t,owner:'player'}))}),/class="attack-contact-media(?: is-finisher)?"/);
   const removed={...effect,targets:effect.targets.map(t=>({...t,after:null}))};
-  assert.match(render(removed),/class="attack-contact-media"/);
-  assert.doesNotMatch(render({...removed,targets:removed.targets.map(t=>({...t,departureCause:'transformation' as const}))}),/class="attack-contact-media"/);
+  assert.match(render(removed),/class="attack-contact-media(?: is-finisher)?"/);
+  assert.doesNotMatch(render({...removed,targets:removed.targets.map(t=>({...t,departureCause:'transformation' as const}))}),/class="attack-contact-media(?: is-finisher)?"/);
+});
+
+test('a real defeat holds the complete hit and ghost; survivors and neutral departures keep their timing',()=>{
+  const before=createMatch('block','combo');before.playerMotion=20;
+  const source=createCardInstance('roaster','player','hand',1);
+  const target={...createCardInstance('hooper','cpu','lane-0',0),lane:0 as Lane,basePower:1};
+  before.playerHand=[source];before.boards=[[target],[],[]];
+  const resolved=playTurnCard(before,'player',source.instanceId,0);
+  const event=resolved.effectLog.find(e=>e.type==='ability'&&e.cardId==='roaster')!;assert.ok(event);
+  assert.ok(event.targets.some(t=>t.cardInstanceId===target.instanceId&&t.before&&!t.after));
+  assert.equal(hasDefeatedCard(event),true);assert.equal(completeDefeatBeat(event,650),5760);
+  assert.equal(onlineEffectImpactMs({...event,targetIds:event.targets.map(t=>t.cardInstanceId)}),Math.max(2920,specialMoveForEvent(event,readMoveOverrides())?.durationMs??0)+2840);
+  assert.equal(completeDefeatBeat(event,325),5760);assert.equal(completeDefeatBeat(event,4000),6840);
+  const effect={...event,targetIds:event.targets.map(t=>t.cardInstanceId)};
+  const render=(entry=effect,impact=true)=>renderToStaticMarkup(<BattleAttack card={source} effect={entry} impact={impact}/>);
+  const html=render();assert.match(html,/data-defeat-playback="once"/);assert.match(html,/has-tombstone/);assert.doesNotMatch(html,/defeat-cross/);
+  assert.doesNotMatch(render(effect,false),/data-defeat-playback/);
+  assert.match(html,/attack-contact-media is-finisher/);
+  assert.match(render({...effect,kind:'fire'}),/attack-contact-media is-finisher/);
+  assert.doesNotMatch(render({...effect,kind:'fire'}),/class="attack-fire-media"/);
+  const unchanged={...effect,targets:effect.targets.map(t=>({...t,after:t.before}))};
+  assert.equal(completeDefeatBeat(unchanged,650),650);assert.doesNotMatch(render(unchanged),/data-defeat-playback/);
+  for(const cause of ['transformation','bounce','aura-loss'] as const){
+    const neutral={...effect,targets:effect.targets.map(t=>({...t,departureCause:cause}))};
+    assert.equal(hasDefeatedCard(neutral),false);assert.equal(completeDefeatBeat(neutral,650),650);assert.doesNotMatch(render(neutral),/data-defeat-playback/);
+  }
+  assert.equal(hasDefeatedCard({...effect,source:event.targets[0],targets:[]}),true);
+  assert.ok(!resolved.boards.flat().some(c=>c.instanceId===target.instanceId),'death art does not restore the defeated card to the live board');
 });

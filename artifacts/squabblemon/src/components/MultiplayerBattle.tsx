@@ -193,7 +193,7 @@ export function MultiplayerBattle({ room, busy, connected, reducedMotion: profil
     setSelected(null); setLane(null); setSquabble(false);
   } }, [myTurn, room.hand, selected]);
   const projected = useMemo(() => onlineBattleProjection(room), [room]);
-  const liveEffect = useOnlineEffectPresenter(room, projected.presentation.scores, Boolean(reducedMotion) || room.status !== 'active');
+  const { effect: liveEffect, presenting: presentingEffects } = useOnlineEffectPresenter(room, projected.presentation.scores, Boolean(reducedMotion) || (room.status !== 'active' && room.status !== 'complete'));
   const status = room.status === 'complete' ? 'Fade complete' : !connected ? 'Reconnecting…' : busy ? 'Sending play…' : remaining === 0 ? 'Checking result…' : myTurn ? 'Your turn' : `${rival.name}'s turn`;
   async function act(command: OnlineCommand) {
     if (sending.current || busy || !connected) return;
@@ -288,7 +288,7 @@ export function MultiplayerBattle({ room, busy, connected, reducedMotion: profil
     </LayoutGroup>
     <AnimatePresence>{inspect && <CardInspector card={projected.match.boards.flat().find(c => c.instanceId === inspect.instanceId) ?? inspect} onClose={() => setInspect(null)} />}{rules && <RulesModal onClose={() => setRules(false)} />}</AnimatePresence>
     {room.status === 'complete' && reviewBoard && (typeof document === 'undefined' ? null : createPortal(<button className="park-result-return" onClick={() => setReviewBoard(false)}>View result</button>, document.body))}
-    <Dialog open={room.status === 'complete' && !reviewBoard && !celebrating} onOpenChange={open => { if (!open) setReviewBoard(true); }}>
+    <Dialog open={room.status === 'complete' && !reviewBoard && !celebrating && !presentingEffects} onOpenChange={open => { if (!open) setReviewBoard(true); }}>
       {room.kumite ? <KumiteResult outcome={room.winner === 'draw' ? 'draw' : room.winner === room.seat ? 'win' : 'loss'} ranked={false} reducedMotion={reducedMotion}
         hero={room.ownDeck.hero} playerName={room.members[room.seat]!.name} final={room.kumite.matchId === 'r3-m1'}
         claimed={room.scores.filter(s => s.winner === room.seat).length} rivalClaimed={room.scores.filter(s => s.winner === rivalSeat).length}

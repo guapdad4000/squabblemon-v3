@@ -1,10 +1,14 @@
+import { completeDefeatBeat, DEFEAT_CONTACT_MS } from './battleMediaEvents';
+import { readMoveOverrides, specialMoveForEvent } from '../specialMoves';
 import { useEffect, useRef, useState } from 'react';
 import type { OnlineRoomView, PublicEvent, PublicParticipant, Seat } from '@workspace/squabblemon-engine/multiplayer';
 import type { EventParticipant, Lane } from '../gameEngine';
 import type { PresentationEffect } from '../components/PlayLoop';
 
-/** PvP plays card effects at double speed (half the solo beat timing), silently. */
+/** Routine PvP effects are brief; knockouts finish the full impact and ghost silently. */
 export const ONLINE_EFFECT_TIMING = { windupMs: 225, impactMs: 325 } as const;
+export const onlineEffectImpactMs = (effect: PresentationEffect) => completeDefeatBeat(effect,
+  ONLINE_EFFECT_TIMING.impactMs, Math.max(DEFEAT_CONTACT_MS, specialMoveForEvent(effect, readMoveOverrides())?.durationMs ?? 0));
 
 export function toPresentationEffect(event: PublicEvent, seat: Seat, scores: PresentationEffect['scores']['before']): PresentationEffect | null {
   if ((!event.sourceId && !event.artCues?.length) || event.type === 'pass' || event.type === 'reveal' || event.kind === 'story') return null;
@@ -35,31 +39,34 @@ export function useOnlineEffectPresenter(room: OnlineRoomView, scores: Presentat
   const seen = useRef(room.events.at(-1)?.sequence ?? 0);
   const queue = useRef<PresentationEffect[]>([]);
   const running = useRef(false);
+  const generation = useRef(0);
   const alive = useRef(true);
   const scoresRef = useRef(scores); scoresRef.current = scores;
-  useEffect(() => () => { alive.current = false; }, []);
-  useEffect(() => { queue.current = []; setEffect(null); seen.current = room.events.at(-1)?.sequence ?? 0; }, [room.code, room.gameNumber]);
+  useEffect(() => { alive.current = true; return () => { alive.current = false; generation.current++; }; }, []);
+  useEffect(() => { generation.current++; running.current = false; queue.current = []; setEffect(null); seen.current = room.events.at(-1)?.sequence ?? 0; }, [room.code, room.gameNumber]);
   useEffect(() => {
     const fresh = room.events.filter(e => e.sequence > seen.current);
     seen.current = room.events.at(-1)?.sequence ?? seen.current;
-    if (disabled || typeof document === 'undefined' || document.hidden) return;
+    if (disabled || typeof document === 'undefined' || document.hidden) { generation.current++; running.current = false; queue.current = []; setEffect(null); return; }
     queue.current.push(...fresh.flatMap(e => toPresentationEffect(e, room.seat, scoresRef.current) ?? []));
     queue.current = queue.current.slice(-8);
     if (running.current) return;
     running.current = true;
+    const currentGeneration = generation.current;
     const wait = (ms: number) => new Promise(resolve => window.setTimeout(resolve, ms));
     void (async () => {
-      while (alive.current && queue.current.length) {
+      while (alive.current && currentGeneration === generation.current && queue.current.length) {
         const next = queue.current.shift()!;
         setEffect(next);
         await wait(ONLINE_EFFECT_TIMING.windupMs);
-        if (!alive.current) break;
+        if (!alive.current || currentGeneration !== generation.current) return;
         setEffect({ ...next, impact: true });
-        await wait(ONLINE_EFFECT_TIMING.impactMs);
+        await wait(onlineEffectImpactMs(next));
       }
+      if (currentGeneration !== generation.current) return;
       running.current = false;
       if (alive.current) setEffect(null);
     })();
   }, [room.events, room.seat, disabled]);
-  return effect;
+  return { effect, presenting: !disabled && (effect !== null || queue.current.length > 0 || room.events.some(e => e.sequence > seen.current && toPresentationEffect(e, room.seat, scores) !== null)) };
 }
