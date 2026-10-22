@@ -1,4 +1,5 @@
 import { CombatSprite } from './BattleArt';
+import { BattleFxImage } from './BattleFxImage';
 import React, { useEffect, useRef } from 'react';
 import './battle-effects.css';
 
@@ -20,7 +21,7 @@ export function BattleBurst({ kind }: { kind: 'burn' | 'charge' | 'freeze' | 'sn
     <span className="fx-shockwave" />
     {fragments.map((style, index) => <i key={index} style={style} />)}
     {kind === 'burn' && <><b className="fx-slash" /><b className="fx-slash fx-slash-second" /><span className="fx-scorch" /></>}
-    {kind === 'charge' && <span className="fx-lightning">ϟ</span>}
+    {kind === 'charge' && <BattleFxImage kind="motion-orb" className="fx-motion-orb" />}
   </span>;
 }
 

@@ -1,10 +1,12 @@
 import { CombatSprite, DefeatCross } from './BattleArt';
 import { BattleBurst } from './BattleEffects';
+import { BattleFxImage } from './BattleFxImage';
+import { fireAttackTargetIds } from '../lib/battleMediaEvents';
 import React, { useLayoutEffect, useMemo, useRef } from 'react';
 import { SpecialMove } from './SpecialMove';
 import { readMoveOverrides, specialMoveForEvent, gateSpecialMoveReplay } from '../specialMoves';
 import { cards, cardEntryAccent, getCardImage, type Card } from '../data';
-import { getCardArtworkId } from '../lib/assets';
+import { getAssetUrl, getCardArtworkId } from '../lib/assets';
 import { battleChanges, eventIntensity, isNeutralDeparture } from '../battleChoreography';
 import { getCardWallpaper } from '../lib/cardFinish';
 import type { PresentationEffect } from './PlayLoop';
@@ -84,9 +86,9 @@ function applyGeometry(root: HTMLElement, geometry: Geometry, sourceId: string) 
   });
   root.querySelectorAll<HTMLElement>('[data-geo-change]').forEach(node => {
     const id = node.dataset.geoChange!;
-    const point = current.get(id) ?? before.get(id);
-    const from = before.get(id);
     const role = node.dataset.geoRole;
+    const point = role === 'departure' ? before.get(id) : current.get(id) ?? before.get(id);
+    const from = before.get(id);
     const hidden = !point || (role === 'moved' && !from);
     hide(node, hidden);
     if (hidden) return;
@@ -113,6 +115,7 @@ export function BattleAttack({ card, effect, impact, replaying = false, audioEna
   }, [effect.sequence, effect.cardId, effect.type, effect.kind, effect.owner, sourceId, playedSpecialMoves]);
   const changes = battleChanges(effect);
   const intensity = eventIntensity(effect);
+  const fireTargets = fireAttackTargetIds(effect);
   const targetIds = effect.targets.length
     ? effect.targets.filter(target => !isNeutralDeparture(target)).map(target => target.cardInstanceId)
     : [sourceId];
@@ -205,6 +208,7 @@ export function BattleAttack({ card, effect, impact, replaying = false, audioEna
               ? <path className="attack-shield" />
               : <><circle className="attack-flash" /><polygon className="attack-star" /><circle data-geo="ring-outer" /><circle data-geo="ring-inner" />{SPARK_ANGLES.map(angle => <line key={angle} className="attack-spark" />)}</>}
       </svg>
+      {fireTargets.has(id) && <span className="attack-fire-media" data-battle-media="fire-impact" data-fire-playback="once" aria-hidden="true"><img className="attack-fire-frames" src={getAssetUrl('assets/combat/supplied/fire-impact-once.webp')} width={2928} height={150} alt="" decoding="async" draggable={false} /></span>}
     </div>)}
     {impact && changes.map(change => {
       const id = change.cardInstanceId;
@@ -225,7 +229,11 @@ export function BattleAttack({ card, effect, impact, replaying = false, audioEna
         {destroyed && <div className="attack-destroyed-card" data-testid="destroyed-card" data-geo-change={id} data-geo-role="box" style={hidden}><img className="defeated-portrait" src={getCardImage((change.after ?? change.before)?.maryElephant ? 'ms-mary-mack-elephant' : cards[change.cardId]?.id ?? change.cardId)} alt="" /><DefeatCross /></div>}
         {(powerLost || powerGained) && <div className="attack-material" data-geo-change={id} data-geo-role="box" style={hidden}><BattleBurst kind={powerLost ? 'burn' : 'charge'} /></div>}
         {(thawed || shieldSpent || restored) && <div data-testid="status-release" className={'status-release ' + (thawed ? 'is-thawing is-unlocking' : shieldSpent ? 'is-shattering' : 'is-restoring is-unlocking')} data-geo-change={id} data-geo-role="box" style={hidden}>{thawed || restored ? <><CombatSprite asset="lock-chain-strand" className="unlock-chain" /><CombatSprite asset="lock-chain-strand" className="unlock-chain" /><CombatSprite asset="lock-padlock" className="unlock-padlock" />{thawed && <CombatSprite asset="freeze-rim" className="unlock-ice" />}</> : Array.from({length:6},(_,index)=><i key={index} style={{'--shard-angle':index*60+'deg'} as React.CSSProperties}/>)}</div>}
-        {moved && <img className="attack-moving-card" src={getCardImage((change.after ?? change.before)?.maryElephant ? 'ms-mary-mack-elephant' : cards[change.cardId]?.id ?? change.cardId)} alt="" data-geo-change={id} data-geo-role="moved" style={hidden} />}
+        {moved && <>
+          <div className="attack-movement-dust is-departure" data-geo-change={id} data-geo-role="departure" style={hidden}><BattleFxImage kind="movement-dust" /></div>
+          <div className="attack-movement-dust" data-geo-change={id} data-geo-role="box" style={hidden}><BattleFxImage kind="movement-dust" /></div>
+          <img className="attack-moving-card" src={getCardImage((change.after ?? change.before)?.maryElephant ? 'ms-mary-mack-elephant' : cards[change.cardId]?.id ?? change.cardId)} alt="" data-geo-change={id} data-geo-role="moved" style={hidden} />
+        </>}
         {((change.permanentDelta !== 0 && !neutralDeparture) || change.labels.length > 0) && <div data-testid="battle-power-change" className={`attack-delta ${neutralDeparture ? '' : change.delta < 0 ? 'is-loss' : 'is-gain'}`} data-geo-change={id} data-geo-role="delta" style={neutralDeparture ? { ...hidden, color: '#e5e7eb' } : hidden}>
           {change.delta !== 0 && !neutralDeparture && <strong>{change.delta > 0 ? '+' : '−'}{Math.abs(change.delta)}</strong>}
           {change.labels.map(label => <span key={label}>{label}</span>)}

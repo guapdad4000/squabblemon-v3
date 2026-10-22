@@ -1,0 +1,176 @@
+{
+  "scope": "Supplied battle graphics only",
+  "beforeBytes": 3314930,
+  "afterBytes": 1296867,
+  "reductionPercent": 60.88,
+  "notes": [
+    "Transparent PNG for idle fist; WebP for other supplied assets.",
+    "Animation frames and timing retained for persistent effects.",
+    "Burst trimmed to 1130ms; its visible contact accent lasts 650ms.",
+    "Four-level alpha encoding for the orb, Squabble aura, and ready fist; RGB quality 74.",
+    "Fire attack is a 24-frame sprite strip played once in 480ms; generic fire thumbnail is static.",
+    "Spent atlas retains all 64 poses and final reduced peace-sign pose."
+  ],
+  "assets": [
+    {
+      "file": "burn-flame-still.webp",
+      "bytes": 3202,
+      "width": 160,
+      "height": 222,
+      "frames": 1,
+      "durationMs": 0,
+      "transparent": true,
+      "sha256": "6eb9719c043eee0e2b785f5170a31e4371836bb4b71181f90749c511cd7ccfc8"
+    },
+    {
+      "file": "burn-flame.webp",
+      "bytes": 32300,
+      "width": 160,
+      "height": 222,
+      "frames": 10,
+      "durationMs": 1233,
+      "transparent": true,
+      "sha256": "26414b2ac8a2cd542438aab587d4fe504614ce482431a068bf8e65fc8bb167a7"
+    },
+    {
+      "file": "fire-impact-once.webp",
+      "bytes": 28118,
+      "width": 2928,
+      "height": 150,
+      "frames": 1,
+      "durationMs": 0,
+      "transparent": true,
+      "sha256": "00f4632b2e80aab2faa5a07d9bb412ebf710c7b6a0489117b47c1e0df124450d"
+    },
+    {
+      "file": "fire-impact-still.webp",
+      "bytes": 2218,
+      "width": 122,
+      "height": 150,
+      "frames": 1,
+      "durationMs": 0,
+      "transparent": true,
+      "sha256": "f19d518694436f461cd6776c87aa590b58f9f973d04c1a4013389be6ffaea6ab"
+    },
+    {
+      "file": "motion-orb-still.webp",
+      "bytes": 4918,
+      "width": 112,
+      "height": 112,
+      "frames": 1,
+      "durationMs": 0,
+      "transparent": true,
+      "sha256": "0d1dda49c7f0037caa59bd5a19fab2ba395ac62d989bd6adffea492ea8d063b7"
+    },
+    {
+      "file": "motion-orb.webp",
+      "bytes": 165124,
+      "width": 112,
+      "height": 112,
+      "frames": 75,
+      "durationMs": 2470,
+      "transparent": true,
+      "sha256": "1fec765053f7f7fe29b7541a3263f170fa083d810b338b5a7835938d5cbf5531"
+    },
+    {
+      "file": "movement-dust-still.webp",
+      "bytes": 2732,
+      "width": 320,
+      "height": 180,
+      "frames": 1,
+      "durationMs": 0,
+      "transparent": true,
+      "sha256": "baf87cd20ea7a91c86e96730b3b84d5f32777d7b1e377c0beaf7673d8829457e"
+    },
+    {
+      "file": "movement-dust.webp",
+      "bytes": 22204,
+      "width": 320,
+      "height": 180,
+      "frames": 16,
+      "durationMs": 1000,
+      "transparent": true,
+      "sha256": "bba3830bf382ddfe213be88073ead4660f6fff37754c9f5812053afa61c94ebc"
+    },
+    {
+      "file": "pvp-energy-burst-still.webp",
+      "bytes": 7140,
+      "width": 480,
+      "height": 266,
+      "frames": 1,
+      "durationMs": 0,
+      "transparent": true,
+      "sha256": "61e71699ac39a9e8e80da6986db3c21f621db5a5dbccf49dc39b41a9f078d14d"
+    },
+    {
+      "file": "pvp-energy-burst.webp",
+      "bytes": 94108,
+      "width": 480,
+      "height": 266,
+      "frames": 17,
+      "durationMs": 1070,
+      "transparent": true,
+      "sha256": "cbcaad592b3e5053c95d9d9ef197f719085d6fc33f2deaad1116d16f51f887b9"
+    },
+    {
+      "file": "squabble-aura-still.webp",
+      "bytes": 11632,
+      "width": 192,
+      "height": 346,
+      "frames": 1,
+      "durationMs": 0,
+      "transparent": true,
+      "sha256": "ca9c7404b0cb14b6bb1c94721881d9d176a906edab41ccf48fbe553efd31850d"
+    },
+    {
+      "file": "squabble-aura.webp",
+      "bytes": 421710,
+      "width": 192,
+      "height": 346,
+      "frames": 91,
+      "durationMs": 5400,
+      "transparent": true,
+      "sha256": "3c78fe867af511d92fa23ee02996e7c9bbf104d2a1d3168f8c27ef0340eb39d0"
+    },
+    {
+      "file": "squabble-idle.png",
+      "bytes": 12621,
+      "width": 111,
+      "height": 160,
+      "frames": 1,
+      "durationMs": 0,
+      "transparent": true,
+      "sha256": "ef16c6c1cb756ae229d40a055e182c643983c4b140d8c18b9aef71b3bd584d62"
+    },
+    {
+      "file": "squabble-ready-still.webp",
+      "bytes": 5592,
+      "width": 160,
+      "height": 160,
+      "frames": 1,
+      "durationMs": 0,
+      "transparent": true,
+      "sha256": "77df4d8bb8f716de410018b8712794646e37887a20c262a4e2b901917dc8a463"
+    },
+    {
+      "file": "squabble-ready.webp",
+      "bytes": 236222,
+      "width": 160,
+      "height": 160,
+      "frames": 72,
+      "durationMs": 5680,
+      "transparent": true,
+      "sha256": "3362688bec39a6a25542bb059b49d0a0b87f529e06e49fd2af79cf1f6ed9ff75"
+    },
+    {
+      "file": "squabble-spent-atlas.webp",
+      "bytes": 247026,
+      "width": 1024,
+      "height": 1024,
+      "frames": 1,
+      "durationMs": 0,
+      "transparent": true,
+      "sha256": "0d4ec079770c97866b60fae4594bc1d0da98ac6861e63d46ccc5ec214c764a7d"
+    }
+  ]
+}

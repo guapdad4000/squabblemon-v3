@@ -1,3 +1,4 @@
+import { BattleFxImage } from './BattleFxImage';
 import { memo, useEffect, useRef } from "react";
 import type { CardInstance } from "../gameEngine";
 import "./battle-hand-peek.css";
@@ -88,7 +89,7 @@ export const BattleHandPeek = memo(function BattleHandPeek({
     >
       <div className="battle-hand-peek__heading">
         <strong>{card.name}</strong>
-        <span className="battle-hand-peek__cost">{baseCost && <small className="battle-hand-peek__cost-label">Base</small>}<span aria-hidden="true">⚡</span>{liveCost}<small className="sr-only"> Motion</small></span>
+        <span className="battle-hand-peek__cost">{baseCost && <small className="battle-hand-peek__cost-label">Base</small>}<BattleFxImage kind="motion-orb" className="inline-motion-orb" />{liveCost}<small className="sr-only"> Motion</small></span>
       </div>
       <div className="battle-hand-peek__move">
         <b>{card.ability}</b>

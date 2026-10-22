@@ -1,4 +1,5 @@
 import { BattleStatus } from './BattleEffects';
+import { BattleFxImage } from './BattleFxImage';
 import { DrFadeArt } from './DrFadeArt';
 import React from 'react';
 import { motion } from 'framer-motion';
@@ -24,6 +25,10 @@ interface CardViewProps {
   card: Card | CardInstance;
   queued?: boolean;
   squabble?: boolean;
+  /** A completed Squabble play; independent of the armed hand preview. */
+  squabblePlayed?: boolean;
+  /** Delay the status flame until the one-shot fire contact finishes. */
+  burnIgniting?: boolean;
   onClick?: (e: React.MouseEvent) => void;
   onInspect?: () => void;
   inspectable?: boolean;
@@ -75,7 +80,7 @@ function movementLockCue(instance: CardInstance | null, currentRound?: number) {
 }
 
 function CardViewComponent({
-  card, queued, squabble, onClick, onInspect, inspectable, testId, className = '',
+  card, queued, squabble, squabblePlayed, burnIgniting, onClick, onInspect, inspectable, testId, className = '',
   isBoard, boardPresentation, isEnemy, effectivePower, cost, highlighted,
   effectRole, effectKind, disableLayout, layoutDependency, unavailable, inspectionLayout,
   disabledReason, variantId, progress, isInspector,
@@ -147,6 +152,7 @@ function CardViewComponent({
   const isMoved = instance?.moved;
   const boardStatusLabel = [
     chargeLabel,
+    squabblePlayed ? 'SQUABBLE: base Hands doubled.' : '',
     buddyDescription,
     buddyBudDescription,
     covered ? 'Covered.' : isProtected ? 'Protected.' : '',
@@ -233,6 +239,7 @@ function CardViewComponent({
       data-card-kind={card.kind ?? 'character'}
       data-mary-form={instance?.cardId === 'ms-mary-mack' ? instance.maryElephant ? 'elephant' : 'human' : undefined}
       data-buddy-form={buddyCue ? (buddyRockForm ? 'squabble' : 'plant') : undefined}
+      data-squabble-played={squabblePlayed || undefined}
       data-bomb-round={fuseRound}
       data-frozen={isFrozen ? true : undefined}
       data-card-finish={cardFinishLabel(rarity, variantKind)}
@@ -273,6 +280,7 @@ function CardViewComponent({
       `}
       style={{ ['--entry-color' as any]: entryAccent }}
     >
+      {isBoard && squabblePlayed && !covered && <BattleFxImage kind="squabble-aura" className="card-squabble-aura" />}
       {isBoard && !combatPresentation && <BattleStatus frozen={isFrozen} silenced={isSilenced} protected={isProtected || covered} />}
       <div className={`collector-frame absolute inset-0 p-[2px] md:p-[3px] transition-colors duration-300 card-bevel
         ${queued && squabble ? 'bg-accent shadow-[0_0_30px_theme(colors.accent.DEFAULT)]' : queued ? 'bg-primary' : 'bg-zinc-700 group-hover:bg-zinc-400'}
@@ -283,6 +291,7 @@ function CardViewComponent({
         <div className="relative w-full h-full bg-zinc-950 card-bevel-inner overflow-hidden flex flex-col group/inner">
           <img src={card.kind === 'blockbuster' ? getCardImage(card.id, variantId) : backgroundUrl ?? (!isEnemy && (!instance || instance.owner === 'player') ? equippedScene : undefined) ?? getCardWallpaper(card.type)} alt="" loading="lazy" decoding="async" draggable={false} className="collector-wallpaper" />
           <div className="collector-atmosphere" aria-hidden="true" />
+          {isBoard && burnStacks > 0 && <span className={`card-burn-media${burnIgniting ? ' is-igniting' : ''}`} data-battle-fx="persistent-burn" aria-hidden="true"><BattleFxImage kind="burn-flame" /><BattleFxImage kind="burn-flame" /></span>}
           <div className="absolute inset-0 bg-[image:var(--rarity-pattern)] opacity-20 mix-blend-screen pointer-events-none z-0" />
 
           <div className="absolute top-[30%] left-1/2 -translate-x-1/2 -translate-y-1/2 text-white/5 font-display font-black text-5xl md:text-7xl italic uppercase pointer-events-none z-0 whitespace-nowrap rotate-[-15deg]">
@@ -408,6 +417,8 @@ function cardViewPropsEqual(previous: CardViewProps, next: CardViewProps) {
     && previous.dragEnabled === next.dragEnabled
     && previous.queued === next.queued
     && previous.squabble === next.squabble
+    && previous.squabblePlayed === next.squabblePlayed
+    && previous.burnIgniting === next.burnIgniting
     && previous.testId === next.testId
     && previous.className === next.className
     && previous.isBoard === next.isBoard

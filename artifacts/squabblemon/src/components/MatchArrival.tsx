@@ -1,5 +1,6 @@
+import { BattleFxImage } from './BattleFxImage';
 import { motion, useReducedMotion } from 'framer-motion';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { getAssetUrl } from '../lib/assets';
 import { FighterPortrait } from './profile/FighterPortrait';
 import { playSoundEffect, stopSoundEffect } from '../lib/sfx';
@@ -18,6 +19,12 @@ export function MatchArrival({ player, rival, label = 'Match found', onContinue 
 }) {
   const reduced = useReducedMotion() || (typeof document !== 'undefined' && document.documentElement.dataset.reduceMotion === 'true');
   const [preferences] = useFeedbackPreferences();
+  const [burstActive, setBurstActive] = useState(!reduced);
+  useEffect(() => {
+    setBurstActive(!reduced);
+    const timer = window.setTimeout(() => setBurstActive(false), 1100);
+    return () => clearTimeout(timer);
+  }, [reduced]);
   useEffect(() => {
     const found = playSoundEffect('match-found', preferences.audioEnabled, 0.7);
     let impact: HTMLAudioElement | null = null;
@@ -48,6 +55,11 @@ export function MatchArrival({ player, rival, label = 'Match found', onContinue 
         src={getAssetUrl('assets/pvp/versus/arm-' + side + '.webp')} alt=""
         initial={reduced ? false : { x: i ? '105%' : '-105%', rotate: i ? 6 : -6 }}
         animate={{ x: 0, rotate: i ? -1 : 1 }} transition={{ duration: .34, delay: .16, ease: [0.16, 1, 0.3, 1] }} />)}
+      {!reduced && burstActive && <motion.div className="versus-impact-anchor versus-impact-anchor--energy"
+        initial={{ opacity: 0, scale: .94 }} animate={{ opacity: [0, .32, .22, 0], scale: [.94, 1, 1.04, 1.04] }}
+        transition={{ delay: .43, duration: .65, times: [0, .2, .65, 1] }}>
+        <BattleFxImage kind="pvp-energy-burst" />
+      </motion.div>}
       <div className="versus-impact-anchor"><motion.img className="versus-impact-frame"
         src={getAssetUrl('assets/pvp/versus-v2/fist-impact-black-v2.webp')} alt=""
         initial={reduced ? false : { opacity: 0, scale: .16, rotate: -9 }}

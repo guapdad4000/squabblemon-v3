@@ -1,0 +1,36 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "composite": false,
+    "incremental": false,
+    "paths": {
+      "@workspace/squabblemon-engine": [
+        "../../lib/squabblemon-engine/src/gameEngine.ts"
+      ],
+      "@workspace/squabblemon-engine/*": [
+        "../../lib/squabblemon-engine/src/*"
+      ],
+      "@workspace/api-client-react": [
+        "../../lib/api-client-react/src/index.ts"
+      ],
+      "@workspace/api-zod": [
+        "../../lib/api-zod/src/index.ts"
+      ],
+      "@/*": [
+        "./src/*"
+      ]
+    },
+    "jsx": "react-jsx"
+  },
+  "references": [],
+  "include": [
+    "src/**/*",
+    "e2e/supplied-battle-fx.fixture.tsx"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "**/*.test.ts",
+    "**/*.test.tsx"
+  ]
+}

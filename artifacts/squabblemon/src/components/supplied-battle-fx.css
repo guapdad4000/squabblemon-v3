@@ -1,0 +1,34 @@
+.supplied-battle-fx{pointer-events:none;user-select:none;object-fit:contain}
+.game-glyph--motion>img.supplied-battle-fx{width:100%;height:100%;filter:drop-shadow(0 0 3px #abbcff66)}
+.card-burn-media{position:absolute;inset:0;z-index:15;pointer-events:none;opacity:.84}
+.card-burn-media>.supplied-battle-fx{position:absolute;left:-19%;bottom:7%;width:60%;height:72%;object-position:center bottom;mask-image:linear-gradient(transparent,#000 24% 80%,transparent)}
+.card-burn-media>.supplied-battle-fx+img{left:auto;right:-19%;scale:-1 1}
+.collector-card--combat .card-burn-media{opacity:.8}
+.attack-fire-media{position:absolute;left:50%;top:50%;width:85%;aspect-ratio:122/150;max-width:142px;translate:-50% -60%;opacity:.88;overflow:hidden;pointer-events:none;animation:fire-contact-end calc(480ms / var(--presentation-speed,1)) steps(1,end) both}
+.attack-hit-shell:has(.attack-fire-media) .attack-hit{opacity:.4}
+.attack-movement-dust{position:absolute;translate:-50% -50%;pointer-events:none;animation:supplied-dust-fade calc(800ms / var(--presentation-speed,1)) ease-out both}
+.attack-movement-dust>.supplied-battle-fx{position:absolute;left:-70%;top:20%;width:240%;height:130%;max-width:none;opacity:.84;object-position:center}
+.attack-movement-dust.is-departure{opacity:.65}
+.fx-motion-orb{position:absolute;left:50%;top:50%;width:58px;height:58px;max-width:none;translate:-50% -50%;animation:supplied-orb-charge .8s ease-out both}
+@keyframes supplied-dust-fade{0%{opacity:0}12%,62%{opacity:1}100%{opacity:0}}
+@keyframes supplied-orb-charge{0%{opacity:0;scale:.45}30%{opacity:1;scale:1}100%{opacity:0;scale:1.15}}
+@media(prefers-reduced-motion:reduce){.attack-movement-dust,.fx-motion-orb{animation:none;opacity:.45}.attack-movement-dust.is-departure{display:none}}
+html:is([data-reduce-motion=true],[data-reduced-motion=true]) :is(.attack-movement-dust,.fx-motion-orb),.battle-arena[data-reduced-motion=true] :is(.attack-movement-dust,.fx-motion-orb){animation:none;opacity:.45}
+.is-replay :is(.attack-movement-dust,.attack-fire-media){display:none}
+
+.inline-motion-orb{display:inline-block;width:1.2em;height:1.2em;vertical-align:middle;flex:none}
+
+/* The supplied frame has transparent margins; align its red inner rectangle to the card. */
+.card-squabble-aura{position:absolute;z-index:-1;left:-34%;top:-35%;width:166%;height:166%;max-width:none;object-fit:fill;opacity:.88}
+.versus-park .versus-impact-anchor--energy{z-index:3;width:clamp(290px,44vw,620px)}
+.versus-impact-anchor--energy>.supplied-battle-fx{display:block;width:100%;height:auto}
+@media(max-width:500px){.versus-park .versus-impact-anchor--energy{width:90vw}}
+
+.attack-fire-frames{display:block;width:2400%;height:100%;max-width:none;pointer-events:none;animation:fire-contact-frames calc(480ms / var(--presentation-speed,1)) steps(24,end) both}
+.card-burn-media.is-igniting{animation:burn-after-contact calc(480ms / var(--presentation-speed,1)) steps(1,end) both}
+@keyframes fire-contact-frames{to{transform:translateX(-100%)}}
+@keyframes fire-contact-end{to{visibility:hidden}}
+@keyframes burn-after-contact{from{visibility:hidden}to{visibility:visible}}
+@media(prefers-reduced-motion:reduce){.attack-fire-media{display:none}.card-burn-media.is-igniting{animation:none}}
+html:is([data-reduce-motion=true],[data-reduced-motion=true]) .attack-fire-media{display:none}
+html:is([data-reduce-motion=true],[data-reduced-motion=true]) .card-burn-media.is-igniting{animation:none}

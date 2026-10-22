@@ -2,11 +2,12 @@ import { isStyleShardRarity, type StyleShardRarity } from '@workspace/squabblemo
 import type { CSSProperties } from 'react';
 import { Sparkles, type LucideIcon } from 'lucide-react';
 import { getAssetUrl } from '../../lib/assets';
+import { BattleFxImage } from '../BattleFxImage';
 import '../../styles/game-ornaments.css';
 
 const artwork = {
   fight: 'ui/fight-emblem',
-  motion: 'ui/motion-bolt',
+  motion: 'combat/supplied/motion-orb-still',
   crew: 'props/deck-stack',
   story: 'props/neighborhood-map',
   bounty: 'props/sticker-phone',
@@ -50,7 +51,7 @@ export function GameGlyph({
       data-shard-rarity={name === 'shards' ? shardRarity ?? 'Universal' : undefined}
       aria-hidden="true"
     >
-      {art ? (
+      {name === 'motion' ? <BattleFxImage kind="motion-orb" /> : art ? (
         <img src={getAssetUrl(`assets/${art}.webp`)} alt="" width={64} height={64} decoding="async" draggable={false} />
       ) : (
         <Stamp size={22} strokeWidth={1.8} />

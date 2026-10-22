@@ -10,7 +10,8 @@ import './battle-location-details.css';
 
 type District = { id: string; name: string; rule: string; strategy?: string; accent?: string; status?: string };
 type ViewMode = 'location' | 'formation';
-export function BattleDistrictView({ districts, boards, scores, lane, mode = 'formation', onMode, onLane, onClose, onInspect, variantFor, covered, targetIds = [], districtMarks = [], focusItemId }: {
+export function BattleDistrictView({ districts, boards, scores, lane, mode = 'formation', onMode, onLane, onClose, onInspect, variantFor, covered, targetIds = [], districtMarks = [], focusItemId, squabbledIds }: {
+  squabbledIds?: ReadonlySet<string>;
   districts: District[]; boards: CardInstance[][]; scores: { player: number; cpu: number }[];
   lane: number; mode?: ViewMode; onMode?: (mode: ViewMode) => void; onLane: (lane: number) => void; onClose: () => void;
   onInspect: (card: CardInstance) => void; variantFor: (card: CardInstance) => string | undefined;
@@ -80,7 +81,7 @@ export function BattleDistrictView({ districts, boards, scores, lane, mode = 'fo
         {(['cpu', 'player'] as const).map(owner => <section key={owner} aria-label={owner === 'cpu' ? 'Rival fighters' : 'Your fighters'}>
           <h3>{owner === 'cpu' ? 'Rival' : 'Your gang'} <span>{boards[lane].filter(c => c.owner === owner).length} fighters</span></h3>
           <div className="battle-district-view__cards">{boards[lane].filter(c => c.owner === owner).map(card => <div key={card.instanceId} className={targetIds.includes(card.instanceId) ? 'district-fighter is-targeted' : 'district-fighter'}>
-            <CardView card={card} isBoard isEnemy={owner === 'cpu'} fillContainer disableLayout covered={covered(card.instanceId)}
+            <CardView card={card} squabblePlayed={squabbledIds?.has(card.instanceId)} isBoard isEnemy={owner === 'cpu'} fillContainer disableLayout covered={covered(card.instanceId)}
               variantId={variantFor(card)} effectivePower={getEffectiveCardPower(card)}
               onClick={() => onInspect(card)} onInspect={() => onInspect(card)} />
             <span>{targetIds.includes(card.instanceId) ? 'Targeted · ' : ''}{card.name}</span>
