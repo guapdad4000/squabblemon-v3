@@ -28,7 +28,7 @@ import { BattleHandPeek } from './BattleHandPeek';
 import { BattleFormation } from './BattleFormation';
 import { DistrictAmbience } from './DistrictAmbience';
 import { SquabbleSigil } from './SquabbleSigil';
-import { setBattleActive } from '../lib/imageWarmup';
+import { setBattleActive, warmImages } from '../lib/imageWarmup';
 import React, { useEffect, useRef, useState } from 'react';
 import { styleSetFor } from '@workspace/squabblemon-engine/cosmetics';
 import { computeHandsOverdrive, computeElementalOverdrivePerk } from '@workspace/squabblemon-engine/bossRaid';
@@ -342,7 +342,7 @@ export function Battle({
     ? online.costs[card.instanceId]?.[lane] ?? Number.POSITIVE_INFINITY
     : getLegalCardCost(m, 'player', card, lane);
   const bossMusic = m.storyEncounter?.activity?.kind === 'boss';
-  useEffect(() => { setBattleActive(true); return () => setBattleActive(false); }, []);
+  useEffect(() => { setBattleActive(true); void warmImages([getAssetUrl('assets/combat/supplied/attack-impact-atlas.webp')]); return () => setBattleActive(false); }, []);
   useEffect(() => { if (bossMusic) setBattleMusicMode('boss'); return () => { if (bossMusic) setBattleMusicMode(null); }; }, [bossMusic]);
   const phase = presentationPhase as PresentationPhase;
   const replaying = !!replay;

@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { createMatch, createCardInstance, playTurnCard, type Lane } from '../src/gameEngine';
 import { GameGlyph } from '../src/components/venue/GameGlyph';
 import { SquabbleSigil } from '../src/components/SquabbleSigil';
+import { BattleAttack } from '../src/components/BattleAttack';
 import { CardView } from '../src/components/CardView';
 import { BattleFxImage, BATTLE_MEDIA } from '../src/components/BattleFxImage';
 import { fireAttackTargetIds, squabbledCardIds } from '../src/lib/battleMediaEvents';
@@ -78,4 +79,23 @@ test('Squabble art has an idle PNG, an interactive flame, and a one-shot spent p
   const spent=renderToStaticMarkup(<SquabbleSigil spent/>);
   assert.match(spent,/squabble-spent-atlas\.webp/);assert.match(spent,/data-squabble-art="spent"/);
   assert.doesNotMatch(spent,/squabble-ready|squabble-idle|×2/);
+});
+
+test('supplied contact follows actual hostile damage, excluding windup, buffs, fire and neutral departures',()=>{
+  const before=createMatch('block','combo');before.playerMotion=20;
+  const attacker=createCardInstance('roaster','player','hand',1);before.playerHand=[attacker];
+  const enemy={...createCardInstance('hooper','cpu','lane-0',0),lane:0 as Lane};
+  before.boards=[[enemy],[],[]];
+  const resolved=playTurnCard(before,'player',attacker.instanceId,0);
+  const event=resolved.effectLog.find(e=>e.type==='ability'&&e.cardId==='roaster')!;assert.ok(event);
+  const effect={...event,targetIds:event.targets.map(t=>t.cardInstanceId)};
+  const render=(entry=effect,impact=true)=>renderToStaticMarkup(<BattleAttack card={attacker} effect={entry} impact={impact}/>);
+  assert.match(render(),/class="attack-contact-media"/);
+  assert.doesNotMatch(render(effect,false),/class="attack-contact-media"/);
+  assert.doesNotMatch(render({...effect,kind:'fire'}),/class="attack-contact-media"/);
+  assert.doesNotMatch(render({...effect,targets:effect.targets.map(t=>({...t,after:t.before}))}),/class="attack-contact-media"/);
+  assert.doesNotMatch(render({...effect,targets:effect.targets.map(t=>({...t,owner:'player'}))}),/class="attack-contact-media"/);
+  const removed={...effect,targets:effect.targets.map(t=>({...t,after:null}))};
+  assert.match(render(removed),/class="attack-contact-media"/);
+  assert.doesNotMatch(render({...removed,targets:removed.targets.map(t=>({...t,departureCause:'transformation' as const}))}),/class="attack-contact-media"/);
 });

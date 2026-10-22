@@ -1,15 +1,16 @@
 {
   "scope": "Supplied battle graphics only",
-  "beforeBytes": 3314930,
-  "afterBytes": 1296867,
-  "reductionPercent": 60.88,
+  "beforeBytes": 5583906,
+  "afterBytes": 1407585,
+  "reductionPercent": 74.79,
   "notes": [
     "Transparent PNG for idle fist; WebP for other supplied assets.",
     "Animation frames and timing retained for persistent effects.",
     "Burst trimmed to 1130ms; its visible contact accent lasts 650ms.",
     "Four-level alpha encoding for the orb, Squabble aura, and ready fist; RGB quality 74.",
     "Fire attack is a 24-frame sprite strip played once in 480ms; generic fire thumbnail is static.",
-    "Spent atlas retains all 64 poses and final reduced peace-sign pose."
+    "Spent atlas retains all 64 poses and final reduced peace-sign pose.",
+    "New impact-fast GIF uses its first single-impact beat: 28 poses in a 7x4 transparent atlas, 620ms once, anchored to hostile permanent damage or destruction; the later multi-hit tail is omitted. Fire and reduced motion omit this supplemental impact."
   ],
   "assets": [
     {
@@ -171,6 +172,21 @@
       "durationMs": 0,
       "transparent": true,
       "sha256": "0d4ec079770c97866b60fae4594bc1d0da98ac6861e63d46ccc5ec214c764a7d"
+    },
+    {
+      "file": "attack-impact-atlas.webp",
+      "bytes": 110718,
+      "width": 1344,
+      "height": 832,
+      "frames": 1,
+      "durationMs": 0,
+      "transparent": true,
+      "sha256": "35d06bdfd0b211de1227092c354091a9319ffffd67bfcb0a137dfc9ec8bea2d1",
+      "spriteColumns": 7,
+      "spriteRows": 4,
+      "spriteFrames": 28,
+      "playbackMs": 620,
+      "sourceBytes": 2268976
     }
   ]
 }

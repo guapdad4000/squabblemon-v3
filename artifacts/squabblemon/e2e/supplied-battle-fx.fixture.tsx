@@ -52,7 +52,7 @@ function Review() {
     setState(s=>({match:resolved,effect:null,impact:false,key:s.key+1}));
   }
   return <><details className="fx-review-controls"><summary>Effects review</summary><div>
-    <button onClick={()=>run('folks')}>Fire attack</button><button onClick={()=>run('roaster')}>Apply Burn</button><button onClick={()=>run('carmeet')}>Move</button>
+    <button onClick={()=>run('roaster')}>Attack impact</button><button onClick={()=>run('folks')}>Fire attack</button><button onClick={()=>run('roaster')}>Apply Burn</button><button onClick={()=>run('carmeet')}>Move</button>
     <button onClick={()=>setState(s=>({...s,match:{...s.match,playerMotion:s.match.playerMotion+1}}))}>Motion +1</button>
     <button onClick={showSquabble}>Squabbled card</button><button onClick={()=>setArrival(true)}>PvP match screen</button>
     <button onClick={clear}>Reset</button><label><input type="checkbox" checked={reduced} onChange={e=>setReduced(e.target.checked)}/>Reduced motion</label>
