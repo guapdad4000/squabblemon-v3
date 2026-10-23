@@ -1,5 +1,6 @@
 import { cards, type Card } from './data';
 import catalog from './specialMoves.json';
+import battleMoves from './lib/battleMoves.json';
 import type { EffectLogEntry } from './gameEngine';
 import { abilityTookEffect } from './abilityOutcome';
 import { getAssetUrl } from './lib/assets';
@@ -21,7 +22,9 @@ export const moveAssignments: Record<string, string | null> = {
 export const MOVE_STORAGE_KEY = 'squabblemon.special-moves.v1';
 export type MoveOverrides = Record<string, string | null>;
 
-export function getMoveClipUrl(clip: MoveClip) {
+export function getMoveClipUrl(clip: MoveClip, quality: 'original' | 'battle' = 'original') {
+  const derivative = (battleMoves as Record<string, {asset: string; revision: string | null}>)[clip.file];
+  if (quality === 'battle' && derivative && (clip.revision ?? null) === derivative.revision) return getAssetUrl(derivative.asset);
   const url = getAssetUrl(`assets/special-moves/${clip.file}`);
   return clip.revision ? `${url}?v=${encodeURIComponent(clip.revision)}` : url;
 }

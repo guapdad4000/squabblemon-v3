@@ -1,0 +1,177 @@
+@font-face {
+  font-family: 'Hemi Head';
+  src: url('../assets/fonts/hemi-head-bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Hemi Head Italic';
+  src: url('../assets/fonts/hemi-head-bold-italic.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'M290';
+  src: url('../assets/fonts/m290.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Blzee';
+  src: url('../assets/fonts/blzee.woff2') format('woff2');
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+:root {
+  --font-sign: 'Blzee', 'Clash Display', sans-serif;
+  --font-number: 'Blzee', 'Clash Display', sans-serif;
+  --font-card-number: 'Hemi Head Italic', 'Clash Display', sans-serif;
+  --font-card-number-weight: 700;
+  --font-card-number-synthesis: none;
+  --font-lane-number: 'Hemi Head Italic', 'Clash Display', sans-serif;
+  --font-lane-number-weight: 700;
+  --font-lane-number-scale: .821;
+  --font-lane-number-digit-width: .65;
+  --font-location-title: var(--font-sign);
+  --font-location-title-weight: 400;
+  --font-deck-title-weight: 400;
+  --font-detail-title: var(--font-sign);
+  --font-card-title: 'Blzee', 'Clash Display', sans-serif;
+  --font-deck-title: 'Blzee', 'Clash Display', sans-serif;
+  --font-action-sign: 'Hemi Head', 'Clash Display', sans-serif;
+}
+
+/* Paint the lettering, preserving sign materials, icons and interaction areas. */
+:is(.battle-street-sign,.street-sign-btn,.crew-street-sign,.park-street-sign,.express-sign__board,.street-select-value) {
+  --font-display: var(--font-sign);
+  font-family: var(--font-sign);
+  font-synthesis: none;
+  font-style: normal;
+  letter-spacing: .035em;
+}
+.express-sign__board strong { font-family: var(--font-sign); font-synthesis: none; }
+.battle-arena.battle-hud .battle-primary-action.battle-street-sign { font-family: var(--font-action-sign); font-weight: 700; font-style: normal; font-synthesis: none; font-size: 15px; letter-spacing: .035em; }
+.street-select-value { font-size: 1.15em; line-height: 1.2; }
+
+/* Blzee keeps the HUD counters; card and location values have independent roles. */
+:is(.battle-round,.battle-motion,.battle-rival-energy,.battle-claims,.district-score-row,.score-with-delta,.turn-timer-copy) {
+  --font-display: var(--font-number);
+}
+.battle-arena .animated-number {
+  font-family: var(--font-number);
+  font-synthesis: none;
+  font-style: normal;
+}
+:is(.battle-round,.battle-motion,.battle-rival-energy,.turn-timer-copy) :is(b,strong) {
+  font-family: var(--font-number);
+  font-synthesis: none;
+  font-style: normal;
+}
+
+.score-tick {
+  font-family: var(--font-lane-number);
+  font-weight: var(--font-lane-number-weight);
+  font-size: calc(1em * var(--font-lane-number-scale));
+  font-synthesis: none;
+  font-style: normal;
+}
+
+/* A small handwritten accent on the existing detail sheets. */
+.card-inspector-shell .dossier-paper .dossier-name {
+  font-family: var(--font-detail-title);
+  font-weight: 400;
+  font-style: normal;
+  font-synthesis: none;
+  letter-spacing: .015em;
+  line-height: 1.05;
+}
+
+/* Keep existing card proportions and name areas; do not enlarge the art overlays. */
+.collector-card .collector-card-copy h4 {
+  font-family: var(--font-card-title);
+  font-weight: 400;
+  font-style: normal;
+  font-synthesis: none;
+  letter-spacing: .015em;
+}
+
+:is(.deck-carousel__copy,.deck-workbench__name,.decks-spectacle__title) { --font-display: var(--font-deck-title); }
+.deck-carousel__copy h3,.deck-workbench__name input,.decks-spectacle__title h1,
+.compact-deck-picker__deck strong,.deck-box__title.deck-box__title,
+.battle-rival-copy > .font-display {
+  font-family: var(--font-deck-title);
+  font-weight: var(--font-deck-title-weight);
+  font-style: normal;
+  font-synthesis: none;
+  letter-spacing: .01em;
+}
+.deck-box__title small { font-family: var(--font-sans); }
+
+/* Four independent roles. Expressive families never replace rules or body text. */
+.card-stat-value {
+  font-family: var(--font-card-number);
+  font-weight: var(--font-card-number-weight);
+  font-synthesis: var(--font-card-number-synthesis);
+}
+.battle-arena.battle-hud .mobile-district-open,
+.battle-arena .district-marker h3,
+.battle-district-view .battle-location-header h2,
+.battle-district-view > nav button > span {
+  font-family: var(--font-location-title);
+  font-weight: var(--font-location-title-weight);
+  font-style: normal;
+  font-synthesis: none;
+  letter-spacing: .015em;
+  line-height: 1.08;
+}
+
+/* The location sheet uses the same Hands role as its lane marker. */
+.battle-district-view :is(.battle-location-score strong, nav strong > em, nav strong > b) {
+  font-family: var(--font-lane-number);
+  font-weight: var(--font-lane-number-weight);
+  font-style: normal;
+  font-synthesis: none;
+}
+.battle-district-view .battle-location-score strong { font-size: calc(27px * var(--font-lane-number-scale)); }
+.battle-district-view > nav strong > :is(em,b) { font-size: calc(22px * var(--font-lane-number-scale)); }
+@media(max-width:600px) {
+  .battle-district-view .battle-location-score strong { font-size: calc(23px * var(--font-lane-number-scale)); }
+}
+
+/* Collector typography roles shared by the surrounding management screens.
+   Paint existing headings only; body copy, logos and battlefield labels keep their roles. */
+:root { --font-section-title:'Hemi Head','Clash Display',sans-serif; }
+:is(.collection-stage .collection-tabs,.arsenal-screen .arsenal-paper-tabs) :is(button,a),
+.deck-workbench .deck-workbench__browse h2,
+.market.training-studio .market-checkout h2,
+.character-styles .style-receipt h2,
+.card-inspector-shell .dossier-section__head h4 {
+ font-family:var(--font-section-title); font-weight:700; font-style:normal; font-synthesis:none; line-height:1.2; letter-spacing:.025em;
+}
+.collection-stage .collection-hero__stat-value,.character-styles .style-wallet strong {
+ font-family:var(--font-card-number); font-weight:700; font-style:normal; font-synthesis:none;
+}
+.character-styles .character-styles__header h1,
+.character-styles .style-deck-cover h2,
+.style-library .style-library__caption h2,
+.collection-stage .gang-mural__title h2,
+.market.training-studio .market-hero h1 {
+ font-family:var(--font-sign); font-weight:400; font-style:normal; font-synthesis:none; letter-spacing:.015em; line-height:1.12;
+}
+.style-hub .extras-hero__copy h1,
+.style-hub .extras-hero__copy h1 em {
+ font-family:var(--font-sign); font-weight:400; font-style:normal; font-synthesis:none; line-height:1.12; letter-spacing:.015em;
+}
+.style-hub .style-category strong,
+.style-hub .mat-library__heading h2,
+.arsenal-screen .arsenal-paper-tabs strong {
+ font-family:var(--font-section-title); font-weight:700; font-style:normal; font-synthesis:none; line-height:1.2; letter-spacing:.025em;
+}

@@ -1,0 +1,89 @@
+{
+  "status": "Design starting points, not production shader values",
+  "recipes": [
+    {
+      "id": "SuperCommon",
+      "label": "Super Common",
+      "color": "#9d9589",
+      "dark": "#25241f",
+      "pale": "#d2c7ae",
+      "border": "Pressed warm gray",
+      "back": "Matte charcoal paper",
+      "postal": "Matte blue band / ivory field",
+      "accents": "Printed fist and yellow Motion",
+      "strength": 0
+    },
+    {
+      "id": "Common",
+      "label": "Common",
+      "color": "#c4d0d0",
+      "dark": "#23292a",
+      "pale": "#edf0df",
+      "border": "Pearl silver satin",
+      "back": "Fine dark paper",
+      "postal": "Matte print, subtle paper grain",
+      "accents": "Quiet neutral catch",
+      "strength": 0.06
+    },
+    {
+      "id": "Uncommon",
+      "label": "Uncommon",
+      "color": "#65ba98",
+      "dark": "#102c28",
+      "pale": "#d8f9de",
+      "border": "Emerald lacquer / engraving",
+      "back": "Dark coated stock",
+      "postal": "Spot varnish on the band",
+      "accents": "Small gold-knuckle glint",
+      "strength": 0.14
+    },
+    {
+      "id": "Rare",
+      "label": "Rare",
+      "color": "#5da9f2",
+      "dark": "#0c254e",
+      "pale": "#d2eeff",
+      "border": "Cobalt hologram / colored microflakes",
+      "back": "Blue-silver foil, fine flecks",
+      "postal": "Foil blue band + pearl white paper",
+      "accents": "Gold knuckles / elemental tips",
+      "strength": 0.35
+    },
+    {
+      "id": "Epic",
+      "label": "Super Rare",
+      "color": "#b187ea",
+      "dark": "#301749",
+      "pale": "#edddff",
+      "border": "Amethyst / fractured prism",
+      "back": "Larger, deeper violet facets",
+      "postal": "Prismatic band + stronger pearl",
+      "accents": "Wider fist and element foil",
+      "strength": 0.47
+    },
+    {
+      "id": "Legendary",
+      "label": "Legendary",
+      "color": "#e1b851",
+      "dark": "#493016",
+      "pale": "#fff0b8",
+      "border": "Engraved holographic gold",
+      "back": "Gold microflake foil / colored diffraction",
+      "postal": "Metallic band + warm pearl paper",
+      "accents": "Yellow-gold Motion and embossed fist",
+      "strength": 0.62
+    },
+    {
+      "id": "Mythical",
+      "label": "Mythical",
+      "color": "#e6556e",
+      "dark": "#400d26",
+      "pale": "#ffd1dc",
+      "border": "Crimson metal / prism glints",
+      "back": "Crimson opal / dense rainbow flakes",
+      "postal": "Foil band + rose-pearl paper",
+      "accents": "Richest spot foil; Motion stays yellow",
+      "strength": 0.74
+    }
+  ]
+}

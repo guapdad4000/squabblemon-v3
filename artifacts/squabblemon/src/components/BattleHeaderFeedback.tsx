@@ -1,3 +1,4 @@
+import { battlePortraitUrl } from '../lib/battlePortrait';
 import type { ReactNode } from 'react';
 import type { Card } from '../data';
 import { getAssetUrl, getCardImage } from '../data';
@@ -20,13 +21,13 @@ export function BattleHeaderFeedback({ phase, round, complete, effect, actor, la
   const showMove = !!effect && !!actor && !resolving && !['round-intro', 'match-finish'].includes(phase);
   const move = showMove ? upgradeName ?? effect.abilityMetadata?.upgradeName ?? (effect.type === 'play' ? actor.name : actor.ability) : undefined;
   const guidance = phase === 'player-ready' ? decision : resolving ? `Round ${round} settled` : phase === 'round-intro' ? `Round ${round}` : phaseMessage;
-  return <div className="battle-live-feedback" data-testid="battle-live-feedback">
+  return <div className="battle-live-feedback" data-testid="battle-live-feedback" data-feedback-mode={showMove ? 'move' : resolving ? 'result' : 'decision'}>
     <div className="battle-live-move" data-testid="battle-live-move" title={showMove ? `${actor.name} · ${move}${failed ? ' · No effect' : ''}` : detail}>
-      {showMove && <img src={getCardImage(getCardArtworkId(actor))} alt="" width="34" height="40" />}
+      {showMove && <img src={battlePortraitUrl(getCardImage(getCardArtworkId(actor)))} alt="" width="34" height="40" />}
       {!showMove && phase === 'round-intro' && round <= 6 && <img data-testid={`broadcast-round-${String(round).padStart(2, '0')}`} src={getAssetUrl(`assets/fight-night/round-${String(round).padStart(2, '0')}.webp`)} alt="" width="34" height="40" />}
       <div className="battle-live-move__copy">
-        {showMove ? <span className="battle-live-kicker">{effect.owner === 'player' ? 'Your' : 'Rival'} move · {failed ? 'No effect' : landed ? 'Landed' : 'Windup'}</span>
-          : <BattlePhaseStatusChip status={status} onlineLabel={onlineLabel} />}
+        {showMove ? <span className="battle-live-kicker">{effect.owner === 'player' ? 'Your' : 'The Opps’'} move · {failed ? 'No effect' : landed ? 'Landed' : 'Windup'}</span>
+          : <span className="sr-only"><BattlePhaseStatusChip status={status} onlineLabel={onlineLabel} /></span>}
         <strong data-testid="battle-guidance"><span data-testid={showMove && upgradeName ? "effect-upgrade-trigger" : undefined}>{showMove && upgradeName ? `Upgrade · ${move}` : move ?? guidance}</span></strong>
         {!showMove && <span className="sr-only">{detail}</span>}
         {showMove && <span className="sr-only"><BattlePhaseStatusChip status={status} onlineLabel={onlineLabel} /></span>}
@@ -39,7 +40,7 @@ export function BattleHeaderFeedback({ phase, round, complete, effect, actor, la
         <strong><b>{chain.index}</b><small> / {chain.total}</small></strong>
         <span className="battle-combo-track" aria-hidden="true"><i style={{ transform: `scaleX(${Math.min(1, chain.index / chain.total)})` }} /></span>
       </div> : showMove ? <><span className="battle-live-kicker">{actor.name}</span><strong>{failed ? 'No effect' : effect.durationLabel ?? effect.kind}</strong></>
-        : resolving ? <><span className="battle-live-kicker">Districts</span><strong>Scores settled</strong></> : null}
+        : null}
     </div>
   </div>;
 }

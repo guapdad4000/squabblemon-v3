@@ -4,6 +4,7 @@
 @import './components/battle-readability.css';
 @import './styles/scrollbars.css';
 @import './styles/tokens.css';
+@import './styles/blzee-type.css';
 @plugin "@tailwindcss/typography";
 
 @theme inline {

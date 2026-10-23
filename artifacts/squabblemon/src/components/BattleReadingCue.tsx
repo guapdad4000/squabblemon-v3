@@ -14,13 +14,13 @@ export function describeBattlePhase(phase: PresentationPhase, engineComplete: bo
   if (phase === 'match-finish' || engineComplete) return { key: 'match-complete', label: 'Match complete' };
   if (phase === 'player-ready') return { key: 'your-turn', label: 'Your turn' };
   if (phase === 'effects') {
-    const owner = effect ? (effect.owner === 'player' ? 'Your' : 'Rival') : '';
+    const owner = effect ? (effect.owner === 'player' ? 'Your' : 'The Opps’') : '';
     return { key: 'effects', label: 'Effects resolve', detail: effect ? `${owner}${actorName ? ` ${actorName}` : ' card'}` : undefined };
   }
-  if (phase === 'rival-thinking') return { key: 'rival-reveal', label: "Rival's turn", detail: 'Choosing a play' };
-  if (phase === 'rival-pass') return { key: 'rival-reveal', label: 'Rival passed' };
+  if (phase === 'rival-thinking') return { key: 'rival-reveal', label: "The Opps’ turn", detail: 'Choosing a play' };
+  if (phase === 'rival-pass') return { key: 'rival-reveal', label: 'The Opps passed' };
   if (phase === 'player-pass') return { key: 'your-play', label: 'Your turn ends' };
-  if (RIVAL.has(phase)) return { key: 'rival-reveal', label: 'Rival reveal' };
+  if (RIVAL.has(phase)) return { key: 'rival-reveal', label: 'The Opps reveal' };
   if (YOURS.has(phase)) return { key: 'your-play', label: 'Your play lands' };
   if (phase === 'district-flipped' || phase === 'round-result') return { key: 'round-result', label: 'Round result' };
   if (phase === 'round-intro') return { key: 'setup', label: `Round ${round} starting`, detail: 'Cards draw at round start while cards remain.' };
@@ -33,7 +33,7 @@ export function BattlePhaseStatusChip({ status, onlineLabel }: { status: BattleP
     <div data-testid="battle-phase-status" data-phase-status={status.key} role="status" aria-live="polite" className={`battle-phase-status is-${status.key}`}>
       <i aria-hidden="true" />
       <b>{status.label}</b>
-      {detail && <span>{detail}</span>}
+      {detail && detail.trim().toLowerCase() !== status.label.trim().toLowerCase() && <span>{detail}</span>}
     </div>
   );
 }

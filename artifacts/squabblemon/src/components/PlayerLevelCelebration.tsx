@@ -1,6 +1,6 @@
 import { useRef, useEffect } from "react";
 import type { PlayerBootstrap } from "@workspace/api-client-react";
-import { rewardReceipts } from "../lib/rewardReceipts";
+import { rewardReceipts } from "../lib/rewardReceiptStore";
 
 export function PlayerLevelCelebration({
   profile,

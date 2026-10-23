@@ -62,8 +62,8 @@ const help: Record<ArcadeKind, string[]> = {
     "Waves grow faster and tougher. Don’t let YNs reach the counter. Pause whenever you need. Clout per stop and restock; tickets when you reach waves three and six.",
   ],
   "block-takeover": [
-    "Capture neighboring districts, fortify your turf, and collect supplies. Every action gives rival crews a turn.",
-    "The red raid marker shows where rivals will attack next. Rally repairs your crew and increases attack power. Own six districts to unlock the headquarters at The Gym.",
+    "Capture neighboring districts, fortify your turf, and collect supplies. Every action gives The Opps’ crews a turn.",
+    "The red raid marker shows where The Opps will attack next. Rally repairs your crew and increases attack power. Own six districts to unlock the headquarters at The Gym.",
     "Take the headquarters within 24 turns to win. Fade Market supplies your crew; The Park restores health. District rewards bank immediately; victory adds two tickets.",
   ],
 };
@@ -1183,13 +1183,13 @@ function BlockTakeover({
             {tile.owner === "player"
               ? "YOUR TURF"
               : tile.owner === "rival"
-                ? "RIVAL CREW"
+                ? "THE OPPS"
                 : "UNCLAIMED"}{" "}
             · {Math.max(0, tile.defense)}{" "}
             {tile.owner === "player" ? "DEFENSE" : "RESISTANCE"}
           </span>
         </header>
-        <p className="block-tactical-readout">{tile.owner === "player" ? b.threat === selected ? "Raid incoming here. Fortify before their next move." : "Secure turf. Fortify it or gather supplies for the next push." : selected === 0 && owned < 6 ? `Headquarters locked: hold ${6-owned} more districts.` : !blockCanAttack(run,selected) ? "Reach this district by taking a neighboring block first." : b.supplies<1 ? "Get supplies before you attack." : `${b.power} attack against ${tile.defense} resistance. Your move advances the rivals.`}</p>
+        <p className="block-tactical-readout">{tile.owner === "player" ? b.threat === selected ? "Raid incoming here. Fortify before their next move." : "Secure turf. Fortify it or gather supplies for the next push." : selected === 0 && owned < 6 ? `Headquarters locked: hold ${6-owned} more districts.` : !blockCanAttack(run,selected) ? "Reach this district by taking a neighboring block first." : b.supplies<1 ? "Get supplies before you attack." : `${b.power} attack against ${tile.defense} resistance. Your move advances The Opps.`}</p>
         <div>
           <button
             disabled={
@@ -1206,7 +1206,7 @@ function BlockTakeover({
             FORTIFY<small>1 SUPPLY / +5 DEFENSE</small>
           </button>
           <button disabled={disabled} onClick={() => act({ type: "supply" })}>
-            GET SUPPLIES<small>+3 / RIVALS MOVE</small>
+            GET SUPPLIES<small>+3 / THE OPPS MOVE</small>
           </button>
           <button
             disabled={disabled || b.supplies < 3}

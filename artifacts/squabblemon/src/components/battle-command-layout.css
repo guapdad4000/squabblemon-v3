@@ -22,7 +22,7 @@
 .battle-arena.battle-hud .battle-round-clock .turn-timer::before { display: none; }
 .battle-arena.battle-hud .battle-round-clock .turn-timer-copy { transform: translateY(-3px); }
 .battle-arena.battle-hud .battle-round-clock .turn-timer-copy strong {
-  font: 900 italic 76px/.9 var(--font-display); letter-spacing: -.065em;
+  font: 700 76px/.9 var(--font-action-sign,'Hemi Head',sans-serif); font-synthesis: none; letter-spacing: -.065em;
   -webkit-text-stroke: 1px #f4cf835c; font-variant-numeric: tabular-nums;
 }
 .battle-arena.battle-hud .battle-round-clock .turn-timer-track {
@@ -73,7 +73,7 @@
   }
   .battle-arena.battle-hud .battle-command-header--stable .battle-rival-avatar { width: 30px; height: 34px; flex: none; }
   .battle-arena.battle-hud .battle-command-header--stable .battle-rival-copy .font-display { font-size: 12px; }
-  .battle-arena.battle-hud .battle-command-header--stable .battle-rival-copy > :first-child { font-size: 6px; letter-spacing: .04em; }
+  .battle-arena.battle-hud .battle-command-header--stable .battle-rival-copy > .battle-rival-caption { font-size: 6px; letter-spacing: .04em; }
   .battle-arena.battle-hud .battle-command-header--stable .battle-round-clock {
     position: absolute; top: calc(2px + env(safe-area-inset-top)); left: 50%; transform: translateX(-50%);
     width: 104px; height: 44px; grid-area: auto;

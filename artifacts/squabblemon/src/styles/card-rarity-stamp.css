@@ -1,0 +1,25 @@
+/* Rarity is named in full; the card frame and foil carry its visual weight. */
+.rarity-stamp {
+  --stamp-paper:#e4dcc4; --stamp-ink:#39362c;
+  position:relative; display:inline-flex; flex:none;
+  justify-content:center; align-items:center;
+  width:max-content; max-width:100%; padding:7px 9px;
+  color:var(--stamp-ink); background:var(--stamp-paper);
+  border:1px solid currentColor; border-radius:3px;
+  isolation:isolate; text-align:center; text-transform:uppercase;
+}
+.rarity-stamp[data-rarity="Uncommon"] { --stamp-paper:#cbd9ce; --stamp-ink:#284336; }
+.rarity-stamp[data-rarity="Rare"] { --stamp-paper:#c5d8f1; --stamp-ink:#254b7c; }
+.rarity-stamp[data-rarity="Epic"] { --stamp-paper:#ddc8ec; --stamp-ink:#603c7f; }
+.rarity-stamp[data-rarity="Legendary"] { --stamp-paper:#ebd38b; --stamp-ink:#65420d; }
+.rarity-stamp[data-rarity="Mythical"] { --stamp-paper:#e9c5c9; --stamp-ink:#7a2338; }
+.rarity-stamp__label {
+  font:700 10px/1.25 var(--font-action-sign,sans-serif);
+  font-synthesis:none; letter-spacing:.02em; white-space:nowrap;
+}
+/* On the card it is ink in the postal header, not a second sticker. */
+.rarity-stamp[data-compact] {
+  justify-content:flex-start; padding:0; border:0; border-radius:0;
+  color:#fff; background:none;
+}
+.rarity-stamp[data-compact] .rarity-stamp__label { font-size:3.4cqw; line-height:1; letter-spacing:.01em; }

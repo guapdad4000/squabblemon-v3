@@ -56,7 +56,7 @@ export function DistrictEffects({ winner, locked, replaying }: { winner: 'player
   }, [snap]);
   return <>
     {locked && <div className="district-lock-material" aria-hidden="true"><BattleStatus frozen /></div>}
-    {!!snap && <div ref={snapNode} key={snap} className={`district-snap fx-owner-${winner}`} data-battle-fx="district-snap" aria-hidden="true"><span className="district-snap-half" /><span className="district-snap-half" /><BattleBurst kind="snap" /><strong>{winner === 'player' ? 'TAKEN OVER' : 'RIVAL TERRITORY'}</strong></div>}
+    {!!snap && <div ref={snapNode} key={snap} className={`district-snap fx-owner-${winner}`} data-battle-fx="district-snap" aria-hidden="true"><span className="district-snap-half" /><span className="district-snap-half" /><BattleBurst kind="snap" /><strong>{winner === 'player' ? 'TAKEN OVER' : 'THE OPPS TERRITORY'}</strong></div>}
   </>;
 }
 

@@ -9,6 +9,13 @@ export function fireAttackTargetIds(effect: Pick<EffectLogEntry, 'kind' | 'owner
     )).map(target => target.cardInstanceId));
 }
 
+/** Burn lands with the shared hit even when it adds stacks without immediate damage. */
+export function burnApplicationTargetIds(effect: Pick<EffectLogEntry, 'owner' | 'targets'>) {
+  return new Set(effect.targets.filter(target => target.owner !== effect.owner && target.before && target.after
+    && (target.after.statuses.burnStacks ?? 0) > (target.before.statuses.burnStacks ?? 0))
+    .map(target => target.cardInstanceId));
+}
+
 /** A played Squabble belongs to that instance, regardless of later power changes. */
 export function squabbledCardIds(events: readonly EffectLogEntry[], throughSequence = Infinity) {
   return new Set(events.filter(event => event.sequence <= throughSequence && event.type === 'play'

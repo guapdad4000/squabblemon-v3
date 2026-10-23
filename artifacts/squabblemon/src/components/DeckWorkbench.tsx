@@ -7,7 +7,7 @@ import { CoachSpotlight } from './CoachSpotlight';
 import { DrFadePortrait } from './DrFade';
 import { ArrowLeft, ArrowRight, ChartNoAxesColumn, Check, ChevronDown, Crown, Pencil, Plus, Save, Search, Trash2, Undo2, X, Zap } from 'lucide-react';
 import { DECK_SIZE, catalogCardById, getCardImage, validateSavedDeck } from '../data';
-import { CardView } from './CardView';
+import { CollectibleCard as CardView } from './CollectibleCard';
 import { CardPressTarget } from './CardInspection';
 import { ArsenalScreen } from './venue/ArsenalScreen';
 import { autoBuildDeck, replaceDeckCard, workshopSuggestions, type DeckDraft } from '../lib/deckWorkshop';

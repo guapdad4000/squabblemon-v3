@@ -1,0 +1,239 @@
+[
+  {
+    "laneScale": 1,
+    "digitAdvanceEm": 0,
+    "id": "easter",
+    "label": "EASTER",
+    "mode": "live",
+    "weight": 400,
+    "digits": false,
+    "uppercase": true,
+    "roles": [
+      "deck",
+      "location"
+    ],
+    "family": "'Audition easter', sans-serif",
+    "plate": "./card-type-auditions/sheets/easter.webp",
+    "rights": "User confirmed purchase; available in the live audition."
+  },
+  {
+    "laneScale": 1,
+    "digitAdvanceEm": 0,
+    "id": "dash",
+    "label": "DASH",
+    "mode": "live",
+    "weight": 400,
+    "digits": false,
+    "uppercase": true,
+    "roles": [
+      "deck",
+      "location"
+    ],
+    "family": "'Audition dash', sans-serif",
+    "plate": "./card-type-auditions/sheets/dash.webp",
+    "rights": "User confirmed purchase; available in the live audition."
+  },
+  {
+    "laneScale": 1,
+    "digitAdvanceEm": 0,
+    "id": "estrella",
+    "label": "Estrella",
+    "mode": "live",
+    "weight": 400,
+    "digits": false,
+    "uppercase": true,
+    "roles": [
+      "deck",
+      "location"
+    ],
+    "family": "'Audition estrella', sans-serif",
+    "plate": "./card-type-auditions/sheets/estrella.webp",
+    "rights": "User confirmed purchase; available in the live audition."
+  },
+  {
+    "laneScale": 1,
+    "digitAdvanceEm": 0,
+    "id": "adecko",
+    "label": "Adecko",
+    "mode": "live",
+    "weight": 400,
+    "digits": false,
+    "uppercase": true,
+    "roles": [
+      "deck",
+      "location"
+    ],
+    "family": "'Audition adecko', sans-serif",
+    "plate": "./card-type-auditions/sheets/adecko.webp",
+    "rights": "User confirmed purchase; available in the live audition."
+  },
+  {
+    "laneScale": 1,
+    "digitAdvanceEm": 0,
+    "id": "adecko-outline",
+    "label": "Adecko Outline",
+    "mode": "live",
+    "weight": 400,
+    "digits": false,
+    "uppercase": true,
+    "roles": [
+      "deck",
+      "location"
+    ],
+    "family": "'Audition adecko-outline', sans-serif",
+    "plate": "./card-type-auditions/sheets/adecko-outline.webp",
+    "rights": "User confirmed purchase; available in the live audition."
+  },
+  {
+    "laneScale": 0.733,
+    "digitAdvanceEm": 0.728,
+    "id": "m290",
+    "label": "M290",
+    "mode": "live",
+    "weight": 400,
+    "digits": true,
+    "uppercase": true,
+    "roles": [
+      "card",
+      "lane",
+      "deck",
+      "location"
+    ],
+    "family": "'M290', sans-serif",
+    "plate": "./card-type-auditions/sheets/m290.webp",
+    "rights": "User confirmed purchase; available in the live audition."
+  },
+  {
+    "laneScale": 0.821,
+    "digitAdvanceEm": 0.65,
+    "id": "hemi",
+    "label": "Hemi Head Bold",
+    "mode": "live",
+    "weight": 700,
+    "digits": true,
+    "uppercase": true,
+    "roles": [
+      "card",
+      "lane",
+      "deck",
+      "location"
+    ],
+    "family": "'Hemi Head', sans-serif",
+    "plate": "./card-type-auditions/sheets/hemi.webp",
+    "rights": "User confirmed purchase; available in the live audition."
+  },
+  {
+    "laneScale": 0.821,
+    "digitAdvanceEm": 0.65,
+    "id": "hemi-italic",
+    "label": "Hemi Head Italic",
+    "mode": "live",
+    "weight": 700,
+    "digits": true,
+    "uppercase": true,
+    "roles": [
+      "card",
+      "lane",
+      "deck",
+      "location"
+    ],
+    "family": "'Hemi Head Italic', sans-serif",
+    "plate": "./card-type-auditions/sheets/hemi-italic.webp",
+    "rights": "User confirmed purchase; available in the live audition."
+  },
+  {
+    "laneScale": 0.743,
+    "digitAdvanceEm": 0.718,
+    "id": "trackvia-sub",
+    "label": "Trackvia Sub",
+    "mode": "live",
+    "weight": 400,
+    "digits": true,
+    "uppercase": true,
+    "roles": [
+      "card",
+      "lane",
+      "deck",
+      "location"
+    ],
+    "family": "'Audition trackvia-sub', sans-serif",
+    "plate": "./card-type-auditions/sheets/trackvia-sub.webp",
+    "rights": "User confirmed purchase; available in the live audition."
+  },
+  {
+    "laneScale": 0.456,
+    "digitAdvanceEm": 1.17,
+    "id": "trackvia-marker",
+    "label": "Trackvia Marker",
+    "mode": "live",
+    "weight": 400,
+    "digits": true,
+    "uppercase": true,
+    "roles": [
+      "card",
+      "lane",
+      "deck",
+      "location"
+    ],
+    "family": "'Audition trackvia-marker', sans-serif",
+    "plate": "./card-type-auditions/sheets/trackvia-marker.webp",
+    "rights": "User confirmed purchase; available in the live audition."
+  },
+  {
+    "laneScale": 1,
+    "digitAdvanceEm": 0.459,
+    "id": "trackvia-rough",
+    "label": "Trackvia Rough",
+    "mode": "live",
+    "weight": 400,
+    "digits": true,
+    "uppercase": true,
+    "roles": [
+      "card",
+      "lane",
+      "deck",
+      "location"
+    ],
+    "family": "'Trackvia Rough', sans-serif",
+    "plate": "./card-type-auditions/sheets/trackvia-rough.webp",
+    "rights": "User confirmed purchase; available in the live audition."
+  },
+  {
+    "laneScale": 0.815,
+    "digitAdvanceEm": 0.654,
+    "id": "dx-bold",
+    "label": "DX Brutalist Bold",
+    "mode": "live",
+    "weight": 700,
+    "digits": true,
+    "uppercase": true,
+    "roles": [
+      "card",
+      "lane",
+      "deck",
+      "location"
+    ],
+    "family": "'Audition dx-bold', sans-serif",
+    "plate": "./card-type-auditions/sheets/dx-bold.webp",
+    "rights": "User confirmed purchase; available in the live audition."
+  },
+  {
+    "laneScale": 0.809,
+    "digitAdvanceEm": 0.659,
+    "id": "dx-heavy",
+    "label": "DX Brutalist ExtraBold",
+    "mode": "live",
+    "weight": 800,
+    "digits": true,
+    "uppercase": true,
+    "roles": [
+      "card",
+      "lane",
+      "deck",
+      "location"
+    ],
+    "family": "'Audition dx-heavy', sans-serif",
+    "plate": "./card-type-auditions/sheets/dx-heavy.webp",
+    "rights": "User confirmed purchase; available in the live audition."
+  }
+]

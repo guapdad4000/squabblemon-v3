@@ -1,8 +1,9 @@
-import { useLayoutEffect, useRef } from 'react';
+import { useId, useLayoutEffect, useRef } from 'react';
 
 /** Track DOM geometry only while selection/layout settles or the hand moves. */
 export function BattleTargetLine({ instanceId, lane }: { instanceId: string; lane: number }) {
   const svg = useRef<SVGSVGElement>(null);
+  const arrowId = `battle-target-${useId().replaceAll(":", "")}`;
   useLayoutEffect(() => {
     const node = svg.current;
     const arena = node?.closest<HTMLElement>('[data-testid="battle-arena"]');
@@ -13,8 +14,6 @@ export function BattleTargetLine({ instanceId, lane }: { instanceId: string; lan
     // These SVG children are fixed for the lifetime of this selection. Capture
     // them once instead of querying the same subtree on every settling frame.
     const paths = node.querySelectorAll('path');
-    const origin = node.querySelector('[data-origin]');
-    const destination = node.querySelector('[data-destination]');
     let frame = 0, until = 0;
     const draw = () => {
       frame = 0;
@@ -30,10 +29,6 @@ export function BattleTargetLine({ instanceId, lane }: { instanceId: string; lan
         const bend = Math.max(24, Math.abs(y - ty) * .45);
         const d = `M ${x} ${y} C ${x} ${y - bend}, ${tx} ${ty + bend}, ${tx} ${ty}`;
         paths.forEach(path => path.setAttribute('d', d));
-        origin?.setAttribute('cx', String(x));
-        origin?.setAttribute('cy', String(y));
-        destination?.setAttribute('cx', String(tx));
-        destination?.setAttribute('cy', String(ty));
       }
       if (performance.now() < until && !document.hidden) frame = requestAnimationFrame(draw);
     };
@@ -61,7 +56,7 @@ export function BattleTargetLine({ instanceId, lane }: { instanceId: string; lan
     };
   }, [instanceId, lane]);
   return <svg ref={svg} className="battle-target-line" data-testid="battle-target-line" data-source-instance={instanceId} aria-hidden="true">
-    <path className="battle-target-line__shadow" /><path className="battle-target-line__beam" />
-    <circle data-origin r="3" /><circle data-destination r="5" />
+    <defs><marker id={arrowId} markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="userSpaceOnUse"><polygon className="battle-target-line__arrow" points="0,0 9,5 0,10 2,5" /></marker></defs>
+    <path className="battle-target-line__shadow" /><path className="battle-target-line__beam" markerEnd={`url(#${arrowId})`} />
   </svg>;
 }

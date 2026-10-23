@@ -213,6 +213,8 @@ test("Buddy forms, Bud timing and hazard metadata are public to both seats and s
     const normal = live.boards.flat().find(card => card.cardId === "buddy" && card.owner === "player")!;
     const transformed = live.boards.flat().find(card => card.cardId === "buddy" && card.owner === "cpu")!;
     assert.equal(normal.buddyForm, "earth");
+    assert.equal(normal.type, "Plant");
+    assert.equal(transformed.type, "Earth");
     assert.equal(normal.buddyGrowthAtRound, 4);
     assert.equal(transformed.buddyForm, "squabble-earth");
     assert.equal(transformed.buddyEarthExpiresAtRound, 4);
@@ -363,7 +365,7 @@ test("either seat forfeits on timeout despite leading two districts, with distin
         assert.match(copy.description, /even if you led in districts/);
         assert.match(copy.subtitle!, /forfeited/);
       } else {
-        assert.match(copy.title!, /RIVAL TIMED OUT/);
+        assert.match(copy.title!, /THE OPPS TIMED OUT/);
         assert.match(copy.description, /You win regardless/);
         assert.match(copy.subtitle!, /won by forfeit/);
       }
@@ -617,5 +619,22 @@ test('Golden Glow activates only on a successful reveal and survives modern onli
       assert(view.events.some(event => event.participants?.some(participant => participant.cardInstanceId === source.instanceId && participant.after?.goldenGlow)),
         'the existing effect presenter receives the awakened state on the public source snapshot');
     }
+  }
+});
+
+
+test('public rank points remain earned points and are separate from matchmaking ratings', () => {
+  const room = fixture();
+  room.members.player.rankPoints = 95;
+  room.members.cpu!.rankPoints = 1640;
+  room.ranked = { queuedAt: 0, heartbeatAt: 0, botAfter: 6000, bot: false, botNextAt: 0, ratings: { player: 1400, cpu: 1050 } };
+  const restored = JSON.parse(JSON.stringify(room)) as OnlineRoom;
+  for (const seat of ['player', 'cpu'] as const) {
+    const view = onlineRoomView(restored, 'RANK-DISPLAY', restored.members[seat]!.userId, 10);
+    assert.equal(view.members.player!.rankPoints, 95);
+    assert.equal(view.members.cpu!.rankPoints, 1640);
+    assert.equal(view.members.player!.rp, 1400);
+    assert.equal(view.members.cpu!.rp, 1050);
+    assert.equal('userId' in view.members.player!, false);
   }
 });

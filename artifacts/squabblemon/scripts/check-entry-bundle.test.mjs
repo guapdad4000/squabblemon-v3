@@ -85,3 +85,15 @@ test('fails when the static public entry exceeds its budget', () => {
     /budget is 475 KiB/,
   );
 });
+
+// The shell can accidentally retain a large catalog through a harmless image
+// helper or a shared context, even while its byte budget happens to pass.
+test('game shell rejects transitive optional catalogs but lets visited routes load them', () => {
+  for (const module of ['/workspace/lib/squabblemon-engine/src/data.ts', '/workspace/lib/squabblemon-engine/src/cosmetics.ts',
+    '/workspace/lib/squabblemon-engine/src/playerMats.ts', '/workspace/src/data.ts', '/workspace/src/lib/notificationCatalog.ts']) {
+    const catalog = { ...entry, fileName: 'catalog.js', imports: [], modules: [module], bytes: 100 };
+    const shared = { ...entry, fileName: 'shared.js', imports: ['catalog.js'], modules: [], bytes: 100 };
+    assert.throws(() => checkGameBundle(report([{ ...shell, imports: ['shared.js'] }, home, shared, catalog])), /optional catalogs/);
+    assert.equal(checkGameBundle(report([shell, { ...home, imports: ['shell.js', 'catalog.js'] }, catalog]))[1].bytes, 2100);
+  }
+});

@@ -32,8 +32,8 @@ test('Epic leaders retain their costs, IDs and kits; v59 Ashlee is a 5/2 Plant l
   assert.equal(cards.ashlee.cost, 5); assert.equal(cards.ashlee.power, 2);
   assert.equal(catalogCardById.ashlee.power, 2, 'the collectible uses the same v52 base Hands budget');
   assert.equal(cards.buddy.cost, 3); assert.equal(cards.folks.cost, 4);
-  assert.equal(cards.buddy.type, 'Earth');
-  assert.equal(cards.buddy.elementalBond, undefined, 'Buddy is an Earth character, not an elemental-bond engine');
+  assert.equal(cards.buddy.type, 'Plant');
+  assert.equal(cards.buddy.elementalBond, undefined, 'Buddy starts as Plant, not an elemental-bond engine');
 });
 for (const owner of ['player', 'cpu'] as const) test('DJ rewards exactly the second Electric character for ' + owner, () => {
   const m = blank(), dj = unit('piratedj', owner, 2, 1); m.boards[2] = [dj];

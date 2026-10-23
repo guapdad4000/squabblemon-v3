@@ -27,7 +27,7 @@ export function FadeSeriesBoard({ series, rivalName, gameNumber, reducedMotion =
   const systemReduced = useReducedMotion();
   const reduced = reducedMotion || Boolean(systemReduced) ||
     (typeof document !== 'undefined' && document.documentElement.dataset.reduceMotion === 'true');
-  const rival = rivalName?.trim() ? rivalName.trim().toUpperCase() : 'RIVAL';
+  const rival = rivalName?.trim() ? rivalName.trim().toUpperCase() : 'THE OPPS';
   const label = `Room series: you ${series.you}, ${rival.toLowerCase()} ${series.rival}` +
     (series.draws ? `, ${series.draws} drawn` : '');
   return <div className={'fade-series fade-series--' + variant} data-testid="fade-series" role="group" aria-label={label}>

@@ -1,0 +1,220 @@
+/* Shared paper, charcoal and chalk treatment for the battle command area. */
+.battle-arena.battle-hud .battle-command-header { --header-paper: #f1eadd; --header-muted: #c9c3b9; }
+.battle-arena.battle-hud .battle-round-clock .battle-round :is(b,small) { color: #fff; }
+.battle-arena.battle-hud .battle-round-clock .turn-timer {
+  color: transparent; background: none; box-shadow: none;
+}
+.battle-arena.battle-hud .battle-round-clock .turn-timer-copy strong {
+  color: transparent; -webkit-text-stroke: 1px #f1eadd4d; text-shadow: none;
+}
+.battle-arena.battle-hud .battle-round-clock .turn-timer-track { display: none; }
+.battle-arena.battle-hud .battle-round-clock .turn-timer.state-warning strong { -webkit-text-stroke-color: #f1eadd8c; }
+.battle-arena.battle-hud .battle-round-clock .turn-timer.state-urgent strong { -webkit-text-stroke-color: #df7b6aa6; }
+.battle-arena.battle-hud .battle-live-feedback :is(strong,.battle-live-kicker,.battle-combo-track + small) { color: var(--header-paper); }
+.battle-arena.battle-hud .battle-live-combo :is(b,small) { color: var(--header-paper); }
+.battle-arena.battle-hud .battle-combo-track { background: #f1eadd26; }
+.battle-arena.battle-hud .battle-combo-track i { background: var(--header-paper); }
+
+/* The art lives on one clipped surface; portraits escape the chalk frame. */
+.battle-arena.battle-hud .pvp-plate {
+  overflow: visible; border: 0; border-radius: 0; background: none; box-shadow: none;
+  isolation: isolate; color: var(--header-paper); padding: 4px 10px; gap: 8px;
+}
+.battle-arena.battle-hud .pvp-plate::before { display: none; }
+.pvp-plate__surface { position: absolute; inset: 0; z-index: -1; overflow: hidden; background: #171715b3; pointer-events: none; }
+.pvp-plate__surface::before { content: ''; position: absolute; inset: 0; z-index: 1; background: linear-gradient(90deg,#17171599,#1717154d); }
+.pvp-plate--rival .pvp-plate__surface::before { background: linear-gradient(270deg,#17171599,#1717154d); }
+.pvp-plate__surface::after { content: ''; position: absolute; inset: -3px; z-index: 3; border: 6px solid transparent; border-image: url('../assets/chalk-lane-border.svg') 12 / 6px / 0 round; opacity: .85; }
+.battle-arena.battle-hud .pvp-plate__banner { z-index: 0; opacity: .55; object-position: center; }
+.battle-arena.battle-hud .pvp-plate__surface .pvp-banner-stickers { z-index: 2; }
+.battle-arena.battle-hud .pvp-plate .pvp-plate__avatar {
+  position: relative; z-index: 4; width: 60px; height: 60px; flex: none;
+  border: 0; border-radius: 0; overflow: visible; background: none; box-shadow: none;
+  align-self: flex-end; margin-top: -8px; margin-bottom: -3px;
+}
+.battle-arena.battle-hud .pvp-plate__avatar .fighter-portrait { overflow: visible; }
+.battle-arena.battle-hud .pvp-plate__avatar .fighter-portrait > img {
+  object-fit: contain; object-position: center bottom;
+  filter: drop-shadow(0 2px 1px #f1eadd66) drop-shadow(0 3px 3px #000b);
+}
+.battle-arena.battle-hud .pvp-plate__copy small,
+.battle-arena.battle-hud .pvp-plate__detail { color: var(--header-muted); }
+.battle-arena.battle-hud .pvp-plate__copy .pvp-level { border: 0; padding: 0; background: none; color: var(--header-muted); }
+.battle-arena.battle-hud .pvp-plate__copy > strong { color: var(--header-paper); font-family: var(--font-action-sign,var(--font-display)); }
+.battle-arena.battle-hud .battle-header--pvp .pvp-plate--rival { margin-right: 44px; }
+
+/* One turn strip above all districts, never attached to the hand. */
+.battle-arena.battle-hud .battle-command-header > .decision-clock {
+  position: relative; flex: none; grid-area: auto; width: 100%; max-width: none;
+  height: 4px; min-height: 4px; padding: 0; margin: 0; border: 0;
+  color: var(--header-paper); background: none; box-shadow: none;
+}
+.battle-arena.battle-hud .battle-command-header > .decision-clock .decision-clock-track {
+  display: block; position: absolute; inset: auto 0 0; width: auto; height: 2px; min-height: 0; margin: 0;
+  background: #f1eadd14; opacity: .5;
+  mask-image: linear-gradient(90deg,transparent,#000 14% 86%,transparent);
+}
+.battle-arena.battle-hud .battle-command-header > .decision-clock .decision-clock-track i { box-shadow: none; }
+.battle-arena.battle-hud .battle-command-header > .decision-clock[data-warning='true'] { color: #eb534a; }
+.battle-arena.battle-hud .battle-command-header > .decision-clock[data-state='paused'] { color: var(--header-muted); }
+.battle-time-vignette {
+  position: absolute; inset: 0; z-index: 50; pointer-events: none;
+  background: radial-gradient(ellipse at center,transparent 48%,#ac1f1426 75%,#c51e1666 100%);
+}
+.battle-arena.battle-hud[data-feedback-layout='split'] .battle-command-header .battle-live-feedback { height: 36px; min-height: 36px; }
+.battle-arena.battle-hud[data-feedback-layout='split'] .battle-live-move { height: 100%; }
+.battle-arena.battle-hud[data-feedback-layout='split'] .battle-live-feedback .battle-phase-status { margin-bottom: 1px; }
+.battle-arena.battle-hud[data-feedback-layout='split'] .battle-command-header:has(.battle-header--pvp) .battle-live-feedback { height: 36px; min-height: 36px; }
+.battle-arena.battle-hud[data-feedback-layout='split'] .battle-command-header .battle-header--pvp { height: 72px; min-height: 72px; }
+.battle-arena.battle-hud[data-feedback-layout='split'] .battle-header--pvp .battle-round-clock { display: grid; place-items: center; height: 68px; }
+.battle-arena.battle-hud[data-feedback-layout='split'] .battle-header--pvp .turn-timer { position: absolute; inset: 0; width: 100%; height: 100%; }
+.battle-arena.battle-hud[data-feedback-layout='split'] .battle-header--pvp .turn-timer-copy { transform: translateY(5px); }
+.battle-arena.battle-hud[data-feedback-layout='split'] .battle-header--pvp .turn-timer-copy strong { font-size: 76px; line-height: .9; letter-spacing: -.065em; }
+.battle-arena.battle-hud[data-feedback-layout='split'] .battle-header--pvp .battle-round b { font-size: 28px; }
+.battle-arena.battle-hud[data-feedback-layout='split'] .battle-header--pvp .battle-round small { font-size: 8px; }
+.battle-arena.battle-hud[data-feedback-layout='split'] .battle-command-header .battle-header--pvp .battle-match-meta { position: absolute; top: 0; right: 0; width: 44px; height: 44px; min-height: 44px; padding: 0; }
+.battle-arena.battle-hud[data-feedback-layout='split'] .battle-command-header .battle-header--pvp .battle-tools { position: static; margin: 0; }
+.battle-arena.battle-hud .battle-header--pvp .battle-tools summary { color: var(--header-paper); background: none; border: 0; box-shadow: none; }
+.battle-arena.battle-hud[data-feedback-layout='split'] .battle-command-header .battle-header--pvp .battle-tools__panel.referee-clipboard { top: 44px; right: 0; }
+.battle-command-header:has(.battle-header--pvp) .battle-live-combo { padding-right: 0; }
+
+@media(max-width:600px) {
+  .battle-arena.battle-hud[data-feedback-layout='split'] .battle-command-header .battle-header--pvp { height: 64px; min-height: 64px; align-items: end; }
+  .battle-arena.battle-hud[data-feedback-layout='split'] .battle-header--pvp .pvp-plate { min-height: 42px; height: 42px; padding: 3px 5px; gap: 3px; }
+  .battle-arena.battle-hud .battle-header--pvp .pvp-plate--rival { margin-right: 0; }
+  .battle-arena.battle-hud .pvp-plate .pvp-plate__avatar { width: 36px; height: 52px; margin-top: -12px; margin-bottom: -1px; }
+  .battle-arena.battle-hud .pvp-plate__copy > strong { font-size: 11px; line-height: 1.1; }
+  .battle-arena.battle-hud .pvp-plate__copy small { font-size: 6px; gap: 3px; letter-spacing: .02em; }
+  .battle-arena.battle-hud .pvp-plate__copy .pvp-level { font-size: 6px; }
+  .battle-arena.battle-hud .pvp-plate__detail { font-size: 7px; }
+  .battle-arena.battle-hud[data-feedback-layout='split'] .battle-header--pvp .battle-round-clock { width: 68px; height: 58px; }
+  .battle-arena.battle-hud[data-feedback-layout='split'] .battle-header--pvp .turn-timer-copy strong { font-size: 58px; }
+  .battle-arena.battle-hud[data-feedback-layout='split'] .battle-header--pvp .battle-round b { font-size: 22px; }
+  .battle-arena.battle-hud[data-feedback-layout='split'] .battle-command-header .battle-header--pvp .battle-match-meta { top: -2px; }
+  .battle-arena.battle-hud .battle-header--pvp .battle-tools summary svg { transform: translateY(-8px); }
+  .battle-arena.battle-hud[data-feedback-layout='split'] .battle-command-header:has(.battle-header--pvp) .battle-live-feedback { height: 38px; min-height: 38px; }
+}
+@media(min-width:601px) and (max-height:580px), (min-width:601px) and (max-width:1100px) and (orientation:landscape) and (max-height:850px) {
+  .battle-arena.battle-hud[data-feedback-layout='split']:has(> .battle-command-header > .decision-clock) { grid-template-rows: 104px minmax(0,1fr); }
+  .battle-arena.battle-hud[data-feedback-layout='split'] .battle-command-header:has(> .decision-clock) { height: 104px; }
+  .battle-arena.battle-hud .battle-command-header > .decision-clock {
+    margin-left: calc(6px - clamp(12px,2vw,24px));
+    width: calc(100% - 166px + 2 * clamp(12px,2vw,24px) - 12px);
+  }
+  .battle-arena.battle-hud .pvp-plate .pvp-plate__avatar { width: 48px; height: 52px; }
+  .battle-arena.battle-hud[data-feedback-layout='split'] .battle-command-header .battle-header--pvp { height: 62px; min-height: 62px; }
+  .battle-arena.battle-hud[data-feedback-layout='split'] .battle-header--pvp .battle-round-clock { height: 58px; }
+}
+
+.battle-arena.battle-hud .battle-command-header .battle-phase-status { color: var(--header-paper); }
+
+/* The move row is a centered broadcast read, with claims and combo at its edges. */
+.battle-arena.battle-hud[data-feedback-layout='split'] .battle-command-header .battle-live-feedback {
+  grid-template-columns: 72px minmax(0,1fr) 72px; align-items: center; gap: 8px;
+}
+.battle-arena.battle-hud[data-feedback-layout='split'] .battle-live-move {
+  grid-column: 2; grid-row: 1; min-width: 0; max-width: 100%; min-height: 0;
+  height: 100%; justify-content: center; align-items: center; gap: 6px; overflow: hidden;
+}
+.battle-arena.battle-hud .battle-live-move > img { width: 26px; height: 30px; filter: none; }
+.battle-arena.battle-hud .battle-live-move__copy { flex: 0 1 auto; min-width: 0; max-width: 420px; text-align: center; }
+.battle-arena.battle-hud .battle-live-move__copy > strong { margin: 0; font-size: 12px; line-height: 1.1; max-height: 26.4px; }
+.battle-arena.battle-hud .battle-live-move__copy > .battle-live-kicker { margin: 0; font-size: 8px; line-height: 1.1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.battle-arena.battle-hud .battle-live-claims { grid-column: 1; grid-row: 1; justify-self: start; }
+.battle-arena.battle-hud .battle-live-combo { grid-column: 3; grid-row: 1; min-width: 0; padding: 0; justify-self: end; max-width: 100%; }
+.battle-arena.battle-hud .battle-live-combo strong { font-size: 11px; line-height: 1.1; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.battle-arena.battle-hud .battle-live-combo b { font-size: 18px; }
+.battle-arena.battle-hud .battle-live-combo small { font-size: 10px; }
+.battle-arena.battle-hud .battle-live-combo .battle-live-kicker { font-size: 7px; line-height: 1.1; }
+.battle-arena.battle-hud .battle-combo-track { width: min(56px,100%); margin-top: 2px; }
+@media(max-width:600px) {
+  .battle-arena.battle-hud[data-feedback-layout='split'] .battle-command-header .battle-live-feedback { grid-template-columns: 42px minmax(0,1fr) 42px; gap: 5px; }
+  .battle-arena.battle-hud .battle-live-move__copy > strong { font-size: 11px; line-height: 1.1; max-height: 24.2px; }
+  .battle-arena.battle-hud .battle-live-move__copy > .battle-live-kicker { font-size: 7px; }
+  .battle-arena.battle-hud .battle-live-move > img { width: 22px; height: 28px; }
+  .battle-arena.battle-hud .battle-live-combo .battle-live-kicker { font-size: 6px; }
+  .battle-arena.battle-hud .battle-live-combo strong { font-size: 10px; }
+}
+@media(min-width:601px) and (max-height:580px), (min-width:601px) and (max-width:1100px) and (orientation:landscape) and (max-height:850px) {
+  .battle-arena.battle-hud[data-feedback-layout='split'] .battle-command-header:has(.battle-header--pvp) .battle-live-feedback { height: 38px; min-height: 38px; }
+}
+
+.battle-arena.battle-hud [data-header-mode='solo'] .pvp-plate__copy > strong { font-family: var(--font-deck-title,var(--font-display)); }
+
+/* Skip remains directly reachable beside the update; speed stays in the menu. */
+.battle-arena.battle-hud[data-feedback-layout='split'] .battle-command-header [data-header-mode='solo'] .battle-playback-controls {
+  position: absolute; inset: 68px 0 auto auto; width: 44px; min-height: 44px;
+}
+.battle-arena.battle-hud[data-feedback-layout='split'] .battle-command-header:has(.battle-fast-forward) .battle-live-combo { padding-right: 48px; }
+@media(max-width:600px) {
+  .battle-arena.battle-hud[data-feedback-layout='split'] .battle-command-header:has([data-header-mode='solo']) .battle-live-feedback { grid-template-columns: 72px minmax(0,1fr) 72px; }
+  .battle-arena.battle-hud[data-feedback-layout='split'] .battle-command-header [data-header-mode='solo'] .battle-playback-controls { top: 61px; }
+  .battle-arena.battle-hud .battle-live-claims .battle-claims { gap: 2px; font-size: 11px; }
+  .battle-arena.battle-hud .battle-live-claims .battle-claims b { width: auto; font-size: 12px; }
+  .battle-arena.battle-hud .battle-live-claims .battle-claims svg { width: 11px; height: 11px; }
+}
+@media(min-width:601px) and (max-height:580px), (min-width:601px) and (max-width:1100px) and (orientation:landscape) and (max-height:850px) {
+  .battle-arena.battle-hud[data-feedback-layout='split'] .battle-command-header [data-header-mode='solo'] .battle-playback-controls { top: 59px; }
+}
+
+/* Compact identity: name first, level and earned rank below, update stays above the strip. */
+.pvp-plate__progress { display: flex; flex-wrap: nowrap; align-items: center; gap: 4px 7px; min-width: 0; }
+.pvp-plate--rival .pvp-plate__progress { justify-content: end; }
+.battle-arena.battle-hud [data-header-mode='pvp'] .pvp-plate--rival .pvp-plate__detail { order: -1; }
+.battle-arena.battle-hud .pvp-plate__copy { gap: 1px; }
+.battle-arena.battle-hud .pvp-plate__level { display: inline-flex; align-items: baseline; gap: 2px; white-space: nowrap; }
+.battle-arena.battle-hud .pvp-plate__level b { font: 700 28px/.9 var(--font-action-sign,var(--font-display)); color: #f1eadd; }
+.battle-arena.battle-hud .pvp-plate__level small { font: 700 6px/1 var(--font-mono); letter-spacing: 0; color: #c9c3b9; }
+.pvp-plate__rank { display: inline-flex; flex: none; }
+.battle-arena.battle-hud .pvp-plate__rank .rank-trophy { width: 25px; height: 27px; margin: 0; object-fit: contain; filter: drop-shadow(0 2px 2px #0009); }
+.battle-arena.battle-hud .pvp-plate__copy > strong { white-space: nowrap; display: block; text-overflow: ellipsis; }
+@media(max-width:600px) {
+  .battle-arena.battle-hud .battle-header--pvp .pvp-plate { gap: 3px; }
+  .battle-arena.battle-hud .pvp-plate .pvp-plate__avatar { width: 26px; }
+  .battle-arena.battle-hud .pvp-plate__level b { font-size: 24px; }
+  .battle-arena.battle-hud .pvp-plate__level small { display: none; }
+  .battle-arena.battle-hud .pvp-plate__progress { gap: 2px; }
+  .battle-arena.battle-hud .pvp-plate__rank .rank-trophy { width: 20px; height: 23px; }
+  .battle-arena.battle-hud .pvp-plate__detail .battle-rival-resources { gap: 4px; font-size: 8px; }
+  .battle-arena.battle-hud .pvp-plate__detail .battle-rival-motion .motion-energy { font-size: 9px; }
+}
+/* Owner tint and hierarchy are semantic; the exact total stays unchanged. */
+.battle-arena.battle-hud .district-score-side .score-with-delta { display: inline-block; position: relative; isolation: isolate; --score-emphasis: 1; }
+.battle-arena.battle-hud .district-score-side [data-score-state='trailing'] { --score-emphasis: .82; }
+.battle-arena.battle-hud .district-score-side .score-tick {
+  position: relative; z-index: 1;
+  font-size: calc(min(calc(var(--lane-score-font-size) * var(--font-lane-number-scale)),calc((100cqw - 26px) / (2 * var(--score-digit-count,2) * var(--font-lane-number-digit-width)))) * var(--score-emphasis));
+  transition: font-size 180ms ease-out;
+}
+.battle-arena.battle-hud .district-score-side--player .score-tick { color: #f1eadd; }
+.battle-arena.battle-hud .district-score-side--rival .score-tick { color: #d8b8b1; }
+.battle-arena.battle-hud .district-score-side .lane-score-flame {
+  position: absolute; z-index: 0; pointer-events: none; max-width: none;
+  left: 50%; top: -68%; width: 150%; height: 165%; translate: -50% 0; object-fit: contain; opacity: .88;
+}
+@media(prefers-reduced-motion:reduce) { .battle-arena.battle-hud .district-score-side .score-tick { transition: none; } }
+.battle-arena.battle-hud[data-reduced-motion='true'] .district-score-side .score-tick { transition: none; }
+
+.battle-arena.battle-hud .district-score-side--player .lane-score-flame { left: calc(50% - clamp(12px,1.5vw,18px)); }
+.battle-arena.battle-hud .district-score-side--rival .lane-score-flame { left: calc(50% + clamp(12px,1.5vw,18px)); }
+
+/* Clip only the fire at the numeral baseline; labels and signed deltas remain free. */
+.battle-arena.battle-hud .district-score-side .lane-score-flame-clip {
+  position: absolute; inset: 0; z-index: 0; pointer-events: none;
+  clip-path: inset(-180% -160% 0 -160%);
+}
+
+/* Desktop banners keep a compact silhouette instead of stretching across each corner. */
+@media(min-width:1101px) and (min-height:581px) {
+  .battle-arena.battle-hud[data-feedback-layout='split'] .battle-header--pvp .pvp-plate {
+    width: min(100%,340px); min-height: 60px; height: 60px; align-self: center;
+  }
+  .battle-arena.battle-hud[data-feedback-layout='split'] .battle-header--pvp .pvp-plate--you { justify-self: start; }
+  .battle-arena.battle-hud[data-feedback-layout='split'] .battle-header--pvp .pvp-plate--rival { justify-self: end; }
+}
+
+/* Regular battles borrow the deck picker's quiet anime brick material. */
+.battle-arena.battle-hud .pvp-plate[data-backdrop='brick'] .pvp-plate__banner {
+  opacity: .3; filter: saturate(.55);
+  mask-image: radial-gradient(ellipse at 50% 45%,#000 20%,#000b 65%,transparent 110%);
+}

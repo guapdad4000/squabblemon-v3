@@ -7,6 +7,9 @@ const normalize = (text: string) => text.replace(/[“”]/g, '"').replace(/[‘
 const byId = new Map(clips.map(clip => [clip.id, clip]));
 const byText = new Map<string, string>();
 for (const clip of clips) if (!byText.has(normalize(clip.text))) byText.set(normalize(clip.text), clip.id);
+// The UI renamed the opponent; this existing take still describes the same protection rule.
+const protectionTake = byId.get('mechanic-protect');
+if (protectionTake) byText.set(normalize(protectionTake.text.replace('the rival targets', 'The Opps target')), protectionTake.id);
 
 export const tutorialScript = (...ids: string[]) => ids.map(id => byId.get(id)?.text ?? '').filter(Boolean).join('\n');
 

@@ -121,7 +121,7 @@ export const storySeasons: readonly StorySeasonDefinition[] = [
     title: "The Last Waffle",
     subtitle: "A Squabble House Movie",
     description:
-      "One missing waffle, two rival crews, and a night shift that throws hands. Watch six film chapters, solve the House puzzles, and earn the server, cook, Janitor, and Manager for your collection.",
+      "One missing waffle, The Opps’ two crews, and a night shift that throws hands. Watch six film chapters, solve the House puzzles, and earn the server, cook, Janitor, and Manager for your collection.",
     chapterIds: [
       "squabble-house-last-waffle",
       "squabble-house-receipts",

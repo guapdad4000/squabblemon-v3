@@ -1,0 +1,32 @@
+{
+  "version": "1.14",
+  "date": "2026-10-22",
+  "title": "Print. Prism. Punch.",
+  "artCardId": "folks",
+  "overview": "Your collection got a new print run. Collector V2 brings layered anime artwork, fitted postal name tags and prismatic rarity finishes, alongside a cleaner battlefield, sharper hit feedback and a lighter, snappier game. Open Collection to catch the light, then take your gang back to the block.",
+  "buffs": [
+    "BUDDY starts as Plant in his normal form and becomes Earth when Squabbled. His normal and Squabbled forms are easy to compare in card details."
+  ],
+  "changes": [
+    "COLLECTOR V2 — Collection, gang building and full card details now use layered element prints, original character art, postal names and readable black rules paper. Battle faces keep the space needed for combat.",
+    "Postal labels fit short and long names. Rarity is written out in full inside the label; single-letter rarity stamps are gone.",
+    "Rare and Super Rare cards gain prismatic foil, Legendary cards use richer gold, and Mythical cards use red holo frames. Motion plates, label paper and backgrounds catch the light without covering the name or live numbers.",
+    "The Squabblemon wordmark is opaque and centered at the top: gold foil for Legendary and silver holo for Mythical. Card Motion stays yellow; Hands use a white box with dark text and green bonuses.",
+    "Card details show complete ability text, clearer typography and a simple Normal / Squabbled switch for BUDDY. Collection finishes stay cosmetic.",
+    "BATTLE READABILITY — Hemi Head numbers and action signs, Blzee deck and district titles, larger district Hands totals and tighter spacing make the board easier to scan.",
+    "Your district total sits on the left; The Opps sit on the right with a restrained red tint. Only the side currently ahead gets the larger total and flame accent; tied scores show no winner flame.",
+    "Picked districts use a chalk outline. The dotted white targeting arrow sits behind the mini card explanation, and clicking away dismisses that explanation.",
+    "Choice cards open an in-battle selection window. Card sizes and spacing now adapt more consistently across narrow phones, medium screens and wide layouts.",
+    "PVP — Compact player banners put the player name, level, rank and battle updates in a cleaner header. The menu sits in the top corner, with music inside it.",
+    "The turn strip sits above all three districts, fades at the edges and turns red at 30 seconds. A red screen-edge warning appears during the last five seconds; duplicate turn labels and counters are removed.",
+    "The larger Motion orb stays beside the green street-sign action button. Emotes sit to its left without pushing the action row off center.",
+    "SQUABBLE — A resting fist becomes a flaming fist on hover or touch, then changes into a peace sign after use. The misleading ×2 label is removed; Squabbled cards get the red frame aura.",
+    "HIT FEEDBACK — Fire hits play once, damage and Burn use impact feedback, and lingering Burn replaces the old small status circle. Defeated cards finish their impact, play the tombstone-and-ghost effect, then clear.",
+    "The gang picker gets the anime brick-wall backdrop, updated boxes and Squabblemon branding. Click the 3D deck to edit.",
+    "PERFORMANCE — Smaller battle portraits, attack videos and card graphics retain their artwork and presentation. Shared state, image warmup and effect lifecycles reduce repeated work and keep offscreen effects quiet.",
+    "EVENTS — The Safehouse Events marker and older Events links now open the full Events page directly. No extra preview window or second Open full Events step.",
+    "Rules version 63 accompanies BUDDY’s form correction. If an older online room cannot continue after updating, start a fresh match."
+  ],
+  "softCurrency": 0,
+  "packTickets": 0
+}

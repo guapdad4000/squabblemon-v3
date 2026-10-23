@@ -45,13 +45,13 @@ export function DiceGameOverlay({ result }: { result?: Match["diceResult"] }) {
       </button>
       <small>THE DICE GAME · {result.wager} MOTION EACH</small>
       {row("You", result.player)}
-      {row("Rival", result.cpu)}
+      {row("The Opps", result.cpu)}
       <strong>
         {result.winner === "draw"
           ? "Even roll. Wagers back."
           : result.winner === "player"
             ? "You take the pot!"
-            : "Rival takes the pot."}
+            : "The Opps take the pot."}
       </strong>
       <p>Best two of three · Motion caps at 9</p>
     </aside>

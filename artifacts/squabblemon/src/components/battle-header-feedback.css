@@ -1,12 +1,13 @@
 /* Two stable feedback lanes: move on the left, chain on the right. */
 .battle-arena.battle-hud[data-feedback-layout='split'] .battle-command-header {
   display: flex; flex-direction: column; position: relative; flex: none;
-  height: 112px; padding: 0 clamp(12px,2vw,24px); gap: 0;
+  height: 112px; padding: 0 clamp(12px,2vw,24px); gap: 0; align-items: stretch;
   background: transparent;
 }
 .battle-arena.battle-hud[data-feedback-layout='split'] .battle-command-header .battle-header {
   display: grid; grid-template-columns: minmax(0,1fr) 136px minmax(0,1fr);
   align-items: center; gap: 12px; height: 60px; min-height: 60px; padding: 0;
+  width: 100%; min-width: 0; align-self: stretch;
 }
 .battle-arena.battle-hud[data-feedback-layout='split'] .battle-command-header .battle-rival {
   position: static; width: auto; margin: 0; align-self: center; min-width: 0;
@@ -43,22 +44,91 @@
 
 /* The item row follows the rule rather than the empty status/prompt slots.
    It remains a sibling of the play button so item inspection never plays a card. */
-.battle-arena.battle-hud .battle-district-hub { grid-template-rows: var(--hub-name-height) calc(var(--hub-body-height) + 44px); }
-.battle-arena.battle-hud .battle-district-hub .district-target { height: calc(var(--hub-body-height) + 44px); }
-.battle-arena.battle-hud .battle-district-hub .district-marker {
-  height: calc(var(--hub-body-height) + 44px);
-  grid-template-rows: var(--hub-score-height) 20px 30px 44px 16px 16px;
+/* A single reading cluster: title, large totals, then the rule. The forecast
+   keeps a reserved row below the rule so selecting a card cannot move the field. */
+.battle-arena.battle-hud .district-lane {
+  --hub-name-height: 32px;
+  --hub-score-height: 62px;
+  --hub-rule-height: 28px;
+  --hub-forecast-height: 20px;
+  --hub-body-height: calc(var(--hub-score-height) + var(--hub-rule-height) + var(--hub-forecast-height) + 16px);
+  --hub-items-height: 0px;
+  --lane-score-font-size: 64px;
+  --lane-title-font-size: clamp(16px,1.5vw,20px);
 }
+.battle-arena.battle-hud .district-lane:has(.battle-item-badge) { --hub-items-height: 44px; }
+.battle-arena.battle-hud .battle-district-hub {
+  grid-template-rows: var(--hub-name-height) calc(var(--hub-body-height) + var(--hub-items-height));
+  height: calc(var(--hub-name-height) + var(--hub-body-height) + var(--hub-items-height));
+  isolation: isolate;
+}
+.battle-arena.battle-hud .mobile-district-open {
+  font-size: var(--lane-title-font-size); align-items: flex-end; padding: 0 2px 2px;
+}
+.battle-arena.battle-hud .battle-district-hub .district-target { height: calc(var(--hub-body-height) + var(--hub-items-height)); }
+.battle-arena.battle-hud .battle-district-hub .district-marker {
+  height: calc(var(--hub-body-height) + var(--hub-items-height));
+  grid-template-rows: var(--hub-score-height) var(--hub-rule-height) var(--hub-forecast-height) var(--hub-items-height) 16px;
+}
+/* The art shares the center of the title/score/rule cluster rather than the
+   taller forecast and item area. Contain preserves the complete street scene. */
+.battle-arena.battle-hud .battle-district-hub .district-target .location-node {
+  inset: auto; left: 50%;
+  top: calc((var(--hub-score-height) + var(--hub-rule-height) - var(--hub-name-height)) / 2);
+  translate: -50% -50%;
+  width: min(114%,270px);
+  height: calc(var(--hub-name-height) + var(--hub-score-height) + var(--hub-rule-height) + 20px);
+}
+.battle-arena.battle-hud .battle-district-hub .location-node__scene {
+  object-fit: contain; object-position: center;
+  animation: none; clip-path: none;
+  mask-image: radial-gradient(ellipse at center,#000 32%,#000e 54%,transparent 78%);
+}
+.battle-arena.battle-hud .district-score-row {
+  display: flex; justify-content: center;
+  width: 100%; gap: 4px; align-items: start; padding: 0;
+}
+.battle-arena.battle-hud .battle-district-hub .district-marker { container-type: inline-size; }
+.battle-arena.battle-hud .district-score-side { width: auto; min-width: 0; container-type: normal; flex: 0 1 auto; }
+.battle-arena.battle-hud .district-score-side .score-tick {
+  /* Font metrics and digit count bound the large display inside the lane while the pair stays centered and close. */
+  font-size: min(calc(var(--lane-score-font-size) * var(--font-lane-number-scale)),calc((100cqw - 26px) / (2 * var(--score-digit-count,2) * var(--font-lane-number-digit-width))));
+  line-height: .95; padding: 0 1px;
+}
+.battle-arena.battle-hud .district-score-label { font-size: 10px; line-height: 11px; }
+.battle-arena.battle-hud .district-score-row > .score-divider { align-self: center; flex: 0 0 12px; width: 12px; margin: 0; padding: 0; }
+.battle-arena.battle-hud .district-marker .district-rule { grid-row: 2; height: var(--hub-rule-height); padding: 0; margin: 0; }
+.battle-arena.battle-hud .district-forecast-slot { grid-row: 3; }
 .battle-arena.battle-hud .district-marker .district-live-cues { grid-row: 5; }
-.battle-arena.battle-hud .district-marker .district-prompt { grid-row: 6; }
+.battle-arena.battle-hud .district-marker .district-prompt { grid-row: 5; }
+/* The compact state line follows the forecast. When both are present, status
+   and play cues share it rather than leaving two empty rows above your cards. */
+.battle-arena.battle-hud .district-marker:has(.district-prompt) .district-live-cues:not(:empty) { width: 48%; justify-self: start; }
+.battle-arena.battle-hud .district-marker:has(.district-live-cues:not(:empty)) .district-prompt { max-width: 50%; justify-self: end; }
 .battle-arena.battle-hud .battle-item-badges {
-  position: absolute; top: calc(var(--hub-name-height) + var(--hub-score-height) + 50px); left: 0; right: 0;
+  position: absolute; top: calc(var(--hub-name-height) + var(--hub-score-height) + var(--hub-rule-height) + var(--hub-forecast-height)); left: 0; right: 0;
   justify-content: safe center; z-index: 3;
+}
+@media(max-width:600px) {
+  .battle-arena.battle-hud .district-lane { --hub-score-height: 44px; --lane-score-font-size: 56px; --lane-title-font-size: 15px; }
+}
+@media(max-width:360px) {
+  .battle-arena.battle-hud .district-lane { --hub-name-height: 32px; --hub-score-height: 40px; --lane-score-font-size: 52px; --lane-title-font-size: 14px; }
+}
+@media(min-width:601px) and (max-height:460px) {
+  .battle-arena.battle-hud .district-lane { --hub-name-height: 30px; --hub-score-height: 58px; --lane-score-font-size: 58px; --lane-title-font-size: 16px; }
 }
 
 /* Values are exact at the impact; only the emphasis and signed delta animate. */
 .battle-arena.battle-hud .score-with-delta { position: relative; }
 .battle-arena.battle-hud .score-with-delta .score-delta { left: calc(100% + 3px); right: auto; top: -2px; font-size: 12px; white-space: nowrap; }
+/* A signed change briefly uses its own owner-label line, never the gap between totals. */
+.battle-arena.battle-hud .district-score-side .score-delta {
+  left: 0; right: 0; top: -11px; bottom: auto; height: 11px; padding: 0;
+  font-size: 9px; line-height: 11px; text-align: center; background: transparent;
+}
+.battle-arena.battle-hud .district-score-side .score-delta[hidden] { display: none; }
+.battle-arena.battle-hud .district-score-side:has(.score-delta:not([hidden])) .district-score-label { opacity: 0; }
 .battle-arena.battle-hud .score-tick--changed { animation: score-arrival 420ms ease-out; }
 .battle-arena.battle-hud[data-feedback-layout='split'].phase-round-result .district-score-row { animation: score-confirm 700ms ease-out; }
 @keyframes score-arrival { 0% { scale: 1.16; filter: brightness(1.45); } 100% { scale: 1; filter: none; } }
@@ -70,7 +140,7 @@
   .battle-live-feedback { grid-template-columns: minmax(0,1fr) 80px minmax(0,1fr); }
 }
 @media(max-width: 600px) {
-  .battle-arena.battle-hud[data-feedback-layout='split'] .battle-command-header { height: calc(106px + env(safe-area-inset-top)); padding: env(safe-area-inset-top) 10px 0; }
+  .battle-arena.battle-hud[data-feedback-layout='split'] .battle-command-header { height: calc(106px + env(safe-area-inset-top)); padding: env(safe-area-inset-top) max(6px,env(safe-area-inset-right)) 0 max(6px,env(safe-area-inset-left)); }
   .battle-arena.battle-hud[data-feedback-layout='split'] .battle-command-header .battle-header { grid-template-columns: minmax(0,1fr) 76px 132px; height: 54px; min-height: 54px; gap: 4px; }
   .battle-arena.battle-hud[data-feedback-layout='split'] .battle-command-header .battle-round-clock { width: 76px; height: 48px; }
   .battle-arena.battle-hud[data-feedback-layout='split'] .battle-command-header .battle-match-meta { gap: 0; }
@@ -85,7 +155,7 @@
   .battle-live-move > img { width: 28px; height: 36px; }
   .battle-live-combo b { font-size: 22px; }
 }
-@media(min-width:601px) and (max-height:580px) {
+@media (min-width:601px) and (max-height:580px), (min-width:601px) and (max-width:1100px) and (orientation:landscape) and (max-height:850px) {
   .battle-arena.battle-hud[data-feedback-layout='split'] .battle-command-header { height: 94px; }
   .battle-arena.battle-hud[data-feedback-layout='split'] .battle-command-header .battle-header { height: 50px; min-height: 50px; }
   .battle-live-feedback { height: 44px; min-height: 44px; }
@@ -118,7 +188,7 @@
 }
 .battle-arena.battle-hud .battle-command-header::before { inset: 0 0 -40px; }
 .battle-arena.battle-hud .battle-command-deck::before { --battle-edge-direction: 0deg; inset: -36px 0 0; }
-@media(min-width:601px) and (max-height:580px) {
+@media (min-width:601px) and (max-height:580px), (min-width:601px) and (max-width:1100px) and (orientation:landscape) and (max-height:850px) {
   .battle-arena.battle-hud .battle-command-deck { border-left: 0; }
   .battle-arena.battle-hud .battle-command-deck::before { --battle-edge-direction: 270deg; inset: 0 0 0 -36px; }
 }
@@ -156,28 +226,6 @@
 .battle-arena.battle-hud[data-feedback-layout='split'] .battle-header--pvp .pvp-plate { min-height: 52px; height: 52px; padding: 4px 8px; gap: 6px; }
 .battle-arena.battle-hud[data-feedback-layout='split'] .pvp-plate__avatar { width: 34px; height: 34px; }
 .battle-arena.battle-hud[data-feedback-layout='split'] .pvp-plate__copy > strong { font-size: 13px; -webkit-line-clamp: 1; }
-/* Keep the live PvP clock legible beneath the round, not behind its digits. */
-.battle-arena.battle-hud[data-feedback-layout='split'] .battle-header--pvp .battle-round-clock {
-  display: flex; flex-direction: column; justify-content: center; gap: 2px;
-}
-.battle-arena.battle-hud[data-feedback-layout='split'] .battle-header--pvp .battle-round { gap: 2px; }
-.battle-arena.battle-hud[data-feedback-layout='split'] .battle-header--pvp .battle-round > span { gap: 2px; font-size: 6px; }
-.battle-arena.battle-hud[data-feedback-layout='split'] .battle-header--pvp .battle-round b { font-size: 20px; }
-.battle-arena.battle-hud[data-feedback-layout='split'] .battle-header--pvp .battle-round small { font-size: 6px; }
-.battle-arena.battle-hud[data-feedback-layout='split'] .battle-header--pvp .turn-timer {
-  order: 2; position: relative; inset: auto; width: 48px; height: 18px; flex: none;
-  color: #f4cf83; border: 0; background: none; box-shadow: none;
-}
-.battle-arena.battle-hud[data-feedback-layout='split'] .battle-header--pvp .turn-timer-copy { transform: none; justify-content: center; }
-.battle-arena.battle-hud[data-feedback-layout='split'] .battle-header--pvp .turn-timer-copy strong {
-  font-size: 14px; line-height: 1; letter-spacing: 0; -webkit-text-stroke: 0;
-}
-.battle-arena.battle-hud[data-feedback-layout='split'] .battle-header--pvp .turn-timer-copy strong::after { content: 's'; font-size: 9px; margin-left: 2px; }
-.battle-arena.battle-hud[data-feedback-layout='split'] .battle-header--pvp .turn-timer-track { inset: auto 4px 0; }
-.battle-arena.battle-hud[data-feedback-layout='split'] .battle-header--pvp .turn-timer.state-paused { color: #a5b0be; }
-.battle-arena.battle-hud[data-feedback-layout='split'] .battle-header--pvp .turn-timer.state-paused strong::after { content: ''; }
-.battle-arena.battle-hud[data-feedback-layout='split'] .battle-header--pvp .turn-timer.state-warning { color: #ffd574; }
-.battle-arena.battle-hud[data-feedback-layout='split'] .battle-header--pvp .turn-timer.state-urgent { color: #ff8293; }
 .battle-live-claims { grid-column: 2; display: grid; place-items: center; }
 .battle-arena.battle-hud[data-feedback-layout='split'] .battle-live-claims .battle-claims { width: auto; gap: 3px; font-size: 13px; }
 .battle-command-header:has(.battle-header--pvp) .battle-live-combo { padding-right: calc(var(--pvp-tools-width) + 8px); }
@@ -207,7 +255,7 @@ html .battle-command-header .pvp-reaction-slot--menu .pvp-reaction-trigger svg {
   .battle-command-header:has(.battle-header--pvp) .battle-live-feedback { grid-template-columns: minmax(0,1fr) 48px minmax(0,1fr); gap: 4px; }
   .battle-command-header:has(.battle-header--pvp) .battle-live-combo { grid-column: 3; }
 }
-@media(min-width:601px) and (max-height:580px) {
+@media (min-width:601px) and (max-height:580px), (min-width:601px) and (max-width:1100px) and (orientation:landscape) and (max-height:850px) {
   .battle-arena.battle-hud[data-feedback-layout='split'] .battle-command-header:has(.battle-header--pvp) { --pvp-feedback-top: 50px; }
   .battle-arena.battle-hud[data-feedback-layout='split'] .battle-header--pvp .battle-round-clock { height: 46px; }
   .battle-arena.battle-hud[data-feedback-layout='split'] .battle-header--pvp .pvp-plate { min-height: 46px; height: 46px; }

@@ -1,11 +1,12 @@
 import { CompactDeckPicker } from './CompactDeckPicker';
 import useEmblaCarousel from 'embla-carousel-react';
-import { Check, ChevronLeft, ChevronRight, Layers, Pencil } from 'lucide-react';
+import { Check, ChevronLeft, ChevronRight, Layers } from 'lucide-react';
 import { useCallback, useEffect, useId, useRef } from 'react';
 import { catalogCardById, getCardImage } from '../data';
 import { styleSetFor } from '@workspace/squabblemon-engine/cosmetics';
 import { getAssetUrl } from '../lib/assets';
 import { detectGPUQuality } from '../lib/gpuQuality';
+import { DECK_BOX_IMPACT_MARK, DECK_BOX_WORDMARK } from './decks/deckBoxBrand';
 import '../styles/deck-carousel.css';
 
 export interface DeckCarouselItem {
@@ -110,12 +111,12 @@ function DeckBox({
     <span className="deck-box" ref={hostRef} aria-hidden="true">
       <span className="deck-box__shadow" />
       <span className="deck-box__print">
-        <span className="deck-box__spine">SQUABBLEMON · THE LINEUP</span>
+        <span className="deck-box__spine"><img src={DECK_BOX_WORDMARK} alt="" draggable={false} /><small>THE LINEUP</small></span>
         <span className={'deck-box__face' + (cover ? ' deck-box__face--artwork' : '')}>
           {!cover && <span className="deck-box__brand">
-            SM
-            <span>SQUABBLEMON</span>
+            <img src={DECK_BOX_WORDMARK} alt="" draggable={false} />
           </span>}
+          {!cover && <span className="deck-box__emblem"><img src={DECK_BOX_IMPACT_MARK} alt="" draggable={false} /></span>}
           {image && <img src={image} alt="" loading={active ? 'eager' : 'lazy'} draggable={false} />}
           {!cover && <span className="deck-box__title">
             {name}
@@ -184,6 +185,15 @@ export function DeckCarousel({
       data-testid="deck-carousel"
       data-selected-deck={decks[selectedIndex].id}
     >
+      <img
+        className="deck-carousel__wall"
+        src={getAssetUrl('assets/progression/brick-ui-v1.webp')}
+        alt=""
+        aria-hidden="true"
+        loading="lazy"
+        decoding="async"
+        draggable={false}
+      />
       <div className="deck-carousel__bar">
         <label htmlFor={selectId}>
           <Layers size={14} aria-hidden="true" /> {label}
@@ -269,17 +279,12 @@ export function DeckCarousel({
                         />
                       ))}
                   </div>
-                  <button
-                    type="button"
-                    className="deck-carousel__edit"
-                    tabIndex={active ? 0 : -1}
-                    disabled={disabled}
-                    onClick={() => onOpen(deck.id)}
-                  >
-                    <Pencil size={13} aria-hidden="true" />
-                    {openLabel}
-                    <ChevronRight size={14} aria-hidden="true" />
-                  </button>
+                  <span className="deck-carousel__edit-cue" aria-hidden="true">
+                    <svg viewBox="0 0 76 34" fill="none">
+                      <path d="M73 7C54 29 26 30 4 12M4 12l3 13M4 12l14 1" />
+                    </svg>
+                    <span>{openLabel === 'Build from example' ? 'Click to build' : 'Click to edit'}</span>
+                  </span>
                 </div>
               </div>
             );

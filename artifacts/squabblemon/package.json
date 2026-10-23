@@ -105,7 +105,8 @@
     "test:restored-art-browser": "node e2e/verify-restored-art.mjs",
     "test:player-mat-media": "node --import tsx src/playerMatMedia.test.ts",
     "test:supplied-fx": "node --import ./e2e/supplied-battle-fx.setup.mjs --test e2e/supplied-battle-fx.test.tsx",
-    "check:supplied-fx": "tsc --noEmit -p tsconfig.supplied-fx.json"
+    "check:supplied-fx": "tsc --noEmit -p tsconfig.supplied-fx.json",
+    "test:collector": "node --import ../../scripts/battle-test-css.mjs --import tsx --test src/components/CardView.collectibleLayers.test.tsx src/lib/cardFormPreview.test.ts"
   },
   "devDependencies": {
     "@clerk/react": "^6.15.1",

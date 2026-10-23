@@ -21,13 +21,13 @@ export function FadeAlleyScene({ rivalName, rivalHandle, joined = false, invited
     </div>
     <div className="fa-avatar fa-avatar--you"><FighterLayer ready={ready} /></div>
     <div className="fa-playerlabel fa-playerlabel--you"><small>{seat === 'player' ? 'PLAYER 1' : 'PLAYER 2'}</small><strong>You</strong><span><UserRound size={11} /> {seat === 'player' ? 'Host' : 'Guest'}</span></div>
-    <div className={`fa-rivalzone${joined ? ' fa-rivalzone--joined' : ''}`} aria-label={joined ? `${rivalName ?? 'Rival'} joined` : 'Waiting for rival'}>
+    <div className={`fa-rivalzone${joined ? ' fa-rivalzone--joined' : ''}`} aria-label={joined ? `${rivalName ?? 'The Opps'} joined` : 'Waiting for The Opps'}>
       {joined
         ? <div className="fa-avatar fa-avatar--rival"><FighterLayer ready={rivalReady} /></div>
         : <div className="fa-rival-silhouette"><UserRound size={31} /><span>OPEN SPOT</span></div>}
     </div>
     {(joined || invited) && <div className={`fa-playerlabel fa-playerlabel--rival${joined ? ' fa-playerlabel--present' : ''}`}>
-      <small>{seat === 'player' ? 'PLAYER 2' : 'PLAYER 1'}</small><strong>{joined ? rivalName ?? 'Rival' : invited ? rivalName ?? 'Invited' : 'Waiting'}</strong>
+      <small>{seat === 'player' ? 'PLAYER 2' : 'PLAYER 1'}</small><strong>{joined ? rivalName ?? 'The Opps' : invited ? rivalName ?? 'Invited' : 'Waiting'}</strong>
       {(joined || invited) && <span><UserRound size={11} />{joined ? rivalHandle ?? 'Joined' : 'Invite pending'}</span>}
     </div>}
   </section>;

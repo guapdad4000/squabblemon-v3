@@ -43,14 +43,14 @@ function CharacterLab() {
     <div className="guide-character-select" aria-label="Choose an example character">
       {featured.map(character => <button key={character.id} type="button" aria-pressed={selected.id === character.id} onClick={() => setSelected(character)}>
         <img src={getCardImage(character.id)} alt="" loading="lazy" />
-        <span>{catalogCardById[character.id].name}<small>{character.role}</small></span><ChevronRight size={17} />
+        <span>{catalogCardById[character.id].name}<small>{character.role === 'rival' ? 'The Opps' : character.role}</small></span><ChevronRight size={17} />
       </button>)}
     </div>
     <div className="guide-showcase" style={{ '--card-accent': rarity.color, backgroundImage: `url(${getCardWallpaper(card.type)})` } as CSSProperties}>
       <span className="guide-showcase-rarity">{rarity.label} · {CARD_FINISH[card.rarity]}</span>
       <img key={card.catalogId} className="guide-showcase-art" src={getCardImage(card.artworkId)} alt={card.name} loading="lazy" />
       <div className="guide-card-stats"><span><Zap size={16} /><b>{card.cost}</b> Motion</span><span><Swords size={16} /><b>{card.power}</b> Hands</span></div>
-      <div className="guide-showcase-name"><small>{card.type} / {selected.role}</small><h3>{card.name}</h3></div>
+      <div className="guide-showcase-name"><small>{card.type} / {selected.role === 'rival' ? 'The Opps' : selected.role}</small><h3>{card.name}</h3></div>
     </div>
     <div className="guide-character-notes" aria-live="polite" aria-atomic="true">
       <span className="guide-eyebrow">Read the card</span><h3>{card.ability}</h3><p>{card.effect}</p>
@@ -188,7 +188,7 @@ export default function HowToPlay() {
         <div className="guide-section-intro"><SectionTitle number="07" label="Your next destination"><span id="modes-heading">Find your<br /><em>kind of fade.</em></span></SectionTitle><p>Cards & gangs brings Collection and Decks together with paper tabs. Build a ten-card gang, choose its hero, and unlock up to {MAX_DECK_SLOTS} saved deck slots.</p></div>
         <div className="guide-wallet-grid">
           <article><h3>Training Circuit</h3><p>The heavy bag opens pack recruitment. The Fadecade holds the Training Circuit. Pick your gang and practice pressure, movement, control, support, freeze recovery, or equal footing.</p><Link href="/game/training">Get your reps →</Link></article>
-          <article><h3>Friendly Fade’s & Fade Park</h3><p>Share a room code for a private fade, or find a ranked rival at Fade Park. Ranked matches use base move tiers; friendly fades do not change rank. The cigarette track burns toward your next rank.</p><Link href="/game/online">Find a fade →</Link></article>
+          <article><h3>Friendly Fade’s & Fade Park</h3><p>Share a room code for a private fade, or find The Opps in ranked play at Fade Park. Ranked matches use base move tiers; friendly fades do not change rank. The cigarette track burns toward your next rank.</p><Link href="/game/online">Find a fade →</Link></article>
           <article><h3>The Fadecade</h3><p>Straight to the Back saves each move in an endurance run, with a boss every fifth opponent. Two entries a day; one loss ends the run. Stockz lets you stake earned Clout on fictional stocks: five trades daily, a 50/50 up-or-down call, and a correct call returns twice the stake. No cash value.</p><Link href="/game/challenges">Enter the arcade →</Link></article>
           <article><h3>Stories & puzzles</h3><p>Play the original seasons, six Sherlock chapters, The Wizard of Oz, Alice in Wonderland, Yasuke, the Cellblock library, and Leon’s chapter. Arrange clues with drag, tap controls, or arrow keys. Hints and puzzle skips keep the story moving.</p><Link href="/game/story">Hit the streets →</Link></article>
         </div>

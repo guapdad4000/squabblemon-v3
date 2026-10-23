@@ -1,5 +1,5 @@
 import { lazy, Suspense, useSyncExternalStore } from 'react';
-import { rewardReceipts } from '../lib/rewardReceipts';
+import { rewardReceipts } from '../lib/rewardReceiptStore';
 
 const LazyRewardReveal = lazy(() => import('./RewardReveal').then(({ RewardReveal }) => ({ default: RewardReveal })));
 

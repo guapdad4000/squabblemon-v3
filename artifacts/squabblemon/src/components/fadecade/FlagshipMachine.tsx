@@ -135,7 +135,7 @@ export function FlagshipMachine({ bootstrap, legalCrews, runsQuery, onBattle, ro
       <ChromeFlag side="right" reducedMotion={bootstrap.profile.settings.reducedMotion}>
         <h3>Your Run</h3>
         <p>{active ? `Stop ${active.encounterIndex + 1}` : 'Ready to go'}</p>
-        <p>{active ? (active.encounter.boss ? 'Boss Alert' : 'Rival Ready') : `Best: ${loading ? '—' : best}`}</p>
+        <p>{active ? (active.encounter.boss ? 'Boss Alert' : 'The Opps Are Ready') : `Best: ${loading ? '—' : best}`}</p>
       </ChromeFlag>
     </div>
 
@@ -159,7 +159,7 @@ export function FlagshipMachine({ bootstrap, legalCrews, runsQuery, onBattle, ro
         </div>
         <div className="fadecade-road-status" aria-live="polite">
           <strong>{active ? `Stop ${active.encounterIndex + 1} · ${active.wins} cleared` : latest ? `Run ${latest.status === 'settled' ? 'over' : 'ended'} · ${latest.wins} stops cleared` : 'Your first stop is waiting.'}</strong>
-          <span>{active ? `${active.encounter.boss ? 'Boss milestone · ' : 'Next rival · '}${rival?.name ?? 'Server-issued rival'}` : 'Two fresh entries each UTC day. No carryover.'}</span>
+          <span>{active ? `${active.encounter.boss ? 'Boss milestone · ' : 'The Opps · '}${rival?.name ?? 'Server-issued Opps'}` : 'Two fresh entries each UTC day. No carryover.'}</span>
           {roadReturn?.outcome === 'draw' && <p>Draw. Same stop, same opponent. No repeat rewards.</p>}
           {active?.recovery && <p>Your committed moves are saved. Continue this exact fight.</p>}
         </div>

@@ -28,10 +28,10 @@ export function KumiteResult({ outcome, description, claimed, rivalClaimed, time
       {src ? <img className={`kumite-result__fighter ${src === pose && poseHeroes.has(hero) && outcome !== 'draw' ? 'is-pose' : ''} ${isLogo ? 'kumite-logo' : ''}`} src={src} alt="" style={isLogo ? { width: '70%', height: '40%', left: '15%', bottom: '30%' } : undefined} onError={() => setFailedSources(current => current.includes(src) ? current : [...current, src])} /> : <span style={{ position: 'absolute', inset: 0, display: 'grid', placeItems: 'center', color: '#fff', font: '800 italic 2rem var(--font-display)' }}>SQUABBLEMON</span>}
       <div className="kumite-result__shade" />
     </div>
-    <header className="kumite-result__heading"><KumiteLogo decorative /><span>WEEKLY KUMITE · {playerName}</span><DialogTitle>{win ? final ? 'KUMITE CHAMPION.' : 'YOU ADVANCE.' : outcome === 'draw' ? 'RUN IT AGAIN.' : 'RESPECT THE FIGHT.'}</DialogTitle><p>{win ? final ? 'Your name belongs on the wall.' : 'Stay ready. The next round is calling.' : outcome === 'draw' ? 'Same gang. Same rivals. A fresh fight.' : 'Keep your discipline. Come back stronger.'}</p></header>
+    <header className="kumite-result__heading"><KumiteLogo decorative /><span>WEEKLY KUMITE · {playerName}</span><DialogTitle>{win ? final ? 'KUMITE CHAMPION.' : 'YOU ADVANCE.' : outcome === 'draw' ? 'RUN IT AGAIN.' : 'RESPECT THE FIGHT.'}</DialogTitle><p>{win ? final ? 'Your name belongs on the wall.' : 'Stay ready. The next round is calling.' : outcome === 'draw' ? 'Same gang. Same Opps. A fresh fight.' : 'Keep your discipline. Come back stronger.'}</p></header>
     <div className="kumite-result__receipt">
       <DialogDescription id="kumite-result-description" data-testid={timeoutResult ? 'timeout-result-reason' : undefined}>{description}</DialogDescription>
-      <div className="kumite-result__scores"><span>YOUR DISTRICTS<strong>{claimed}</strong></span><i>—</i><span>RIVAL DISTRICTS<strong>{rivalClaimed}</strong></span></div>
+      <div className="kumite-result__scores"><span>YOUR DISTRICTS<strong>{claimed}</strong></span><i>—</i><span>THE OPPS DISTRICTS<strong>{rivalClaimed}</strong></span></div>
       {timeoutResult && <p>District totals show the final board; the turn deadline decided this match.</p>}
       <nav aria-label="After the Kumite fight">{children}</nav>
     </div>

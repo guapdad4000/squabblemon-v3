@@ -86,7 +86,7 @@ export function RulesModal({ onClose }: any) {
             <div id="in-match-field-guide" className="mt-4 grid gap-2 sm:grid-cols-2" data-testid="in-match-field-guide">
               <article className="border border-white/10 bg-black/55 p-3">
                 <h4 className="font-display text-sm font-black uppercase text-primary">Play the turn</h4>
-                <p className="mt-1 text-xs leading-relaxed text-white/65">Play cards into districts while you can afford them. Drag or tap to select and place; inspect a card before committing. The rival takes its turn after you end yours.</p>
+                <p className="mt-1 text-xs leading-relaxed text-white/65">Play cards into districts while you can afford them. Drag or tap to select and place; inspect a card before committing. The Opps take their turn after you end yours.</p>
               </article>
               <article className="border border-white/10 bg-black/55 p-3">
                 <h4 className="font-display text-sm font-black uppercase text-primary">Check the battlefield</h4>

@@ -100,7 +100,7 @@ export function CommunityCrewStudio({
               XP or ranked points.
             </p>
             <label>
-              Choose the rival
+              Choose The Opps
               <select value={rival} onChange={(e) => setRival(e.target.value)}>
                 {starterRecipes.map((recipe) => (
                   <option key={recipe.id} value={recipe.id}>

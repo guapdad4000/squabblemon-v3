@@ -48,7 +48,7 @@ export function FadecadeRoad({ index, active, fighting, defeated, compact = fals
       <img src={image} alt="" className="fadecade-sprite-loader" onError={() => setFailed(true)} />
       {phase === 'idle' || phase === 'defeat' ? <AnimatedSprite animation={roadSpriteAnimation(phase === 'defeat')} name={`road-${phase}`} className={`fadecade-sprite fadecade-sprite--${phase}`} animationKey={returnState?.key} fallback={image} /> : failed ? <span className="fadecade-sprite-fallback">YOU</span> : <div className={`fadecade-sprite fadecade-sprite--${phase}`} style={{ backgroundImage: `url(${image})` }} />}
     </div>
-    {!compact && <div className="fadecade-road-callout" role="status">{phase === 'clear' ? 'STOP CLEARED!' : phase === 'walk' ? 'ON TO THE NEXT BLOCK' : phase === 'defeat' ? 'RUN OVER' : fighting ? 'FIGHT IN PROGRESS' : active ? 'NEXT RIVAL READY' : 'MAKE YOUR RUN'}</div>}
+    {!compact && <div className="fadecade-road-callout" role="status">{phase === 'clear' ? 'STOP CLEARED!' : phase === 'walk' ? 'ON TO THE NEXT BLOCK' : phase === 'defeat' ? 'RUN OVER' : fighting ? 'FIGHT IN PROGRESS' : active ? 'THE OPPS ARE READY' : 'MAKE YOUR RUN'}</div>}
     {!compact && <div className="fadecade-road-overlay"><span>STOP {index + 1}</span><span>{(index + 1) % 5 === 0 ? 'BOSS BLOCK' : 'STRAIGHT TO THE BACK'}</span></div>}
   </div>;
 }

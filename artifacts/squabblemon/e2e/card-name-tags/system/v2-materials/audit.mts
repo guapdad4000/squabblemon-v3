@@ -1,0 +1,12 @@
+import { writeFileSync,readFileSync } from 'node:fs';
+import { createHash } from 'node:crypto';
+import { catalogCardByEngineId, CARD_RARITY_DEFINITIONS, canonicalElement } from '/home/falcon/.codex/worktrees/battle-supplied-effects/New project 9/lib/squabblemon-engine/src/data.ts';
+const base='/home/falcon/.codex/worktrees/battle-supplied-effects/New project 9';
+const out='/home/falcon/Documents/New project 9/output/card-system-20261022/v2-materials';
+const cards=Object.values(catalogCardByEngineId);
+const count=(key:(c:typeof cards[number])=>string)=>Object.fromEntries([...new Set(cards.map(key))].map(value=>[value,cards.filter(c=>key(c)===value).length]));
+const elements=['Normal','Fire','Water','Plant','Air','Electric','Poison','Light','Dark','Earth'];
+const paths=['lib/squabblemon-engine/src/data.ts','artifacts/squabblemon/src/components/CardView.tsx','artifacts/squabblemon/src/components/CardRarityTreatment.tsx','artifacts/squabblemon/src/components/CardVariantTreatment.tsx','artifacts/squabblemon/src/lib/cardFinish.ts','artifacts/squabblemon/src/components/CardFoil.tsx','artifacts/squabblemon/src/components/card-finish.css','artifacts/squabblemon/public/scenes/cards/foil.js','artifacts/squabblemon/src/assets/foil-crown.svg'];
+const data={capturedAt:new Date().toISOString(),source:base,scope:'Local dirty worktree catalog; no deployment or player-state claim',total:cards.length,elements:count(c=>canonicalElement(c.type)),rarities:count(c=>c.rarity),kinds:count(c=>c.kind??'character'),tiers:CARD_RARITY_DEFINITIONS,matrix:elements.map(element=>({element,...Object.fromEntries(Object.keys(CARD_RARITY_DEFINITIONS).map(r=>[r,cards.filter(c=>canonicalElement(c.type)===element&&c.rarity===r).length]))})),portraitCards:cards.filter(c=>c.artworkLayout==='portrait').map(c=>({id:c.engineId,name:c.name})),immersiveCards:cards.filter(c=>c.immersiveAssetId).map(c=>({id:c.engineId,name:c.name})),shortNames:cards.filter(c=>c.name.length<=4).map(c=>({id:c.engineId,name:c.name})),longNames:cards.toSorted((a,b)=>b.name.length-a.name.length).slice(0,8).map(c=>({id:c.engineId,name:c.name})),sources:paths.map(path=>({path,sha256:createHash('sha256').update(readFileSync(base+'/'+path)).digest('hex')}))};
+writeFileSync(out+'/audit.json',JSON.stringify(data,null,2)+'\n');
+console.log(JSON.stringify({total:data.total,portraits:data.portraitCards.length,immersive:data.immersiveCards.length,matrix:data.matrix}));

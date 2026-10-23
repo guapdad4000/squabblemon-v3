@@ -4,7 +4,7 @@ import { DrFadeArt } from './DrFadeArt';
 import React from 'react';
 import { motion } from 'framer-motion';
 import { CardInstance } from '../gameEngine';
-import { Shield, Ban, VolumeX, Snowflake, Wind, Flame, TrendingDown, LockKeyhole, Sparkles } from 'lucide-react';
+import { Shield, Ban, VolumeX, Snowflake, Wind, TrendingDown, LockKeyhole, Sparkles } from 'lucide-react';
 import { CardVariantTreatment, getVariantKind } from './CardVariantTreatment';
 import { CardProgress } from './CardProgress';
 import type { CardProgress as CardProgressValue } from '@workspace/squabblemon-engine/cardProgression';
@@ -18,8 +18,17 @@ import { CardFoil } from './CardFoil';
 import { tryStartGyro } from '../lib/depthQuality';
 import { useCardInspection } from './CardInspection';
 import './card-finish.css';
+import cardWordmarkUrl from '../assets/card-wordmark-white.webp';
 import { useCardScene } from './CosmeticContext';
 import { getCardArtworkId } from '../lib/assets';
+import { battlePortraitUrl } from '../lib/battlePortrait';
+
+export interface CollectibleCardLayers {
+  foil: boolean;
+  backdrop: React.ReactNode;
+  name: React.ReactNode;
+  copy: React.ReactNode;
+}
 
 interface CardViewProps {
   card: Card | CardInstance;
@@ -37,6 +46,8 @@ interface CardViewProps {
   isBoard?: boolean;
   /** Tactical board face; collection and inspection keep their complete card face. */
   boardPresentation?: 'combat';
+  /** Use bounded portrait files on battle faces; full inspection keeps original art. */
+  battleArtwork?: boolean;
   isEnemy?: boolean;
   effectivePower?: number;
   cost?: number;
@@ -65,6 +76,8 @@ interface CardViewProps {
   portraitPop?: boolean;
   /** Current match round, used for temporary-form and movement-lock countdowns. */
   currentRound?: number;
+  /** Opt-in collectible printing. React owns all layers through form/finish changes. */
+  collectibleLayers?: CollectibleCardLayers;
 }
 
 type MovementLockProjection = CardInstance & { movementLockedThroughRound?: number };
@@ -81,14 +94,16 @@ function movementLockCue(instance: CardInstance | null, currentRound?: number) {
 
 function CardViewComponent({
   card, queued, squabble, squabblePlayed, burnIgniting, onClick, onInspect, inspectable, testId, className = '',
-  isBoard, boardPresentation, isEnemy, effectivePower, cost, highlighted,
+  isBoard, boardPresentation, battleArtwork, isEnemy, effectivePower, cost, highlighted,
   effectRole, effectKind, disableLayout, layoutDependency, unavailable, inspectionLayout,
   disabledReason, variantId, progress, isInspector,
   fillContainer, presentationOnly, dragEnabled = false, covered = false,
-  entryBurst, scoreStance, portraitPop, backgroundUrl, currentRound,
+  entryBurst, scoreStance, portraitPop, backgroundUrl, currentRound, collectibleLayers,
 }: CardViewProps) {
   const inspection = useCardInspection(card, inspectable ?? (!presentationOnly && !isInspector), onInspect, variantId);
   const combatPresentation = isBoard && !isInspector && boardPresentation === 'combat';
+  const decoration = !combatPresentation && (isInspector || fillContainer) ? collectibleLayers : undefined;
+  const faceArtwork = (url: string) => battleArtwork && !isInspector ? battlePortraitUrl(url) : url;
   const equippedScene = useCardScene(card.id);
   const isInstance = 'instanceId' in card;
   const instance = isInstance ? card as CardInstance : null;
@@ -134,6 +149,7 @@ function CardViewComponent({
   const displayPower = card.hazard ? 0 : effectivePower ?? (instance
     ? instance.statuses.frozen ? 0 : Math.max(0, instance.basePower + instance.powerModifier + ongoingHands)
     : card.power);
+  const element = canonicalElement(card.type);
   const displayCost = cost ?? card.cost;
   const motionLabel = isBurntPlate ? 'This round' : isBuddyBud ? 'Matures' : card.hazard ? 'Explodes' : 'Motion';
   const motionValue = isBuddyBud && instance?.buddyBud
@@ -177,7 +193,7 @@ function CardViewComponent({
     : isBuddyBud ? instance?.buddyBud?.sprouted ? 'SPROUTED' : `+3${buddyBudTurns === null ? '' : ` · ${buddyBudTurns}T`}`
     : `PLANT −1⚡${buddyGrowthTurns === null ? '' : ` · ${buddyGrowthTurns}T`}`;
   const handsDelta = powerModifier + ongoingHands;
-  const compactStatusCount = [covered, isProtected, isBlocked, isSilenced, isFrozen, burnStacks > 0, isWeakened, isLocked, movementLock, isBoosted, isMoved, ongoingHands > 0].filter(Boolean).length;
+  const compactStatusCount = [covered, isProtected, isBlocked, isSilenced, isFrozen, isWeakened, isLocked, movementLock, isBoosted, isMoved, ongoingHands > 0].filter(Boolean).length;
   const variantKind = getVariantKind(variantId);
   const rarity = getCardRarity(instance?.cardId ?? card.id, card.kind);
   const entryAccent = cardEntryAccent(card);
@@ -226,6 +242,8 @@ function CardViewComponent({
       {...motionProps}
       data-testid={testId ?? `card-${card.id}`}
       data-card-id={card.id}
+      data-layered-card={decoration ? true : undefined}
+      data-layered-foil={decoration ? decoration.foil : undefined}
       data-instance-id={instance?.instanceId}
       data-card-cost={displayCost}
       data-card-power={displayPower}
@@ -251,6 +269,15 @@ function CardViewComponent({
       }}
       onPointerUp={event => {
         if (isInspector) { resetFoil(event); if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId); }
+      }}
+      onKeyDown={event => {
+        inspection.props.onKeyDown?.(event);
+        if (!decoration || !isInspector || cardMotionReduced() || !['ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(event.key)) return;
+        event.preventDefault();
+        const key = event.key === 'ArrowLeft' || event.key === 'ArrowRight' ? '--foil-x' : '--foil-y';
+        const previous = parseFloat(event.currentTarget.style.getPropertyValue(key)) || 50;
+        const step = event.key === 'ArrowLeft' || event.key === 'ArrowUp' ? -12 : 12;
+        event.currentTarget.style.setProperty(key, `${Math.max(0, Math.min(100, previous + step))}%`);
       }}
       onPointerMove={moveFoil}
       onPointerLeave={resetFoil}
@@ -289,20 +316,21 @@ function CardViewComponent({
         ${isInspector ? 'bg-gradient-to-br from-zinc-600 to-zinc-900' : ''}
       `}>
         <div className="relative w-full h-full bg-zinc-950 card-bevel-inner overflow-hidden flex flex-col group/inner">
-          <img src={card.kind === 'blockbuster' ? getCardImage(card.id, variantId) : backgroundUrl ?? (!isEnemy && (!instance || instance.owner === 'player') ? equippedScene : undefined) ?? getCardWallpaper(card.type)} alt="" loading="lazy" decoding="async" draggable={false} className="collector-wallpaper" />
+          {decoration?.backdrop}
+          <img src={card.kind === 'blockbuster' ? faceArtwork(getCardImage(card.id, variantId)) : backgroundUrl ?? (!isEnemy && (!instance || instance.owner === 'player') ? equippedScene : undefined) ?? getCardWallpaper(card.type)} alt="" loading="lazy" decoding="async" draggable={false} className="collector-wallpaper" />
           <div className="collector-atmosphere" aria-hidden="true" />
           {isBoard && burnStacks > 0 && <span className={`card-burn-media${burnIgniting ? ' is-igniting' : ''}`} data-battle-fx="persistent-burn" aria-hidden="true"><BattleFxImage kind="burn-flame" /><BattleFxImage kind="burn-flame" /></span>}
           <div className="absolute inset-0 bg-[image:var(--rarity-pattern)] opacity-20 mix-blend-screen pointer-events-none z-0" />
 
           <div className="absolute top-[30%] left-1/2 -translate-x-1/2 -translate-y-1/2 text-white/5 font-display font-black text-5xl md:text-7xl italic uppercase pointer-events-none z-0 whitespace-nowrap rotate-[-15deg]">
-            {canonicalElement(card.type)}
+            {element}
           </div>
 
           <div className={`absolute inset-0 bg-gradient-to-t from-zinc-900 to-zinc-800/20 ${isEnemy ? 'hue-rotate-180 brightness-50' : ''} ${isFrozen ? 'brightness-150 saturate-50 hue-rotate-180 mix-blend-hard-light' : ''} z-0`} />
           {card.id === 'dr-fade' && (!isBoard || fillContainer || isInspector)
             ? <DrFadeArt className={'collector-portrait ' + (isSilenced ? 'grayscale' : '')} animated={!isSilenced && !isFrozen} />
             : <img
-                src={instance?.cardId === 'leroy' && instance.goldenGlow ? getAssetUrl('assets/kumite/fighters/bruce-leroy-glow.webp') : isBurntPlate ? getCardImage('burnt-plate') : buddyRockForm ? getBuddySquabbleImage() : instance?.maryElephant ? getCardImage('ms-mary-mack-elephant') : getCardImage(getCardArtworkId(card), variantId)}
+                src={faceArtwork(instance?.cardId === 'leroy' && instance.goldenGlow ? getAssetUrl('assets/kumite/fighters/bruce-leroy-glow.webp') : isBurntPlate ? getCardImage('burnt-plate') : buddyRockForm ? getBuddySquabbleImage() : instance?.maryElephant ? getCardImage('ms-mary-mack-elephant') : getCardImage(getCardArtworkId(card), variantId))}
                 alt=""
                 decoding="async"
                 draggable={false}
@@ -318,7 +346,7 @@ function CardViewComponent({
               <span data-stat-length={String(motionValue).length} className={`card-stat-value font-display font-black leading-none ${isBoard ? 'text-sm' : 'text-lg md:text-xl'}`}>{motionValue}</span>
             </div>
 
-            <div className={`card-stat--hands px-1.5 py-1 min-w-[1.5rem] md:min-w-[2.25rem] flex flex-col items-center justify-center shadow-md border-l border-b border-black/30 ${handsDelta > 0 ? 'bg-green-400 text-black' : handsDelta < 0 ? 'bg-accent text-white' : 'bg-zinc-200 text-black'}`} style={{ clipPath: 'polygon(0 0, 100% 0, 100% 100%, 6px 100%, 0 calc(100% - 6px))' }}>
+            <div data-hands-shift={handsDelta > 0 ? 'gain' : handsDelta < 0 ? 'loss' : 'base'} className="card-stat--hands bg-white text-black px-1.5 py-1 min-w-[1.5rem] md:min-w-[2.25rem] flex flex-col items-center justify-center shadow-md border-l border-b border-black/30" style={{ clipPath: 'polygon(0 0, 100% 0, 100% 100%, 6px 100%, 0 calc(100% - 6px))' }}>
               {isLarge && <span className="text-[5px] md:text-[7px] font-mono uppercase tracking-widest leading-none opacity-80 mb-0.5">{isBuddyBud ? 'Payoff' : 'Hands'}</span>}
               <span data-stat-length={String(isBuddyBud ? '+3' : displayPower).length} className={`card-stat-value font-display font-black leading-none ${isBoard ? 'text-sm' : 'text-lg md:text-xl'}`}>{isBuddyBud ? '+3' : displayPower}</span>
               {powerModifier !== 0 && isBoard && (
@@ -348,7 +376,7 @@ function CardViewComponent({
               {isBlocked && <div data-card-status="blocked" title="Blocked" className="card-status bg-accent text-white"><Ban size={8} strokeWidth={3} /></div>}
               {isSilenced && <div data-card-status="silenced" title="Silenced" className="card-status bg-zinc-600 text-white"><VolumeX size={8} strokeWidth={3} /></div>}
               {isFrozen && <div data-card-status="frozen" title="Frozen" className="card-status bg-blue-400 text-black"><Snowflake size={8} strokeWidth={3} /></div>}
-              {burnStacks > 0 && <div data-card-status="burn" title={`Burning: ${burnStacks} burn stack${burnStacks === 1 ? '' : 's'}`} className="card-status bg-orange-500 text-black"><Flame size={8} strokeWidth={3} /><span>{burnStacks}</span></div>}
+
               {isWeakened && <div data-card-status="weakened" title="Weakened" className="card-status bg-rose-400 text-black"><TrendingDown size={8} strokeWidth={3} /></div>}
               {isLocked && <div data-card-status="locked" title="Locked" className="card-status bg-slate-200 text-black"><LockKeyhole size={8} strokeWidth={3} /></div>}
               {movementLock && <div data-card-status="movement-locked" title={movementLock.label} className="card-status bg-amber-300 text-black"><LockKeyhole size={8} strokeWidth={3} /><span>R{movementLock.throughRound}</span></div>}
@@ -360,23 +388,26 @@ function CardViewComponent({
           )}
 
           <div className={`collector-card-copy absolute inset-x-0 bottom-0 p-1.5 md:p-2.5 z-20 flex flex-col justify-end pointer-events-none ${isInspector ? 'collector-card-copy--inspector' : ''}`}>
-            <div className="flex flex-wrap items-center gap-1 mb-1">
-              <span className={`font-mono uppercase text-[4.5px] md:text-[6px] tracking-widest px-1 py-0.5 bg-black/80 text-white border border-[var(--rarity-color)] leading-none shadow-sm`}>
+            <div className="collector-card-meta flex flex-wrap items-center gap-1 mb-1">
+              <span className={`collector-rarity font-mono uppercase text-[4.5px] md:text-[6px] tracking-widest px-1 py-0.5 bg-black/80 text-white border border-[var(--rarity-color)] leading-none shadow-sm`}>
                 <span aria-hidden="true" className="collector-tier-cue">{CARD_RARITY_DEFINITIONS[rarity].cue} </span>{card.kind === 'token' ? 'Summon' : CARD_RARITY_DEFINITIONS[rarity].label}
               </span>
-              <span className="font-mono uppercase text-[4.5px] md:text-[6px] tracking-widest text-[var(--rarity-color)] leading-none bg-black/40 px-1 py-0.5">
-                {card.kind === 'blockbuster' ? 'Blockbuster · Lane Event' : card.kind === 'support' ? `Support · ${canonicalElement(card.type)}` : canonicalElement(card.type)}
+              <span data-element={element} className="collector-element font-mono uppercase text-[4.5px] md:text-[6px] tracking-widest text-[var(--rarity-color)] leading-none bg-black/40 px-1 py-0.5">
+                <span className="collector-element-full">
+                  {card.kind === 'blockbuster' ? 'Blockbuster · Lane Event' : card.kind === 'support' ? `Support · ${element}` : element}
+                </span><span className="collector-element-battle">{element}</span>
               </span>
               {variantKind && (
-                <span className="font-mono uppercase text-[4.5px] md:text-[6px] tracking-widest px-1 py-0.5 bg-black/80 text-[var(--rarity-color)] border border-white/20 leading-none shadow-sm ml-auto">
+                <span className="collector-finish font-mono uppercase text-[4.5px] md:text-[6px] tracking-widest px-1 py-0.5 bg-black/80 text-[var(--rarity-color)] border border-white/20 leading-none shadow-sm ml-auto">
                   {variantKind}
                 </span>
               )}
             </div>
 
             <h4 className={`font-display font-black uppercase italic leading-[0.95] text-white ${isBoard ? 'text-[9px] sm:text-[11px]' : 'text-sm md:text-lg drop-shadow-md'}`}>
-              {card.name}
+              {card.name}{decoration?.name}
             </h4>
+            {decoration?.copy}
 
             {(isInspector || (!isBoard && !presentationOnly)) && (
                <div className={`collector-card-ability mt-1 border-t border-white/15 pt-1 ${isInspector ? '' : 'opacity-90'}`}>
@@ -396,13 +427,13 @@ function CardViewComponent({
           <CardRarityTreatment rarity={rarity} />
           <span className="collector-art-rim" aria-hidden="true" />
           <span className="collector-engraving" aria-hidden="true" />
-          <span className="collector-edition-seal" aria-hidden="true">SM</span>
+          <span className="collector-edition-seal" aria-hidden="true"><img src={cardWordmarkUrl} alt="" width="192" height="59" decoding="async" draggable={false} /></span>
           <CardVariantTreatment variantId={variantId} />
           <span className="collector-foil" aria-hidden="true" />
           <span className="collector-foil-pattern" aria-hidden="true" />
           <span className="collector-foil-grain" aria-hidden="true" />
           <span className="collector-glare" aria-hidden="true" />
-          <CardFoil tier={CARD_RARITY_DEFINITIONS[rarity].order + 1} variant={variantKind} live={Boolean(isInspector || queued || squabble)} />
+          <CardFoil tier={CARD_RARITY_DEFINITIONS[rarity].order + 1} variant={variantKind} live={!decoration && Boolean(isInspector || queued || squabble)} />
         </div>
       </div>
     </MotionElement>{inspection.dialog}</>
@@ -423,6 +454,7 @@ function cardViewPropsEqual(previous: CardViewProps, next: CardViewProps) {
     && previous.className === next.className
     && previous.isBoard === next.isBoard
     && previous.boardPresentation === next.boardPresentation
+    && previous.battleArtwork === next.battleArtwork
     && previous.isEnemy === next.isEnemy
     && previous.effectivePower === next.effectivePower
     && previous.cost === next.cost
@@ -444,7 +476,8 @@ function cardViewPropsEqual(previous: CardViewProps, next: CardViewProps) {
     && previous.entryBurst === next.entryBurst
     && previous.scoreStance === next.scoreStance
     && previous.portraitPop === next.portraitPop
-    && previous.currentRound === next.currentRound;
+    && previous.currentRound === next.currentRound
+    && previous.collectibleLayers === next.collectibleLayers;
 }
 
 export const CardView = React.memo(CardViewComponent, cardViewPropsEqual);

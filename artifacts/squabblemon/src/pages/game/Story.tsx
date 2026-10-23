@@ -853,7 +853,7 @@ function BattleBriefing({
             {battle.optional && <span className="eyebrow">Mastery Node</span>}
             {!battle.optional && <span className="eyebrow">{cleared ? 'Mastery replay' : battle.battleType}</span>}
             <h2>{battle.encounter.enemy.name}</h2>
-            <p>{battle.encounter.enemy.behaviorProfile} rival · {getMatchRoundLimit(battle.encounter)} rounds · first to two districts</p>
+            <p>{battle.encounter.enemy.behaviorProfile}  · The Opps · {getMatchRoundLimit(battle.encounter)} rounds · first to two districts</p>
             <div className="story-briefing__history">{historyButton}</div>
           </div>
           <div className="story-briefing__enemy">

@@ -44,3 +44,12 @@
   .battle-arena.battle-hud .battle-side :is(.battle-formation-continuation,.battle-formation-inspect) { transition: none; }
 }
 .battle-arena.battle-hud[data-reduced-motion='true'] .battle-side :is(.battle-formation-continuation,.battle-formation-inspect) { transition: none; }
+
+@media (pointer: coarse), (max-width: 900px) {
+  .battle-arena.battle-hud .battle-side button.battle-formation-continuation,
+  .battle-arena.battle-hud .battle-side button.formation-expand.battle-formation-inspect { height: 44px; min-height: 44px; }
+  .battle-arena.battle-hud .battle-side .battle-formation-continuation { width: 44px; min-width: 44px; }
+  .battle-arena.battle-hud .battle-side button.formation-expand.battle-formation-inspect { min-width: 44px; max-width: calc(100% - 48px); }
+  .battle-arena.battle-hud .battle-side:has(.battle-formation-stack[data-inspectable='true']) { padding-bottom: 48px; }
+  .battle-arena.battle-hud .district-lane:has(.battle-formation-stack[data-inspectable='true']) { --formation-footer-space: 48px; }
+}

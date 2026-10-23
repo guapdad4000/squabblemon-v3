@@ -1,8 +1,10 @@
-import { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { getAssetUrl } from '../lib/assets';
 import './supplied-battle-fx.css';
 
 export const BATTLE_MEDIA = {
+  'lane-flame-left': { width: 112, height: 168 },
+  'lane-flame-right': { width: 112, height: 168 },
   'fire-impact': { width: 122, height: 150 },
   'burn-flame': { width: 160, height: 222 },
   'movement-dust': { width: 320, height: 180 },
@@ -18,11 +20,21 @@ export function BattleFxImage({ kind, className = '', animated = true }: {
   kind: BattleMediaKind; className?: string; animated?: boolean;
 }) {
   const image = useRef<HTMLImageElement>(null);
-  const [playing, setPlaying] = useState(false);
-  const [failed, setFailed] = useState(false);
+  const failed = useRef(false);
   useEffect(() => {
     const node = image.current;
-    if (!node || !animated || kind === 'fire-impact') return;
+    if (!node) return;
+    failed.current = false;
+    // Playback is decorative DOM state. Visibility changes must not commit React
+    // updates across the battle tree or restart unrelated card animations.
+    const setPlaying = (playing: boolean) => {
+      const moving = animated && kind !== 'fire-impact' && playing && !failed.current;
+      node.dataset.mediaAnimated = moving ? 'true' : 'false';
+      const src = getAssetUrl(`assets/combat/supplied/${kind}${moving ? '' : '-still'}.webp`);
+      if (node.getAttribute('src') !== src) node.setAttribute('src', src);
+    };
+    setPlaying(false);
+    if (!animated || kind === 'fire-impact') return;
     let disposed = false;
     let stop: (() => void) | undefined;
     // Playback observers are optional; keep the static art if this chunk fails.
@@ -32,11 +44,16 @@ export function BattleFxImage({ kind, className = '', animated = true }: {
     return () => { disposed = true; stop?.(); };
 
   }, [animated, kind]);
-  const moving = kind !== 'fire-impact' && animated && playing && !failed;
   return <img ref={image} className={`supplied-battle-fx ${className}`} data-battle-media={kind}
-    data-media-animated={moving ? 'true' : 'false'}
-    src={getAssetUrl(`assets/combat/supplied/${kind}${moving ? '' : '-still'}.webp`)}
+    data-media-animated="false"
+    src={getAssetUrl(`assets/combat/supplied/${kind}-still.webp`)}
     width={BATTLE_MEDIA[kind].width} height={BATTLE_MEDIA[kind].height}
     alt="" aria-hidden="true" decoding="async" draggable={false}
-    onError={() => { if (!failed) setFailed(true); }} />;
+    onError={event => {
+      const node = event.currentTarget;
+      if (node.dataset.mediaAnimated !== 'true') return;
+      failed.current = true;
+      node.dataset.mediaAnimated = 'false';
+      node.setAttribute('src', getAssetUrl(`assets/combat/supplied/${kind}-still.webp`));
+    }} />;
 }

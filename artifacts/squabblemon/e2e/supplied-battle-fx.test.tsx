@@ -11,7 +11,7 @@ import { onlineEffectImpactMs } from '../src/lib/useOnlineEffectPresenter';
 import { BattleAttack } from '../src/components/BattleAttack';
 import { CardView } from '../src/components/CardView';
 import { BattleFxImage, BATTLE_MEDIA } from '../src/components/BattleFxImage';
-import { completeDefeatBeat, hasDefeatedCard, fireAttackTargetIds, squabbledCardIds } from '../src/lib/battleMediaEvents';
+import { completeDefeatBeat, hasDefeatedCard, fireAttackTargetIds, burnApplicationTargetIds, squabbledCardIds } from '../src/lib/battleMediaEvents';
 
 test('Motion glyph uses the supplied orb with a static server fallback',()=>{
   const html=renderToStaticMarkup(<GameGlyph name="motion"/>);
@@ -30,6 +30,7 @@ test('persistent flame follows actual Burn stacks, retaining the stack count',()
   assert.doesNotMatch(render(),/data-battle-media="burn-flame"/);
   card.statuses.burnStacks=2;
   const html=render();assert.match(html,/data-battle-media="burn-flame"/);assert.match(html,/Burning: 2 burn stacks/);
+  assert.doesNotMatch(html,/data-card-status="burn"|card-status-summary/);
   card.statuses.burnStacks=0;assert.doesNotMatch(render(),/data-battle-media="burn-flame"/);
 });
 test('Fire visuals select actual hostile hits and Burn, excluding buffs and blocked targets',()=>{
@@ -83,7 +84,7 @@ test('Squabble art has an idle PNG, an interactive flame, and a one-shot spent p
   assert.doesNotMatch(spent,/squabble-ready|squabble-idle|×2/);
 });
 
-test('supplied contact follows actual hostile damage, excluding windup, buffs, fire and neutral departures',()=>{
+test('supplied contact follows hostile damage including fire, excluding windup, buffs and neutral departures',()=>{
   const before=createMatch('block','combo');before.playerMotion=20;
   const attacker=createCardInstance('roaster','player','hand',1);before.playerHand=[attacker];
   const enemy={...createCardInstance('hooper','cpu','lane-0',0),lane:0 as Lane};
@@ -94,7 +95,7 @@ test('supplied contact follows actual hostile damage, excluding windup, buffs, f
   const render=(entry=effect,impact=true)=>renderToStaticMarkup(<BattleAttack card={attacker} effect={entry} impact={impact}/>);
   assert.match(render(),/class="attack-contact-media(?: is-finisher)?"/);
   assert.doesNotMatch(render(effect,false),/class="attack-contact-media(?: is-finisher)?"/);
-  assert.doesNotMatch(render({...effect,kind:'fire'}),/class="attack-contact-media(?: is-finisher)?"/);
+  assert.match(render({...effect,kind:'fire'}),/class="attack-contact-media(?: is-finisher)?"/);
   assert.doesNotMatch(render({...effect,targets:effect.targets.map(t=>({...t,after:t.before}))}),/class="attack-contact-media(?: is-finisher)?"/);
   assert.doesNotMatch(render({...effect,targets:effect.targets.map(t=>({...t,owner:'player'}))}),/class="attack-contact-media(?: is-finisher)?"/);
   const removed={...effect,targets:effect.targets.map(t=>({...t,after:null}))};
@@ -128,4 +129,29 @@ test('a real defeat holds the complete hit and ghost; survivors and neutral depa
   }
   assert.equal(hasDefeatedCard({...effect,source:event.targets[0],targets:[]}),true);
   assert.ok(!resolved.boards.flat().some(c=>c.instanceId===target.instanceId),'death art does not restore the defeated card to the live board');
+});
+
+
+test('Burn without immediate Hands loss lands the normal contact, excluding friendly and blocked recipients',()=>{
+  for (const sourceId of ['folks','cornball']) {
+  const before=createMatch('block','combo');before.playerMotion=20;
+  const source=createCardInstance(sourceId,'player','hand',1);before.playerHand=[source];
+  const enemy={...createCardInstance('plug','cpu','lane-0',0),lane:0 as Lane};
+  const ally={...createCardInstance('hooper','player','lane-0',1),lane:0 as Lane};
+  before.boards=[[enemy,ally],[],[]];
+  const resolved=playTurnCard(before,'player',source.instanceId,0);
+  const event=resolved.effectLog.find(e=>e.type==='ability'&&e.cardId===sourceId)!;
+  const target=event.targets.find(t=>t.cardInstanceId===enemy.instanceId)!;
+  assert.equal(target.before!.powerModifier,target.after!.powerModifier);
+  assert.ok(burnApplicationTargetIds(event).has(enemy.instanceId));
+  assert.ok(!burnApplicationTargetIds(event).has(ally.instanceId));
+  const effect={...event,targetIds:event.targets.map(t=>t.cardInstanceId)};
+  const html=renderToStaticMarkup(<BattleAttack card={source} effect={effect} impact/>);
+  assert.match(html,/class="attack-contact-media"/);
+  assert.doesNotMatch(html,/class="attack-hit"|data-geo="ring-(?:outer|inner)"|class="attack-star"/);
+  assert.doesNotMatch(html,/attack-fire-media|fire-impact-once/);
+  const blocked={...effect,targets:effect.targets.map(t=>({...t,after:t.before}))};
+  assert.equal(burnApplicationTargetIds(blocked).size,0);
+  assert.doesNotMatch(renderToStaticMarkup(<BattleAttack card={source} effect={blocked} impact/>),/class="attack-contact-media"/);
+  }
 });

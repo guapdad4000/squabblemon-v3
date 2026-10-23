@@ -3,7 +3,7 @@ import { Music2 } from 'lucide-react';
 import { soundtrack } from '../musicPlayer';
 import { useMusic } from '../musicStore';
 import { useFeedbackPreferences } from '../hooks/useFeedbackPreferences';
-import { getAssetUrl } from '../data';
+import { getAssetUrl } from '../lib/assets';
 import './music-controls.css';
 
 const MusicPanel = lazy(() => import('./MusicPanel'));

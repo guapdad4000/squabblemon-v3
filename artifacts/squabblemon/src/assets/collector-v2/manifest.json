@@ -1,0 +1,112 @@
+[
+  {
+    "file": "air-fist.webp",
+    "bytes": 19584,
+    "sha256": "3d268003edd6ca46df85c67560036ae59d2cb56dada7224fd000ae59e9908bfd"
+  },
+  {
+    "file": "air-plate.webp",
+    "bytes": 49394,
+    "sha256": "20ec918e3cec09ac2466c0f3b195a61ffe36f6b1efbeb71fa64a15a76291dbec"
+  },
+  {
+    "file": "dark-fist.webp",
+    "bytes": 18924,
+    "sha256": "8e566093a6a8e0b16b11b589ece1959c122d439296fe82956eb5351c79790b1e"
+  },
+  {
+    "file": "dark-plate.webp",
+    "bytes": 36408,
+    "sha256": "82585f0069de154331957f14612b3d215047bf2c87dff3f49e7bd448dd765c46"
+  },
+  {
+    "file": "earth-fist.webp",
+    "bytes": 18104,
+    "sha256": "a09698cf9154aaf568c13eb128128a9da3e12ab1018ea2af8c06cd489353b425"
+  },
+  {
+    "file": "earth-plate.webp",
+    "bytes": 52680,
+    "sha256": "a30a764d39d53c7e6b634ec44cc26ea915230298e2bda3efec6ee1ae34b359b8"
+  },
+  {
+    "file": "electric-fist.webp",
+    "bytes": 22486,
+    "sha256": "5a1d4d4710c67e68e6c87593b16ba9aa64f08570cc79b68799cd178cd5cd2a60"
+  },
+  {
+    "file": "electric-plate.webp",
+    "bytes": 56124,
+    "sha256": "6c80e42e268316f543fece474f1644a52c9492e9b0f267d59cebe482013afab8"
+  },
+  {
+    "file": "fire-fist.webp",
+    "bytes": 19242,
+    "sha256": "b26668bc47d37e448445c65a845f97c02c50033784a5b5bf7139cd08f8540e7e"
+  },
+  {
+    "file": "fire-plate.webp",
+    "bytes": 171968,
+    "sha256": "618c320972045efb036900917c33ab0a1526cea45898d7eaa8f0109b5f1e3e7d"
+  },
+  {
+    "file": "light-fist.webp",
+    "bytes": 26276,
+    "sha256": "965309936ef0668abc02783860c3c6099513671ad59748c47a5937706cabac89"
+  },
+  {
+    "file": "light-plate.webp",
+    "bytes": 54952,
+    "sha256": "ea9e5de1fd630be6eb70042d0ced4475d4fc8d8769737649588514cd01c9c4fb"
+  },
+  {
+    "file": "normal-fist.webp",
+    "bytes": 16618,
+    "sha256": "cab5adf6f6f7c716f5b9d9ddceab30d57d82dca9f9dec739a93369a265a31709"
+  },
+  {
+    "file": "normal-plate.webp",
+    "bytes": 49962,
+    "sha256": "d81a212a06273893126465e90e76e164acc2a1b5899ca6b710a5e0de05884cb8"
+  },
+  {
+    "file": "plant-fist.webp",
+    "bytes": 19960,
+    "sha256": "0bb9d7671deb69b589cedf99b25e48d13b12abac5ceb88dea1c4e5e5431d1e1a"
+  },
+  {
+    "file": "plant-plate.webp",
+    "bytes": 50184,
+    "sha256": "faeb0f01931880d9c99be6f757e6f3648253ff60496313eb6181027693bcf81c"
+  },
+  {
+    "file": "poison-fist.webp",
+    "bytes": 19494,
+    "sha256": "388d29056de4123be960ec04e4dd723c89c84aa23210c785c87cd4ff16b23a42"
+  },
+  {
+    "file": "poison-plate.webp",
+    "bytes": 44244,
+    "sha256": "fd81cf9d82f6fc8fc3a5acb652b9555caadef018e5d7f318dc5993ce42224a97"
+  },
+  {
+    "file": "prism-flakes.webp",
+    "bytes": 132302,
+    "sha256": "0a27750091cf85fcf125b2ff9238a904f328d1a9edeeb84712c2fd67bd66be4c"
+  },
+  {
+    "file": "rules-paper.webp",
+    "bytes": 39398,
+    "sha256": "cf06eaa85431989e7d0c9a28a1e8423cbfae70ae5b50b3f6fca3255a23d7e769"
+  },
+  {
+    "file": "water-fist.webp",
+    "bytes": 20048,
+    "sha256": "d84110eb10c58d351736db6b6d6b086eafaa341bb1fec737dab63db9901d1190"
+  },
+  {
+    "file": "water-plate.webp",
+    "bytes": 52340,
+    "sha256": "3f5678fb3592f19a3695667b40ca2aed11d6d80cbd6bc3baee182daa849ec9d7"
+  }
+]

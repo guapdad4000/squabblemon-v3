@@ -33,7 +33,8 @@ function Review() {
   function run(id:string, lethal=false, publicSnapshot=false) {
     setDefeatAudit({});setSquabble(false);setSelected(null);setLane(null);
     clearTimeout(timer.current);
-    const before=initialMatch(),card=before.playerHand.find(c=>c.cardId===id)!;
+    const before=initialMatch(),card=before.playerHand.find(c=>c.cardId===id)??createCardInstance(id,'player','review-hand',0);
+    if(!before.playerHand.includes(card))before.playerHand.push(card);
     if(lethal){
       const target=before.boards[0].find(c=>c.owner==='cpu')!;
       target.basePower=1;target.powerModifier=0;
@@ -61,7 +62,7 @@ function Review() {
     setState(s=>({match:resolved,effect:null,impact:false,key:s.key+1}));
   }
   return <><details className="fx-review-controls"><summary>Effects review</summary><div>
-    <button onClick={()=>run('roaster',true)}>Defeat</button><button onClick={()=>run('roaster',true,true)}>Defeat — public snapshot</button><button onClick={()=>run('roaster')}>Attack impact</button><button onClick={()=>run('folks')}>Fire attack</button><button onClick={()=>run('roaster')}>Apply Burn</button><button onClick={()=>run('carmeet')}>Move</button>
+    <button onClick={()=>run('roaster',true)}>Defeat</button><button onClick={()=>run('roaster',true,true)}>Defeat — public snapshot</button><button onClick={()=>run('roaster')}>Attack impact</button><button onClick={()=>run('folks')}>Fire attack</button><button onClick={()=>run('roaster')}>Apply Burn</button><button onClick={()=>run('cornball')}>Burn only</button><button onClick={()=>run('carmeet')}>Move</button>
     <button onClick={()=>setState(s=>({...s,match:{...s.match,playerMotion:s.match.playerMotion+1}}))}>Motion +1</button>
     <button onClick={showSquabble}>Squabbled card</button><button onClick={()=>setArrival(true)}>PvP match screen</button>
     <button onClick={clear}>Reset</button><label><input type="checkbox" checked={reduced} onChange={e=>setReduced(e.target.checked)}/>Reduced motion</label>

@@ -10,7 +10,7 @@ export function BattlePowerBreakdown({ card, match }: { card: CardInstance; matc
   const suppression = effective - raw;
   const shared = inPlay ? getStoryLaneBonus(match, card.owner, card.lane!) + getDistrictSharedBonus(match, card.owner, card.lane!) : 0;
   return <section className="battle-power-breakdown" data-testid="battle-power-breakdown" aria-label="Current battle Hands">
-    <header>{card.owner === 'player' ? 'Your' : 'Rival'} character · {inPlay ? getMatchDistricts(match)[card.lane!].name : 'In hand'}</header>
+    <header>{card.owner === 'player' ? 'Your' : 'The Opps’'} character · {inPlay ? getMatchDistricts(match)[card.lane!].name : 'In hand'}</header>
     <dl><div><dt>Base Hands</dt><dd>{card.basePower}</dd></div><div><dt>Buffs / penalties</dt><dd>{card.powerModifier > 0 ? '+' : ''}{card.powerModifier}</dd></div>
       {ongoing !== 0 && <div><dt>Ongoing Hands</dt><dd>{ongoing > 0 ? '+' : ''}{ongoing}</dd></div>}
       {suppression !== 0 && <div><dt>{card.statuses.frozen ? 'Frozen suppression' : 'Minimum Hands adjustment'}</dt><dd>{suppression > 0 ? '+' : ''}{suppression}</dd></div>}

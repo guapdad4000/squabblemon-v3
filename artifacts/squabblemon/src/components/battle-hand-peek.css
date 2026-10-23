@@ -6,43 +6,46 @@
   bottom: calc(100% + 3px);
   translate: -50% 0;
   width: min(410px, calc(100% - 24px));
-  padding: 9px 12px 10px;
-  border: 1px solid #d9e0e538;
-  border-radius: 8px;
-  background: linear-gradient(125deg, #12232bf5, #07121bf5 78%);
-  color: #fff4dd;
-  box-shadow: 0 6px 22px #0008;
+  padding: 10px 12px 11px;
+  border: 1px solid #f1eadd55;
+  border-radius: 3px;
+  background: linear-gradient(125deg, #242421, #10100f 78%);
+  color: #f1eadd;
+  box-shadow: 0 8px 24px #000a, inset 0 0 0 1px #f1eadd08;
+  /* Read-only move text must never swallow a district tap on short screens. */
   pointer-events: none;
   animation: hand-peek-enter 140ms ease-out both;
 }
-.battle-arena.battle-hud .battle-hand-peek[data-unavailable='true'] { color: #e3e5e8; }
+.battle-arena.battle-hud .battle-hand-peek[data-unavailable='true'] { color: #c9c3b9; }
 .battle-arena.battle-hud .battle-hand-peek__heading { display: flex; align-items: center; gap: 12px; min-width: 0; }
 .battle-arena.battle-hud .battle-hand-peek__heading > strong {
   flex: 1;
   min-width: 0;
-  font: 900 italic 17px/1.08 var(--font-display, sans-serif);
+  font: 400 21px/1.08 var(--font-card-title, var(--font-display, sans-serif));
+  font-synthesis: none;
+  letter-spacing: .015em;
   text-transform: uppercase;
   overflow-wrap: anywhere;
 }
-.battle-arena.battle-hud .battle-hand-peek__cost { flex: none; display: flex; gap: 3px; align-items: center; color: #ffe4a4; font: 900 18px/1 var(--font-display, sans-serif); font-variant-numeric: tabular-nums; }
+.battle-arena.battle-hud .battle-hand-peek__cost { flex: none; display: flex; gap: 3px; align-items: center; color: #facc15; font: 700 20px/1 var(--font-card-number, var(--font-display, sans-serif)); font-synthesis: none; font-variant-numeric: tabular-nums; }
 .battle-arena.battle-hud .battle-hand-peek__cost > span { font-size: 14px; }
 .battle-arena.battle-hud .battle-hand-peek__move { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; margin-top: 6px; }
-.battle-arena.battle-hud .battle-hand-peek__move > b { min-width: 0; color: #eacd90; font: 800 10px/1.25 var(--font-mono, monospace); text-transform: uppercase; overflow-wrap: anywhere; }
-.battle-arena.battle-hud .battle-hand-peek__move > span { flex: none; color: #ffbbb3; font: 800 9px/1.2 var(--font-mono, monospace); }
+.battle-arena.battle-hud .battle-hand-peek__move > b { min-width: 0; color: #e1dbcf; font: 700 12px/1.15 var(--font-action-sign, var(--font-sans, sans-serif)); font-synthesis: none; letter-spacing: .025em; text-transform: uppercase; overflow-wrap: anywhere; }
+.battle-arena.battle-hud .battle-hand-peek__move > span { flex: none; color: #df7b6a; font: 800 9px/1.2 var(--font-mono, monospace); }
 .battle-arena.battle-hud .battle-hand-peek > p {
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 3;
-  margin: 3px 0 0;
+  margin: 4px 0 0;
   overflow: hidden;
-  color: #eef2ed;
+  color: #d5d0c7;
   font: 500 12px/1.35 var(--font-sans, sans-serif);
 }
 
 /* The explicit deck attribute bounds selector invalidation to a small hand.
    Individual translation preserves CardView's Framer/foil transform pipeline. */
 .battle-arena.battle-hud .battle-command-deck[data-hand-peek='true'] .battle-hand-card { transition: translate 160ms ease, filter 140ms ease; }
-.battle-arena.battle-hud .battle-command-deck[data-hand-peek='true'] .battle-hand-card[aria-pressed='true'] { translate: 0 -4px; box-shadow: 0 7px 20px #0009, 0 0 0 2px #ffe1a0, 0 0 13px #e7c06f33; }
+.battle-arena.battle-hud .battle-command-deck[data-hand-peek='true'] .battle-hand-card[aria-pressed='true'] { translate: 0 -4px; box-shadow: 0 7px 20px #0009, 0 0 0 2px #f1eadd, 0 0 13px #f1eadd22; }
 .battle-arena.battle-hud .battle-command-deck[data-hand-peek='true'] .battle-hand-row > .battle-hand-card:has(~ .battle-hand-card[aria-pressed='true']) { translate: -4px 0; }
 .battle-arena.battle-hud .battle-command-deck[data-hand-peek='true'] .battle-hand-row > .battle-hand-card[aria-pressed='true'] ~ .battle-hand-card { translate: 4px 0; }
 .battle-arena.battle-hud .battle-command-deck:not([data-hand-peek='true']) .battle-hand-card { translate: 0 0; transition: translate 160ms ease, filter 140ms ease; }
@@ -50,14 +53,14 @@
 @keyframes hand-peek-enter { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 @media (max-width: 600px) {
   .battle-arena.battle-hud .battle-hand-peek { width: min(370px, calc(100% - 20px)); padding: 8px 10px; }
-  .battle-arena.battle-hud .battle-hand-peek__heading > strong { font-size: 15px; }
+  .battle-arena.battle-hud .battle-hand-peek__heading > strong { font-size: 19px; }
   .battle-arena.battle-hud .battle-hand-peek > p { font-size: 11px; line-height: 1.35; }
 }
 @media (max-width: 600px) and (max-height: 680px) {
   .battle-arena.battle-hud .battle-hand-peek { padding-block: 7px; }
   .battle-arena.battle-hud .battle-hand-peek > p { -webkit-line-clamp: 2; }
 }
-@media (min-width: 601px) and (max-height: 580px) {
+@media (min-width:601px) and (max-height:580px), (min-width:601px) and (max-width:1100px) and (orientation:landscape) and (max-height:850px) {
   .battle-arena.battle-hud .battle-hand-peek { left: auto; right: calc(100% + 6px); bottom: auto; top: 8px; translate: 0 0; width: min(340px, calc(100vw - 195px)); }
   .battle-arena.battle-hud .battle-command-deck[data-hand-peek='true'] .battle-hand-row > .battle-hand-card:not([aria-pressed='true']) { translate: 0 0; }
   .battle-arena.battle-hud .battle-command-deck[data-hand-peek='true'] .battle-hand-row > .battle-hand-card[aria-pressed='true'] { translate: 0 -2px; }
@@ -70,4 +73,4 @@
 .battle-arena.battle-hud .battle-hand-peek[data-reduced-motion='true'] { animation: none; }
 .battle-arena.battle-hud[data-reduced-motion='true'] .battle-command-deck[data-hand-peek='true'] .battle-hand-row > .battle-hand-card { translate: 0 0; transition: filter 140ms ease; }
 
-.battle-arena.battle-hud .battle-hand-peek__cost-label { font: 700 9px/1 var(--font-sans); color: #e7d8bd; }
+.battle-arena.battle-hud .battle-hand-peek__cost-label { font: 700 9px/1 var(--font-sans); color: #c9c3b9; }

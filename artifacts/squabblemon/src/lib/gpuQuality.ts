@@ -40,7 +40,7 @@ export function startFrameGuard() {
     if (slow < 0.25) return;
     void (detector() as Promise<DetectorWithDowngrade>).then(module => {
       if (module.downgradeGPUQuality?.()) qualityListeners.forEach(listener => listener());
-    });
+    }).catch(() => { modulePromise = undefined; /* Keep the scene running and allow a later probe to retry. */ });
   };
   requestAnimationFrame(tick);
 }

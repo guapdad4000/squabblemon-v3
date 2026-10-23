@@ -398,7 +398,7 @@ export function resolveBlockbusterWave(
         },
       };
       if (winner !== "draw") buff(weakest(fighters(m, l).filter(c => c.owner === winner), t), 3);
-      note = `Dice Game: player [${p.join(", ")}] = ${score(p)}; rival [${c.join(", ")}] = ${score(c)}. ${winner === "draw" ? "Tie: wagers refunded." : winner + " wins the " + wager * 2 + "-Motion pot (cap 9)."}`;
+      note = `Dice Game: player [${p.join(", ")}] = ${score(p)}; The Opps [${c.join(", ")}] = ${score(c)}. ${winner === "draw" ? "Tie: wagers refunded." : winner + " wins the " + wager * 2 + "-Motion pot (cap 9)."}`;
       succeeded = true;
       break;
     }

@@ -219,7 +219,7 @@ export function ResultScreen({
           {isTutorial && <div className="result-stage__lesson-debrief" aria-label="Rookie Road final board lesson" data-testid="tutorial-final-debrief">
             <p>{describeTutorialBoard(m)}</p>
             <p>{tutorialNextAdjustment(m)}</p>
-            <p>This coached fade had four rounds, no clock and a limited rival. Regular fades usually last six rounds; you may play multiple cards before End Turn. Check card kinds, location rules, encounter modifiers and any clock before the next fight.</p>
+            <p>This coached fade had four rounds, no clock and limited resources for The Opps. Regular fades usually last six rounds; you may play multiple cards before End Turn. Check card kinds, location rules, encounter modifiers and any clock before the next fight.</p>
           </div>}
         </header>}>
 

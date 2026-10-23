@@ -1,0 +1,99 @@
+/* Isolated collectible-card composition. All selectors require an explicit
+   layered opt-in; no battle card receives this attribute. */
+.collector-card[data-layered-card] { isolation:isolate; container-type:inline-size; }
+.collector-card[data-layered-card] .collector-frame {
+  padding:0!important; background:none!important; clip-path:none!important;
+  border:0!important; box-shadow:none!important;
+}
+.collector-card[data-layered-card] .collector-frame > div {
+  background:transparent!important; clip-path:none!important; isolation:isolate;
+}
+.collector-card[data-layered-card] :is(.collector-wallpaper,.collector-atmosphere,.collector-art-shade,.collector-art-rim,.collector-engraving,.card-rarity-glow,.collector-foil,.collector-foil-pattern,.collector-foil-grain,.collector-glare,.collector-webgl,.card-variant-sheen,.holo-finish),
+.collector-card[data-layered-card] .collector-frame > div > .z-0 { display:none!important; }
+.collector-card[data-layered-card] :is(.collector-frame,.collector-frame>div)::before,
+.collector-card[data-layered-card] :is(.collector-frame,.collector-frame>div)::after { display:none!important; }
+.collector-card[data-layered-card] .layered-print {
+  position:absolute; inset:0; z-index:0; pointer-events:none; overflow:hidden;
+}
+.collector-card[data-layered-card] .layered-print > :is(img,svg) { width:100%; height:100%; display:block; object-fit:contain; }
+/* Preserve the original figure's proportions and its upper portrait space. */
+.collector-card[data-layered-card] .collector-portrait {
+  top:8%!important; bottom:auto!important; left:4%!important; right:auto!important;
+  width:92%!important; height:70%!important; object-fit:contain!important;
+  object-position:center bottom!important; transform:none!important; z-index:10;
+  filter:drop-shadow(0 1cqw 1cqw #0008);
+}
+.collector-card[data-layered-card] .card-stat-pair {
+  top:3cqw!important; left:4cqw!important; right:4cqw!important; z-index:40;
+}
+.collector-card[data-layered-card] :is(.card-stat--motion,.card-stat--hands) {
+  min-width:17cqw!important; padding:1.5cqw 2cqw!important;
+  border:0!important; box-shadow:0 1cqw 0 #050505!important;
+}
+.collector-card[data-layered-card] .card-stat--motion { background:#ffdc00!important; color:#0b0c0c!important; }
+.collector-card[data-layered-card] .card-stat--hands { background:#fff!important; color:#101211!important; }
+.collector-card[data-layered-card] .card-stat--hands[data-hands-shift="gain"] .card-stat-value { color:#168448!important; }
+.collector-card[data-layered-card] .card-stat-value { font-size:11cqw!important; line-height:.93!important; }
+.collector-card[data-layered-card] .card-stat-pair > div > span:not(.card-stat-value) { font-size:2.7cqw!important; margin:0 0 .5cqw!important; }
+.collector-card[data-layered-card] .collector-edition-seal {
+  top:3.5cqw!important; bottom:auto!important; left:35%!important; right:auto!important;
+  width:30%!important; opacity:.7!important; z-index:35!important;
+}
+/* One quiet material pass below the illustration, rules and all UI.
+   Respect the Fire master's real alpha, including its torn outside edge. */
+.collector-card[data-layered-card] .layered-material { position:absolute; inset:0; z-index:2; pointer-events:none; }
+.collector-card[data-layered-card] .layered-material[data-element="Fire"] { mask:url('../assets/collector-v2/fire-plate.webp') center / contain no-repeat; }
+.collector-card[data-layered-card] .layered-material:not([data-element="Fire"]) { clip-path:polygon(3% 3%,98% 1%,97% 50%,100% 80%,96% 99%,4% 98%,1% 87%,2% 30%); }
+.collector-card[data-layered-card] :is(.layered-stock,.layered-reflection) {
+  position:absolute; inset:0; pointer-events:none; z-index:2;
+  mask-image:linear-gradient(#000,#000),linear-gradient(#000,#000);
+  mask-origin:border-box,content-box; mask-clip:border-box,content-box;
+  mask-composite:exclude; padding:14% 14% 25%;
+}
+.collector-card[data-layered-card] .layered-stock { opacity:0; }
+.collector-card[data-layered-card] .layered-reflection {
+  background:linear-gradient(115deg,transparent 35%,#c2e8ff66 43%,#ffffdfaa 48%,#efaedd77 52%,transparent 60%);
+  background-size:250% 100%; background-position:var(--foil-x,48%) 50%;
+  mix-blend-mode:screen; opacity:.22;
+}
+.collector-card[data-layered-card][data-card-rarity="SuperCommon"] .layered-reflection { display:none; }
+.collector-card[data-layered-card][data-card-rarity="Common"] .layered-reflection { opacity:.08; }
+.collector-card[data-layered-card][data-card-rarity="Uncommon"] .layered-stock { background:repeating-linear-gradient(30deg,#ddd7b044 0 1px,transparent 1px 7px); opacity:.22; }
+.collector-card[data-layered-card][data-layered-foil="false"] :is(.layered-stock,.layered-reflection) { display:none; }
+/* Name paper and the readable black rules field share one natural-height column. */
+.collector-card[data-layered-card] .collector-card-copy {
+  display:flex!important; flex-direction:column!important; align-items:flex-start!important;
+  left:5cqw!important; right:5cqw!important; bottom:4cqw!important;
+  padding:0!important; gap:0!important; background:none!important; z-index:30!important; overflow:visible!important;
+}
+.collector-card[data-layered-card] .collector-card-copy > .collector-card-meta,
+.collector-card[data-layered-card] .collector-card-copy > .collector-card-ability { display:none!important; }
+.collector-card[data-layered-card] .collector-card-copy > h4 {
+  margin:0 0 1cqw 0!important; z-index:4; filter:drop-shadow(.6cqw 1cqw 0 #090909d9)!important;
+}
+.collector-card[data-layered-card] .layered-element {
+  position:absolute; right:-1cqw; top:-8cqw; width:31cqw; aspect-ratio:1.16;
+  z-index:2; pointer-events:none; filter:drop-shadow(0 .7cqw .5cqw #0009);
+}
+.collector-card[data-layered-card].collector-card--long-name .layered-element { top:-19cqw; right:-2cqw; width:28cqw; }
+.collector-card[data-layered-card] .layered-element :is(svg,img) { width:100%; height:100%; display:block; overflow:hidden; }
+.collector-card[data-layered-card] .layered-rules {
+  position:relative; align-self:stretch; isolation:isolate; z-index:1;
+  margin:0 -1cqw; padding:4cqw 5cqw 4.5cqw;
+  color:#f7f4ed; font:400 3.25cqw/1.3 var(--font-sans,Arial,sans-serif);
+}
+.collector-card[data-layered-card] .layered-rules::before {
+  content:""; position:absolute; inset:0; z-index:-1;
+  border:2.5cqw solid transparent;
+  border-image:url('../assets/collector-v2/rules-paper.webp') 41.53 59.81 41.53 59.81 fill / 2.5cqw 4cqw / 0 stretch;
+  background:#0c0d0c; background-clip:padding-box;
+}
+.collector-card[data-layered-card] .layered-rules strong {
+  display:block; margin:0 0 1.2cqw; color:#ffdf46;
+  font:700 3.5cqw/1.1 var(--font-mono,monospace); letter-spacing:.05em; text-transform:uppercase;
+}
+.collector-card[data-layered-card] .layered-rules p { margin:0; text-wrap:pretty; display:-webkit-box; -webkit-line-clamp:7; -webkit-box-orient:vertical; overflow:hidden; }
+/* Small grid cards carry a readable identity; full source rules remain in preview/details. */
+.collector-card[data-layered-card]:not(.collector-card--inspector) .layered-rules p { display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
+.collector-card[data-layered-card]:not(.collector-card--inspector) .layered-rules { min-height:24cqw; }
+@media(prefers-reduced-motion:reduce) { .collector-card[data-layered-card] .layered-reflection { background-position:48% 50%; } }

@@ -146,7 +146,7 @@ export function Multiplayer({ bootstrap, code }: { bootstrap: PlayerBootstrap; c
     const rivalLeft = room.reason === 'left' && room.closedBy && room.closedBy !== room.seat;
     const youLeft = room.reason === 'left' && room.closedBy === room.seat;
     screen = <div className="sq-state">
-      <h2>{rivalLeft ? `${room.members[room.seat === 'player' ? 'cpu' : 'player']?.name ?? 'Your rival'} left the room.` : youLeft ? 'You left this room.' : 'This room has closed.'}</h2>
+      <h2>{rivalLeft ? `${room.members[room.seat === 'player' ? 'cpu' : 'player']?.name ?? 'The Opps'} left the room.` : youLeft ? 'You left this room.' : 'This room has closed.'}</h2>
       <p>{rivalLeft ? 'The series in this room is over. Open a fresh challenge to play again.'
         : targeted ? `The invite with ${targeted.player.displayName} is ${targeted.status}.` : 'Open a fresh challenge to play again.'}</p>
       <button className="sq-btn sq-btn--primary" onClick={leave}>Back to Friendly Fades</button>
@@ -159,8 +159,8 @@ export function Multiplayer({ bootstrap, code }: { bootstrap: PlayerBootstrap; c
       <div className="fa-lobby fa-lobby--room">
         <section className="fa-control" aria-label="Room controls">
           <div className="fa-sectionhead">
-            <h2 data-testid="online-room">{opponentJoined ? 'Rival joined' : invitedPlayer ? `Waiting on ${invitedPlayer.displayName}` : 'Room open'}</h2>
-            {opponentJoined && !room.ranked && <PersonalFadeRecord room={room.code} rival={room.members[opponentSeat]?.name ?? 'Rival'} />}
+            <h2 data-testid="online-room">{opponentJoined ? 'The Opps joined' : invitedPlayer ? `Waiting on ${invitedPlayer.displayName}` : 'Room open'}</h2>
+            {opponentJoined && !room.ranked && <PersonalFadeRecord room={room.code} rival={room.members[opponentSeat]?.name ?? 'The Opps'} />}
             {opponentJoined && (room.gameNumber > 1 || played > 0) && <FadeSeriesBoard variant="lobby" reducedMotion={profile.settings.reducedMotion}
               gameNumber={room.gameNumber} rivalName={room.members[opponentSeat]?.name}
               series={{ you: room.series[room.seat], rival: room.series[opponentSeat], draws: room.series.draws }} />}
@@ -175,12 +175,12 @@ export function Multiplayer({ bootstrap, code }: { bootstrap: PlayerBootstrap; c
           <div className="fa-session" aria-label="Room status and actions">
             <div className="fa-session__summary">
               <div className="fa-session__status"><small>YOUR CREW</small><strong>{room.ownDeck.name}</strong></div>
-              <div className="fa-session__status"><small>{room.seat === 'player' ? 'RIVAL' : 'HOST'}</small><strong>{room.members[opponentSeat]?.name ?? invitedPlayer?.displayName ?? 'Open seat'}</strong></div>
+              <div className="fa-session__status"><small>{room.seat === 'player' ? 'THE OPPS' : 'HOST'}</small><strong>{room.members[opponentSeat]?.name ?? invitedPlayer?.displayName ?? 'Open seat'}</strong></div>
             </div>
             <div className="fa-session__actions">
               <button className="fa-button fa-button--ready" data-testid="online-ready"
                 disabled={working || !opponentJoined || room.members[room.seat]!.ready} onClick={() => void send({ type: "ready" })}>
-                {room.members[room.seat]!.ready ? 'Ready. Waiting for your rival…' : !opponentJoined ? 'Waiting for your rival to join' : 'Ready to squabble'}</button>
+                {room.members[room.seat]!.ready ? 'Ready. Waiting for The Opps…' : !opponentJoined ? 'Waiting for The Opps to join' : 'Ready to squabble'}</button>
               {invitedPlayer && targeted?.status === 'pending' && room.seat === 'player' && !opponentJoined && <button className="fa-button fa-button--secondary" disabled={working || social.busy} data-testid="button-cancel-targeted"
                 onClick={() => { if (window.confirm(`Call off the invite to ${invitedPlayer.displayName}?`)) void social.respondInvitation(targeted.id, 'cancel').catch(reason => setError(onlineErrorMessage(reason))); }}>Cancel invite</button>}
               <button className="fa-button fa-button--secondary" data-testid="button-close-room" disabled={working}

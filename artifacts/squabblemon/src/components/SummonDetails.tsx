@@ -21,7 +21,7 @@ export function SummonDetails({ card, match }: { card: CardInstance; match?: Mat
   return <article className="summon-details" data-testid="summon-details" onClick={event => event.stopPropagation()}>
     <div className="summon-details__portrait"><img className="collector-portrait--inspector" src={getCardImage(getCardArtworkId(card))} alt={card.name}/></div>
     <div className="summon-details__copy">
-      <p className="summon-details__eyebrow">{card.owner === 'cpu' ? 'Rival’s summon' : 'Your summon'}</p>
+      <p className="summon-details__eyebrow">{card.owner === 'cpu' ? 'The Opps’ summon' : 'Your summon'}</p>
       <h2>{card.name}</h2>{creator && <p className="summon-details__creator">Created by {creator}</p>}
       <dl><div><dt>Lane Hands</dt><dd>{card.hazard ? 0 : getEffectiveCardPower(card)}</dd></div><div><dt>Duration</dt><dd>{duration}</dd></div></dl>
       <h3>{card.ability}</h3><p>{card.effect}</p>

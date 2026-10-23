@@ -27,3 +27,20 @@
 .deck-carousel .compact-deck-picker__deck { background:#28251f; border-color:#746b58; }
 .deck-carousel .compact-deck-picker__deck[aria-pressed=true] { background:#49402a; border-color:#e0c486; box-shadow:inset 0 -3px #d4b36a; }
 .deck-carousel__jump { min-width:0; }
+
+/* One neutral picker treatment across battle entry points. */
+:is(.compact-deck-picker,.fadecade-dialog-content,.online-room-panel,.deck-carousel) .compact-deck-picker__deck {
+  color: #f1eadd; background: #1b1b19; border: 1px solid #f1eadd40; border-radius: 0; box-shadow: none;
+}
+:is(.compact-deck-picker,.fadecade-dialog-content,.online-room-panel,.deck-carousel) .compact-deck-picker__deck[aria-pressed=true] {
+  color: #fff; background: #283c33; border-color: #f1eadd; box-shadow: none;
+  outline: 1px dashed #f1eadd8c; outline-offset: -4px;
+}
+.compact-deck-picker__deck strong { font-family: var(--font-deck-title,var(--font-display)); font-weight: 400; }
+.compact-deck-picker__deck small { color: #c9c3b9; }
+:is(.compact-deck-picker,.fadecade-dialog-content,.online-room-panel,.deck-carousel) .compact-deck-picker__box {
+  background: #171715; border-color: #c9c3b9; box-shadow: -4px 2px 0 #b8b2a6,-6px 3px 0 #34342f;
+}
+:is(.compact-deck-picker,.fadecade-dialog-content,.online-room-panel,.deck-carousel) .compact-deck-picker__deck:is([aria-pressed=true],:hover:not(:disabled)) .compact-deck-picker__box {
+  border-color: #f1eadd; box-shadow: -4px 3px 0 #c9c3b9,-6px 4px 0 #34342f;
+}

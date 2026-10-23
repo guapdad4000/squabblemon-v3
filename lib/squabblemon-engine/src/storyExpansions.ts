@@ -230,7 +230,7 @@ function chapter(
                 : beat.twist === "reserve"
                   ? "Both sides receive 1 less Motion in round three."
                   : boss
-                    ? "At round four, the rival gains 1 Motion."
+                    ? "At round four, The Opps gain 1 Motion."
                     : "Control two districts when the final round ends.",
           },
           roundLimit: boss ? 6 : 5,
@@ -259,7 +259,7 @@ function chapter(
                   id: "second-wind",
                   name: "The last word",
                   description:
-                    "The rival gains 1 Motion at the start of round four.",
+                    "The Opps gain 1 Motion at the start of round four.",
                   trigger: { kind: "round", atLeast: 4 },
                   onEnter: [{ kind: "motion", owner: "cpu", amount: 1 }],
                 },
@@ -931,7 +931,7 @@ const sherlockMuseum = chapter(
         ["promoter", "I had not even said handling."],
         [
           "sherlock",
-          "Six rounds. Your rival gains a Motion in round four. His crew has learned to save something for the end.",
+          "Six rounds. The Opps gain a Motion in round four. Their crew has learned to save something for the end.",
         ],
       ],
       fight: [

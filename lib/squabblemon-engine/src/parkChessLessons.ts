@@ -36,7 +36,7 @@ export const PARK_CHESS_LESSONS: ParkChessLessonDefinition[] = [
         instruction: "Capture the black pawn on D5 with your pawn on E4. Pawns capture one square diagonally forward.",
         hint: "Select E4, then D5. Pawns move straight ahead but capture diagonally.",
         startFen: "7k/8/8/3p4/4P3/8/8/7K w - - 0 1", expectedMove: { from: "e4", to: "d5" }, reply: { from: "h8", to: "g8" },
-        success: "Pawn capture. Your pawn took the rival's square; pawns cannot capture straight ahead.",
+        success: "Pawn capture. Your pawn took The Opps’ square; pawns cannot capture straight ahead.",
       },
       {
         id: "rook-capture", title: "Rook · straight lines",
@@ -112,22 +112,22 @@ export const PARK_CHESS_LESSONS: ParkChessLessonDefinition[] = [
     id: "ashlee-mate", title: "Checkmate with Ashlee", subtitle: "Use the queen and your leader to close every escape.",
     steps: [
       {
-        id: "force-retreat", title: "Force the rival back",
-        instruction: "Move Ashlee from F5 to D5. Her diagonal attacks the rival king on G8, forcing a response.",
+        id: "force-retreat", title: "Force The Opps back",
+        instruction: "Move Ashlee from F5 to D5. Her diagonal attacks The Opps’ king on G8, forcing a response.",
         hint: "Select the queen on F5, then D5. The D5–E6–F7–G8 diagonal gives check.",
         startFen: "6k1/8/6K1/5Q2/8/8/8/8 w - - 0 1", expectedMove: { from: "f5", to: "d5" }, reply: { from: "g8", to: "h8" },
-        success: "Check. The rival retreated to H8; GUAP already covers the nearby seventh-rank escapes.",
+        success: "Check. The Opps retreated to H8; GUAP already covers the nearby seventh-rank escapes.",
       },
       {
         id: "back-rank-mate", title: "Close the back rank",
         instruction: "Move Ashlee from D5 to D8. She checks along the back rank while GUAP covers G7 and H7.",
-        hint: "Select D5, then D8. The rival cannot move to G8, G7 or H7, block the check, or capture Ashlee.",
+        hint: "Select D5, then D8. The Opps cannot move to G8, G7 or H7, block the check, or capture Ashlee.",
         startFen: "7k/8/6K1/3Q4/8/8/8/8 w - - 2 2", expectedMove: { from: "d5", to: "d8" },
         success: "Checkmate. A checked king with no legal escape ends the game; the king is never captured.",
       },
       {
         id: "supported-queen-mate", title: "Ashlee and GUAP finish together",
-        instruction: "On this new table, move Ashlee from F7 to G7. GUAP on G6 protects her while she checks the rival king on H8.",
+        instruction: "On this new table, move Ashlee from F7 to G7. GUAP on G6 protects her while she checks The Opps’ king on H8.",
         hint: "Select F7, then G7. GUAP protects Ashlee, and the queen covers every escape around H8.",
         startFen: "7k/5Q2/6K1/8/8/8/8/8 w - - 0 1", expectedMove: { from: "f7", to: "g7" },
         success: "Protected-queen checkmate. You finished the lesson. Replay any tutorial whenever you want; practice awards no tickets.",

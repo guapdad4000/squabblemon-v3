@@ -44,7 +44,7 @@ export function BattleDistrictView({ districts, boards, scores, lane, mode = 'fo
       <button type="button" className="battle-location-close" onClick={onClose} aria-label="Close location details"><X size={22} aria-hidden="true" /></button>
     </header>
     {formation && <nav aria-label="District scores">{districts.map((d, i) => <button type="button" key={d.id} aria-pressed={i === lane} onClick={() => onLane(i)}>
-      <span>{d.name}</span><strong><em>{scores[i].cpu}</em><small>Rival / You</small><b>{scores[i].player}</b></strong>
+      <span>{d.name}</span><strong><b>{scores[i].player}</b><small>You / The Opps</small><em>{scores[i].cpu}</em></strong>
     </button>)}</nav>}
     <div ref={content} className="battle-district-view__content">
       <div className={formation ? "battle-location-layout battle-location-layout--formation" : "battle-location-layout"}>
@@ -65,8 +65,8 @@ export function BattleDistrictView({ districts, boards, scores, lane, mode = 'fo
           {district.status && <section className="battle-location-status" aria-labelledby="location-status-title" data-testid="location-status">
             <h3 id="location-status-title">Right now</h3><p>{district.status}</p>
           </section>}
-          {!formation && <div className="battle-location-score" aria-label={`Current Hands: Rival ${score.cpu}, You ${score.player}`}>
-            <div><span>Rival</span><strong>{score.cpu}</strong></div><Swords size={18} aria-hidden="true" /><div><span>You</span><strong>{score.player}</strong></div>
+          {!formation && <div className="battle-location-score" aria-label={`Current Hands: You ${score.player}, The Opps ${score.cpu}`}>
+            <div><span>You</span><strong>{score.player}</strong></div><Swords size={18} aria-hidden="true" /><div><span>The Opps</span><strong>{score.cpu}</strong></div>
           </div>}
         </div>
       </div>
@@ -74,12 +74,12 @@ export function BattleDistrictView({ districts, boards, scores, lane, mode = 'fo
         <h3>Active items</h3>
         <ul>{items.map((mark, index) => <li key={mark.id ?? `${mark.owner}-${mark.artworkId}-${index}`} data-item-id={mark.id} className={mark.id && mark.id === focusItemId ? 'is-selected' : undefined}>
           <img src={getAssetUrl(`assets/items/${mark.artworkId}.webp`)} alt={mark.artworkId!.replaceAll('-', ' ')} width="80" height="112" decoding="async" />
-          <div><h4>{mark.artworkId!.replaceAll('-', ' ')}</h4><small>{mark.owner === 'player' ? 'Yours' : 'Rival’s'}</small><p>{mark.text}</p></div>
+          <div><h4>{mark.artworkId!.replaceAll('-', ' ')}</h4><small>{mark.owner === 'player' ? 'Yours' : 'The Opps’'}</small><p>{mark.text}</p></div>
         </li>)}</ul>
       </section>}
       {formation && <div className="battle-location-formations">
-        {(['cpu', 'player'] as const).map(owner => <section key={owner} aria-label={owner === 'cpu' ? 'Rival fighters' : 'Your fighters'}>
-          <h3>{owner === 'cpu' ? 'Rival' : 'Your gang'} <span>{boards[lane].filter(c => c.owner === owner).length} fighters</span></h3>
+        {(['cpu', 'player'] as const).map(owner => <section key={owner} aria-label={owner === 'cpu' ? 'The Opps’ fighters' : 'Your fighters'}>
+          <h3>{owner === 'cpu' ? 'The Opps' : 'Your gang'} <span>{boards[lane].filter(c => c.owner === owner).length} fighters</span></h3>
           <div className="battle-district-view__cards">{boards[lane].filter(c => c.owner === owner).map(card => <div key={card.instanceId} className={targetIds.includes(card.instanceId) ? 'district-fighter is-targeted' : 'district-fighter'}>
             <CardView card={card} squabblePlayed={squabbledIds?.has(card.instanceId)} isBoard isEnemy={owner === 'cpu'} fillContainer disableLayout covered={covered(card.instanceId)}
               variantId={variantFor(card)} effectivePower={getEffectiveCardPower(card)}

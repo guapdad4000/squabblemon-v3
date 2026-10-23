@@ -5,10 +5,13 @@ import { Link, useSearch } from 'wouter';
 import { ArrowLeft } from 'lucide-react';
 import { SafehouseBulletinBoardContent } from '../../components/SafehouseBulletinBoard';
 import { EventFeedbackSection } from '../../components/EventFeedback';
+import { markPatchBoardRead, usePublishedPatches } from '../../hooks/use-patches';
 import { FEEDBACK_SECTION_ID } from '../../content/bulletinBoard';
 
 export function Events({ playerId, bootstrap }: { playerId: string; bootstrap?: PlayerBootstrap }) {
   const search = useSearch();
+  const patches = usePublishedPatches(playerId);
+  useEffect(() => { if (patches.data) markPatchBoardRead(patches.data); }, [patches.data]);
   const main = useRef<HTMLElement>(null);
   const wantsFeedback = new URLSearchParams(search).get('section') === 'feedback';
 

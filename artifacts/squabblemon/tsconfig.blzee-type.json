@@ -1,0 +1,4 @@
+{
+  "extends": "./tsconfig.supplied-fx.json",
+  "include": ["src/**/*", "e2e/blzee-type.fixture.tsx"]
+}

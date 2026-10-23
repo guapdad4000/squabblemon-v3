@@ -1,0 +1,58 @@
+{
+  "char03_chroma.mp4": {
+    "asset": "assets/battle-moves/char03_chroma-5886f27087cf.mp4",
+    "revision": "5886f27087cf25d3",
+    "sourceHash": "5886f27087cf25d3ad23e3c806de26da99f6c09f3f320088d9336c7871958234",
+    "before": 3743159,
+    "after": 1635011
+  },
+  "char31_chroma.mp4": {
+    "asset": "assets/battle-moves/char31_chroma-7daf3def86f2.mp4",
+    "revision": "7daf3def86f27114",
+    "sourceHash": "7daf3def86f27114a677f61a41a90ce61f72441c7a7765e66fa32bb0bbd7ed10",
+    "before": 4124923,
+    "after": 1720668
+  },
+  "char20_chroma.mp4": {
+    "asset": "assets/battle-moves/char20_chroma-3ec9b4a21e53.mp4",
+    "revision": "3ec9b4a21e53e52b",
+    "sourceHash": "3ec9b4a21e53e52b4a4e8167d8e2a13d0c1f795f883b9834087007b9c6a2d8c6",
+    "before": 4559761,
+    "after": 2014301
+  },
+  "char49_chroma.mp4": {
+    "asset": "assets/battle-moves/char49_chroma-2735286b254d.mp4",
+    "revision": "2735286b254d003c",
+    "sourceHash": "2735286b254d003c802b40c61cac124f1480ffe903b324c75293af6fe8cc19d5",
+    "before": 3273330,
+    "after": 1392481
+  },
+  "char11_chroma.mp4": {
+    "asset": "assets/battle-moves/char11_chroma-2199d936d0bc.mp4",
+    "revision": "2199d936d0bc1f46",
+    "sourceHash": "2199d936d0bc1f4602121e162f30e0a405f00424ea39129d400b0bab1aba8bab",
+    "before": 4792493,
+    "after": 1946307
+  },
+  "char12_chroma.mp4": {
+    "asset": "assets/battle-moves/char12_chroma-e85585618081.mp4",
+    "revision": "e85585618081ff48",
+    "sourceHash": "e85585618081ff48c8d7c8dccc65e6d99a0968386edc565df1799cda87663b52",
+    "before": 3821363,
+    "after": 1497143
+  },
+  "char32_chroma.mp4": {
+    "asset": "assets/battle-moves/char32_chroma-ecf128f234aa.mp4",
+    "revision": "ecf128f234aa2e61",
+    "sourceHash": "ecf128f234aa2e617d95ef96aca3f6260d2184569ececa046c1636c1babcce31",
+    "before": 4192993,
+    "after": 1830221
+  },
+  "char50_chroma.mp4": {
+    "asset": "assets/battle-moves/char50_chroma-b04b9cdc1428.mp4",
+    "revision": "b04b9cdc1428e87c",
+    "sourceHash": "b04b9cdc1428e87c0c00987616474654b61af5024af6465e8e5b8b3887368843",
+    "before": 3129668,
+    "after": 1277656
+  }
+}

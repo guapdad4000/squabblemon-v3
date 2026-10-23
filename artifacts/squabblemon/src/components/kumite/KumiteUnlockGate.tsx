@@ -2,11 +2,11 @@ import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useLocation } from 'wouter';
 import { getGetPlayerBootstrapQueryKey, type PlayerBootstrap } from '@workspace/api-client-react';
-import { getCardImage } from '../../data';
+import { getCardImage } from '../../lib/assets';
 import { claimKumiteFilmReceipt, getKumiteFilmReceipts, type KumiteFilmReceipt } from '../../lib/kumite';
 import { KUMITE_FILMS } from '../../lib/kumiteFilms';
 import { isBattleActive, subscribeBattleActive } from '../../lib/imageWarmup';
-import { rewardReceipts } from '../../lib/rewardReceipts';
+import { rewardReceipts } from '../../lib/rewardReceiptStore';
 
 /** Auto presentations only begin on a safe destination, never in a timed room or minigame. */
 export function KumiteUnlockGate({ bootstrap }: { bootstrap: PlayerBootstrap }) {

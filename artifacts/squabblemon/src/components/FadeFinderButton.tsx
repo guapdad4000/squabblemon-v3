@@ -59,7 +59,7 @@ export function FadeFinderButton({ busy, searching, loading, unavailable, reduce
         </svg>
       </span>
       <span className="fade-phone__label">{status}</span>
-      <span className="fade-phone__hint">{searching ? 'Cancel the call' : busy ? 'Finding your next rival' : 'Pick up. Pull up.'}</span>
+      <span className="fade-phone__hint">{searching ? 'Cancel the call' : busy ? 'Finding The Opps' : 'Pick up. Pull up.'}</span>
     </button>
   </div>;
 }

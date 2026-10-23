@@ -59,7 +59,7 @@ export const BLOCKBUSTER_CHARACTERS = [
     3,
     2,
     "Show the Receipts",
-    "Take up to 1 Motion from your rival, then gain +1 Hand if any Motion was taken.",
+    "Take up to 1 Motion from The Opps, then gain +1 Hand if any Motion was taken.",
   ],
   [
     "hater",

@@ -3,7 +3,16 @@ export const SQUABBLE_HOUSE_MAIL_ID = 'patch_1-9_eca06fdd26e513a7';
 
 export const STREET_LEGENDS_MAIL_ID = 'patch_1-11_b096c134b668c19b';
 
+export const COLLECTOR_V2_MAIL_ID = 'patch_1-14_69828231cb667d04';
+
 export function getMailEventPresentation(mailId: string) {
+  if (mailId === COLLECTOR_V2_MAIL_ID) return {
+    bannerAssetId: 'assets/events/collector-v2-patch-1-14.webp',
+    bannerSmallAssetId: 'assets/events/collector-v2-patch-1-14-small.webp',
+    bannerAlt: 'Print. Prism. Punch. Collector V2: layered cards, prismatic foil and a sharper battlefield.',
+    href: '/game/events?patch=1.14',
+    actionLabel: 'Explore the full update',
+  };
   if (mailId === STREET_LEGENDS_MAIL_ID) return {
     bannerAssetId: 'assets/events/street-legends-patch-1-11.webp',
     bannerAlt: 'Them Streets Talkin: 30 new fighters and a gift of 10 Street Pack Tickets.',

@@ -95,7 +95,7 @@ export const squabbleHousePuzzles: readonly StoryPuzzleDefinition[] = [
       ["ken", "tek-KEN", "Sits immediately to Red’s right so Red can read the bill."],
     ], ["red", "ken", "manager", "cuff", "blue"],
     ["Red occupies an end and Blue must be to his right. That rules out Red’s right-hand end.", "Red is seat 1, Blue seat 5, Manager seat 3. tek-KEN belongs immediately after Red; Cuff fills seat 4."],
-    "Red • tek-KEN • Manager • Cuff • Blue. Both rivals can see the receipts without reaching each other. Their OGs, unfortunately, are still standing.",
+    "Red • tek-KEN • Manager • Cuff • Blue. Both sides of The Opps can see the receipts without reaching each other. Their OGs, unfortunately, are still standing.",
     "booths", ["Seat 1 · left end", "Seat 2", "Seat 3 · middle", "Seat 4", "Seat 5 · right end"], "booth"),
   puzzle(4, "squabble-house-grill-rush", "Keep the Pass Moving",
     "One grill. Start at minute 0. Cook one ticket at a time without interruption, using each ticket once. Each order must FINISH at or before its pickup deadline. Choose the sequence that gets all five out on time; waiting never helps.",
@@ -220,10 +220,10 @@ const scripts: readonly ChapterScript[] = [
     opening: [say("Pigeon", "Y’all beefing. I’m eating."), say("Red", "The BIRD?"), say("Blue", "You owe me an apology and half that waffle."), say("Manager", "Y’all split the bill... and the embarrassment."), say("tek-KEN", "Before anyone declares a mistrial, fix the camera clocks. The footage tells the whole story.")],
     puzzleLines: [say("tek-KEN", "Fast clocks get time subtracted. Slow clocks get time added. Put the events in real order."), say("Pigeon", "My legal team says that feather could be anybody’s."), say("Security", "You are still holding the evidence.")],
     battleTitle: "Settle the House Tab", opponent: "Red OG", crew: "rivals",
-    pre: [say("Red OG", "Blood and Crip crews. One last table. Settle it before the bird leaves."), say("Manager", "This is the final shift: both rivals, one extra Motion for them in round four. Keep your House crew working together.")],
+    pre: [say("Red OG", "Blood and Crip crews. One last table. Settle it before the bird leaves."), say("Manager", "This is the final shift: both sides of The Opps, one extra Motion for them in round four. Keep your House crew working together.")],
     post: [say("Blue OG", "Joint statement: that was everybody else’s fault."), say("tek-KEN", "Joint invoice: still payable.")],
     closing: [say("Manager", "You held the floor. Squabble House Manager joins your collection. One Motion, two Hands, plus one on reveal when an enemy is here. The Manager keeps gaining a Hand for each other friendly staff member on the board."), say("Griddle", "Server, cook, Janitor, Manager. That is a real shift. Keep them together and make the next crew work for it."), say("Pigeon", "Put it on her tab."), say("Red", "HER?!"), say("Blue", "We are absolutely coming back tomorrow."), say("Manager", "Good. We open early.")],
-    tips: ["Both rival sets bring their OGs and dogs: Blue anchors the left, Red anchors the right. Contest the middle and one outside district.", "In round four, the enemy gains 1 extra Motion once. The phase is visible in the encounter rules.", "Cleanse with the server, retaliate with the cook, and use Janitor to protect a key district."],
+    tips: ["Both sets of The Opps bring their OGs and dogs: Blue anchors the left, Red anchors the right. Contest the middle and one outside district.", "In round four, the enemy gains 1 extra Motion once. The phase is visible in the encounter rules.", "Cleanse with the server, retaliate with the cook, and use Janitor to protect a key district."],
     focus: ["squabbleserver", "squabblecook", "janitor", "squabble-house-manager"], rewards: [rewardCard("squabble-house-manager"), { kind: "pack-ticket", id: "street-pack-ticket", amount: 3, claimKey: "squabble-house:finale:tickets:v1" }],
   },
 ];
@@ -244,7 +244,7 @@ export const squabbleHouseChapters: readonly StoryChapter[] = scripts.map((scrip
     passive: { name: "On-Shift Backup", description: supportDescription },
     soundHooks: { intro: "story.encounter.intro", play: "story.card.play", phase: "story.boss.phase", victory: "story.victory", defeat: "story.defeat" },
     modifiers: { startingMotion: { player: number === 1 || number === 3 ? 8 : 6, cpu: 0 }, handSize: { player: number === 1 || number === 3 ? 6 : 5, cpu: 3 }, ...(number === 1 ? { lanePowerBonuses: [{ owner: "player" as const, lane: 0 as const, amount: 3 }, { owner: "player" as const, lane: 1 as const, amount: 3 }] } : {}), reinforcements: support.map((cardId, supportIndex) => ({ round: supportIndex + 1, owner: "player" as const, cardId, allowDuplicate: true })), ...(number === 5 ? { laneLocks: [{ round: 3, owner: "both" as const, lanes: [1 as const] }] } : {}) },
-    phases: number === 6 ? [{ id: "last-call", name: "Last Call", description: "At the start of round four, the rival crew gains 1 extra Motion once.", trigger: { kind: "round", atLeast: 4 }, onEnter: [{ kind: "motion", owner: "cpu", amount: 1 }] }] : [],
+    phases: number === 6 ? [{ id: "last-call", name: "Last Call", description: "At the start of round four, The Opps’ crew gains 1 extra Motion once.", trigger: { kind: "round", atLeast: 4 }, onEnter: [{ kind: "motion", owner: "cpu", amount: 1 }] }] : [],
     starObjectives: stars,
   };
   const nodes: readonly StoryNode[] = [

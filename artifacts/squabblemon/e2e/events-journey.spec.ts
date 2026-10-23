@@ -25,6 +25,7 @@ async function init(page: Page, seat: 'a' | 'b' = 'a', mocked = true) {
       const path = new URL(route.request().url()).pathname;
       if (path === '/api/player/bootstrap') return route.fulfill({ json: bootstrap });
       if (path.startsWith('/api/player/mail')) return route.fulfill({ json: { messages: [] } });
+      if (path === '/api/events/patches') return route.fulfill({ json: [] });
       if (path === '/api/events/feedback') return route.fulfill({ json: { posts: [], nextCursor: null } });
       // Other game-shell queries cannot reach a real service in mock mode.
       return route.fulfill({ status: 503, json: { error: `Not part of events mock: ${path}` } });
@@ -38,8 +39,9 @@ async function visit(page: Page, path = '/game/events') {
 }
 async function openBoard(page: Page) {
   await page.getByRole('button', { name: 'Explore the bulletin board' }).click();
-  await page.getByRole('button', { name: 'Read the board' }).click();
-  await expect(page.getByTestId('dialog-bulletin')).toBeVisible();
+  await expect(page).toHaveURL(/\/game\/events$/);
+  await expect(page.getByTestId('page-events')).toBeVisible();
+  await expect(page.getByTestId('dialog-bulletin')).toHaveCount(0);
 }
 async function screenshot(page: Page, name: string) {
   await page.screenshot({ path: `${shots}/${name}.png`, fullPage: false, animations: 'disabled' });
@@ -91,7 +93,7 @@ async function reachable(page: Page, locator: Locator, mode: 'wheel' | 'keyboard
   throw new Error(`Cannot reach or hit-test ${locator} with ${mode} scrolling`);
 }
 
-test('Safehouse marker opens corkboard, clears unread badge and restores focus on close', async ({ page }) => {
+test('Safehouse marker opens full Events directly and clears unread badge on return', async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await init(page);
   await page.goto(`${base}/game`);
@@ -101,24 +103,22 @@ test('Safehouse marker opens corkboard, clears unread badge and restores focus o
   await expect(page.getByLabel('New bulletin posts')).toBeVisible();
   await screenshot(page, 'desktop-safehouse-marker');
   await openBoard(page);
-  const dialog = page.getByRole('dialog');
-  await expect(dialog).toBeVisible();
-  await expect(page.getByLabel('New bulletin posts')).toHaveCount(0);
   await screenshot(page, 'desktop-board-top');
-  await dialog.getByRole('button', { name: 'Close bulletin board' }).click();
-  await expect(dialog).not.toBeVisible();
-  await expect(marker).toBeFocused();
+  await page.getByTestId('link-back-safehouse').click();
+  await expect(page.locator('.safehouse-stage')).toBeVisible();
+  await expect(page.getByLabel('New bulletin posts')).toHaveCount(0);
 });
 
 for (const [index, entry] of destinations.entries()) {
-  test(`popup card and expanded detail separately navigate to real ${entry.path} content`, async ({ page }) => {
+  test(`Events card and expanded detail separately navigate to real ${entry.path} content`, async ({ page }) => {
     await init(page);
     // This is the Safehouse notice deep-link, not a standalone component fixture.
     await page.goto(`${base}/game?notice=events`);
-    const dialog = page.getByTestId('dialog-bulletin');
+    const dialog = page.getByTestId('page-events');
     await expect(dialog).toBeVisible({ timeout: 60_000 });
     const card = dialog.getByTestId(`card-event-${entry.id}`);
-    await card.getByTestId(`button-expand-${entry.id}`).click();
+    const expand = card.getByTestId(`button-expand-${entry.id}`);
+    if (await expand.getAttribute('aria-expanded') !== 'true') await expand.click();
     await expect(card.getByRole('button')).toHaveAttribute('aria-expanded', 'true');
     await expect(dialog.getByTestId(`detail-event-${entry.id}`)).toContainText(entry.title);
     await screenshot(page, `desktop-board-detail-${index}`);
@@ -134,54 +134,43 @@ for (const [index, entry] of destinations.entries()) {
       else if (index === 1) await expect(page.getByRole('heading', { name: 'The Lineup' })).toBeVisible();
       else await expect(page.getByRole('main', { name: 'Fade Park ranked lobby' })).toBeVisible();
       await page.goBack();
-      await expect(page).toHaveURL(/\/game\?notice=events$/);
+      await expect(page).toHaveURL(/\/game\/events$/);
       await expect(dialog).toBeVisible();
-      await card.getByTestId(`button-expand-${entry.id}`).click();
+      if (await expand.getAttribute('aria-expanded') !== 'true') await expand.click();
     }
   });
 }
 
-test('both developer notes and header feedback shortcut lead to form and browser Back restores board', async ({ page }) => {
+test('developer notes lead to feedback within the full Events page', async ({ page }) => {
   await init(page);
   await page.goto(`${base}/game?notice=events`);
-  const dialog = page.getByTestId('dialog-bulletin');
-  await expect(dialog).toBeVisible({ timeout: 60_000 });
+  const board = page.getByTestId('page-events');
+  await expect(board).toBeVisible({ timeout: 60_000 });
   for (const [id, action] of [['roadmap-fall-2026', 'Share a roadmap suggestion'], ['dev-note-balance', 'Send balance feedback']]) {
-    const link = dialog.getByTestId(`link-note-${id}`);
+    const link = board.getByTestId(`link-note-${id}`);
     await expect(link).toHaveText(new RegExp(action));
     await reachable(page, link);
     await link.click();
     await expect(page).toHaveURL(/\/game\/events\?section=feedback$/);
-    await expect(dialog).not.toBeVisible();
+    await expect(board).toBeVisible();
     await expect(page.getByRole('heading', { name: 'Send feedback to the devs' })).toBeVisible();
     await page.goBack();
-    await expect(dialog).toBeVisible();
+    await expect(page).toHaveURL(/\/game\/events$/);
   }
-  await reachable(page, dialog.getByTestId('link-header-feedback'));
-  await dialog.getByTestId('link-header-feedback').click();
-  await expect(page).toHaveURL(/\/game\/events\?section=feedback$/);
-  await expect(dialog).not.toBeVisible();
-  await page.goBack();
-  await expect(dialog).toBeVisible();
 });
 
-test('Escape closes popup and full Events link reaches feedback form', async ({ page }) => {
+test('legacy Events notice opens the full page without a precursor', async ({ page }) => {
   await init(page);
   await page.goto(`${base}/game?notice=events`);
-  const dialog = page.getByTestId('dialog-bulletin');
-  await expect(dialog).toBeVisible({ timeout: 60_000 });
-  await page.keyboard.press('Escape');
-  await expect(dialog).not.toBeVisible();
-  await expect(page.getByRole('button', { name: 'Explore the bulletin board' })).toBeFocused();
-  await page.goto(`${base}/game?notice=events`);
-  await expect(dialog).toBeVisible();
-  await dialog.getByTestId('link-full-events').click();
-  await expect(page).toHaveURL(/\/game\/events$/);
-  await expect(dialog).not.toBeVisible();
-  await expect(page.getByRole('heading', { name: 'Send feedback to the devs' })).toBeVisible();
+  await expect(page).toHaveURL(/\/game\/events$/, { timeout: 60_000 });
+  await expect(page.getByTestId('page-events')).toBeVisible();
+  await expect(page.getByTestId('dialog-bulletin')).toHaveCount(0);
+  await expect(page.getByTestId('link-full-events')).toHaveCount(0);
+  await page.getByTestId('link-back-safehouse').click();
+  await expect(page).toHaveURL(/\/game$/);
 });
 
-test('short touch phone popup has one scrolling owner, working thumb and reachable final note', async ({ browser }) => {
+test('short touch phone Events has one scrolling owner and working thumb', async ({ browser }) => {
   const context = await browser.newContext({ viewport: { width: 360, height: 480 }, hasTouch: true, isMobile: true });
   try {
     const page = await context.newPage();
@@ -211,21 +200,15 @@ test('short touch phone popup has one scrolling owner, working thumb and reachab
     console.log('Events touch target geometry:', JSON.stringify(geometry));
     expect(geometry.boardHit, `Bulletin marker center is intercepted: ${JSON.stringify(geometry)}`).toBe(true);
     await page.getByRole('button', { name: 'Explore the bulletin board' }).tap({ timeout: 10_000 });
-    await page.getByRole('button', { name: 'Read the board' }).tap({ timeout: 10_000 });
-    const dialog = page.getByTestId('dialog-bulletin');
+    const dialog = page.getByTestId('page-events');
     await expect(dialog).toBeVisible();
-    const shell = dialog.locator('.bulletin-shell');
-    const metrics = await shell.evaluate(el => {
-      const parent = el.parentElement!;
-      return {
-        ownOverflow: getComputedStyle(el).overflowY,
-        dialogOverflow: getComputedStyle(parent).overflowY,
-        scrolling: el.scrollHeight > el.clientHeight,
-        scrollOwnerCount: [el, parent].filter(node => node.scrollHeight > node.clientHeight &&
-          /auto|scroll/.test(getComputedStyle(node).overflowY)).length,
-      };
-    });
-    expect(metrics).toMatchObject({ ownOverflow: 'auto', dialogOverflow: 'visible', scrolling: true, scrollOwnerCount: 1 });
+    const shell = dialog;
+    const metrics = await shell.evaluate(el => ({
+      pageOverflow: getComputedStyle(el).overflowY,
+      shellOverflow: getComputedStyle(el.querySelector('.bulletin-shell')!).overflowY,
+      scrolling: el.scrollHeight > el.clientHeight,
+    }));
+    expect(metrics).toMatchObject({ pageOverflow: 'auto', shellOverflow: 'visible', scrolling: true });
     const cdp = await context.newCDPSession(page);
     const x = 180;
     await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x, y: 370 }] });
@@ -235,13 +218,13 @@ test('short touch phone popup has one scrolling owner, working thumb and reachab
     }
     await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
     await expect.poll(() => shell.evaluate(el => el.scrollTop)).toBeGreaterThan(0);
-    await screenshot(page, 'short-touch-popup-scroll');
-    await dialog.getByTestId('link-full-events').focus();
+    await screenshot(page, 'short-touch-events-scroll');
+    await dialog.getByTestId('link-back-safehouse').focus();
     await page.keyboard.press('End');
     await expect.poll(() => shell.evaluate(el => el.scrollTop + el.clientHeight >= el.scrollHeight - 2)).toBe(true);
-    await screenshot(page, 'short-touch-popup-last-note');
+    await screenshot(page, 'short-touch-events-last-note');
     await expect(dialog.getByTestId('link-note-dev-note-balance')).toBeVisible();
-    await page.keyboard.press('Escape');
+    await dialog.getByTestId('link-back-safehouse').click();
     await expect(dialog).not.toBeVisible();
   } finally {
     await context.close();
@@ -252,7 +235,8 @@ test('full Events page expands all cards and routes from the expanded action', a
   await init(page);
   await visit(page);
   for (const entry of destinations) {
-    await page.getByTestId(`button-expand-${entry.id}`).click();
+    const expand = page.getByTestId(`button-expand-${entry.id}`);
+    if (await expand.getAttribute('aria-expanded') !== 'true') await expand.click();
     await expect(page.getByTestId(`detail-event-${entry.id}`)).toBeVisible();
     const action = page.getByTestId(`link-detail-${entry.id}`);
     await expect(action).toContainText(entry.action);

@@ -30,13 +30,13 @@ import {
 } from "./gameEngine";
 
 /** Bumped whenever a persisted online room can no longer be replayed safely. */
-export const ONLINE_RULES_VERSION = 62;
+export const ONLINE_RULES_VERSION = 63;
 /**
  * Card values and trigger semantics are part of a reward match's issued
  * snapshot.  Keep this separate from the transport rules version so a
  * cosmetic/network change does not invalidate an in-progress reward fade.
  */
-export const CARD_BALANCE_VERSION = 62;
+export const CARD_BALANCE_VERSION = 63;
 export const TURN_SECONDS = 75;
 export const ROOM_LIFETIME_MS = 30 * 60 * 1000;
 export type Seat = Owner;
@@ -55,6 +55,8 @@ export type OnlineMember = {
   avatarKey?: string;
   level?: number;
   streetRep?: number;
+  /** Earned season points for the rank trophy, separate from matchmaking rating. */
+  rankPoints?: number;
   /** Display-only equipment, captured when joining the room; never affects play. */
   playerMatId?: string;
   banner?: OnlineBanner;
@@ -291,7 +293,7 @@ export function applyOnlineCommand(
         "Return to Fade Park to find your next ranked opponent.",
       );
     if (!room.members.cpu)
-      throw new OnlineError("Wait for a rival to join this room.");
+      throw new OnlineError("Wait for The Opps to join this room.");
     if (room.status === "waiting") return room;
     if (room.status !== "complete")
       throw new OnlineError("Finish this fade first.");
@@ -502,7 +504,7 @@ export type OnlineRoomView = {
   startedAt: number | null;
   completedAt: number | null;
   seat: Seat;
-  members: Record<Seat, { name: string; hero: string; avatarKey?: string; level?: number; streetRep?: number; rp?: number; playerMatId?: string; banner?: OnlineBanner; ready: boolean } | null>;
+  members: Record<Seat, { name: string; hero: string; avatarKey?: string; level?: number; streetRep?: number; rankPoints?: number; rp?: number; playerMatId?: string; banner?: OnlineBanner; ready: boolean } | null>;
   ownDeck: OnlineDeck;
   revealedDecks: Record<Seat, OnlineDeck> | null;
   activeSeat: Seat;
@@ -587,7 +589,7 @@ export function onlineRoomView(
   const publicMember = (member: OnlineMember | null, memberSeat: Seat) =>
     member
       ? { name: member.name, hero: member.deck.hero, avatarKey: member.avatarKey, level: member.level,
-          streetRep: member.streetRep, rp: room.ranked?.ratings[memberSeat], ...(member.banner ? { banner: member.banner } : {}), ...(member.playerMatId ? { playerMatId: member.playerMatId } : {}), ready: member.ready }
+          streetRep: member.streetRep, rankPoints: member.rankPoints, rp: room.ranked?.ratings[memberSeat], ...(member.banner ? { banner: member.banner } : {}), ...(member.playerMatId ? { playerMatId: member.playerMatId } : {}), ready: member.ready }
       : null;
   return {
     ...(room.kumite ? { kumite: { ...room.kumite } } : {}),

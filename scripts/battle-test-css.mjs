@@ -8,6 +8,11 @@ const viteEnvironment = JSON.stringify({
   BASE_URL: '/', DEV: false, PROD: true, MODE: 'test', SSR: true, VITE_E2E_AUTH: 'false',
 });
 registerHooks({
+  // Match Vite: use this checkout rather than a linked checkout's generated client.
+  resolve(specifier, context, nextResolve) {
+    return nextResolve(specifier === '@workspace/api-client-react'
+      ? new URL('../lib/api-client-react/src/index.ts', import.meta.url).href : specifier, context);
+  },
   load(url, context, nextLoad) {
     if (url.startsWith(browserSourceRoot) && /\.(?:webp|png|jpe?g|svg|mp4|webm)$/.test(url)) return { format: 'module', source: `export default ${JSON.stringify(url)};`, shortCircuit: true };
     if (url.endsWith('.css')) return { format: 'module', source: '', shortCircuit: true };

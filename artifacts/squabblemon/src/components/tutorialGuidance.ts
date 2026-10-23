@@ -51,8 +51,8 @@ const playSequence = (
 ): TutorialGuidance => {
   if (playsThisRound > 0) {
     return {
-      id: `${prefix}_end_turn`, round, focus: 'end-turn', title: 'Let the rival answer',
-      body: 'Motion remaining can pay for another card in a normal turn. In this coached round, End Turn passes the move to the rival; its reply may change any district.',
+      id: `${prefix}_end_turn`, round, focus: 'end-turn', title: 'Let The Opps answer',
+      body: 'Motion remaining can pay for another card in a normal turn. In this coached round, End Turn passes the move to The Opps; their reply may change any district.',
     };
   }
   if (!selectedInstanceId) {
@@ -73,7 +73,7 @@ const playSequence = (
   }
   return {
     id: `${prefix}_play_card`, round, focus: 'play', title: 'Commit the play',
-    body: 'The preview estimates this play with the known board and location rule. It cannot promise what the rival will play after End Turn.',
+    body: 'The preview estimates this play with the known board and location rule. It cannot promise what The Opps will play after End Turn.',
   };
 };
 
@@ -95,7 +95,7 @@ function getBaseTutorialGuidance({
       return playsThisRound > 0
         ? {
           id: 'r4_end_turn', round: 4, focus: 'end-turn', title: 'Pressure applied',
-          body: 'Your SQUABBLE is spent for this match. End the turn and see if the rival can answer the doubled Base Hands.',
+          body: 'Your SQUABBLE is spent for this match. End the turn and see if The Opps can answer the doubled Base Hands.',
         }
         : {
           id: 'free_play', round: 4, focus: 'free', title: 'SQUABBLE already spent',
@@ -175,13 +175,13 @@ export function getTutorialGuidance(input: TutorialGuidanceInput): TutorialGuida
     if (guidance.focus === 'card') return { ...common, target: handCardTarget, title: 'Your Legendary is ready.', body: `Tap Dr. Fade. He costs ${getLegalCardCost(input.match, 'player', card, choice!.lane)} Motion here, brings ${card.basePower} Base Hands, then hits the strongest enemy here for −2 and coaches the weakest ally elsewhere for +2 if they are present.` };
     if (guidance.focus === 'squabble') return { ...common, target: selector('button-squabble'), title: 'Double Dr. Fade’s Base Hands.', body: `Tap SQUABBLE. It adds his ${card.basePower} Base Hands again (${card.basePower} → ${card.basePower * 2}), before location or ability effects. You can use it only once per match.` };
     if (guidance.focus === 'district' && choice && district) return { ...common, target: selector('lane-' + choice.lane), title: 'Put your coach to work.', body: `Tap ${district.name}. Rule: ${district.rule} Dr. Fade fights here and may help an ally in another district. Watch both scores.` };
-    if (guidance.focus === 'play') return { ...common, target: selector('button-lock'), title: 'Watch the score settle.', body: 'Confirm the card. The preview includes known effects but not the rival’s next answer. Your owned Dr. Fade stays in your collection after this lesson.' };
+    if (guidance.focus === 'play') return { ...common, target: selector('button-lock'), title: 'Watch the score settle.', body: 'Confirm the card. The preview includes known effects but not The Opps’ next answer. Your owned Dr. Fade stays in your collection after this lesson.' };
   }
    if (guidance.focus === "card" && card && choice) return { ...common, target: handCardTarget, body: `Tap ${card.name}. It costs ${getLegalCardCost(input.match, "player", card, choice.lane)} Motion in ${district?.name}; you have ${input.match.playerMotion}. Its ${card.basePower} Base Hands add strength, and its ability can change the final score. Other lit cards can be inspected; follow this highlighted move for the coached match.` };
-   if (guidance.focus === "district" && choice && district) return { ...common, target: selector("lane-" + choice.lane), title: "Take " + district.name + ".", body: `Tap ${district.name}. ${district.rule} Watch the Rival/You score labels: a tie claims nothing, and you need two district leads at the finish. A locked or unaffordable lane cannot take this card.` };
-   if (guidance.focus === "play") return { ...common, target: selector("button-lock"), body: 'The preview uses the board you can see and known effects; it does not predict the rival’s answer. Confirm this card now, then read its ability and any score change.' };
+   if (guidance.focus === "district" && choice && district) return { ...common, target: selector("lane-" + choice.lane), title: "Take " + district.name + ".", body: `Tap ${district.name}. ${district.rule} Watch The Opps/You score labels: a tie claims nothing, and you need two district leads at the finish. A locked or unaffordable lane cannot take this card.` };
+   if (guidance.focus === "play") return { ...common, target: selector("button-lock"), body: 'The preview uses the board you can see and known effects; it does not predict The Opps’ answer. Confirm this card now, then read its ability and any score change.' };
   if (guidance.focus === "squabble") return { ...common, target: selector("button-squabble") };
-   if (guidance.focus === "end-turn") return { ...common, target: selector("button-next-round"), title: input.match.round === 3 ? "Save a little for later." : "Now let the rival respond.", body: input.match.round === 3 ? `End Turn without playing. You have ${input.match.playerMotion} Motion; up to one carries into the next round’s refill. Watch the Motion counter.` : `You have ${input.match.playerMotion} Motion left. In a regular fade you can play more affordable cards first. End Turn now to see the rival’s response; this round’s unused Motion carries over by at most one.` };
+   if (guidance.focus === "end-turn") return { ...common, target: selector("button-next-round"), title: input.match.round === 3 ? "Save a little for later." : "Now let The Opps respond.", body: input.match.round === 3 ? `End Turn without playing. You have ${input.match.playerMotion} Motion; up to one carries into the next round’s refill. Watch the Motion counter.` : `You have ${input.match.playerMotion} Motion left. In a regular fade you can play more affordable cards first. End Turn now to see The Opps’ response; this round’s unused Motion carries over by at most one.` };
   return guidance;
 }
 export const MECHANIC_LESSON_IDS = [
@@ -215,7 +215,7 @@ export const MECHANIC_LESSONS: Record<MechanicLessonId, MechanicLesson> = {
   protect: {
     id: 'protect', name: 'Protection',
     summary: 'Protection blocks a targeted hostile effect. Some shields last for the round; Cover lasts until spent.',
-    tacticalTip: 'Use protection before the rival targets your most valuable fighter.',
+    tacticalTip: 'Use protection before The Opps target your most valuable fighter.',
   },
   blocked: {
     id: 'blocked', name: 'Blocked',

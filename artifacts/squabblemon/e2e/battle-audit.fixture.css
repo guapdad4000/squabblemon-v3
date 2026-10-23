@@ -1,0 +1,7 @@
+.audit-page {font:12px/1.3 system-ui,sans-serif;color:#eee;background:#101210;min-height:100vh}.audit-page>header{position:sticky;top:0;z-index:100;display:flex;align-items:center;gap:16px;padding:8px 12px;background:#151815;border-bottom:1px solid #777;min-height:52px}.audit-page label{display:flex;gap:5px;align-items:center}.audit-page select,.audit-page button,.audit-benchmark button{padding:6px 10px;background:#26372c;color:white;border:1px solid #aab7ae}.audit-page main{padding:12px}.audit-page iframe{display:block;border:0;outline:1px solid #999;max-width:none;background:#121512}.audit-page details pre,.audit-benchmark pre{white-space:pre-wrap;overflow:auto;max-height:70vh;max-width:600px;font:11px/1.4 monospace}.audit-page header details[open]{position:absolute;top:54px;right:12px;background:#111e;padding:12px;border:1px solid #999}.audit-benchmark{position:fixed;z-index:9999;right:4px;bottom:4px;background:#101510e6;padding:4px;max-width:90vw;font:11px system-ui}.audit-benchmark details[open]{background:#101510;max-height:75vh;overflow:auto}
+
+html:has(.audit-page),body:has(.audit-page){overflow:hidden;height:100%}
+.audit-page{height:100dvh;overflow:hidden}
+.audit-page>header{position:fixed;inset:0 0 auto;height:60px;min-height:60px}
+.audit-page>main{position:absolute;inset:60px 0 0;padding:12px;overflow:clip}
+.audit-benchmark{top:4px;bottom:auto}

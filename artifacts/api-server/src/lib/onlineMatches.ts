@@ -76,6 +76,7 @@ export async function loadMember(
     avatarKey: profile.avatarKey,
     level: profile.level,
     streetRep: profile.streetRep,
+    rankPoints: rankedStats(profile.storyProgress.fadePark).points,
     ...equippedBanner(profile),
     playerMatId: equippedPlayerMat(profile),
     ready: false,

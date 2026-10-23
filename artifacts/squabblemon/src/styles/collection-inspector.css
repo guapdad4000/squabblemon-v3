@@ -18,3 +18,12 @@
 .collection-inspector .collection-inspector__variant button:disabled{color:#909688}
 @media(max-width:767px){.collection-inspector>.relative{gap:32px}.collection-inspector .collector-dossier{max-height:none;overflow:visible}.collection-inspector .collector-display>.collector-card{width:230px}.collection-inspector .collector-dossier h3{font-size:42px}}
 @media(max-height:550px) and (min-width:768px){.collection-inspector .collector-display>.collector-card{width:180px}.collection-inspector{padding-block:48px}.collection-inspector .collector-display-caption{margin-top:8px}.collection-inspector .collector-dossier{max-height:calc(100dvh - 96px)}}
+
+/* Compact, explicit form inspection; never changes a live battle card. */
+.collector-form-preview { width:100%; margin:0 auto 16px; text-align:center; }
+.collector-form-preview [role="group"] { display:inline-flex; max-width:100%; border-bottom:1px solid #c8bfa961; }
+.collector-form-preview button { min-height:44px; padding:8px 12px; background:transparent; color:#ded8c9; border:0; font:11px/1.2 var(--font-mono,monospace); }
+.collector-form-preview button[aria-pressed="true"] { color:#fff; box-shadow:inset 0 -2px #e6d4a2; background:#ffffff09; }
+.collector-form-preview button:focus-visible { outline:2px solid white; outline-offset:2px; }
+.collector-form-preview small { display:block; margin-top:7px; color:#ddd3bb; font-size:10px; }
+.polaroid__photo > .name-tag-card { width:100%; height:100%; }

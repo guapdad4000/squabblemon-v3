@@ -119,7 +119,7 @@ export function SpecialMove({ clip, onStatus, audioEnabled = false, speed = 1 }:
       };
       video.onerror = fail;
       video.onended = stop;
-      video.src = getMoveClipUrl(clip);
+      video.src = getMoveClipUrl(clip, 'battle');
       video.onplaying = scheduleDraw;
       video.onpause = cancelDraw;
       scheduleDraw();

@@ -291,7 +291,7 @@ export function PlayLoop({ mode = 'practice', onExit, onTutorialComplete, onVeri
   useEffect(() => { skipTransitionRef.current = false; }, [presentationPhase]);
 
   const enterPlayerTurn = useCallback(async (round: number, immediate = false, resetClock = true) => { const id = timeline.current.id; setPresentationPhase('round-intro'); setPhaseMessage(`ROUND ${round} · DECISION IN 1`); if (!immediate && !await waitForBeat(1100, 90, id)) return; decisionStartedAtRef.current = Date.now(); setPresentationPhase('player-ready'); setPhaseMessage(`ROUND ${round} // YOUR MOVE`); if (resetClock) setTimerSeconds(TURN_SECONDS); locked.current = false; fastForwardRef.current = false; setSquabbleCinematicLane(null); }, [waitForBeat]);
-  const runIntro = useCallback(async (round = 1) => { cancelTimers(); const id = timeline.current.id; const beats: Array<[PresentationPhase, string, number]> = [['versus', 'YOU  VS  RIVAL', 1100], ['countdown-3', '3', 700], ['countdown-2', '2', 700], ['countdown-1', '1', 700], ['squabble', 'SQUABBLE!', 900], ['deal', 'GANG UP', 850]]; for (const [phase, message, duration] of beats) { if (id !== timeline.current.id) return; setPresentationPhase(phase); setPhaseMessage(message); if (!await waitForBeat(duration, 90, id)) return; } if (id === timeline.current.id) void enterPlayerTurn(round); }, [cancelTimers, enterPlayerTurn, waitForBeat]);
+  const runIntro = useCallback(async (round = 1) => { cancelTimers(); const id = timeline.current.id; const beats: Array<[PresentationPhase, string, number]> = [['versus', 'YOU  VS  THE OPPS', 1100], ['countdown-3', '3', 700], ['countdown-2', '2', 700], ['countdown-1', '1', 700], ['squabble', 'SQUABBLE!', 900], ['deal', 'GANG UP', 850]]; for (const [phase, message, duration] of beats) { if (id !== timeline.current.id) return; setPresentationPhase(phase); setPhaseMessage(message); if (!await waitForBeat(duration, 90, id)) return; } if (id === timeline.current.id) void enterPlayerTurn(round); }, [cancelTimers, enterPlayerTurn, waitForBeat]);
   const [restoredComplete, setRestoredComplete] = useState(false);
   const beginMatch = useCallback((initial: Match, committedMoves: MatchMove[] = []) => {
     matchGeneration.current++;
@@ -554,7 +554,7 @@ export function PlayLoop({ mode = 'practice', onExit, onTutorialComplete, onVeri
       const needsReading = mode === 'tutorial' && effect.owner === 'cpu' && (isPlay || effect.type === 'ability');
       if (needsReading && !await pauseForGuidedReading({
         kind: 'event',
-        title: `Rival · ${cards[effect.cardId]?.name ?? effect.cardId}`,
+        title: `The Opps · ${cards[effect.cardId]?.name ?? effect.cardId}`,
         body: describeTutorialEvent(effect, resolved),
         continueLabel: 'Continue the play',
       }, `${id}:event:${effect.sequence}`, id)) return false;
@@ -639,7 +639,7 @@ export function PlayLoop({ mode = 'practice', onExit, onTutorialComplete, onVeri
       setPresentationPhase('district-flipped');
       const changes = changedLanes.map(lane => {
         const result = getDistrictResults(resolved)[lane];
-        const owner = result.winner === 'player' ? 'YOU TOOK' : result.winner === 'cpu' ? 'RIVAL TOOK' : 'TIED';
+        const owner = result.winner === 'player' ? 'YOU TOOK' : result.winner === 'cpu' ? 'THE OPPS TOOK' : 'TIED';
         return `${owner} ${getMatchDistricts(resolved)[lane].name} ${result.player}–${result.cpu}`;
       });
       setPhaseMessage(changes.join(' · '));
@@ -658,7 +658,7 @@ export function PlayLoop({ mode = 'practice', onExit, onTutorialComplete, onVeri
     if (await waitForBeat(changedLanes.length > 0 ? 1300 : 1700, 120, id)) await advanceRoundBoundary(resolved, id, fastForwardRef.current);
   }, [advanceRoundBoundary, mode, pauseForGuidedReading, waitForBeat]);
   const runRival = useCallback(async (afterPlayer: Match, id: number) => {
-    setPresentationPhase('rival-thinking'); setPhaseMessage('RIVAL THINKING');
+    setPresentationPhase('rival-thinking'); setPhaseMessage('THE OPPS THINKING');
     if (!await waitForBeat(1100, 90, id)) return;
     const resolved = revealCpuTurn(afterPlayer);
     setMatch(resolved);

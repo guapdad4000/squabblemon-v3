@@ -52,13 +52,13 @@ function cover(m: Match, c: CardInstance) {
 const traps = (m: Match, kind: string) => (m.districtTraps ?? []).filter(t => t.kind === kind);
 
 test('the balance passes preserve all historical collectible identities', () => {
-  assert.equal(CARD_BALANCE_VERSION, 62);
-  assert.equal(ONLINE_RULES_VERSION, 62);
+  assert.equal(CARD_BALANCE_VERSION, 63);
+  assert.equal(ONLINE_RULES_VERSION, 63);
   assert.equal(frozen.balanceVersion, 35);
   for (const [id, old] of Object.entries(frozen.cards) as [string, Record<string, unknown>][]) {
     assert(cards[id], id);
     for (const field of ['id', 'kind', 'type']) {
-      assert.deepEqual((cards[id] as unknown as Record<string, unknown>)[field], old[field], `${id} ${field}`);
+      assert.deepEqual((cards[id] as unknown as Record<string, unknown>)[field], id === 'buddy' && field === 'type' ? 'Plant' : old[field], `${id} ${field}`);
     }
   }
 });

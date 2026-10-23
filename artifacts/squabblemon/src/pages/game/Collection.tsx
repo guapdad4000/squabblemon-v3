@@ -11,7 +11,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { CardPressTarget } from '../../components/CardInspection';
 import { CardInspector } from '../../components/CardInspector';
 import { cardCatalog, CARD_RARITY_DEFINITIONS } from '../../data';
-import { CardView } from '../../components/CardView';
+import { CollectibleCard as CardView } from '../../components/CollectibleCard';
 import { useCollectionCardDiscovery } from '../../lib/useCollectionCardDiscovery';
 import { useCollectionCardViewport } from '../../lib/useCollectionCardViewport';
 import sunsetBg from '../../assets/collection-sunset-standoff.webp';

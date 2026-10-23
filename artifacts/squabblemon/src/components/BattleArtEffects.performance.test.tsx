@@ -1,0 +1,33 @@
+import assert from 'node:assert/strict';
+import test from 'node:test';
+import React, { Profiler } from 'react';
+import { act, create } from 'react-test-renderer';
+import { BattleArtEffects } from './BattleArtEffects';
+import type { PresentationEffect } from './PlayLoop';
+
+const bounds={left:0,top:0,right:400,bottom:600,width:400,height:600};
+test('confirmed art cues position without a nested React update and empty cues read no geometry',async t=>{
+  const original=Object.getOwnPropertyDescriptor(globalThis,'IS_REACT_ACT_ENVIRONMENT');
+  const css=Object.getOwnPropertyDescriptor(globalThis,'CSS');
+  Object.defineProperty(globalThis,'IS_REACT_ACT_ENVIRONMENT',{configurable:true,value:true});
+  Object.defineProperty(globalThis,'CSS',{configurable:true,value:{escape:(s:string)=>s}});
+  const restore=()=>{if(original)Object.defineProperty(globalThis,'IS_REACT_ACT_ENVIRONMENT',original);else delete (globalThis as any).IS_REACT_ACT_ENVIRONMENT;if(css)Object.defineProperty(globalThis,'CSS',css);else delete (globalThis as any).CSS;};
+  let reads=0,commits=0;
+  const style={display:'none',left:'',top:'',setProperty:(key:string,value:string)=>{(style as any)[key]=value;}};
+  const zone={getBoundingClientRect:()=>{reads++;return{...bounds,left:10,right:110,top:100,bottom:300,width:100,height:200};}};
+  const root={getBoundingClientRect:()=>{reads++;return bounds;},querySelector:()=>zone};
+  const host={closest:()=>root,querySelectorAll:()=>[{style}]};
+  const effect={artCues:[]} as unknown as PresentationEffect;
+  const render=(next:PresentationEffect)=><Profiler id="cues" onRender={()=>commits++}><BattleArtEffects effect={next} reducedMotion={false}/></Profiler>;
+  let renderer:ReturnType<typeof create>;
+  await act(async()=>{renderer=create(render(effect),{createNodeMock:element=>(element.props as {className?:string}).className==='battle-art-effects'?host:null});});
+  t.after(async()=>{await act(async()=>renderer.unmount());restore();});
+  assert.equal(reads,0);assert.equal(commits,1);
+  const cue={id:'one',kind:'impact',owner:'player',lane:0,artwork:'combat/test',label:'Hit'};
+  await act(async()=>renderer.update(render({...effect,artCues:[cue]} as unknown as PresentationEffect)));
+  assert.equal(commits,2,'a landed cue adds only its parent render');
+  assert.equal(style.display,'');assert.equal(style.left,'60px');assert.equal(style.top,'200px');
+  const positionedReads=reads;
+  await act(async()=>renderer.update(render(effect)));
+  assert.equal(reads,positionedReads,'empty effects must not measure the arena');
+});

@@ -17,13 +17,13 @@ function protect(m: Match, card: CardInstance, kind: 'church-protection' | 'nail
   m.timedEffects.push({ id: 'protection:' + card.instanceId, kind, owner: card.owner, lane: card.lane!, sourceInstanceId: 'protector', targetInstanceId: card.instanceId, startsAtRound: 1, expiresAtRound: 7, expiration: 'match-complete' });
 }
 
-test('BUDDY is a Legendary Earth character with a distinct normal and Squabble contract', () => {
+test('BUDDY is a Legendary Plant character with a distinct normal and Squabble contract', () => {
   for (const id of ['buddy', 'folks'] as const) {
     assert.equal(catalogCardById[id].rarity, 'Legendary');
     assert.deepEqual(catalogCardById[id].acquisitionSources, ['Street Packs']);
   }
   assert.deepEqual([cards.buddy.cost, cards.buddy.power, cards.folks.cost, cards.folks.power], [3, 3, 4, 2]);
-  assert.equal(cards.buddy.type, 'Earth');
+  assert.equal(cards.buddy.type, 'Plant');
   assert.equal(cards.buddy.ability, 'Buddy Buds');
   assert.equal(cards['buddy-bud'], undefined, 'Bud tokens are battle-only and never collectible');
   assert.match(cards.buddy.effect, /two or three randomly chosen/);
@@ -38,6 +38,8 @@ for (const owner of ['player', 'cpu'] as const) test('normal Buddy selects two o
   const two = playCard(m, owner, source.instanceId, 0);
   const budLanes = (match: Match) => match.boards.flatMap((laneCards, laneIndex) =>
     laneCards.some(card => card.buddyBud) ? [laneIndex] : []);
+  assert.equal(source.type, 'Plant');
+  assert.equal(find(one, source).type, 'Plant');
   assert.deepEqual(budLanes(one), budLanes(two), 'selection depends only on replayable match state');
   assert.ok(budLanes(one).length === 2 || budLanes(one).length === 3);
   assert.equal(JSON.stringify(m), original, 'resolution does not mutate its input');
@@ -109,6 +111,8 @@ for (const owner of ['player', 'cpu'] as const) test('Squabbled Buddy transforms
   m.boards = [[foe], [earth], [friendlyNonEarth]];
   const after = playCard(m, owner, source.instanceId, 0, true);
   assert.equal(find(after, source).buddyForm, 'squabble-earth');
+  assert.equal(find(after, source).type, 'Earth');
+  assert.equal(source.type, 'Plant', 'Squabble does not mutate the hand/catalog form');
   assert.equal(getEffectiveCardPower(find(after, source)), source.basePower * 2 + 2, 'ordinary SQUABBLE boost plus the Earth +2 also applies to Buddy');
   assert.equal(find(after, earth).powerModifier, 2);
   assert.equal(find(after, friendlyNonEarth).powerModifier, 0);
@@ -121,6 +125,7 @@ for (const owner of ['player', 'cpu'] as const) test('Squabbled Buddy transforms
   assert.deepEqual(replayedOnce.timedEffects, once.timedEffects, 'serialized battle state preserves the same expiry schedule');
   const expired = nextRound({ ...once, phase: 'resolved', playerHand: [], cpuHand: [] });
   assert.equal(expired.round, 6, 'the two-round modifiers expire at the start of round 6');
+  assert.equal(find(expired, source).type, 'Earth', 'expiry removes the timed boost, not the transformed element');
   assert.equal(find(expired, earth).powerModifier, 0);
   assert.equal(find(expired, foe).powerModifier, 0);
   assert.equal(find(expired, source).powerModifier, source.basePower, 'the ordinary Squabble base-Hands boost is permanent');

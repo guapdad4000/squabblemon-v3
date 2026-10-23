@@ -42,7 +42,7 @@ html[data-reduce-motion='true'] .battle-command-header--organized .battle-rival-
   .battle-arena.battle-hud .battle-command-header--organized .battle-rival-avatar { width: 34px; height: 34px; border-width: 1px; }
   .battle-arena.battle-hud .battle-command-header--organized .battle-rival-copy { min-width: 0; }
   .battle-arena.battle-hud .battle-command-header--organized .battle-rival-copy .font-display { font-size: 13px; max-width: none; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .battle-arena.battle-hud .battle-command-header--organized .battle-rival-copy > :first-child { font-size: 7px; margin-bottom: 4px; letter-spacing: .1em; }
+  .battle-arena.battle-hud .battle-command-header--organized .battle-rival-copy > .battle-rival-caption { font-size: 7px; margin-bottom: 4px; letter-spacing: .1em; }
   .battle-command-header--organized .battle-round { grid-area: round; position: relative; padding-top: 9px; gap: 4px; }
   .battle-command-header--organized .battle-round::before { content: 'Round'; position: absolute; top: 0; font: 600 6px var(--font-sans); text-transform: uppercase; letter-spacing: .15em; color: #b1b6be; }
   .battle-command-header--organized .battle-round > span { display: flex; align-items: baseline; justify-content: center; gap: 2px; font-size: 0; letter-spacing: 0; }
@@ -55,7 +55,7 @@ html[data-reduce-motion='true'] .battle-command-header--organized .battle-rival-
   .battle-arena.battle-hud .battle-command-header--organized .battle-tools summary { width: 44px; height: 36px; }
   .battle-arena.battle-hud .battle-command-header--organized .battle-tools__panel { top: 100%; right: 0; }
   .battle-arena.battle-hud .battle-command-header--organized .battle-rival-energy { grid-area: energy; justify-self: center; gap: 4px; }
-  .battle-arena.battle-hud .battle-command-header--organized .battle-rival-energy::before { content: 'Rival'; font: 600 6px var(--font-mono); text-transform: uppercase; letter-spacing: .06em; color: #b1c6ce; }
+  .battle-arena.battle-hud .battle-command-header--organized .battle-rival-energy::before { content: 'The Opps'; font: 600 6px var(--font-mono); text-transform: uppercase; letter-spacing: .06em; color: #b1c6ce; }
   .battle-arena.battle-hud .battle-command-header--organized .battle-rival-energy strong { font-size: 16px; }
   .battle-arena.battle-hud .battle-command-header--organized .battle-claims { width: 58px; justify-content: center; grid-area: claims; justify-self: end; gap: 4px; font-size: 15px; }
   .battle-arena.battle-hud .battle-command-header--organized .battle-claims b { font-size: 15px; }

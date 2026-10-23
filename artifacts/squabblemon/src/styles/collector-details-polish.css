@@ -1,0 +1,56 @@
+/* Full details use flow layout: long names, finish names and rules may grow. */
+.card-inspector-shell .collector-display-stack { min-width:0; }
+.card-inspector-shell .polaroid { padding:12px 12px 14px; }
+.card-inspector-shell .polaroid__photo { width:min(100%,320px); }
+.card-inspector-shell .polaroid__caption {
+  position:static; margin:14px 4px 0; padding:2px 0;
+  font:400 clamp(22px,3vw,30px)/1.15 var(--font-card-title);
+  overflow-wrap:anywhere;
+}
+.card-inspector-shell .polaroid__caption em {
+  display:block; margin-top:6px; font:700 10px/1.4 var(--font-action-sign);
+  letter-spacing:.08em; font-style:normal; overflow-wrap:normal;
+}
+.card-inspector-shell .card-touch-hint { margin:10px 0 0; font:400 10px/1.5 var(--font-sans,Arial,sans-serif); color:#706851; }
+.card-inspector-shell .collector-finish-controls { margin-top:16px; }
+.card-inspector-shell .collector-finish-controls button { font-family:var(--font-action-sign); letter-spacing:.02em; min-height:44px; line-height:1.3; white-space:normal; }
+.card-inspector-shell .dossier-identity { display:flex; align-items:center; gap:14px; margin:16px 0 18px; }
+.card-inspector-shell .dossier-identity__copy { min-width:0; flex:1; }
+.card-inspector-shell .dossier-name { font-size:clamp(30px,4.5vw,58px); line-height:1.12; margin:8px 0; padding-bottom:3px; text-wrap:balance; }
+.card-inspector-shell .dossier-handle { font:400 10px/1.5 var(--font-mono,monospace); margin:8px 0 0; letter-spacing:.015em; }
+.card-inspector-shell .dossier-stats { grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; }
+.card-inspector-shell .dossier-stat { padding:14px 10px 12px; }
+.card-inspector-shell .dossier-stat__value { font-family:var(--font-card-number); font-style:normal; font-synthesis:none; font-size:clamp(25px,3vw,36px); line-height:1.2; }
+.card-inspector-shell .dossier-stat:first-child .dossier-stat__value { font-family:var(--font-action-sign); font-size:clamp(17px,2.1vw,24px); line-height:1.8; }
+.card-inspector-shell .dossier-stat__sub { font:400 10px/1.45 var(--font-sans,Arial,sans-serif); letter-spacing:0; }
+.card-inspector-shell .dossier-sticky { transform:none; padding:20px 22px; margin-top:12px; }
+.card-inspector-shell .dossier-sticky__title { font:700 clamp(23px,3vw,32px)/1.15 var(--font-action-sign); margin:8px 0 12px; letter-spacing:.015em; overflow-wrap:break-word; }
+.card-inspector-shell .dossier-sticky__copy { font:400 14px/1.65 var(--font-sans,Arial,sans-serif); overflow-wrap:break-word; }
+.card-inspector-shell .dossier-section__head h4 { font:700 22px/1.2 var(--font-action-sign); letter-spacing:.01em; }
+.card-inspector-shell .dossier-section__head em { font:400 11px/1.5 var(--font-sans,Arial,sans-serif); }
+.card-inspector-shell .dossier-variant h5 { font:700 18px/1.25 var(--font-action-sign); overflow-wrap:break-word; }
+.card-inspector-shell .dossier-variant :is(p,button) { line-height:1.5; }
+.card-inspector-shell .dossier-stripe { display:none; }
+.card-inspector-shell .dossier-notes { border-left:0; font:400 13px/1.6 var(--font-sans,Arial,sans-serif); transform:none; }
+.card-inspector-shell .dossier-banner__meta { font:700 11px/1.4 var(--font-action-sign); letter-spacing:.055em; }
+.card-inspector-shell .dossier-banner__tape { font-family:var(--font-action-sign); line-height:1.3; }
+.card-inspector-shell .card-inspector-close { color:#f7f4eb; border-color:#ffffff4d; font-family:var(--font-action-sign); }
+/* An inspector card is not a summary tile: show the complete authored rules. */
+.card-inspector-shell .collector-card-ability > div:last-child { display:block; -webkit-line-clamp:unset; max-height:none; overflow:visible; }
+@media(max-width:767px) {
+ .card-inspector-shell .polaroid__photo { width:min(69vw,280px); }
+ .card-inspector-shell .dossier-identity { gap:8px; }
+ .card-inspector-shell .dossier-identity > .rarity-stamp { padding:6px; }
+ .card-inspector-shell .dossier-identity > .rarity-stamp .rarity-stamp__label { font-size:9px; }
+ .card-inspector-shell .dossier-sticky { padding:18px 14px; }
+ .card-inspector-shell .dossier-stat { padding:12px 6px; }
+ .card-inspector-shell .dossier-handle { display:none; }
+}
+@media(max-height:560px) and (orientation:landscape) {
+ .card-inspector-shell .polaroid__photo { width:min(26vw,210px); }
+}
+/* A definite photo width prevents the inline polaroid from shrinking to its caption. */
+.card-inspector-shell .polaroid { display:block; width:100%; max-width:344px; box-sizing:border-box; }
+.card-inspector-shell .polaroid__photo { width:100%; }
+@media(max-width:767px) { .card-inspector-shell .polaroid { width:min(80vw,304px); } }
+@media(max-height:560px) and (orientation:landscape) { .card-inspector-shell .polaroid { width:100%; } }

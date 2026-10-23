@@ -1,0 +1,71 @@
+/* Snapshot of the revised holo audition materials. Only name-tag preview
+   card roots opt in. Layout and rules remain owned by CardView. */
+[data-name-tag-material] :is(.collector-foil,.collector-foil-pattern,.collector-foil-grain,.collector-glare,.collector-webgl,.collector-engraving){display:none}
+[data-name-tag-material] .collector-art-rim{opacity:.35}
+.holo-finish{position:absolute;inset:0;z-index:5;pointer-events:none;mix-blend-mode:screen;overflow:hidden;border-radius:inherit;background-position:var(--foil-x,48%) var(--foil-y,36%);background-size:220% 200%;opacity:.85}
+.holo-finish[data-finish=gold]{background-image:repeating-linear-gradient(117deg,transparent 0 13px,#f1d88e30 14px 15px,transparent 16px 22px),linear-gradient(125deg,#3d290d00,#e1c07855,#fff0ae22,#75491100)}
+.holo-finish[data-finish=shards]{background-image:repeating-conic-gradient(from 20deg at 30% 40%,#b7c5eb3d 0deg 12deg,transparent 13deg 37deg,#7193c923 38deg 55deg)}
+.holo-finish[data-finish=cosmos]{background-image:radial-gradient(circle at 22% 27%,#fff4 0 1px,transparent 2px),radial-gradient(circle at 74% 45%,#f5b8cd66 0 2px,transparent 3px),radial-gradient(ellipse at 30% 40%,#a44b773d,transparent 65%);background-size:35px 47px,67px 85px,100% 100%}
+.holo-finish-canvas{position:absolute;inset:0;width:100%;height:100%;display:none}
+.holo-finish[data-renderer=webgl]{background:none}
+.holo-finish[data-renderer=webgl] .holo-finish-canvas{display:block}
+
+/* Engraved gold: opaque metal stock and a separate reflective rim. */
+[data-name-tag-material="gold"] .collector-frame{
+ background:linear-gradient(115deg,#62350d 0%,#e4b75b 12%,#a2671d 27%,#fff0be 42%,#d6a646 51%,#6c3c12 68%,#f5d78b 84%,#a1671c 100%);
+ background-size:240% 200%;background-position:var(--gold-light-x,48%) var(--gold-light-y,36%);
+ box-shadow:0 18px 42px #000b,0 0 24px #d4a24719;
+}
+.holo-finish[data-finish=gold]{mix-blend-mode:normal;opacity:1;
+ background-image:repeating-radial-gradient(ellipse at 50% 39%,transparent 0 3px,#4d2a0a2b 3.5px 4px,transparent 4.5px 7px),linear-gradient(115deg,#714412b8 0%,#d7a747d9 24%,#f3d888d9 39%,#8a5211d4 61%,#e6be63c9 84%);
+ mask-image:linear-gradient(#000 0 63%,transparent 79%);
+}
+.holo-finish[data-finish=gold][data-renderer=webgl]{background:none;mask-image:none}
+[data-name-tag-material="gold"] .collector-edition-seal{color:#fae5b2;text-shadow:0 1px #4a280b}
+
+/* Leroy keeps the game's Mythical red frame; only its reflected position moves. */
+[data-name-tag-material="cosmos"] .collector-frame{
+ background-position:var(--astral-light-x,48%) var(--astral-light-y,36%);
+}
+.holo-finish[data-finish=cosmos]{mix-blend-mode:normal;opacity:1;
+ background-image:
+ radial-gradient(circle at 32% 37%,#a7b8d011 0 11px,#c4c8db99 11.5px 12.5px,transparent 13px),
+ radial-gradient(circle at 68% 61%,#b795b411 0 18px,#d0acb777 18.5px 19.5px,transparent 20px),
+ radial-gradient(ellipse at 63% 32%,#1f5f7555,transparent 40%),
+ radial-gradient(circle at 19% 26%,#d0e8ef 0 .7px,transparent 1.2px),
+ radial-gradient(circle at 71% 43%,#f0d99e 0 1px,transparent 1.5px),
+ linear-gradient(132deg,#071022ef,#1d2745eb 34%,#27233deb 50%,#0c162bea 78%);
+ background-size:73px 91px,107px 123px,100% 100%,27px 41px,63px 73px,100% 100%;
+ mask-image:linear-gradient(#000 0 64%,transparent 79%);
+}
+.holo-finish[data-finish=cosmos][data-renderer=webgl]{background:none;mask-image:none}
+
+/* The opaque beveled inner card covers these layers, leaving only the rim.
+   Reflections follow the existing renderer light; there is no extra timer. */
+[data-name-tag-material] .collector-frame{isolation:isolate;--prism-strength:.64}
+[data-name-tag-material="gold"] .collector-frame{--prism-strength:.52}
+[data-name-tag-material="cosmos"] .collector-frame{--prism-strength:.44}
+[data-name-tag-material] .collector-frame>div{z-index:1}
+[data-name-tag-material] .collector-frame::before,
+[data-name-tag-material] .collector-frame::after{
+ content:"";position:absolute;inset:0;z-index:0;pointer-events:none;
+}
+[data-name-tag-material] .collector-frame::before{
+ background-image:
+  linear-gradient(116deg,transparent 18%,#d5fdff12 28%,#ffffffc4 34%,#b6fff4ad 36%,transparent 44% 66%,#edc4ff80 73%,transparent 81%),
+  repeating-linear-gradient(128deg,#ffffff29 0 .5px,transparent .8px 3px),
+  conic-gradient(from 145deg at var(--prism-light-x,48%) var(--prism-light-y,36%),#ff9cce,#ffeab0,#acffe5,#b1eaff,#b9b3ff,#f3b9fa,#ff9cce);
+ background-size:250% 190%,7px 9px,210% 190%;
+ background-position:var(--prism-light-x,48%) var(--prism-light-y,36%);
+ mix-blend-mode:soft-light;opacity:var(--prism-strength);
+}
+[data-name-tag-material] .collector-frame::after{
+ background-image:
+  repeating-conic-gradient(from 23deg at 38% 44%,#ffffffed 0deg 36deg,transparent 37deg 178deg,#b6eeffc7 179deg 214deg,transparent 215deg 360deg),
+  repeating-conic-gradient(from 67deg at 63% 72%,#fff7d5c9 0deg 22deg,transparent 23deg 205deg,#f3d0ff9c 206deg 223deg,transparent 224deg 360deg);
+ background-size:4px 5px,7px 9px;
+ background-position:0 0,2px 3px;
+ mask-image:linear-gradient(118deg,transparent 7%,#0002 23%,#000 34%,#0007 41%,#0001 56%,#000b 72%,transparent 88%);
+ mask-size:240% 200%;mask-position:var(--prism-light-x,48%) var(--prism-light-y,36%);
+ mix-blend-mode:screen;opacity:calc(var(--prism-strength) + .16);
+}

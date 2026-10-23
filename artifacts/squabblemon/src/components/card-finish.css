@@ -55,7 +55,12 @@
     0 0 10px color-mix(in srgb, var(--rarity-color) 28%, transparent);
 }
 .collector-engraving{position:absolute;inset:4% 3.5% 30%;z-index:17;pointer-events:none;background:linear-gradient(var(--foil-light),var(--foil-mid)) left top/16% 1px no-repeat,linear-gradient(var(--foil-light),var(--foil-mid)) right top/16% 1px no-repeat,linear-gradient(var(--foil-mid),transparent) left top/1px 80% no-repeat,linear-gradient(var(--foil-mid),transparent) right top/1px 80% no-repeat;opacity:.65;}
-.collector-edition-seal{position:absolute;top:2%;left:40%;right:40%;height:4.5%;z-index:18;display:flex;align-items:center;justify-content:center;color:var(--foil-light);font:900 italic clamp(4px,1cqw,8px) var(--font-display);letter-spacing:.15em;border-bottom:1px solid var(--foil-mid);text-shadow:0 1px #000;pointer-events:none;}
+.collector-edition-seal{position:absolute;top:2%;left:40%;right:40%;height:4.5%;z-index:18;display:flex;align-items:center;justify-content:center;pointer-events:none;}
+.collector-edition-seal > img{display:block;width:100%;height:100%;object-fit:contain;opacity:.62;}
+/* Hands keep a white badge; only the live value changes color. */
+.collector-card .card-stat--hands{background:#fff;color:#111;text-shadow:none;}
+.collector-card .card-stat--hands[data-hands-shift="gain"] :is(.card-stat-value,.card-stat-delta,.card-stat-ongoing){color:#15803d;}
+.collector-card .card-stat--hands[data-hands-shift="loss"] :is(.card-stat-value,.card-stat-delta){color:#b91c1c;}
 .collector-card.card-rarity-supercommon .collector-engraving,.collector-card.card-rarity-supercommon .collector-edition-seal{display:none;}
 .collector-tier-cue{color:var(--rarity-color);letter-spacing:-.14em;}
 .collector-webgl canvas{display:block;width:100%;height:100%;}
@@ -335,3 +340,13 @@ html[data-reduce-motion='true'] .card-touch-hint {display:none}
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.85), 0 0 10px rgba(250, 204, 21, 0.75);
   pointer-events: none;
 }
+
+/* Battle metadata is elemental; collection and inspection retain rarity/finish. */
+.collector-element-battle { display: none; }
+:is(.battle-arena,.battle-district-view,.raid-combat-layout) .collector-card-meta :is(.collector-rarity,.collector-finish,.collector-element-full) { display: none; }
+:is(.battle-arena,.battle-district-view,.raid-combat-layout) .collector-card-meta .collector-element-battle { display: inline; }
+:is(.battle-arena,.battle-district-view,.raid-combat-layout) .collector-card-copy > .collector-card-meta { display: flex; margin-bottom: 2px; }
+:is(.battle-arena,.battle-district-view,.raid-combat-layout) .collector-card-meta .collector-element {
+  color: #f5ebd4; background: transparent; padding: 0; font-size: 6px; letter-spacing: .08em; line-height: 1.1;
+}
+.collector-card.collector-card--combat .collector-card-copy > .collector-card-meta { display: flex; margin-bottom: 1px; }

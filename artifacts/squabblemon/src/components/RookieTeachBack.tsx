@@ -16,7 +16,7 @@ export function RookieTeachBack({ match }: { match: Match }) {
       explanation: 'Each district is one claim. A tie claims nothing; total Hands across the board is not the tiebreaker.',
     },
     {
-      question: 'When does the rival get to respond?',
+      question: 'When do The Opps get to respond?',
       options: ['After every card you tap', 'When you end your turn'],
       correct: 1,
       explanation: 'In a normal turn you can play more affordable cards before End Turn. This coached fade asked for one play in each playing round.',

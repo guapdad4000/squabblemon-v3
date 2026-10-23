@@ -1,0 +1,1 @@
+{"extends":"../tsconfig.card-type-auditions.json","include":["../src/**/*","./card-name-tags.fixture.tsx"]}

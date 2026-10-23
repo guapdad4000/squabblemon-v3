@@ -221,7 +221,7 @@ export function FadePark({ bootstrap }: { bootstrap: PlayerBootstrap }) {
             <img className="park-search-phone" src={getAssetUrl('assets/props/sticker-phone.webp')} alt="" />
           </div>
           <div className="park-search-status" role="status"><span className="park-pulse" /><h3>{connected ? 'Calling for a fade…' : 'Reconnecting…'}</h3><time>{String(Math.floor(elapsed / 60)).padStart(2, '0')}:{String(elapsed % 60).padStart(2, '0')}</time></div>
-          <p>Finding your next rival. Hang up the phone to cancel. A Park Bot steps in after a short wait, with reduced rank rewards.</p>
+          <p>Finding The Opps. Hang up the phone to cancel. A Park Bot steps in after a short wait, with reduced rank rewards.</p>
           {!chosen && <button className="park-cancel" disabled={busy} onClick={() => void cancel()}>{busy ? 'Hanging up…' : 'Hang up — cancel search'}</button>}
         </div> : null}
         <div className="park-floating-info">

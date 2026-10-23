@@ -1,0 +1,17 @@
+/* Postal identity uses the approved Blzee ink; rarity is printed inside the postal header. */
+.collectible-print { display:contents; }
+.collector-card[data-layered-card] .collector-card-copy > h4 {
+ position:relative; isolation:isolate; display:flex; align-items:center; flex:none;
+ width:calc(100% - 25cqw); min-width:0; max-width:100%; min-height:30cqw;
+ margin:4cqw 0 3cqw; padding:13cqw 6cqw 7cqw;
+ color:#101210; font-size:clamp(12px,9.7cqw,34px); line-height:.96;
+ text-shadow:none; filter:drop-shadow(1px 2px 0 #080908b3);
+ transform:rotate(-6deg); transform-origin:48% 50%; overflow-wrap:anywhere;
+ text-wrap:balance; letter-spacing:.005em;
+ background:url('../assets/card-name-tag-paper.svg') center/100% 100% no-repeat;
+}
+.collector-card[data-layered-card].collector-card--long-name .collector-card-copy > h4 { font-size:clamp(10px,6.6cqw,24px); line-height:1; }
+.collectible-print[data-name-tag-short="true"] .collector-card[data-layered-card] .collector-card-copy > h4 {
+ width:fit-content; min-width:var(--postal-label-min,52cqw); max-width:65cqw; min-height:26cqw;
+ padding:10cqw 6cqw 5cqw; font-size:clamp(12px,9.7cqw,34px);
+}

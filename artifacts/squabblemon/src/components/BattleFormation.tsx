@@ -44,7 +44,22 @@ export function BattleFormation({ children, count, inspectCount = count, crowded
       // offsetTop is stable while entry effects transform the card artwork.
       const starts = cards.map(card => card.offsetTop).sort((a, b) => a - b);
       rowStarts.current = starts.filter((top, index) => index === 0 || Math.abs(top - starts[index - 1]) > 2);
-      const scrollable = stack.scrollHeight > stack.clientHeight + 2;
+      let scrollable = stack.scrollHeight > stack.clientHeight + 2;
+      // A previously overflowing small crew must be able to recover after a
+      // resize. Its own footer cannot make a now-fitting crew stay scrollable.
+      if (scrollable && stack.dataset.crowded !== 'true') {
+        const side = stack.closest<HTMLElement>('.battle-side');
+        const field = stack.closest<HTMLElement>('.battlefield-grid');
+        const hub = side?.parentElement?.querySelector<HTMLElement>('.battle-district-hub');
+        if (side && field && hub) {
+          const sideStyle = getComputedStyle(side), fieldStyle = getComputedStyle(field);
+          const px = (value: string) => Number.parseFloat(value) || 0;
+          const naturalSide = Math.max(px(sideStyle.getPropertyValue('--formation-side-min')),
+            (field.clientHeight - px(fieldStyle.paddingTop) - px(fieldStyle.paddingBottom) - hub.offsetHeight) / 2);
+          const naturalHeight = naturalSide - px(sideStyle.paddingTop) - px(sideStyle.getPropertyValue('--formation-base-bottom'));
+          if (stack.scrollHeight <= naturalHeight + 2) scrollable = false;
+        }
+      }
       // Ignore trailing scroll padding: the cue describes actual hidden cards.
       const remaining = cards.filter(card => card.offsetTop + card.offsetHeight > stack.scrollTop + stack.clientHeight + 2).length;
       const after = scrollable && remaining > 0;
@@ -106,7 +121,7 @@ export function BattleFormation({ children, count, inspectCount = count, crowded
   };
 
   return <>
-    <div ref={stackRef} className={`battle-card-stack battle-formation-stack ${className}`.trim()} data-count={count} data-crowded={crowded} data-scrollable={scroll.scrollable} data-inspectable={inspectable} data-more-before={scroll.before} data-more-after={scroll.after} data-testid={testId} style={style} role="group" aria-label={`${label}, ${count} ${count === 1 ? 'card' : 'cards'}`} aria-describedby={scroll.scrollable ? hintId : undefined} tabIndex={scroll.scrollable ? 0 : undefined} onKeyDown={handleKeyDown}>
+    <div ref={stackRef} className={`battle-card-stack battle-formation-stack ${className}`.trim()} data-count={count} data-crowded={crowded} data-scrollable={scroll.scrollable} data-inspectable={inspectable} data-more-before={scroll.before} data-more-after={scroll.after} data-testid={testId} style={{ ...style, "--formation-count": Math.max(1, count) } as CSSProperties} role="group" aria-label={`${label}, ${count} ${count === 1 ? 'card' : 'cards'}`} aria-describedby={scroll.scrollable ? hintId : undefined} tabIndex={scroll.scrollable ? 0 : undefined} onKeyDown={handleKeyDown}>
       {children}
     </div>
     {scroll.scrollable && <>

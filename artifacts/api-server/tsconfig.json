@@ -5,9 +5,30 @@
     "tsBuildInfoFile": ".tsbuildinfo",
     "outDir": "dist",
     "rootDir": "src",
-    "types": ["node"]
+    "types": [
+      "node"
+    ],
+    "paths": {
+      "@workspace/squabblemon-engine": [
+        "../../lib/squabblemon-engine/src/gameEngine.ts"
+      ],
+      "@workspace/squabblemon-engine/*": [
+        "../../lib/squabblemon-engine/src/*"
+      ],
+      "@workspace/api-zod": [
+        "../../lib/api-zod/src/index.ts"
+      ],
+      "@workspace/db": [
+        "../../lib/db/src/index.ts"
+      ],
+      "@workspace/db/*": [
+        "../../lib/db/src/*"
+      ]
+    }
   },
-  "include": ["src"],
+  "include": [
+    "src"
+  ],
   "references": [
     {
       "path": "../../lib/squabblemon-engine"

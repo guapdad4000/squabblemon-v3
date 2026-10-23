@@ -18,7 +18,7 @@ test('play, rival and SQUABBLE recaps use event scores/resources, not a predicte
     const text = describeTutorialEvent(event, result);
     assert.match(text, new RegExp(event.note.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
     assert.match(text, /Motion \d+ → \d+/);
-    assert.match(text, /You \d+ → \d+, Rival \d+ → \d+|Scores did not change/);
+    assert.match(text, /You \d+ → \d+, The Opps \d+ → \d+|Scores did not change/);
   }
   const squabble = result.effectLog.find(item => item.type === 'play' && item.note.includes('SQUABBLE'));
   assert.ok(squabble?.source?.after);
@@ -28,7 +28,7 @@ test('play, rival and SQUABBLE recaps use event scores/resources, not a predicte
 
 test('board lesson counts district claims; ties and losses get actionable advice', () => {
   const text = describeTutorialBoard(result);
-  for (const lane of getDistrictResults(result)) assert.match(text, new RegExp(`You ${lane.player}, Rival ${lane.cpu}`));
+  for (const lane of getDistrictResults(result)) assert.match(text, new RegExp(`You ${lane.player}, The Opps ${lane.cpu}`));
   assert.match(text, /won by claiming at least two districts/);
   assert.match(tutorialNextAdjustment(result), /Next time/);
   const blank = { ...createStoryMatch(encounter, cardIds, ROOKIE_DECK_ID, undefined, districts), round: 4, phase: 'complete' as const };

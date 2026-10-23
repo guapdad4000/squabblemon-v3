@@ -5229,6 +5229,8 @@ function resolveCardPlay(match: Match, owner: Owner, instanceId: string, targetL
     rabbitReturnDiscount: false,
     powerModifier: card.powerModifier + (squabble ? card.basePower : 0),
     ...(card.cardId === 'buddy' ? {
+      type: squabble ? 'Earth' : 'Plant',
+      // Keep the legacy normal-form wire key; the actual normal element is Plant.
       buddyForm: squabble ? 'squabble-earth' as const : 'earth' as const,
       ...(squabble ? { buddyEarthExpiresAtRound: m.round + 2 } : {}),
     } : {}),
@@ -5551,7 +5553,7 @@ export function chooseCpuPlay(match: Match, lookAhead = true): { instanceId: str
 export function revealCpu(match: Match): Match { const choice = chooseCpuPlay(match); return choice ? playCard(match, 'cpu', choice.instanceId, choice.lane, false, choice.investment) : pass(match, 'cpu'); }
 /** Resolve the rival's whole turn with the same per-card Motion budget. */
 export function revealCpuTurn(match: Match): Match {
-  if (match.phase !== 'cpu-reveal') throw new Error('It is not the rival turn');
+  if (match.phase !== 'cpu-reveal') throw new Error('It is not The Opps’ turn');
   let next = match;
   while (true) {
     const choice = chooseCpuPlay(next);

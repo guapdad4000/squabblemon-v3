@@ -1,0 +1,144 @@
+/* V2 prismatic stock: color dispersion + irregular foil flakes, no white stripes.
+   Static at rest. Existing card pointer light drives the same reflection field. */
+.collector-card[data-layered-card] { --stock:#2a3435; --stock-deep:#0b171e; --stock-light:#a7b8c5; --holo-strength:0; --holo-scale:80cqw; }
+.collector-card[data-layered-card][data-card-rarity="Rare"] { --stock:#4776c2; --stock-deep:#092455; --stock-light:#b5dbff; --holo-strength:.7; }
+.collector-card[data-layered-card][data-card-rarity="Epic"] { --stock:#9b70be; --stock-deep:#301044; --stock-light:#e3c4ff; --holo-strength:.82; --holo-scale:105cqw; }
+.collector-card[data-layered-card][data-card-rarity="Legendary"] { --stock:#d2a342; --stock-deep:#59401b; --stock-light:#fff0aa; --holo-strength:.88; }
+.collector-card[data-layered-card][data-card-rarity="Mythical"] { --stock:#b43454; --stock-deep:#400c21; --stock-light:#ff8da7; --holo-strength:1; --holo-scale:66cqw; }
+.collector-card[data-layered-card] .layered-material { z-index:0; background:none; }
+.collector-card[data-layered-card] :is(.layered-stock,.layered-reflection) { inset:1.5%; mask:none; padding:0; }
+.collector-card[data-layered-card] .layered-stock {
+  opacity:var(--holo-strength); box-shadow:none;
+  background-image:url('../assets/collector-v2/prism-flakes.webp'),radial-gradient(ellipse at 28% 35%,var(--stock-light),transparent 39%),conic-gradient(from 40deg at 60% 38%,var(--stock-deep),var(--stock),#74b7bd,var(--stock-deep),#ae80a9,var(--stock),var(--stock-deep));
+  background-size:var(--holo-scale) var(--holo-scale),100% 100%,100% 100%;
+  background-blend-mode:color-dodge,soft-light,normal;
+}
+.collector-card[data-layered-card] .layered-reflection {
+  background:linear-gradient(112deg,#f4a5c400 8%,#84ddeb99 22%,#e3ecaa88 36%,#e5a5df66 48%,#99c8ee88 62%,#a3dd9a55 74%,transparent 89%);
+  background-size:210% 160%; background-position:var(--foil-x,48%) var(--foil-y,40%);
+  mix-blend-mode:color-dodge; opacity:calc(var(--holo-strength) * .55);
+}
+/* Open the charcoal center to the foil substrate; retain authored elemental edges. */
+.collector-card[data-layered-card] .layered-print { z-index:1; }
+.collector-card[data-layered-card][data-layered-foil="true"]:is([data-card-rarity="Rare"],[data-card-rarity="Epic"],[data-card-rarity="Legendary"],[data-card-rarity="Mythical"]) .layered-print {
+  mask-image:linear-gradient(90deg,#000 3%,#000b 15%,transparent 32% 68%,#000b 85%,#000 97%),linear-gradient(#000 0 6%,transparent 20% 65%,#000 85%);
+}
+.collector-card[data-layered-card] .layered-rarity-rim {
+  position:absolute; inset:1.3%; padding:1.7cqw; opacity:var(--holo-strength); z-index:4;
+  background-image:url('../assets/collector-v2/prism-flakes.webp'),linear-gradient(118deg,var(--stock-deep),var(--stock) 15%,var(--stock-light) 24%,var(--stock) 35%,var(--stock-deep) 48%,var(--stock-light) 67%,var(--stock) 82%,var(--stock-deep));
+  background-size:70cqw 70cqw,200% 100%; background-position:0 0,var(--foil-x,48%) 50%; background-blend-mode:color-dodge,normal;
+  mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0); mask-composite:exclude;
+  clip-path:polygon(2% 0,98% 0,100% 2%,100% 98%,98% 100%,2% 100%,0 98%,0 2%);
+}
+.collector-card[data-layered-card][data-layered-foil="false"] .layered-rarity-rim { display:none; }
+.collector-card[data-layered-card] .collector-edition-seal {
+  display:block!important; top:4.4cqw!important; left:31%!important; width:38%!important; height:11.7cqw!important;
+  opacity:1!important; filter:drop-shadow(0 .4cqw .45cqw #000); z-index:41!important;
+}
+.collector-card[data-layered-card] .collector-edition-seal > img { opacity:1!important; }
+.collector-card[data-layered-card]:is([data-card-rarity="Legendary"],[data-card-rarity="Mythical"]) .collector-edition-seal > img { visibility:hidden; }
+.collector-card[data-layered-card]:is([data-card-rarity="Legendary"],[data-card-rarity="Mythical"]) .collector-edition-seal::after {
+  content:""; position:absolute; inset:0; mask:url('../assets/card-wordmark-white.webp') center/contain no-repeat;
+  background:linear-gradient(112deg,#996319,#ffe696 18%,#ddad3c 32%,#fff0ab 44%,#b38222 53%,#ffe390 66%,#cf9a2c 82%,#ffeeb9);
+  background-size:200% 100%; background-position:var(--foil-x,48%) 50%;
+}
+.collector-card[data-layered-card][data-card-rarity="Mythical"] .collector-edition-seal::after {
+  background-image:linear-gradient(112deg,#acb4c9,#f7fdff 17%,#b7d9e5 29%,#e9c6f0 40%,#fff 48%,#bac8da 56%,#e4f3d5 70%,#e6e9f9 82%,#a8b5ca);
+}
+.collector-card[data-layered-card][data-layered-foil="true"]:is([data-card-rarity="Legendary"],[data-card-rarity="Mythical"]) .card-stat--motion {
+  background:linear-gradient(112deg,#f5c600,#ffe365 23%,#ffde00 45%,#fff29b 54%,#eab600 65%,#ffda16 85%)!important;
+  background-size:190% 100%!important; background-position:var(--foil-x,48%) 50%!important;
+}
+/* Preview-only status ribbons would duplicate the selected form and rules. */
+.collector-card[data-layered-card] .buddy-form-cue { display:none; }
+@media(prefers-reduced-motion:reduce) {
+ .collector-card[data-layered-card] :is(.layered-reflection,.layered-rarity-rim,.collector-edition-seal::after) { background-position:48% 50%; }
+}
+
+/* V2.6: separate metal bevel, microflake film and printed ink planes. */
+.collector-card[data-layered-card] .layered-rarity-rim {
+ inset:.7%; padding:2.1cqw; opacity:1;
+ background-image:url('../assets/collector-v2/prism-flakes.webp'),conic-gradient(from 25deg,var(--stock-deep),var(--stock-light) 7%,var(--stock) 15%,var(--stock-deep) 27%,var(--stock-light) 39%,var(--stock) 46%,var(--stock-deep) 56%,var(--stock-light) 68%,var(--stock) 80%,var(--stock-deep));
+ background-size:48cqw 48cqw,160% 160%; background-position:0 0,var(--foil-x,48%) var(--foil-y,40%);
+ box-shadow:inset .5cqw .5cqw .6cqw #fff9,inset -.6cqw -.6cqw .5cqw #000b;
+}
+/* Neutral tiers retain a printed edge; premium metals keep their own color. */
+.collector-card[data-layered-card]:is([data-card-rarity="SuperCommon"],[data-card-rarity="Common"],[data-card-rarity="Uncommon"]) .layered-rarity-rim {
+ background-image:linear-gradient(120deg,#272c29,#a2aba5 22%,#343c38 48%,#909c94 72%,#202723); padding:.8cqw; opacity:.75;
+}
+.collector-card[data-layered-card] .layered-material::after {
+ content:""; position:absolute; inset:2.8%; z-index:5; pointer-events:none;
+ border:.45cqw solid color-mix(in srgb,var(--stock-light) 65%,transparent);
+ box-shadow:0 0 0 .45cqw #000b,inset 0 0 2cqw #000b;
+ clip-path:polygon(2% 0,98% 0,100% 2%,100% 98%,98% 100%,2% 100%,0 98%,0 2%);
+}
+/* Yellow stays the Motion identifier. Ink is above the foil, never blended. */
+.collector-card[data-layered-card] .card-stat--motion { position:relative; isolation:isolate; overflow:visible!important; border-radius:.7cqw; }
+.collector-card[data-layered-card][data-layered-foil="true"]:is([data-card-rarity="Rare"],[data-card-rarity="Epic"],[data-card-rarity="Legendary"],[data-card-rarity="Mythical"]) .card-stat--motion {
+ background:linear-gradient(116deg,#ffd300,#ffe982 37%,#ffdc1c 66%,#e9b900)!important;
+ box-shadow:0 1cqw 0 #12100a, inset .35cqw .35cqw 0 #fff7!important;
+}
+.collector-card[data-layered-card] .card-stat--motion > span { position:relative; z-index:2; }
+.collector-card[data-layered-card][data-layered-foil="true"] .card-stat--motion::before {
+ content:""; position:absolute; inset:0; z-index:0; pointer-events:none; opacity:calc(var(--holo-strength) * .52);
+ background-image:url('../assets/collector-v2/prism-flakes.webp'),linear-gradient(112deg,#f3cfff44,#79ddf033 23%,#fff39244 40%,#dca6ef55 58%,#b1dff022 75%);
+ background-size:25cqw 25cqw,220% 160%; background-position:0 0,var(--foil-x,48%) var(--foil-y,40%);
+ mix-blend-mode:multiply;
+}
+.collector-card[data-layered-card][data-layered-foil="true"] .card-stat--motion::after {
+ content:""; position:absolute; inset:-.8cqw; padding:.8cqw; z-index:1; pointer-events:none; opacity:var(--holo-strength);
+ background-image:url('../assets/collector-v2/prism-flakes.webp'),conic-gradient(from 40deg,#fff0a5,#87c7e6,#e8a8dc,#fff6c0,#9ce4d2,#c1aeed,#ffe17a);
+ background-size:40cqw 40cqw,160% 160%; background-position:0 0,var(--foil-x,48%) var(--foil-y,40%); background-blend-mode:color-dodge,normal;
+ mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0); mask-composite:exclude; border-radius:1cqw;
+}
+/* Postage foil sits below the real Blzee ink and above its printed paper. */
+.collector-card[data-layered-card] .collector-card-copy > h4 { overflow:visible!important; }
+.collector-card[data-layered-card] .collector-card-copy > h4::after { display:none!important; }
+.collector-card[data-layered-card] .postal-foil {
+ position:absolute; inset:3%; border-radius:1cqw; z-index:-1; pointer-events:none; opacity:0;
+ background-image:url('../assets/collector-v2/prism-flakes.webp'),linear-gradient(110deg,#a4d2ed,#ecd0ef 20%,#e9e5b6 40%,#a8d8d0 56%,#b5c3f0 75%,#ebbdcd);
+ background-size:42cqw 42cqw,200% 150%; background-position:0 0,var(--foil-x,48%) var(--foil-y,40%);
+ background-blend-mode:soft-light,normal; mix-blend-mode:multiply;
+}
+.collector-card[data-layered-card][data-layered-foil="true"] .postal-foil { opacity:calc(var(--holo-strength) * .59); }
+.collector-card[data-layered-card] .collector-card-copy h4 > .rarity-stamp {
+ position:absolute; top:6.7%; left:5.5%; height:16.7%; max-width:61%;
+ z-index:2; transform:none; text-shadow:0 1px 1px #06205e;
+}
+/* The hero and inspector print the entire rule. Small selection tiles use an excerpt. */
+:is(.name-tag-hero,.card-inspector-shell) .collector-card[data-layered-card] .layered-rules p {
+ display:block; -webkit-line-clamp:unset; overflow:visible; max-height:none;
+}
+:is(.name-tag-hero,.card-inspector-shell) .collector-card[data-layered-card] .layered-rules {
+ font-size:3.05cqw; line-height:1.36; padding:3cqw 4cqw 3.5cqw;
+}
+.collector-card[data-layered-card] .layered-rules strong { font-family:var(--font-action-sign); font-size:4cqw; line-height:1.15; letter-spacing:.025em; }
+@media(prefers-reduced-motion:reduce) {
+ .collector-card[data-layered-card] :is(.postal-foil,.card-stat--motion::before,.card-stat--motion::after,.layered-rarity-rim) { background-position:0 0,48% 40%; }
+}
+html[data-reduce-motion="true"] .collector-card[data-layered-card] :is(.postal-foil,.card-stat--motion::before,.card-stat--motion::after,.layered-rarity-rim,.layered-reflection,.collector-edition-seal::after) { background-position:0 0,48% 40%; }
+.collector-card[data-layered-card] .postal-foil { background-size:24cqw 24cqw,180% 140%; }
+.collector-card[data-layered-card][data-layered-foil="true"] .postal-foil { opacity:calc(var(--holo-strength) * .78); }
+/* Flakes stay large enough to read as individual inclusions at card size. */
+.collector-card[data-layered-card][data-layered-foil="true"] .card-stat--motion::before {
+ background-size:90cqw 90cqw,220% 160%; mix-blend-mode:normal; opacity:calc(var(--holo-strength) * .65);
+}
+.collector-card[data-layered-card] .postal-foil { background-size:80cqw 80cqw,180% 140%; mix-blend-mode:normal; }
+.collector-card[data-layered-card][data-layered-foil="true"] .postal-foil { opacity:calc(var(--holo-strength) * .62); }
+.collector-card[data-layered-card]:is([data-card-rarity="Rare"],[data-card-rarity="Epic"],[data-card-rarity="Legendary"],[data-card-rarity="Mythical"]) .layered-rarity-rim {
+ background-image:url('../assets/collector-v2/prism-flakes.webp'),conic-gradient(from 25deg,var(--stock-deep),var(--stock-light) 7%,#a5d7df 11%,var(--stock) 18%,var(--stock-deep) 27%,var(--stock-light) 39%,#e8b5dc 43%,var(--stock) 49%,var(--stock-deep) 56%,var(--stock-light) 68%,#abdfcc 73%,var(--stock) 83%,var(--stock-deep));
+ background-size:95cqw 95cqw,160% 160%;
+}
+/* Material choices remain separate from catalog rarity and its identifying seal. */
+.collector-card[data-layered-card][data-card-variant="chrome"] { --stock:#a8b8c5; --stock-deep:#283849; --stock-light:#ecf5ff; --holo-strength:.82; }
+.collector-card[data-layered-card][data-card-variant="chrome"] .layered-stock { filter:saturate(.3); }
+.collector-card[data-layered-card][data-card-variant="prismatic"] { --holo-strength:1; --holo-scale:105cqw; }
+.collector-card[data-layered-card][data-card-variant="prismatic"] .layered-stock { filter:saturate(1.35) contrast(1.08); }
+.collector-card[data-layered-card][data-layered-foil="true"][data-card-variant="prismatic"] .postal-foil { opacity:.85; }
+.collector-card[data-layered-card][data-card-variant="tagged"] .layered-rarity-rim {
+ background-image:repeating-linear-gradient(133deg,transparent 0 12cqw,#ce3b2d 12cqw 14cqw,transparent 14cqw 23cqw),url('../assets/collector-v2/prism-flakes.webp'),linear-gradient(115deg,var(--stock),var(--stock-light),var(--stock-deep));
+ background-size:100% 100%,70cqw 70cqw,150% 150%;
+}
+.collector-card[data-layered-card][data-layered-foil="true"] .card-stat--motion::after { inset:0; padding:.8cqw; }
+.card-inspector-shell .dossier-variant .collector-card[data-layered-card] .layered-rules p { display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
+.card-inspector-shell .dossier-variant .collector-card[data-layered-card] .layered-rules { min-height:24cqw; }

@@ -514,7 +514,7 @@ router.post("/player/matches", async (req, res): Promise<void> => {
         )
       : parsed.data.rivalDeckId;
   if (!rivalDeckId) {
-    res.status(400).json({ error: "Unknown rival gang" });
+    res.status(400).json({ error: "Unknown gang for The Opps" });
     return;
   }
   if (parsed.data.mode === "story") {
@@ -572,7 +572,7 @@ router.post("/player/matches", async (req, res): Promise<void> => {
     storyEncounterSnapshot?.enemy.cardIds ??
     starterRecipes.find((item) => item.id === rivalDeckId)?.cards;
   if (!rivalRosterCardIds) {
-    res.status(400).json({ error: "Unknown rival gang" });
+    res.status(400).json({ error: "Unknown gang for The Opps" });
     return;
   }
   try {

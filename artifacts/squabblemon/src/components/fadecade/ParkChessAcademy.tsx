@@ -86,7 +86,7 @@ export default function ParkChessAcademy({ bootstrap, onExit }: { bootstrap: Pla
           <div className="park-chess__status" role="status" aria-live="polite"><small>STEP {view.stepIndex + 1} OF {view.lesson.steps.length}</small><h2 ref={instruction} tabIndex={-1}>{view.phase === "complete" ? "LESSON COMPLETE" : view.status === "success" ? "NICE MOVE" : view.step.title}</h2>
             {view.phase === "complete" && <HandFist className="park-chess-academy__complete" aria-hidden="true" />}
             <p>{view.status === "success" ? view.feedback : view.step.instruction}</p>
-            {view.lastBotMove && <p className="park-chess__moves">RIVAL REPLIED <b>{view.lastBotMove.san}</b></p>}
+            {view.lastBotMove && <p className="park-chess__moves">THE OPPS REPLIED <b>{view.lastBotMove.san}</b></p>}
           </div>
           {error && <p className="park-chess-academy__feedback" role="alert">{error}</p>}
           {hint && !locked && <p className="park-chess-academy__hint">{view.step.hint}</p>}

@@ -107,7 +107,13 @@ export function checkGameBundle(report) {
       }
     }
     const allowed = name === 'GameApp' ? ['GameApp'] : ['GameApp', 'Home'];
-    const eagerRoutes = chunks.flatMap(chunk => chunk.modules.map(normalizeModuleId))
+    const modules = chunks.flatMap(chunk => chunk.modules.map(normalizeModuleId));
+    if (name === 'GameApp') {
+      const eagerCatalogs = modules.filter(id => /\/lib\/squabblemon-engine\/src\/(?:data|cosmetics|playerMats)\.[jt]s$/.test(id)
+        || /\/src\/(?:data|lib\/notificationCatalog)\.[jt]s$/.test(id));
+      if (eagerCatalogs.length) throw new Error(`GameApp eagerly includes optional catalogs: ${eagerCatalogs.join(', ')}`);
+    }
+    const eagerRoutes = modules
       .filter(id => /\/src\/pages\/game\/[^/]+\.tsx$/.test(id))
       .filter(id => !allowed.some(route => id.endsWith(`/${route}.tsx`)));
     if (eagerRoutes.length) throw new Error(`${name} eagerly includes unrelated game routes: ${eagerRoutes.join(', ')}`);

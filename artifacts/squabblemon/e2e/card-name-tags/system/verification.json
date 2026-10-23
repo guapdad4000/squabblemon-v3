@@ -1,0 +1,144 @@
+{
+  "scope": "Local visual study and isolated name label refinement. No API, ownership, gameplay, main push or deployment.",
+  "typecheck": {
+    "command": "node ../../node_modules/typescript/bin/tsc --noEmit -p e2e/tsconfig.card-name-tags.json",
+    "result": "pass"
+  },
+  "labelBrowserChecks": {
+    "sizes": [
+      [
+        320,
+        568
+      ],
+      [
+        849,
+        751
+      ],
+      [
+        1506,
+        "desktop default"
+      ]
+    ],
+    "allSixSampleNamesFit": true,
+    "pageHorizontalOverflow": false,
+    "guapMinimum": "42.84cqw",
+    "kyleMinimum": "44.24cqw",
+    "folksAndBuddyMinimum": "52cqw",
+    "fullInspector": {
+      "opens": true,
+      "closes": true,
+      "guapNameFits": true,
+      "font": "Blzee",
+      "size": [
+        320,
+        568
+      ]
+    },
+    "battleScope": {
+      "importedMaterial": false,
+      "postalBackground": "none",
+      "postalWidthOverride": false
+    },
+    "consoleErrorsObserved": []
+  },
+  "reviewBrowserChecks": {
+    "phoneViewport": [
+      389,
+      843
+    ],
+    "pageHorizontalOverflow": false,
+    "matrixRows": 10,
+    "matrixUsesOwnHorizontalScroll": true,
+    "legendaryButton": true,
+    "mythicalButton": true,
+    "maskToggle": true,
+    "lightSlider": {
+      "value": 100,
+      "computedBackgroundPosition": "100% 50%"
+    },
+    "finalGoldEmblems": {
+      "naturalWidth": 1983,
+      "decoded": true,
+      "desktopViewport": [
+        1280,
+        800
+      ],
+      "noPageOverflow": true,
+      "consoleErrorsObserved": []
+    },
+    "responsiveViewports": [
+      [
+        320,
+        568
+      ],
+      [
+        389,
+        843
+      ],
+      [
+        1280,
+        800
+      ]
+    ]
+  },
+  "whitespace": [
+    {
+      "file": "e2e/card-name-tags.fixture.tsx",
+      "whitespacePass": true
+    },
+    {
+      "file": "e2e/card-name-tags.fixture.css",
+      "whitespacePass": true
+    },
+    {
+      "file": "src/styles/card-name-tag.preview.css",
+      "whitespacePass": true
+    }
+  ],
+  "sharedSources": [
+    {
+      "file": "lib/squabblemon-engine/src/data.ts",
+      "sameAsAudit": true
+    },
+    {
+      "file": "artifacts/squabblemon/src/components/CardView.tsx",
+      "sameAsAudit": true
+    },
+    {
+      "file": "artifacts/squabblemon/src/components/CardRarityTreatment.tsx",
+      "sameAsAudit": true
+    },
+    {
+      "file": "artifacts/squabblemon/src/components/CardVariantTreatment.tsx",
+      "sameAsAudit": true
+    },
+    {
+      "file": "artifacts/squabblemon/src/lib/cardFinish.ts",
+      "sameAsAudit": true
+    },
+    {
+      "file": "artifacts/squabblemon/src/components/CardFoil.tsx",
+      "sameAsAudit": true
+    },
+    {
+      "file": "artifacts/squabblemon/src/components/card-finish.css",
+      "sameAsAudit": true
+    },
+    {
+      "file": "artifacts/squabblemon/public/scenes/cards/foil.js",
+      "sameAsAudit": true
+    },
+    {
+      "file": "artifacts/squabblemon/src/assets/foil-crown.svg",
+      "sameAsAudit": true
+    }
+  ],
+  "notTested": [
+    "Physical devices",
+    "All 301 cards rendered",
+    "Performance benchmarks",
+    "Final production masks and shader integration",
+    "Actual collection and deck-builder integration"
+  ],
+  "localLinksMissing": []
+}

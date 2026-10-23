@@ -562,7 +562,7 @@ function blockAction(run: BlockRun, action: ArcadeAction) {
     run.log = [`${DISTRICTS[action.tile]} fortified.`];
   } else if (action.type === "supply") {
     b.supplies += 3;
-    run.log = ["Three supplies collected. Rival crews still move."];
+    run.log = ["Three supplies collected. The Opps’ crews still move."];
   } else if (action.type === "rally") {
     if (b.supplies < 3)
       throw new ArcadeRuleError("Rally needs three supplies.");

@@ -12,10 +12,10 @@ export function AnimatedNumber({ value = 0, from = 0, delay = 0, prefix = '', cl
     const reduced = reducedMotion || systemReduced || document.documentElement.dataset.reduceMotion === 'true';
     const start = previous.current;
     previous.current = value;
-    if (reduced) { if (node.current) node.current.textContent = value.toLocaleString(); return; }
+    if (reduced || start === value) { if (node.current) node.current.textContent = value.toLocaleString(); return; }
     const controls = animate(start, value, { duration: .75, delay, ease: 'easeOut',
       onUpdate: number => { if (node.current) node.current.textContent = Math.round(number).toLocaleString(); } });
     return () => controls.stop();
   }, [value, delay, systemReduced, reducedMotion]);
-  return <span className={className} aria-label={prefix + value.toLocaleString()}><span aria-hidden="true">{prefix}<span ref={node}>{value.toLocaleString()}</span></span></span>;
+  return <span className={`animated-number ${className}`} aria-label={prefix + value.toLocaleString()}><span aria-hidden="true">{prefix}<span ref={node}>{value.toLocaleString()}</span></span></span>;
 }

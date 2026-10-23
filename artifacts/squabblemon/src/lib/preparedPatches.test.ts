@@ -1,6 +1,8 @@
 import assert from 'node:assert/strict';
 import { existsSync, readFileSync } from 'node:fs';
 import test from 'node:test';
+import { createHash } from 'node:crypto';
+import { COLLECTOR_V2_MAIL_ID, getMailEventPresentation } from './mailEvents';
 import { catalogCardById, KUMITE_CARD_REWARDS } from '@workspace/squabblemon-engine/data';
 import { PREPARED_PATCHES } from './preparedPatches';
 import { getPatchBanner, PATCH_BANNERS } from './patchBanners';
@@ -23,8 +25,8 @@ test('prepared patch notes fit the publication contract', () => {
       ...(patch.changes.length ? ['', 'Changes', ...patch.changes.map(line => `• ${line}`)] : []),
     ].join('\n');
     assert.ok(mailBody.length <= 6000, `${patch.version} rendered mail exceeds server limit`);
-    assert.equal(patch.softCurrency, ['1.9', '1.10', '1.11', '1.12', '1.13'].includes(patch.version) ? 0 : patch.version === '1.8' ? 50 : 100);
-    assert.equal(patch.packTickets, ['1.11', '1.12'].includes(patch.version) ? 10 : ['1.8', '1.9', '1.10', '1.13'].includes(patch.version) ? 0 : 1);
+    assert.equal(patch.softCurrency, ['1.9', '1.10', '1.11', '1.12', '1.13', '1.14'].includes(patch.version) ? 0 : patch.version === '1.8' ? 50 : 100);
+    assert.equal(patch.packTickets, ['1.11', '1.12'].includes(patch.version) ? 10 : ['1.8', '1.9', '1.10', '1.13', '1.14'].includes(patch.version) ? 0 : 1);
   }
   const versionParts = (version: string) => version.split('.').map(Number);
   assert.deepEqual([...versions], [...versions].sort((a, b) => {
@@ -117,4 +119,25 @@ test('Kumite 1.13 stays a reviewed zero-gift draft with accurate mode coverage',
   assert.match(text, /latest 52 weekly tournaments/);
   assert.match(text, /only when a ranked result moves you into a higher PvP tier/);
   assert.ok(!/all eight.{0,30}exclusive|claim.{0,20}(?:Clout|tickets)|exclusive skin/i.test(text));
+});
+
+
+test('Collector V2 draft binds the reviewed notes, mail campaign and responsive banner', () => {
+  const patch = PREPARED_PATCHES.find(item => item.version === '1.14');
+  assert.ok(patch);
+  const reviewed = JSON.parse(readFileSync(new URL('../../../../docs/releases/collector-v2-1.14.json', import.meta.url), 'utf8'));
+  assert.deepEqual(patch, reviewed);
+  assert.equal(patch.softCurrency, 0);
+  assert.equal(patch.packTickets, 0);
+  assert.ok(patch.buffs.some(line => /BUDDY.*Plant.*Earth/.test(line)));
+  assert.ok(patch.changes.some(line => /63/.test(line)));
+  const id = `patch_1-14_${createHash('sha256').update(patch.version).digest('hex').slice(0, 16)}`;
+  assert.equal(COLLECTOR_V2_MAIL_ID, id);
+  const mail = getMailEventPresentation(id);
+  const banner = getPatchBanner(patch.version, patch.artCardId);
+  assert.ok(mail && banner && 'smallPath' in banner);
+  assert.equal(mail.bannerAssetId, banner.path);
+  assert.equal(mail.href, '/game/events?patch=1.14');
+  for (const path of [banner.path, banner.smallPath]) assert.ok(existsSync(new URL(`../../public/${path}`, import.meta.url)));
+  assert.equal(getMailEventPresentation('patch_1-14_wrong'), undefined);
 });

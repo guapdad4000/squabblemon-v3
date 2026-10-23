@@ -18,6 +18,7 @@ import { Battle, createBattleDecisionHandlers, getRecentBattleActions, tryLockIn
 import { ResultScreen } from './ResultScreen';
 import { CardUpgrades } from './CardUpgrades';
 import { CardView } from './CardView';
+import { battlePortraitUrl } from '../lib/battlePortrait';
 import { CardInspector } from './CardInspector';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { applyEventState, buildReplayFrame, shouldRunTurnTimer, trackBattleFastForwarded, trackBattleTurnCommitted } from './PlayLoop';
@@ -226,7 +227,7 @@ test('all twelve side and Oz cards show their own art and abilities in collectio
     assert(inspector.includes(ability), `${name} inspector ability`);
     assert.equal((inspector.match(/data-testid="card-upgrade-/g) ?? []).length, 3);
     const board = renderBattle({ ...match, boards: [[{ ...instance, lane: 0 }], [], []] });
-    assert(board.includes(image), `${name} board art`);
+    assert(board.includes(battlePortraitUrl(image)), `${name} board art`);
   }
 });
 
@@ -241,7 +242,7 @@ test('summoned token cards render with their own art instead of requiring a cata
   assert.match(html, /data-card-rarity="Mythical"/);
   assert.match(html, /assets\/characters\/steward\.webp/);
 });
-test('board cards expose Burn, Weaken, Lock, and Boost status badges', () => {
+test('board cards use flame art for Burn and badges for Weaken, Lock, and Boost', () => {
   const base = createMatch('block', 'combo').playerHand[0];
   const card = {
     ...base,
@@ -255,7 +256,9 @@ test('board cards expose Burn, Weaken, Lock, and Boost status badges', () => {
     },
   };
   const html = renderToStaticMarkup(<CardView card={card} isBoard presentationOnly />);
-  for (const status of ['burn', 'weakened', 'locked', 'boosted']) {
+  assert.match(html, /data-battle-fx="persistent-burn"/);
+  assert.doesNotMatch(html, /data-card-status="burn"/);
+  for (const status of ['weakened', 'locked', 'boosted']) {
     assert.match(html, new RegExp(`data-card-status="${status}"`));
   }
   assert.match(html, /aria-label="[^"]*Burning: 2 burn stacks\. Weakened\. Locked\. Boosted\./);
@@ -317,7 +320,7 @@ test('the mounted Janitor marker exposes distinct spent charges locally and in p
       districtMarks: [rivalMark],
     },
   });
-  assert.match(guestHtml, /Rival Turn It Around · harm spent · staff ready/);
+  assert.match(guestHtml, /The Opps’ Turn It Around · harm spent · staff ready/);
 });
 
 test('Buddy keeps plant collectible art and uses rock art for its Squabbled battle instance', () => {
@@ -849,7 +852,7 @@ test('district-first selection stays selected when a card is chosen', () => {
   assert.match(html, /aria-pressed="true"/);
   assert.match(html, /Play card ·/);
   assert.match(html, /Your Motion/);
-  assert.match(html, /Rival Motion/);
+  assert.match(html, /The Opps’ Motion/);
 });
 
 test('unavailable cards explain the exact Motion shortfall', () => {
@@ -1490,7 +1493,7 @@ test('phase status names the actual presentation phase in plain language', () =>
   const effect = { sequence: 5, kind: 'normal', type: 'ability', cardInstanceId: card.instanceId, cardId: card.cardId, owner: 'cpu', lane: 0, targetIds: [], targets: [], note: 'x', source: null, round: 1, scores: { before: [], after: [] } };
   const html = renderBattle(match, { presentationPhase: 'effects', activeEffect: effect });
   assert.match(html, /data-phase-status="effects"/);
-  assert.match(html, /Effects resolve<\/b><span>Rival /);
+  assert.match(html, /Effects resolve<\/b><span>The Opps’ /);
 });
 
 test('live PvP effects stay visible while the server turn status is ready or rival-thinking', () => {
@@ -1499,7 +1502,7 @@ test('live PvP effects stay visible while the server turn status is ready or riv
   const effect = { sequence: 5, kind: 'normal', type: 'ability', cardInstanceId: card.instanceId, cardId: card.cardId, owner: 'cpu', lane: 0, targetIds: [], targets: [], note: 'x', source: null, round: 1, scores: { before: [], after: [] } };
   for (const presentationPhase of ['player-ready', 'rival-thinking']) {
     const html = renderBattle(match, { online: onlinePresentationFor(match), presentationPhase, activeEffect: effect });
-    assert.match(html, /class="battle-live-kicker">Rival move · /);
+    assert.match(html, /class="battle-live-kicker">The Opps’ move · /);
     assert.ok(html.includes(`<strong data-testid="battle-guidance"><span>${card.ability}</span>`));
     assert.doesNotMatch(html, /class="attack-caption"/);
   }
@@ -1586,8 +1589,8 @@ test('combat card faces retain authoritative stats, statuses and form charge whi
   assert.match(compact, /data-stat-length="3"/);
   assert.match(compact, /12¢ \/ 15¢/);
   assert.match(compact, /data-card-status="protected"/);
-  assert.match(compact, /data-status-count="4"/);
-  assert.match(compact, /card-status-summary[^>]*>\+3<\/span>/);
+  assert.match(compact, /data-status-count="3"/);
+  assert.match(compact, /card-status-summary[^>]*>\+2<\/span>/);
   assert.match(compact, /Burning: 1 burn stack/);
   assert.match(compact, /data-testid="card-ongoing-hands"[^>]*>\+2↥/);
   assert.match(compact, /Ongoing: \+2 Hands/);
@@ -1654,4 +1657,116 @@ test('player mats follow both seats through reconnect and stay out of Kumite', a
     assert.deepEqual(onlineBattleProjection(view).presentation.playerMats,{player,rival});
     assert.equal(onlineBattleProjection({...view,kumite:{tournamentId:'t',matchId:'m',roundDeadline:Date.now()+10000}}).presentation.playerMats,undefined);
   }
+});
+
+
+test('backing out of a hand selection clears its card, district and armed Squabble together', () => {
+  const match = createMatch('block', 'combo');
+  const card = match.playerHand[0];
+  const state = { selected: card.instanceId as string | null, lane: 1 as number | null, squabble: true };
+  const handlers = (interactive: boolean) => createBattleDecisionHandlers({
+    match, interactive, selectedInstanceId: state.selected, selectedLane: state.lane, squabble: state.squabble,
+    lockedDistricts: 0, setSelectedInstanceId: value => { state.selected = value; },
+    setSelectedLane: value => { state.lane = value; }, setSquabble: value => { state.squabble = value; },
+  });
+  handlers(false).clearSelection();
+  assert.equal(state.selected, card.instanceId);
+  assert.equal(state.lane, 1);
+  assert.equal(state.squabble, true);
+  handlers(true).clearSelection();
+  assert.deepEqual(state, { selected: null, lane: null, squabble: false });
+  assert.doesNotThrow(() => handlers(true).clearSelection());
+  Object.assign(state, { lane: 2 });
+  handlers(true).clearSelection();
+  assert.equal(state.lane, null);
+});
+
+
+test('clock warnings start at thirty seconds and the vignette only shows in the last five active seconds', () => {
+  const match = createMatch('block', 'combo');
+  const cases = [
+    { seconds: 31, running: true, warning: false, vignette: false },
+    { seconds: 30, running: true, warning: true, vignette: false },
+    { seconds: 6, running: true, warning: true, vignette: false },
+    { seconds: 5, running: true, warning: true, vignette: true },
+    { seconds: 1, running: true, warning: true, vignette: true },
+    { seconds: 0, running: true, warning: false, vignette: false },
+    { seconds: 5, running: false, warning: false, vignette: false },
+  ];
+  for (const expected of cases) {
+    const html = renderBattle(match, { timerEnabled: true, timerSeconds: expected.seconds,
+      online: { ...onlinePresentationFor(match), turnSeconds: 75, clockRunning: expected.running } });
+    const strip = html.match(/<div data-testid="decision-clock"[^>]*>/)?.[0] ?? '';
+    assert.equal(strip.includes('data-warning="true"'), expected.warning, JSON.stringify(expected));
+    assert.equal(html.includes('data-testid="battle-time-vignette"'), expected.vignette, JSON.stringify(expected));
+  }
+  const untimed = renderBattle(match, { timerEnabled: false, timerSeconds: 5 });
+  assert(!untimed.includes('data-testid="decision-clock"'));
+  assert(!untimed.includes('data-testid="battle-time-vignette"'));
+});
+
+
+test('normal battles share the paired header and keep one district tally and one update', () => {
+  const match = createMatch('block', 'combo');
+  const html = renderBattle(match, { timerEnabled: true, timerSeconds: 20 });
+  assert.match(html, /data-header-mode="solo"/);
+  assert.equal((html.match(/data-testid="pvp-plate-you"/g) ?? []).length, 1);
+  assert.equal((html.match(/data-testid="pvp-plate-rival"/g) ?? []).length, 1);
+  assert.equal((html.match(/data-testid="claims-live"/g) ?? []).length, 1);
+  assert.equal((html.match(/data-testid="battle-guidance"/g) ?? []).length, 1);
+  assert.match(html, /data-testid="battle-live-feedback" data-feedback-mode="decision"/);
+  assert.match(html, /The Opps’ tell:/);
+});
+
+
+test('PvP banners use saved names, prominent levels and earned rank trophies without inventing missing ranks', () => {
+  const match = createMatch('block', 'combo');
+  const online = { ...onlinePresentationFor(match),
+    playerIdentity: { name: 'Named Player', hero: 'kyle', level: 18, rankPoints: 95, rp: 1400 },
+    rivalIdentity: { name: 'Named Opponent', hero: 'guap', level: 19, rankPoints: 1640, rp: 1050 },
+  };
+  const html = renderBattle(match, { online });
+  assert.match(html, /Named Player/); assert.match(html, /Named Opponent/);
+  assert.match(html, /aria-label="Level 18"/); assert.match(html, /aria-label="Level 19"/);
+  assert.match(html, /alt="Rookie trophy"/); assert.match(html, /alt="Diamond trophy"/);
+  assert.doesNotMatch(html, /Your corner|Your Corner|Platinum trophy/);
+  assert.equal((html.match(/data-testid="battle-guidance"/g) ?? []).length, 1);
+  assert.equal((html.match(/data-testid="claims-live"/g) ?? []).length, 1);
+  assert.doesNotMatch(html, /battle-live-feedback--banner|pvp-plate__update/);
+  assert.ok(html.indexOf('data-testid="battle-live-feedback"') > html.indexOf('data-testid="pvp-plate-rival"'), 'updates use the shared row after both compact identities');
+  const legacy = renderBattle(match, { online: { ...online,
+    playerIdentity: { name: 'Legacy Player', hero: 'kyle' }, rivalIdentity: { name: 'Legacy Opponent', hero: 'guap' },
+  } });
+  assert.doesNotMatch(legacy, /alt="[^"]+ trophy"|aria-label="Level /);
+});
+
+test('district totals show your score before The Opps without changing either score', () => {
+  const match = createMatch('block', 'combo');
+  match.boards[0] = [
+    { ...createCardInstance('hooper', 'player', 'score-order', 0), lane: 0 },
+    { ...createCardInstance('plug', 'cpu', 'score-order', 1), lane: 0 },
+  ];
+  const html = renderBattle(match);
+  for (const lane of [0, 1, 2]) assert(html.indexOf(`data-testid="score-player-${lane}"`) < html.indexOf(`data-testid="score-cpu-${lane}"`));
+  const scores = getDistrictResults(match);
+  assert.match(html, new RegExp(`data-testid="score-player-0"[^>]*[^]*?>${scores[0].player}`));
+});
+
+
+test('lane flame follows only the current leader, clears for ties and switches direction with ownership', () => {
+  const match = createMatch('block', 'combo');
+  const base = onlinePresentationFor(match);
+  const online = { ...base, scores: base.scores.map((s, i) => ({ ...s,
+    player: [101, 12, 0][i], cpu: [99, 12, 15][i],
+  })) };
+  const html = renderBattle(match, { online });
+  assert.equal((html.match(/data-battle-media="lane-flame-left"/g) ?? []).length, 1);
+  assert.equal((html.match(/data-battle-media="lane-flame-right"/g) ?? []).length, 1);
+  assert.equal((html.match(/data-score-state="tied"/g) ?? []).length, 2);
+  assert.equal((html.match(/--score-digit-count:3/g) ?? []).length, 2, 'both sides share a digit bound, so a three-digit leader cannot look smaller');
+  const flipped = renderBattle(match, { online: { ...online, scores: online.scores.map((s, i) => ({ ...s, player: i === 0 ? 98 : s.player })) } });
+  assert.doesNotMatch(flipped, /data-battle-media="lane-flame-left"/);
+  assert.equal((flipped.match(/data-battle-media="lane-flame-right"/g) ?? []).length, 2);
+  const ties = renderBattle(match, { online: { ...base, scores: base.scores.map(s => ({ ...s, player: 0, cpu: 0 })) } });
+  assert.doesNotMatch(ties, /data-battle-media="lane-flame/);
 });

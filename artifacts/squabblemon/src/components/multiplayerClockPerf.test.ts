@@ -22,8 +22,8 @@ test('MultiplayerBattle only updates state when integer remaining seconds change
   assert.match(mpBattleSource, /computeTurnSecondsRemaining/);
 });
 
-test('DeckWorkbench and GangWall memoize catalog filtering and deck validation', () => {
+test('DeckWorkbench memoizes validation and GangWall reuses its bounded catalog cache', () => {
   assert.match(deckWorkbenchSource, /useMemo\(\(\)\s*=>\s*crewInsights\(draft\.cardIds\)/);
   assert.match(deckWorkbenchSource, /useMemo\(\(\)\s*=>\s*validateSavedDeck\(/);
-  assert.match(gangWallSource, /useMemo<WallGroup\[\]>/);
+  assert.match(gangWallSource, /getGangWallGroups\(mode\)/);
 });

@@ -1,0 +1,74 @@
+[
+  {
+    "file": "element-fists-study.webp",
+    "width": 1536,
+    "height": 1024,
+    "mode": "RGBA",
+    "alphaRange": [
+      0,
+      254
+    ],
+    "bytes": 2342231,
+    "sha256": "0b6a8726e34e8424ca0a885372a6c7e054e7f919a9498d96342a1941ea53593c",
+    "status": "earlier colored-fist direction; superseded by consistent gold-fist study"
+  },
+  {
+    "file": "fire-plate.webp",
+    "width": 1061,
+    "height": 1483,
+    "mode": "RGBA",
+    "alphaRange": [
+      0,
+      255
+    ],
+    "bytes": 2904428,
+    "sha256": "6792f0399cbd87ebd52fd0a4f91e5d0bce5a140d47b49aae5bf5fc1c653f8506",
+    "status": "design study; original generated file, not runtime optimized"
+  },
+  {
+    "file": "fire-plate-study-v1.png",
+    "width": 1061,
+    "height": 1482,
+    "mode": "RGB",
+    "alphaRange": null,
+    "bytes": 2798791,
+    "sha256": "6eb44462cfd87ef265293a0f901feee00e3723edd6c9a062d15cb2c90dc1bdef",
+    "status": "rejected first draft: baked checkerboard exterior; superseded by transparent Fire master"
+  },
+  {
+    "file": "rules-paper.webp",
+    "width": 2167,
+    "height": 725,
+    "mode": "RGBA",
+    "alphaRange": [
+      0,
+      255
+    ],
+    "bytes": 2352605,
+    "sha256": "1386443ebfd06a0ee1f9b8d11b1ce9996d4a456a05fa36cb0683b616bfa63c1e",
+    "status": "design study; original generated file, not runtime optimized"
+  },
+  {
+    "file": "ten-element-backgrounds-study.webp",
+    "width": 1536,
+    "height": 1024,
+    "mode": "RGB",
+    "alphaRange": null,
+    "bytes": 3227457,
+    "sha256": "dd3ffa4abaf668f6ecd55ed0be4205bcc01be58ed18b81e4e4a569f95c875668",
+    "status": "design study; original generated file, not runtime optimized"
+  },
+  {
+    "file": "element-fists-goldmaster-study.webp",
+    "width": 1983,
+    "height": 793,
+    "mode": "RGBA",
+    "alphaRange": [
+      0,
+      255
+    ],
+    "bytes": 1600988,
+    "sha256": "d733c1e06a6b0571c405ab32f6280ada7e907dcc78724c1ad4a45d1150f7e650",
+    "status": "preferred gold-fist concept sheet; individual final asset registration and small-size cleanup still required"
+  }
+]

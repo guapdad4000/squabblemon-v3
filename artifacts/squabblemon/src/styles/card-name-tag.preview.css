@@ -1,0 +1,98 @@
+/* Audition only. Opt in at collection, deck-builder or full-detail surfaces.
+   Battle hand and combat faces are explicitly excluded. */
+:is([data-name-tag-surface="collection"],[data-name-tag-surface="deck-builder"],[data-name-tag-surface="details"],body[data-name-tag-audition="shipping"] .card-inspector-shell) .collector-card:not(.battle-hand-card):not(.collector-card--combat) { container-type: inline-size; }
+:is([data-name-tag-surface="collection"],[data-name-tag-surface="deck-builder"],[data-name-tag-surface="details"],body[data-name-tag-audition="shipping"] .card-inspector-shell) .collector-card:not(.battle-hand-card):not(.collector-card--combat) .collector-card-copy {
+  display: grid; grid-template-columns: minmax(0,1fr) 25cqw; align-items: end; gap: 0;
+}
+:is([data-name-tag-surface="collection"],[data-name-tag-surface="deck-builder"],[data-name-tag-surface="details"],body[data-name-tag-audition="shipping"] .card-inspector-shell) .collector-card:not(.battle-hand-card):not(.collector-card--combat) .collector-card-copy > h4 {
+  position: relative; isolation: isolate; display: flex; align-items: center;
+  grid-column: 1; grid-row: 1; min-width: 0;
+  min-height: 30cqw; margin: 4cqw 0 3cqw; padding: 13cqw 6cqw 7cqw;
+  color: #101210; font-size: clamp(12px,9.7cqw,34px); line-height: .96;
+  text-shadow: none; filter: drop-shadow(1px 2px 0 #080908b3);
+  transform: rotate(-6deg); transform-origin: 48% 50%;
+  overflow-wrap: anywhere; text-wrap: balance; letter-spacing: .005em;
+  background: url('../assets/card-name-tag-paper.svg') center / 100% 100% no-repeat;
+}
+:is([data-name-tag-surface="collection"],[data-name-tag-surface="deck-builder"],[data-name-tag-surface="details"],body[data-name-tag-audition="shipping"] .card-inspector-shell) .collector-card--long-name:not(.battle-hand-card):not(.collector-card--combat) .collector-card-copy > h4 {
+  font-size: clamp(10px,6.6cqw,24px); line-height: 1;
+}
+:is([data-name-tag-surface="collection"],[data-name-tag-surface="deck-builder"],[data-name-tag-surface="details"],body[data-name-tag-audition="shipping"] .card-inspector-shell) .collector-card:not(.battle-hand-card):not(.collector-card--combat) .collector-card-copy > h4::after {
+  content: var(--postal-rarity); position: absolute; top: 3cqw; left: 3cqw;
+  color: #fff; font: 700 clamp(5px,2.5cqw,9px)/1 var(--font-mono,monospace);
+  letter-spacing: .045em; text-shadow: none;
+}
+:is([data-name-tag-surface="collection"],[data-name-tag-surface="deck-builder"],[data-name-tag-surface="details"],body[data-name-tag-audition="shipping"] .card-inspector-shell) .card-rarity-supercommon { --postal-rarity: "SUPER COMMON"; }
+:is([data-name-tag-surface="collection"],[data-name-tag-surface="deck-builder"],[data-name-tag-surface="details"],body[data-name-tag-audition="shipping"] .card-inspector-shell) .card-rarity-common { --postal-rarity: "COMMON"; }
+:is([data-name-tag-surface="collection"],[data-name-tag-surface="deck-builder"],[data-name-tag-surface="details"],body[data-name-tag-audition="shipping"] .card-inspector-shell) .card-rarity-uncommon { --postal-rarity: "UNCOMMON"; }
+:is([data-name-tag-surface="collection"],[data-name-tag-surface="deck-builder"],[data-name-tag-surface="details"],body[data-name-tag-audition="shipping"] .card-inspector-shell) .card-rarity-rare { --postal-rarity: "RARE"; }
+:is([data-name-tag-surface="collection"],[data-name-tag-surface="deck-builder"],[data-name-tag-surface="details"],body[data-name-tag-audition="shipping"] .card-inspector-shell) .card-rarity-epic { --postal-rarity: "SUPER RARE"; }
+:is([data-name-tag-surface="collection"],[data-name-tag-surface="deck-builder"],[data-name-tag-surface="details"],body[data-name-tag-audition="shipping"] .card-inspector-shell) .card-rarity-legendary { --postal-rarity: "LEGENDARY"; }
+:is([data-name-tag-surface="collection"],[data-name-tag-surface="deck-builder"],[data-name-tag-surface="details"],body[data-name-tag-audition="shipping"] .card-inspector-shell) .card-rarity-mythical { --postal-rarity: "MYTHICAL"; }
+:is([data-name-tag-surface="collection"],[data-name-tag-surface="deck-builder"],[data-name-tag-surface="details"],body[data-name-tag-audition="shipping"] .card-inspector-shell) .collector-card[data-card-kind="token"] { --postal-rarity: "SUMMON"; }
+:is([data-name-tag-surface="collection"],[data-name-tag-surface="deck-builder"],[data-name-tag-surface="details"],body[data-name-tag-audition="shipping"] .card-inspector-shell) .collector-card:not(.battle-hand-card):not(.collector-card--combat) .collector-card-copy > .collector-card-meta {
+  grid-column: 2; grid-row: 1; position: relative; align-self: center;
+  display: flex; flex-direction: column; justify-content: center; align-items: center;
+  width: 25cqw; gap: 1cqw; margin: 0; padding: 0; transform: translateY(1cqw);
+}
+:is([data-name-tag-surface="collection"],[data-name-tag-surface="deck-builder"],[data-name-tag-surface="details"],body[data-name-tag-audition="shipping"] .card-inspector-shell) .collector-card:not(.battle-hand-card):not(.collector-card--combat) .collector-card-meta > .collector-rarity { display: none; }
+:is([data-name-tag-surface="collection"],[data-name-tag-surface="deck-builder"],[data-name-tag-surface="details"],body[data-name-tag-audition="shipping"] .card-inspector-shell) .collector-card:not(.battle-hand-card):not(.collector-card--combat) .collector-card-meta > .collector-element {
+  position: relative; display: grid; place-items: center; flex: none;
+  width: 25cqw; min-height: 5cqw; margin: 0; padding: 1cqw;
+  border: 0; box-shadow: none; color: #f1eadd; background: #171715;
+  font: 700 3cqw/1.2 var(--font-mono,monospace); text-align: center;
+}
+:is([data-name-tag-surface="collection"],[data-name-tag-surface="deck-builder"],[data-name-tag-surface="details"],body[data-name-tag-audition="shipping"] .card-inspector-shell) .collector-card:not(.battle-hand-card):not(.collector-card--combat) .collector-element[data-element]:not([data-element="Earth"]) {
+  aspect-ratio: 1.499; min-height: 0; padding: 0;
+  background-color: transparent;
+  background-image: url('../assets/element-badge-sheet.webp');
+  background-size: 300% 300%; background-repeat: no-repeat;
+}
+:is([data-name-tag-surface="collection"],[data-name-tag-surface="deck-builder"],[data-name-tag-surface="details"],body[data-name-tag-audition="shipping"] .card-inspector-shell) .collector-card:not(.battle-hand-card):not(.collector-card--combat) .collector-element:not([data-element="Earth"]) > span {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip-path: inset(50%); white-space: nowrap;
+}
+:is([data-name-tag-surface="collection"],[data-name-tag-surface="deck-builder"],[data-name-tag-surface="details"],body[data-name-tag-audition="shipping"] .card-inspector-shell) .collector-card:not(.battle-hand-card):not(.collector-card--combat) .collector-card-copy > :not(h4):not(.collector-card-meta) { grid-column: 1 / -1; }
+:is([data-name-tag-surface="collection"],[data-name-tag-surface="deck-builder"],[data-name-tag-surface="details"],body[data-name-tag-audition="shipping"] .card-inspector-shell) .collector-card:not(.battle-hand-card):not(.collector-card--combat) .collector-card-copy .collector-card-ability { margin-top: 2cqw; }
+:is([data-name-tag-surface="collection"],[data-name-tag-surface="deck-builder"],[data-name-tag-surface="details"],body[data-name-tag-audition="shipping"] .card-inspector-shell) .collector-card:not(.battle-hand-card):not(.collector-card--combat) .collector-element[data-element="Normal"] { background-position: 0% 0%; }
+:is([data-name-tag-surface="collection"],[data-name-tag-surface="deck-builder"],[data-name-tag-surface="details"],body[data-name-tag-audition="shipping"] .card-inspector-shell) .collector-card:not(.battle-hand-card):not(.collector-card--combat) .collector-element[data-element="Fire"] { background-position: 50% 0%; }
+:is([data-name-tag-surface="collection"],[data-name-tag-surface="deck-builder"],[data-name-tag-surface="details"],body[data-name-tag-audition="shipping"] .card-inspector-shell) .collector-card:not(.battle-hand-card):not(.collector-card--combat) .collector-element[data-element="Water"] { background-position: 100% 0%; }
+:is([data-name-tag-surface="collection"],[data-name-tag-surface="deck-builder"],[data-name-tag-surface="details"],body[data-name-tag-audition="shipping"] .card-inspector-shell) .collector-card:not(.battle-hand-card):not(.collector-card--combat) .collector-element[data-element="Plant"] { background-position: 0% 50%; }
+:is([data-name-tag-surface="collection"],[data-name-tag-surface="deck-builder"],[data-name-tag-surface="details"],body[data-name-tag-audition="shipping"] .card-inspector-shell) .collector-card:not(.battle-hand-card):not(.collector-card--combat) .collector-element[data-element="Air"] { background-position: 50% 50%; }
+:is([data-name-tag-surface="collection"],[data-name-tag-surface="deck-builder"],[data-name-tag-surface="details"],body[data-name-tag-audition="shipping"] .card-inspector-shell) .collector-card:not(.battle-hand-card):not(.collector-card--combat) .collector-element[data-element="Electric"] { background-position: 100% 50%; }
+:is([data-name-tag-surface="collection"],[data-name-tag-surface="deck-builder"],[data-name-tag-surface="details"],body[data-name-tag-audition="shipping"] .card-inspector-shell) .collector-card:not(.battle-hand-card):not(.collector-card--combat) .collector-element[data-element="Poison"] { background-position: 0% 100%; }
+:is([data-name-tag-surface="collection"],[data-name-tag-surface="deck-builder"],[data-name-tag-surface="details"],body[data-name-tag-audition="shipping"] .card-inspector-shell) .collector-card:not(.battle-hand-card):not(.collector-card--combat) .collector-element[data-element="Light"] { background-position: 50% 100%; }
+:is([data-name-tag-surface="collection"],[data-name-tag-surface="deck-builder"],[data-name-tag-surface="details"],body[data-name-tag-audition="shipping"] .card-inspector-shell) .collector-card:not(.battle-hand-card):not(.collector-card--combat) .collector-element[data-element="Dark"] { background-position: 100% 100%; }
+
+/* V3: quieter composition; all changes remain opt-in preview treatments. */
+:is([data-name-tag-surface="collection"],[data-name-tag-surface="deck-builder"],[data-name-tag-surface="details"],body[data-name-tag-audition="shipping"] .card-inspector-shell) .collector-card:not(.battle-hand-card):not(.collector-card--combat) .collector-card-copy { display:flex; flex-direction:column; align-items:flex-start; gap:0; }
+:is([data-name-tag-surface="collection"],[data-name-tag-surface="deck-builder"],[data-name-tag-surface="details"],body[data-name-tag-audition="shipping"] .card-inspector-shell) .collector-card:not(.battle-hand-card):not(.collector-card--combat) .collector-card-copy > h4 { width:calc(100% - 25cqw); max-width:100%; flex:none; }
+:is([data-name-tag-surface] [data-name-tag-short="true"],body[data-name-tag-audition="shipping"][data-name-tag-short="true"] .card-inspector-shell) .collector-card:not(.battle-hand-card):not(.collector-card--combat) .collector-card-copy > h4 {
+  width:fit-content; min-width:var(--postal-label-min,52cqw); max-width:65cqw; min-height:26cqw;
+  padding:10cqw 6cqw 5cqw; font-size:clamp(12px,9.7cqw,34px);
+}
+:is([data-name-tag-surface="collection"],[data-name-tag-surface="deck-builder"],[data-name-tag-surface="details"],body[data-name-tag-audition="shipping"] .card-inspector-shell) .collector-card:not(.battle-hand-card):not(.collector-card--combat) .collector-card-copy > .collector-card-meta {
+  width:auto; align-self:flex-start; flex-direction:row; justify-content:flex-start;
+  transform:none; margin:0 0 .5cqw; gap:2cqw;
+}
+body[data-name-tag-elements="text"] :is([data-name-tag-surface="collection"],[data-name-tag-surface="deck-builder"],[data-name-tag-surface="details"],body[data-name-tag-audition="shipping"] .card-inspector-shell) .collector-card:not(.battle-hand-card):not(.collector-card--combat) .collector-card-meta > .collector-element {
+  width:auto; min-height:0; aspect-ratio:auto; padding:0;
+  background:none; color:#c9c3b9; font:500 clamp(5px,2.8cqw,10px)/1.2 var(--font-mono,monospace);
+  letter-spacing:.06em;
+}
+body[data-name-tag-elements="text"] :is([data-name-tag-surface="collection"],[data-name-tag-surface="deck-builder"],[data-name-tag-surface="details"],body[data-name-tag-audition="shipping"] .card-inspector-shell) .collector-card:not(.battle-hand-card):not(.collector-card--combat) .collector-element > .collector-element-full {
+  display:inline; position:static; width:auto; height:auto; margin:0;
+  overflow:visible; clip-path:none; white-space:normal;
+}
+body[data-name-tag-elements="artwork"] :is([data-name-tag-surface="collection"],[data-name-tag-surface="deck-builder"],[data-name-tag-surface="details"],body[data-name-tag-audition="shipping"] .card-inspector-shell) .collector-card:not(.battle-hand-card):not(.collector-card--combat) .collector-card-copy { display:grid; grid-template-columns:minmax(0,1fr) 25cqw; }
+body[data-name-tag-elements="artwork"] :is([data-name-tag-surface="collection"],[data-name-tag-surface="deck-builder"],[data-name-tag-surface="details"],body[data-name-tag-audition="shipping"] .card-inspector-shell) .collector-card:not(.battle-hand-card):not(.collector-card--combat) .collector-card-copy > h4 { width:auto; max-width:100%; }
+body[data-name-tag-elements="artwork"] :is([data-name-tag-surface] [data-name-tag-short="true"],body[data-name-tag-audition="shipping"][data-name-tag-short="true"] .card-inspector-shell) .collector-card:not(.battle-hand-card):not(.collector-card--combat) .collector-card-copy > h4 { width:var(--postal-label-min,52cqw); }
+body[data-name-tag-elements="artwork"] :is([data-name-tag-surface="collection"],[data-name-tag-surface="deck-builder"],[data-name-tag-surface="details"],body[data-name-tag-audition="shipping"] .card-inspector-shell) .collector-card:not(.battle-hand-card):not(.collector-card--combat) .collector-card-copy > .collector-card-meta { width:25cqw; align-self:center; margin:0; }
+body[data-name-tag-placement="center"] :is([data-name-tag-surface="collection"],[data-name-tag-surface="deck-builder"],[data-name-tag-surface="details"],body[data-name-tag-audition="shipping"] .card-inspector-shell) .collector-card:not(.battle-hand-card):not(.collector-card--combat) .collector-card-copy > h4 { align-self:center; }
+body[data-name-tag-placement="center"] :is([data-name-tag-surface="collection"],[data-name-tag-surface="deck-builder"],[data-name-tag-surface="details"],body[data-name-tag-audition="shipping"] .card-inspector-shell) .collector-card:not(.battle-hand-card):not(.collector-card--combat) .collector-card-copy > .collector-card-meta { align-self:center; }
+body[data-name-tag-placement="straight"] :is([data-name-tag-surface="collection"],[data-name-tag-surface="deck-builder"],[data-name-tag-surface="details"],body[data-name-tag-audition="shipping"] .card-inspector-shell) .collector-card:not(.battle-hand-card):not(.collector-card--combat) .collector-card-copy > h4 { transform:none; }
+:is([data-name-tag-surface="collection"],[data-name-tag-surface="deck-builder"],[data-name-tag-surface="details"],body[data-name-tag-audition="shipping"] .card-inspector-shell) .collector-card:not(.battle-hand-card):not(.collector-card--combat) .collector-card-copy > .collector-card-ability { align-self:stretch; }
+body[data-name-tag-backdrop="quiet"] :is(.name-tag-stage:not([data-context="battle"]),.card-inspector-shell) .collector-card:not(.battle-hand-card):not(.collector-card--combat) .collector-wallpaper { opacity:.13; filter:saturate(.45); }
+body[data-name-tag-backdrop="quiet"] :is(.name-tag-stage:not([data-context="battle"]),.card-inspector-shell) .collector-card:not(.battle-hand-card):not(.collector-card--combat) .collector-atmosphere {
+  background:linear-gradient(150deg,#171c2080,#090c0de8);
+}

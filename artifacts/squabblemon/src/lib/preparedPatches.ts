@@ -1,3 +1,4 @@
+import collectorV2Release from './collectorV2Release.json' with { type: 'json' };
 import type { PatchInput } from '@workspace/api-client-react';
 import selectedWaveRelease from './selectedWaveRelease.json' with { type: 'json' };
 import streetLegendsRelease from './streetLegendsRelease.json' with { type: 'json' };
@@ -126,7 +127,7 @@ export const PREPARED_PATCHES: readonly PreparedPatch[] = [
     date: '2026-09-29',
     title: 'Earn Your Block',
     artCardId: 'cracked-head',
-    overview: 'Chapter One’s rivals are now yours to play. Beat them in story mode to put them in your collection, and every story fight pays out more than before.',
+    overview: 'The Opps from Chapter One are now yours to play. Beat them in story mode to put them in your collection, and every story fight pays out more than before.',
     buffs: [
       'Win Welcome to the Block to earn Ganger Blue (3 / 3): gives your weakest ally in another district +2 Hands and Protection.',
       'Win Receipts on Camera to earn Ganger Red (3 / 4): hits the strongest enemy for 2 and gains +1 Hand if it lands.',
@@ -193,11 +194,11 @@ export const PREPARED_PATCHES: readonly PreparedPatch[] = [
     date: '2026-10-03',
     title: 'The Last Waffle: Squabble House Story',
     artCardId: 'squabble-house-manager',
-    overview: 'The diner is open. The Last Waffle is a six-chapter Squabble House story with a cinematic in every chapter, illustrated conversations, six hands-on puzzles, and Blood and Crips rival crews. Follow the missing waffle through the late-night chaos and earn four Squabble House fighters by winning their story battles.',
+    overview: 'The diner is open. The Last Waffle is a six-chapter Squabble House story with a cinematic in every chapter, illustrated conversations, six hands-on puzzles, and The Opps’ Blood and Crips crews. Follow the missing waffle through the late-night chaos and earn four Squabble House fighters by winning their story battles.',
     buffs: [],
     changes: [
       'Now showing: a vintage Squabble House poster and a new six-chapter story arc, open from the Story theater without clearing another campaign.',
-      'Each chapter blends a 10-second cinematic with illustrated dialogue, a diner puzzle, and a battle against Blood and Crips rivals.',
+      'Each chapter blends a 10-second cinematic with illustrated dialogue, a diner puzzle, and a battle against The Opps from Blood and Crips.',
       'Solve the Booth Lineup, Receipt Run, Grill Order, Clock Shift, Wet Floor Route, and Final Evidence puzzles to uncover who took the last waffle.',
       'Win the required House battles to add Squabble Server, Squabble Cook, Janitor, and the Squabble House Manager to your collection. These story cards stay out of random packs.',
       'Story rewards follow the current payout schedule: each node pays at least 100 Clout and one Street Pack Ticket; chapter finales pay at least 250 Clout and ten tickets.',
@@ -242,8 +243,8 @@ export const PREPARED_PATCHES: readonly PreparedPatch[] = [
       "A full draw replays in a fresh room with the same locked gangs and the same round cutoff. Check in again to enter the replay. Draws count participation once per bracket pairing, so repeated replays do not multiply participation.",
       "Permanent roadmap progress counts full six-round Kumite battles, full-battle wins and full-final wins. Totals carry across weeks and cards unlock automatically. Byes, no-shows, surrender and turn-timeout wins add no roadmap credit.",
       "Bushedo Brown (Rare): complete one full fight. Franklin Duke (Epic): win one full fight. Chonk Lee (Legendary): win one full final.",
-      "Dragonfly Jones (Legendary): win three full fights. Undercova Brotha (Rare): win five full fights. Sho'Nuff (Legendary): win eight full fights. Leroy (Mythical): win two full finals. Yasuke (Mythical): win three full finals.",
-      "Bushedo Brown, Franklin Duke and Chonk Lee are earned through Kumite and stay out of Street Packs, variant pack pools, Neighborhood Recruit and borrowed drafts. The other five keep their existing acquisition routes. Once owned, the cards can join your ordinary saved gangs.",
+      "Dragonfly Jones (Legendary): win three full fights. P. Tang (Legendary): win four full fights. Undercova Brotha (Rare): win five full fights. Sho'Nuff (Legendary): win eight full fights. Leroy (Mythical): win two full finals. Yasuke (Mythical): win three full finals.",
+      "Bushedo Brown, Franklin Duke and Chonk Lee are earned through Kumite and stay out of Street Packs, variant pack pools, Neighborhood Recruit and borrowed drafts. The other six keep their existing acquisition routes. Once owned, the cards can join your ordinary saved gangs.",
       "Already own a roadmap fighter? Completing its milestone preserves the card and its XP. Rewards are fighter cards; no dedicated tournament Clout, tickets, skins or duplicate-shard payout is configured.",
       "Past Winners preserves each bracket champion's name, hero and avatar as they were registered. A legitimate forfeit-decided champion still enters history, but a forfeit final does not count toward Chonk Lee, Leroy or Yasuke's full-final milestones.",
       "Fight Records covers the latest 52 weekly tournaments: the fastest decisive full fight, recent full-final winners and Hand Throwers ranked by full-fight wins, then full-final titles. Draws, byes, surrender and timeouts stay out of these records. They are separate from lifetime unlock progress and Fade Park rank.",
@@ -255,4 +256,5 @@ export const PREPARED_PATCHES: readonly PreparedPatch[] = [
     "softCurrency": 0,
     "packTickets": 0
   },
+  collectorV2Release satisfies PreparedPatch,
 ];

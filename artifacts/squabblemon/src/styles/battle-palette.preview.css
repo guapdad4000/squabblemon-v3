@@ -1,0 +1,54 @@
+/* Local audition only: imported by the typography fixture, never the app entry. */
+html[data-battle-palette='ink'] {
+  --battle-paper: #f1eadd;
+  --battle-stone: #c9c3b9;
+  --battle-ink: #171715;
+  --battle-damage: #df7b6a;
+}
+
+/* Card Hands use the shared white badge; Motion keeps its yellow tab. */
+
+/* Ownership uses paper and a muted red paper tint; Motion keeps its yellow. */
+html[data-battle-palette='ink'] .battle-arena.battle-hud .district-score-side--rival .score-tick { color: #d8b8b1; }
+html[data-battle-palette='ink'] .battle-arena.battle-hud .district-score-side--player .score-tick { color: var(--battle-paper); }
+html[data-battle-palette='ink'] .battle-arena.battle-hud :is(.district-score-label,.mobile-district-open,.district-rule) { color: var(--battle-paper); }
+html[data-battle-palette='ink'] .battle-arena.battle-hud .score-divider { color: #b6afa3; opacity: .55; }
+html[data-battle-palette='ink'] .battle-arena.battle-hud .district-score-side .score-delta { color: var(--battle-paper); }
+html[data-battle-palette='ink'] .battle-arena.battle-hud .district-lane:not(.is-selected) {
+  background: linear-gradient(#11110f38,#11110f10 45% 55%,#11110f38) var(--lane-surface);
+  box-shadow: inset 0 0 0 1px #e4dcca36;
+}
+html[data-battle-palette='ink'] .battle-arena.battle-hud .district-lane.is-selected { box-shadow: inset 0 0 22px #f1eadd12; background: #f1eadd0c; }
+html[data-battle-palette='ink'] .battle-arena.battle-hud .district-lane[data-rival-interest='true'] .battle-side-rival::before { background: linear-gradient(90deg,transparent,#e4dcca80,transparent); box-shadow: none; }
+html[data-battle-palette='ink'] .battle-arena.battle-hud .collector-card--combat.is-leading .collector-frame { box-shadow: 0 5px 12px #0009,0 0 0 1px #e4dcca77; }
+
+/* Approved green enamel; the paper border and hardware stay in the ink palette. */
+html[data-battle-palette='ink'] .battle-arena.battle-hud .battle-primary-action.battle-street-sign {
+  --sign-top: #17634e; --sign-bottom: #103f34; border-color: #d2c9b9; color: var(--battle-paper);
+  box-shadow: 0 3px 0 #080806,0 5px 12px #0007; text-shadow: 0 1px 1px #000;
+}
+html[data-battle-palette='ink'] .battle-arena.battle-hud .battle-primary-action.battle-street-sign::before { border-color: #d2c9b95c; }
+html[data-battle-palette='ink'] .battle-arena.battle-hud .battle-primary-action.battle-street-sign::after { background: radial-gradient(circle at 8px 50%,#d2c9b9 0 1px,#080806 1.5px 2px,transparent 2.5px),radial-gradient(circle at calc(100% - 8px) 50%,#d2c9b9 0 1px,#080806 1.5px 2px,transparent 2.5px); }
+html[data-battle-palette='ink'] .battle-arena.battle-hud .battle-street-sign:hover:not(:disabled) { --sign-top: #237c61; --sign-bottom: #174c3c; }
+html[data-battle-palette='ink'] .battle-arena.battle-hud .battle-street-sign:disabled { --sign-top: #294a40; --sign-bottom: #1b332c; color: #a49d90; }
+html[data-battle-palette='ink'] .battle-arena.battle-hud .battle-street-sign.action-error { --sign-top: #572c25; --sign-bottom: #301b17; }
+html[data-battle-palette='ink'] .battle-arena.battle-hud :is(.battle-claims,.battle-live-combo) :is(b,strong,.text-primary,.text-accent) { color: var(--battle-paper); }
+
+/* Compact formation tools: clear type and icons with no framed blue tile. */
+html[data-battle-palette='ink'] .battle-arena.battle-hud .battle-side button.battle-formation-continuation,
+html[data-battle-palette='ink'] .battle-arena.battle-hud .battle-side button.formation-expand.battle-formation-inspect {
+  border: 0; border-radius: 0; background: linear-gradient(transparent,#11110fc7);
+  color: var(--battle-paper); box-shadow: none; font: 600 10px/1.2 var(--font-sans);
+}
+html[data-battle-palette='ink'] .battle-arena.battle-hud .battle-side :is(.battle-formation-continuation,.battle-formation-inspect):focus-visible { outline-color: var(--battle-paper); }
+html[data-battle-palette='ink'] .battle-arena.battle-hud .battle-side :is(.battle-formation-continuation,.battle-formation-inspect):active { background: #292823; }
+
+/* The lab framing stays neutral while comparing gameplay colors. */
+.type-palette { display: flex; align-items: center; gap: 8px; margin-top: 9px; font: 11px var(--font-sans); }
+.type-palette > span { color: #bdb6a8; margin-right: 2px; }
+.type-palette button { padding: 7px 12px; min-height: 36px; color: #d8d0bf; background: #171714; border: 1px solid #625e53; cursor: pointer; }
+.type-palette button[aria-pressed='true'] { color: #fff5df; border-color: #d9cebb; }
+html[data-battle-palette='ink'] :is(.type-audition,.type-tabs) { background: #151513; }
+html[data-battle-palette='ink'] .type-controls { background: #20201c; }
+html[data-battle-palette='ink'] :is(.type-controls select,.type-library select) { background: #151513; border-color: #6c6659; }
+html[data-battle-palette='ink'] :is(.type-presets button,.type-tabs button[aria-pressed='true']) { background: #35332c; border-color: #756c5b; }

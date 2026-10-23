@@ -9,6 +9,9 @@ import { createPortal } from 'react-dom';
 import { Link } from 'wouter';
 import { motion, useReducedMotion } from 'framer-motion';
 import { CardView } from './CardView';
+import { CollectibleCard } from './CollectibleCard';
+import { CardRarityStamp } from './CardRarityStamp';
+import { previewBuddyForm } from '../lib/cardFormPreview';
 import { PageDecor } from './venue/PageDecor';
 import { X } from 'lucide-react';
 import { CardInstance, getEffectiveCardPower } from '../gameEngine';
@@ -26,6 +29,7 @@ import { getAssetUrl } from '../lib/assets';
 import { KumiteFilmReplay } from './kumite/KumiteFilmPlayer';
 import '../styles/collection-inspector.css';
 import '../styles/fighter-resume.css';
+import '../styles/collector-details-polish.css';
 
 /**
  * A short handwritten scout-note line for the card, derived from its ability.
@@ -47,9 +51,14 @@ function scoutNote(card: any): string {
   return `${ability} — note for the next squad run.`;
 }
 
-export function CardInspector({ card, onClose, bootstrap, variantId, initialPreviewVariant, match, useCachedProfile = false }: any) {
+export function CardInspector({ card, onClose, bootstrap, variantId, initialPreviewVariant, match, useCachedProfile = false, renderCard }: any) {
   const reduceMotion = useReducedMotion() || (typeof window !== 'undefined' && cardMotionReduced());
   card = match?.boards?.flat().find((current: CardInstance) => current.instanceId === card.instanceId) ?? card;
+  const sourceCard = card;
+  const canPreviewForm = !match && !('instanceId' in sourceCard) && sourceCard.id === 'buddy';
+  const [form, setForm] = React.useState<{cardId: string; squabbled: boolean} | null>(null);
+  const squabbledPreview = canPreviewForm && form?.cardId === sourceCard.id && Boolean(form?.squabbled);
+  card = canPreviewForm ? previewBuddyForm(sourceCard, Boolean(squabbledPreview)) : sourceCard;
   const isInstance = 'instanceId' in card;
   const panel = React.useRef<HTMLDivElement>(null);
   // Escape transformed route containers while staying inside a native dialog's top layer.
@@ -117,6 +126,15 @@ export function CardInspector({ card, onClose, bootstrap, variantId, initialPrev
   const isBattleMode = Boolean(match);
   const variantSlots = catalogCard?.variantSlots ?? [];
 
+  const inspectorCardProps: React.ComponentProps<typeof CardView> = {
+    card, covered: isCovered, variantId: displayedVariant ?? undefined, progress: progression,
+    testId: 'card-inspector',
+    inspectionLayout: instance && match && !reduceMotion ? 'battle-inspect-' + instance.instanceId : undefined,
+    effectivePower: instance ? getEffectiveCardPower(instance) : undefined,
+    isInspector: true, presentationOnly: true,
+    className: `w-full h-full ${!match && bootstrap && !isCardOwned && catalogCard ? 'grayscale opacity-75' : ''}`,
+  };
+
   const inspector = (
     <div ref={panel} data-notification-id={initialPreviewVariant ? `style:${initialPreviewVariant}` : undefined} role="dialog" aria-modal="true" aria-label={card.name + (match ? ' battle details' : ' card details')} className={'card-inspector-shell bg-black/95 backdrop-blur-xl ' + (match ? 'battle-inspector' : 'collection-inspector fighter-resume world-decor-host')} onClick={onClose} onKeyDown={event => {
       if (event.key === 'Escape') { event.preventDefault(); event.stopPropagation(); onClose(); }
@@ -142,25 +160,21 @@ export function CardInspector({ card, onClose, bootstrap, variantId, initialPrev
             LEFT — Polaroid portrait
             ============================================================ */}
         <div className="collector-display-stack">
+        {canPreviewForm && <div className="collector-form-preview">
+          <div role="group" aria-label="Preview Buddy form">
+            <button type="button" aria-pressed={!squabbledPreview} onClick={() => setForm({cardId: sourceCard.id, squabbled: false})}>Normal · Plant</button>
+            <button type="button" aria-pressed={Boolean(squabbledPreview)} onClick={() => setForm({cardId: sourceCard.id, squabbled: true})}>Squabbled · Earth</button>
+          </div>
+          <small aria-live="polite">{squabbledPreview ? 'Doubled base Hands shown · +2 Earth bonus applies in battle' : 'Plant form · Buddy Buds'}</small>
+        </div>}
         <div className="polaroid mx-auto md:mx-0">
           <div className="polaroid__tape" aria-hidden="true" />
           <div className="polaroid__photo">
-            <CardView
-              card={card}
-              covered={isCovered}
-              variantId={displayedVariant ?? undefined}
-              progress={progression}
-              testId="card-inspector"
-              inspectionLayout={instance && match && !reduceMotion ? 'battle-inspect-' + instance.instanceId : undefined}
-              effectivePower={instance ? getEffectiveCardPower(instance) : undefined}
-              isInspector
-              presentationOnly
-              className={`w-full h-full ${!match && bootstrap && !isCardOwned && catalogCard ? 'grayscale opacity-75' : ''}`}
-            />
+            {renderCard ? renderCard(inspectorCardProps) : match ? <CardView {...inspectorCardProps} /> : <CollectibleCard {...inspectorCardProps} />}
           </div>
           <div className="polaroid__caption">
             {card.name}
-            <em>{finishLabel} · {rarityLabel}</em>
+            <em>{finishLabel}</em>
           </div>
           <p className="card-touch-hint">Drag the card to catch the light</p>
           {!isBattleMode && isCardOwned && bootstrap && catalogCard && <KumiteFilmReplay cardId={catalogCard.catalogId} ownedCardIds={bootstrap.profile.ownedCardIds} />}
@@ -206,17 +220,20 @@ export function CardInspector({ card, onClose, bootstrap, variantId, initialPrev
             </span>
             <span className="dossier-banner__stamp" aria-hidden="true" />
             <span className="dossier-banner__meta">
-              {canonicalElement(card.type)} class · {card.cost} motion · {rarityLabel}
+              {canonicalElement(card.type)} class · {card.cost} motion
             </span>
           </header>
 
           {/* Title plate */}
-          <div>
+          <div className="dossier-identity">
+            <div className="dossier-identity__copy">
             <div className="dossier-eyebrow">
               {isBattleMode ? 'Combat dossier' : 'Fighter dossier'} · {faction} faction
             </div>
             <h3 className="dossier-name">{card.name}</h3>
             <div className="dossier-handle">"#{String(card.id || '').slice(0, 6)} — filed by Dr. Fade's scout team"</div>
+            </div>
+            {catalogCard && !bossOnly ? <CardRarityStamp rarity={catalogCard.rarity} /> : <span className="dossier-edition">{rarityLabel}</span>}
           </div>
 
           {/* Signature ability + stats row (moved UP from below the XP) */}
@@ -246,13 +263,7 @@ export function CardInspector({ card, onClose, bootstrap, variantId, initialPrev
                 <span className="dossier-stat__pin" aria-hidden="true" />
                 <div className="dossier-stat__label">Hands</div>
                 <div className="dossier-stat__value">{card.power}</div>
-                <div className="dossier-stat__sub">Base power</div>
-              </div>
-              <div className="dossier-stat" role="listitem">
-                <span className="dossier-stat__pin" aria-hidden="true" />
-                <div className="dossier-stat__label">Rarity</div>
-                <div className="dossier-stat__value" style={{ color: 'var(--rarity-color)' }}>{rarityLabel}</div>
-                <div className="dossier-stat__sub">{finishLabel}</div>
+                <div className="dossier-stat__sub">{squabbledPreview ? 'Squabbled base · before effects' : 'Base power'}</div>
               </div>
             </div>
           </div>
@@ -396,7 +407,7 @@ export function CardInspector({ card, onClose, bootstrap, variantId, initialPrev
                   return (
                     <article key={slot.id} className="dossier-variant" data-finish={getVariantKind(slot.id)}>
                       <button type="button" className="dossier-variant__preview" aria-label={`Preview ${slot.name} finish`} aria-pressed={displayedVariant === slot.id} onClick={() => setPreview({cardId: card.id, variant: slot.id})}>
-                        <CardView card={card} variantId={slot.id} fillContainer presentationOnly disableLayout />
+                        {renderCard ? renderCard({card, variantId:slot.id, fillContainer:true, presentationOnly:true, disableLayout:true}) : <CollectibleCard card={card} variantId={slot.id} fillContainer presentationOnly disableLayout />}
                         <span>Preview finish</span>
                       </button>
                       <div className="dossier-variant__cost">

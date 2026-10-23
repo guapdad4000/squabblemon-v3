@@ -9,7 +9,7 @@ declare global {
   interface Window {
     __battlePerf?: {
       ready: boolean;
-      run: () => Promise<{ commits: number; renderDurationMs: number; occupiedDistricts: number }>;
+      run: () => Promise<{ commits: number; renderDurationMs: number; occupiedDistricts: number; scriptedFrames: number; commitSamples: unknown[] }>;
     };
   }
 }
@@ -131,15 +131,21 @@ export function BattlePerfHarness() {
   const run = useCallback(async () => {
     let measuredCommits = 0;
     let measuredDuration = 0;
+    let scriptedFrame = -1;
+    const commitSamples: { frame: number; phase: string; duration: number; animated: number; scrollable: number }[] = [];
     const record = (_id: string, _phase: string, actualDuration: number) => {
       measuredCommits += 1;
       measuredDuration += actualDuration;
+      commitSamples.push({ frame: scriptedFrame, phase: _phase, duration: actualDuration,
+        animated: document.querySelectorAll('[data-media-animated="true"]').length,
+        scrollable: document.querySelectorAll('.battle-formation-stack[data-scrollable="true"]').length });
     };
     window.__battlePerfRecord = record;
 
     for (const nextFrame of script.frames) {
+      scriptedFrame++;
       setFrame(nextFrame);
-      const motion = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'reduced' : 'standard';
+      const motion = document.documentElement.dataset.reduceMotion === 'true' || window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'reduced' : 'standard';
       await waitForDuration(EFFECT_PRESENTATION_TIMING[motion][nextFrame.timing]);
     }
 
@@ -160,7 +166,7 @@ export function BattlePerfHarness() {
     setCommits(measuredCommits);
     setRenderDurationMs(measuredDuration);
     const occupiedDistricts = script.finalMatch.boards.filter((lane) => lane.length > 0).length;
-    return { commits: measuredCommits, renderDurationMs: measuredDuration, occupiedDistricts };
+    return { commits: measuredCommits, renderDurationMs: measuredDuration, occupiedDistricts, scriptedFrames: script.frames.length, commitSamples };
   }, [script]);
 
   window.__battlePerf = { ready: true, run };

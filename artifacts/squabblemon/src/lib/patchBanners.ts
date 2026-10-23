@@ -3,6 +3,13 @@
  * enough: the expected original character art ID must also still be present.
  */
 export const PATCH_BANNERS = {
+  '1.14': {
+    artCardId: 'folks',
+    aspectRatio: '3 / 1',
+    path: 'assets/events/collector-v2-patch-1-14.webp',
+    smallPath: 'assets/events/collector-v2-patch-1-14-small.webp',
+    alt: 'Print. Prism. Punch. Collector V2, featuring the new FOLKS, GUAP and BUDDY collectible cards.',
+  },
   '1.11': {
     artCardId: 'the-og-rap-legend',
     aspectRatio: '3 / 1',
@@ -13,7 +20,7 @@ export const PATCH_BANNERS = {
     artCardId: 'squabble-house-manager',
     aspectRatio: '16 / 9',
     path: 'assets/events/last-waffle-patch-1-9.webp',
-    alt: 'The Last Waffle: Squabble House manager, Blue and Red rivals around the final waffle',
+    alt: 'The Last Waffle: Squabble House manager, The Opps in Blue and Red around the final waffle',
   },
   '1.7': {
     artCardId: 'triple-og-blue',

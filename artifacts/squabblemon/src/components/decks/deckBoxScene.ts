@@ -1,9 +1,13 @@
 import * as THREE from 'three';
 import type { GPUQuality } from '../../lib/gpuQuality';
+import { DECK_BOX_IMPACT_MARK, DECK_BOX_WORDMARK } from './deckBoxBrand';
 
 // This is the deck-box scene recovered from the previous production deployment.
 // Portrait ink stays matte; the frame, seal, spine, and lettering carry the foil.
 export function mountDeckBox(host: HTMLElement, { name, image, fullCover = false }: { name: string; image: string | null; fullCover?: boolean }, quality: GPUQuality) {
+  const type = getComputedStyle(host);
+  const titleFamily = type.getPropertyValue('--font-deck-title').trim() || 'Blzee, Arial';
+  const titleWeight = type.getPropertyValue('--font-deck-title-weight').trim() || '400';
   let renderer: THREE.WebGLRenderer;
   try {
     const canvas = document.createElement('canvas');
@@ -55,15 +59,23 @@ export function mountDeckBox(host: HTMLElement, { name, image, fullCover = false
     textures.push(texture);
     return texture;
   };
+  const wordmark = new Image();
+  const impactMark = new Image();
+  const drawMark = (context: CanvasRenderingContext2D, image: HTMLImageElement, x: number, y: number, width: number, height: number) => {
+    if (!image.complete || !image.naturalWidth) return;
+    const scale = Math.min(width / image.naturalWidth, height / image.naturalHeight);
+    const w = image.naturalWidth * scale, h = image.naturalHeight * scale;
+    context.drawImage(image, x + (width - w) / 2, y + (height - h) / 2, w, h);
+  };
   const makeMaps = (portrait: HTMLImageElement | null) => {
     const color = makeCanvas(768, 1075);
     const mask = makeCanvas(768, 1075);
     const colorContext = color.getContext('2d')!;
     const maskContext = mask.getContext('2d')!;
     const gradient = colorContext.createLinearGradient(0, 0, 768, 1075);
-    gradient.addColorStop(0, '#283b3b');
-    gradient.addColorStop(0.5, '#131d22');
-    gradient.addColorStop(1, '#080e13');
+    gradient.addColorStop(0, '#2c614e');
+    gradient.addColorStop(0.5, '#174634');
+    gradient.addColorStop(1, '#0b241d');
     colorContext.fillStyle = gradient;
     colorContext.fillRect(0, 0, 768, 1075);
     maskContext.fillStyle = '#111';
@@ -78,7 +90,7 @@ export function mountDeckBox(host: HTMLElement, { name, image, fullCover = false
       maskContext.fillRect(754, 0, 14, 1075);
       return { color, mask };
     }
-    colorContext.strokeStyle = '#9aaab112';
+    colorContext.strokeStyle = '#e9e3d414';
     colorContext.lineWidth = 1;
     for (let x = -1100; x < 850; x += 17) {
       colorContext.beginPath();
@@ -89,8 +101,8 @@ export function mountDeckBox(host: HTMLElement, { name, image, fullCover = false
     const foil = (draw: (context: CanvasRenderingContext2D) => void) => {
       colorContext.save();
       maskContext.save();
-      colorContext.strokeStyle = '#bdad86';
-      colorContext.fillStyle = '#d7c59d';
+      colorContext.strokeStyle = '#c9c3b9';
+      colorContext.fillStyle = '#f1eadd';
       maskContext.strokeStyle = '#eee';
       maskContext.fillStyle = '#eee';
       draw(colorContext);
@@ -114,16 +126,16 @@ export function mountDeckBox(host: HTMLElement, { name, image, fullCover = false
           context.fill();
         }
       }
-      context.textAlign = 'center';
-      context.font = '900 52px Georgia';
-      context.fillText('SM', 384, 113);
-      context.font = '600 18px Arial';
-      context.fillText('S Q U A B B L E M O N', 384, 145);
+      drawMark(context, wordmark, 132, 55, 504, 112);
       context.beginPath();
       context.moveTo(152, 165);
       context.lineTo(616, 165);
       context.stroke();
     });
+    colorContext.save();
+    colorContext.globalAlpha = .1;
+    drawMark(colorContext, impactMark, 100, 225, 568, 620);
+    colorContext.restore();
     if (portrait) {
       const scale = Math.min(646 / portrait.width, 717 / portrait.height);
       const width = portrait.width * scale;
@@ -133,23 +145,21 @@ export function mountDeckBox(host: HTMLElement, { name, image, fullCover = false
       maskContext.fillRect(60, 179, 648, 727);
     } else {
       foil((context) => {
-        context.textAlign = 'center';
-        context.font = '900 174px Georgia';
-        context.fillText('SM', 384, 580);
+        drawMark(context, impactMark, 190, 330, 388, 440);
       });
     }
     const fade = colorContext.createLinearGradient(0, 810, 0, 930);
-    fade.addColorStop(0, '#0b131800');
-    fade.addColorStop(1, '#0b1318');
+    fade.addColorStop(0, '#0b241d00');
+    fade.addColorStop(1, '#0b241d');
     colorContext.fillStyle = fade;
     colorContext.fillRect(48, 810, 672, 220);
     foil((context) => {
       context.textAlign = 'center';
       let size = 39;
-      context.font = `800 ${size}px Arial`;
+      context.font = `${titleWeight} ${size}px ${titleFamily}`;
       while (context.measureText(name.toUpperCase()).width > 624 && size > 16) {
         size -= 1;
-        context.font = `800 ${size}px Arial`;
+        context.font = `${titleWeight} ${size}px ${titleFamily}`;
       }
       context.fillText(name.toUpperCase(), 384, 951, 624);
       context.font = '14px Arial';
@@ -207,26 +217,31 @@ export function mountDeckBox(host: HTMLElement, { name, image, fullCover = false
   });
   const sideCanvas = makeCanvas(180, 840);
   const sideContext = sideCanvas.getContext('2d')!;
-  sideContext.fillStyle = '#17282d';
-  sideContext.fillRect(0, 0, 180, 840);
-  sideContext.strokeStyle = '#b6a279';
-  sideContext.lineWidth = 4;
-  sideContext.strokeRect(14, 14, 152, 812);
-  sideContext.translate(90, 420);
-  sideContext.rotate(-Math.PI / 2);
-  sideContext.fillStyle = '#d5c5a0';
-  sideContext.textAlign = 'center';
-  sideContext.font = 'bold 34px Georgia';
-  sideContext.fillText('S Q U A B B L E M O N', 0, 12);
+  const paintSide = () => {
+    sideContext.fillStyle = '#174634';
+    sideContext.fillRect(0, 0, 180, 840);
+    sideContext.strokeStyle = '#c9c3b9';
+    sideContext.lineWidth = 3;
+    sideContext.strokeRect(14, 14, 152, 812);
+    drawMark(sideContext, impactMark, 51, 55, 78, 86);
+    drawMark(sideContext, impactMark, 51, 699, 78, 86);
+    sideContext.save();
+    sideContext.translate(90, 420);
+    sideContext.rotate(-Math.PI / 2);
+    drawMark(sideContext, wordmark, -280, -59, 560, 118);
+    sideContext.restore();
+  };
+  paintSide();
+  const sideMap = makeTexture(sideCanvas, true);
   const side = new THREE.MeshPhysicalMaterial({
-    map: makeTexture(sideCanvas, true),
+    map: sideMap,
     metalness: 0.7,
     roughness: 0.3,
     clearcoat: 1,
     iridescence: 0.28,
     iridescenceThicknessRange: [270, 340],
   });
-  const edge = new THREE.MeshStandardMaterial({ color: '#968564', metalness: 0.85, roughness: 0.35 });
+  const edge = new THREE.MeshStandardMaterial({ color: '#b8b3a6', metalness: 0.85, roughness: 0.35 });
   materials.push(face, side, edge);
 
   const geometry = new THREE.BoxGeometry(2.5, 3.5, 0.7, 8, 12, 4);
@@ -348,15 +363,20 @@ export function mountDeckBox(host: HTMLElement, { name, image, fullCover = false
   document.addEventListener('visibilitychange', visibility);
 
   const portrait = new Image();
-  portrait.onload = () => {
+  const refreshPrint = () => {
     if (disposed) return;
-    const printed = makeMaps(portrait);
+    const printed = makeMaps(portrait.complete && portrait.naturalWidth ? portrait : null);
     cover.color.getContext('2d')!.drawImage(printed.color, 0, 0);
     cover.mask.getContext('2d')!.drawImage(printed.mask, 0, 0);
     updateRoughness();
-    coverColor.needsUpdate = coverMask.needsUpdate = roughness.needsUpdate = true;
+    paintSide();
+    coverColor.needsUpdate = coverMask.needsUpdate = roughness.needsUpdate = sideMap.needsUpdate = true;
     wake();
   };
+  portrait.onload = wordmark.onload = impactMark.onload = refreshPrint;
+  wordmark.src = DECK_BOX_WORDMARK;
+  impactMark.src = DECK_BOX_IMPACT_MARK;
+  if (!fullCover) void document.fonts.load(`${titleWeight} 39px ${titleFamily}`).then(refreshPrint).catch(() => {});
   if (image) portrait.src = image;
   resize();
 
@@ -364,8 +384,10 @@ export function mountDeckBox(host: HTMLElement, { name, image, fullCover = false
     disposed = true;
     cancelAnimationFrame(raf);
     observer.disconnect();
-    portrait.onload = null;
-    portrait.src = '';
+    for (const asset of [portrait, wordmark, impactMark]) {
+      asset.onload = null;
+      asset.src = '';
+    }
     host.removeEventListener('pointermove', pointer);
     host.removeEventListener('pointerleave', leave);
     document.removeEventListener('visibilitychange', visibility);

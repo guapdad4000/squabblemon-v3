@@ -175,7 +175,8 @@ test('Rock merges into Earth without changing catalog, rarity, stats or upgrade 
   assert(!cardCatalog.some(c => c.type === 'Rock' || c.elementalBond === 'Rock'));
   const earth = cardCatalog.filter(c => c.type === 'Earth' && (c.kind ?? 'character') === 'character');
   assert.equal(earth.length, 33);
-  assert(earth.some(c => c.engineId === 'buddy'), 'Earth cardinality includes Buddy’s new Earth identity');
+  assert(!earth.some(c => c.engineId === 'buddy'), 'Buddy enters the catalog as Plant, then transforms into Earth on Squabble');
+  assert.equal(cardCatalog.find(c => c.engineId === 'buddy')?.type, 'Plant');
   for (const [id, catalogId, rarity, cost, power] of [
     ['concrete', 'concrete', 'SuperCommon', 1, 1],
     ['landlord', 'landlord', 'Legendary', 2, 3],

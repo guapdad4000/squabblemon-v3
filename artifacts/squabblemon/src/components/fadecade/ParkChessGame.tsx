@@ -115,7 +115,7 @@ export default function ParkChessGame({ bootstrap }: { bootstrap: PlayerBootstra
       else move(choices[0]);
     } else setSelected(board.get(square)?.color === "w" && selected !== square ? square : null);
   }
-  const phaseLabel = busy ? "Saving move · rival thinking…" : run?.phase === "won" ? "CHECKMATE · YOU WON" : run?.phase === "lost" ? "CHECKMATE · RIVAL WON"
+  const phaseLabel = busy ? "Saving move · The Opps thinking…" : run?.phase === "won" ? "CHECKMATE · YOU WON" : run?.phase === "lost" ? "CHECKMATE · THE OPPS WON"
     : run?.phase === "draw" ? "DRAW · MATCH SAVED" : run?.phase === "resigned" ? "MATCH RESIGNED" : run?.inCheck ? "CHECK · PROTECT YOUR LEADER" : run ? "YOUR MOVE" : "TAKE A SEAT";
 
   function openAcademy() { setDialog(null); setPromotion(null); setAcademyOpen(true); }
@@ -127,7 +127,7 @@ export default function ParkChessGame({ bootstrap }: { bootstrap: PlayerBootstra
     <header className="park-chess__header"><div><small>THE PARK / REAL CHESS</small><h1>CHECK THE BLOCK</h1></div><div className="park-chess__record"><span><b>{status.campaign.wins}</b> WINS</span><span><GameGlyph name="ticket" /><b>1</b> EVERY WIN</span></div></header>
     <div className="park-chess__layout">
       <section className="park-chess__table" aria-label="Chess table">
-        <div className="park-chess__player"><span>RIVAL · BLACK</span><strong>{tier.name}</strong><b>TIER {tier.id}/5</b></div>
+        <div className="park-chess__player"><span>THE OPPS · BLACK</span><strong>{tier.name}</strong><b>TIER {tier.id}/5</b></div>
         <ParkChessBoard board={run?.board ?? startingBoard} legalMoves={run?.legalMoves ?? []} turn={run?.turn ?? "w"} inCheck={run?.inCheck ?? false} lastMove={lastMove} selected={selected} locked={locked} busy={busy} focusSquare={focusSquare} onFocusSquare={setFocusSquare} onSelect={select} onEscape={() => { setSelected(null); setPromotion(null); }} />
         <div className="park-chess__player park-chess__player--you"><span>YOU · WHITE</span><strong>{bootstrap.profile.displayName}</strong><b><HandFist aria-hidden="true" /> YOUR CREW</b></div>
       </section>
@@ -138,12 +138,12 @@ export default function ParkChessGame({ bootstrap }: { bootstrap: PlayerBootstra
           {finished && ratingChange && <p className="park-chess__rating-change" data-result={ratingChange.result}>{ratingChange.delta > 0 ? "+" : ""}{ratingChange.delta} PARK RATING <span>{ratingChange.before} → {ratingChange.after}</span></p>}
           {run && status.runRating?.rated === false && <p className="park-chess__unrated">Older saved match · unrated. Your tickets and tier progress still count.</p>}
           {run?.phase === "draw" && <p>{run.reason?.replaceAll("-", " ")}. No ticket awarded.</p>}
-          {!finished && <p>{selected ? `${pieceNames[board.get(selected)?.type ?? "p"]} ${selected.toUpperCase()} · ${legal.length ? "choose a marked square" : "no legal destinations"}` : run ? "Choose a Squabbler, then its destination." : "Checkmate the rival. Every win earns one ticket."}</p>}
+          {!finished && <p>{selected ? `${pieceNames[board.get(selected)?.type ?? "p"]} ${selected.toUpperCase()} · ${legal.length ? "choose a marked square" : "no legal destinations"}` : run ? "Choose a Squabbler, then its destination." : "Checkmate The Opps. Every win earns one ticket."}</p>}
         </div>
-        <div className="park-chess__captures"><div aria-label="Pieces you captured"><small>YOU TOOK</small><div>{run?.captured.b.length ? run.captured.b.map((type, i) => <Piece key={i} type={type} color="b" compact />) : <span>—</span>}</div></div><div aria-label="Pieces rival captured"><small>RIVAL TOOK</small><div>{run?.captured.w.length ? run.captured.w.map((type, i) => <Piece key={i} type={type} color="w" compact />) : <span>—</span>}</div></div></div>
+        <div className="park-chess__captures"><div aria-label="Pieces you captured"><small>YOU TOOK</small><div>{run?.captured.b.length ? run.captured.b.map((type, i) => <Piece key={i} type={type} color="b" compact />) : <span>—</span>}</div></div><div aria-label="Pieces The Opps captured"><small>THE OPPS TOOK</small><div>{run?.captured.w.length ? run.captured.w.map((type, i) => <Piece key={i} type={type} color="w" compact />) : <span>—</span>}</div></div></div>
         {(run?.lastPlayerMove || run?.lastBotMove) && <p className="park-chess__moves">LAST TURN <b>{run.lastPlayerMove?.san ?? "—"}</b> / <b>{run.lastBotMove?.san ?? "—"}</b></p>}
         <fieldset className="park-chess__tier-picker" aria-describedby="park-chess-tier-note">
-          <legend>{activeMatch ? "SAVED RIVAL" : "CHOOSE YOUR RIVAL"}<span>UNLOCKED {unlockedTier}/5</span></legend>
+          <legend>{activeMatch ? "SAVED OPPS" : "CHOOSE THE OPPS"}<span>UNLOCKED {unlockedTier}/5</span></legend>
           <div className="park-chess__tier-options">{PARK_CHESS_TIERS.map(opponent => {
             const lockedTier = opponent.id > unlockedTier;
             return <label key={opponent.id} data-selected={nextTier === opponent.id} data-locked={lockedTier} data-disabled={activeMatch || busy || query.isFetching || !!error || lockedTier}>
@@ -151,7 +151,7 @@ export default function ParkChessGame({ bootstrap }: { bootstrap: PlayerBootstra
               <b>{opponent.id}</b><span>{opponent.name}</span>{lockedTier && <small>LOCKED</small>}
             </label>;
           })}</div>
-          <p id="park-chess-tier-note">{activeMatch ? `Your tier ${run.tier} match is saved. Finish it to choose another rival.` : unlockedTier < 5 ? `Beat tier ${unlockedTier} to unlock tier ${unlockedTier + 1}. Replay any unlocked rival; every win banks one ticket.` : "All five rivals unlocked. Replay any tier; every win banks one ticket."}</p>
+          <p id="park-chess-tier-note">{activeMatch ? `Your tier ${run.tier} match is saved. Finish it to choose another tier for The Opps.` : unlockedTier < 5 ? `Beat tier ${unlockedTier} to unlock tier ${unlockedTier + 1}. Replay any unlocked tier of The Opps; every win banks one ticket.` : "All five tiers of The Opps unlocked. Replay any tier; every win banks one ticket."}</p>
         </fieldset>
         <div className="park-chess__actions">
           {(!run || finished) && <button className="park-chess__primary" disabled={busy || query.isFetching || !!error} onClick={() => void send(endpoint + "/start", { requestId: crypto.randomUUID(), tier: chosenTier })}>{busy ? "Taking your seat…" : run ? `Play tier ${chosenTier}` : "New match"}</button>}

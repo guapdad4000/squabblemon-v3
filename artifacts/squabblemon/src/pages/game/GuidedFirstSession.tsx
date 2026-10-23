@@ -51,8 +51,8 @@ export function GuidedFirstSession({ bootstrap, onCollect, onComplete }: { boots
       <img src={getAssetUrl('scenes/safehouse/concept.webp')} alt="" />
       <span className="venue-kicker">ROOKIE ROAD / BEFORE THE FADE</span>
       <h1>Your first fight goal.</h1>
-      <p>Finish ahead in at least two of the three districts to win; a tied district belongs to neither side. The rival plays at the top of the board, your gang at the bottom. Each district shows Rival and You scores. Total Hands across all three districts alone cannot win the match.</p>
-      <p>Dr. Fade will guide each move in this four-round fight with no timer and a limited rival. Most normal fights last six rounds, allow multiple affordable cards per turn and may have different rules or a clock.</p>
+      <p>Finish ahead in at least two of the three districts to win; a tied district belongs to neither side. The Opps play at the top of the board, your gang at the bottom. Each district shows The Opps and You scores. Total Hands across all three districts alone cannot win the match.</p>
+      <p>Dr. Fade will guide each move in this four-round fight with no timer. The Opps have limited resources. Most normal fights last six rounds, allow multiple affordable cards per turn and may have different rules or a clock.</p>
       <p>Your saved ten-card gang and cover go into this fight. The first five cards are your opening hand; later cards draw at the start of each new round while cards remain. Inspect cards without playing them.</p>
       <nav><button className="venue-button" onClick={() => { setPlaying(null); setStage('deck'); }}>Back to my gang</button><button data-testid="button-start-guided-fight" className="venue-button venue-button--gold" onClick={() => setStage('battle')}>Start guided fight</button></nav>
     </div>

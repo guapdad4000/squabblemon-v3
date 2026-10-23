@@ -364,7 +364,7 @@ function getNextAction(
       id: "story-first-node",
       eyebrow: "Chapter 1",
       title: "Welcome to the Block",
-      description: "Your first story rival is waiting.",
+      description: "The Opps are waiting in your first story fight.",
       destination: "story",
       rewardLabel: "Guaranteed card",
     };
@@ -374,7 +374,7 @@ function getNextAction(
     id: "play-practice",
     eyebrow: "Build your gang",
     title: "XP Training",
-    description: "Train against a fair CPU rival. Played owned cards earn XP even when you lose.",
+    description: "Train against The Opps with fair CPU play. Played owned cards earn XP even when you lose.",
     destination: "play",
     rewardLabel: "20–30 Card XP per participant",
   };

@@ -27,7 +27,7 @@ export function PatchArt({ cardId, version, size = 'hero' }: { cardId?: string |
     ? { '--patch-banner-ratio': banner.aspectRatio } : { '--patch-art-accent': cardEntryAccent(card) };
   return <figure className={`patch-art patch-art--${size}${useBanner ? ' patch-art--banner' : card.artworkLayout === 'portrait' ? ' patch-art--portrait' : ''}`}
     style={artStyle} aria-hidden={size === 'thumb' || undefined} data-testid={size === 'hero' ? 'patch-art' : undefined}>
-    <img src={src} alt={size !== 'hero' ? '' : useBanner ? banner.alt : `${card.name} artwork`} draggable={false} decoding="async" loading="lazy" onError={() => setFailed(src)} />
+    <img src={src} srcSet={useBanner && 'smallPath' in banner ? `${getAssetUrl(banner.smallPath)} 800w, ${bannerSrc} 1600w` : undefined} sizes={useBanner && 'smallPath' in banner ? '(max-width: 700px) 100vw, 1100px' : undefined} alt={size !== 'hero' ? '' : useBanner ? banner.alt : `${card.name} artwork`} draggable={false} decoding="async" loading="lazy" onError={() => setFailed(src)} />
     {size === 'hero' && !useBanner && <figcaption>{card.name}</figcaption>}
   </figure>;
 }

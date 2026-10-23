@@ -1,5 +1,5 @@
 import { JohnHenryMythic } from '../../components/JohnHenryMythic';
-import { useSearch } from 'wouter';
+import { useSearch, useLocation } from 'wouter';
 import { LobbyDepth } from '../../components/LobbyDepth';
 import { avatarSticker } from '@workspace/squabblemon-engine/cosmetics';
 import { Attention } from '../../components/Notifications';
@@ -7,7 +7,7 @@ import { StarterMythic } from '../../components/StarterMythic';
 import { KumiteShortcut } from '../../components/kumite/KumiteShortcut';
 import { GameBackButton } from '../../components/venue/GameBackButton';
 import { playInteractionSound } from '../../lib/interactionAudio';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link } from 'wouter';
 import { getGetPlayerStoryQueryKey, useGetPlayerStory, useListChallengeRuns, getListChallengeRunsQueryKey, type PlayerBootstrap } from '@workspace/api-client-react';
 import { Briefcase, ArrowRight, Moon, Sun, Tv, Dumbbell, Layers, Smartphone, Disc3, Move, MousePointer2, Sprout, UserRound, CalendarDays } from 'lucide-react';
@@ -15,7 +15,6 @@ import { getAssetUrl } from '../../lib/assets';
 import { DeferredGrowthLab, preloadGrowthLab } from '../../components/DeferredGrowthLab';
 import { MusicControls } from '../../components/MusicControls';
 import { SafehouseMail, useSafehouseMail } from '../../components/SafehouseMail';
-import { hasUnreadBulletin, SafehouseBulletinBoard } from '../../components/SafehouseBulletinBoard';
 import { hasUnreadPatchBoard, usePublishedPatches } from '../../hooks/use-patches';
 import { useMusic, musicActions } from '../../musicStore';
 import { catalogCardById, getCardImage } from '../../data';
@@ -29,7 +28,7 @@ import { playVoiceLine, stopSoundEffect } from '../../lib/sfx';
 
 const stations = [
   { id: 'mail', label: 'The mail door', short: 'Mail', icon: Briefcase, title: 'Special delivery.', detail: 'Letters, updates, and gifts from your people.', action: 'Open your mail', href: '' },
-  { id: 'events', label: 'The bulletin board', short: 'Events', icon: CalendarDays, title: 'What’s happening on the block?', detail: 'What you can play right now, what is planned, dev notes, and a place to send feedback to the devs.', action: 'Read the board', href: '' },
+  { id: 'events', label: 'The bulletin board', short: 'Events', icon: CalendarDays, title: 'What’s happening on the block?', detail: 'What you can play right now, what is planned, dev notes, and a place to send feedback to the devs.', action: 'Open Events', href: '/game/events' },
   { id: 'growth', label: 'Buddy’s plants', short: 'Growth Lab', icon: Sprout, title: 'Buddy’s Growth Lab', detail: 'Helping you get them hands holistically.', action: 'Enter Growth Lab', href: '' },
   { id: 'arcade', label: 'The arcade machine', short: 'Fadecade', icon: Tv, title: 'Got next?', detail: 'Straight to the Back, Stockz, and a whole room of challenges.', action: 'Enter the Fadecade', href: '/game/challenges' },
   { id: 'inventory', label: 'Your inventory bag', short: 'Bag', icon: Briefcase, title: 'Keep it in the bag.', detail: 'Your Clout, tickets, Style Shards, and collection. All accounted for.', action: 'Open your bag', href: '/game/inventory' },
@@ -102,18 +101,17 @@ export function Home({ bootstrap, onGuideComplete }: { bootstrap: PlayerBootstra
   const [view, setView] = useState<Station | 'room'>('room');
   const [growthOpen, setGrowthOpen] = useState(false);
   const [mailOpen, setMailOpen] = useState(false);
-  const [bulletinOpen, setBulletinOpen] = useState(false);
-  const [bulletinUnread, setBulletinUnread] = useState(hasUnreadBulletin);
+  const [location, navigate] = useLocation();
+  const [bulletinUnread, setBulletinUnread] = useState(true);
   const publishedPatches = usePublishedPatches(bootstrap.profile.id);
-  useEffect(() => { if (publishedPatches.data) setBulletinUnread(hasUnreadPatchBoard(publishedPatches.data)); }, [publishedPatches.data]);
-  const markBulletinViewed = useCallback(() => setBulletinUnread(hasUnreadPatchBoard(publishedPatches.data)), [publishedPatches.data]);
+  useEffect(() => { if (publishedPatches.data) setBulletinUnread(hasUnreadPatchBoard(publishedPatches.data)); }, [publishedPatches.data, location]);
   const noticeSearch = useSearch();
   useEffect(() => {
     const notice = new URLSearchParams(noticeSearch).get('notice');
     if (notice === 'mail') { setView('mail'); setMailOpen(true); }
     if (notice === 'growth') setGrowthOpen(true);
-    if (notice === 'events') { setView('events'); setBulletinOpen(true); }
-  }, [noticeSearch]);
+    if (notice === 'events') navigate('/game/events', { replace: true });
+  }, [noticeSearch, navigate]);
   const mail = useSafehouseMail(bootstrap.profile.id);
   const unreadMail = (mail.data?.messages ?? []).filter(item => !item.readAt).length;
   const [night, setNight] = useState(() => {
@@ -158,7 +156,7 @@ export function Home({ bootstrap, onGuideComplete }: { bootstrap: PlayerBootstra
     return () => clearTimeout(timer);
   }, [view, bootstrap.profile.settings.reducedMotion]);
   useEffect(() => { sendScene(frame, { type: 'mail', unread: unreadMail }); }, [unreadMail]);
-  useEffect(() => { sendScene(frame, { type: 'mail-overlay', open: mailOpen || bulletinOpen }); }, [mailOpen, bulletinOpen]);
+  useEffect(() => { sendScene(frame, { type: 'mail-overlay', open: mailOpen }); }, [mailOpen]);
   useEffect(() => { sendScene(frame, { type: 'bulletin', unread: bulletinUnread }); }, [bulletinUnread]);
   const crew = [...new Set([...(bootstrap.profile.savedDecks[0]?.cardIds ?? []), ...bootstrap.profile.ownedCardIds])]
     .map(id => catalogCardById[id]).filter(Boolean).slice(0, 3);
@@ -166,11 +164,17 @@ export function Home({ bootstrap, onGuideComplete }: { bootstrap: PlayerBootstra
     ?? bootstrap.profile.ownedCardIds.map(id => catalogCardById[id]).find(Boolean)
     ?? catalogCardById.cornball;
   const profileSticker = avatarSticker(bootstrap.profile.avatarKey);
-  function explore(next: Station | 'room') { setView(next); sendScene(frame, { type: 'view', view: next }); }
+  function explore(next: Station | 'room') {
+    if (next === 'events') { navigate('/game/events'); return; }
+    setView(next); sendScene(frame, { type: 'view', view: next });
+  }
   function receive(message: SceneMessage) {
     if (message.type === 'bag-hit') playInteractionSound('bag-hit');
     if (message.type === 'interact' && music.enabled && !music.playing) musicActions.play();
-    if (message.type === 'view' && (message.view === 'room' || stations.some(item => item.id === message.view))) setView(message.view as Station | 'room');
+    if (message.type === 'view' && (message.view === 'room' || stations.some(item => item.id === message.view))) {
+      if (message.view === 'events') navigate('/game/events');
+      else setView(message.view as Station | 'room');
+    }
     if (message.type === 'loading') { setSceneFallback('none'); latestAnchors.current = []; setSceneReady(false); setMarkersPlaced(false); resetRoomMarkers(markers.current); }
     if (message.type === 'static' || message.type === 'error') { setSceneFallback(message.type); latestAnchors.current = []; setSceneReady(false); setMarkersPlaced(false); resetRoomMarkers(markers.current); }
     if (message.type === 'anchors' && markerLayer.current && frame.current) {
@@ -186,7 +190,7 @@ export function Home({ bootstrap, onGuideComplete }: { bootstrap: PlayerBootstra
     else if (previous !== 'room') {
       const marker = markers.current.get(previous);
       marker?.focus({ preventScroll: true });
-      // Deep links (e.g. ?notice=events) open before markers are placed; hidden markers cannot take focus yet.
+      // Deep links (e.g. ?notice=mail) open before markers are placed; hidden markers cannot take focus yet.
       pendingMarkerFocus.current = marker && document.activeElement !== marker ? previous : null;
     }
   }, [view]);
@@ -218,7 +222,7 @@ export function Home({ bootstrap, onGuideComplete }: { bootstrap: PlayerBootstra
   const syncRoom = () => {
     sendScene(frame, { type: 'arcade', ...arcadeProgress });
     sendScene(frame, { type: 'mail', unread: unreadMail });
-    sendScene(frame, { type: 'mail-overlay', open: mailOpen || bulletinOpen });
+    sendScene(frame, { type: 'mail-overlay', open: mailOpen });
     sendScene(frame, { type: 'bulletin', unread: bulletinUnread });
     sendScene(frame, { type: 'light', night });
     sendScene(frame, { type: 'music', playing: music.playing });
@@ -268,10 +272,9 @@ export function Home({ bootstrap, onGuideComplete }: { bootstrap: PlayerBootstra
       <LobbyDepth />
       <DeferredGrowthLab bootstrap={bootstrap} open={growthOpen} onOpenChange={setGrowthOpen} />
       <SafehouseMail playerId={bootstrap.profile.id} open={mailOpen} onClose={() => { setMailOpen(false); explore('room'); }} />
-      <SafehouseBulletinBoard playerId={bootstrap.profile.id} open={bulletinOpen} onViewed={markBulletinViewed} onClose={() => { setBulletinOpen(false); explore('room'); }} />
       <Link className="safehouse-bounty-logo" href="/game/missions" aria-label={`Open bounties${claimed ? ` · ${claimed} ready` : ''}`}><img src={getAssetUrl('assets/bounty-hunter/hero.webp')} alt="" /><span className="sr-only">Bounties</span><Attention section="missions" />{claimed > 0 && <b>{claimed}</b>}</Link>
       <JohnHenryMythic bootstrap={bootstrap} placement="shortcut" />
-      <StarterMythic bootstrap={bootstrap} placement="shortcut" autoShow={!onGuideComplete && view === 'room' && !growthOpen && !mailOpen && !bulletinOpen} />
+      <StarterMythic bootstrap={bootstrap} placement="shortcut" autoShow={!onGuideComplete && view === 'room' && !growthOpen && !mailOpen} />
       <KumiteShortcut />
       <SceneFrame kind="safehouse" frameRef={frame} poster={`${import.meta.env.BASE_URL}scenes/safehouse/concept.webp`}
         onMessage={receive} onReady={() => { setSceneFallback('none'); resetRoomMarkers(markers.current); setMarkersPlaced(false); setSceneReady(true); syncRoom(); sendScene(frame, { type: 'view', view }); }} />
@@ -297,7 +300,7 @@ export function Home({ bootstrap, onGuideComplete }: { bootstrap: PlayerBootstra
           <div className="safehouse-room-detail__body"><div><span className="room-eyebrow">{station.label}</span><h2>{station.id === 'growth' ? <>Buddy’s <em className="buddy-growth-word">Growth</em> Lab</> : station.title}</h2>
             <p>{station.id === 'music' ? `${music.playing ? 'Now playing' : 'On the turntable'}: ${music.track?.title ?? soundtrack[music.trackIndex].title}` : station.id === 'story' && chapter ? chapter.title : station.detail}</p></div>
             <div className="safehouse-room-actions">
-              {station.id === 'growth' ? <div className="room-growth"><img className="room-growth__buddy" src={getAssetUrl('assets/buddy-growth/buddy-welcome.webp')} alt="Buddy welcomes you to his Growth Lab" width="720" height="960" /><button type="button" className="room-action" onPointerEnter={preloadGrowthLab} onFocus={preloadGrowthLab} onPointerDown={preloadGrowthLab} onClick={() => setGrowthOpen(true)}>Enter Growth Lab<ArrowRight size={15} /></button></div> : station.id === 'events' ? <button type="button" className="room-action" onClick={() => setBulletinOpen(true)}>Read the board<ArrowRight size={15} /></button> : station.id === 'music' ? <MusicControls variant="dj" wrapperClassName="room-dj" /> : onGuideComplete && station.id === 'cards' ? <button className="room-action" onClick={onGuideComplete}>Build your gang<ArrowRight size={15} /></button> : <Link href={station.href} className="room-action">{station.action}<ArrowRight size={15} /></Link>}
+              {station.id === 'growth' ? <div className="room-growth"><img className="room-growth__buddy" src={getAssetUrl('assets/buddy-growth/buddy-welcome.webp')} alt="Buddy welcomes you to his Growth Lab" width="720" height="960" /><button type="button" className="room-action" onPointerEnter={preloadGrowthLab} onFocus={preloadGrowthLab} onPointerDown={preloadGrowthLab} onClick={() => setGrowthOpen(true)}>Enter Growth Lab<ArrowRight size={15} /></button></div> : station.id === 'music' ? <MusicControls variant="dj" wrapperClassName="room-dj" /> : onGuideComplete && station.id === 'cards' ? <button className="room-action" onClick={onGuideComplete}>Build your gang<ArrowRight size={15} /></button> : <Link href={station.href} className="room-action">{station.action}<ArrowRight size={15} /></Link>}
               {station.id === 'training' && sceneReady && <button type="button" className="room-punch" onClick={() => { sendScene(frame, { type: 'punch' }); }}>Hit the bag</button>}
             </div>
           </div>

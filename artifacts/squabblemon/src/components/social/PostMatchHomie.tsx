@@ -120,11 +120,11 @@ export function PostMatchHomie({ code }: { code: string }) {
   }
   return <div className="post-match-homie" data-testid="post-match-homie">
     {hidden ? (loading || error ? <div className="post-match-homie__status" role="status">
-      {loading ? 'Checking rival…' : 'Could not check your rival.'}
+      {loading ? 'Checking The Opps…' : 'Could not check The Opps.'}
       {!loading && <button type="button" onClick={() => void refresh()}>Retry</button>}
     </div> : null) : <>
       <div className="post-match-homie__identity">
-        <span>YOUR RIVAL <strong>{opponent.player.displayName}</strong></span>
+        <span>THE OPPS <strong>{opponent.player.displayName}</strong></span>
         <button type="button" className="online-secondary post-match-homie__button"
           data-testid="post-match-homie-action"
           disabled={working || loading || !!error || social.busy || !navigator.onLine || relation === 'outgoing' || relation === 'homie'}
@@ -132,7 +132,7 @@ export function PostMatchHomie({ code }: { code: string }) {
           {working ? 'Saving…' : relation === 'homie' ? 'Homies' : relation === 'outgoing' ? 'Request sent' : relation === 'incoming' ? 'Accept request' : 'Add Homie'}
         </button>
       </div>
-      {(error || !navigator.onLine) && <div className="post-match-homie__status" role="alert">{error ? `Could not confirm your rival’s Homies status. ${error}` : 'Reconnect to add a Homie.'} <button type="button" onClick={() => { void social.query.refetch(); void refresh(); }}>Retry</button></div>}
+      {(error || !navigator.onLine) && <div className="post-match-homie__status" role="alert">{error ? `Could not confirm The Opps’ Homies status. ${error}` : 'Reconnect to add a Homie.'} <button type="button" onClick={() => { void social.query.refetch(); void refresh(); }}>Retry</button></div>}
     </>}
   </div>;
 }

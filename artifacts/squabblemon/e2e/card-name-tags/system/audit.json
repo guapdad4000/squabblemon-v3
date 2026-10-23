@@ -1,0 +1,722 @@
+{
+  "capturedAt": "2026-10-23T02:59:50.484Z",
+  "source": "/home/falcon/.codex/worktrees/battle-supplied-effects/New project 9",
+  "scope": "Local dirty worktree catalog; no deployment or player-state claim",
+  "total": 301,
+  "elements": {
+    "Earth": 36,
+    "Fire": 39,
+    "Light": 28,
+    "Electric": 32,
+    "Dark": 40,
+    "Plant": 16,
+    "Air": 43,
+    "Normal": 29,
+    "Water": 25,
+    "Poison": 13
+  },
+  "rarities": {
+    "Legendary": 38,
+    "Mythical": 25,
+    "Rare": 77,
+    "Uncommon": 49,
+    "Common": 56,
+    "Epic": 47,
+    "SuperCommon": 9
+  },
+  "kinds": {
+    "character": 278,
+    "support": 13,
+    "blockbuster": 10
+  },
+  "tiers": {
+    "SuperCommon": {
+      "name": "SuperCommon",
+      "label": "Super Common",
+      "order": -1,
+      "color": "#cbb99c",
+      "cue": "◇",
+      "accessibilityLabel": "Super Common rarity, one outline diamond"
+    },
+    "Common": {
+      "name": "Common",
+      "label": "Common",
+      "order": 0,
+      "color": "#a8ada9",
+      "cue": "◆",
+      "accessibilityLabel": "Common rarity, one diamond"
+    },
+    "Uncommon": {
+      "name": "Uncommon",
+      "label": "Uncommon",
+      "order": 1,
+      "color": "#4ade80",
+      "cue": "◆◆",
+      "accessibilityLabel": "Uncommon rarity, two diamonds"
+    },
+    "Rare": {
+      "name": "Rare",
+      "label": "Rare",
+      "order": 2,
+      "color": "#3b82f6",
+      "cue": "◆◆◆",
+      "accessibilityLabel": "Rare rarity, three diamonds"
+    },
+    "Epic": {
+      "name": "Epic",
+      "label": "Super Rare",
+      "order": 3,
+      "color": "#a855f7",
+      "cue": "◆◆◆◆",
+      "accessibilityLabel": "Super Rare rarity, four diamonds"
+    },
+    "Legendary": {
+      "name": "Legendary",
+      "label": "Legendary",
+      "order": 4,
+      "color": "#eab308",
+      "cue": "◆◆◆◆◆",
+      "accessibilityLabel": "Legendary rarity, five diamonds"
+    },
+    "Mythical": {
+      "name": "Mythical",
+      "label": "Mythical",
+      "order": 5,
+      "color": "#ef4444",
+      "cue": "◆◆◆◆◆◆",
+      "accessibilityLabel": "Mythical rarity, six diamonds"
+    }
+  },
+  "matrix": [
+    {
+      "element": "Normal",
+      "SuperCommon": 0,
+      "Common": 9,
+      "Uncommon": 7,
+      "Rare": 4,
+      "Epic": 2,
+      "Legendary": 4,
+      "Mythical": 3
+    },
+    {
+      "element": "Fire",
+      "SuperCommon": 1,
+      "Common": 7,
+      "Uncommon": 5,
+      "Rare": 12,
+      "Epic": 5,
+      "Legendary": 5,
+      "Mythical": 4
+    },
+    {
+      "element": "Water",
+      "SuperCommon": 1,
+      "Common": 6,
+      "Uncommon": 5,
+      "Rare": 6,
+      "Epic": 4,
+      "Legendary": 1,
+      "Mythical": 2
+    },
+    {
+      "element": "Plant",
+      "SuperCommon": 1,
+      "Common": 4,
+      "Uncommon": 3,
+      "Rare": 3,
+      "Epic": 3,
+      "Legendary": 1,
+      "Mythical": 1
+    },
+    {
+      "element": "Air",
+      "SuperCommon": 1,
+      "Common": 12,
+      "Uncommon": 8,
+      "Rare": 12,
+      "Epic": 6,
+      "Legendary": 3,
+      "Mythical": 1
+    },
+    {
+      "element": "Electric",
+      "SuperCommon": 0,
+      "Common": 7,
+      "Uncommon": 4,
+      "Rare": 11,
+      "Epic": 4,
+      "Legendary": 3,
+      "Mythical": 3
+    },
+    {
+      "element": "Poison",
+      "SuperCommon": 0,
+      "Common": 1,
+      "Uncommon": 3,
+      "Rare": 3,
+      "Epic": 3,
+      "Legendary": 1,
+      "Mythical": 2
+    },
+    {
+      "element": "Light",
+      "SuperCommon": 2,
+      "Common": 3,
+      "Uncommon": 4,
+      "Rare": 5,
+      "Epic": 6,
+      "Legendary": 4,
+      "Mythical": 4
+    },
+    {
+      "element": "Dark",
+      "SuperCommon": 1,
+      "Common": 4,
+      "Uncommon": 6,
+      "Rare": 11,
+      "Epic": 7,
+      "Legendary": 8,
+      "Mythical": 3
+    },
+    {
+      "element": "Earth",
+      "SuperCommon": 2,
+      "Common": 3,
+      "Uncommon": 4,
+      "Rare": 10,
+      "Epic": 7,
+      "Legendary": 8,
+      "Mythical": 2
+    }
+  ],
+  "portraitCards": [
+    {
+      "id": "church",
+      "name": "Church Auntie"
+    },
+    {
+      "id": "simmy",
+      "name": "Simmy"
+    },
+    {
+      "id": "captainjigga",
+      "name": "Captain Jigga"
+    },
+    {
+      "id": "og-calisthenics",
+      "name": "OG Calisthenics"
+    },
+    {
+      "id": "hair-stylist",
+      "name": "Hair Stylist"
+    },
+    {
+      "id": "stylist",
+      "name": "Stylist"
+    },
+    {
+      "id": "demario",
+      "name": "Demario"
+    },
+    {
+      "id": "luigion",
+      "name": "Luigion"
+    },
+    {
+      "id": "black-cowboy",
+      "name": "Black Cowboy"
+    },
+    {
+      "id": "inmate-crafty",
+      "name": "Inmate Crafty"
+    },
+    {
+      "id": "inmate-boyfriend",
+      "name": "Inmate Boyfriend"
+    },
+    {
+      "id": "inmate-informant",
+      "name": "Inmate Informant"
+    },
+    {
+      "id": "inmate-contraband",
+      "name": "Inmate Contraband"
+    },
+    {
+      "id": "lebron-james",
+      "name": "Regular guy named LeBron James"
+    },
+    {
+      "id": "sugarfoot",
+      "name": "Sugarfoot"
+    },
+    {
+      "id": "yn-gokarter",
+      "name": "YN Gokarter"
+    },
+    {
+      "id": "yn-atv-lord",
+      "name": "YN ATV Lord"
+    },
+    {
+      "id": "janitor",
+      "name": "SquabbleHouse Janitor"
+    },
+    {
+      "id": "homeless-wiseman",
+      "name": "Homeless Wiseman"
+    },
+    {
+      "id": "juneteenth-chair-guy",
+      "name": "Juneteenth Chair Guy"
+    },
+    {
+      "id": "squabble-house-manager",
+      "name": "SquabbleHouse Manager"
+    },
+    {
+      "id": "riptidebruiser",
+      "name": "Gator Boy"
+    },
+    {
+      "id": "stillwatermedic",
+      "name": "Hot Tub Hottie"
+    },
+    {
+      "id": "monsoonanchor",
+      "name": "Gas Station Sushi Chef"
+    },
+    {
+      "id": "rainmaker",
+      "name": "Energy Drink Freak"
+    },
+    {
+      "id": "batteryback",
+      "name": "Game Developer"
+    },
+    {
+      "id": "circuitcaptain",
+      "name": "Electrician Foreman"
+    },
+    {
+      "id": "wiretap",
+      "name": "E.V. Enthusiast"
+    },
+    {
+      "id": "livewire",
+      "name": "Dominican Phone Salesman"
+    },
+    {
+      "id": "sprout",
+      "name": "OG Vegan"
+    },
+    {
+      "id": "rootnurse",
+      "name": "Matcha Freak"
+    },
+    {
+      "id": "canopykeeper",
+      "name": "Performative Male"
+    },
+    {
+      "id": "gardenwall",
+      "name": "A Spare Gus"
+    },
+    {
+      "id": "gust",
+      "name": "Big City Pigeon"
+    },
+    {
+      "id": "crosswind",
+      "name": "Baby Crying on an Airplane"
+    },
+    {
+      "id": "slipstream",
+      "name": "The Flight Plug"
+    },
+    {
+      "id": "cloudbreak",
+      "name": "Airheaded Model"
+    },
+    {
+      "id": "bushedo-brown",
+      "name": "Bushedo Brown"
+    },
+    {
+      "id": "franklin-duke",
+      "name": "Franklin Duke"
+    },
+    {
+      "id": "chonk-lee",
+      "name": "Chonk Lee"
+    },
+    {
+      "id": "ganger-blue",
+      "name": "Ganger Blue"
+    },
+    {
+      "id": "ganger-red",
+      "name": "Ganger Red"
+    },
+    {
+      "id": "snitch",
+      "name": "Snitch"
+    },
+    {
+      "id": "cracked-head",
+      "name": "Cracked Head"
+    },
+    {
+      "id": "triple-og-blue",
+      "name": "CLUE COOKY"
+    },
+    {
+      "id": "triple-og-red",
+      "name": "RED PUNCH"
+    },
+    {
+      "id": "initiation",
+      "name": "INITIATION"
+    },
+    {
+      "id": "block-spinner",
+      "name": "BLOCK SPINNER"
+    },
+    {
+      "id": "look-out",
+      "name": "LOOK OUT"
+    },
+    {
+      "id": "the-shootout",
+      "name": "The Shootout"
+    },
+    {
+      "id": "the-block-spin",
+      "name": "The Block Spin"
+    },
+    {
+      "id": "the-sideshow",
+      "name": "The Sideshow"
+    },
+    {
+      "id": "the-concert",
+      "name": "The Concert"
+    },
+    {
+      "id": "the-setup",
+      "name": "The Setup"
+    },
+    {
+      "id": "the-dice-game",
+      "name": "The Dice Game"
+    },
+    {
+      "id": "the-after-party",
+      "name": "The After Party"
+    },
+    {
+      "id": "the-kickback",
+      "name": "The Kickback"
+    },
+    {
+      "id": "the-cookout",
+      "name": "The Cookout"
+    },
+    {
+      "id": "the-babyshower",
+      "name": "The Baby Shower"
+    },
+    {
+      "id": "squabblehouse-security",
+      "name": "SquabbleHouse Security"
+    },
+    {
+      "id": "squabblehouse-teknician",
+      "name": "SquabbleHouse Teknician"
+    },
+    {
+      "id": "griddle-master",
+      "name": "SquabbleHouse Griddle Master"
+    },
+    {
+      "id": "inmate-reformed",
+      "name": "SquabbleHouse Inmate Reformed"
+    },
+    {
+      "id": "squabblehouse-bus-boy",
+      "name": "SquabbleHouse Bus Boy"
+    },
+    {
+      "id": "squabblehouse-cashier",
+      "name": "SquabbleHouse Cashier"
+    },
+    {
+      "id": "waffle-warlord",
+      "name": "SquabbleHouse Waffle Warlord"
+    },
+    {
+      "id": "cane-corso-red",
+      "name": "Cane Corso (Red)"
+    },
+    {
+      "id": "blue-nose-pit",
+      "name": "Blue-Nose Pit"
+    },
+    {
+      "id": "boo-boo-the-fool",
+      "name": "Boo Boo the Fool"
+    },
+    {
+      "id": "mr-mc-hands",
+      "name": "Mr. Mc Hands"
+    },
+    {
+      "id": "ms-mary-mack",
+      "name": "Ms. Mary Mack"
+    },
+    {
+      "id": "pimp-swookie",
+      "name": "Pimp Swookie"
+    },
+    {
+      "id": "og-uncle-harley-davidson",
+      "name": "OG Uncle Harley Davidson"
+    },
+    {
+      "id": "suga-mama",
+      "name": "Suga Mama"
+    },
+    {
+      "id": "side-chick",
+      "name": "Side Chick"
+    },
+    {
+      "id": "gas-station-window-wiper",
+      "name": "Gas Station Window Wiper"
+    },
+    {
+      "id": "parole-officer",
+      "name": "Parole Officer"
+    },
+    {
+      "id": "work-hubby",
+      "name": "The Work Hubby"
+    },
+    {
+      "id": "he-just-a-friend",
+      "name": "The Guy She Told You Not to Worry About"
+    },
+    {
+      "id": "crazy-ex-boyfriend",
+      "name": "Crazy Ex-Boyfriend"
+    },
+    {
+      "id": "uncle-sam",
+      "name": "Uncle Sam"
+    },
+    {
+      "id": "apartment-maintenance-sage",
+      "name": "Apartment Maintenance Sage"
+    },
+    {
+      "id": "bail-bonds-auntie",
+      "name": "The Bail Bonds Auntie"
+    },
+    {
+      "id": "lash-tech",
+      "name": "Lash Tech"
+    },
+    {
+      "id": "the-opening-act",
+      "name": "The Opening Act"
+    },
+    {
+      "id": "the-dj",
+      "name": "The DJ"
+    },
+    {
+      "id": "the-hype-man",
+      "name": "The Hype Man"
+    },
+    {
+      "id": "the-manager-nice",
+      "name": "The Manager — Nice"
+    },
+    {
+      "id": "the-rapper",
+      "name": "The Rapper"
+    },
+    {
+      "id": "the-janky-promoter",
+      "name": "The Janky Promoter"
+    },
+    {
+      "id": "the-local-celebrity",
+      "name": "The Local Celebrity"
+    },
+    {
+      "id": "the-battle-rapper",
+      "name": "The Battle Rapper"
+    },
+    {
+      "id": "the-manager-evil",
+      "name": "The Manager — Evil"
+    },
+    {
+      "id": "the-og-rap-legend",
+      "name": "The OG Rap Legend"
+    },
+    {
+      "id": "fitness-bro",
+      "name": "Fitness Bro"
+    },
+    {
+      "id": "fitness-girl",
+      "name": "Fitness Girl"
+    },
+    {
+      "id": "personal-trainer",
+      "name": "Personal Trainer"
+    },
+    {
+      "id": "demon-trainer",
+      "name": "Demon Trainer"
+    },
+    {
+      "id": "kyle",
+      "name": "KYLE"
+    },
+    {
+      "id": "stockz",
+      "name": "STOCKZ"
+    }
+  ],
+  "immersiveCards": [
+    {
+      "id": "rastamon",
+      "name": "Rastamon"
+    },
+    {
+      "id": "wifey",
+      "name": "Wifey"
+    }
+  ],
+  "shortNames": [
+    {
+      "id": "guap",
+      "name": "GUAP"
+    },
+    {
+      "id": "plug",
+      "name": "Plug"
+    },
+    {
+      "id": "fein",
+      "name": "Fein"
+    },
+    {
+      "id": "stud",
+      "name": "STUD"
+    },
+    {
+      "id": "bboy",
+      "name": "Bboy"
+    },
+    {
+      "id": "tron",
+      "name": "TRON"
+    },
+    {
+      "id": "lola",
+      "name": "Lola"
+    },
+    {
+      "id": "lion",
+      "name": "Lion"
+    },
+    {
+      "id": "oz",
+      "name": "Oz"
+    },
+    {
+      "id": "ahki",
+      "name": "Ahki"
+    },
+    {
+      "id": "kyle",
+      "name": "KYLE"
+    }
+  ],
+  "longNames": [
+    {
+      "id": "he-just-a-friend",
+      "name": "The Guy She Told You Not to Worry About"
+    },
+    {
+      "id": "teacher",
+      "name": "Teacher Who Never Believed in Rappers"
+    },
+    {
+      "id": "lebron-james",
+      "name": "Regular guy named LeBron James"
+    },
+    {
+      "id": "transplant",
+      "name": "Racially Ambiguous Transplant"
+    },
+    {
+      "id": "sideofhands",
+      "name": "SquabbleHouse A Side of Hands"
+    },
+    {
+      "id": "inmate-reformed",
+      "name": "SquabbleHouse Inmate Reformed"
+    },
+    {
+      "id": "griddle-master",
+      "name": "SquabbleHouse Griddle Master"
+    },
+    {
+      "id": "waffle-warlord",
+      "name": "SquabbleHouse Waffle Warlord"
+    }
+  ],
+  "sources": [
+    {
+      "path": "lib/squabblemon-engine/src/data.ts",
+      "sha256": "43b6123a5b5561609e32049d26cb93d480048ef2deb961f60a109f05159f7fd7"
+    },
+    {
+      "path": "artifacts/squabblemon/src/components/CardView.tsx",
+      "sha256": "01472287bc1c9f6afc7f76f930abd1296c1ca4b747df3eea9ef76d1842e23aea"
+    },
+    {
+      "path": "artifacts/squabblemon/src/components/CardRarityTreatment.tsx",
+      "sha256": "b0ee73c935128d512aaa367eef6eda6c107e51b1c8d75c388423c00a7adcf9f6"
+    },
+    {
+      "path": "artifacts/squabblemon/src/components/CardVariantTreatment.tsx",
+      "sha256": "b0873cc0c069b1c58eaa235608f5ee8eb1a6dc5a3edbcea0a7e7bbf21ed54379"
+    },
+    {
+      "path": "artifacts/squabblemon/src/lib/cardFinish.ts",
+      "sha256": "57368701449e0c504be5444cbc4c6fcadf4099da0a205fb884991c6e99115e68"
+    },
+    {
+      "path": "artifacts/squabblemon/src/components/CardFoil.tsx",
+      "sha256": "bf523cee10de9ff927b1c3068d9900e0d445eb6b3d08f99232cdfa7cc2494ff1"
+    },
+    {
+      "path": "artifacts/squabblemon/src/components/card-finish.css",
+      "sha256": "e77a55d32cf11d6cf88611d4b7e57c7b26e18d1c717eb006a36d1254882dcc36"
+    },
+    {
+      "path": "artifacts/squabblemon/public/scenes/cards/foil.js",
+      "sha256": "20fb3c4b154ef5150399551e7f4162860ef8300da768ff1245828b76f2d3d7c9"
+    },
+    {
+      "path": "artifacts/squabblemon/src/assets/foil-crown.svg",
+      "sha256": "528aa7df8c2c024bd826fd6c97acddefc37bae6af6d5b3b01f0599a5285610d6"
+    }
+  ]
+}

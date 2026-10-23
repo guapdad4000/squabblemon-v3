@@ -7,7 +7,7 @@ export function rookieEncounter(): StoryEncounterSnapshot {
     id: 'rookie-road-v2', roundLimit: 4,
     enemy: { id: 'fade-training', name: 'Dr. Fade’s training crew', portraitAssetId: 'assets/tutorial/dr-fade-welcome.png', deckId: 'vibes', cardIds: ['cornball', 'rastamon', 'roaster', 'snow', 'wifey', 'barber', 'church', 'hooper', 'plug', 'drfade'], behaviorProfile: 'support' },
     battlefieldAssetId: 'assets/venues/red-fence-night-court.webp', soundHooks: {},
-    passive: { name: 'Training wheels', description: 'Four rounds. No timer. Your rival has a small opening hand and limited Motion while you learn.' },
+    passive: { name: 'Training wheels', description: 'Four rounds. No timer. The Opps have a small opening hand and limited Motion while you learn.' },
     modifiers: { startingMotion: { cpu: 1 }, handSize: { cpu: 1 }, roundMotionDeltas: [2, 3, 4].map(round => ({ round, owner: 'cpu' as const, amount: -round })) },
   };
 }

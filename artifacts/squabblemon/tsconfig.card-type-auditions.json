@@ -1,0 +1,1 @@
+{"extends":"./tsconfig.supplied-fx.json","include":["src/**/*","e2e/card-type-auditions.fixture.tsx"]}
