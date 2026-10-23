@@ -55,16 +55,16 @@
  .collector-card[data-layered-card] :is(.layered-reflection,.layered-rarity-rim,.collector-edition-seal::after) { background-position:48% 50%; }
 }
 
-/* V2.6: separate metal bevel, microflake film and printed ink planes. */
+/* The masked rim grows inward: double its width without changing card bounds. */
 .collector-card[data-layered-card] .layered-rarity-rim {
- inset:.7%; padding:2.1cqw; opacity:1;
+ inset:.7%; padding:4.2cqw; opacity:1;
  background-image:url('../assets/collector-v2/prism-flakes.webp'),conic-gradient(from 25deg,var(--stock-deep),var(--stock-light) 7%,var(--stock) 15%,var(--stock-deep) 27%,var(--stock-light) 39%,var(--stock) 46%,var(--stock-deep) 56%,var(--stock-light) 68%,var(--stock) 80%,var(--stock-deep));
  background-size:48cqw 48cqw,160% 160%; background-position:0 0,var(--foil-x,48%) var(--foil-y,40%);
  box-shadow:inset .5cqw .5cqw .6cqw #fff9,inset -.6cqw -.6cqw .5cqw #000b;
 }
 /* Neutral tiers retain a printed edge; premium metals keep their own color. */
 .collector-card[data-layered-card]:is([data-card-rarity="SuperCommon"],[data-card-rarity="Common"],[data-card-rarity="Uncommon"]) .layered-rarity-rim {
- background-image:linear-gradient(120deg,#272c29,#a2aba5 22%,#343c38 48%,#909c94 72%,#202723); padding:.8cqw; opacity:.75;
+ background-image:linear-gradient(120deg,#272c29,#a2aba5 22%,#343c38 48%,#909c94 72%,#202723); padding:1.6cqw; opacity:.75;
 }
 .collector-card[data-layered-card] .layered-material::after {
  content:""; position:absolute; inset:2.8%; z-index:5; pointer-events:none;

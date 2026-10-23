@@ -54,3 +54,36 @@
 .card-inspector-shell .polaroid__photo { width:100%; }
 @media(max-width:767px) { .card-inspector-shell .polaroid { width:min(80vw,304px); } }
 @media(max-height:560px) and (orientation:landscape) { .card-inspector-shell .polaroid { width:100%; } }
+
+/* The full-size portrait gives its postal identity to the dossier. */
+.collection-inspector .polaroid__photo .collector-card[data-layered-card] .collector-card-copy > h4 { display:none!important; }
+.collection-inspector .polaroid__photo .collector-card[data-layered-card] .layered-element {
+ top:auto; bottom:calc(100% + 1cqw); right:0; width:23cqw;
+}
+.collection-inspector .polaroid__photo .collector-card[data-layered-card] .layered-rules {
+ font-size:3.5cqw; line-height:1.34;
+}
+.collection-inspector .dossier-identity__copy { container-type:inline-size; }
+.collection-inspector .dossier-paper .dossier-name--postal {
+ position:relative; isolation:isolate; width:fit-content; min-width:min(100%,240px); max-width:100%;
+ box-sizing:border-box; margin:14px 0 16px;
+ padding:clamp(30px,9cqw,44px) clamp(16px,4cqw,24px) clamp(18px,5cqw,26px);
+ background:url('../assets/card-name-tag-paper.svg') center/100% 100% no-repeat;
+ color:#101210; font:400 clamp(26px,9.3cqw,46px)/1.08 var(--font-card-title);
+ letter-spacing:.005em; text-shadow:none; text-wrap:balance; overflow-wrap:break-word; word-break:normal;
+ filter:drop-shadow(2px 3px 0 #17171166);
+}
+.collection-inspector .dossier-paper .dossier-name--postal[data-long-name] { font-size:clamp(22px,7.5cqw,36px); }
+.dossier-name--postal .dossier-name__ink { display:block; position:relative; z-index:1; }
+.dossier-name--postal::before {
+ content:""; position:absolute; inset:3%; z-index:-1; pointer-events:none; border-radius:6px; opacity:0;
+ background:url('../assets/collector-v2/prism-flakes.webp') center/240px,linear-gradient(112deg,#c2e6eb,#e9cbe4,#ebe6b5,#b4d8ed);
+ background-blend-mode:soft-light,normal; mix-blend-mode:multiply;
+}
+.collection-inspector .dossier-paper:is(.card-rarity-rare,.card-rarity-epic,.card-rarity-legendary,.card-rarity-mythical) .dossier-name--postal::before { opacity:.4; }
+.collection-inspector .dossier-name--postal > :is(.rarity-stamp,.dossier-name__edition) {
+ position:absolute; top:15%; left:5.5%; z-index:2; max-width:61%; transform:translateY(-50%);
+ padding:0; border:0; background:none; color:#f8f7ed; text-shadow:0 1px 1px #10295b;
+ font:700 clamp(9px,2.5cqw,12px)/1 var(--font-action-sign); letter-spacing:.02em;
+}
+.collection-inspector .dossier-name--postal .rarity-stamp__label { font:inherit; line-height:1; }

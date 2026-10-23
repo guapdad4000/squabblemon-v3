@@ -230,10 +230,13 @@ export function CardInspector({ card, onClose, bootstrap, variantId, initialPrev
             <div className="dossier-eyebrow">
               {isBattleMode ? 'Combat dossier' : 'Fighter dossier'} · {faction} faction
             </div>
-            <h3 className="dossier-name">{card.name}</h3>
+            <h3 className={'dossier-name' + (!isBattleMode ? ' dossier-name--postal' : '')} data-long-name={card.name.length > 24 || undefined}>
+              <span className="dossier-name__ink">{card.name}</span>
+              {!isBattleMode && (catalogCard && !bossOnly ? <CardRarityStamp rarity={catalogCard.rarity} compact /> : <span className="dossier-name__edition">{rarityLabel}</span>)}
+            </h3>
             <div className="dossier-handle">"#{String(card.id || '').slice(0, 6)} — filed by Dr. Fade's scout team"</div>
             </div>
-            {catalogCard && !bossOnly ? <CardRarityStamp rarity={catalogCard.rarity} /> : <span className="dossier-edition">{rarityLabel}</span>}
+            {isBattleMode && (catalogCard && !bossOnly ? <CardRarityStamp rarity={catalogCard.rarity} /> : <span className="dossier-edition">{rarityLabel}</span>)}
           </div>
 
           {/* Signature ability + stats row (moved UP from below the XP) */}

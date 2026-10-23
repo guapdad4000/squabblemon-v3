@@ -42,11 +42,12 @@ const art: Record<string, { plate: string; fist: string }> = {
 export function collectibleCardLayers(card: Props['card'], foil = true, showRules = true): CollectibleCardLayers {
   const element = card.type === 'Rock' ? 'Earth' : card.type;
   const images = art[element] ?? art.Normal;
+  const isBlockbuster = card.kind === 'blockbuster';
   return {
     foil,
     backdrop: <>
-      <div className="layered-print" aria-hidden="true"><img src={images.plate} alt="" draggable={false} decoding="async" /></div>
-      <div className="layered-material" data-element={element} aria-hidden="true"><span className="layered-stock"/><span className="layered-reflection"/></div>
+      {!isBlockbuster && <div className="layered-print" aria-hidden="true"><img src={images.plate} alt="" draggable={false} decoding="async" /></div>}
+      <div className="layered-material" data-element={isBlockbuster ? undefined : element} aria-hidden="true"><span className="layered-stock"/><span className="layered-reflection"/></div>
       <span className="layered-rarity-rim" aria-hidden="true"/>
     </>,
     name: <><span className="postal-foil" aria-hidden="true"/><CardRarityStamp rarity={getCardRarity('cardId' in card ? card.cardId : card.id, card.kind)} compact/></>,

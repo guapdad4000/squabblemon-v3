@@ -23,6 +23,17 @@
   object-position:center bottom!important; transform:none!important; z-index:10;
   filter:drop-shadow(0 1cqw 1cqw #0008);
 }
+/* Griddle Master's source has transparent landscape gutters (the figure spans
+   x=440..1233 of 1728). Fit the full figure to the portrait height, allowing only
+   those empty gutters outside the frame instead of shrinking the character. */
+.collector-card[data-layered-card][data-card-id="griddle-master"] .collector-portrait {
+  left:-22.5%!important; width:150%!important; max-width:none;
+}
+/* Side of Hands is intentionally wide art. Top-align its complete silhouette
+   above the postal label rather than bottom-aligning it underneath the label. */
+.collector-card[data-layered-card]:is([data-card-id="a-side-of-hands"],[data-card-id="sideofhands"]) .collector-portrait {
+  top:20%!important; object-position:center top!important;
+}
 .collector-card[data-layered-card] .card-stat-pair {
   top:3cqw!important; left:4cqw!important; right:4cqw!important; z-index:40;
 }
@@ -44,6 +55,9 @@
 .collector-card[data-layered-card] .layered-material { position:absolute; inset:0; z-index:2; pointer-events:none; }
 .collector-card[data-layered-card] .layered-material[data-element="Fire"] { mask:url('../assets/collector-v2/fire-plate.webp') center / contain no-repeat; }
 .collector-card[data-layered-card] .layered-material:not([data-element="Fire"]) { clip-path:polygon(3% 3%,98% 1%,97% 50%,100% 80%,96% 99%,4% 98%,1% 87%,2% 30%); }
+/* Blockbusters use only their rarity stock and frame, without an element plate. */
+.collector-card[data-layered-card][data-card-kind="blockbuster"] .layered-material { clip-path:none; mask:none; background:#111516; }
+.collector-card[data-layered-card][data-card-kind="blockbuster"] .collector-portrait { top:3%!important; height:94%!important; object-position:center!important; }
 .collector-card[data-layered-card] :is(.layered-stock,.layered-reflection) {
   position:absolute; inset:0; pointer-events:none; z-index:2;
   mask-image:linear-gradient(#000,#000),linear-gradient(#000,#000);
