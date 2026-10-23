@@ -112,7 +112,7 @@ test('a real defeat holds the complete hit and ghost; survivors and neutral depa
   const event=resolved.effectLog.find(e=>e.type==='ability'&&e.cardId==='roaster')!;assert.ok(event);
   assert.ok(event.targets.some(t=>t.cardInstanceId===target.instanceId&&t.before&&!t.after));
   assert.equal(hasDefeatedCard(event),true);assert.equal(completeDefeatBeat(event,650),5760);
-  assert.equal(onlineEffectImpactMs({...event,targetIds:event.targets.map(t=>t.cardInstanceId)}),Math.max(2920,specialMoveForEvent(event,readMoveOverrides())?.durationMs??0)+2840);
+  assert.equal(onlineEffectImpactMs({...event,targetIds:event.targets.map(t=>t.cardInstanceId)}),Math.ceil((Math.max(2920,(specialMoveForEvent(event,readMoveOverrides())?.durationMs??0)-450)+2840)/2));
   assert.equal(completeDefeatBeat(event,325),5760);assert.equal(completeDefeatBeat(event,4000),6840);
   const effect={...event,targetIds:event.targets.map(t=>t.cardInstanceId)};
   const render=(entry=effect,impact=true)=>renderToStaticMarkup(<BattleAttack card={source} effect={entry} impact={impact}/>);

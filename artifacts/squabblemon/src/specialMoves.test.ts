@@ -4,7 +4,7 @@ import { existsSync, readFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import openart from '../reference/openart-specials.json';
 import { cardCatalog, cards, LATER_DROP_STARTER_IDS } from './data';
-import { getMoveClipUrl, gateSpecialMoveReplay, getMovePlayKey, keyChromaPixels, markSpecialMovePlayed, planSpecialMoveBeat, moveAssignments, moveClips, resolveSpecialMove, specialMoveForEvent } from './specialMoves';
+import { getMoveClipEndSeconds, getMoveClipUrl, gateSpecialMoveReplay, getMovePlayKey, keyChromaPixels, markSpecialMovePlayed, planSpecialMoveBeat, moveAssignments, moveClips, resolveSpecialMove, specialMoveForEvent } from './specialMoves';
 
 const appliedOutcome = { resources: { before: { playerMotion: 0, cpuMotion: 0 }, after: { playerMotion: 1, cpuMotion: 0 } } };
 
@@ -316,4 +316,13 @@ test('Waffle Warlord uses character-art fallback until its own special-move clip
   assert.equal(moveAssignments['waffle-warlord'], null);
   assert.equal(resolveSpecialMove('waffle-warlord'), null);
   assert.equal(specialMoveForEvent({ type: 'ability', kind: 'ability', cardId: 'waffle-warlord' }), null);
+});
+
+
+test('authored clip window stops a long source at the same pose regardless of playback speed', () => {
+  const clip = {...Object.values(moveClips)[0], startSeconds:1, durationMs:3600, playbackRate:1};
+  assert.equal(getMoveClipEndSeconds(clip,8),4.6);
+  assert.equal(getMoveClipEndSeconds(clip,3),3,'short media finishes at its actual end');
+  assert.equal(getMoveClipEndSeconds({...clip,playbackRate:2},12),8.2,'catalog rate is already baked into authored wall-clock duration');
+  assert.equal(Math.round((getMoveClipEndSeconds(clip,8)-clip.startSeconds)*500),1800,'2x presents the intended excerpt in half the time');
 });

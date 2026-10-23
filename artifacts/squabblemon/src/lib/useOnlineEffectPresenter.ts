@@ -1,14 +1,24 @@
+import { ONLINE_BATTLE_SPEED } from '../battleSpeed';
 import { completeDefeatBeat, DEFEAT_CONTACT_MS } from './battleMediaEvents';
-import { readMoveOverrides, specialMoveForEvent } from '../specialMoves';
-import { useEffect, useRef, useState } from 'react';
+import { gateSpecialMoveReplay, getMovePlayKey, readMoveOverrides, specialMoveForEvent } from '../specialMoves';
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import type { OnlineRoomView, PublicEvent, PublicParticipant, Seat } from '@workspace/squabblemon-engine/multiplayer';
 import type { EventParticipant, Lane } from '../gameEngine';
 import type { PresentationEffect } from '../components/PlayLoop';
 
-/** Routine PvP effects are brief; knockouts finish the full impact and ghost silently. */
+/** Wall-clock timings: the server clock is independent of decorative playback. */
 export const ONLINE_EFFECT_TIMING = { windupMs: 225, impactMs: 325 } as const;
-export const onlineEffectImpactMs = (effect: PresentationEffect) => completeDefeatBeat(effect,
-  ONLINE_EFFECT_TIMING.impactMs, Math.max(DEFEAT_CONTACT_MS, specialMoveForEvent(effect, readMoveOverrides())?.durationMs ?? 0));
+export function onlineEffectPlan(effect: PresentationEffect, played: Set<string> | null = null) {
+  const candidate = specialMoveForEvent(effect, readMoveOverrides());
+  const key = candidate ? { owner: effect.owner, sourceInstanceId: effect.cardInstanceId, moveId: candidate.id } : null;
+  const clip = key ? gateSpecialMoveReplay(candidate, key, played) : null;
+  const contactMs = Math.max(DEFEAT_CONTACT_MS, (clip?.durationMs ?? 0) - ONLINE_EFFECT_TIMING.windupMs * ONLINE_BATTLE_SPEED);
+  const normalMs = Math.max(ONLINE_EFFECT_TIMING.impactMs * ONLINE_BATTLE_SPEED,
+    (clip?.durationMs ?? 0) - ONLINE_EFFECT_TIMING.windupMs * ONLINE_BATTLE_SPEED);
+  return { impactMs: Math.ceil(completeDefeatBeat(effect, normalMs, contactMs) / ONLINE_BATTLE_SPEED),
+    contactMs, playKey: clip && key ? getMovePlayKey(key) : null };
+}
+export const onlineEffectImpactMs = (effect: PresentationEffect) => onlineEffectPlan(effect).impactMs;
 
 export function toPresentationEffect(event: PublicEvent, seat: Seat, scores: PresentationEffect['scores']['before']): PresentationEffect | null {
   if ((!event.sourceId && !event.artCues?.length) || event.type === 'pass' || event.type === 'reveal' || event.kind === 'story') return null;
@@ -33,40 +43,62 @@ export function toPresentationEffect(event: PublicEvent, seat: Seat, scores: Pre
   };
 }
 
-/** Replays newly arrived public events as board effects. Display only; never changes game state. */
+/** Replays public events in order. Only the visual board is held; commands and clocks stay live. */
 export function useOnlineEffectPresenter(room: OnlineRoomView, scores: PresentationEffect['scores']['before'], disabled: boolean) {
-  const [effect, setEffect] = useState<PresentationEffect | null>(null);
+  const key = `${room.code}:${room.gameNumber}`;
+  const [playback, setPlayback] = useState(() => ({ key, pending: [] as PresentationEffect[], impact: false }));
   const seen = useRef(room.events.at(-1)?.sequence ?? 0);
-  const queue = useRef<PresentationEffect[]>([]);
-  const running = useRef(false);
-  const generation = useRef(0);
-  const alive = useRef(true);
-  const scoresRef = useRef(scores); scoresRef.current = scores;
-  useEffect(() => { alive.current = true; return () => { alive.current = false; generation.current++; }; }, []);
-  useEffect(() => { generation.current++; running.current = false; queue.current = []; setEffect(null); seen.current = room.events.at(-1)?.sequence ?? 0; }, [room.code, room.gameNumber]);
-  useEffect(() => {
+  const playedSpecialMoves = useRef(new Set<string>());
+  const latest = useRef(room); latest.current = room;
+  const first = playback.key === key && !disabled ? playback.pending[0] : undefined;
+  const effect = useMemo(() => first ? { ...first, impact: playback.impact,
+    defeatContactMs: onlineEffectPlan(first, playedSpecialMoves.current).contactMs } : null, [first, playback.impact]);
+  // Include newly received events before the layout effect runs: no one-frame
+  // disappearance of a defeated target between the snapshot and its animation.
+  const pendingEffects = useMemo(() => {
+    if (disabled || playback.key !== key || (typeof document !== 'undefined' && document.hidden)) return [];
+    const fresh = room.events.filter(e => e.sequence > seen.current)
+      .flatMap(e => toPresentationEffect(e, room.seat, scores) ?? []);
+    return [...(effect ? [effect, ...playback.pending.slice(1)] : []), ...fresh];
+  }, [disabled, key, playback, effect, room.events, room.seat, scores]);
+  useLayoutEffect(() => {
+    const last = room.events.at(-1)?.sequence ?? 0;
+    if (playback.key !== key) {
+      seen.current = last;
+      playedSpecialMoves.current.clear();
+      setPlayback({ key, pending: [], impact: false });
+      return;
+    }
     const fresh = room.events.filter(e => e.sequence > seen.current);
-    seen.current = room.events.at(-1)?.sequence ?? seen.current;
-    if (disabled || typeof document === 'undefined' || document.hidden) { generation.current++; running.current = false; queue.current = []; setEffect(null); return; }
-    queue.current.push(...fresh.flatMap(e => toPresentationEffect(e, room.seat, scoresRef.current) ?? []));
-    queue.current = queue.current.slice(-8);
-    if (running.current) return;
-    running.current = true;
-    const currentGeneration = generation.current;
-    const wait = (ms: number) => new Promise(resolve => window.setTimeout(resolve, ms));
-    void (async () => {
-      while (alive.current && currentGeneration === generation.current && queue.current.length) {
-        const next = queue.current.shift()!;
-        setEffect(next);
-        await wait(ONLINE_EFFECT_TIMING.windupMs);
-        if (!alive.current || currentGeneration !== generation.current) return;
-        setEffect({ ...next, impact: true });
-        await wait(onlineEffectImpactMs(next));
+    seen.current = last;
+    if (disabled || (typeof document !== 'undefined' && document.hidden)) {
+      setPlayback(p => p.pending.length ? { key, pending: [], impact: false } : p);
+      return;
+    }
+    const incoming = fresh.flatMap(e => toPresentationEffect(e, room.seat, scores) ?? []);
+    if (incoming.length) setPlayback(p => ({ ...p, pending: [...p.pending, ...incoming] }));
+  }, [room.events, room.seat, key, disabled, playback.key, scores]);
+  useEffect(() => {
+    if (!first) return;
+    const plan = onlineEffectPlan(first, playedSpecialMoves.current);
+    const timer = window.setTimeout(() => {
+      if (!playback.impact) setPlayback(p => ({ ...p, impact: true }));
+      else {
+        if (plan.playKey) playedSpecialMoves.current.add(plan.playKey);
+        setPlayback(p => ({ ...p, pending: p.pending.slice(1), impact: false }));
       }
-      if (currentGeneration !== generation.current) return;
-      running.current = false;
-      if (alive.current) setEffect(null);
-    })();
-  }, [room.events, room.seat, disabled]);
-  return { effect, presenting: !disabled && (effect !== null || queue.current.length > 0 || room.events.some(e => e.sequence > seen.current && toPresentationEffect(e, room.seat, scores) !== null)) };
+    }, playback.impact ? plan.impactMs : ONLINE_EFFECT_TIMING.windupMs);
+    return () => window.clearTimeout(timer);
+  }, [first, playback.impact, key]);
+  useEffect(() => {
+    const hide = () => {
+      if (!document.hidden) return;
+      seen.current = latest.current.events.at(-1)?.sequence ?? seen.current;
+      setPlayback(p => ({ ...p, pending: [], impact: false }));
+    };
+    document.addEventListener('visibilitychange', hide);
+    return () => document.removeEventListener('visibilitychange', hide);
+  }, []);
+  return { effect, pendingEffects, playedSpecialMoves: playedSpecialMoves.current,
+    presenting: !disabled && pendingEffects.length > 0 };
 }

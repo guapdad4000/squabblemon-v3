@@ -40,7 +40,7 @@ import type { CardInstance } from '../gameEngine';
 import { getCharacterDistrictMarks, type CharacterDistrictMark, getMatchDistricts, getMatchRoundLimit, getCardCostExplanation, getDistrictResults, getEffectiveCardPower, getLaneScoreForMatch, getLegalCardCost, getRivalIntent, Match, getStoryLockedLanes, getStoryModifierSummaries, getActiveStoryPhase, type EffectLogEntry, type Lane } from '../gameEngine';
 import type { PresentationEffect, PresentationPhase } from './PlayLoop';
 import type { FeedbackPreferences } from '../battleFeedback';
-import { FAST_BATTLE_SPEED } from '../battleSpeed';
+import { FAST_BATTLE_SPEED, ONLINE_BATTLE_SPEED } from '../battleSpeed';
 import { getDistrictRuleSummary } from '../districtRuleSummary';
 import { getDistrictBattleCue } from '../districtBattleCue';
 import { decisionTimeBucket, trackEvent } from '../lib/analytics';
@@ -77,6 +77,7 @@ import './battle-header-polish.css';
 export type BattleHistoryEntry = Pick<EffectLogEntry, 'sequence' | 'round' | 'type' | 'owner' | 'note' | 'cardId'> & Partial<EffectLogEntry>;
 export type OnlineBattlePresentation = {
   playerMats?: { player: string; rival: string };
+  squabbledIds?: ReadonlySet<string>;
   playerIdentity?: PvpIdentity;
   rivalIdentity?: PvpIdentity;
   districts: ReturnType<typeof getMatchDistricts>;
@@ -412,8 +413,8 @@ export function Battle({
     && presentedEffect.owner === 'player'
     && presentedEffect.note.includes('SQUABBLE');
   const feedback = feedbackPreferences as FeedbackPreferences | undefined;
-  // PvE only: online battles follow server pacing, so they always present at 1x.
-  const presentationSpeed = !online && Number(battleSpeed) === FAST_BATTLE_SPEED ? FAST_BATTLE_SPEED : 1;
+  // Online art runs at 2x; server deadlines and gameplay remain independent.
+  const presentationSpeed = online ? ONLINE_BATTLE_SPEED : Number(battleSpeed) === FAST_BATTLE_SPEED ? FAST_BATTLE_SPEED : 1;
   const fastBattleSpeed = presentationSpeed === FAST_BATTLE_SPEED;
   useBattleAnnouncer({
     round: m.round,
@@ -717,7 +718,7 @@ export function Battle({
     [m, selectedCard, selectedLane, interactive, squabble, online, investment]);
   const previewTargets = selectedLane === null ? [] : previews[selectedLane]?.targets ?? [];
   const effectLanded = presentedEffect?.impact ?? (phase === 'player-impact' || phase === 'rival-impact' || (phase === 'effects' && presentationScores === presentedEffect?.scores.after));
-  const squabbledIds = React.useMemo(() => squabbledCardIds(m.effectLog, presentedEffect ? presentedEffect.sequence - (effectLanded ? 0 : 1) : Infinity), [m.effectLog, presentedEffect?.sequence, effectLanded]);
+  const squabbledIds = React.useMemo(() => online?.squabbledIds ?? squabbledCardIds(m.effectLog, presentedEffect ? presentedEffect.sequence - (effectLanded ? 0 : 1) : Infinity), [online?.squabbledIds, m.effectLog, presentedEffect?.sequence, effectLanded]);
   const actor = presentedEffect ? allVisibleCards.find(card => card.instanceId === (presentedEffect.source?.cardInstanceId ?? presentedEffect.cardInstanceId)) ?? cards[presentedEffect.cardId] : null;
   const organizedHeader = !online && !tutorialCoach;
   const musicInMenu = Boolean(online) || organizedHeader || compactMusic;
@@ -800,7 +801,7 @@ export function Battle({
       phaseMessage={phaseMessage} onlineLabel={online?.status ? String(online.status) : undefined}
     />;
 
-  return <div {...drag.rootProps} onClickCapture={dismissHandSelection} onKeyDown={dismissHandSelectionWithEscape} data-testid="battle-arena" data-feedback-layout={splitFeedback ? 'split' : undefined} data-hud-layout={stableHeader ? 'organized' : undefined} data-attack-caption={(showsAttackCaption && !readingCue && !splitFeedback) || undefined} data-chain-banner={(showsChainBanner && !readingCue && !splitFeedback) || undefined} data-reading-cue={readingCue ? readingCue.kind : undefined} data-replaying={showsAttack && replaying ? true : undefined} data-tutorial-focus={tutorialCoach && interactive ? (tutorialGuidance as TutorialGuidance | null)?.focus : undefined} data-presentation-phase={phase} data-engine-phase={m.phase} data-impact-strength={effectLanded && presentedEffect ? eventIntensity(presentedEffect) : 'none'} data-reduced-motion={reducedMotion ? 'true' : 'false'} data-battle-speed={fastBattleSpeed ? 'fast' : 'normal'} style={{ '--presentation-speed': presentationSpeed } as React.CSSProperties} data-venue={venue.id} data-venue-tone={venue.tone} className={`battle-arena battle-hud world-decor-host phase-${phase} ${squabble ? 'is-squabble-armed' : ''} flex flex-col h-full w-full max-w-full mx-auto overflow-hidden relative z-10 bg-[#0d0d0d]`} aria-label={`Battle phase: ${phaseMessage}`}>
+  return <div {...drag.rootProps} onClickCapture={dismissHandSelection} onKeyDown={dismissHandSelectionWithEscape} data-testid="battle-arena" data-feedback-layout={splitFeedback ? 'split' : undefined} data-hud-layout={stableHeader ? 'organized' : undefined} data-attack-caption={(showsAttackCaption && !readingCue && !splitFeedback) || undefined} data-chain-banner={(showsChainBanner && !readingCue && !splitFeedback) || undefined} data-reading-cue={readingCue ? readingCue.kind : undefined} data-replaying={showsAttack && replaying ? true : undefined} data-tutorial-focus={tutorialCoach && interactive ? (tutorialGuidance as TutorialGuidance | null)?.focus : undefined} data-presentation-phase={phase} data-engine-phase={m.phase} data-impact-strength={effectLanded && presentedEffect ? eventIntensity(presentedEffect) : 'none'} data-reduced-motion={reducedMotion ? 'true' : 'false'} data-battle-speed={online ? 'online-fast' : fastBattleSpeed ? 'fast' : 'normal'} style={{ '--presentation-speed': presentationSpeed } as React.CSSProperties} data-venue={venue.id} data-venue-tone={venue.tone} className={`battle-arena battle-hud world-decor-host phase-${phase} ${squabble ? 'is-squabble-armed' : ''} flex flex-col h-full w-full max-w-full mx-auto overflow-hidden relative z-10 bg-[#0d0d0d]`} aria-label={`Battle phase: ${phaseMessage}`}>
     <PageDecor theme="battle" />
     {clockUrgent && <div className="battle-time-vignette" data-testid="battle-time-vignette" aria-hidden="true" />}
     {canInvest && selectedCard && selectedLane !== null && interactive && !drag.drag && !selectedLaneLocked && selectedLaneAllowed && (baseSelectedCost ?? Infinity) <= m.playerMotion && <BattlePlayChoice key={investmentKey}

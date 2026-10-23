@@ -16,15 +16,15 @@ export function DrFadeArt({ className = '', animated = true }: { className?: str
   </span>;
 }
 
-export function DrFadeEntrance({ cueId, squabble = false }: { cueId: number; squabble?: boolean }) {
+export function DrFadeEntrance({ cueId, squabble = false, speed = 1 }: { cueId: number; squabble?: boolean; speed?: number }) {
   const nodeRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (nodeRef.current) nodeRef.current.style.display = '';
     const timeout = window.setTimeout(() => {
       if (nodeRef.current) nodeRef.current.style.display = 'none';
-    }, 1000);
+    }, 1000 / speed);
     return () => window.clearTimeout(timeout);
-  }, [cueId]);
+  }, [cueId, speed]);
   return <div ref={nodeRef} className={'dr-fade-entrance ' + (squabble ? 'dr-fade-entrance--squabble' : '')}
     data-testid="dr-fade-entrance" aria-hidden="true">
     <DrFadeArt animated={false} />

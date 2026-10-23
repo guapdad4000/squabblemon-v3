@@ -184,10 +184,10 @@ export function BattleAttack({ card, effect, impact, replaying = false, audioEna
   return <div ref={root} className={`battle-choreography battle-choreography--legible kind-${effect.kind} intensity-${intensity} ${impact ? 'is-impact' : 'is-winding-up'} ${replaying ? 'is-replay' : ''}`}
     data-mary-landing={effect.source?.after?.maryElephant && !effect.source?.before ? true : undefined}
     data-testid="character-attack" data-character={card.id} data-owner={effect.owner} data-impact={impact}
-    style={{ '--attack-color': cardEntryAccent(card), '--defeat-delay': `${Math.max(DEFEAT_CONTACT_MS, move?.durationMs ?? 0)}ms` } as React.CSSProperties} aria-hidden="true">
+    style={{ '--attack-color': cardEntryAccent(card), '--defeat-delay': `${effect.defeatContactMs ?? Math.max(DEFEAT_CONTACT_MS, move?.durationMs ?? 0)}ms` } as React.CSSProperties} aria-hidden="true">
     {move && <div className="battle-special-move" data-geo="special" data-move-id={move.id} style={hidden}><SpecialMove clip={move} audioEnabled={audioEnabled} speed={speed} /></div>}
     {card.id === 'dr-fade' && effect.type === 'ability' && !effect.abilityMetadata?.upgradeId
-      && <DrFadeEntrance key={effect.sequence} cueId={effect.sequence}
+      && <DrFadeEntrance key={effect.sequence} cueId={effect.sequence} speed={speed}
         squabble={!!effect.source?.after && effect.source.after.powerModifier >= effect.source.after.basePower} />}
     {showCaption && showPortrait && card.id !== 'dr-fade' && <div className="attack-caption">
       <img className="attack-caption__scene" src={getCardWallpaper(card.type)} alt="" />

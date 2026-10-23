@@ -57,7 +57,7 @@ import {
 } from '../lib/resultBroadcastEligibility';
 
 export type PresentationPhase = 'versus' | 'countdown-3' | 'countdown-2' | 'countdown-1' | 'squabble' | 'deal' | 'round-intro' | 'lock-in' | 'player-ready' | 'player-travel' | 'player-reveal' | 'player-focus' | 'player-slam' | 'player-impact' | 'effects' | 'player-pass' | 'rival-thinking' | 'rival-travel' | 'rival-reveal' | 'rival-focus' | 'rival-slam' | 'rival-impact' | 'rival-pass' | 'district-flipped' | 'round-result' | 'match-finish';
-export type PresentationEffect = EffectLogEntry & { artCues?: BattleArtCue[]; targetIds: string[]; durationLabel?: string; impact?: boolean; chain?: { id: string; index: number; total: number; fromId: string | null } };
+export type PresentationEffect = EffectLogEntry & { artCues?: BattleArtCue[]; targetIds: string[]; defeatContactMs?: number; durationLabel?: string; impact?: boolean; chain?: { id: string; index: number; total: number; fromId: string | null } };
 
 export const EFFECT_PRESENTATION_TIMING = {
   standard: { beforeMs: 450, afterMs: 650 },

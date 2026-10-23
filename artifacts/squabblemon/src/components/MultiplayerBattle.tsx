@@ -8,7 +8,7 @@ import { resolveRoomExit, type RoomExitIntent } from '../lib/roomExit';
 import { onlineResultCopy } from './onlineResultCopy';
 import { useBattleResultExit } from '../lib/useBattleResultExit';
 import { useTurnClockCues } from '../lib/turnClockCues';
-import { useEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
 import { createPortal } from 'react-dom';
 import { LayoutGroup, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { cards, getAssetUrl, type Card } from '../data';
@@ -19,6 +19,7 @@ import { otherSeat, TURN_SECONDS, type OnlineCommand, type OnlineRoomView, type 
 import { DEFAULT_PLAYER_MAT_ID } from '@workspace/squabblemon-engine/playerMats';
 import { Battle, type OnlineBattlePresentation } from './Battle';
 import { useOnlineEffectPresenter } from '../lib/useOnlineEffectPresenter';
+import type { PresentationEffect } from './PlayLoop';
 import { BattleStartSmoke } from './BattleStartSmoke';
 import { CardInspector } from './CardInspector';
 import { RulesModal } from './RulesModal';
@@ -53,6 +54,25 @@ export const asCard = (card: OnlinePublicCard): CardInstance => {
   };
 };
 
+/** Undo only unpresented public changes; this never feeds back into server actions. */
+export function onlinePresentationBoards(boards: Match['boards'], pending: readonly PresentationEffect[], known: ReadonlyMap<string, CardInstance>): Match['boards'] {
+  const waiting = pending.filter(event => !event.impact);
+  if (!waiting.length) return boards;
+  const byId = new Map(boards.flat().map(card => [card.instanceId, card]));
+  const order = new Map([...known.keys(), ...byId.keys()].map((id, i) => [id, i]));
+  for (const event of [...waiting].reverse()) {
+    for (const p of [event.source, ...event.targets]) {
+      if (!p) continue;
+      if (!p.before || p.before.lane === null) { byId.delete(p.cardInstanceId); continue; }
+      const base = byId.get(p.cardInstanceId) ?? known.get(p.cardInstanceId);
+      byId.set(p.cardInstanceId, { ...(base ?? { ...definition(p.cardId), deck: 'online', playedRound: null }),
+        ...p.before, instanceId: p.cardInstanceId, cardId: p.cardId, owner: p.before.owner ?? p.owner });
+    }
+  }
+  return ([0, 1, 2] as Lane[]).map(lane => [...byId.values()].filter(c => c.lane === lane)
+    .sort((a, b) => (a.arrivalOrder ?? order.get(a.instanceId) ?? Infinity) - (b.arrivalOrder ?? order.get(b.instanceId) ?? Infinity))) as Match['boards'];
+}
+
 export function computeTurnSecondsRemaining(deadline: number | null | undefined, nowMs: number, clockOffsetMs: number): number {
   if (deadline == null) return 0;
   return Math.max(0, Math.min(TURN_SECONDS, Math.ceil((deadline - nowMs - clockOffsetMs) / 1000)));
@@ -83,6 +103,8 @@ export function onlineBattleProjection(room: OnlineRoomView): { match: Match; pr
   };
   return { match, presentation: {
     playerMats: room.kumite ? undefined : { player: room.members[room.seat]?.playerMatId ?? DEFAULT_PLAYER_MAT_ID, rival: room.members[rival]?.playerMatId ?? DEFAULT_PLAYER_MAT_ID },
+    squabbledIds: new Set([...room.boards.flat().filter(card => card.squabbled).map(card => card.instanceId),
+      ...room.events.filter(event => event.type === 'play' && event.note.includes('SQUABBLE') && event.sourceId).map(event => event.sourceId!)]),
     districts: room.districts, scores, costs: Object.fromEntries(room.hand.map(c => [c.instanceId, c.costs])),
     districtMarks: room.districtMarks?.map(mark => ({ ...mark, owner: owner(mark.owner) })),
     covered: new Set(room.boards.flat().filter(c => c.covered).map(c => c.instanceId)), lockedLanes: room.lockedLanes ?? [],
@@ -192,7 +214,15 @@ export function MultiplayerBattle({ room, busy, connected, reducedMotion: profil
     setSelected(null); setLane(null); setSquabble(false);
   } }, [myTurn, room.hand, selected]);
   const projected = useMemo(() => onlineBattleProjection(room), [room]);
-  const { effect: liveEffect, presenting: presentingEffects } = useOnlineEffectPresenter(room, projected.presentation.scores, Boolean(reducedMotion) || (room.status !== 'active' && room.status !== 'complete'));
+  const { effect: liveEffect, presenting: presentingEffects, pendingEffects, playedSpecialMoves } = useOnlineEffectPresenter(room, projected.presentation.scores, Boolean(reducedMotion) || (room.status !== 'active' && room.status !== 'complete'));
+  const remembered = useRef({ key: `${room.code}:${room.gameNumber}`, cards: new Map<string, CardInstance>() });
+  const matchKey = `${room.code}:${room.gameNumber}`;
+  const visualMatch = useMemo(() => ({ ...projected.match, boards: onlinePresentationBoards(projected.match.boards, pendingEffects,
+    remembered.current.key === matchKey ? remembered.current.cards : new Map()) }), [projected.match, pendingEffects, matchKey]);
+  useLayoutEffect(() => {
+    if (remembered.current.key !== matchKey) remembered.current = { key: matchKey, cards: new Map() };
+    for (const card of projected.match.boards.flat()) remembered.current.cards.set(card.instanceId, card);
+  }, [projected.match.boards, matchKey]);
   const status = room.status === 'complete' ? 'Fade complete' : !connected ? 'Reconnecting…' : busy ? 'Sending play…' : remaining === 0 ? 'Checking result…' : myTurn ? 'Your turn' : `${rival.name}'s turn`;
   async function act(command: OnlineCommand) {
     if (sending.current || busy || !connected) return;
@@ -269,7 +299,7 @@ export function MultiplayerBattle({ room, busy, connected, reducedMotion: profil
       <BattleStartSmoke onComplete={() => setBattleStartEffectVisible(false)} />
     )}
     {!arrival && <BattleReactions key={`${room.code}:${room.gameNumber}`} room={room} connected={connected} reducedMotion={reducedMotion} />}
-    <LayoutGroup><Battle match={projected.match} deck={room.ownDeck} rivalDeck={{ id: 'online-rival', name: rival.name, hero: rival.hero, cards: [] }}
+    <LayoutGroup><Battle match={visualMatch} playedSpecialMoves={playedSpecialMoves} deck={room.ownDeck} rivalDeck={{ id: 'online-rival', name: rival.name, hero: rival.hero, cards: [] }}
       online={{ ...projected.presentation, status, yourTurn: myTurn, clockRunning: room.status === 'active' && connected, announcementsReady: !arrival && connected }}
       selectedInstanceId={selected} setSelectedInstanceId={setSelected} selectedLane={lane} setSelectedLane={setLane}
       squabble={squabble} setSquabble={setSquabble} setInspect={setInspect}

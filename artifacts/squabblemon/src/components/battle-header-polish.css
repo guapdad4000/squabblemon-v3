@@ -183,6 +183,9 @@
 .battle-arena.battle-hud .district-score-side [data-score-state='trailing'] { --score-emphasis: .82; }
 .battle-arena.battle-hud .district-score-side .score-tick {
   position: relative; z-index: 1;
+  -webkit-text-stroke: 2px #080907;
+  paint-order: stroke fill;
+  text-shadow: 0 2px 1px #080907, 1px 0 #080907, -1px 0 #080907;
   font-size: calc(min(calc(var(--lane-score-font-size) * var(--font-lane-number-scale)),calc((100cqw - 26px) / (2 * var(--score-digit-count,2) * var(--font-lane-number-digit-width)))) * var(--score-emphasis));
   transition: font-size 180ms ease-out;
 }

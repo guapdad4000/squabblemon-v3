@@ -1562,15 +1562,15 @@ test('PvE speed control scales presentation beats but not reading or the clock',
   assert.match(fast, /data-testid="button-fast-forward"[^]*?battle-tools/);
 });
 
-test('PvP battles never show the speed pill and keep normal presentation timing', () => {
+test('PvP fixes presentation at 2x without exposing the solo speed pill', () => {
   const match = createMatch('block', 'combo');
   const online = renderBattle(match, {
     presentationPhase: 'effects', onToggleBattleSpeed: noop, battleSpeed: 1.5,
     online: { mode: 'ranked', status: 'Rival turn', costs: {}, districts: getMatchDistricts(match), districtMarks: [], scores: null, rivalHandCount: 4 },
   });
   assert.doesNotMatch(online, /data-testid="button-battle-speed"/);
-  assert.match(online, /data-battle-speed="normal"/);
-  assert.match(online, /--presentation-speed:1[;"]/);
+  assert.match(online, /data-battle-speed="online-fast"/);
+  assert.match(online, /--presentation-speed:2[;"]/);
 });
 
 

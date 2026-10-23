@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { getMoveClipUrl, keyChromaPixels, type MoveClip } from '../specialMoves';
+import { getMoveClipUrl, getMoveClipEndSeconds, keyChromaPixels, type MoveClip } from '../specialMoves';
 import './special-moves.css';
 import { createChromaRenderer } from '../lib/chromaRenderer';
 
@@ -8,6 +8,7 @@ export function SpecialMove({ clip, onStatus, audioEnabled = false, speed = 1 }:
   const canvas = useRef<HTMLCanvasElement>(null);
   const media = useRef<HTMLVideoElement | null>(null);
   const audioRequested = useRef(audioEnabled);
+  const playbackSpeed = useRef(speed); playbackSpeed.current = speed;
   const resumePlayback = useRef<(() => void) | null>(null);
   const [useGpu, setUseGpu] = useState(true);
   useEffect(() => {
@@ -54,6 +55,7 @@ export function SpecialMove({ clip, onStatus, audioEnabled = false, speed = 1 }:
     };
     const draw = (now: number) => {
       if (stopped || !video || document.hidden || video.paused) return;
+      if (video.currentTime >= getMoveClipEndSeconds(clip, video.duration)) { stop(); return; }
       const interval = 1000 / 24;
       if ((!revealed || now - lastFrame >= interval - 1) && video.readyState >= 2 && !video.seeking && video.currentTime !== lastMediaTime) {
         // Keep fractional time so a 30fps source does not collapse to 15fps.
@@ -114,7 +116,8 @@ export function SpecialMove({ clip, onStatus, audioEnabled = false, speed = 1 }:
         surface.width = Math.min(288, video.videoWidth || 288);
         surface.height = Math.round(surface.width * (video.videoHeight / video.videoWidth || 16 / 9));
         video.currentTime = Math.max(0, Math.min(clip.startSeconds, Math.max(0, video.duration - .1)));
-        video.playbackRate = clip.playbackRate * (speed > 0 ? speed : 1);
+        video.playbackRate = clip.playbackRate * (playbackSpeed.current > 0 ? playbackSpeed.current : 1);
+        surface.dataset.playbackRate = String(video.playbackRate);
         void play();
       };
       video.onerror = fail;
@@ -143,7 +146,10 @@ export function SpecialMove({ clip, onStatus, audioEnabled = false, speed = 1 }:
   }, [clip, onStatus, useGpu]);
   // A speed change mid-clip retimes the running video rather than restarting it.
   useEffect(() => {
-    if (media.current) media.current.playbackRate = clip.playbackRate * (speed > 0 ? speed : 1);
+    if (media.current) {
+      media.current.playbackRate = clip.playbackRate * (speed > 0 ? speed : 1);
+      if (canvas.current) canvas.current.dataset.playbackRate = String(media.current.playbackRate);
+    }
   }, [clip.playbackRate, speed]);
   return <canvas key={useGpu ? 'gpu' : 'cpu'} ref={canvas} className="special-move-canvas" data-testid="special-move-canvas" data-ready="false" data-muted="true" aria-hidden="true" />;
 }

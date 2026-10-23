@@ -22,6 +22,12 @@ export const moveAssignments: Record<string, string | null> = {
 export const MOVE_STORAGE_KEY = 'squabblemon.special-moves.v1';
 export type MoveOverrides = Record<string, string | null>;
 
+/** Source-time endpoint of the authored excerpt; speed changes only wall-clock time. */
+export function getMoveClipEndSeconds(clip: MoveClip, mediaDuration: number) {
+  const start = Math.max(0, Math.min(clip.startSeconds, Math.max(0, mediaDuration - .1)));
+  return Math.min(mediaDuration, start + clip.durationMs / 1000 * clip.playbackRate);
+}
+
 export function getMoveClipUrl(clip: MoveClip, quality: 'original' | 'battle' = 'original') {
   const derivative = (battleMoves as Record<string, {asset: string; revision: string | null}>)[clip.file];
   if (quality === 'battle' && derivative && (clip.revision ?? null) === derivative.revision) return getAssetUrl(derivative.asset);

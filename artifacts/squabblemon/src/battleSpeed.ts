@@ -1,6 +1,6 @@
 /**
  * Player-chosen presentation speed for solo (PvE) battles. Online battles are
- * server paced, so they always present at normal speed.
+ * server paced; their decorative playback uses a fixed 2x multiplier.
  */
 export type BattleSpeed = 1 | 1.5;
 
@@ -8,6 +8,7 @@ export const BATTLE_SPEED_STORAGE_KEY = 'squabblemon_battle_speed';
 export const BATTLE_SPEED_CHANGE_EVENT = 'squabblemon:battle-speed-change';
 export const FAST_BATTLE_SPEED = 1.5 as const;
 export const NORMAL_BATTLE_SPEED = 1 as const;
+export const ONLINE_BATTLE_SPEED = 2 as const;
 
 export function normalizeBattleSpeed(value: unknown): BattleSpeed {
   return Number(value) === FAST_BATTLE_SPEED ? FAST_BATTLE_SPEED : NORMAL_BATTLE_SPEED;

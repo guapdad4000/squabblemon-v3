@@ -425,6 +425,8 @@ export function applyOnlineCommand(
 }
 
 export type PublicCard = {
+  /** Recorded play identity, independent of current Hands and the short public event window. */
+  squabbled?: boolean;
   /** Public artwork identity; summons may share mechanics but use different portraits. */
   artworkId?: string;
   /** Public battle form presentation; never changes collection identity. */
@@ -547,7 +549,9 @@ export function onlineRoomView(
 ): OnlineRoomView {
   const seat = memberSeat(room, userId),
     match = room.match;
+  const squabbledIds = new Set((match?.effectLog ?? []).filter(event => event.type === 'play' && event.note.includes('SQUABBLE')).map(event => event.cardInstanceId));
   const showCard = (card: CardInstance): PublicCard => ({
+    ...(squabbledIds.has(card.instanceId) ? { squabbled: true } : {}),
     artworkId: card.id,
     ...(card.cardId === 'luigion' && card.id === 'luigion-powered'
       ? { form: { name: card.name, ability: card.ability, effect: card.effect } } : {}),
