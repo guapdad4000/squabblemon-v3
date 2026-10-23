@@ -50,7 +50,7 @@
   background-size:190% 100%!important; background-position:var(--foil-x,48%) 50%!important;
 }
 /* Preview-only status ribbons would duplicate the selected form and rules. */
-.collector-card[data-layered-card] .buddy-form-cue { display:none; }
+.collector-card[data-layered-card] :is(.buddy-form-cue,[data-testid="card-charge"]) { display:none; }
 @media(prefers-reduced-motion:reduce) {
  .collector-card[data-layered-card] :is(.layered-reflection,.layered-rarity-rim,.collector-edition-seal::after) { background-position:48% 50%; }
 }

@@ -11,7 +11,7 @@ import { motion, useReducedMotion } from 'framer-motion';
 import { CardView } from './CardView';
 import { CollectibleCard } from './CollectibleCard';
 import { CardRarityStamp } from './CardRarityStamp';
-import { previewBuddyForm } from '../lib/cardFormPreview';
+import { getCardFormPreview, previewCardForm } from '../lib/cardFormPreview';
 import { PageDecor } from './venue/PageDecor';
 import { X } from 'lucide-react';
 import { CardInstance, getEffectiveCardPower } from '../gameEngine';
@@ -55,10 +55,10 @@ export function CardInspector({ card, onClose, bootstrap, variantId, initialPrev
   const reduceMotion = useReducedMotion() || (typeof window !== 'undefined' && cardMotionReduced());
   card = match?.boards?.flat().find((current: CardInstance) => current.instanceId === card.instanceId) ?? card;
   const sourceCard = card;
-  const canPreviewForm = !match && !('instanceId' in sourceCard) && sourceCard.id === 'buddy';
-  const [form, setForm] = React.useState<{cardId: string; squabbled: boolean} | null>(null);
-  const squabbledPreview = canPreviewForm && form?.cardId === sourceCard.id && Boolean(form?.squabbled);
-  card = canPreviewForm ? previewBuddyForm(sourceCard, Boolean(squabbledPreview)) : sourceCard;
+  const formPreview = !match && !('instanceId' in sourceCard) ? getCardFormPreview(sourceCard) : undefined;
+  const [form, setForm] = React.useState<{cardId: string; alternate: boolean} | null>(null);
+  const alternatePreview = Boolean(formPreview && form?.cardId === sourceCard.id && form?.alternate);
+  card = formPreview ? previewCardForm(sourceCard, alternatePreview) : sourceCard;
   const isInstance = 'instanceId' in card;
   const panel = React.useRef<HTMLDivElement>(null);
   // Escape transformed route containers while staying inside a native dialog's top layer.
@@ -81,8 +81,8 @@ export function CardInspector({ card, onClose, bootstrap, variantId, initialPrev
 
   const isCardOwned = bootstrap && catalogCard && bootstrap.profile.ownedCardIds.includes(catalogCard.catalogId);
   const equippedVariant = (catalogCard ? bootstrap?.profile.equippedVariants[catalogCard.catalogId] : undefined) ?? variantId;
-  const [preview, setPreview] = React.useState<{ cardId: string; variant: string | null } | null>(initialPreviewVariant ? { cardId: card.id, variant: initialPreviewVariant } : null);
-  const displayedVariant = preview && preview.cardId === card.id ? preview.variant : equippedVariant;
+  const [preview, setPreview] = React.useState<{ cardId: string; variant: string | null } | null>(initialPreviewVariant ? { cardId: sourceCard.id, variant: initialPreviewVariant } : null);
+  const displayedVariant = preview && preview.cardId === sourceCard.id ? preview.variant : equippedVariant;
   const previewKind = getVariantKind(displayedVariant);
   const isPreview = (displayedVariant ?? null) !== (equippedVariant ?? null);
   const progression = catalogCard ? bootstrap?.profile.cardProgression[catalogCard.catalogId] : undefined;
@@ -160,12 +160,12 @@ export function CardInspector({ card, onClose, bootstrap, variantId, initialPrev
             LEFT — Polaroid portrait
             ============================================================ */}
         <div className="collector-display-stack">
-        {canPreviewForm && <div className="collector-form-preview">
-          <div role="group" aria-label="Preview Buddy form">
-            <button type="button" aria-pressed={!squabbledPreview} onClick={() => setForm({cardId: sourceCard.id, squabbled: false})}>Normal · Plant</button>
-            <button type="button" aria-pressed={Boolean(squabbledPreview)} onClick={() => setForm({cardId: sourceCard.id, squabbled: true})}>Squabbled · Earth</button>
+        {formPreview && <div className="collector-form-preview">
+          <div role="group" aria-label={`Preview ${sourceCard.name} form`}>
+            <button type="button" aria-pressed={!alternatePreview} onClick={() => setForm({cardId: sourceCard.id, alternate: false})}>{formPreview.normalLabel}</button>
+            <button type="button" aria-pressed={alternatePreview} onClick={() => setForm({cardId: sourceCard.id, alternate: true})}>{formPreview.alternateLabel}</button>
           </div>
-          <small aria-live="polite">{squabbledPreview ? 'Doubled base Hands shown · +2 Earth bonus applies in battle' : 'Plant form · Buddy Buds'}</small>
+          <small aria-live="polite">{alternatePreview ? formPreview.alternateHint : formPreview.normalHint}</small>
         </div>}
         <div className="polaroid mx-auto md:mx-0">
           <div className="polaroid__tape" aria-hidden="true" />
@@ -187,8 +187,8 @@ export function CardInspector({ card, onClose, bootstrap, variantId, initialPrev
           {variantSlots.length > 0 && <div className="collector-finish-controls">
             <div className="collector-finish-controls__label" aria-live="polite">{isPreview ? 'Finish preview' : 'Your finish'} · {finishLabel}</div>
             <nav aria-label="Preview card finish">
-              <button type="button" aria-pressed={!displayedVariant} onClick={() => setPreview({cardId: card.id, variant: null})}>Original</button>
-              {variantSlots.map((slot: any) => <button type="button" key={slot.id} data-finish={getVariantKind(slot.id)} aria-pressed={displayedVariant === slot.id} onClick={() => setPreview({cardId: card.id, variant: slot.id})}>{slot.name}</button>)}
+              <button type="button" aria-pressed={!displayedVariant} onClick={() => setPreview({cardId: sourceCard.id, variant: null})}>Original</button>
+              {variantSlots.map((slot: any) => <button type="button" key={slot.id} data-finish={getVariantKind(slot.id)} aria-pressed={displayedVariant === slot.id} onClick={() => setPreview({cardId: sourceCard.id, variant: slot.id})}>{slot.name}</button>)}
             </nav>
             <small>Touch or hover to catch the light. Arrow keys work too.</small>
           </div>}
@@ -266,7 +266,7 @@ export function CardInspector({ card, onClose, bootstrap, variantId, initialPrev
                 <span className="dossier-stat__pin" aria-hidden="true" />
                 <div className="dossier-stat__label">Hands</div>
                 <div className="dossier-stat__value">{card.power}</div>
-                <div className="dossier-stat__sub">{squabbledPreview ? 'Squabbled base · before effects' : 'Base power'}</div>
+                <div className="dossier-stat__sub">{alternatePreview ? formPreview?.powerLabel : 'Base power'}</div>
               </div>
             </div>
           </div>
@@ -409,7 +409,7 @@ export function CardInspector({ card, onClose, bootstrap, variantId, initialPrev
                   const canAfford = !!catalogCard && quoteStyleShards(bootstrap?.profile ?? { styleShards: 0 }, catalogCard.rarity, slot.shardCost).canAfford;
                   return (
                     <article key={slot.id} className="dossier-variant" data-finish={getVariantKind(slot.id)}>
-                      <button type="button" className="dossier-variant__preview" aria-label={`Preview ${slot.name} finish`} aria-pressed={displayedVariant === slot.id} onClick={() => setPreview({cardId: card.id, variant: slot.id})}>
+                      <button type="button" className="dossier-variant__preview" aria-label={`Preview ${slot.name} finish`} aria-pressed={displayedVariant === slot.id} onClick={() => setPreview({cardId: sourceCard.id, variant: slot.id})}>
                         {renderCard ? renderCard({card, variantId:slot.id, fillContainer:true, presentationOnly:true, disableLayout:true}) : <CollectibleCard card={card} variantId={slot.id} fillContainer presentationOnly disableLayout />}
                         <span>Preview finish</span>
                       </button>
