@@ -11,7 +11,7 @@ Buffs
 • BUDDY starts as Plant in his normal form and becomes Earth when Squabbled. His normal and Squabbled forms are easy to compare in card details.
 
 Changes
-• COLLECTOR V2 — Collection, gang building and full card details now use layered element prints, original character art, postal names and readable black rules paper. Battle faces keep the space needed for combat.
+• COLLECTOR V2 — Layered element prints, original character art and postal names now appear in Collection, gang building and full card details. Collection tiles keep ability text and upgrade readouts in details so the art has room to breathe.
 • Postal labels fit short and long names. Rarity is written out in full inside the label; single-letter rarity stamps are gone.
 • Rare and Super Rare cards gain prismatic foil, Legendary cards use richer gold, and Mythical cards use red holo frames. Motion plates, label paper and backgrounds catch the light without covering the name or live numbers.
 • The Squabblemon wordmark is opaque and centered at the top: gold foil for Legendary and silver holo for Mythical. Card Motion stays yellow; Hands use a white box with dark text and green bonuses.

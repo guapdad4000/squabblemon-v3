@@ -26,7 +26,7 @@ import darkFist from '../assets/collector-v2/dark-fist.webp';
 import earthPlate from '../assets/collector-v2/earth-plate.webp';
 import earthFist from '../assets/collector-v2/earth-fist.webp';
 
-type Props = React.ComponentProps<typeof CardView> & { foil?: boolean };
+type Props = React.ComponentProps<typeof CardView> & { foil?: boolean; showRules?: boolean };
 const art: Record<string, { plate: string; fist: string }> = {
   Normal: { plate: normalPlate, fist: normalFist },
   Fire: { plate: firePlate, fist: fireFist },
@@ -39,7 +39,7 @@ const art: Record<string, { plate: string; fist: string }> = {
   Dark: { plate: darkPlate, fist: darkFist },
   Earth: { plate: earthPlate, fist: earthFist },
 };
-export function collectibleCardLayers(card: Props['card'], foil = true): CollectibleCardLayers {
+export function collectibleCardLayers(card: Props['card'], foil = true, showRules = true): CollectibleCardLayers {
   const element = card.type === 'Rock' ? 'Earth' : card.type;
   const images = art[element] ?? art.Normal;
   return {
@@ -52,7 +52,7 @@ export function collectibleCardLayers(card: Props['card'], foil = true): Collect
     name: <><span className="postal-foil" aria-hidden="true"/><CardRarityStamp rarity={getCardRarity('cardId' in card ? card.cardId : card.id, card.kind)} compact/></>,
     copy: <>
       <span className="layered-element" role="img" aria-label={element}><img src={images.fist} alt="" draggable={false} decoding="async" /></span>
-      <div className="layered-rules"><strong>{card.ability}</strong><p>{card.effect}</p></div>
+      {showRules && <div className="layered-rules"><strong>{card.ability}</strong><p>{card.effect}</p></div>}
     </>,
   };
 }
@@ -60,9 +60,9 @@ const labelWidths = new Map<string, number>();
 let typeReady: Promise<FontFace[]> | undefined;
 /** Approved print composition, explicitly chosen by collection/deck/detail callers.
  * CardView still rejects layers on battle hand and combat faces. */
-export const CollectibleCard = memo(function CollectibleCard({ foil = true, ...props }: Props) {
+export const CollectibleCard = memo(function CollectibleCard({ foil = true, showRules = true, ...props }: Props) {
   const host = useRef<HTMLDivElement>(null);
-  const layers = useMemo(() => collectibleCardLayers(props.card, foil), [props.card, foil]);
+  const layers = useMemo(() => collectibleCardLayers(props.card, foil, showRules), [props.card, foil, showRules]);
   const name = props.card.name;
   useEffect(() => {
     let disposed = false;

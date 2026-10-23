@@ -19,7 +19,7 @@ import '../../styles/collection-discovery.css';
 import '../../styles/collection.css';
 
 const CollectionCard = memo(function CollectionCard({
-  card, isOwned, show, isNew, isActive, mountFace, variantId, progress, onInspect,
+  card, isOwned, show, isNew, isActive, mountFace, variantId, onInspect,
 }: {
   card: typeof cardCatalog[number];
   isOwned: boolean;
@@ -28,7 +28,6 @@ const CollectionCard = memo(function CollectionCard({
   isActive: boolean;
   mountFace: boolean;
   variantId?: string;
-  progress: PlayerBootstrap['profile']['cardProgression'][string];
   onInspect: (id: string) => void;
 }) {
   return <CardPressTarget
@@ -47,7 +46,7 @@ const CollectionCard = memo(function CollectionCard({
   >
     {show ? <>
       {mountFace
-        ? <><CardView card={card} variantId={variantId} progress={progress} unavailable={!isOwned} isBoard fillContainer presentationOnly disableLayout /><ItemDot id={`card:${card.catalogId}`} /></>
+        ? <><CardView card={card} variantId={variantId} showRules={false} unavailable={!isOwned} isBoard fillContainer presentationOnly disableLayout /><ItemDot id={`card:${card.catalogId}`} /></>
         : <span className="collection-card-grid__deferred card-bevel" data-card-rarity={card.rarity.toLowerCase()} aria-hidden="true"><b>{card.cost} / {card.power}</b><span>{card.name}</span></span>}
       {isNew && <span className="collection-discovery__badge" aria-hidden="true">New</span>}
       {!isOwned && <LockKeyhole className="collection-card-grid__lock" size={20} aria-hidden="true" />}
@@ -182,7 +181,7 @@ export function Collection({ bootstrap }: { bootstrap: PlayerBootstrap }) {
                    key={card.catalogId}
                    card={card} isOwned={isOwned} show={show} isNew={isNew} isActive={isActive}
                    mountFace={nearbyCards === null || nearbyCards.has(card.catalogId) || focusedCardId === card.catalogId || isActive || requestedCard === card.catalogId}
-                   variantId={bootstrap.profile.equippedVariants[card.catalogId]} progress={bootstrap.profile.cardProgression[card.catalogId]}
+                   variantId={bootstrap.profile.equippedVariants[card.catalogId]}
                    onInspect={inspectCard}
                  />
                );
