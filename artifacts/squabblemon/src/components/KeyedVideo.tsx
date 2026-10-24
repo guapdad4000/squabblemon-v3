@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { createChromaRenderer } from '../lib/chromaRenderer';
+import { observePlayback } from '../lib/battleMediaPlayback';
 
 type KeyMode = 'green' | 'light';
 
@@ -46,6 +47,7 @@ export function KeyedVideo({
   const [useGpu, setUseGpu] = useState(true);
   const onEndedRef = useRef(onEnded);
   const pausedRef = useRef(paused);
+  const refreshPlayback = useRef<(() => void) | null>(null);
 
   useEffect(() => {
     onEndedRef.current = onEnded;
@@ -53,6 +55,7 @@ export function KeyedVideo({
 
   useEffect(() => {
     pausedRef.current = paused;
+    refreshPlayback.current?.();
   }, [paused]);
 
   useEffect(() => {
@@ -70,20 +73,38 @@ export function KeyedVideo({
     let stopped = false;
     let frameHandle = 0;
     let fallbackHandle = 0;
+    let allowed = false;
+    let lastMediaTime = -1;
+    let lastVideoFrames = -1;
+    let playPending = false;
+    let playbackEpoch = 0;
     let resizeObserver: ResizeObserver | undefined;
     const finish = () => {
       if (stopped) return;
       stopped = true;
+      cancelDraw();
+      video.pause();
       onEndedRef.current?.();
     };
     const sizeCanvas = () => {
       const bounds = canvas.getBoundingClientRect();
       const ratio = bounds.height > 0 ? bounds.width / bounds.height : 1;
-      canvas.width = Math.max(1, Math.min(maxWidth, Math.round(bounds.width || maxWidth)));
-      canvas.height = Math.max(1, Math.round(canvas.width / ratio));
+      const width = Math.max(1, Math.min(maxWidth, Math.round(bounds.width || maxWidth)));
+      const height = Math.max(1, Math.round(width / ratio));
+      if (canvas.width !== width || canvas.height !== height) {
+        canvas.width = width;
+        canvas.height = height;
+        lastMediaTime = -1;
+        lastVideoFrames = -1;
+        draw();
+      }
     };
     const draw = () => {
-      if (stopped || video.readyState < 2 || video.seeking) return;
+      if (stopped || document.hidden || video.readyState < 2 || video.seeking || video.currentTime === lastMediaTime) return;
+      const decodedFrames = video.getVideoPlaybackQuality?.().totalVideoFrames ?? 0;
+      // The RAF fallback may tick faster than the source video. Upload each
+      // decoded frame once, while retaining currentTime fallback on older engines.
+      if (decodedFrames > 0 && decodedFrames === lastVideoFrames) return;
       try {
         const sourceRatio = video.videoWidth / video.videoHeight;
         const targetRatio = canvas.width / canvas.height;
@@ -99,37 +120,65 @@ export function KeyedVideo({
           sy = (video.videoHeight - sh) / 2;
         }
         renderer.draw(video, [sx / video.videoWidth, sy / video.videoHeight, sw / video.videoWidth, sh / video.videoHeight]);
+        lastMediaTime = video.currentTime;
+        lastVideoFrames = decodedFrames;
         canvas.dataset.ready = 'true';
       } catch {
         finish();
       }
     };
+    const cancelDraw = () => {
+      if (frameHandle) video.cancelVideoFrameCallback?.(frameHandle);
+      cancelAnimationFrame(fallbackHandle);
+      frameHandle = fallbackHandle = 0;
+    };
     const schedule = () => {
-      if (stopped) return;
-      const frameVideo = video as HTMLVideoElement & {
-        requestVideoFrameCallback?: (callback: () => void) => number;
-        cancelVideoFrameCallback?: (handle: number) => void;
-      };
-      if (frameVideo.requestVideoFrameCallback) {
-        frameHandle = frameVideo.requestVideoFrameCallback(() => {
+      if (stopped || !allowed || pausedRef.current || video.paused || frameHandle || fallbackHandle) return;
+      if (typeof video.requestVideoFrameCallback === 'function') {
+        frameHandle = video.requestVideoFrameCallback(() => {
+          frameHandle = 0;
           draw();
-          if (pausedRef.current) {
-            video.pause();
-            return;
-          }
           schedule();
         });
       } else {
         fallbackHandle = requestAnimationFrame(() => {
+          fallbackHandle = 0;
           draw();
-          if (pausedRef.current) {
-            video.pause();
-            return;
-          }
           schedule();
         });
       }
     };
+    const refresh = () => {
+      if (stopped) return;
+      // A hidden resize clears the canvas; restore its still frame on return
+      // even when the user keeps playback paused or reduced.
+      draw();
+      if (!allowed || pausedRef.current) {
+        playbackEpoch++;
+        cancelDraw();
+        video.pause();
+        return;
+      }
+      if (video.readyState < 2 || playPending || video.ended && !loop) return;
+      if (!video.paused) { schedule(); return; }
+      playPending = true;
+      const requestedEpoch = playbackEpoch;
+      void video.play().then(() => {
+        playPending = false;
+        // A pause can abort play before a quick resume. Reconcile stale promises
+        // with the latest visibility/prop state instead of ending the renderer.
+        if (stopped) { video.pause(); return; }
+        if (requestedEpoch !== playbackEpoch) { refresh(); return; }
+        if (!allowed || pausedRef.current) { video.pause(); return; }
+        schedule();
+      }, () => {
+        playPending = false;
+        if (stopped) return;
+        if (requestedEpoch !== playbackEpoch) { refresh(); return; }
+        if (allowed && !pausedRef.current) finish();
+      });
+    };
+    refreshPlayback.current = refresh;
 
     sizeCanvas();
     resizeObserver = new ResizeObserver(sizeCanvas);
@@ -142,20 +191,24 @@ export function KeyedVideo({
     video.loop = loop;
     video.onloadeddata = () => {
       if (stopped) return;
-      void video.play().then(schedule, finish);
+      // Keep the original first frame when motion is paused or reduced.
+      draw();
+      refresh();
     };
     video.onended = finish;
     video.onerror = finish;
     video.src = src;
+    const stopPlayback = observePlayback(canvas, moving => { allowed = moving; refresh(); });
 
     return () => {
       stopped = true;
+      stopPlayback();
+      refreshPlayback.current = null;
       resizeObserver?.disconnect();
       canvas.removeEventListener('ended', finish);
       canvas.removeEventListener('error', finish);
-      cancelAnimationFrame(fallbackHandle);
-      const frameVideo = video as HTMLVideoElement & { cancelVideoFrameCallback?: (handle: number) => void };
-      frameVideo.cancelVideoFrameCallback?.(frameHandle);
+      cancelDraw();
+      video.onloadeddata = null; video.onended = null; video.onerror = null;
       video.pause();
       video.removeAttribute('src');
       video.load();

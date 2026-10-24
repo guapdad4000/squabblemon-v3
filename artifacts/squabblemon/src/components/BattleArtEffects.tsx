@@ -30,17 +30,22 @@ export function BattleArtEffects({ effect, reducedMotion }: { effect: Presentati
       return result;
     };
     const nodes = host.current?.querySelectorAll<HTMLElement>('[data-art-cue]');
-    cues.forEach((cue, index) => {
+    // Capture every anchor before revealing any cue. Interleaving a cue's style
+    // writes with the next target's reads forces layout again for multi-target art.
+    const placements = cues.map((cue, index) => {
       const node = nodes?.[index];
-      if (!node) return;
-      const to = point(cue.targetId, cue), from = cue.fromId ? point(cue.fromId, cue) : null;
+      return node ? { node, to: point(cue.targetId, cue), from: cue.fromId ? point(cue.fromId, cue) : null } : null;
+    });
+    for (const placement of placements) {
+      if (!placement) continue;
+      const { node, to, from } = placement;
       node.style.display = to ? '' : 'none';
-      if (!to) return;
+      if (!to) continue;
       node.style.left = `${to.x}px`;
       node.style.top = `${to.y}px`;
       node.style.setProperty('--cue-x', `${from ? from.x - to.x : 0}px`);
       node.style.setProperty('--cue-y', `${from ? from.y - to.y : 18}px`);
-    });
+    }
   }, [cues]);
   return <div ref={host} className="battle-art-effects" aria-hidden="true" data-reduced-motion={reducedMotion}>
     {cues.map(cue => <div key={cue.id} className={`battle-art-cue battle-art-cue--${cue.kind}`} data-art-cue={cue.id} data-testid={`art-cue-${cue.kind}`}

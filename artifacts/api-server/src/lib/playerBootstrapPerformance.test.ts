@@ -94,6 +94,107 @@ async function recordCardReceipt(clerkUserId: string, cardId: string) {
   });
 }
 
+test("settled HTTP bootstrap bounds database work and returns the latest wallet", async t => {
+  const userId = `bootstrap-query-budget-${randomUUID()}`;
+  cleanup(t, userId);
+  await ensurePlayer(userId);
+  await withPlayerApi(userId, async origin => {
+    // Settle any published mail before measuring the repeat startup path.
+    await request(origin, "/player/bootstrap");
+    const queries = captureQueries(t);
+    const state = await request(origin, "/player/bootstrap");
+    const startupQueries = [...queries];
+    const transactions = startupQueries.filter(query => /^begin$/i.test(query.text)).length;
+    const locks = startupQueries.filter(query => /for update/i.test(query.text)).length;
+    assert.ok(startupQueries.length <= 12, `settled startup must stay within 12 SQL statements; received ${startupQueries.length}`);
+    assert.equal(transactions, 1, "cadence and reconciliation share one transaction");
+    assert.equal(locks, 1, "initialization acquires the profile row lock once");
+    t.diagnostic(JSON.stringify({ workload: "settled-bootstrap", statements: startupQueries.length, transactions, locks }));
+    await db.update(playerProfilesTable).set({ softCurrency: state.profile.softCurrency + 731 })
+      .where(eq(playerProfilesTable.clerkUserId, userId));
+    const next = await request(origin, "/player/bootstrap");
+    assert.equal(next.profile.softCurrency, state.profile.softCurrency + 731, "bootstrap must not serve a cached wallet");
+  });
+});
+
+test("collection pack request keeps one fresh response and idempotent payment", async t => {
+  const userId = `pack-route-work-${randomUUID()}`;
+  cleanup(t, userId);
+  await db.insert(playerProfilesTable).values({ clerkUserId: userId, packTickets: 2, onboardingStep: "complete" });
+  await recordCardReceipt(userId, "closet-nerd");
+  await withPlayerApi(userId, async origin => {
+    const input = { paymentMethod: "ticket", idempotencyKey: randomUUID() };
+    const queries = captureQueries(t);
+    const opened = await request(origin, "/player/packs/open", "POST", input);
+    const historyReads = selectsFrom(queries, "player_pack_openings").filter(query => query.text.includes("limit")).length;
+    assert.equal(historyReads, 1, "only serialize pack history for the response");
+    t.diagnostic(JSON.stringify({ workload: "pack-open", statements: queries.length, historyReads }));
+    assert.ok(opened.bootstrap.profile.ownedCardIds.includes("closet-nerd"), "preflight still recovers earned ownership");
+    assert.equal(opened.bootstrap.profile.packTickets, 1);
+    const retry = await request(origin, "/player/packs/open", "POST", input);
+    assert.equal(retry.alreadyOpened, true);
+    assert.equal(retry.opening.id, opened.opening.id);
+    assert.equal(retry.bootstrap.profile.packTickets, 1);
+    assert.deepEqual(retry.opening.rewards, opened.opening.rewards);
+  });
+});
+
+test("shop preflight recovers ownership before training and returns the updated wallet", async t => {
+  const userId = `shop-route-work-${randomUUID()}`;
+  cleanup(t, userId);
+  await db.insert(playerProfilesTable).values({ clerkUserId: userId, softCurrency: 500, onboardingStep: "complete" });
+  await recordCardReceipt(userId, "closet-nerd");
+  await withPlayerApi(userId, async origin => {
+    const input = { itemId: "training", cardId: "closet-nerd", idempotencyKey: randomUUID() };
+    const queries = captureQueries(t);
+    const trained = await request(origin, "/player/shop/purchases", "POST", input);
+    const historyReads = selectsFrom(queries, "player_pack_openings").filter(query => query.text.includes("limit")).length;
+    assert.equal(historyReads, 1, "training preflight must not assemble unused bootstrap data");
+    t.diagnostic(JSON.stringify({ workload: "shop-training", statements: queries.length, historyReads }));
+    assert.equal(trained.bootstrap.profile.cardProgression["closet-nerd"].xp, 100);
+    assert.equal(trained.bootstrap.profile.softCurrency, 500 - trained.receipt.cost);
+    const retry = await request(origin, "/player/shop/purchases", "POST", input);
+    assert.equal(retry.alreadyPurchased, true);
+    assert.equal(retry.bootstrap.profile.softCurrency, trained.bootstrap.profile.softCurrency);
+    assert.equal(retry.bootstrap.profile.cardProgression["closet-nerd"].xp, 100);
+  });
+});
+
+test("welcome and legend status initialize new accounts without building discarded bootstraps", async t => {
+  for (const path of ["/player/packs/welcome", "/player/rewards/legend-bounties"]) {
+    const userId = `status-route-work-${randomUUID()}`;
+    cleanup(t, userId);
+    await withPlayerApi(userId, async origin => {
+      const queries = captureQueries(t);
+      const state = await request(origin, path);
+      const historyReads = selectsFrom(queries, "player_pack_openings").filter(query => query.text.includes('"rewards"') && query.text.includes("limit")).length;
+      assert.equal(historyReads, 0, "status routes must not select unused pack reward history");
+      t.diagnostic(JSON.stringify({ workload: path, statements: queries.length, historyReads }));
+      if (path.endsWith("welcome")) assert.equal(state.available, true);
+      const [profile] = await db.select().from(playerProfilesTable).where(eq(playerProfilesTable.clerkUserId, userId));
+      assert.ok(profile, "status preflight provisions new profiles");
+    });
+  }
+});
+
+test("promo preflight preserves once-only rewards and a fresh response", async t => {
+  const userId = `promo-route-work-${randomUUID()}`;
+  cleanup(t, userId);
+  await db.insert(playerProfilesTable).values({ clerkUserId: userId, onboardingStep: "complete" });
+  await withPlayerApi(userId, async origin => {
+    const queries = captureQueries(t);
+    const redeemed = await request(origin, "/player/promo-codes/redeem", "POST", { code: "SIMMYFOODZ" });
+    const historyReads = selectsFrom(queries, "player_pack_openings").filter(query => query.text.includes("limit")).length;
+    assert.equal(historyReads, 1, "promo preflight keeps recovery but omits the discarded projection");
+    t.diagnostic(JSON.stringify({ workload: "promo-redeem", statements: queries.length, historyReads }));
+    assert.ok(redeemed.bootstrap.profile.ownedCardIds.includes("simmy"));
+    assert.ok(redeemed.bootstrap.profile.ownedCardIds.includes("foodz"));
+    const retry = await request(origin, "/player/promo-codes/redeem", "POST", { code: "SIMMYFOODZ" });
+    assert.deepEqual(retry.bootstrap.profile.ownedCardIds, redeemed.bootstrap.profile.ownedCardIds);
+    assert.equal(retry.bootstrap.profile.softCurrency, redeemed.bootstrap.profile.softCurrency);
+  });
+});
+
 test("HTTP bootstrap initializes once, recovers receipts and cadence, and includes late patch mail", async t => {
   const userId = `bootstrap-work-${randomUUID()}`;
   cleanup(t, userId);

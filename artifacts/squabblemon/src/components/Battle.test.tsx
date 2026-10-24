@@ -135,10 +135,10 @@ test('activity and rookie snapshots use their red court in both orientations', (
   }
 });
 
-test('custom story environments retain their issued art and the existing portrait fallback', () => {
+test('custom Story environments render their issued art in landscape and portrait', () => {
   const encounter = { ...getStoryBattle('welcome-to-the-block')!.encounter, id: 'custom-story-arena', battlefieldAssetId: 'assets/custom/sunset-warehouse.webp' };
   const match = createStoryMatch(encounter, 'block');
-  const portraitAssetId = resolveBattleVenue(match).portraitAssetId;
+  const portraitAssetId = encounter.battlefieldAssetId;
   assert.deepEqual(resolveBattleArtwork(match), { landscapeAssetId: encounter.battlefieldAssetId, portraitAssetId });
   assertRenderedBattleArtwork(renderBattle(match, { rivalDeck: decks[0] }), encounter.battlefieldAssetId, portraitAssetId);
 });

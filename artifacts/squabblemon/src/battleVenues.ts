@@ -55,6 +55,6 @@ export function resolveBattleArtwork(match: Pick<Match, 'cpuDeck' | 'storyEncoun
     : venue;
   return {
     landscapeAssetId: pair?.assetId ?? issuedAsset ?? venue.assetId,
-    portraitAssetId: pair?.portraitAssetId ?? venue.portraitAssetId,
+    portraitAssetId: pair?.portraitAssetId ?? issuedAsset ?? venue.portraitAssetId,
   };
 }

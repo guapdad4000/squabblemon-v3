@@ -9,6 +9,10 @@ import { verifyNativeMigrationTransactions } from "./verify-native-migration-tra
 
 // Always use a newly owned native cluster. Never take a caller's DATABASE_URL.
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
+const startupPerformance = process.argv.includes("--startup-performance");
+if (startupPerformance && (process.argv.includes("--browser-only") || process.argv.includes("--migrations-only"))) {
+  throw new Error("Startup performance validation must run its database tests.");
+}
 process.chdir(root);
 const requireDb = createRequire(new URL("../lib/db/package.json", import.meta.url));
 const { Client } = requireDb("pg");
@@ -36,6 +40,7 @@ let child;
 const environment = {
   PATH: process.env.PATH, HOME: process.env.HOME,
   NODE_ENV: "test", DATABASE_POOL_MAX: "5", EVENTS_FEEDBACK_TEST_OWNED: "1", PATCHES_TEST_OWNED: "1",
+  ...(startupPerformance ? { CAMPAIGN_DATABASE_TESTS: "1" } : {}),
 };
 function run(command, args, label, visible = false) {
   return new Promise((resolve, reject) => {
@@ -134,7 +139,11 @@ try {
   const pnpm = process.env.npm_execpath ? [process.execPath, process.env.npm_execpath] : ["pnpm"];
   const browserOnly = process.argv.includes("--browser-only");
   const migrationsOnly = process.argv.includes("--migrations-only");
-  if (!browserOnly && !migrationsOnly) await runTests(pnpm[0], [...pnpm.slice(1), "--filter", "@workspace/api-server", "exec", "tsx", "--test", "--test-concurrency=1", "src/lib/eventFeedback.test.ts", "src/lib/patches.test.ts"]);
+  const tests = ["src/lib/eventFeedback.test.ts", "src/lib/patches.test.ts", ...(startupPerformance ? [
+    "src/lib/playerBootstrapPerformance.test.ts", "src/lib/playerState.test.ts",
+    "src/lib/playerRewardTransactions.test.ts", "src/lib/collectionTransactions.test.ts", "src/lib/accountRewards.test.ts",
+  ] : [])];
+  if (!browserOnly && !migrationsOnly) await runTests(pnpm[0], [...pnpm.slice(1), "--filter", "@workspace/api-server", "exec", process.execPath, "--import", "tsx", "--test", "--test-concurrency=1", ...tests]);
   if (browserOnly || process.argv.includes("--browser")) {
     const separator = process.argv.indexOf("--");
     const browserArgs = separator < 0 ? [] : process.argv.slice(separator + 1);

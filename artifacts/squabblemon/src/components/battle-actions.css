@@ -32,7 +32,7 @@
   padding: 10px 17px; border: 2px solid #dce8df; border-radius: 5px;
   background: linear-gradient(165deg,var(--sign-top),var(--sign-bottom));
   box-shadow: 0 3px 0 #091c17, 0 5px 12px #0006;
-  color: #f4f7ec; font: 700 13px/1.15 var(--font-display);
+  color: #f4f7ec; font: 700 13px/1.15 var(--font-action-sign,var(--font-display));
   letter-spacing: .035em; text-transform: uppercase; text-shadow: 0 1px 1px #002d23;
   opacity: 1; clip-path: none; transform: none; filter: none; animation: none; border-image: none;
   transition: background 120ms ease, box-shadow 120ms ease, translate 120ms ease;

@@ -50,9 +50,9 @@
   color: #d4a656;
 }
 .decks-spectacle__title h1 {
-  font: 900 italic clamp(28px, 4vw, 42px)/1 var(--font-display);
+  font: var(--font-deck-title-weight,400) clamp(28px, 4vw, 42px)/1 var(--font-deck-title,var(--font-display));
   text-transform: uppercase;
-  letter-spacing: -0.02em;
+  letter-spacing: .01em;
   margin: 0;
   color: var(--sq-paper);
   text-shadow: 3px 4px 0 rgba(0,0,0,0.6);

@@ -6,16 +6,25 @@ const LAST_SCENE_KEY = 'squabblemon:last-loading-scene';
 const EPISODE_RELEASE_MS = 900;
 let activeScene: LoadingScene | undefined;
 let holders = 0;
+let lastSceneId: string | null = null;
 let releaseTimer: ReturnType<typeof setTimeout> | undefined;
 
 function previousSceneId(): string | null {
-  try { return window.localStorage.getItem(LAST_SCENE_KEY); }
-  catch { return null; }
+  try { return window.localStorage.getItem(LAST_SCENE_KEY) ?? lastSceneId; }
+  catch { return lastSceneId; }
 }
 
 function rememberScene(id: string) {
+  lastSceneId = id;
   try { window.localStorage.setItem(LAST_SCENE_KEY, id); }
   catch { /* Storage can be unavailable in private or embedded sessions. */ }
+}
+
+export function selectLoadingScene(previous: string | null, random: () => number = Math.random): LoadingScene {
+  const candidates = loadingScenes.filter(scene => scene.id !== previous);
+  const available = candidates.length ? candidates : loadingScenes;
+  if (!available.length) throw new Error('A loading scene is required');
+  return available[Math.floor(random() * available.length)] ?? available[0];
 }
 
 /** Selection is an episode decision, not a render/phase decision. */
@@ -27,13 +36,10 @@ export function currentLoadingScene(): LoadingScene {
   if (root) delete root.dataset.bootLoadingScene;
   if (bootScene) {
     activeScene = bootScene;
+    rememberScene(activeScene.id);
     return activeScene;
   }
-  const previous = previousSceneId();
-  const previousIndex = loadingScenes.findIndex(scene => scene.id === previous);
-  // Cycle instead of random choice: every supplied street appears across visits,
-  // including after hard reloads, with no immediate repeat.
-  activeScene = loadingScenes[(previousIndex + 1) % loadingScenes.length];
+  activeScene = selectLoadingScene(previousSceneId());
   rememberScene(activeScene.id);
   return activeScene;
 }

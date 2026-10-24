@@ -89,6 +89,33 @@ export function checkEntryBundle(report) {
   };
 }
 
+function optionalCatalogs(modules) {
+  return modules.map(normalizeModuleId).filter(id => /\/lib\/squabblemon-engine\/src\/(?:data|cosmetics|playerMats|story)\.[jt]s$/.test(id)
+    || /\/src\/(?:data|story|lib\/notificationCatalog)\.[jt]s$/.test(id));
+}
+
+/** The soundtrack mounts independently of GameApp, so its lazy chunk needs its
+ * own static-closure guard. Selecting music must never load the Story screenplay. */
+export function checkSoundtrackBundle(report) {
+  const byFile = new Map(report.chunks.map(chunk => [chunk.fileName, chunk]));
+  const root = report.chunks.find(chunk => chunk.modules.some(id => normalizeModuleId(id).endsWith('/src/components/GameSoundtrack.tsx')));
+  if (!root) throw new Error('Missing GameSoundtrack in the bundle report.');
+  const visited = new Set(), pending = [root], chunks = [];
+  while (pending.length) {
+    const chunk = pending.pop();
+    if (visited.has(chunk.fileName)) continue;
+    visited.add(chunk.fileName); chunks.push(chunk);
+    for (const file of chunk.imports) {
+      const dependency = byFile.get(file);
+      if (!dependency) throw new Error(`Missing static dependency ${file}.`);
+      pending.push(dependency);
+    }
+  }
+  const eagerCatalogs = optionalCatalogs(chunks.flatMap(chunk => chunk.modules));
+  if (eagerCatalogs.length) throw new Error(`GameSoundtrack eagerly includes optional catalogs: ${eagerCatalogs.join(', ')}`);
+  return { bytes: chunks.reduce((sum, chunk) => sum + chunk.bytes, 0), chunks: chunks.map(chunk => chunk.fileName) };
+}
+
 /** Count transitive static dependencies, not just the conveniently small entry file. */
 export function checkGameBundle(report) {
   const byFile = new Map(report.chunks.map(chunk => [chunk.fileName, chunk]));
@@ -109,8 +136,7 @@ export function checkGameBundle(report) {
     const allowed = name === 'GameApp' ? ['GameApp'] : ['GameApp', 'Home'];
     const modules = chunks.flatMap(chunk => chunk.modules.map(normalizeModuleId));
     if (name === 'GameApp') {
-      const eagerCatalogs = modules.filter(id => /\/lib\/squabblemon-engine\/src\/(?:data|cosmetics|playerMats)\.[jt]s$/.test(id)
-        || /\/src\/(?:data|lib\/notificationCatalog)\.[jt]s$/.test(id));
+      const eagerCatalogs = optionalCatalogs(modules);
       if (eagerCatalogs.length) throw new Error(`GameApp eagerly includes optional catalogs: ${eagerCatalogs.join(', ')}`);
     }
     const eagerRoutes = modules
@@ -133,11 +159,13 @@ async function main() {
   const report = JSON.parse(await readFile(reportPath, 'utf8'));
   const result = checkEntryBundle(report);
   const game = checkGameBundle(report);
+  const soundtrack = checkSoundtrackBundle(report);
   await unlink(reportPath);
 
   console.log(
     `Public entry bundle: ${(result.bytes / 1024).toFixed(1)} KiB / ${(ENTRY_BUDGET_BYTES / 1024).toFixed(0)} KiB across ${result.chunks.length} static chunk(s).`,
   );
+  console.log(`GameSoundtrack static JavaScript: ${(soundtrack.bytes / 1024).toFixed(1)} KiB; no optional catalogs.`);
   for (const route of game) console.log(`${route.name} static JavaScript: ${(route.bytes / 1024).toFixed(1)} KiB / ${route.budget / 1024} KiB.`);
 }
 

@@ -5,7 +5,6 @@
 @import './styles/scrollbars.css';
 @import './styles/tokens.css';
 @import './styles/blzee-type.css';
-@plugin "@tailwindcss/typography";
 
 @theme inline {
   --font-display: 'Clash Display', sans-serif;
@@ -124,8 +123,8 @@
   transition: background .4s ease, opacity .4s ease;
 }
 .battle-arena.phase-player-ready::after { background: radial-gradient(ellipse at 50% 110%, rgba(250,204,21,.15) 0%, transparent 60%); }
-.battle-arena[class*="phase-rival"]::after { background: radial-gradient(ellipse at 50% -10%, rgba(56,189,248,.15) 0%, transparent 60%); }
-.battle-arena[class*="squabble"]::after, .battle-arena.is-squabble-armed::after {
+.battle-arena:is(.phase-rival-thinking,.phase-rival-travel,.phase-rival-reveal,.phase-rival-focus,.phase-rival-slam,.phase-rival-impact,.phase-rival-pass)::after { background: radial-gradient(ellipse at 50% -10%, rgba(56,189,248,.15) 0%, transparent 60%); }
+.battle-arena.phase-squabble::after, .battle-arena.is-squabble-armed::after {
     background: radial-gradient(circle at 50% 50%, rgba(225,29,72,.2) 0%, rgba(0,0,0,.8) 100%);
     opacity: 1;
 }
@@ -528,7 +527,7 @@
 .battle-primary-action.action-error { color: #fff; background: var(--color-squabble-dark); border: 1px solid var(--color-squabble); cursor: not-allowed; opacity: 0.8;}
 .battle-primary-action.action-disabled { color: rgba(255,255,255,.3); background: #111; border: 1px solid #222; cursor: not-allowed; }
 .staged-card { z-index: 35 !important; filter: drop-shadow(0 0 12px currentColor); }
-.battle-arena[class*="phase-player-"] .presentation-card-origin { opacity: .16; }
+.battle-arena:is(.phase-player-ready,.phase-player-travel,.phase-player-reveal,.phase-player-focus,.phase-player-slam,.phase-player-impact,.phase-player-pass) .presentation-card-origin { opacity: .16; }
 .staged-player-focus,
 .staged-rival-focus { animation: card-focus .48s ease-in-out infinite alternate; }
 .staged-rival-reveal,

@@ -1,9 +1,11 @@
+import { isDefeatMediaReady, warmDefeatMedia } from '../lib/battleDefeatMedia';
 import { battlePortraitUrl } from '../lib/battlePortrait';
 import { CombatSprite } from './BattleArt';
 import { BattleBurst } from './BattleEffects';
 import { BattleFxImage } from './BattleFxImage';
-import { DEFEAT_CONTACT_MS, burnApplicationTargetIds } from '../lib/battleMediaEvents';
-import React, { useLayoutEffect, useMemo, useRef } from 'react';
+import { DEFEAT_CONTACT_MS, burnApplicationTargetIds, hasDefeatedCard } from '../lib/battleMediaEvents';
+import React, { useEffect, useLayoutEffect, useMemo, useRef } from 'react';
+import { cancelFrame, frame } from 'framer-motion';
 import { SpecialMove } from './SpecialMove';
 import { readMoveOverrides, specialMoveForEvent, gateSpecialMoveReplay } from '../specialMoves';
 import { cards, cardEntryAccent, getCardImage, type Card } from '../data';
@@ -98,6 +100,13 @@ export function BattleAttack({ card, effect, impact, replaying = false, audioEna
     if (!clip) return null;
     return gateSpecialMoveReplay(clip, { owner: effect.owner, sourceInstanceId: sourceId, moveId: clip.id }, playedSpecialMoves);
   }, [effect.sequence, effect.cardId, effect.type, effect.kind, effect.owner, sourceId, playedSpecialMoves]);
+  const defeatMedia = useRef<'atlas' | 'fallback' | null>(null);
+  const hasDefeat = hasDefeatedCard(effect);
+  useEffect(() => { if (hasDefeat) void warmDefeatMedia(); }, [hasDefeat]);
+  // Decide once at contact. A slow image arriving halfway through the beat must
+  // not replace a moving fallback with a frozen late frame or restart the KO.
+  if (impact && hasDefeat && !defeatMedia.current) defeatMedia.current = isDefeatMediaReady() ? 'atlas' : 'fallback';
+  const useDefeatAtlas = defeatMedia.current === 'atlas';
   const changes = battleChanges(effect);
   const intensity = eventIntensity(effect);
   const burnTargets = burnApplicationTargetIds(effect);
@@ -109,13 +118,31 @@ export function BattleAttack({ card, effect, impact, replaying = false, audioEna
     const overlay = root.current;
     const arena = overlay?.parentElement;
     if (!overlay || !arena) return;
+    // Capture pre-impact positions even when a self-only departure has no beam.
+    // Otherwise only empty events can skip geometry while retaining caption/flash.
+    const hasUpcomingGeometry = !impact && changes.some(change => change.permanentDelta !== 0 || change.labels.length > 0);
+    if (!hasUpcomingGeometry && !overlay.querySelector('[data-geo="special"], [data-geo="chain"], [data-geo="beam"], [data-impact-target], [data-geo-change]')) return;
     // Keep the affected card in view without scrolling the page or hiding the crew.
     const focusIds = new Set(targetIds.length ? targetIds : [sourceId]);
     const measuredIds = new Set([sourceId, ...targetIds, ...changes.map(change => change.cardInstanceId)]);
     if (effect.chain?.fromId) measuredIds.add(effect.chain.fromId);
     let scrolledInitial = false;
     let measuredWidth = 0, measuredHeight = 0;
+    let pending: Geometry | null = null;
+    let disposed = false;
+    const paint = () => {
+      if (!disposed && pending) applyGeometry(overlay, pending, sourceId);
+      pending = null;
+    };
     const measure = () => {
+      if (disposed) return;
+      // Reuse rectangles within a pass, including shared defeat zones/samples.
+      const rectangles = new Map<Element, DOMRect>();
+      const rectFor = (element: Element) => {
+        let rect = rectangles.get(element);
+        if (!rect) { rect = element.getBoundingClientRect(); rectangles.set(element, rect); }
+        return rect;
+      };
       const boardNodes = arena.querySelectorAll<HTMLElement>('[data-card-zone="board"][data-instance-id]');
       if (!scrolledInitial) {
         scrolledInitial = true;
@@ -124,21 +151,23 @@ export function BattleAttack({ card, effect, impact, replaying = false, audioEna
         boardNodes.forEach(node => {
           const stack = node.closest<HTMLElement>('[data-crowded="true"]');
           if (!stack || scrolled.has(stack) || !focusIds.has(node.dataset.instanceId!)) return;
-          const cardBounds = node.getBoundingClientRect();
-          const stackBounds = stack.getBoundingClientRect();
+          const cardBounds = rectFor(node);
+          const stackBounds = rectFor(stack);
           if (cardBounds.top < stackBounds.top || cardBounds.bottom > stackBounds.bottom) {
             scrolls.push({ stack, top: stack.scrollTop + cardBounds.top - stackBounds.top - 4 });
           }
           scrolled.add(stack);
         });
         scrolls.forEach(({ stack, top }) => { stack.scrollTop = top; });
+        // Scroll snapping can move the cards; only a real scroll invalidates them.
+        if (scrolls.length) rectangles.clear();
       }
-      const bounds = arena.getBoundingClientRect();
+      const bounds = rectFor(arena);
       measuredWidth = bounds.width; measuredHeight = bounds.height;
       const current = new Map<string, Point>();
       boardNodes.forEach(node => {
         if (!measuredIds.has(node.dataset.instanceId!)) return;
-        const rect = node.getBoundingClientRect();
+        const rect = rectFor(node);
         current.set(node.dataset.instanceId!, { x: rect.x - bounds.x + rect.width / 2, y: rect.y - bounds.y + rect.height / 2, width: rect.width, height: rect.height });
       });
       if (!original.current.size) {
@@ -149,7 +178,7 @@ export function BattleAttack({ card, effect, impact, replaying = false, audioEna
       for (const participant of [effect.source, ...effect.targets]) {
         if (!participant?.before || participant.after || participant.departureCause) continue;
         const zone = arena.querySelector<HTMLElement>(`[data-testid="lane-${participant.before.lane}-${participant.owner}-zone"]`);
-        const zoneBox = zone?.getBoundingClientRect();
+        const zoneBox = zone ? rectFor(zone) : undefined;
         if (!zoneBox || !zoneBox.width || !zoneBox.height) continue;
         const previous = original.current.get(participant.cardInstanceId);
         if (previous && !defeatAnchors.current.has(participant.cardInstanceId)) {
@@ -157,26 +186,26 @@ export function BattleAttack({ card, effect, impact, replaying = false, audioEna
         }
         if (previous && !resized) continue;
         const sample = zone?.querySelector<HTMLElement>('[data-card-zone="board"]') ?? boardNodes[0];
-        const size = sample?.getBoundingClientRect();
+        const size = sample ? rectFor(sample) : undefined;
         const width = size?.width ?? Math.min(96, zoneBox.width), height = size?.height ?? width * 1.4;
         const anchor = defeatAnchors.current.get(participant.cardInstanceId) ?? { x: .5, y: Math.min(zoneBox.height, height) / (2 * zoneBox.height) };
         defeatAnchors.current.set(participant.cardInstanceId, anchor);
         original.current.set(participant.cardInstanceId, { x: zoneBox.left + zoneBox.width * anchor.x - bounds.left, y: zoneBox.top + zoneBox.height * anchor.y - bounds.top, width, height });
       }
       const source = original.current.get(sourceId) ?? current.get(sourceId);
-      applyGeometry(overlay, { source, current, before: original.current }, sourceId);
+      pending = { source, current, before: original.current };
+      frame.render(paint);
     };
-    measure();
-    // ResizeObserver fires once on observe(). Coalesce it with the follow-up
-    // frame instead of forcing two identical board-wide layout reads.
-    let frame = 0;
-    const scheduleMeasure = () => { if (!frame) frame = requestAnimationFrame(() => { frame = 0; measure(); }); };
+    // Join Motion's shared read phase: every board reads before overlay writes,
+    // instead of forcing layout inside each React commit and each independent RAF.
+    const scheduleMeasure = () => { frame.read(measure); };
+    scheduleMeasure();
     const resize = new ResizeObserver(entries => {
       const box = entries[0]?.borderBoxSize?.[0];
       if (!box || box.inlineSize !== measuredWidth || box.blockSize !== measuredHeight) scheduleMeasure();
     });
     resize.observe(arena, { box: 'border-box' });
-    return () => { resize.disconnect(); cancelAnimationFrame(frame); };
+    return () => { disposed = true; resize.disconnect(); cancelFrame(measure); cancelFrame(paint); pending = null; };
   }, [sourceId, impact, move]);
   const showPortrait = (effect.type === 'ability' && (effect.chain?.total ?? 0) < 2) || intensity === 'squabble';
   const chainFrom = effect.chain?.fromId && effect.chain.fromId !== sourceId ? effect.chain.fromId : null;
@@ -231,8 +260,8 @@ export function BattleAttack({ card, effect, impact, replaying = false, audioEna
       const powerGained = change.permanentDelta > 0;
       return <React.Fragment key={id}>
         {neutralDeparture && <img className="attack-moving-card" data-testid="neutral-departure" src={battlePortraitUrl(getCardImage((change.after ?? change.before)?.maryElephant ? 'ms-mary-mack-elephant' : cards[change.cardId]?.id ?? change.cardId))} alt="" data-geo-change={id} data-geo-role="moved" style={hidden} />}
-        {destroyed && <div className="attack-destroyed-card has-tombstone" data-testid="destroyed-card" data-geo-change={id} data-geo-role="box" style={hidden}><img className="defeated-portrait" src={battlePortraitUrl(getCardImage((change.after ?? change.before)?.maryElephant ? 'ms-mary-mack-elephant' : cards[change.cardId]?.id ?? change.cardId))} alt="" /><span className="defeat-tombstone" data-defeat-playback="once" /></div>}
-        {(showContact || powerGained) && <div className="attack-material" data-geo-change={id} data-geo-role="box" style={hidden}><span className={destroyed ? "attack-contact-media is-finisher" : showContact ? "attack-contact-media" : undefined}>{!showContact && <BattleBurst kind="charge" />}</span></div>}
+        {destroyed && <div className={`attack-destroyed-card ${useDefeatAtlas ? 'has-tombstone' : 'has-defeat-fallback'}`} data-defeat-media={defeatMedia.current} data-testid="destroyed-card" data-geo-change={id} data-geo-role="box" style={hidden}><img className="defeated-portrait" src={battlePortraitUrl(getCardImage((change.after ?? change.before)?.maryElephant ? 'ms-mary-mack-elephant' : cards[change.cardId]?.id ?? change.cardId))} alt="" />{useDefeatAtlas ? <span className="defeat-tombstone" data-defeat-playback="once" /> : <span className="defeat-fallback-final" data-defeat-playback="once">KO</span>}</div>}
+        {(showContact || powerGained) && <div className="attack-material" data-geo-change={id} data-geo-role="box" style={hidden}><span className={destroyed ? useDefeatAtlas ? "attack-contact-media is-finisher" : undefined : showContact ? "attack-contact-media" : undefined}>{destroyed && !useDefeatAtlas ? <BattleBurst kind="burn" /> : !showContact && <BattleBurst kind="charge" />}</span></div>}
         {(thawed || shieldSpent || restored) && <div data-testid="status-release" className={'status-release ' + (thawed ? 'is-thawing is-unlocking' : shieldSpent ? 'is-shattering' : 'is-restoring is-unlocking')} data-geo-change={id} data-geo-role="box" style={hidden}>{thawed || restored ? <><CombatSprite asset="lock-chain-strand" className="unlock-chain" /><CombatSprite asset="lock-chain-strand" className="unlock-chain" /><CombatSprite asset="lock-padlock" className="unlock-padlock" />{thawed && <CombatSprite asset="freeze-rim" className="unlock-ice" />}</> : Array.from({length:6},(_,index)=><i key={index} style={{'--shard-angle':index*60+'deg'} as React.CSSProperties}/>)}</div>}
         {moved && <>
           <div className="attack-movement-dust is-departure" data-geo-change={id} data-geo-role="departure" style={hidden}><BattleFxImage kind="movement-dust" /></div>

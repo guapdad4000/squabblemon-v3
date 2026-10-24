@@ -40,6 +40,7 @@ export function SpecialMove({ clip, onStatus, audioEnabled = false, speed = 1 }:
     surface.addEventListener('webglcontextlost', contextLost);
     let video: HTMLVideoElement | undefined;
     let frame = 0, videoFrame = 0, lastFrame = 0, lastMediaTime = -1, stopped = false, revealed = false;
+    let playPending = false, playbackEpoch = 0;
     const cancelDraw = () => {
       cancelAnimationFrame(frame);
       if (videoFrame) video?.cancelVideoFrameCallback(videoFrame);
@@ -75,19 +76,29 @@ export function SpecialMove({ clip, onStatus, audioEnabled = false, speed = 1 }:
       setReady(false);
     };
     const fail = () => { if (stopped) return; stop(); onStatus?.('Clip unavailable — using the card effect.'); };
-    const play = async () => {
-      if (!video || stopped || document.hidden || video.ended) return;
-      try { await video.play(); scheduleDraw(); }
-      catch {
+    const play = () => {
+      if (!video || stopped || document.hidden || video.ended || playPending) return;
+      const epoch = playbackEpoch;
+      playPending = true;
+      void video.play().then(() => {
+        playPending = false;
         if (stopped) return;
-        // Browser sound restrictions must never prevent the animation itself.
-        if (!video.muted) {
-          video.muted = true;
-          try { await video.play(); scheduleDraw(); } catch { fail(); }
-        } else fail();
-      }
+        if (epoch !== playbackEpoch) { play(); return; }
+        scheduleDraw();
+      }, () => {
+        playPending = false;
+        if (stopped) return;
+        // pause() can reject an older play promise after the tab is visible
+        // again. That interruption is not a decoding or autoplay failure.
+        if (epoch !== playbackEpoch) { play(); return; }
+        if (video && !video.muted) { video.muted = true; play(); }
+        else fail();
+      });
     };
-    const visibility = () => { if (document.hidden) { cancelDraw(); video?.pause(); } else void play(); };
+    const visibility = () => {
+      if (document.hidden) { playbackEpoch++; cancelDraw(); video?.pause(); }
+      else play();
+    };
     document.addEventListener('visibilitychange', visibility);
     const reduce = () => {
       if (motion.matches || document.documentElement.dataset.reduceMotion === 'true') {

@@ -6,7 +6,7 @@ import type { GuidedReadingCue } from '../src/components/BattleReadingCue';
 import { CardInspector } from '../src/components/CardInspector';
 import { createMatch, createStoryMatch, createCardInstance, playCard, playTurnCard, getMatchDistricts, getDistrictResults, type CardInstance, type Lane } from '../src/gameEngine';
 import { getStoryBattle } from '@workspace/squabblemon-engine/story';
-import { decks } from '../src/data';
+import { cards, decks } from '../src/data';
 import { DISTRICT_CATALOG, validateDistrictSnapshot } from '@workspace/squabblemon-engine/districts';
 import '../src/index.css';
 const noop = () => {};
@@ -16,7 +16,7 @@ function App() {
   const requestedEncounter = getStoryBattle(query.get('encounter') ?? '')?.encounter;
   const fixtureRival = requestedEncounter ? {
     ...decks[1], id: requestedEncounter.enemy.deckId, name: requestedEncounter.enemy.name,
-    hero: requestedEncounter.enemy.cardIds[0], cards: [...requestedEncounter.enemy.cardIds],
+    hero: cards[requestedEncounter.enemy.cardIds[0]]?.id ?? decks[0].hero, cards: [...requestedEncounter.enemy.cardIds],
   } : (requestedRival ?? decks[1]);
   const [match, setMatch] = useState(() => {
     const requestedLocations = new URLSearchParams(location.search).get('locations');

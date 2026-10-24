@@ -3,7 +3,8 @@ import { readFileSync } from "node:fs";
 import release from "../../../squabblemon/src/lib/streetLegendsRelease.json";
 import { after, before, test } from "node:test";
 import { db, patchDeliveryTargetsTable, patchDraftsTable, playerProfilesTable } from "@workspace/db";
-import { and, eq } from "drizzle-orm";
+import { and, eq, inArray } from "drizzle-orm";
+import { NoopLogger } from "drizzle-orm/logger";
 import { makePatchLetter, createPatchDraft, deliverLatePatchLetters, listPublicPatches, previewPatch, processOutstandingPatchBatches, processPatchDeliveryBatch, publishPatch, updatePatchDraft } from "./patches";
 import { updateMail } from "./mail";
 import { createApp } from "../app";
@@ -343,4 +344,113 @@ test("prepared release letter matches the exact authoritative rendering", () => 
   const fixture = JSON.parse(readFileSync(new URL('../../../deliverables/release-mail-1-11/mail-preview.json', import.meta.url), 'utf8'));
   assert.deepEqual(makePatchLetter(release), fixture);
   assert.equal(release.packTickets, 10);
+});
+
+
+/** Capture real emitted statements, including transaction boundaries. */
+async function capturePatchQueries<T>(t: test.TestContext, run: () => Promise<T>) {
+  const queries: string[] = [];
+  const observer = t.mock.method(NoopLogger.prototype, "logQuery", (query: string) => { queries.push(query); });
+  try { return { result: await run(), queries }; }
+  finally { observer.mock.restore(); }
+}
+
+test("public patch delivery state stays fresh with one combined status read", async t => {
+  const cases = [
+    { name: "empty", statuses: [], expected: "complete" },
+    { name: "delivered", statuses: [["delivered", 1], ["late", 1]], expected: "complete" },
+    { name: "pending", statuses: [["pending", 0]], expected: "delivering" },
+    { name: "retryable", statuses: [["failed", 2]], expected: "delivering" },
+    { name: "exhausted", statuses: [["failed", 3]], expected: "partial" },
+    { name: "missing", statuses: [["missing", 0]], expected: "partial" },
+    { name: "active-wins", statuses: [["pending", 0], ["missing", 1], ["failed", 3]], expected: "delivering" },
+  ] as const;
+  const drafts = await db.insert(patchDraftsTable).values(cases.map((item, index) => ({
+    version: `${runId}-${item.name}`, title: item.name, patchDate: "2026-10-23",
+    overview: "Fresh public status coverage", createdBy: "test", status: "published" as const,
+    publishedAt: new Date(Date.UTC(2026, 9, 23, 0, 0, index)),
+  }))).returning();
+  t.after(async () => { await db.delete(patchDraftsTable).where(inArray(patchDraftsTable.id, drafts.map(row => row.id))); });
+  const targets = cases.flatMap((item, index) => item.statuses.map(([status, attempts], target) => ({
+    patchId: drafts[index].id, clerkUserId: `${runId}-status-${target}`, status, attempts,
+  })));
+  await db.insert(patchDeliveryTargetsTable).values(targets);
+  const { result, queries } = await capturePatchQueries(t, listPublicPatches);
+  for (const [index, item] of cases.entries()) {
+    assert.equal(result.find(patch => patch.version === drafts[index].version)?.mailStatus, item.expected, item.name);
+  }
+  assert.deepEqual(result.filter(patch => patch.version.startsWith(`${runId}-`)).map(patch => patch.version),
+    [...drafts].reverse().map(patch => patch.version), "published ordering is unchanged");
+  await db.update(patchDeliveryTargetsTable).set({ status: "delivered" })
+    .where(eq(patchDeliveryTargetsTable.patchId, drafts[2].id));
+  assert.equal((await listPublicPatches()).find(patch => patch.version === drafts[2].version)?.mailStatus, "complete",
+    "status is read again after delivery; no stale response cache");
+  t.diagnostic(`public patch statements: ${queries.length}`);
+  assert.equal(queries.length, 2, "published projection and one fresh target status query");
+});
+
+test("one hundred late patch letters use one ledger batch and preserve order, retries, and concurrent ownership", async t => {
+  const lateUser = `${runId}-bulk`, concurrentUser = `${runId}-bulk-concurrent`;
+  const priorPatches = await db.select({ id: patchDraftsTable.id }).from(patchDraftsTable);
+  const drafts = await db.insert(patchDraftsTable).values(Array.from({ length: 100 }, (_, index) => ({
+    version: `bulk-${Date.now()}-${index}`, title: "Bulk letter", patchDate: "2026-10-23",
+    overview: `Letter ${index}`, createdBy: "test", status: "published" as const,
+    softCurrency: 1, packTickets: 0, publishedAt: new Date(Date.UTC(2026, 9, 23, 0, 0, index)),
+  }))).returning();
+  t.after(async () => {
+    await db.delete(patchDraftsTable).where(inArray(patchDraftsTable.id, drafts.map(row => row.id)));
+    await db.delete(patchDeliveryTargetsTable).where(inArray(patchDeliveryTargetsTable.clerkUserId, [lateUser, concurrentUser]));
+    await db.delete(playerProfilesTable).where(inArray(playerProfilesTable.clerkUserId, [lateUser, concurrentUser]));
+  });
+  await db.insert(playerProfilesTable).values([lateUser, concurrentUser].map(clerkUserId => ({ clerkUserId, softCurrency: 7 })));
+  if (priorPatches.length) await db.insert(patchDeliveryTargetsTable).values(priorPatches.flatMap(patch =>
+    [lateUser, concurrentUser].map(clerkUserId => ({ patchId: patch.id, clerkUserId, status: "delivered" as const }))));
+  const { result, queries } = await capturePatchQueries(t, () => deliverLatePatchLetters(lateUser));
+  assert.equal(result, 100);
+  const [profile] = await db.select().from(playerProfilesTable).where(eq(playerProfilesTable.clerkUserId, lateUser));
+  assert.equal(profile.softCurrency, 7, "delivery does not credit unclaimed gifts");
+  const ids = drafts.map(patch => makePatchLetter({
+    version: patch.version, title: patch.title, date: patch.patchDate, overview: patch.overview,
+    buffs: patch.buffs, changes: patch.changes, softCurrency: patch.softCurrency, packTickets: patch.packTickets,
+  }).id);
+  assert.deepEqual(profile.inbox.map(letter => letter.id), ids, "oldest patch first");
+  for (let index = 1; index < profile.inbox.length; index++) {
+    const currentSentAt = profile.inbox[index].sentAt;
+    const previousSentAt = profile.inbox[index - 1].sentAt;
+    assert.ok(typeof currentSentAt === "string" && typeof previousSentAt === "string");
+    assert.equal(Date.parse(currentSentAt) - Date.parse(previousSentAt), 1);
+  }
+  const replay = await capturePatchQueries(t, () => deliverLatePatchLetters(lateUser));
+  assert.equal(replay.result, 0);
+  assert.equal(replay.queries.length, 1, "completed inbox takes only the missing-patch lookup");
+  const matching = { ...profile.inbox[0], readAt: "2026-10-23T00:00:00.000Z", claimedAt: "2026-10-23T00:00:01.000Z" };
+  const conflicting = { ...profile.inbox[1], body: "Other content owns this campaign ID." };
+  await db.update(playerProfilesTable).set({ inbox: [matching, conflicting] })
+    .where(eq(playerProfilesTable.clerkUserId, concurrentUser));
+  const concurrent = await Promise.all([deliverLatePatchLetters(concurrentUser), deliverLatePatchLetters(concurrentUser)]);
+  assert.equal(concurrent.reduce((sum, added) => sum + added, 0), 98);
+  const [concurrentProfile] = await db.select().from(playerProfilesTable).where(eq(playerProfilesTable.clerkUserId, concurrentUser));
+  assert.deepEqual(concurrentProfile.inbox.map(letter => letter.id), ids);
+  assert.deepEqual(concurrentProfile.inbox.slice(0, 2), [matching, conflicting], "existing read/claim state and conflicting letter stay untouched");
+  const ledger = await db.select().from(patchDeliveryTargetsTable).where(and(
+    inArray(patchDeliveryTargetsTable.patchId, drafts.map(row => row.id)),
+    inArray(patchDeliveryTargetsTable.clerkUserId, [lateUser, concurrentUser]),
+  ));
+  assert.equal(ledger.length, 199);
+  assert.ok(ledger.some(target => target.clerkUserId === concurrentUser && target.patchId === drafts[0].id), "matching existing mail receives its missing ledger");
+  assert.ok(!ledger.some(target => target.clerkUserId === concurrentUser && target.patchId === drafts[1].id), "conflicting content receives no ledger");
+  assert.ok(ledger.every(target => target.status === "late" && target.attempts === 1));
+  const gifts = await Promise.all([updateMail(lateUser, ids[0], true), updateMail(lateUser, ids[0], true)]);
+  assert.equal(gifts.filter(claim => claim.credited).length, 1);
+  assert.equal((await db.select().from(playerProfilesTable).where(eq(playerProfilesTable.clerkUserId, lateUser)))[0].softCurrency, 8);
+  const snapshot = await db.select().from(patchDraftsTable).where(inArray(patchDraftsTable.id, drafts.map(row => row.id)));
+  assert.ok(snapshot.every(patch => patch.intendedCount === 0 && patch.deliveredCount === 0 && patch.failedCount === 0));
+  const inserts = queries.filter(query => /^insert into "patch_delivery_targets"/i.test(query));
+  t.diagnostic(`late patch statements: ${queries.length}; ledger inserts: ${inserts.length}; letters: ${result}`);
+  assert.equal(inserts.length, 1, "all one hundred new ledger records share one roundtrip");
+  assert.equal(queries.length, 6, "lookup, begin, locked inbox, ledger batch, inbox update, commit");
+  const profileReads = queries.filter(query => /^select /i.test(query) && query.includes('from "player_profiles"'));
+  assert.equal(profileReads.length, 1);
+  assert.match(profileReads[0], /^select "inbox" from "player_profiles"/i,
+    "patch delivery does not load decks, Story history, or wallet JSON");
 });

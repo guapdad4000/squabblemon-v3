@@ -38,6 +38,7 @@ import {
   openStreetPackForPlayer,
 } from "../lib/collectionTransactions";
 import {
+  ensurePlayer,
   getPlayerBootstrap,
   serializePackOpening,
 } from "../lib/playerState";
@@ -103,7 +104,7 @@ router.put(
     }
 
     try {
-      await getPlayerBootstrap(userId);
+      await ensurePlayer(userId);
       await db.transaction(async (tx) => {
         await tx.execute(
           sql`select ${playerProfilesTable.clerkUserId} from ${playerProfilesTable} where ${playerProfilesTable.clerkUserId} = ${userId} for update`,
@@ -185,7 +186,7 @@ router.delete(
     }
 
     try {
-      await getPlayerBootstrap(userId);
+      await ensurePlayer(userId);
       await db.transaction(async (tx) => {
         await tx.execute(
           sql`select ${playerProfilesTable.clerkUserId} from ${playerProfilesTable} where ${playerProfilesTable.clerkUserId} = ${userId} for update`,
@@ -241,14 +242,14 @@ router.delete(
 router.get("/player/packs/welcome", async (req, res): Promise<void> => {
   const userId = authenticatedUserId(req, res);
   if (!userId) return;
-  await getPlayerBootstrap(userId);
+  await ensurePlayer(userId);
   res.json({ available: await welcomePullAvailable(userId) });
 });
 router.post("/player/packs/welcome", async (req, res): Promise<void> => {
   const userId = authenticatedUserId(req, res);
   if (!userId) return;
   try {
-    await getPlayerBootstrap(userId);
+    await ensurePlayer(userId);
     const result = await openWelcomePull(userId);
     res.json(OpenPlayerPackResponse.parse({ ...result, opening: serializePackOpening(result.opening), bootstrap: await getPlayerBootstrap(userId) }));
   } catch (error) { sendError(res, error); }
@@ -264,7 +265,7 @@ router.post("/player/packs/open", async (req, res): Promise<void> => {
   }
 
   try {
-    await getPlayerBootstrap(userId);
+    await ensurePlayer(userId);
     const result = await openStreetPackForPlayer(userId, body.data);
 
     res.json(
@@ -291,7 +292,7 @@ router.post("/player/collection/craft", async (req, res): Promise<void> => {
   }
 
   try {
-    await getPlayerBootstrap(userId);
+    await ensurePlayer(userId);
     const result = await craftPlayerVariantForPlayer(
       userId,
       body.data.cardId,
@@ -318,7 +319,7 @@ router.put("/player/collection/equip", async (req, res): Promise<void> => {
   }
 
   try {
-    await getPlayerBootstrap(userId);
+    await ensurePlayer(userId);
     await db.transaction(async (tx) => {
       await tx.execute(
         sql`select ${playerProfilesTable.clerkUserId} from ${playerProfilesTable} where ${playerProfilesTable.clerkUserId} = ${userId} for update`,
@@ -377,7 +378,7 @@ router.post(
     }
 
     try {
-      await getPlayerBootstrap(userId);
+      await ensurePlayer(userId);
       const result = await claimCollectionRoadForPlayer(
         userId,
         milestone,

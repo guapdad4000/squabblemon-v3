@@ -3,7 +3,7 @@ import { Router } from 'express';
 import { EquipPlayerCosmeticsBody, GetPlayerBootstrapResponse, PurchasePlayerShopItemBody } from '@workspace/api-zod';
 import { SHOP_OFFERS, ShopRuleError, ECONOMY_VERSION } from '@workspace/squabblemon-engine/economy';
 import { purchaseShopItem } from '../lib/shopTransactions';
-import { getPlayerBootstrap } from '../lib/playerState';
+import { ensurePlayer, getPlayerBootstrap } from '../lib/playerState';
 import { EconomyTransactionError } from '../lib/collectionTransactions';
 
 import { equipCosmetics } from '../lib/cosmeticTransactions';
@@ -20,7 +20,7 @@ router.post('/player/shop/purchases', async (req, res) => {
   const parsed = ShopPurchaseBody.safeParse(req.body);
   if (!parsed.success) { res.status(400).json({ error: 'Choose a valid shop item and purchase request.' }); return; }
   try {
-    await getPlayerBootstrap(userId);
+    await ensurePlayer(userId);
     const result = await purchaseShopItem(userId, parsed.data);
     res.json({ ...result, bootstrap: await getPlayerBootstrap(userId) });
   } catch (error) {
@@ -35,7 +35,7 @@ router.put('/player/cosmetics', async (req, res) => {
   const parsed = EquipPlayerCosmeticsBody.strict().safeParse(req.body);
   if (!parsed.success) { res.status(400).json({ error: 'Choose a valid player mat, banner, up to three stickers, and owned card scenes.' }); return; }
   try {
-    await getPlayerBootstrap(userId);
+    await ensurePlayer(userId);
     await equipCosmetics(userId, parsed.data);
     res.json(GetPlayerBootstrapResponse.parse(await getPlayerBootstrap(userId)));
   } catch (error) {

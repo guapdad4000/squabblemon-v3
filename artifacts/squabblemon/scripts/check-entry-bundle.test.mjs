@@ -4,6 +4,7 @@ import test from 'node:test';
 import {
   checkEntryBundle,
   checkGameBundle,
+  checkSoundtrackBundle,
   ENTRY_BUDGET_BYTES,
 } from './check-entry-bundle.mjs';
 
@@ -90,10 +91,46 @@ test('fails when the static public entry exceeds its budget', () => {
 // helper or a shared context, even while its byte budget happens to pass.
 test('game shell rejects transitive optional catalogs but lets visited routes load them', () => {
   for (const module of ['/workspace/lib/squabblemon-engine/src/data.ts', '/workspace/lib/squabblemon-engine/src/cosmetics.ts',
-    '/workspace/lib/squabblemon-engine/src/playerMats.ts', '/workspace/src/data.ts', '/workspace/src/lib/notificationCatalog.ts']) {
+    '/workspace/lib/squabblemon-engine/src/playerMats.ts', '/workspace/lib/squabblemon-engine/src/story.ts',
+    '/workspace/src/story.ts', '/workspace/src/data.ts', '/workspace/src/lib/notificationCatalog.ts']) {
     const catalog = { ...entry, fileName: 'catalog.js', imports: [], modules: [module], bytes: 100 };
     const shared = { ...entry, fileName: 'shared.js', imports: ['catalog.js'], modules: [], bytes: 100 };
     assert.throws(() => checkGameBundle(report([{ ...shell, imports: ['shared.js'] }, home, shared, catalog])), /optional catalogs/);
     assert.equal(checkGameBundle(report([shell, { ...home, imports: ['shell.js', 'catalog.js'] }, catalog]))[1].bytes, 2100);
   }
+});
+
+
+test('game shell allows compact Story music metadata while the full catalog stays lazy', () => {
+  const metadata = { ...entry, fileName: 'music-metadata.js', modules: ['/workspace/src/storyMusicRoutes.json'], imports: [], bytes: 100 };
+  const catalog = { ...entry, fileName: 'story-catalog.js', modules: ['/workspace/lib/squabblemon-engine/src/story.ts'], imports: [], bytes: 600_000 };
+  const result = checkGameBundle(report([
+    { ...shell, imports: ['music-metadata.js'], dynamicImports: ['home.js', 'story-catalog.js'] },
+    home, metadata, catalog,
+  ]));
+  assert.equal(result[0].bytes, 1100);
+  assert.equal(result[1].bytes, 2100);
+});
+
+
+const music = { ...entry, fileName: 'music.js', modules: ['/workspace/src/components/GameSoundtrack.tsx'], imports: [], dynamicImports: [] };
+
+test('lazy soundtrack has its own transitive guard against optional catalogs', () => {
+  for (const module of ['/workspace/lib/squabblemon-engine/src/story.ts', '/workspace/src/story.ts',
+    '/workspace/lib/squabblemon-engine/src/data.ts', '/workspace/lib/squabblemon-engine/src/cosmetics.ts',
+    '/workspace/lib/squabblemon-engine/src/playerMats.ts', '/workspace/src/data.ts', '/workspace/src/lib/notificationCatalog.ts']) {
+    const catalog = { ...entry, fileName: 'catalog.js', imports: [], modules: [module], bytes: 100 };
+    const helper = { ...entry, fileName: 'music-helper.js', imports: ['catalog.js'], modules: ['/workspace/src/musicModes.ts'], bytes: 100 };
+    const bundle = report([shell, home, { ...music, imports: ['music-helper.js'] }, helper, catalog]);
+    assert.doesNotThrow(() => checkGameBundle(bundle), 'GameApp does not statically reach the independently mounted soundtrack');
+    assert.throws(() => checkSoundtrackBundle(bundle), /GameSoundtrack eagerly includes optional catalogs/);
+  }
+});
+
+test('soundtrack allows compact metadata and ignores full catalogs behind a lazy boundary', () => {
+  const metadata = { ...entry, fileName: 'metadata.js', modules: ['/workspace/src/storyMusicRoutes.json'], imports: [], bytes: 100 };
+  const catalog = { ...entry, fileName: 'story.js', modules: ['/workspace/lib/squabblemon-engine/src/story.ts'], imports: [], bytes: 600_000 };
+  const result = checkSoundtrackBundle(report([{ ...music, imports: ['metadata.js'], dynamicImports: ['story.js'] }, metadata, catalog]));
+  assert.equal(result.bytes, 1100);
+  assert.deepEqual(result.chunks, ['music.js', 'metadata.js']);
 });

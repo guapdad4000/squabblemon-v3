@@ -1,0 +1,24 @@
+/* Keep relational rules ancestor-first. The generated group-has :is(... *)
+   selectors invalidated unrelated battle subtrees on every :has() change.
+   :where() preserves the utilities' original specificity and group semantics. */
+@layer utilities {
+  :where(.group\/field):has([data-orientation="horizontal"]) .field-description-balance {
+    text-wrap: balance;
+  }
+  :where(.group\/input-group):has(> input) .input-group-addon-input-top {
+    padding-top: calc(var(--spacing) * 2.5);
+  }
+  :where(.group\/input-group):has(> input) .input-group-addon-input-bottom {
+    padding-bottom: calc(var(--spacing) * 2.5);
+  }
+  :where(.group\/item):has([data-slot="item-description"]) .item-media-description-offset {
+    --tw-translate-y: calc(var(--spacing) * .5);
+    translate: var(--tw-translate-x) var(--tw-translate-y);
+  }
+  :where(.group\/item):has([data-slot="item-description"]) .item-media-description-align {
+    align-self: flex-start;
+  }
+  :where(.group\/menu-item):has([data-sidebar="menu-action"]) .sidebar-menu-button-action-space {
+    padding-right: calc(var(--spacing) * 8);
+  }
+}

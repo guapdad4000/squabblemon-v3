@@ -183,7 +183,10 @@ export function withStoryEnvironments(chapters: readonly StoryChapter[]): StoryC
       if (!name) throw new Error(`Missing authored environment for ${node.id}`);
       const environmentAssetId = asset(name);
       return { ...node, cinematic: { ...node.cinematic, environmentAssetId },
-        ...(node.kind === 'battle' ? { battlefieldAssetId: environmentAssetId } : {}) };
+        ...(node.kind === 'battle' ? {
+          battlefieldAssetId: environmentAssetId,
+          encounter: { ...node.encounter, battlefieldAssetId: environmentAssetId },
+        } : {}) };
     }) };
   });
 }

@@ -146,7 +146,7 @@
 .battle-arena.battle-hud .mobile-district-open {
   display: flex; position: relative; inset: auto; width: 100%; height: var(--hub-name-height); min-height: var(--hub-name-height);
   justify-content: center; align-items: center; gap: 4px; padding: 2px 4px; border-radius: 0;
-  color: #fff2db; font: 900 clamp(11px,1.2vw,14px)/1.05 var(--font-display);
+  color: #fff2db; font: var(--font-location-title-weight,400) clamp(11px,1.2vw,14px)/1.05 var(--font-location-title,var(--font-display));
   letter-spacing: .02em; background: transparent;
   text-shadow: 0 1px 2px #000, 1px 0 2px #000, -1px 0 2px #000, 0 -1px 2px #000, 0 0 6px #000;
 }

@@ -1,5 +1,6 @@
 import { useEffect, useId, useRef, useState, type CSSProperties, type KeyboardEvent, type MouseEvent, type ReactNode } from 'react';
 import { ChevronDown, ChevronUp, Swords } from 'lucide-react';
+import { cancelFrame, frame } from 'framer-motion';
 import './battle-formation.css';
 
 interface BattleFormationProps {
@@ -29,7 +30,6 @@ const EMPTY_SCROLL: ScrollState = { scrollable: false, before: false, after: fal
 export function BattleFormation({ children, count, inspectCount = count, crowded = count > 4, label, onInspect, style, className = '', testId }: BattleFormationProps) {
   const stackRef = useRef<HTMLDivElement>(null);
   const rowStarts = useRef<number[]>([]);
-  const frame = useRef<number | null>(null);
   const [scroll, setScroll] = useState<ScrollState>(EMPTY_SCROLL);
   const hintId = useId();
   const inspectable = inspectCount > 0 && (crowded || scroll.scrollable);
@@ -38,56 +38,84 @@ export function BattleFormation({ children, count, inspectCount = count, crowded
     const stack = stackRef.current;
     if (!stack) return;
 
-    const measure = () => {
-      frame.current = null;
-      const cards = Array.from(stack.children).filter((child): child is HTMLElement => child instanceof HTMLElement && child.matches('.battle-board-card'));
-      // offsetTop is stable while entry effects transform the card artwork.
-      const starts = cards.map(card => card.offsetTop).sort((a, b) => a - b);
-      rowStarts.current = starts.filter((top, index) => index === 0 || Math.abs(top - starts[index - 1]) > 2);
-      let scrollable = stack.scrollHeight > stack.clientHeight + 2;
-      // A previously overflowing small crew must be able to recover after a
-      // resize. Its own footer cannot make a now-fitting crew stay scrollable.
-      if (scrollable && stack.dataset.crowded !== 'true') {
-        const side = stack.closest<HTMLElement>('.battle-side');
-        const field = stack.closest<HTMLElement>('.battlefield-grid');
-        const hub = side?.parentElement?.querySelector<HTMLElement>('.battle-district-hub');
-        if (side && field && hub) {
-          const sideStyle = getComputedStyle(side), fieldStyle = getComputedStyle(field);
-          const px = (value: string) => Number.parseFloat(value) || 0;
-          const naturalSide = Math.max(px(sideStyle.getPropertyValue('--formation-side-min')),
-            (field.clientHeight - px(fieldStyle.paddingTop) - px(fieldStyle.paddingBottom) - hub.offsetHeight) / 2);
-          const naturalHeight = naturalSide - px(sideStyle.paddingTop) - px(sideStyle.getPropertyValue('--formation-base-bottom'));
-          if (stack.scrollHeight <= naturalHeight + 2) scrollable = false;
-        }
-      }
-      // Ignore trailing scroll padding: the cue describes actual hidden cards.
-      const remaining = cards.filter(card => card.offsetTop + card.offsetHeight > stack.scrollTop + stack.clientHeight + 2).length;
-      const after = scrollable && remaining > 0;
-      const next: ScrollState = {
-        scrollable,
-        before: scrollable && stack.scrollTop > 2,
-        after,
-        remaining: after ? remaining : 0,
-      };
+    let disposed = false;
+    let layoutDirty = true;
+    let cardBottoms: number[] = [];
+    const observedCards = new Set<HTMLElement>();
+    let height = 0;
+    let scrollable = false;
+    let pending: ScrollState | null = null;
+    const publish = () => {
+      if (disposed || !pending) return;
+      const next = pending;
+      pending = null;
       setScroll(previous => previous.scrollable === next.scrollable && previous.before === next.before && previous.after === next.after && previous.remaining === next.remaining ? previous : next);
     };
-    const schedule = () => {
-      if (frame.current === null) frame.current = requestAnimationFrame(measure);
+    const measure = () => {
+      if (disposed) return;
+      if (layoutDirty) {
+        layoutDirty = false;
+        const cards = Array.from(stack.children).filter((child): child is HTMLElement => child instanceof HTMLElement && child.matches('.battle-board-card'));
+        // Fonts or responsive card contents can resize a row without resizing its
+        // scroll viewport. Track direct tiles as well as the stack itself.
+        const currentCards = new Set(cards);
+        for (const card of observedCards) {
+          if (!currentCards.has(card)) { resize?.unobserve(card); observedCards.delete(card); }
+        }
+        for (const card of cards) {
+          if (!observedCards.has(card)) { observedCards.add(card); resize?.observe(card); }
+        }
+        // Card offsets do not change while scrolling or while artwork transforms.
+        // Read each once per layout, then reuse them for every smooth-scroll tick.
+        const metrics = cards.map(card => ({ top: card.offsetTop, height: card.offsetHeight }));
+        const starts = metrics.map(card => card.top).sort((a, b) => a - b);
+        rowStarts.current = starts.filter((top, index) => index === 0 || Math.abs(top - starts[index - 1]) > 2);
+        cardBottoms = metrics.map(card => card.top + card.height);
+        height = stack.clientHeight;
+        const contentHeight = stack.scrollHeight;
+        scrollable = contentHeight > height + 2;
+        // A previously overflowing small crew must recover after resize. Its own
+        // footer cannot make a now-fitting crew stay scrollable.
+        if (scrollable && stack.dataset.crowded !== 'true') {
+          const side = stack.closest<HTMLElement>('.battle-side');
+          const field = stack.closest<HTMLElement>('.battlefield-grid');
+          const hub = side?.parentElement?.querySelector<HTMLElement>('.battle-district-hub');
+          if (side && field && hub) {
+            const sideStyle = getComputedStyle(side), fieldStyle = getComputedStyle(field);
+            const px = (value: string) => Number.parseFloat(value) || 0;
+            const naturalSide = Math.max(px(sideStyle.getPropertyValue('--formation-side-min')),
+              (field.clientHeight - px(fieldStyle.paddingTop) - px(fieldStyle.paddingBottom) - hub.offsetHeight) / 2);
+            const naturalHeight = naturalSide - px(sideStyle.paddingTop) - px(sideStyle.getPropertyValue('--formation-base-bottom'));
+            if (contentHeight <= naturalHeight + 2) scrollable = false;
+          }
+        }
+      }
+      const top = stack.scrollTop;
+      // Ignore trailing scroll padding: the cue describes actual hidden cards.
+      const remaining = cardBottoms.filter(bottom => bottom > top + height + 2).length;
+      const after = scrollable && remaining > 0;
+      pending = { scrollable, before: scrollable && top > 2, after, remaining: after ? remaining : 0 };
+      // All formations finish reading before a React update can change footers.
+      frame.update(publish);
     };
-    const resize = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(schedule);
-    const childrenChanged = typeof MutationObserver === 'undefined' ? null : new MutationObserver(schedule);
+    const scheduleScroll = () => { frame.read(measure); };
+    const scheduleLayout = () => { layoutDirty = true; scheduleScroll(); };
+    const resize = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(scheduleLayout);
+    const childrenChanged = typeof MutationObserver === 'undefined' ? null : new MutationObserver(scheduleLayout);
     resize?.observe(stack);
-    childrenChanged?.observe(stack, { childList: true });
-    stack.addEventListener('scroll', schedule, { passive: true });
-    window.addEventListener('resize', schedule, { passive: true });
-    schedule();
+    childrenChanged?.observe(stack, { childList: true, attributes: true, attributeFilter: ['data-count', 'data-crowded'] });
+    stack.addEventListener('scroll', scheduleScroll, { passive: true });
+    window.addEventListener('resize', scheduleLayout, { passive: true });
+    scheduleLayout();
     return () => {
+      disposed = true;
       resize?.disconnect();
       childrenChanged?.disconnect();
-      stack.removeEventListener('scroll', schedule);
-      window.removeEventListener('resize', schedule);
-      if (frame.current !== null) cancelAnimationFrame(frame.current);
-      frame.current = null;
+      stack.removeEventListener('scroll', scheduleScroll);
+      window.removeEventListener('resize', scheduleLayout);
+      cancelFrame(measure);
+      cancelFrame(publish);
+      pending = null;
     };
   }, []);
 

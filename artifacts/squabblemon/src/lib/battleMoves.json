@@ -1,58 +1,862 @@
 {
   "char03_chroma.mp4": {
-    "asset": "assets/battle-moves/char03_chroma-5886f27087cf.mp4",
-    "revision": "5886f27087cf25d3",
-    "sourceHash": "5886f27087cf25d3ad23e3c806de26da99f6c09f3f320088d9336c7871958234",
-    "before": 3743159,
-    "after": 1635011
+    "asset": "assets/battle-moves/char03_chroma-5886f27087cf-c1815ec8ba4e.mp4",
+    "revision": "5886f27087cf25d3"
   },
   "char31_chroma.mp4": {
-    "asset": "assets/battle-moves/char31_chroma-7daf3def86f2.mp4",
-    "revision": "7daf3def86f27114",
-    "sourceHash": "7daf3def86f27114a677f61a41a90ce61f72441c7a7765e66fa32bb0bbd7ed10",
-    "before": 4124923,
-    "after": 1720668
+    "asset": "assets/battle-moves/char31_chroma-7daf3def86f2-c1815ec8ba4e.mp4",
+    "revision": "7daf3def86f27114"
   },
   "char20_chroma.mp4": {
-    "asset": "assets/battle-moves/char20_chroma-3ec9b4a21e53.mp4",
-    "revision": "3ec9b4a21e53e52b",
-    "sourceHash": "3ec9b4a21e53e52b4a4e8167d8e2a13d0c1f795f883b9834087007b9c6a2d8c6",
-    "before": 4559761,
-    "after": 2014301
+    "asset": "assets/battle-moves/char20_chroma-3ec9b4a21e53-c1815ec8ba4e.mp4",
+    "revision": "3ec9b4a21e53e52b"
   },
   "char49_chroma.mp4": {
-    "asset": "assets/battle-moves/char49_chroma-2735286b254d.mp4",
-    "revision": "2735286b254d003c",
-    "sourceHash": "2735286b254d003c802b40c61cac124f1480ffe903b324c75293af6fe8cc19d5",
-    "before": 3273330,
-    "after": 1392481
+    "asset": "assets/battle-moves/char49_chroma-2735286b254d-c1815ec8ba4e.mp4",
+    "revision": "2735286b254d003c"
   },
   "char11_chroma.mp4": {
-    "asset": "assets/battle-moves/char11_chroma-2199d936d0bc.mp4",
-    "revision": "2199d936d0bc1f46",
-    "sourceHash": "2199d936d0bc1f4602121e162f30e0a405f00424ea39129d400b0bab1aba8bab",
-    "before": 4792493,
-    "after": 1946307
+    "asset": "assets/battle-moves/char11_chroma-2199d936d0bc-c1815ec8ba4e.mp4",
+    "revision": "2199d936d0bc1f46"
   },
   "char12_chroma.mp4": {
-    "asset": "assets/battle-moves/char12_chroma-e85585618081.mp4",
-    "revision": "e85585618081ff48",
-    "sourceHash": "e85585618081ff48c8d7c8dccc65e6d99a0968386edc565df1799cda87663b52",
-    "before": 3821363,
-    "after": 1497143
+    "asset": "assets/battle-moves/char12_chroma-e85585618081-c1815ec8ba4e.mp4",
+    "revision": "e85585618081ff48"
   },
   "char32_chroma.mp4": {
-    "asset": "assets/battle-moves/char32_chroma-ecf128f234aa.mp4",
-    "revision": "ecf128f234aa2e61",
-    "sourceHash": "ecf128f234aa2e617d95ef96aca3f6260d2184569ececa046c1636c1babcce31",
-    "before": 4192993,
-    "after": 1830221
+    "asset": "assets/battle-moves/char32_chroma-ecf128f234aa-c1815ec8ba4e.mp4",
+    "revision": "ecf128f234aa2e61"
   },
   "char50_chroma.mp4": {
-    "asset": "assets/battle-moves/char50_chroma-b04b9cdc1428.mp4",
-    "revision": "b04b9cdc1428e87c",
-    "sourceHash": "b04b9cdc1428e87c0c00987616474654b61af5024af6465e8e5b8b3887368843",
-    "before": 3129668,
-    "after": 1277656
+    "asset": "assets/battle-moves/char50_chroma-b04b9cdc1428-c1815ec8ba4e.mp4",
+    "revision": "b04b9cdc1428e87c"
+  },
+  "char97_chroma.mp4": {
+    "asset": "assets/battle-moves/char97_chroma-3fac34b55f9c-c1815ec8ba4e.mp4",
+    "revision": "3fac34b55f9cd02d"
+  },
+  "char27_chroma.mp4": {
+    "asset": "assets/battle-moves/char27_chroma-862f7cb01fe5-c1815ec8ba4e.mp4",
+    "revision": "862f7cb01fe5cdac"
+  },
+  "oa-corrupt-pastor-v1.mp4": {
+    "asset": "assets/battle-moves/oa-corrupt-pastor-v1-3a1151cff6b4-c1815ec8ba4e.mp4",
+    "revision": "3a1151cff6b40ebc"
+  },
+  "char01_chroma.mp4": {
+    "asset": "assets/battle-moves/char01_chroma-d4ba803f4475-c1815ec8ba4e.mp4",
+    "revision": "d4ba803f4475a4bf"
+  },
+  "char02_chroma.mp4": {
+    "asset": "assets/battle-moves/char02_chroma-1a6c8ae294aa-c1815ec8ba4e.mp4",
+    "revision": "1a6c8ae294aac0a3"
+  },
+  "char04_chroma.mp4": {
+    "asset": "assets/battle-moves/char04_chroma-b89e3d72833f-c1815ec8ba4e.mp4",
+    "revision": "b89e3d72833f59f7"
+  },
+  "char05_chroma.mp4": {
+    "asset": "assets/battle-moves/char05_chroma-3de2a783cd21-c1815ec8ba4e.mp4",
+    "revision": "3de2a783cd21fe68"
+  },
+  "char06_chroma.mp4": {
+    "asset": "assets/battle-moves/char06_chroma-6e8ff4029c0a-c1815ec8ba4e.mp4",
+    "revision": "6e8ff4029c0a0918"
+  },
+  "char07_chroma.mp4": {
+    "asset": "assets/battle-moves/char07_chroma-2949f8a79ebe-c1815ec8ba4e.mp4",
+    "revision": "2949f8a79ebe706a"
+  },
+  "char08_chroma.mp4": {
+    "asset": "assets/battle-moves/char08_chroma-6239d66a99bb-c1815ec8ba4e.mp4",
+    "revision": "6239d66a99bbbf43"
+  },
+  "char09_chroma.mp4": {
+    "asset": "assets/battle-moves/char09_chroma-900183e60020-c1815ec8ba4e.mp4",
+    "revision": "900183e60020a8de"
+  },
+  "char100_chroma.mp4": {
+    "asset": "assets/battle-moves/char100_chroma-6ccc73e24836-c1815ec8ba4e.mp4",
+    "revision": "6ccc73e24836b0b4"
+  },
+  "char101_chroma.mp4": {
+    "asset": "assets/battle-moves/char101_chroma-c4fcbebe4470-c1815ec8ba4e.mp4",
+    "revision": "c4fcbebe4470d678"
+  },
+  "char102_chroma.mp4": {
+    "asset": "assets/battle-moves/char102_chroma-863a9d1d6bc8-c1815ec8ba4e.mp4",
+    "revision": "863a9d1d6bc8e096"
+  },
+  "char103_chroma.mp4": {
+    "asset": "assets/battle-moves/char103_chroma-8a19217adf1b-c1815ec8ba4e.mp4",
+    "revision": "8a19217adf1b1a2b"
+  },
+  "char10_chroma.mp4": {
+    "asset": "assets/battle-moves/char10_chroma-091fa7276fe6-c1815ec8ba4e.mp4",
+    "revision": "091fa7276fe61209"
+  },
+  "char13_chroma.mp4": {
+    "asset": "assets/battle-moves/char13_chroma-a2fc050edd3e-c1815ec8ba4e.mp4",
+    "revision": "a2fc050edd3e1cc7"
+  },
+  "char14_chroma.mp4": {
+    "asset": "assets/battle-moves/char14_chroma-41c95cad2819-c1815ec8ba4e.mp4",
+    "revision": "41c95cad28194562"
+  },
+  "char15_chroma.mp4": {
+    "asset": "assets/battle-moves/char15_chroma-1f3f0aae358c-c1815ec8ba4e.mp4",
+    "revision": "1f3f0aae358c9d12"
+  },
+  "char16_chroma.mp4": {
+    "asset": "assets/battle-moves/char16_chroma-9fdb21fd00db-c1815ec8ba4e.mp4",
+    "revision": "9fdb21fd00dbf475"
+  },
+  "char17_chroma.mp4": {
+    "asset": "assets/battle-moves/char17_chroma-46e4c65d8416-c1815ec8ba4e.mp4",
+    "revision": "46e4c65d8416506b"
+  },
+  "char18_chroma.mp4": {
+    "asset": "assets/battle-moves/char18_chroma-bbf4985a0bc0-c1815ec8ba4e.mp4",
+    "revision": "bbf4985a0bc07b3e"
+  },
+  "char19_chroma.mp4": {
+    "asset": "assets/battle-moves/char19_chroma-74870f8bf55d-c1815ec8ba4e.mp4",
+    "revision": "74870f8bf55d6a6a"
+  },
+  "char21_chroma.mp4": {
+    "asset": "assets/battle-moves/char21_chroma-47c0955cc171-c1815ec8ba4e.mp4",
+    "revision": "47c0955cc1710483"
+  },
+  "char22_chroma.mp4": {
+    "asset": "assets/battle-moves/char22_chroma-3745f2de9486-c1815ec8ba4e.mp4",
+    "revision": "3745f2de9486f249"
+  },
+  "char23_chroma.mp4": {
+    "asset": "assets/battle-moves/char23_chroma-e27ce58af95c-c1815ec8ba4e.mp4",
+    "revision": "e27ce58af95c7db7"
+  },
+  "char24_chroma.mp4": {
+    "asset": "assets/battle-moves/char24_chroma-7fab126b99aa-c1815ec8ba4e.mp4",
+    "revision": "7fab126b99aa2a8c"
+  },
+  "char25_chroma.mp4": {
+    "asset": "assets/battle-moves/char25_chroma-5b682cda138c-c1815ec8ba4e.mp4",
+    "revision": "5b682cda138c0d4e"
+  },
+  "char26_chroma.mp4": {
+    "asset": "assets/battle-moves/char26_chroma-9e0d26583f3b-c1815ec8ba4e.mp4",
+    "revision": "9e0d26583f3bda17"
+  },
+  "char28_chroma.mp4": {
+    "asset": "assets/battle-moves/char28_chroma-5d2037b33a35-c1815ec8ba4e.mp4",
+    "revision": "5d2037b33a35d70a"
+  },
+  "char29_chroma.mp4": {
+    "asset": "assets/battle-moves/char29_chroma-dcb4888fdaa6-c1815ec8ba4e.mp4",
+    "revision": "dcb4888fdaa6b85b"
+  },
+  "char30_chroma.mp4": {
+    "asset": "assets/battle-moves/char30_chroma-6a0cb710730b-c1815ec8ba4e.mp4",
+    "revision": "6a0cb710730b89f2"
+  },
+  "char33_chroma.mp4": {
+    "asset": "assets/battle-moves/char33_chroma-b5a77a203df3-c1815ec8ba4e.mp4",
+    "revision": "b5a77a203df3ce26"
+  },
+  "char34_chroma.mp4": {
+    "asset": "assets/battle-moves/char34_chroma-003660413c35-c1815ec8ba4e.mp4",
+    "revision": "003660413c35a3ec"
+  },
+  "char35_chroma.mp4": {
+    "asset": "assets/battle-moves/char35_chroma-9ba4bcb38e6e-c1815ec8ba4e.mp4",
+    "revision": "9ba4bcb38e6e1934"
+  },
+  "char36_chroma.mp4": {
+    "asset": "assets/battle-moves/char36_chroma-70fe37031f9e-c1815ec8ba4e.mp4",
+    "revision": "70fe37031f9e2be2"
+  },
+  "char37_chroma.mp4": {
+    "asset": "assets/battle-moves/char37_chroma-ecc4de62a8b0-c1815ec8ba4e.mp4",
+    "revision": "ecc4de62a8b0126b"
+  },
+  "char38_chroma.mp4": {
+    "asset": "assets/battle-moves/char38_chroma-025023952d62-c1815ec8ba4e.mp4",
+    "revision": "025023952d62c7c6"
+  },
+  "char39_chroma.mp4": {
+    "asset": "assets/battle-moves/char39_chroma-b840726f25e3-c1815ec8ba4e.mp4",
+    "revision": "b840726f25e38d11"
+  },
+  "char40_chroma.mp4": {
+    "asset": "assets/battle-moves/char40_chroma-fd31292f7b13-c1815ec8ba4e.mp4",
+    "revision": "fd31292f7b1330ec"
+  },
+  "char41_chroma.mp4": {
+    "asset": "assets/battle-moves/char41_chroma-3f907f9cb56e-c1815ec8ba4e.mp4",
+    "revision": "3f907f9cb56ea04c"
+  },
+  "char42_chroma.mp4": {
+    "asset": "assets/battle-moves/char42_chroma-c3a08d86e8f2-c1815ec8ba4e.mp4",
+    "revision": "c3a08d86e8f2a95d"
+  },
+  "char43_chroma.mp4": {
+    "asset": "assets/battle-moves/char43_chroma-556e4102d4a0-c1815ec8ba4e.mp4",
+    "revision": "556e4102d4a0e97f"
+  },
+  "char44_chroma.mp4": {
+    "asset": "assets/battle-moves/char44_chroma-b0111c85cdf5-c1815ec8ba4e.mp4",
+    "revision": "b0111c85cdf5f5e5"
+  },
+  "char45_chroma.mp4": {
+    "asset": "assets/battle-moves/char45_chroma-228b962459e6-c1815ec8ba4e.mp4",
+    "revision": "228b962459e6813a"
+  },
+  "char46_chroma.mp4": {
+    "asset": "assets/battle-moves/char46_chroma-8c9c452b5d53-c1815ec8ba4e.mp4",
+    "revision": "8c9c452b5d53e576"
+  },
+  "char47_chroma.mp4": {
+    "asset": "assets/battle-moves/char47_chroma-767bfa9f9afd-c1815ec8ba4e.mp4",
+    "revision": "767bfa9f9afd2334"
+  },
+  "char48_chroma.mp4": {
+    "asset": "assets/battle-moves/char48_chroma-385b1f145660-c1815ec8ba4e.mp4",
+    "revision": "385b1f1456607041"
+  },
+  "char51_chroma.mp4": {
+    "asset": "assets/battle-moves/char51_chroma-bd3c45b6e5ef-c1815ec8ba4e.mp4",
+    "revision": "bd3c45b6e5efb5d0"
+  },
+  "char52_chroma.mp4": {
+    "asset": "assets/battle-moves/char52_chroma-66a923229027-c1815ec8ba4e.mp4",
+    "revision": "66a923229027f353"
+  },
+  "char53_chroma.mp4": {
+    "asset": "assets/battle-moves/char53_chroma-3424a0c0ceef-c1815ec8ba4e.mp4",
+    "revision": "3424a0c0ceef094b"
+  },
+  "char54_chroma.mp4": {
+    "asset": "assets/battle-moves/char54_chroma-fa2176355c32-c1815ec8ba4e.mp4",
+    "revision": "fa2176355c325be0"
+  },
+  "char55_chroma.mp4": {
+    "asset": "assets/battle-moves/char55_chroma-405e343736cc-c1815ec8ba4e.mp4",
+    "revision": "405e343736cc49b3"
+  },
+  "char56_chroma.mp4": {
+    "asset": "assets/battle-moves/char56_chroma-b38df33fd68d-c1815ec8ba4e.mp4",
+    "revision": "b38df33fd68d3289"
+  },
+  "char57_chroma.mp4": {
+    "asset": "assets/battle-moves/char57_chroma-efaccb7be4f1-c1815ec8ba4e.mp4",
+    "revision": "efaccb7be4f15954"
+  },
+  "char58_chroma.mp4": {
+    "asset": "assets/battle-moves/char58_chroma-ea3caf2214a5-c1815ec8ba4e.mp4",
+    "revision": "ea3caf2214a5faf2"
+  },
+  "char59_chroma.mp4": {
+    "asset": "assets/battle-moves/char59_chroma-789aed151abb-c1815ec8ba4e.mp4",
+    "revision": "789aed151abb5bdd"
+  },
+  "char60_chroma.mp4": {
+    "asset": "assets/battle-moves/char60_chroma-7d935e221afa-c1815ec8ba4e.mp4",
+    "revision": "7d935e221afab283"
+  },
+  "char61_chroma.mp4": {
+    "asset": "assets/battle-moves/char61_chroma-cd41d8907fed-c1815ec8ba4e.mp4",
+    "revision": "cd41d8907fedae24"
+  },
+  "char62_chroma.mp4": {
+    "asset": "assets/battle-moves/char62_chroma-de4e9905aedb-c1815ec8ba4e.mp4",
+    "revision": "de4e9905aedb953e"
+  },
+  "char63_chroma.mp4": {
+    "asset": "assets/battle-moves/char63_chroma-ed5dc72f514e-c1815ec8ba4e.mp4",
+    "revision": "ed5dc72f514e3b28"
+  },
+  "char64_chroma.mp4": {
+    "asset": "assets/battle-moves/char64_chroma-29a54a551c41-c1815ec8ba4e.mp4",
+    "revision": "29a54a551c415c91"
+  },
+  "char65_chroma.mp4": {
+    "asset": "assets/battle-moves/char65_chroma-566bbc39137f-c1815ec8ba4e.mp4",
+    "revision": "566bbc39137f6805"
+  },
+  "char66_chroma.mp4": {
+    "asset": "assets/battle-moves/char66_chroma-20f03171a38c-c1815ec8ba4e.mp4",
+    "revision": "20f03171a38caebb"
+  },
+  "char67_chroma.mp4": {
+    "asset": "assets/battle-moves/char67_chroma-bd2b26c4b72a-c1815ec8ba4e.mp4",
+    "revision": "bd2b26c4b72a9078"
+  },
+  "char68_chroma.mp4": {
+    "asset": "assets/battle-moves/char68_chroma-3035adb5099f-c1815ec8ba4e.mp4",
+    "revision": "3035adb5099f8320"
+  },
+  "char69_chroma.mp4": {
+    "asset": "assets/battle-moves/char69_chroma-7793891f2abf-c1815ec8ba4e.mp4",
+    "revision": "7793891f2abf22cc"
+  },
+  "char70_chroma.mp4": {
+    "asset": "assets/battle-moves/char70_chroma-d51bb316770d-c1815ec8ba4e.mp4",
+    "revision": "d51bb316770dc1b2"
+  },
+  "char71_chroma.mp4": {
+    "asset": "assets/battle-moves/char71_chroma-f31aa9f05f93-c1815ec8ba4e.mp4",
+    "revision": "f31aa9f05f93b630"
+  },
+  "char72_chroma.mp4": {
+    "asset": "assets/battle-moves/char72_chroma-f4f93e7f4452-c1815ec8ba4e.mp4",
+    "revision": "f4f93e7f4452d817"
+  },
+  "char73_chroma.mp4": {
+    "asset": "assets/battle-moves/char73_chroma-6b56db2aaaca-c1815ec8ba4e.mp4",
+    "revision": "6b56db2aaacab24e"
+  },
+  "char74_chroma.mp4": {
+    "asset": "assets/battle-moves/char74_chroma-19278f13196b-c1815ec8ba4e.mp4",
+    "revision": "19278f13196bbdf5"
+  },
+  "char75_chroma.mp4": {
+    "asset": "assets/battle-moves/char75_chroma-bc4005d195c5-c1815ec8ba4e.mp4",
+    "revision": "bc4005d195c580fa"
+  },
+  "char76_chroma.mp4": {
+    "asset": "assets/battle-moves/char76_chroma-6a45ee30185b-c1815ec8ba4e.mp4",
+    "revision": "6a45ee30185bf8f9"
+  },
+  "char77_chroma.mp4": {
+    "asset": "assets/battle-moves/char77_chroma-c75204352b53-c1815ec8ba4e.mp4",
+    "revision": "c75204352b538182"
+  },
+  "char78_chroma.mp4": {
+    "asset": "assets/battle-moves/char78_chroma-c3b7a0bf7283-c1815ec8ba4e.mp4",
+    "revision": "c3b7a0bf728394d9"
+  },
+  "char79_chroma.mp4": {
+    "asset": "assets/battle-moves/char79_chroma-66d404b07d7c-c1815ec8ba4e.mp4",
+    "revision": "66d404b07d7c99f1"
+  },
+  "char80_chroma.mp4": {
+    "asset": "assets/battle-moves/char80_chroma-b2ec9a435e46-c1815ec8ba4e.mp4",
+    "revision": "b2ec9a435e46ac7c"
+  },
+  "char81_chroma.mp4": {
+    "asset": "assets/battle-moves/char81_chroma-c3d4ab5dccfa-c1815ec8ba4e.mp4",
+    "revision": "c3d4ab5dccfa4f03"
+  },
+  "char82_chroma.mp4": {
+    "asset": "assets/battle-moves/char82_chroma-97304b15d937-c1815ec8ba4e.mp4",
+    "revision": "97304b15d937382f"
+  },
+  "char83_chroma.mp4": {
+    "asset": "assets/battle-moves/char83_chroma-27548db85670-c1815ec8ba4e.mp4",
+    "revision": "27548db856709a75"
+  },
+  "char84_chroma.mp4": {
+    "asset": "assets/battle-moves/char84_chroma-5f0f15e25aa5-c1815ec8ba4e.mp4",
+    "revision": "5f0f15e25aa54bf6"
+  },
+  "char85_chroma.mp4": {
+    "asset": "assets/battle-moves/char85_chroma-968c09fad3f6-c1815ec8ba4e.mp4",
+    "revision": "968c09fad3f689e5"
+  },
+  "char86_chroma.mp4": {
+    "asset": "assets/battle-moves/char86_chroma-bb99f2ada408-c1815ec8ba4e.mp4",
+    "revision": "bb99f2ada408f0dd"
+  },
+  "char87_chroma.mp4": {
+    "asset": "assets/battle-moves/char87_chroma-33f136ae95e4-c1815ec8ba4e.mp4",
+    "revision": "33f136ae95e41e83"
+  },
+  "char88_chroma.mp4": {
+    "asset": "assets/battle-moves/char88_chroma-447aecbb3cd3-c1815ec8ba4e.mp4",
+    "revision": "447aecbb3cd305d9"
+  },
+  "char89_chroma.mp4": {
+    "asset": "assets/battle-moves/char89_chroma-3b796db598ea-c1815ec8ba4e.mp4",
+    "revision": "3b796db598ea76c5"
+  },
+  "char90_chroma.mp4": {
+    "asset": "assets/battle-moves/char90_chroma-c1b5caaaac1c-c1815ec8ba4e.mp4",
+    "revision": "c1b5caaaac1ce29e"
+  },
+  "char91_chroma.mp4": {
+    "asset": "assets/battle-moves/char91_chroma-ac629e17c5d2-c1815ec8ba4e.mp4",
+    "revision": "ac629e17c5d2728f"
+  },
+  "char92_chroma.mp4": {
+    "asset": "assets/battle-moves/char92_chroma-fa9f947928b5-c1815ec8ba4e.mp4",
+    "revision": "fa9f947928b5a0cf"
+  },
+  "char93_chroma.mp4": {
+    "asset": "assets/battle-moves/char93_chroma-08a53931e7c4-c1815ec8ba4e.mp4",
+    "revision": "08a53931e7c4acab"
+  },
+  "char94_chroma.mp4": {
+    "asset": "assets/battle-moves/char94_chroma-cccca0d048d1-c1815ec8ba4e.mp4",
+    "revision": "cccca0d048d18ded"
+  },
+  "char95_chroma.mp4": {
+    "asset": "assets/battle-moves/char95_chroma-c03646972558-c1815ec8ba4e.mp4",
+    "revision": "c03646972558fa6e"
+  },
+  "char96_chroma.mp4": {
+    "asset": "assets/battle-moves/char96_chroma-251bf1ddaf35-c1815ec8ba4e.mp4",
+    "revision": "251bf1ddaf35e6ff"
+  },
+  "char98_chroma.mp4": {
+    "asset": "assets/battle-moves/char98_chroma-c2b66cdedf8e-c1815ec8ba4e.mp4",
+    "revision": "c2b66cdedf8ec5de"
+  },
+  "char99_chroma.mp4": {
+    "asset": "assets/battle-moves/char99_chroma-989cadecef41-c1815ec8ba4e.mp4",
+    "revision": "989cadecef4107c6"
+  },
+  "oa-ahki-v1.mp4": {
+    "asset": "assets/battle-moves/oa-ahki-v1-024fda6837f7-c1815ec8ba4e.mp4",
+    "revision": "024fda6837f7cad4"
+  },
+  "oa-alchy-v1.mp4": {
+    "asset": "assets/battle-moves/oa-alchy-v1-bc6746ad3eae-c1815ec8ba4e.mp4",
+    "revision": "bc6746ad3eaea75a"
+  },
+  "oa-asphalt-apostle-v1.mp4": {
+    "asset": "assets/battle-moves/oa-asphalt-apostle-v1-6f07907fca0b-c1815ec8ba4e.mp4",
+    "revision": "6f07907fca0bb646"
+  },
+  "oa-atl-scammer-v1.mp4": {
+    "asset": "assets/battle-moves/oa-atl-scammer-v1-8e9c2986bc55-c1815ec8ba4e.mp4",
+    "revision": "8e9c2986bc5551e1"
+  },
+  "oa-battery-back-v1.mp4": {
+    "asset": "assets/battle-moves/oa-battery-back-v1-ea339ba279b6-c1815ec8ba4e.mp4",
+    "revision": "ea339ba279b6d3dd"
+  },
+  "oa-bbl-demon-v1.mp4": {
+    "asset": "assets/battle-moves/oa-bbl-demon-v1-88d94a262fd2-c1815ec8ba4e.mp4",
+    "revision": "88d94a262fd28e51"
+  },
+  "oa-bbl-nice-v1.mp4": {
+    "asset": "assets/battle-moves/oa-bbl-nice-v1-89f2b463c310-c1815ec8ba4e.mp4",
+    "revision": "89f2b463c31049c7"
+  },
+  "oa-bboy-v1.mp4": {
+    "asset": "assets/battle-moves/oa-bboy-v1-e685a6be654d-c1815ec8ba4e.mp4",
+    "revision": "e685a6be654d8e33"
+  },
+  "oa-black-cowboy-v1.mp4": {
+    "asset": "assets/battle-moves/oa-black-cowboy-v1-1ce41d986ea2-c1815ec8ba4e.mp4",
+    "revision": "1ce41d986ea2579a"
+  },
+  "oa-blue-side-1-v1.mp4": {
+    "asset": "assets/battle-moves/oa-blue-side-1-v1-74a9b03b9037-c1815ec8ba4e.mp4",
+    "revision": "74a9b03b9037a07b"
+  },
+  "oa-blue-side-2-v1.mp4": {
+    "asset": "assets/battle-moves/oa-blue-side-2-v1-0954669f02a6-c1815ec8ba4e.mp4",
+    "revision": "0954669f02a6e37e"
+  },
+  "oa-blue-side-3-v1.mp4": {
+    "asset": "assets/battle-moves/oa-blue-side-3-v1-b6179272dc68-c1815ec8ba4e.mp4",
+    "revision": "b6179272dc687c36"
+  },
+  "oa-blue-side-4-v1.mp4": {
+    "asset": "assets/battle-moves/oa-blue-side-4-v1-7e97e4b64309-c1815ec8ba4e.mp4",
+    "revision": "7e97e4b64309131c"
+  },
+  "oa-blue-side-5-v1.mp4": {
+    "asset": "assets/battle-moves/oa-blue-side-5-v1-60435160c084-c1815ec8ba4e.mp4",
+    "revision": "60435160c084bb14"
+  },
+  "oa-bonnet-girl-v1.mp4": {
+    "asset": "assets/battle-moves/oa-bonnet-girl-v1-8c4416614129-c1815ec8ba4e.mp4",
+    "revision": "8c44166141299488"
+  },
+  "oa-bouncer-v1.mp4": {
+    "asset": "assets/battle-moves/oa-bouncer-v1-e4f1c8ed9d3a-c1815ec8ba4e.mp4",
+    "revision": "e4f1c8ed9d3a24b4"
+  },
+  "oa-break-dancer-v1.mp4": {
+    "asset": "assets/battle-moves/oa-break-dancer-v1-0b66a39695b0-c1815ec8ba4e.mp4",
+    "revision": "0b66a39695b05726"
+  },
+  "oa-buddy-v1.mp4": {
+    "asset": "assets/battle-moves/oa-buddy-v1-7a8db4587771-c1815ec8ba4e.mp4",
+    "revision": "7a8db4587771e483"
+  },
+  "oa-canopy-keeper-v1.mp4": {
+    "asset": "assets/battle-moves/oa-canopy-keeper-v1-d23c28aaef13-c1815ec8ba4e.mp4",
+    "revision": "d23c28aaef13f42b"
+  },
+  "oa-circuit-captain-v1.mp4": {
+    "asset": "assets/battle-moves/oa-circuit-captain-v1-2f106b66dc65-c1815ec8ba4e.mp4",
+    "revision": "2f106b66dc65d6b1"
+  },
+  "oa-cloudbreak-v1.mp4": {
+    "asset": "assets/battle-moves/oa-cloudbreak-v1-afd3c4a746c9-c1815ec8ba4e.mp4",
+    "revision": "afd3c4a746c9f3f4"
+  },
+  "oa-cologne-criminal-v1.mp4": {
+    "asset": "assets/battle-moves/oa-cologne-criminal-v1-5271ee589db7-c1815ec8ba4e.mp4",
+    "revision": "5271ee589db767bc"
+  },
+  "oa-concrete-v1.mp4": {
+    "asset": "assets/battle-moves/oa-concrete-v1-3b26ca429a65-c1815ec8ba4e.mp4",
+    "revision": "3b26ca429a654e2c"
+  },
+  "oa-counter-v1.mp4": {
+    "asset": "assets/battle-moves/oa-counter-v1-d8416fd4d95a-c1815ec8ba4e.mp4",
+    "revision": "d8416fd4d95a8b1b"
+  },
+  "oa-crosswind-v1.mp4": {
+    "asset": "assets/battle-moves/oa-crosswind-v1-f331aa5abe2c-c1815ec8ba4e.mp4",
+    "revision": "f331aa5abe2cdd65"
+  },
+  "oa-demario-v1.mp4": {
+    "asset": "assets/battle-moves/oa-demario-v1-c580e9360ecf-c1815ec8ba4e.mp4",
+    "revision": "c580e9360ecf521c"
+  },
+  "oa-divorced-dad-v1.mp4": {
+    "asset": "assets/battle-moves/oa-divorced-dad-v1-d0e8d7d0abe7-c1815ec8ba4e.mp4",
+    "revision": "d0e8d7d0abe7b071"
+  },
+  "oa-dmv-worker-v1.mp4": {
+    "asset": "assets/battle-moves/oa-dmv-worker-v1-ec0c768a2a15-c1815ec8ba4e.mp4",
+    "revision": "ec0c768a2a1500f1"
+  },
+  "oa-dr-fade-v1.mp4": {
+    "asset": "assets/battle-moves/oa-dr-fade-v1-3ad40819373a-c1815ec8ba4e.mp4",
+    "revision": "3ad40819373aaa79"
+  },
+  "oa-dr-umah-v1.mp4": {
+    "asset": "assets/battle-moves/oa-dr-umah-v1-7171a5b8184c-c1815ec8ba4e.mp4",
+    "revision": "7171a5b8184c8e7e"
+  },
+  "oa-failed-athlete-v1.mp4": {
+    "asset": "assets/battle-moves/oa-failed-athlete-v1-64f88a6277ad-c1815ec8ba4e.mp4",
+    "revision": "64f88a6277ad1ae3"
+  },
+  "oa-failed-rapper-v1.mp4": {
+    "asset": "assets/battle-moves/oa-failed-rapper-v1-f120b6727dd9-c1815ec8ba4e.mp4",
+    "revision": "f120b6727dd95961"
+  },
+  "oa-fangirl-v1.mp4": {
+    "asset": "assets/battle-moves/oa-fangirl-v1-c1cfa7a5b987-c1815ec8ba4e.mp4",
+    "revision": "c1cfa7a5b987fadb"
+  },
+  "oa-fein-v1.mp4": {
+    "asset": "assets/battle-moves/oa-fein-v1-959ac71d9358-c1815ec8ba4e.mp4",
+    "revision": "959ac71d93581950"
+  },
+  "oa-flying-monkeys-v1.mp4": {
+    "asset": "assets/battle-moves/oa-flying-monkeys-v1-dbfbc59fd588-c1815ec8ba4e.mp4",
+    "revision": "dbfbc59fd588b2ca"
+  },
+  "oa-folks-v1.mp4": {
+    "asset": "assets/battle-moves/oa-folks-v1-de15c8612e49-c1815ec8ba4e.mp4",
+    "revision": "de15c8612e4934c7"
+  },
+  "oa-ganger-blue-v1.mp4": {
+    "asset": "assets/battle-moves/oa-ganger-blue-v1-f6c43baaf1df-c1815ec8ba4e.mp4",
+    "revision": "f6c43baaf1df460c"
+  },
+  "oa-ganger-red-v1.mp4": {
+    "asset": "assets/battle-moves/oa-ganger-red-v1-fb2d5be9d654-c1815ec8ba4e.mp4",
+    "revision": "fb2d5be9d654d9f9"
+  },
+  "oa-garden-wall-v1.mp4": {
+    "asset": "assets/battle-moves/oa-garden-wall-v1-c40af29f043c-c1815ec8ba4e.mp4",
+    "revision": "c40af29f043c041d"
+  },
+  "oa-god-of-hookah-v1.mp4": {
+    "asset": "assets/battle-moves/oa-god-of-hookah-v1-ea7fcd55f39e-c1815ec8ba4e.mp4",
+    "revision": "ea7fcd55f39eacd5"
+  },
+  "oa-goth-kid-v1.mp4": {
+    "asset": "assets/battle-moves/oa-goth-kid-v1-7421da66f0f8-c1815ec8ba4e.mp4",
+    "revision": "7421da66f0f897d0"
+  },
+  "oa-grown-man-fanboy-v1.mp4": {
+    "asset": "assets/battle-moves/oa-grown-man-fanboy-v1-03f7c9118693-c1815ec8ba4e.mp4",
+    "revision": "03f7c91186930b87"
+  },
+  "oa-gust-v1.mp4": {
+    "asset": "assets/battle-moves/oa-gust-v1-8754fd8b06b2-c1815ec8ba4e.mp4",
+    "revision": "8754fd8b06b22a62"
+  },
+  "oa-hair-stylist-v1.mp4": {
+    "asset": "assets/battle-moves/oa-hair-stylist-v1-c4dfca503c7c-c1815ec8ba4e.mp4",
+    "revision": "c4dfca503c7cbbd4"
+  },
+  "oa-hater-v1.mp4": {
+    "asset": "assets/battle-moves/oa-hater-v1-5e0af0dd56e7-c1815ec8ba4e.mp4",
+    "revision": "5e0af0dd56e7f739"
+  },
+  "oa-homeless-guy-v1.mp4": {
+    "asset": "assets/battle-moves/oa-homeless-guy-v1-72ef2c55fb45-c1815ec8ba4e.mp4",
+    "revision": "72ef2c55fb45b8bd"
+  },
+  "oa-homeless-legend-v1.mp4": {
+    "asset": "assets/battle-moves/oa-homeless-legend-v1-ffb5c42895ee-c1815ec8ba4e.mp4",
+    "revision": "ffb5c42895ee5cb7"
+  },
+  "oa-homeless-wiseman-v1.mp4": {
+    "asset": "assets/battle-moves/oa-homeless-wiseman-v1-740b32aef27e-c1815ec8ba4e.mp4",
+    "revision": "740b32aef27ec842"
+  },
+  "oa-homeless-yn-v1.mp4": {
+    "asset": "assets/battle-moves/oa-homeless-yn-v1-1628d6bbbb34-c1815ec8ba4e.mp4",
+    "revision": "1628d6bbbb34e999"
+  },
+  "oa-incel-v1.mp4": {
+    "asset": "assets/battle-moves/oa-incel-v1-5b9f66dcdcbe-c1815ec8ba4e.mp4",
+    "revision": "5b9f66dcdcbe4fd9"
+  },
+  "oa-inmate-boyfriend-v1.mp4": {
+    "asset": "assets/battle-moves/oa-inmate-boyfriend-v1-1d609139f580-c1815ec8ba4e.mp4",
+    "revision": "1d609139f580a394"
+  },
+  "oa-inmate-contraband-v1.mp4": {
+    "asset": "assets/battle-moves/oa-inmate-contraband-v1-308f4685a026-c1815ec8ba4e.mp4",
+    "revision": "308f4685a026cc27"
+  },
+  "oa-inmate-crafty-v1.mp4": {
+    "asset": "assets/battle-moves/oa-inmate-crafty-v1-9bfbe7f54f43-c1815ec8ba4e.mp4",
+    "revision": "9bfbe7f54f430603"
+  },
+  "oa-inmate-informant-v1.mp4": {
+    "asset": "assets/battle-moves/oa-inmate-informant-v1-1701af68d979-c1815ec8ba4e.mp4",
+    "revision": "1701af68d97934fc"
+  },
+  "oa-inmate-kingpin-v1.mp4": {
+    "asset": "assets/battle-moves/oa-inmate-kingpin-v1-efcd070e0181-c1815ec8ba4e.mp4",
+    "revision": "efcd070e0181f34c"
+  },
+  "oa-juneteenth-chair-guy-v1.mp4": {
+    "asset": "assets/battle-moves/oa-juneteenth-chair-guy-v1-d30d5dc932bf-c1815ec8ba4e.mp4",
+    "revision": "d30d5dc932bf08a6"
+  },
+  "oa-krump-dancer-v1.mp4": {
+    "asset": "assets/battle-moves/oa-krump-dancer-v1-89eb386b386f-c1815ec8ba4e.mp4",
+    "revision": "89eb386b386f4b98"
+  },
+  "oa-lawless-yn-v1.mp4": {
+    "asset": "assets/battle-moves/oa-lawless-yn-v1-29cb331f9c9c-c1815ec8ba4e.mp4",
+    "revision": "29cb331f9c9cc349"
+  },
+  "oa-lawyer-v1.mp4": {
+    "asset": "assets/battle-moves/oa-lawyer-v1-6ca848f623f2-c1815ec8ba4e.mp4",
+    "revision": "6ca848f623f22264"
+  },
+  "oa-lebron-james-v1.mp4": {
+    "asset": "assets/battle-moves/oa-lebron-james-v1-5b9a41f8ce3d-c1815ec8ba4e.mp4",
+    "revision": "5b9a41f8ce3d278b"
+  },
+  "oa-live-streamer-male-v1.mp4": {
+    "asset": "assets/battle-moves/oa-live-streamer-male-v1-2b4bf934e2ed-c1815ec8ba4e.mp4",
+    "revision": "2b4bf934e2edd469"
+  },
+  "oa-livewire-v1.mp4": {
+    "asset": "assets/battle-moves/oa-livewire-v1-d8a322d9c8f3-c1815ec8ba4e.mp4",
+    "revision": "d8a322d9c8f3ed49"
+  },
+  "oa-luigion-v1.mp4": {
+    "asset": "assets/battle-moves/oa-luigion-v1-06971a31dd1b-c1815ec8ba4e.mp4",
+    "revision": "06971a31dd1b2c62"
+  },
+  "oa-miami-surgeon-v1.mp4": {
+    "asset": "assets/battle-moves/oa-miami-surgeon-v1-cf8faa25bf26-c1815ec8ba4e.mp4",
+    "revision": "cf8faa25bf261140"
+  },
+  "oa-monsoon-anchor-v1.mp4": {
+    "asset": "assets/battle-moves/oa-monsoon-anchor-v1-6facc2bf1d67-c1815ec8ba4e.mp4",
+    "revision": "6facc2bf1d67b4a0"
+  },
+  "oa-mr-trick-v1.mp4": {
+    "asset": "assets/battle-moves/oa-mr-trick-v1-cc7b4c1c2cb5-c1815ec8ba4e.mp4",
+    "revision": "cc7b4c1c2cb520f5"
+  },
+  "oa-nigerian-father-v1.mp4": {
+    "asset": "assets/battle-moves/oa-nigerian-father-v1-e6cf0c079085-c1815ec8ba4e.mp4",
+    "revision": "e6cf0c079085cf32"
+  },
+  "oa-og-skater-v1.mp4": {
+    "asset": "assets/battle-moves/oa-og-skater-v1-8a964506ab1b-c1815ec8ba4e.mp4",
+    "revision": "8a964506ab1b7323"
+  },
+  "oa-p-tang-v1.mp4": {
+    "asset": "assets/battle-moves/oa-p-tang-v1-54c21ae55b91-c1815ec8ba4e.mp4",
+    "revision": "54c21ae55b91b11b"
+  },
+  "oa-passport-bro-v1.mp4": {
+    "asset": "assets/battle-moves/oa-passport-bro-v1-ab9e65a3bbd3-c1815ec8ba4e.mp4",
+    "revision": "ab9e65a3bbd3a07c"
+  },
+  "oa-powerhouse-v1.mp4": {
+    "asset": "assets/battle-moves/oa-powerhouse-v1-4edb552cd7b3-c1815ec8ba4e.mp4",
+    "revision": "4edb552cd7b3f5c7"
+  },
+  "oa-rainmaker-v1.mp4": {
+    "asset": "assets/battle-moves/oa-rainmaker-v1-94d7a68c246f-c1815ec8ba4e.mp4",
+    "revision": "94d7a68c246f7d0e"
+  },
+  "oa-red-pill-v1.mp4": {
+    "asset": "assets/battle-moves/oa-red-pill-v1-d21910726f33-c1815ec8ba4e.mp4",
+    "revision": "d21910726f332622"
+  },
+  "oa-red-side-1-v1.mp4": {
+    "asset": "assets/battle-moves/oa-red-side-1-v1-6e86868c738d-c1815ec8ba4e.mp4",
+    "revision": "6e86868c738df3bd"
+  },
+  "oa-red-side-2-v1.mp4": {
+    "asset": "assets/battle-moves/oa-red-side-2-v1-291cd5ddaa8c-c1815ec8ba4e.mp4",
+    "revision": "291cd5ddaa8c216f"
+  },
+  "oa-red-side-3-v1.mp4": {
+    "asset": "assets/battle-moves/oa-red-side-3-v1-c8936cbe0f64-c1815ec8ba4e.mp4",
+    "revision": "c8936cbe0f64a8a0"
+  },
+  "oa-red-side-5-v1.mp4": {
+    "asset": "assets/battle-moves/oa-red-side-5-v1-cdb294f88f49-c1815ec8ba4e.mp4",
+    "revision": "cdb294f88f494235"
+  },
+  "oa-redneck-evil-v1.mp4": {
+    "asset": "assets/battle-moves/oa-redneck-evil-v1-1c74f7f7a049-c1815ec8ba4e.mp4",
+    "revision": "1c74f7f7a0490311"
+  },
+  "oa-redneck-v1.mp4": {
+    "asset": "assets/battle-moves/oa-redneck-v1-1c7af2a6ea2b-c1815ec8ba4e.mp4",
+    "revision": "1c7af2a6ea2b80b2"
+  },
+  "oa-rent-a-cop-v1.mp4": {
+    "asset": "assets/battle-moves/oa-rent-a-cop-v1-978d3341e34e-c1815ec8ba4e.mp4",
+    "revision": "978d3341e34e5088"
+  },
+  "oa-revolutionary-ronald-v1.mp4": {
+    "asset": "assets/battle-moves/oa-revolutionary-ronald-v1-26109fed2dff-c1815ec8ba4e.mp4",
+    "revision": "26109fed2dffa798"
+  },
+  "oa-riptide-bruiser-v1.mp4": {
+    "asset": "assets/battle-moves/oa-riptide-bruiser-v1-5519a5c649ca-c1815ec8ba4e.mp4",
+    "revision": "5519a5c649cadaf5"
+  },
+  "oa-roommate-v1.mp4": {
+    "asset": "assets/battle-moves/oa-roommate-v1-684ef907bc68-c1815ec8ba4e.mp4",
+    "revision": "684ef907bc68b644"
+  },
+  "oa-root-nurse-v1.mp4": {
+    "asset": "assets/battle-moves/oa-root-nurse-v1-cbef8464c471-c1815ec8ba4e.mp4",
+    "revision": "cbef8464c4717d28"
+  },
+  "oa-seafood-assassin-v1.mp4": {
+    "asset": "assets/battle-moves/oa-seafood-assassin-v1-06403bd731d9-c1815ec8ba4e.mp4",
+    "revision": "06403bd731d9e51c"
+  },
+  "oa-sherlock-v1.mp4": {
+    "asset": "assets/battle-moves/oa-sherlock-v1-7b562fe3a0da-c1815ec8ba4e.mp4",
+    "revision": "7b562fe3a0daa28a"
+  },
+  "oa-slipstream-v1.mp4": {
+    "asset": "assets/battle-moves/oa-slipstream-v1-c83c4be54c14-c1815ec8ba4e.mp4",
+    "revision": "c83c4be54c14e010"
+  },
+  "oa-sports-prodigy-v1.mp4": {
+    "asset": "assets/battle-moves/oa-sports-prodigy-v1-77ce7ff33ad8-c1815ec8ba4e.mp4",
+    "revision": "77ce7ff33ad88866"
+  },
+  "oa-sprout-v1.mp4": {
+    "asset": "assets/battle-moves/oa-sprout-v1-6ae9bd15d5c3-c1815ec8ba4e.mp4",
+    "revision": "6ae9bd15d5c3cbf3"
+  },
+  "oa-squabble-house-female-v1.mp4": {
+    "asset": "assets/battle-moves/oa-squabble-house-female-v1-6ece1795d965-c1815ec8ba4e.mp4",
+    "revision": "6ece1795d9650fd5"
+  },
+  "oa-squabble-house-male-v1.mp4": {
+    "asset": "assets/battle-moves/oa-squabble-house-male-v1-a4348ff15df5-c1815ec8ba4e.mp4",
+    "revision": "a4348ff15df5495a"
+  },
+  "oa-squabble-house-manager-v1.mp4": {
+    "asset": "assets/battle-moves/oa-squabble-house-manager-v1-ca1a5a04d75f-c1815ec8ba4e.mp4",
+    "revision": "ca1a5a04d75f0c7c"
+  },
+  "oa-stillwater-medic-v1.mp4": {
+    "asset": "assets/battle-moves/oa-stillwater-medic-v1-d26a6848c2cb-c1815ec8ba4e.mp4",
+    "revision": "d26a6848c2cbf5e5"
+  },
+  "oa-stoner-jr-v1.mp4": {
+    "asset": "assets/battle-moves/oa-stoner-jr-v1-8e2754ccf1b3-c1815ec8ba4e.mp4",
+    "revision": "8e2754ccf1b3e4b0"
+  },
+  "oa-stoner-sr-v1.mp4": {
+    "asset": "assets/battle-moves/oa-stoner-sr-v1-b656d27e619c-c1815ec8ba4e.mp4",
+    "revision": "b656d27e619c5f25"
+  },
+  "oa-street-apostle-v1.mp4": {
+    "asset": "assets/battle-moves/oa-street-apostle-v1-70218fd3aec7-c1815ec8ba4e.mp4",
+    "revision": "70218fd3aec7251e"
+  },
+  "oa-stud-v1.mp4": {
+    "asset": "assets/battle-moves/oa-stud-v1-6d9011989bbb-c1815ec8ba4e.mp4",
+    "revision": "6d9011989bbb1acc"
+  },
+  "oa-stylist-v1.mp4": {
+    "asset": "assets/battle-moves/oa-stylist-v1-9c2f771f3fb8-c1815ec8ba4e.mp4",
+    "revision": "9c2f771f3fb8fb84"
+  },
+  "oa-sugarfoot-v1.mp4": {
+    "asset": "assets/battle-moves/oa-sugarfoot-v1-f1d692de2d9f-c1815ec8ba4e.mp4",
+    "revision": "f1d692de2d9fb8b0"
+  },
+  "oa-tattoo-artist-v1.mp4": {
+    "asset": "assets/battle-moves/oa-tattoo-artist-v1-ee786d3913e1-c1815ec8ba4e.mp4",
+    "revision": "ee786d3913e1045c"
+  },
+  "oa-teacher-v1.mp4": {
+    "asset": "assets/battle-moves/oa-teacher-v1-3fe4fb771f52-c1815ec8ba4e.mp4",
+    "revision": "3fe4fb771f528175"
+  },
+  "oa-the-feds-v1.mp4": {
+    "asset": "assets/battle-moves/oa-the-feds-v1-fb39c2952203-c1815ec8ba4e.mp4",
+    "revision": "fb39c29522034a44"
+  },
+  "oa-the-mailman-v1.mp4": {
+    "asset": "assets/battle-moves/oa-the-mailman-v1-bb5614dacafa-c1815ec8ba4e.mp4",
+    "revision": "bb5614dacafa5609"
+  },
+  "oa-trap-vamp-v1.mp4": {
+    "asset": "assets/battle-moves/oa-trap-vamp-v1-1a483c377f97-c1815ec8ba4e.mp4",
+    "revision": "1a483c377f974527"
+  },
+  "oa-undercova-brotha-v1.mp4": {
+    "asset": "assets/battle-moves/oa-undercova-brotha-v1-861a87e66f80-c1815ec8ba4e.mp4",
+    "revision": "861a87e66f809830"
+  },
+  "oa-watson-v1.mp4": {
+    "asset": "assets/battle-moves/oa-watson-v1-6e016b435d1a-c1815ec8ba4e.mp4",
+    "revision": "6e016b435d1a04c4"
+  },
+  "oa-wicked-witch-v1.mp4": {
+    "asset": "assets/battle-moves/oa-wicked-witch-v1-bc4530d758cc-c1815ec8ba4e.mp4",
+    "revision": "bc4530d758cc17d4"
+  },
+  "oa-wiretap-v1.mp4": {
+    "asset": "assets/battle-moves/oa-wiretap-v1-e94b92a5daa8-c1815ec8ba4e.mp4",
+    "revision": "e94b92a5daa8d5da"
+  },
+  "oa-yn-atv-lord-v1.mp4": {
+    "asset": "assets/battle-moves/oa-yn-atv-lord-v1-93e9da401104-c1815ec8ba4e.mp4",
+    "revision": "93e9da401104406b"
+  },
+  "oa-yn-gokarter-v1.mp4": {
+    "asset": "assets/battle-moves/oa-yn-gokarter-v1-6ae7fb17b384-c1815ec8ba4e.mp4",
+    "revision": "6ae7fb17b3848895"
+  },
+  "oa-yung-hustle-v1.mp4": {
+    "asset": "assets/battle-moves/oa-yung-hustle-v1-12cfc7c7c59a-c1815ec8ba4e.mp4",
+    "revision": "12cfc7c7c59aa2f0"
   }
 }

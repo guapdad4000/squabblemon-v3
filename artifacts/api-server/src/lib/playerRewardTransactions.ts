@@ -61,7 +61,8 @@ export async function lockPlayerProfile(
   );
 }
 
-async function resetExpiredMissionsInTransaction(
+/** Caller must hold this player's profile row lock for the entire transaction. */
+export async function resetExpiredMissionsInTransaction(
   tx: Parameters<Parameters<typeof db.transaction>[0]>[0],
   clerkUserId: string,
   now: Date,

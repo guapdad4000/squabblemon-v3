@@ -5,7 +5,7 @@ import { revealStoryRewards } from '../../lib/rewardReceipts';
 import { GameGlyph } from '../../components/venue/GameGlyph';
 import { PageDecor } from '../../components/venue/PageDecor';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { ArrowRight, Check, Crown, LockKeyhole, MessageCircle, Star, Ticket, X, Film, UtensilsCrossed } from 'lucide-react';
+import { ArrowRight, Check, LockKeyhole, MessageCircle, Star, Ticket, X, Film, UtensilsCrossed } from 'lucide-react';
 import '../../styles/studio.css';
 import '../../styles/story-map.css';
 import '../../styles/cinema-atlas.css';
@@ -401,7 +401,7 @@ export function Story({ bootstrap }: { bootstrap: PlayerBootstrap }) {
                   ) : (
                     <MessageCircle size={19} />
                   )}
-                  {boss && !node.nodeId.startsWith('squabble-house-') && <Crown className="story-atlas__crown" size={15} />}
+                  {boss && !node.nodeId.startsWith('squabble-house-') && <GameGlyph name="fight" className="story-atlas__crown" />}
                 </span>
                 <span className="story-atlas__label">
                   <strong>{node.title}</strong>

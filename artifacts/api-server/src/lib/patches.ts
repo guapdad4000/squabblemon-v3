@@ -11,6 +11,10 @@ const AUTOMATIC_WORK_FILTER = sql`(
   ${patchDeliveryTargetsTable.status} = 'pending'
   OR (${patchDeliveryTargetsTable.status} = 'failed' AND ${patchDeliveryTargetsTable.attempts} < ${MAX_AUTOMATIC_ATTEMPTS})
 )`;
+const PARTIAL_WORK_FILTER = sql`(
+  ${patchDeliveryTargetsTable.status} = 'missing'
+  OR (${patchDeliveryTargetsTable.status} = 'failed' AND ${patchDeliveryTargetsTable.attempts} >= ${MAX_AUTOMATIC_ATTEMPTS})
+)`;
 
 export function adminPatchRecord(record: PatchDraftRecord) {
   return {
@@ -99,20 +103,19 @@ export async function listPublicPatches() {
     .where(and(eq(patchDraftsTable.status, "published"), isNotNull(patchDraftsTable.publishedAt)))
     .orderBy(sql`${patchDraftsTable.publishedAt} DESC`, asc(patchDraftsTable.version))
     .limit(100);
-  const activePatchIds = rows.length ? new Set((await db.select({ patchId: patchDeliveryTargetsTable.patchId })
-    .from(patchDeliveryTargetsTable)
+  // Completed/late ledgers can be large; only outstanding states participate.
+  // A single fresh aggregate also keeps the active/partial flags in one snapshot.
+  const states = rows.length ? await db.select({
+    patchId: patchDeliveryTargetsTable.patchId,
+    active: sql<boolean>`bool_or(${AUTOMATIC_WORK_FILTER})`,
+    partial: sql<boolean>`bool_or(${PARTIAL_WORK_FILTER})`,
+  }).from(patchDeliveryTargetsTable)
     .where(and(
       inArray(patchDeliveryTargetsTable.patchId, rows.map(record => record.id)),
-      AUTOMATIC_WORK_FILTER,
+      inArray(patchDeliveryTargetsTable.status, ["pending", "failed", "missing"]),
     ))
-    .groupBy(patchDeliveryTargetsTable.patchId)).map(target => target.patchId)) : new Set<string>();
-  const partialPatchIds = rows.length ? new Set((await db.select({ patchId: patchDeliveryTargetsTable.patchId })
-    .from(patchDeliveryTargetsTable)
-    .where(and(
-      inArray(patchDeliveryTargetsTable.patchId, rows.map(record => record.id)),
-      sql`${patchDeliveryTargetsTable.status} = 'missing' OR (${patchDeliveryTargetsTable.status} = 'failed' AND ${patchDeliveryTargetsTable.attempts} >= ${MAX_AUTOMATIC_ATTEMPTS})`,
-    ))
-    .groupBy(patchDeliveryTargetsTable.patchId)).map(target => target.patchId)) : new Set<string>();
+    .groupBy(patchDeliveryTargetsTable.patchId) : [];
+  const stateByPatchId = new Map(states.map(state => [state.patchId, state]));
   return rows.map(record => ({
     version: record.version,
     title: record.title,
@@ -122,9 +125,9 @@ export async function listPublicPatches() {
     changes: record.changes,
     artCardId: record.artCardId ?? null,
     publishedAt: record.publishedAt!.toISOString(),
-    mailStatus: activePatchIds.has(record.id)
+    mailStatus: stateByPatchId.get(record.id)?.active
       ? "delivering" as const
-      : partialPatchIds.has(record.id) ? "partial" as const : "complete" as const,
+      : stateByPatchId.get(record.id)?.partial ? "partial" as const : "complete" as const,
   }));
 }
 
@@ -233,7 +236,7 @@ async function processPatchBatch(patchId: string, limit: number, includeExhauste
       .for("update", { skipLocked: true });
     for (const target of targets) {
       try {
-        const [profile] = await tx.select().from(playerProfilesTable)
+        const [profile] = await tx.select({ inbox: playerProfilesTable.inbox }).from(playerProfilesTable)
           .where(eq(playerProfilesTable.clerkUserId, target.clerkUserId)).for("update");
         if (!profile) {
           await tx.update(patchDeliveryTargetsTable).set({
@@ -320,32 +323,39 @@ export async function deliverLatePatchLetters(clerkUserId: string): Promise<numb
     .limit(100);
   if (!missed.length) return 0;
   return db.transaction(async tx => {
-    const [profile] = await tx.select().from(playerProfilesTable)
+    const [profile] = await tx.select({ inbox: playerProfilesTable.inbox }).from(playerProfilesTable)
       .where(eq(playerProfilesTable.clerkUserId, clerkUserId)).for("update");
     if (!profile) return 0;
-    let inbox = profile.inbox;
-    let added = 0;
-    const sentAt = Date.now();
-    for (const patch of missed) {
+    const candidates = missed.flatMap(patch => {
       const mail = makePatchLetter(patchContent(patch));
-      const existing = inbox.find(item => (item as { id?: unknown })?.id === mail.id);
-      // A different letter already holding this campaign ID is left unresolved
-      // (no ledger row), so it is never marked delivered without the real gift.
-      if (existing && !sameLetter(existing, mail)) continue;
-      const [owned] = await tx.insert(patchDeliveryTargetsTable).values({
-        patchId: patch.id,
-        clerkUserId,
-        status: "late",
-        attempts: 1,
-        deliveredAt: new Date(),
-      }).onConflictDoNothing().returning({ id: patchDeliveryTargetsTable.id });
-      if (!owned || existing) continue;
-      // Oldest patch first, one millisecond apart, so the newest note sorts on top.
-      inbox = [...inbox, { ...parseMail({ ...mail, sentAt: "", readAt: null, claimedAt: null }), sentAt: new Date(sentAt + added).toISOString() }];
-      added++;
+      const existing = profile.inbox.find(item => (item as { id?: unknown })?.id === mail.id);
+      // Leave conflicting campaign IDs unresolved, without a delivery ledger row.
+      return existing && !sameLetter(existing, mail) ? [] : [{ patch, mail, existing }];
+    });
+    if (!candidates.length) return 0;
+    // Keep the profile lock and ledger ownership check, but pay for one insert
+    // roundtrip instead of one per patch. Concurrent calls only append owned IDs.
+    const inserted = await tx.insert(patchDeliveryTargetsTable).values(candidates.map(({ patch }) => ({
+      patchId: patch.id,
+      clerkUserId,
+      status: "late" as const,
+      attempts: 1,
+      deliveredAt: new Date(),
+    }))).onConflictDoNothing().returning({ patchId: patchDeliveryTargetsTable.patchId });
+    const ownedPatchIds = new Set(inserted.map(target => target.patchId));
+    const additions: Mail[] = [];
+    const sentAt = Date.now();
+    for (const { patch, mail, existing } of candidates) {
+      if (!ownedPatchIds.has(patch.id) || existing) continue;
+      // Keep candidate order, not INSERT RETURNING order: newest sorts on top.
+      additions.push({
+        ...parseMail({ ...mail, sentAt: "", readAt: null, claimedAt: null }),
+        sentAt: new Date(sentAt + additions.length).toISOString(),
+      });
     }
-    if (added) await tx.update(playerProfilesTable).set({ inbox }).where(eq(playerProfilesTable.clerkUserId, clerkUserId));
-    return added;
+    if (additions.length) await tx.update(playerProfilesTable)
+      .set({ inbox: [...profile.inbox, ...additions] }).where(eq(playerProfilesTable.clerkUserId, clerkUserId));
+    return additions.length;
   });
 }
 

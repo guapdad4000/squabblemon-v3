@@ -1,0 +1,82 @@
+import assert from 'node:assert/strict';
+import test from 'node:test';
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import os from 'node:os';
+import { execFileSync } from 'node:child_process';
+import { parseOptions, optimizeBattleMoves, scaledDimensions } from './optimize-battle-moves.mjs';
+
+const command = (...args) => execFileSync('ffmpeg', ['-nostdin', '-v', 'error', '-threads', '1', '-filter_threads', '1', ...args], { stdio: 'pipe' });
+
+test('CLI accepts bounded batches and rejects ambiguous or unsafe arguments', () => {
+  assert.deepEqual(parseOptions(['--all', '--offset', '4', '--limit', '8', '--threads', '2']).files, []);
+  for (const args of [['../source.mp4'], ['--all', 'source.mp4'], ['--threads', '9', 'source.mp4'], ['--limit', '0', 'source.mp4'], ['--report'], ['--mystery'], ['--width', '287', 'source.mp4'], ['--crf', '36', 'source.mp4']]) assert.throws(() => parseOptions(args));
+});
+
+test('even dimensions retain the exact portrait/widescreen ratio and skip unsuitable geometry', () => {
+  assert.deepEqual(scaledDimensions(768, 1024, 320), [318, 424]);
+  assert.deepEqual(scaledDimensions(768, 1152, 320), [320, 480]);
+  assert.deepEqual(scaledDimensions(768, 1344, 320), [320, 560]);
+  assert.deepEqual(scaledDimensions(768, 432, 432), [416, 234]);
+  assert.equal(scaledDimensions(770, 1024, 320), null);
+  assert.equal(scaledDimensions(0, 1024, 320), null);
+});
+
+test('catalog batches preserve frame/audio timing, reuse verified files, detect damage, and clean discarded candidates', async t => {
+  const root = await fs.mkdtemp(path.join(os.tmpdir(), 'battle-move-optimizer-'));
+  t.after(() => fs.rm(root, { recursive: true, force: true }));
+  const source = path.join(root, 'public/assets/special-moves');
+  const output = path.join(root, 'public/assets/battle-moves');
+  await fs.mkdir(source, { recursive: true });
+  await fs.mkdir(path.join(root, 'src/lib'), { recursive: true });
+  command('-f', 'lavfi', '-i', 'testsrc2=size=768x432:rate=24:duration=0.5', '-f', 'lavfi', '-i', 'sine=frequency=1000:duration=0.5', '-c:v', 'libx264', '-threads', '1', '-preset', 'ultrafast', '-crf', '0', '-pix_fmt', 'yuv420p', '-c:a', 'aac', path.join(source, 'first.mp4'));
+  await fs.copyFile(path.join(source, 'first.mp4'), path.join(source, 'second.mp4'));
+  command('-f', 'lavfi', '-i', 'color=c=black:size=32x32:rate=24:duration=0.5', '-c:v', 'libx264', '-threads', '1', '-preset', 'slow', '-crf', '28', '-pix_fmt', 'yuv420p', path.join(source, 'tiny.mp4'));
+  const catalog = { clips: { first: { file: 'first.mp4', revision: 'r1' }, second: { file: 'second.mp4', revision: 'r2' }, tiny: { file: 'tiny.mp4' } } };
+  await fs.writeFile(path.join(root, 'src/specialMoves.json'), JSON.stringify(catalog));
+  const reportPath = path.join(root, 'report.json');
+  const first = await optimizeBattleMoves(root, parseOptions(['--all', '--limit', '1', '--report', reportPath]));
+  assert.equal(first.results[0].status, 'created');
+  assert.equal(first.results[0].verification.frames, 12);
+  assert.equal(first.results[0].verification.frameRate, '24/1');
+  assert.equal(first.results[0].verification.audioHashes.length, 1);
+  const manifestPath = path.join(root, 'src/lib/battleMoves.json');
+  const firstManifest = JSON.parse(await fs.readFile(manifestPath, 'utf8'));
+  assert.deepEqual(Object.keys(firstManifest['first.mp4']).sort(), ['asset', 'revision'], 'verification metadata must stay out of the runtime bundle');
+  assert.match(firstManifest['first.mp4'].asset, /first-[a-f0-9]{12}-[a-f0-9]{12}\.mp4$/);
+  const firstOutput = path.join(root, 'public', firstManifest['first.mp4'].asset);
+  const previousMtime = (await fs.stat(firstOutput)).mtimeMs;
+  const batch = await optimizeBattleMoves(root, parseOptions(['--all', '--limit', '2']));
+  assert.deepEqual(batch.results.map(result => result.status), ['reused', 'created']);
+  assert.equal((await fs.stat(firstOutput)).mtimeMs, previousMtime);
+  const changedRecipe = await optimizeBattleMoves(root, parseOptions(['second.mp4', '--width', '432', '--crf', '23']));
+  assert.equal(changedRecipe.results[0].status, 'created');
+  assert.notEqual(changedRecipe.configHash, first.configHash);
+  assert.equal(changedRecipe.results[0].verification.dimensions[0], 416);
+  const check = await optimizeBattleMoves(root, parseOptions(['--check', '--report', reportPath]));
+  assert.equal(check.results.length, 2);
+  assert.ok(check.results.every(result => result.status === 'verified'));
+  await fs.writeFile(firstOutput, 'damaged derivative');
+  await assert.rejects(optimizeBattleMoves(root, parseOptions(['--check', 'first.mp4'])), /Derivative hash changed/);
+  const restored = await optimizeBattleMoves(root, parseOptions(['first.mp4']));
+  assert.equal(restored.results[0].status, 'created');
+  const rejected = await optimizeBattleMoves(root, parseOptions(['tiny.mp4']));
+  assert.equal(rejected.results[0].status, 'not-smaller');
+  assert.equal((await fs.readdir(output)).length, 3, 'discarded candidates must not leave output files');
+  assert.equal(JSON.parse(await fs.readFile(reportPath, 'utf8')).totals.accepted, 2);
+  command('-f', 'lavfi', '-i', 'color=c=black:size=770x1024:rate=24:duration=0.5', '-c:v', 'libx264', '-threads', '1', '-preset', 'ultrafast', '-crf', '28', '-pix_fmt', 'yuv420p', path.join(source, 'unusual.mp4'));
+  catalog.clips.unusual = { file: 'unusual.mp4' };
+  await fs.writeFile(path.join(root, 'src/specialMoves.json'), JSON.stringify(catalog));
+  const geometrySkip = await optimizeBattleMoves(root, parseOptions(['unusual.mp4']));
+  assert.equal(geometrySkip.results[0].status, 'skipped-geometry');
+  const geometryCheck = await optimizeBattleMoves(root, parseOptions(['--check', '--all', '--offset', '3']));
+  assert.equal(geometryCheck.results[0].status, 'verified-original');
+  assert.equal(geometryCheck.totals.skippedGeometry, 1);
+  assert.equal((await fs.readdir(output)).length, 3);
+  await fs.writeFile(path.join(source, 'broken.mp4'), 'broken source');
+  catalog.clips.broken = { file: 'broken.mp4' };
+  await fs.writeFile(path.join(root, 'src/specialMoves.json'), JSON.stringify(catalog));
+  await assert.rejects(optimizeBattleMoves(root, parseOptions(['broken.mp4', '--report', reportPath])));
+  assert.equal((await fs.readdir(output)).length, 3, 'failed encodes must not leave output files');
+  assert.equal(JSON.parse(await fs.readFile(reportPath, 'utf8')).results[0].status, 'failed');
+});

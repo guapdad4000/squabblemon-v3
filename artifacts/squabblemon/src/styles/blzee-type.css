@@ -58,7 +58,7 @@
   letter-spacing: .035em;
 }
 .express-sign__board strong { font-family: var(--font-sign); font-synthesis: none; }
-.battle-arena.battle-hud .battle-primary-action.battle-street-sign { font-family: var(--font-action-sign); font-weight: 700; font-style: normal; font-synthesis: none; font-size: 15px; letter-spacing: .035em; }
+.battle-arena.battle-hud .battle-primary-action.battle-street-sign { font-family: var(--font-action-sign); font-weight: 700; font-style: normal; font-synthesis: none; letter-spacing: .035em; }
 .street-select-value { font-size: 1.15em; line-height: 1.2; }
 
 /* Blzee keeps the HUD counters; card and location values have independent roles. */

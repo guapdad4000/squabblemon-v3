@@ -28,7 +28,7 @@ import {
   ROOKIE_FOUNDATION_ID, ROOKIE_DECK_ID, ROOKIE_MENTOR_ID,
 } from "@workspace/squabblemon-engine/data";
 import { COLLECTION_ROAD, STREET_PACK_CONFIG, STREET_PACK_TEN_PULL_CONFIG } from "./collectionEconomy";
-import { resetExpiredPlayerMissions } from "./playerRewardTransactions";
+import { resetExpiredMissionsInTransaction } from "./playerRewardTransactions";
 import {
   normalizeCardProgress,
   type CardProgressionMap,
@@ -85,17 +85,16 @@ export async function ensurePlayer(clerkUserId: string): Promise<void> {
   }
 
   const now = new Date();
-  await resetExpiredPlayerMissions(clerkUserId, now);
-
   await db.transaction(async (tx) => {
-    await tx.execute(
-      sql`select ${playerProfilesTable.clerkUserId} from ${playerProfilesTable} where ${playerProfilesTable.clerkUserId} = ${clerkUserId} for update`,
-    );
+    // Mission cadence and ownership reconciliation share the reward writers' lock.
+    // Read the locked row once, avoiding a second transaction and lock roundtrip.
     const [current] = await tx
       .select()
       .from(playerProfilesTable)
-      .where(eq(playerProfilesTable.clerkUserId, clerkUserId));
+      .where(eq(playerProfilesTable.clerkUserId, clerkUserId))
+      .for("update");
     if (!current) return;
+    await resetExpiredMissionsInTransaction(tx, clerkUserId, now);
 
     const normalizeCardId = (cardId: string) =>
       catalogCardById[cardId]?.catalogId ??

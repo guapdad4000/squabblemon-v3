@@ -8,7 +8,7 @@
 .deck-workbench__title h1{font:900 italic clamp(28px,3vw,44px)/1.1 var(--font-display);letter-spacing:-.035em;text-transform:uppercase;margin:4px 0}
 .deck-workbench__title p{font-size:12px;color:#b8b8ac;margin-top:6px}
 .deck-workbench__name{display:flex;align-items:center;gap:12px;max-width:560px;color:#b6a582}
-.deck-workbench__name input{width:100%;min-width:0;background:transparent;border:0;border-bottom:1px solid transparent;color:#f6f1e4;font:900 italic clamp(26px,3vw,42px)/1.25 var(--font-display);letter-spacing:-.035em;padding:2px 0;text-transform:uppercase;text-overflow:ellipsis}
+.deck-workbench__name input{width:100%;min-width:0;background:transparent;border:0;border-bottom:1px solid transparent;color:#f6f1e4;font:var(--font-deck-title-weight,400) clamp(26px,3vw,42px)/1.25 var(--font-deck-title,var(--font-display));letter-spacing:.01em;padding:2px 0;text-transform:uppercase;text-overflow:ellipsis}
 .deck-workbench__name input:hover,.deck-workbench__name input:focus{border-bottom-color:#d8bb7380;outline:none}
 .deck-workbench__header-tools{display:flex;align-items:center;gap:20px;flex:none}
 .deck-workbench__count{font:500 12px var(--font-mono);color:#a8a99d;white-space:nowrap}
