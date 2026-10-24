@@ -60,62 +60,69 @@
  .growth-plant--2{left:-19px;--plant-angle:-2deg}.growth-plant--3{right:-18px;--plant-angle:3deg}
  .growth-plant--4,.growth-plant--5{bottom:-22px}.growth-plant--6{top:-30px}
 }
-/* Condensed care sheet, retaining Buddy's original clipboard composition. */
-.growth-dialog--compact .growth-heading h2{margin-bottom:8px}
-.growth-dialog--compact .growth-heading>p{display:none}
-.growth-dialog--compact .growth-hero__note>p{font-size:29px;margin:8px 0}
-.growth-dialog--compact .growth-tasks li{min-height:52px;padding:7px 0}
-.growth-dialog--compact .growth-tasks p{font-size:10px;margin-top:2px;line-height:1.35}
-.growth-dialog--compact .growth-task-heading{padding:6px 0}
-.growth-roadmap{margin-top:12px;border:1px solid #728c5740;border-radius:6px;padding:10px;background:#d6dfbf}
-.growth-roadmap>header{display:flex;justify-content:space-between;font-size:11px;color:#3e5b35}
-.growth-roadmap>header span{font-size:10px}
-.growth-roadmap ol{display:grid;grid-template-columns:repeat(3,1fr);padding:0;list-style:none;margin:10px 0;gap:8px}
-.growth-roadmap li{display:flex;flex-direction:column;gap:4px;font-size:10px}
-.growth-roadmap li>span{display:grid;place-items:center;width:24px;height:24px;border:1px solid #7a9263;border-radius:50%}
-.growth-roadmap li[data-complete=true]>span{background:#456e38;color:#f4f5df}
-.growth-roadmap small{font-size:8px;line-height:1.4}
-.growth-roadmap p{font-size:9px;line-height:1.5;margin:0;color:#546c46}
-.growth-roadmap button{margin-top:10px;padding:9px 16px;border:0;background:#3f6536;color:#f9f3df;font-weight:800;border-radius:5px}
-.growth-dialog--compact .growth-checkins{margin:8px 0;padding-top:6px}
-.growth-dialog--compact .growth-live{font-size:10px}
-.growth-dialog--compact .growth-bonus{padding:9px;font-size:10px;margin-top:8px}
-/* Plants fan beyond the clipboard edges; the original watering-can rules stay intact. */
-.growth-dialog--compact .growth-plant--0{left:-48px;top:2%;width:33%;--plant-angle:-14deg}
-.growth-dialog--compact .growth-plant--1{right:-44px;top:0;width:25%;--plant-angle:13deg}
-.growth-dialog--compact .growth-plant--2{left:-49px;top:34%;width:28%;--plant-angle:-12deg}
-.growth-dialog--compact .growth-plant--3{right:-47px;top:35%;width:36%;--plant-angle:12deg}
-.growth-dialog--compact .growth-plant--4{left:5%;bottom:-43px;width:31%;--plant-angle:174deg}
-.growth-dialog--compact .growth-plant--5{right:5%;bottom:-43px;width:35%;--plant-angle:186deg}
-.growth-dialog--compact .growth-plant--6{left:35%;top:-46px;width:31%;--plant-angle:-4deg}
-@media(max-width:480px){
- .growth-dialog--compact .growth-hero__note>p{font-size:18px}
- .growth-dialog--compact .growth-tasks li{min-height:53px}
- .growth-dialog--compact .growth-tasks p{font-size:9px}
- .growth-dialog--compact .growth-plant--0{left:-23px;width:33%;--plant-angle:-8deg}
- .growth-dialog--compact .growth-plant--1{right:-22px;width:25%;--plant-angle:8deg}
- .growth-dialog--compact .growth-plant--2{left:-24px;width:28%;--plant-angle:-6deg}
- .growth-dialog--compact .growth-plant--3{right:-23px;width:36%;--plant-angle:7deg}
- .growth-dialog--compact .growth-plant--4,.growth-dialog--compact .growth-plant--5{bottom:-27px}
- .growth-dialog--compact .growth-plant--6{top:-27px}
+/* One care sheet: the garden, three tasks, next harvest and visible daily calendar. */
+.growth-dialog--compact{width:min(880px,100vw);padding:48px 70px 54px}
+.growth-dialog--compact .growth-clipboard{padding:22px 24px 14px;border-width:10px}
+.growth-dialog--compact .growth-heading h2{margin:0 0 3px;font-size:32px}
+.growth-dialog--compact .growth-hero{grid-template-columns:112px minmax(0,1fr) 155px;min-height:132px;margin:0}
+.growth-dialog--compact .growth-buddy{width:112px;height:133px;transform:none}
+.growth-dialog--compact .growth-can{width:155px;margin:0}
+.growth-dialog--compact .growth-can__meter>b{font-size:26px}
+.growth-dialog--compact .growth-can__meter small{font-size:12px}
+.growth-dialog--compact .growth-can__meter>span{font-size:6px;margin-top:2px}
+.growth-dialog--compact .growth-hero__note{padding-top:0}
+.growth-dialog--compact .growth-hero__note>p{font-size:32px;margin:4px 0}
+.growth-dialog--compact .growth-hero__note>span:last-child{font-size:10px}
+.growth-dialog--compact .growth-task-heading{padding:5px 0}
+.growth-dialog--compact .growth-task-heading>span{font-size:10px}
+.growth-dialog--compact .growth-tasks li{min-height:48px;padding:3px 0;gap:9px}
+.growth-dialog--compact .growth-tasks h4{font-size:12px;line-height:1.35;font-weight:600}
+.growth-next-reward{margin:10px 0 12px;padding:9px 11px;background:#d6dfbf;border:1px solid #728c5740;border-radius:4px}
+.growth-next-reward>div{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+.growth-next-reward h3{font:800 14px/1.3 var(--font-sans,sans-serif);margin:0}
+.growth-next-reward p{font:700 11px/1.4 var(--font-sans,sans-serif);margin:4px 0 0}
+.growth-next-reward small{display:block;font:500 10px/1.4 var(--font-sans,sans-serif);margin-top:3px}
+.growth-dialog--compact .account-check-in-calendar{color:#355332;margin-top:10px}
+.growth-pending-bonuses{font:600 11px/1.4 var(--font-sans,sans-serif);margin:8px 0}
+.growth-pending-bonuses p{margin:0}
+.growth-pending-bonuses button{min-height:44px;margin-top:5px;padding:8px 12px;border:0;border-radius:3px;background:#426740;color:#f9f2d7;font-weight:700}
+.growth-dialog--compact .growth-footer{margin-top:10px;font-size:9px}
+.growth-dialog--compact .growth-bonus{margin-bottom:10px;padding:8px}
+.growth-dialog--compact .growth-live{font-size:11px}
+.growth-dialog--compact .growth-plant--0{left:-42px;top:2%;width:23%;--plant-angle:-10deg}
+.growth-dialog--compact .growth-plant--1{right:-39px;top:0;width:18%;--plant-angle:10deg}
+.growth-dialog--compact .growth-plant--2{left:-43px;top:36%;width:21%;--plant-angle:-8deg}
+.growth-dialog--compact .growth-plant--3{right:-40px;top:35%;width:26%;--plant-angle:8deg}
+.growth-dialog--compact .growth-plant--4{left:8%;bottom:-38px;width:25%;--plant-angle:174deg}
+.growth-dialog--compact .growth-plant--5{right:7%;bottom:-38px;width:27%;--plant-angle:186deg}
+.growth-dialog--compact .growth-plant--6{left:38%;top:-35px;width:22%;--plant-angle:-4deg}
+@media(max-width:600px){
+ .growth-dialog--compact{padding:36px 22px 40px}
+ .growth-dialog--compact .growth-clipboard{padding:18px 12px 12px;border-width:7px}
+ .growth-dialog--compact .growth-heading h2{font-size:25px}
+ .growth-dialog--compact .growth-hero{grid-template-columns:72px minmax(0,1fr) 108px;min-height:100px}
+ .growth-dialog--compact .growth-buddy{width:76px;height:101px;margin:0}
+ .growth-dialog--compact .growth-can{width:110px}
+ .growth-dialog--compact .growth-can__meter>b{font-size:19px}
+ .growth-dialog--compact .growth-can__meter small{font-size:10px}
+ .growth-dialog--compact .growth-can__meter>span{font-size:4.5px}
+ .growth-dialog--compact .growth-hero__note>p{font-size:25px}
+ .growth-dialog--compact .growth-hero__note>span:last-child{font-size:9px}
+ .growth-dialog--compact .growth-tasks h4{font-size:11px}
+ .growth-dialog--compact .growth-task-check{width:22px;height:24px}
+ .growth-next-reward{padding:8px;margin-block:8px}
+ .growth-next-reward>div{gap:4px 8px}
+ .growth-next-reward h3{font-size:12px}
+ .growth-next-reward p{font-size:10px}
+ .growth-next-reward small{font-size:9px}
+ .growth-dialog--compact .growth-plant--0{left:-16px;--plant-angle:-3deg}
+ .growth-dialog--compact .growth-plant--2{left:-16px;--plant-angle:-2deg}
+ .growth-dialog--compact .growth-plant--1,.growth-dialog--compact .growth-plant--3{right:-16px;--plant-angle:3deg}
+ .growth-dialog--compact .growth-plant--4,.growth-dialog--compact .growth-plant--5{bottom:-25px}
+ .growth-dialog--compact .growth-plant--6{top:-25px}
 }
-/* Safe perimeter for the visible plant fan. Watering-can rules remain unchanged. */
-.growth-dialog--compact{width:min(1100px,100vw);padding:100px 150px 115px;overflow-x:hidden}
-.growth-dialog--compact .growth-plant--0{left:-105px;top:0;width:33%;--plant-angle:-12deg}
-.growth-dialog--compact .growth-plant--1{right:-100px;top:0;width:25%;--plant-angle:12deg}
-.growth-dialog--compact .growth-plant--2{left:-105px;top:35%;width:28%;--plant-angle:-10deg}
-.growth-dialog--compact .growth-plant--3{right:-100px;top:36%;width:33%;--plant-angle:10deg}
-.growth-dialog--compact .growth-plant--4{left:5%;bottom:-95px;width:31%;--plant-angle:174deg}
-.growth-dialog--compact .growth-plant--5{right:5%;bottom:-95px;width:33%;--plant-angle:186deg}
-.growth-dialog--compact .growth-plant--6{left:35%;top:-90px;width:29%;--plant-angle:-4deg}
-@media(max-width:850px){
- .growth-dialog--compact{width:min(848px,100vw);padding:110px 28px 115px}
- .growth-dialog--compact .growth-plant--0{left:0;top:-90px;width:34%;--plant-angle:-10deg}
- .growth-dialog--compact .growth-plant--1{right:0;top:-90px;width:25%;--plant-angle:10deg}
- .growth-dialog--compact .growth-plant--2{left:-12px;top:30%;width:22%;--plant-angle:-6deg}
- .growth-dialog--compact .growth-plant--3{right:-12px;top:36%;width:25%;--plant-angle:6deg}
- .growth-dialog--compact .growth-plant--4,.growth-dialog--compact .growth-plant--5{bottom:-85px;width:31%}
- .growth-dialog--compact .growth-plant--6{left:37%;top:-85px;width:24%}
-}
-@media(max-width:480px){.growth-dialog--compact{padding-inline:23px}}
-@media(max-width:350px){.growth-dialog--compact{padding-inline:17px}.growth-dialog--compact .growth-plant--2{left:-7px}.growth-dialog--compact .growth-plant--3{right:-7px}}
+
+.growth-check-in-tracks{display:grid;gap:12px;margin-top:12px}
+.growth-check-in-tracks>.account-check-in-calendar{margin:0}
+.growth-monthly-claim{min-height:44px;width:100%;margin-top:8px;border:1px solid #2b5b32;background:#2b5b32;color:#fff8dc;font:700 12px var(--font-sans,sans-serif)}
+@media(min-width:760px){.growth-check-in-tracks{grid-template-columns:1fr 1fr;gap:18px;align-items:start}}

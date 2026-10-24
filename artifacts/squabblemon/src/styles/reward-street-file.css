@@ -1,0 +1,52 @@
+@import './game-popup.css';
+
+/* Story crew-selection materials, shared by native and Radix dialogs.
+   Positioning/focus/claim lifecycle stay with the host; this layer only paints. */
+.reward-street-file {
+  border: 2px solid #a28c5c;
+  border-radius: 0;
+  background: linear-gradient(120deg, #071b1680, #05140bbb), var(--reward-file-scene, none) center / cover, #0b1b13;
+  box-shadow: 0 18px 70px #000b, inset 0 0 0 4px #07170e;
+}
+.reward-street-file__paper {
+  position: relative;
+  min-width: 0;
+  background: repeating-linear-gradient(0deg, transparent 0 27px, #846a2820 28px 29px), linear-gradient(110deg, #f1e2bded, #e3c98fde), var(--reward-file-folder, none) center / 100% 100%, var(--popup-paper);
+  border: 1px solid #9e7c48;
+  border-top: 5px solid var(--popup-stamp);
+  border-radius: 0;
+  color: var(--popup-ink);
+  box-shadow: 4px 5px 0 #0006;
+}
+.reward-street-file__paper::before {
+  content: ''; position: absolute; z-index: 2; width: 12px; height: 32px; left: 22px; top: -13px;
+  border: 3px solid #bfc3b9; border-radius: 9px; transform: rotate(16deg); box-shadow: 1px 2px 1px #28291d;
+  pointer-events: none;
+}
+.reward-street-file__stamp { display: inline-block; max-width: 100%; border: 2px solid currentColor; padding: 4px 9px; color: var(--popup-stamp); font: 700 11px/1.2 var(--popup-font-amount); letter-spacing: .1em; text-transform: uppercase; transform: rotate(-4deg); box-shadow: inset 0 0 0 1px #942c2430; }
+.reward-street-file__loot { display: flex; justify-content: center; align-items: stretch; gap: 10px; margin: 18px 0; padding: 0; }
+.reward-street-file__loot > :is(div,span) {
+  position: relative; flex: 1 1 0; min-width: 0; max-width: 180px; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 4px; margin: 0; padding: 14px 8px 10px; background: #f6edcf; color: var(--popup-ink); border: 1px solid #aa9466;
+  box-shadow: 2px 3px 0 #5940214d; transform: rotate(-2deg); text-align: center;
+}
+.reward-street-file__loot > :is(div,span):nth-child(even) { transform: rotate(2deg); }
+.reward-street-file__loot > :is(div,span)::before { content: ''; position: absolute; top: 4px; left: calc(50% - 3px); width: 6px; height: 6px; border-radius: 50%; background: #a72e25; box-shadow: 1px 2px 0 #4e1f16; }
+.reward-street-file__loot :is(.game-glyph,img) { width: 44px; height: 44px; object-fit: contain; flex: none; }
+.reward-street-file__loot :is(b,strong) { font: 700 clamp(23px, 3.7vw, 34px)/1.1 var(--popup-font-amount); color: #254b32; font-variant-numeric: tabular-nums; letter-spacing: -.035em; }
+.reward-street-file__loot > :is(div,span) > :is(span,small) { color: #57452e; font: 700 10px/1.3 var(--popup-font-body); }
+.reward-street-file__loot > p { margin: 0; padding: 12px 0; color: #374f35; font: 700 14px/1.5 var(--popup-font-body); }
+.reward-street-file .reward-street-file__action {
+  position: relative; isolation: isolate; display: flex; align-items: center; justify-content: center; gap: 12px;
+  width: 100%; min-height: 52px; margin: 14px 0 0; padding: 11px 30px 11px 15px;
+  border: 0; border-radius: 0; color: #fff9e6; background: var(--popup-rim); box-shadow: none;
+  clip-path: polygon(0 0, 91% 0, 100% 50%, 91% 100%, 0 100%);
+  font: 700 17px/1.2 var(--popup-font-amount); text-transform: uppercase; letter-spacing: .035em; text-shadow: 0 1px 2px #082516;
+  cursor: pointer; filter: drop-shadow(0 3px 2px #0005); transition: filter .12s ease;
+}
+.reward-street-file .reward-street-file__action::before { content: ''; position: absolute; z-index: -1; inset: 3px; clip-path: inherit; background: linear-gradient(var(--popup-sign),var(--popup-sign-dark)); }
+.reward-street-file .reward-street-file__action::after { display: none; }
+.reward-street-file .reward-street-file__action:hover:not(:disabled) { filter: brightness(1.1); }
+.reward-street-file .reward-street-file__action:active:not(:disabled) { filter: brightness(.92); }
+.reward-street-file::backdrop, .game-popup-backdrop { background: #030c09ce; }
+@media(max-width:420px) { .reward-street-file__loot { gap: 7px; } .reward-street-file__loot > :is(div,span) { padding-inline: 4px; } .reward-street-file__loot :is(.game-glyph,img) { width: 36px; height: 36px; } .reward-street-file .reward-street-file__action { font-size: 15px; } }

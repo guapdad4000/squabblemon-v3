@@ -15,9 +15,14 @@ export interface OpenPackInput {
   idempotencyKey: string;
   /** Selected active pull banner. Defaults to standard. */
   bannerId?: string;
+  /**
+     * Exact weekly occurrence selected by the client. Stale unpaid requests are rejected; completed idempotent retries recover their original receipt.
+     * @maxLength 80
+     */
+  bannerOccurrenceId?: string;
   paymentMethod: OpenPackInputPaymentMethod;
   /**
-     * Number of packs to open. Defaults to 1; 10 unlocks the upgraded ten-pull experience.
+     * Number of packs to open. Defaults to 1. Batches of 2–9 cost the single-pack price per pack; only 10 receives the ten-pull discount and Rare-or-better guarantee.
      * @minimum 1
      * @maximum 10
      */

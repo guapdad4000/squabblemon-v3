@@ -20,7 +20,12 @@
     "test:cosmetics": "node scripts/test-api-database.mjs cosmetics",
     "test:park-chess:db": "node scripts/test-api-database.mjs park-chess",
     "test:performance:db": "node scripts/test-api-database.mjs performance",
-    "test:performance:native": "node scripts/test-events-feedback-database.mjs --startup-performance"
+    "test:performance:native": "node scripts/test-events-feedback-database.mjs --startup-performance",
+    "test:pull-banners:db": "node scripts/test-api-database.mjs pull-banners",
+    "test:monthly-login:native": "node scripts/test-payments-database.mjs --monthly-login",
+    "test:ranked-clout:native": "node scripts/test-payments-database.mjs --ranked-clout",
+    "test:flex-pulls:native": "node scripts/test-payments-database.mjs --flex-pulls",
+    "test:flex-pulls:db": "node scripts/test-api-database.mjs flex-pulls"
   },
   "private": true,
   "dependencies": {

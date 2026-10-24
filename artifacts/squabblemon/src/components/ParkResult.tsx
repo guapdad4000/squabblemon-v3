@@ -1,3 +1,4 @@
+import { RankedMatchClout } from "./RankedMatchClout";
 import { RankUpReward } from './RankUpReward';
 import { RANKED_SEASON } from '@workspace/squabblemon-engine/ranked';
 import { type CSSProperties, type ReactNode, useEffect, useLayoutEffect, useRef, useState } from 'react';
@@ -78,6 +79,7 @@ export function ParkResult({ outcome, ranked, rank, resultKey, description, titl
       {boardNote && <p className="park-result-board-note" data-testid="timeout-board-note">{boardNote}</p>}
       {series}
       {rank && <div className="park-result-award" data-testid="ranked-result"><motion.div initial={reduced ? false : { y: -30, rotate: -12, opacity: 0 }} animate={{ y: 0, rotate: 0, opacity: 1 }} transition={{ type: 'spring', damping: 12, delay: .3 }}><RankTrophy tier={rank.tier} /></motion.div><div><span className="park-award-label">{promoted ? 'RANK UP!' : 'PRESEASON RANK'}</span><h3>{rank.tier}</h3><div className="park-rp-change"><RPToken /><strong><AnimatedNumber reducedMotion={Boolean(reduced)} value={rank.delta} prefix={rank.delta >= 0 ? '+' : ''} delay={.5} /> RP</strong></div><small><AnimatedNumber reducedMotion={Boolean(reduced)} value={rank.after} from={rank.before} delay={.5} /> total RP{rank.bot ? ' · Park Bot' : ''}</small></div></div>}
+      <RankedMatchClout grant={rank?.matchClout} />
       {!promoted && rewards.length > 0 && <p className="park-result-board-note" data-testid="saved-rank-rewards">Milestone rewards saved: +{rewards.reduce((total, reward) => total + reward.softCurrency, 0)} Clout · +{rewards.reduce((total, reward) => total + reward.packTickets, 0)} tickets · +{rewards.reduce((total, reward) => total + reward.styleShards, 0)} shards.</p>}
       {promoted && <button className="park-rank-review" onClick={() => setOpenPromotionKey(promotionKey)}>{rewards.length ? 'View saved promotion rewards →' : 'View promotion →'}</button>}
        {opponent}

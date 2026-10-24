@@ -586,3 +586,35 @@
     transition: none;
   }
 }
+
+/* Status belongs to the poster mat; the authored cover remains unobstructed. */
+.cinema-poster[data-current=true]{border-color:#f7cc67;box-shadow:0 0 0 3px #f7cc6770,0 12px 32px #0009}
+.cinema-poster[data-status=cleared]{border-color:#72947b}
+.cinema-poster-status-badge{left:0;min-height:22px;display:flex;align-items:center;justify-content:center;gap:5px;padding:4px 6px;font-size:10px;letter-spacing:.025em}
+.cinema-poster-status-badge svg{width:12px;height:12px;flex:none}
+.cinema-poster[data-current=true] .cinema-poster-status-badge{background:#f7cc67;color:#342408}
+.cinema-poster-status-badge[data-status=cleared]{background:#315642;color:#f1f5e8}
+.cinema-poster-status-badge[data-status=locked]{background:#292c32;color:#c5c7cd}
+.cinema-poster-art{bottom:96px}
+.cinema-poster-details{height:88px;padding-bottom:25px}
+.theater-continue-ticket{flex-direction:column;max-width:min(640px,92vw);text-align:center;padding:.65rem 1.4rem}
+.theater-continue-ticket>span{justify-content:center}
+.theater-continue-destination{display:block;margin-top:5px;font:500 11px/1.35 var(--font-sans,sans-serif);font-style:normal;text-shadow:none;overflow-wrap:anywhere}
+.theater-continue-destination b,.theater-continue-destination span{display:block}
+.theater-continue-destination b{font-weight:800}
+@media(max-height:600px){
+ .theater-host{--cinema-poster-height:clamp(220px,45vh,270px)}
+ .theater-content{padding-top:75px;padding-bottom:22px}
+ .theater-continue-destination{font-size:10px}
+ .theater-continue-ticket{padding:.45rem 1rem}
+}
+/* Short landscape keeps the cover large, with its destination beside it. */
+@media(max-height:600px) and (min-width:600px){
+ .theater-host{--cinema-poster-height:clamp(220px,calc(100dvh - 86px),350px)}
+ .theater-content{width:64%;padding-top:52px;padding-bottom:10px}
+ .theater-selection{position:fixed;right:3vw;top:80px;width:32vw;padding:8px;margin:0}
+ .theater-selection small{font-size:10px;margin-top:8px;padding:5px}
+ .theater-continue-ticket{position:fixed;right:3vw;bottom:30px;width:32vw;max-width:none}
+ .theater-nav--previous{left:8px}
+ .theater-nav--next{right:8px}
+}

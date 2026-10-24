@@ -30,7 +30,6 @@
   mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0); mask-composite:exclude;
   clip-path:polygon(2% 0,98% 0,100% 2%,100% 98%,98% 100%,2% 100%,0 98%,0 2%);
 }
-.collector-card[data-layered-card][data-layered-foil="false"] .layered-rarity-rim { display:none; }
 .collector-card[data-layered-card] .collector-edition-seal {
   display:block!important; top:4.4cqw!important; left:31%!important; width:38%!important; height:11.7cqw!important;
   opacity:1!important; filter:drop-shadow(0 .4cqw .45cqw #000); z-index:41!important;
@@ -64,7 +63,8 @@
 }
 /* Neutral tiers retain a printed edge; premium metals keep their own color. */
 .collector-card[data-layered-card]:is([data-card-rarity="SuperCommon"],[data-card-rarity="Common"],[data-card-rarity="Uncommon"]) .layered-rarity-rim {
- background-image:linear-gradient(120deg,#272c29,#a2aba5 22%,#343c38 48%,#909c94 72%,#202723); padding:1.6cqw; opacity:.75;
+ background-image:linear-gradient(120deg,#272c29,#a2aba5 22%,#343c38 48%,#909c94 72%,#202723);
+ background-size:100% 100%; background-position:center; padding:3.2cqw; opacity:1;
 }
 .collector-card[data-layered-card] .layered-material::after {
  content:""; position:absolute; inset:2.8%; z-index:5; pointer-events:none;
@@ -142,3 +142,10 @@ html[data-reduce-motion="true"] .collector-card[data-layered-card] :is(.postal-f
 .collector-card[data-layered-card][data-layered-foil="true"] .card-stat--motion::after { inset:0; padding:.8cqw; }
 .card-inspector-shell .dossier-variant .collector-card[data-layered-card] .layered-rules p { display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
 .card-inspector-shell .dossier-variant .collector-card[data-layered-card] .layered-rules { min-height:24cqw; }
+
+/* Foil is optional decoration; every printed card still has a physical frame.
+   Keep rarity/finish color while removing flakes and pointer-driven reflections. */
+.collector-card[data-layered-card][data-layered-foil="false"] .layered-rarity-rim {
+ background-image:linear-gradient(120deg,var(--stock-deep),var(--stock-light) 22%,var(--stock) 48%,var(--stock-light) 72%,var(--stock-deep));
+ background-size:100% 100%; background-position:center; background-blend-mode:normal;
+}

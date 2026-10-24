@@ -229,7 +229,7 @@ test('automatic tax quote and server-confirmed order totals remain truthful', as
   await page.screenshot({ path: 'e2e/screenshots/payment-tax-checkout.png' });
   await dialog.getByRole('button', { name: 'Close' }).click();
 
-  await page.getByText('Your Orders', { exact: true }).click();
+  await page.locator('.corner-store__orders > summary').click();
   const taxed = page.getByTestId('corner-history-order').filter({ hasText: 'Server pocket' });
   await expect(taxed).toContainText('$13.33');
   await expect(taxed).toContainText('Base $12.34');
@@ -387,7 +387,7 @@ test('history refresh discovers an order completed on another device', async ({ 
   });
 
   await openStore(page);
-  await page.getByText('Your Orders').click();
+  await page.locator('.corner-store__orders > summary').click();
   await expect(page.getByText('NO PURCHASES FOUND')).toBeVisible();
   showOtherDevice = true;
   await page.getByRole('button', { name: 'Refresh history' }).click();
@@ -449,11 +449,11 @@ test('legacy demo tampering is ignored and unsupported showcase remains inspecta
   await expect(page.locator('.city-header__balance:not(.city-header__shards)')).toContainText('100');
   await expect(page.locator('body')).not.toContainText('999,999,999');
 
-  await page.getByRole('button', { name: 'Packs', exact: true }).click();
+  await page.getByRole('navigation', { name: 'Fade Market shelves' }).getByRole('button', { name: 'Showcase', exact: true }).click();
   const emerald = page.locator('.corner-product').filter({ hasText: 'Emerald City' });
   await emerald.getByRole('button', { name: 'View' }).click();
   const dialog = page.getByRole('dialog');
-  await expect(dialog).toContainText('Showcase preview only. This item is not currently for sale.');
+  await expect(dialog).toContainText('Showcase preview · not currently for sale.');
   await expect(dialog.getByRole('button', { name: /checkout|purchase|buy/i })).toHaveCount(0);
 });
 
@@ -515,7 +515,7 @@ test(`real Shop route stays wheel and keyboard reachable at ${viewport.width}x${
     await expect.poll(() => stage.evaluate(element =>
       Math.abs(element.scrollHeight - element.clientHeight - element.scrollTop))).toBeLessThanOrEqual(1);
 
-    const orders = page.getByText('Your Orders', { exact: true });
+    const orders = page.locator('.corner-store__orders > summary');
     expect(await reachable(orders)).toBe(true);
     await orders.click();
     const historyOrders = page.getByTestId('corner-history-order');
@@ -563,7 +563,7 @@ test(`real Shop route stays wheel and keyboard reachable at ${viewport.width}x${
     await expect(page).toHaveURL(/[?&]view=corner(?:&|$)/);
 
     const shelves = page.getByRole('navigation', { name: 'Fade Market shelves' });
-    for (const name of ['Clout', 'Packs', 'Card styles', 'Shards']) {
+    for (const name of ['Clout', 'Showcase', 'Reactions']) {
       await wheelTo(shelves.getByRole('button', { name, exact: true }));
       await shelves.getByRole('button', { name, exact: true }).click();
       await expect(shelves.getByRole('button', { name, exact: true })).toHaveAttribute('aria-pressed', 'true');

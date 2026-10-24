@@ -67,6 +67,7 @@ export function StoryTheater({ campaign, onSelectSeason, onContinue }: TheaterPr
     onPosterRail: boolean;
   } | null>(null);
   const suppressClickRef = useRef(false);
+  const browsed = useRef(false);
   const suppressResetRef = useRef<number | null>(null);
 
   const { containerRef: popcornContainerRef, spawnParticles } = usePopcornParticles();
@@ -89,6 +90,7 @@ export function StoryTheater({ campaign, onSelectSeason, onContinue }: TheaterPr
     season.chapterIds.includes(recommendedNode?.chapterId ?? ''),
   );
 
+  const destinationChapter = campaign.chapters.find(chapter => chapter.id === recommendedNode?.chapterId);
   const initialSeason = recommendedSeason ?? seasons.find((season) => season.status !== 'locked') ?? seasons[0];
   const [selectedId, setSelectedId] = useState(initialSeason?.id ?? '');
   const selected = seasons.find((season) => season.id === selectedId) ?? initialSeason;
@@ -104,7 +106,31 @@ export function StoryTheater({ campaign, onSelectSeason, onContinue }: TheaterPr
     if (suppressResetRef.current !== null) window.clearTimeout(suppressResetRef.current);
   }, []);
 
+  // Keep the current presentation centered while initial fonts/layout settle.
+  // Any browsing gesture permanently releases this initial positioning aid.
+  useEffect(() => {
+    const rail = posterRailRef.current;
+    const poster = posterRefs.current[initialSeason?.id ?? ''];
+    if (!rail || !poster || browsed.current) return;
+    let frame = 0, disposed = false;
+    const center = () => {
+      if (disposed || browsed.current) return;
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => {
+        if (disposed || browsed.current || !rail.clientWidth || !poster.offsetWidth) return;
+        const bounds = rail.getBoundingClientRect(), target = poster.getBoundingClientRect();
+        rail.scrollTo({ left: rail.scrollLeft + target.left + target.width / 2 - bounds.left - bounds.width / 2, behavior: 'instant' });
+      });
+    };
+    const observer = new ResizeObserver(center);
+    observer.observe(rail); observer.observe(poster);
+    void document.fonts.ready.then(center);
+    center();
+    return () => { disposed = true; cancelAnimationFrame(frame); observer.disconnect(); };
+  }, [initialSeason?.id]);
+
   const selectSeason = (seasonId: string, focus = false, openImmediately = false) => {
+    browsed.current = true;
     setSelectedId(seasonId);
 
     const season = seasons.find((item) => item.id === seasonId);
@@ -159,6 +185,7 @@ export function StoryTheater({ campaign, onSelectSeason, onContinue }: TheaterPr
       onPointerDownCapture={(event) => {
         handlePointerMove(event);
         const target = event.target as Element;
+        if (target.closest('.theater-posters')) browsed.current = true;
         dragRef.current = {
           pointerId: event.pointerId,
           x: event.clientX,
@@ -257,7 +284,7 @@ export function StoryTheater({ campaign, onSelectSeason, onContinue }: TheaterPr
             );
           })}
 
-          <div className="theater-posters" ref={posterRailRef} aria-label="Story presentations">
+          <div className="theater-posters" ref={posterRailRef} aria-label="Story presentations" onWheel={() => { browsed.current = true; }}>
             {seasons.map((season, index) => {
               const isSelected = season.id === selected?.id;
               return (
@@ -266,6 +293,7 @@ export function StoryTheater({ campaign, onSelectSeason, onContinue }: TheaterPr
                   ref={(node) => { posterRefs.current[season.id] = node; }}
                   season={season}
                   isSelected={isSelected}
+                  isCurrent={season.id === recommendedSeason?.id}
                   onFocus={() => selectSeason(season.id)}
                   onKeyDown={(event) => handlePosterKeys(event, index)}
                   onSelect={() => {
@@ -310,8 +338,9 @@ export function StoryTheater({ campaign, onSelectSeason, onContinue }: TheaterPr
             data-testid="button-continue-story"
           >
             <span>
-              <Play aria-hidden="true" fill="currentColor" /> Continue Story
+              <Play aria-hidden="true" fill="currentColor" /> {recommendedNode ? 'Continue Story' : 'Story complete'}
             </span>
+            {recommendedNode && <small className="theater-continue-destination"><b>{destinationChapter?.title ?? recommendedSeason?.title}</b><span>{recommendedNode.title}</span></small>}
           </button>
         </div>
       </div>

@@ -19,9 +19,6 @@ import {
   BOSS_ROUNDS,
   bossBlastPreview,
   bossCardCost,
-  computeHandsOverdrive,
-  computeElementalOverdrivePerk,
-  HANDS_OVERDRIVE_TIERS,
   type BossAction,
   type BossStatus,
   type BossBlast,
@@ -29,8 +26,7 @@ import {
   type BossTier,
   type BossRaidMode,
 } from "@workspace/squabblemon-engine/bossRaid";
-import { styleSetFor } from "@workspace/squabblemon-engine/cosmetics";
-import { KUMITE_LINEUP_REWARDS, catalogCardByEngineId, catalogCardById, getCardImage } from "../../data";
+import { KUMITE_LINEUP_REWARDS, getCardImage } from "../../data";
 import {
   getEffectiveCardPower,
   getMatchWinner,
@@ -39,10 +35,13 @@ import {
 } from "../../gameEngine";
 import { CardView } from "../CardView";
 import { CardInspector } from "../CardInspector";
+import { GameGlyph } from "../venue/GameGlyph";
 import { getAssetUrl } from "../../lib/assets";
 import {
   POLICE_ENTRANCE_MS,
   policeRevealDuration,
+  raidIdentity,
+  raidBankedRewards,
 } from "./bossRaidPresentation";
 import { BossRaidRoundBlast } from "./BossRaidRoundBlast";
 import { BossRaidTargetLine } from "./BossRaidTargetLine";
@@ -50,10 +49,14 @@ import { BossIdleSprite } from "./BossIdleSprite";
 import "../../styles/boss-raid.css";
 import "../../styles/boss-raid-design.css";
 import "../battle-board.css";
+import "../../styles/reward-street-file.css";
+import "../../styles/boss-raid-cinematic.css";
 export const bossArt = (name: string) =>
   getAssetUrl(`assets/boss-raid/${name}.webp`);
-function RaidFormationDialog({ lane, owner, cards, round, onClose, onInspect }: {
+function RaidFormationDialog({ lane, laneName, opposition, owner, cards, round, onClose, onInspect }: {
   lane: Lane;
+  laneName: string;
+  opposition: string;
   owner: "player" | "cpu";
   cards: CardInstance[];
   round: number;
@@ -72,14 +75,14 @@ function RaidFormationDialog({ lane, owner, cards, round, onClose, onInspect }: 
       if (opener?.isConnected) opener.focus({ preventScroll: true });
     };
   }, []);
-  const side = owner === "cpu" ? "Police" : "Your crew";
+  const side = owner === "cpu" ? opposition : "Your crew";
   return createPortal(
     <dialog ref={dialog} className="raid-formation-dialog"
       aria-labelledby={titleId} aria-describedby={descriptionId}
       onCancel={onClose}
       onClick={(event) => { if (event.target === event.currentTarget) onClose(); }}>
       <header className="raid-formation-header">
-        <div><small>{["Checkpoint", "Barricade", "Lockup"][lane]}</small><h2 id={titleId}>{side} · {cards.length}</h2></div>
+        <div><small>{laneName}</small><h2 id={titleId}>{side} · {cards.length}</h2></div>
         <button type="button" onClick={onClose} aria-label="Close formation">×</button>
       </header>
       <div className="raid-formation-content">
@@ -131,7 +134,9 @@ export function BossRaidView({
     activeMode: BossRaidMode = mode ?? run.mode ?? "precinct",
     form = bossFormForMode(run.bossTier, activeMode),
     kumiteForm = KUMITE_BOSS_FORMS[run.bossTier - 1],
-    campaign = status.campaign;
+    campaign = status.campaign,
+    identity = raidIdentity(activeMode, run.bossTier),
+    banked = raidBankedRewards(status, activeMode);
   const [resultsDismissed, setResultsDismissed] = useState(false);
   const [formation, setFormation] = useState<{ lane: Lane; owner: "player" | "cpu" } | null>(null);
   const arenaRef = useRef<HTMLDivElement>(null);
@@ -270,36 +275,9 @@ export function BossRaidView({
     run.phase === "active" && !blast ? Math.min(displayedHp, preview.total) : 0;
   const isLethalProjection = projectedLoss >= displayedHp && displayedHp > 0;
   const totalBoardHands = preview.hands[0] + preview.hands[1] + preview.hands[2];
-  const overdrive = computeHandsOverdrive(totalBoardHands);
-  const leadBoardCard = useMemo(() => {
-    const playerCards = shownMatch.boards.flat().filter((c) => c.owner === "player" && !c.hazard);
-    const sorted = [...playerCards].sort((a, b) => getEffectiveCardPower(b) - getEffectiveCardPower(a));
-    for (const candidate of sorted) {
-      const cat = catalogCardByEngineId[candidate.cardId] ?? catalogCardById[candidate.cardId];
-      if (cat && styleSetFor(cat.catalogId)?.banner) {
-        return {
-          name: cat.name,
-          catalogId: cat.catalogId,
-          ability: candidate.ability,
-          element: candidate.type ?? "Air",
-          power: getEffectiveCardPower(candidate),
-          banner: styleSetFor(cat.catalogId)!.banner!,
-        };
-      }
-    }
-    return {
-      name: "P. Tang",
-      catalogId: "p-tang",
-      ability: "Belt Check",
-      element: "Air",
-      power: 12,
-      banner: styleSetFor("p-tang")?.banner ?? "assets/cosmetics/p-tang/banner-v3.webp",
-    };
-  }, [shownMatch.boards]);
-  const elementalPerk = computeElementalOverdrivePerk(leadBoardCard.element);
   return (
     <main
-      className="boss-raid raid-v2 raid-v3 raid-combat-layout"
+      className="boss-raid raid-v2 raid-v3 raid-combat-layout raid-cinematic"
       aria-label={activeMode === "kumite" ? "Kumite Dojo Raid battle" : "Punch on Patrol battle"}
       data-testid="boss-raid-stage"
       data-raid-mode={activeMode}
@@ -355,6 +333,19 @@ export function BossRaidView({
         </button>
       </header>
       <div className="raid-arena" ref={arenaRef}>
+        <div className="raid-boss-scene" aria-hidden="true" data-hit={!!blast?.total && !policeRevealing}
+          data-defeated={run.hp === 0} data-boss-phase={bossPhase}>
+          <div className="raid-boss-figure" data-testid="raid-boss-figure">
+            {activeMode === "kumite" ? (
+              <img className="raid-scene-portrait" src={getCardImage(kumiteForm.fighterId)} alt="" draggable={false} />
+            ) : (
+              <BossIdleSprite asset={form.art} name={identity.title}
+                paused={modal || resultsOpen || run.hp === 0} reduced={reducedMotion} />
+            )}
+            <span className="raid-boss-impact-anchor" />
+          </div>
+          <span className="raid-scene-ground" />
+        </div>
         {card && selectedLane !== null && targets[selectedLane] && (
           <BossRaidTargetLine
             instanceId={card.instanceId}
@@ -372,63 +363,17 @@ export function BossRaidView({
           </span>
           <div className="raid-boss-title">
             <div className="raid-boss-title__eyebrow-row">
-              <button onClick={(e) => open(e, () => setForms(true))}>
+              <button className="raid-boss-inspect" onClick={(e) => open(e, () => setForms(true))}
+                aria-label={activeMode === "kumite" ? "Inspect Kumite Grandmaster tiers" : "Inspect Officer Oink tiers"}>
                 TIER {run.bossTier} / 5 · {form.name}
               </button>
               {(bossPhase === "bloodied" || bossPhase === "critical") && (
                 <span className="raid-phase-badge" data-phase={bossPhase}>
-                  {bossPhase === "critical" ? "CRITICAL · <25% HP" : "ENRAGED · <50% HP"}
+                  {bossPhase === "critical" ? "CRITICAL · <25% HP" : "WOUNDED · <50% HP"}
                 </span>
               )}
             </div>
-            <h1>{activeMode === "kumite" ? kumiteForm.bossTitle : "OFFICER OINK"}</h1>
-          </div>
-          <div
-            className="raid-boss-counter raid-damage-counter"
-            aria-label={`Today's damage: ${displayedDamage}`}
-          >
-            <b>−{displayedDamage}</b>
-            <small>DAMAGE</small>
-          </div>
-          <div
-            className="raid-boss-counter raid-deck-counter"
-            aria-label={`Police deck: ${Math.max(0, run.match.cpuCardIds.length - run.match.cpuDrawIndex)} cards remaining, ${run.match.cpuHand.length} in hand`}
-          >
-            <b>
-              {Math.max(
-                0,
-                run.match.cpuCardIds.length - run.match.cpuDrawIndex,
-              )}
-            </b>
-            <img
-              src={getAssetUrl("assets/boss-raid/precinct-cardback.svg")}
-              alt=""
-            />
-            <small>TO DRAW</small>
-          </div>
-          <div className="raid-boss-world">
-            <span className="raid-siren left" />
-            <span className="raid-siren right" />
-            <button
-              className="raid-boss-inspect"
-              onClick={(e) => open(e, () => setForms(true))}
-              aria-label={activeMode === "kumite" ? "Inspect Kumite Grandmaster tiers" : "Inspect Officer Oink tiers"}
-            >
-              {activeMode === "kumite" ? (
-                <img
-                  className="raid-kumite-boss-portrait"
-                  src={getCardImage(kumiteForm.fighterId)}
-                  alt={`${kumiteForm.bossTitle}, ${kumiteForm.name}`}
-                />
-              ) : (
-                <BossIdleSprite
-                  asset={form.art}
-                  name={`Officer Oink, ${form.name}`}
-                  paused={modal || resultsOpen || run.hp === 0}
-                  reduced={reducedMotion}
-                />
-              )}
-            </button>
+            <h1>{identity.title}</h1>
           </div>
           <div
             className="raid-hp-wrap"
@@ -492,50 +437,13 @@ export function BossRaidView({
                 </span>
               )}
             </div>
-            <div className="raid-score-tiers" aria-label="Daily damage reward milestones">
-              {BOSS_TIERS.map((t) => {
-                const earned = displayedDamage >= t.score;
-                const projected = !earned && displayedDamage + preview.total >= t.score;
-                return (
-                  <span
-                    key={t.score}
-                    className="raid-score-tier-pip"
-                    data-earned={earned}
-                    data-projected={projected}
-                  >
-                    <b>{t.score} DMG</b>
-                    <small>{t.score === 50 ? "★ KUMITE WIN" : `+${t.packTickets || t.softCurrency} ${t.packTickets ? "TIX" : "CLOUT"}`}</small>
-                  </span>
-                );
-              })}
-            </div>
-            <div className="raid-overdrive-bar" data-overdrive-tier={overdrive.tier} aria-label={`Hands Overdrive: ${totalBoardHands} total Hands, ${overdrive.callout}`}>
-              <span className="raid-overdrive-bar__status">
-                <b>⚡ {totalBoardHands} HANDS</b>
-                <small>{overdrive.tier > 0 ? `${overdrive.callout} (+${overdrive.bonusPct}% POWER)` : overdrive.callout}</small>
-              </span>
-              <div className="raid-overdrive-bar__pips">
-                {HANDS_OVERDRIVE_TIERS.map((t) => (
-                  <span key={t.tier} className="raid-overdrive-pip" data-active={totalBoardHands >= t.minHands}>
-                    {t.minHands}H · +{t.bonusPct}%
-                  </span>
-                ))}
-              </div>
+            <div className="raid-crew-pressure" aria-label={`${totalBoardHands} crew Hands; ${displayedDamage} damage banked`}>
+              <span><b>{totalBoardHands}</b> CREW HANDS</span>
+              <span><b>−{displayedDamage}</b> BANKED</span>
+              <span>{Math.max(0, run.match.cpuCardIds.length - run.match.cpuDrawIndex)} TO DRAW</span>
             </div>
           </div>
         </section>
-        {overdrive.tier > 0 && (
-          <aside className="raid-overdrive-cutin" data-tier={overdrive.tier} aria-label={`${leadBoardCard.name} Overdrive Power-Up Active`}>
-            <img className="raid-overdrive-cutin__banner" src={getAssetUrl(leadBoardCard.banner)} alt={`${leadBoardCard.name} signature banner`} />
-            <div className="raid-overdrive-cutin__copy">
-              <span>{overdrive.callout}</span>
-              <strong>{leadBoardCard.name.toUpperCase()} · {leadBoardCard.ability.toUpperCase()}</strong>
-              <small className="raid-overdrive-perk" style={{ color: elementalPerk.accent }}>
-                {elementalPerk.element.toUpperCase()} PERK · {elementalPerk.perkName} (+{overdrive.bonusPct}%)
-              </small>
-            </div>
-          </aside>
-        )}
         <div className="raid-directive" aria-live="polite">
           {error ? (
             <div role="alert">
@@ -545,7 +453,7 @@ export function BossRaidView({
           ) : blast ? (
             <strong>
               {policeRevealing
-                ? `POLICE TURN · ${step ? blast.policePlays[step - 1].name : blast.policePlays.length ? "DEPLOYING…" : "PASSED"}`
+                ? `${identity.opposition.toUpperCase()} TURN · ${step ? blast.policePlays[step - 1].name : blast.policePlays.length ? "DEPLOYING…" : "PASSED"}`
                 : `ROUND ${blast.round} · ${blast.winners.filter((w) => w === "player").length} LANES WON · ${blast.total ? `−${blast.total} HP` : "BLOCKED"}`}
             </strong>
           ) : run.phase !== "active" ? (
@@ -554,7 +462,7 @@ export function BossRaidView({
                 ? "TIER DOWN."
                 : run.phase === "retired"
                   ? "ATTACK ENDED. DAMAGE SAVED."
-                  : `${getMatchWinner(run.match) === "player" ? "MATCH WON" : getMatchWinner(run.match) === "cpu" ? "POLICE WON" : "MATCH DRAWN"}.`}
+                  : `${getMatchWinner(run.match) === "player" ? "MATCH WON" : getMatchWinner(run.match) === "cpu" ? `${identity.opposition.toUpperCase()} WON` : "MATCH DRAWN"}.`}
             </strong>
           ) : (
             <>
@@ -563,7 +471,7 @@ export function BossRaidView({
                 {card
                   ? selectedLane === null
                     ? "Choose a highlighted lane below."
-                    : `Deploy to ${["Checkpoint", "Barricade", "Lockup"][selectedLane]}.`
+                    : `Deploy to ${identity.lanes[selectedLane]}.`
                   : activeMode === "kumite"
                     ? `Conquer the Dojo lanes. Round results strike ${kumiteForm.bossTitle}.`
                     : "Beat the police lanes. Round results attack Oink."}
@@ -602,8 +510,7 @@ export function BossRaidView({
             </div>
             <div className="raid-entrance-copy">
               <small>
-                POLICE DEPLOY ·{" "}
-                {["CHECKPOINT", "BARRICADE", "LOCKUP"][entrance.lane]}
+                {identity.opposition.toUpperCase()} DEPLOY · {identity.lanes[entrance.lane].toUpperCase()}
               </small>
               <h2>{entrance.name}</h2>
               <p>{entranceCard.effect.split(".")[0]}.</p>
@@ -616,11 +523,11 @@ export function BossRaidView({
                 (c) => c.owner === "player",
               ),
               enemy = shownMatch.boards[lane].filter((c) => c.owner === "cpu");
-            const laneName = ["Checkpoint", "Barricade", "Lockup"][lane];
+            const laneName = identity.lanes[lane];
             const laneResult = preview.winners[lane] === "player"
-              ? "You lead" : preview.winners[lane] === "cpu" ? "Police lead" : "Tied";
+              ? "You lead" : preview.winners[lane] === "cpu" ? `${identity.opposition} leads` : "Tied";
             const laneDescription = [
-              `${laneName}. Police ${preview.policeHands[lane]} Hands. You ${preview.hands[lane]} Hands. ${laneResult}.`,
+              `${laneName}. ${identity.opposition} ${preview.policeHands[lane]} Hands. You ${preview.hands[lane]} Hands. ${laneResult}.`,
               blast && !policeRevealing ? `${blast.damage[lane]} damage to the boss.` : "",
               card ? targets[lane]
                 ? `Select to deploy ${card.name} for ${bossCardCost(run, card, lane, squabble, investment)} Motion.${selectedLane === lane ? " Selected." : ""}`
@@ -639,7 +546,7 @@ export function BossRaidView({
                 <div className="raid-formation">
                 <div className="raid-police" role="group" data-count={enemy.length} data-overflow={enemy.length > 4}
                   tabIndex={enemy.length > 4 ? 0 : undefined}
-                  aria-label={`Police in lane ${lane + 1}: ${enemy.length} cards`}>
+                  aria-label={`${identity.opposition} in lane ${lane + 1}: ${enemy.length} cards`}>
                   {enemy.map((c) => {
                     const npc = BOSS_NPCS[c.cardId as BossNpcId];
                     return npc ? (
@@ -694,7 +601,7 @@ export function BossRaidView({
                 </div>
                 <div className="raid-formation-footer">
                   {enemy.length > 4 && <button type="button" className="raid-formation-expand"
-                    aria-label={`View all ${enemy.length} police cards in ${laneName}`} aria-haspopup="dialog"
+                    aria-label={`View all ${enemy.length} ${identity.opposition.toLowerCase()} cards in ${laneName}`} aria-haspopup="dialog"
                     onClick={(event) => { event.currentTarget.focus({ preventScroll: true }); setFormation({ lane, owner: "cpu" }); }}>
                     <span aria-hidden="true">↗</span> View {enemy.length}
                   </button>}
@@ -709,15 +616,13 @@ export function BossRaidView({
                   onClick={() => setSelectedLane(lane)}
                 >
                   <h3>
-                    {(activeMode === "kumite"
-                      ? ["WEST DOJO", "CENTER RING", "EAST DOJO"]
-                      : ["CHECKPOINT", "BARRICADE", "LOCKUP"])[lane]}
+                    {laneName.toUpperCase()}
                   </h3>
                   <div>
                     <b className="raid-police-score">
                       {preview.policeHands[lane]}
                     </b>
-                    <span>{activeMode === "kumite" ? "DOJO" : "POLICE"}</span>
+                    <span>{activeMode === "kumite" ? "OPPS" : "POLICE"}</span>
                     <strong>{preview.hands[lane]}</strong>
                     <span>YOU</span>
                   </div>
@@ -947,8 +852,11 @@ export function BossRaidView({
         <Dialog.Portal>
           <Dialog.Overlay className="raid-modal-backdrop raid-results-backdrop" />
           <Dialog.Content
-            className="raid-modal raid-results-popup"
-            style={{backgroundImage: `linear-gradient(180deg, #06132355, #061323cc), url("${getAssetUrl("assets/boss-raid/attack-complete-bg.webp")}")`}}
+            className="raid-modal raid-results-popup reward-street-file"
+            style={{
+              "--reward-file-scene": `url("${getAssetUrl("assets/selection/underpass.webp")}")`,
+              "--reward-file-folder": `url("${getAssetUrl("assets/selection/dossier.webp")}")`,
+            } as CSSProperties}
             onCloseAutoFocus={(event) => {
               event.preventDefault();
               arenaRef.current
@@ -957,43 +865,56 @@ export function BossRaidView({
             }}
             aria-describedby="raid-results-description"
           >
-            <img
-              className="raid-results-emblem"
-              src={getAssetUrl("assets/boss-raid/attack-complete-seal.svg")}
-              alt=""
-            />
-            <small>PUNCH ON PATROL · ATTACK COMPLETE</small>
+            <div className="reward-street-file__paper raid-results-paper">
+            <div className="raid-results-record">
+            <span className="reward-street-file__stamp">{run.hp === 0 ? "TIER CLEARED" : "DAMAGE SAVED"}</span>
+            <small className="raid-results-case">{identity.operation} · ATTACK {campaign.attacks}</small>
             <Dialog.Title>
               {run.hp === 0
-                ? "PRECINCT DOWN"
+                ? activeMode === "kumite" ? "MASTER DEFEATED" : "PRECINCT DOWN"
                 : run.phase === "retired"
                   ? "DAMAGE BANKED"
                   : getMatchWinner(run.match) === "player"
                     ? "THE BLOCK HIT BACK"
                     : "KEEP APPLYING PRESSURE"}
             </Dialog.Title>
-            <strong className="raid-results-damage">
-              −{run.score}
-              <span>BOSS DAMAGE</span>
-            </strong>
+            <div className="raid-results-takedown">
+              <figure className="raid-results-evidence">
+                <img src={activeMode === "kumite" ? getCardImage(kumiteForm.fighterId) : bossArt(form.art)} alt="" />
+                <figcaption>{identity.title} · TIER {run.bossTier}</figcaption>
+              </figure>
+              <strong className="raid-results-damage">
+                −{run.score}
+                <span>BOSS DAMAGE</span>
+              </strong>
+            </div>
+            </div>
+            <div className="raid-results-details">
             <Dialog.Description id="raid-results-description">
               {run.hp === 0
-                ? "You broke this tier. The next precinct is waiting."
-                : `${run.hp} HP left. Your damage stays on Oink—bring the crew back tomorrow.`}
+                ? status.campaign.completed ? "All five tiers defeated. Your campaign rewards are saved."
+                  : `Tier ${run.bossTier} cleared. Tier ${campaign.tier} opens with your next daily attack.`
+                : `${run.hp} HP left. Your damage stays on ${identity.title}—bring the crew back tomorrow.`}
             </Dialog.Description>
-            <div className="raid-results-reward">
-              <b>+{status.earned.packTickets}</b> TICKETS BANKED
+            <div className="raid-results-reward reward-street-file__loot" aria-label="Rewards banked by this attack">
+              <span><GameGlyph name="cloutStack" /><b>+{banked.softCurrency}</b><small>CLOUT</small></span>
+              <span><GameGlyph name="ticket" /><b>+{banked.packTickets}</b><small>TICKETS</small></span>
+              <span><GameGlyph name="shards" /><b>+{banked.styleShards}</b><small>STYLE SHARDS</small></span>
             </div>
-            <button className="raid-fire" onClick={onExit}>
+            {banked.tierCleared && <p className="raid-results-tier-reward">Includes the confirmed tier-clear bonus.</p>}
+            {!campaign.completed && <p className="raid-results-next">Next attack: {new Date(status.resetsAt).toLocaleString([], { weekday: "short", hour: "numeric", minute: "2-digit" })}</p>}
+            <button className="raid-fire reward-street-file__action" onClick={onExit}>
               BACK TO FADECADE →
             </button>
             <Dialog.Close className="raid-results-inspect">
               Review battlefield
             </Dialog.Close>
+            </div>
+            </div>
           </Dialog.Content>
         </Dialog.Portal>
       </Dialog.Root>
-      {formation && <RaidFormationDialog lane={formation.lane} owner={formation.owner}
+      {formation && <RaidFormationDialog lane={formation.lane} laneName={identity.lanes[formation.lane]} opposition={identity.opposition} owner={formation.owner}
         cards={shownMatch.boards[formation.lane].filter((fighter) => fighter.owner === formation.owner)}
         round={shownMatch.round} onClose={() => setFormation(null)} onInspect={setIntel} />}
       {intel && <CardInspector card={intel} match={run.match} onClose={close} />}
@@ -1018,7 +939,7 @@ export function BossRaidView({
                 (retire
                   ? "End daily attack"
                   : forms
-                    ? "Officer Oink tiers"
+                    ? `${identity.title} tiers`
                     : "How to fight")}
             </Dialog.Title>
             <button
@@ -1064,7 +985,7 @@ export function BossRaidView({
                       <p>
                         {f.hp} HP · Hands ×{f.multiplier}
                       </p>
-                      <p>{f.pressure}</p>
+                      <p>{activeMode === "kumite" ? "Contest lanes, break armor, and keep your crew standing." : f.pressure}</p>
                       <b>{f.reward.packTickets} tickets + Kumite Title Credit</b>
                     </article>
                   ))}
@@ -1085,17 +1006,17 @@ export function BossRaidView({
               </>
             ) : (
               <>
-                <h2>PUNCH ON PATROL</h2>
+                <h2>{identity.operation}</h2>
                 <p>
-                  Play a six-round match against a shuffled ten-card police
-                  deck. The police draw cards, spend Motion and contest your
-                  lanes. After both turns, native abilities resolve and lane
-                  results fire at Oink at ×{form.multiplier} damage.
+                  Play a six-round match against a shuffled ten-card opponent
+                  deck. Opponents draw cards, spend Motion and contest your
+                  lanes. After both turns, abilities resolve and lane
+                  results strike {identity.title} at ×{form.multiplier} damage.
                 </p>
                 <p>
                   Each surviving character supplies 2 blast charge. Winning
                   lanes add full Hands, ties add half and lost lanes add a
-                  quarter. Police armor absorbs the Hands bonus; charge still
+                  quarter. Opponent armor absorbs the Hands bonus; charge still
                   gets through. All charge is multiplied by this tier's blast
                   strength.
                 </p>
@@ -1105,9 +1026,27 @@ export function BossRaidView({
                   pace. Defeat all five forms.
                 </p>
                 <p>
-                  Silence, freeze and protection beat police pressure. Tap
-                  officers to read their counters.
+                  Silence, freeze and protection counter opponent pressure. Tap
+                  fighters to read their abilities.
                 </p>
+                <h3>DAILY DAMAGE REWARDS</h3>
+            <div className="raid-score-tiers" aria-label="Daily damage reward milestones">
+              {BOSS_TIERS.map((t) => {
+                const earned = displayedDamage >= t.score;
+                const projected = !earned && displayedDamage + preview.total >= t.score;
+                return (
+                  <span
+                    key={t.score}
+                    className="raid-score-tier-pip"
+                    data-earned={earned}
+                    data-projected={projected}
+                  >
+                    <b>{t.score} DMG</b>
+                    <small>{t.score === 50 ? "★ KUMITE WIN" : `+${t.packTickets || t.softCurrency} ${t.packTickets ? "TIX" : "CLOUT"}`}</small>
+                  </span>
+                );
+              })}
+            </div>
                 <h3>THIS TIER'S BOUNTY</h3>
                 <p>
                   {form.reward.softCurrency} Clout · {form.reward.packTickets}{" "}

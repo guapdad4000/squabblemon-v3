@@ -130,7 +130,20 @@
     "test:deck-swipe": "node e2e/verify-deck-swipe.mjs",
     "test:battle-desktop-lanes": "node e2e/verify-battle-desktop-lanes.mjs",
     "test:safehouse-refinement": "node --import tsx e2e/verify-safehouse-refinement.mjs",
-    "test:safehouse-render-budget": "node e2e/verify-safehouse-render-budget.mjs"
+    "test:safehouse-render-budget": "node e2e/verify-safehouse-render-budget.mjs",
+    "test:daily-arrival": "node --import tsx e2e/verify-daily-arrival.mjs",
+    "test:weekly-banners": "node e2e/verify-weekly-banners.mjs",
+    "test:story-clarity": "node e2e/verify-story-clarity.mjs",
+    "test:boss-cinematic": "node e2e/verify-boss-cinematic.mjs",
+    "test:first-wave-presentation": "node --import ../../scripts/battle-test-css.mjs --import tsx --test src/components/AccountCheckInCalendar.test.tsx src/components/fadecade/bossRaidPresentation.test.ts src/components/MonthlyLoginTrack.test.tsx",
+    "test:popup-system": "node e2e/verify-popup-system.mjs",
+    "test:bag-arrival": "node e2e/verify-bag-arrival.mjs",
+    "test:monthly-login": "node e2e/verify-monthly-login.mjs",
+    "test:monthly-daily-arrival": "node --import tsx e2e/verify-monthly-daily-arrival.mjs",
+    "test:ranked-clout": "node e2e/verify-ranked-clout.mjs",
+    "test:flex-pulls": "node e2e/verify-flex-pulls.mjs",
+    "test:shared-receipts": "node e2e/verify-shared-receipts.mjs",
+    "test:surrender-popup": "node e2e/verify-surrender-popup.mjs"
   },
   "devDependencies": {
     "@clerk/react": "^6.15.1",

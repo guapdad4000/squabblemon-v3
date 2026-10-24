@@ -43,7 +43,7 @@ const puzzleNode = storyContent.chapters
   .find((node) => node.puzzle && (!requestedPuzzle || node.id === requestedPuzzle));
 if (!puzzleNode) throw new Error('The real story registry has no puzzle node.');
 
-if (scenario === 'season-two') params.set('season', 'season-2');
+if (scenario === 'season-two' && !params.has('theater')) params.set('season', 'season-2');
 if (scenario === 'puzzle-dialogue' || scenario === 'puzzle' || scenario === 'puzzle-complete') params.set('node', puzzleNode.id);
 params.delete('scenario');
 
@@ -235,6 +235,7 @@ function createCampaign(): StoryCampaign {
 
 let bootstrap = createBootstrap();
 let campaign = createCampaign();
+Object.assign(window, { storyClarityFixture: { campaign: () => campaign } });
 const realFetch = window.fetch.bind(window);
 window.fetch = async (input, init) => {
   const request = input instanceof Request ? input : new Request(input, init);

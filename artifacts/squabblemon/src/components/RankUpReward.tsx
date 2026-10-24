@@ -1,3 +1,4 @@
+import { RankedMatchClout } from "./RankedMatchClout";
 import managerCinematic from "../assets/promotion/squabblehouse-openart-cinematic-v1.mp4";
 import managerPoster from "../assets/promotion/squabblehouse-manager-poster-v1.webp";
 import { canPlayOptionalBroadcast } from "../lib/optionalBroadcastMedia";
@@ -103,6 +104,7 @@ export function RankUpReward({
             </article>
           ))}
         </div>
+        <RankedMatchClout grant={rank.matchClout} />
         <button className="rank-promotion__continue" onClick={onDone}>
           KEEP MY SPOT <GameGlyph name="fight" />
         </button>

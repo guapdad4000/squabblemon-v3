@@ -1,0 +1,15 @@
+.bag-arrival{position:fixed;inset:0;z-index:120;pointer-events:none;isolation:isolate}
+.bag-arrival__receipt{position:absolute;right:max(16px,env(safe-area-inset-right));top:max(74px,calc(env(safe-area-inset-top) + 58px));width:min(280px,calc(100vw - 32px));padding:13px 18px 14px;color:#fff1cc;border:1px solid #c6aa67;border-left:4px solid #d7b86e;background:linear-gradient(90deg,#07271cee,#0a1d16dc),var(--bag-brick) center/cover;box-shadow:5px 7px 0 #0008,0 8px 30px #0007;animation:bag-arrival-in .22s ease-out both}
+.bag-arrival__heading{display:block;margin:0 0 7px;font:400 23px/1.2 var(--font-sign,'Blzee',sans-serif);letter-spacing:.03em}
+.bag-arrival__resource{display:flex;gap:10px;align-items:center;margin-top:5px;min-width:0}
+.bag-arrival__resource>.game-glyph{width:38px;height:38px;flex:0 0 38px}
+.bag-arrival__resource>.game-glyph img{width:100%;height:100%;object-fit:contain}
+.bag-arrival__resource strong{display:block;font:700 13px/1.3 var(--font-sans,sans-serif)}
+.bag-arrival__resource small{display:block;color:#d5d7c0;font:600 10px/1.6 var(--font-mono,monospace);font-variant-numeric:tabular-nums}
+.bag-arrival__flight{position:absolute;inset:0}
+.bag-arrival__flight>i{position:absolute;left:var(--flight-x);top:var(--flight-y);width:26px;height:26px;opacity:0;animation:bag-coin-home .85s cubic-bezier(.45,.02,.85,.55) calc(.25s + var(--coin-index) * .09s) both}
+.bag-arrival__flight .game-glyph,.bag-arrival__flight img{width:100%;height:100%;object-fit:contain}
+@keyframes bag-arrival-in{from{opacity:0;transform:translateY(-7px)}to{opacity:1;transform:translateY(0)}}
+@keyframes bag-coin-home{0%{opacity:0;transform:translate(-13px,0) scale(.7)}15%{opacity:1}75%{opacity:1}100%{opacity:0;transform:translate(calc(var(--flight-dx) - 13px),var(--flight-dy)) scale(.3)}}
+@media(prefers-reduced-motion:reduce){.bag-arrival__receipt{animation:none}.bag-arrival__flight{display:none}}
+.bag-arrival[data-reduced-motion=true] .bag-arrival__receipt{animation:none}.bag-arrival[data-reduced-motion=true] .bag-arrival__flight{display:none}

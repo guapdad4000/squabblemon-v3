@@ -1,5 +1,27 @@
 import { detectGPUQuality } from './gpu-quality.js';
 
+// Iframes do not inherit the parent game's native-interaction policy. These
+// handlers only cancel browser UI defaults; scene pointer/wheel events still flow.
+const nativeTextSelector = 'input, textarea, select, [contenteditable]:not([contenteditable="false"])';
+const nativeTarget = event => event.target instanceof Element ? event.target : event.target?.parentElement;
+const preserveNativeText = event => Boolean(nativeTarget(event)?.closest(nativeTextSelector));
+const sceneInteractionStyle = document.createElement('style');
+sceneInteractionStyle.textContent = `
+  html, body { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; cursor: default; }
+  img { -webkit-user-drag: none; -webkit-touch-callout: none; }
+  ${nativeTextSelector} { -webkit-user-select: text; user-select: text; -webkit-touch-callout: default; }
+  input, textarea, [contenteditable]:not([contenteditable="false"]) { cursor: text; }
+`;
+document.head.append(sceneInteractionStyle);
+const preventNativeSceneUI = event => {
+  if (!preserveNativeText(event)) event.preventDefault();
+};
+document.addEventListener('contextmenu', preventNativeSceneUI, true);
+document.addEventListener('selectstart', preventNativeSceneUI, true);
+document.addEventListener('dragstart', event => {
+  if (!preserveNativeText(event) && nativeTarget(event)?.closest('img')) event.preventDefault();
+}, true);
+
 const quality=await detectGPUQuality();
 if(quality.tier==='static'){
   const stage=document.querySelector('#stage, #webgl-container');

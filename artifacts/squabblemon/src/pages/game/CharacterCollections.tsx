@@ -16,9 +16,11 @@ import '../../styles/character-styles.css';
 import '../../styles/extras-studio.css';
 import '../../styles/style-hub.css';
 const PlayerMats = lazy(() => import('./PlayerMats').then(module => ({default: module.PlayerMats})));
+const FinishCounter = lazy(() => import('../../components/FinishCounter').then(module => ({default: module.FinishCounter})));
 
 export function CharacterCollections({ bootstrap }: { bootstrap: PlayerBootstrap }) {
-  const view = new URLSearchParams(useSearch()).get('view') === 'characters' ? 'characters' : 'mats';
+  const requestedView = new URLSearchParams(useSearch()).get('view');
+  const view = requestedView === 'characters' || requestedView === 'finishes' ? requestedView : 'mats';
   useExtrasNotificationsSeen(undefined, view === 'characters');
   const { notices } = useNotifications();
   const { profile } = bootstrap;
@@ -45,13 +47,14 @@ export function CharacterCollections({ bootstrap }: { bootstrap: PlayerBootstrap
     <header className="extras-hero style-hub__hero">
       <img className="extras-hero__art" src={getAssetUrl('assets/extras/stylist-studio.webp')} alt="" />
       <div className="extras-hero__copy"><p className="extras-eyebrow"><Scissors size={14}/> THE STYLIST</p><h1>YOUR <em>STYLE.</em></h1></div>
-      <details className="style-hub__wallet"><summary><GameGlyph name="shards"/><span><strong>{profile.styleShards.toLocaleString()}</strong> Universal</span><span aria-hidden="true">⌄</span></summary><StyleShardWallet wallet={profile}/></details>
+      {view !== 'finishes' && <details className="style-hub__wallet"><summary><GameGlyph name="shards"/><span><strong>{profile.styleShards.toLocaleString()}</strong> Universal</span><span aria-hidden="true">⌄</span></summary><StyleShardWallet wallet={profile}/></details>}
     </header>
     <nav className="style-categories" aria-label="Style categories">
       <Link href="/game/style?view=mats" className="style-category" aria-current={view==='mats'?'page':undefined}><PlayerMatImage src="assets/player-mats/v4/guap-illustration.webp" thumbnail eager/><span><strong>Player mats</strong><small>Battle backgrounds</small></span><span className="style-category__arrow" aria-hidden="true">↗</span></Link>
       <Link href="/game/style?view=characters" className="style-category" aria-current={view==='characters'?'page':undefined}><img src={getAssetUrl(sets[0]?.banner ?? 'assets/extras/stylist-studio.webp')} alt=""/><span><strong>Character styles</strong><small>Banners · decks · stickers</small></span><span className="style-category__arrow" aria-hidden="true">↗</span></Link>
+      <Link href="/game/style?view=finishes" className="style-category" aria-current={view==='finishes'?'page':undefined}><img src={getAssetUrl('assets/training/inmate-chrome-icon.webp')} alt=""/><span><strong>Card finishes</strong><small>Tagged · Chrome · Style Shards</small></span><span className="style-category__arrow" aria-hidden="true">↗</span></Link>
     </nav>
-    {view === 'mats' ? <Suspense fallback={<p className="style-hub__loading" role="status">Loading player mats…</p>}><PlayerMats bootstrap={bootstrap}/></Suspense> : <>
+    {view === 'finishes' ? <Suspense fallback={<p className="style-hub__loading" role="status">Loading card finishes…</p>}><FinishCounter key={profile.id} bootstrap={bootstrap}/></Suspense> : view === 'mats' ? <Suspense fallback={<p className="style-hub__loading" role="status">Loading player mats…</p>}><PlayerMats bootstrap={bootstrap}/></Suspense> : <>
     <section id="extras-collections" className="extras-collections" aria-label="Signature collections">
       <div className="extras-section-heading"><div><p className="extras-eyebrow">{String(visible.length).padStart(2,'0')} SERIES</p><h2>Signature <em>Collections</em></h2></div></div>
       <div className="style-library__tools extras-tools"><label><span>Find your character</span><div className="extras-search"><Search size={17}/><input type="search" aria-label="Search signature collections" placeholder="Who are you repping?" value={query} onChange={event => setQuery(event.target.value)}/></div></label><nav aria-label="Filter collections">{(['all','owned','Mythical','Legendary','Epic'] as const).map(value => <button type="button" key={value} aria-pressed={filter === value} onClick={() => setFilter(value)}>{value === 'all' ? 'All collections' : value === 'owned' ? 'My characters' : value === 'Legendary' ? 'Legendaries' : value === 'Epic' ? CARD_RARITY_DEFINITIONS.Epic.label : 'Mythicals'}</button>)}</nav></div>

@@ -2,8 +2,8 @@ import { Link } from 'wouter';
 import { DailyCloutPack, ItemDot } from '../../components/Notifications';
 import { ReactionShop } from '../../components/ReactionShop';
 import { useEffect, useRef, useState } from 'react';
-import { LayeredVenue } from '../../components/venue/LayeredVenue';
 import {
+  customFetch,
   type PlayerBootstrap,
   useGetPaymentCatalog,
   useCreatePaymentCheckout,
@@ -24,18 +24,25 @@ import { ShoppingBag, ArrowUpRight, RefreshCw, ArrowRight, XCircle, Clock, Loade
 import { getAssetUrl } from '../../lib/assets';
 import { CORNER_OFFERS, type StoreOffer, getOrCreatePendingCheckout, clearPendingCheckout, formatCurrency, isTerminalOrderStatus, isValidOrderId, orderStatusDetail, safeHttpsUrl, safeStripeCheckoutUrl } from '../../lib/cornerStore';
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from '../../components/ui/dialog';
+import { RewardFileAction } from '../../components/ui/game-popup';
+import { SHOP_OFFERS, MAX_DECK_SLOTS, planShopPurchase, type ShopRequest, type ShopReceipt } from '@workspace/squabblemon-engine/economy';
+import { clearShopRequest, readShopRequest, saveShopRequest } from '../../lib/shopJournal';
+import { shopPurchaseDestination } from '../../lib/shopDestination';
+import { revealProfileRewards } from '../../lib/rewardReceipts';
+import { playInteractionSound } from '../../lib/interactionAudio';
 import { AnimatedNumber } from '../../components/AnimatedNumber';
 import { loadFeedbackPreferences } from '../../battleFeedback';
 import { playVoiceLine, stopSoundEffect } from '../../lib/sfx';
 import '../../styles/ui-polish.css';
 import '../../styles/market-shelves.css';
+import '../../styles/corner-neon.css';
 import { useLocation, useSearch } from 'wouter';
 import { e2eAuthEnabled } from '../../lib/auth';
 import { appPath } from '../../lib/routing';
 import { useQueryClient } from '@tanstack/react-query';
 
 const MAX_STATUS_ATTEMPTS = 15;
-type MarketShelf = 'clout' | 'pack' | 'style' | 'shards' | 'reactions';
+type MarketShelf = 'clout' | 'pack' | 'reactions';
 
 type TaxAwareCatalog = {
   taxMode?: 'none' | 'automatic';
@@ -163,20 +170,20 @@ function OrderStatusModal({ orderId, bootstrap, checkoutEnabled, onClose }: { or
       setCopyMessage('Select and copy the secure link below, then paste it into your browser address bar.');
     }
   }
-  
+
   return (
     <Dialog open={true} onOpenChange={(open) => { if (!open) onClose(); }}>
-      <DialogContent data-testid="corner-order-status" className={`corner-checkout bg-black border-2 border-white/10 rounded-xl overflow-hidden p-0 max-w-sm ${order?.status === 'fulfilled' ? 'market-receipt-dialog' : ''}`}>
+      <DialogContent data-testid="corner-order-status" className={`corner-checkout game-popup reward-street-file bg-black border-2 border-white/10 rounded-xl overflow-hidden p-0 max-w-sm ${order?.status === 'fulfilled' ? 'market-receipt-dialog' : ''}`}>
         <div className="p-6">
           <DialogTitle className={order?.status === 'fulfilled' ? 'sr-only' : 'font-display italic uppercase text-2xl text-center mb-1'}>Order Status</DialogTitle>
           <DialogDescription className={order?.status === 'fulfilled' ? 'sr-only' : 'text-center font-sans text-sm text-white/60 mb-6'}>
             {order?.status === 'fulfilled' ? 'Your purchase is ready.' : terminal ? 'Order finalized.' : 'Checking your purchase...'}
           </DialogDescription>
-          
+
           {!validOrderId && <p role="alert" className="text-red-400 py-6 text-center">This purchase reference is invalid.</p>}
           {isLoading && <div className="py-8 flex flex-col items-center"><Loader2 size={32} className="animate-spin text-primary mb-4" /><p className="text-white/70">Contacting market...</p></div>}
-          {error && <div className="py-8 flex flex-col items-center"><AlertCircle size={32} className="text-red-500 mb-4" /><p role="alert" className="text-red-400 mb-4 text-center">{errorMessage(error, 'Could not retrieve this purchase.')}</p>{authExpired ? <a href="/sign-in" onClick={saveCurrentPathForSignIn} className="studio-action studio-action--gold text-sm no-underline">Sign in to check purchase</a> : <button onClick={() => { setAttempts(0); void refetch(); }} className="studio-action studio-action--gold text-sm">Check again</button>}</div>}
-          
+          {error && <div className="py-8 flex flex-col items-center"><AlertCircle size={32} className="text-red-500 mb-4" /><p role="alert" className="text-red-400 mb-4 text-center">{errorMessage(error, 'Could not retrieve this purchase.')}</p>{authExpired ? <a href="/sign-in" onClick={saveCurrentPathForSignIn} className="reward-street-file__action text-sm no-underline">Sign in to check purchase</a> : <button onClick={() => { setAttempts(0); void refetch(); }} className="reward-street-file__action text-sm">Check again</button>}</div>}
+
           {order && (
             <div className="flex flex-col gap-6">
               {order.status === 'fulfilled' ? <MarketPurchaseSuccess
@@ -187,7 +194,7 @@ function OrderStatusModal({ orderId, bootstrap, checkoutEnabled, onClose }: { or
               <div className="text-center">
                 <div className="mb-4 flex justify-center">
                    {order.status === 'failed' || order.status === 'refunded' || order.status === 'disputed' ? <XCircle size={48} className="text-red-500" /> :
-                   order.status === 'expired' ? <Clock size={48} className="text-yellow-500" /> : 
+                   order.status === 'expired' ? <Clock size={48} className="text-yellow-500" /> :
                    <Loader2 size={48} className="animate-spin text-blue-500" />}
                 </div>
                 <h3 className="font-display text-2xl uppercase italic tracking-wide">
@@ -199,7 +206,7 @@ function OrderStatusModal({ orderId, bootstrap, checkoutEnabled, onClose }: { or
               </div>
               )}
                {journalError && <p role="alert" className="text-red-400 text-sm">{journalError}</p>}
-              
+
               {order.status !== 'fulfilled' && <><div className="bg-white/5 p-3 rounded flex justify-between items-center border border-white/10">
                 <span className="text-white/50 font-mono text-[10px] uppercase tracking-widest">ID</span>
                 <span className="font-mono text-[10px] text-white/80 truncate max-w-[200px]">{order.id}</span>
@@ -211,7 +218,7 @@ function OrderStatusModal({ orderId, bootstrap, checkoutEnabled, onClose }: { or
               {order.status === 'pending' && resumeUrl && (
                 checkoutEnabled
                   ? <div className="space-y-3">
-                      <a href={resumeUrl} className="studio-action studio-action--gold flex justify-center no-underline">Resume Checkout</a>
+                      <a href={resumeUrl} className="reward-street-file__action flex justify-center no-underline">Resume Checkout</a>
                       <button type="button" onClick={() => void copyCheckoutLink()} className="studio-text-action w-full justify-center">
                         Copy secure checkout link
                       </button>
@@ -226,15 +233,15 @@ function OrderStatusModal({ orderId, bootstrap, checkoutEnabled, onClose }: { or
                       <p className="text-center text-xs text-white/50">If Preview opens a blank page, select this address and paste it into your browser.</p>
                       {copyMessage && <p role="status" className="text-center text-xs text-white/60">{copyMessage}</p>}
                     </div>
-                  : <button disabled className="studio-action studio-action--gold">Checkout unavailable</button>
+                  : <button disabled className="reward-street-file__action">Checkout unavailable</button>
               )}
-              
+
               <button className="studio-text-action w-full justify-center mt-2" onClick={onClose}>
                 {terminal ? 'Return to Market' : 'Check Later'}
               </button>
             </div>
           )}
-           {pollingPaused && !error && <div className="text-center"><p className="text-white/60 text-sm mb-3">Confirmation is taking longer than usual. The latest server status is still shown.</p><button className="studio-action studio-action--gold text-sm" onClick={() => { setAttempts(0); void refetch(); }}>Check again</button></div>}
+           {pollingPaused && !error && <div className="text-center"><p className="text-white/60 text-sm mb-3">Confirmation is taking longer than usual. The latest server status is still shown.</p><button className="reward-street-file__action text-sm" onClick={() => { setAttempts(0); void refetch(); }}>Check again</button></div>}
         </div>
       </DialogContent>
     </Dialog>
@@ -245,9 +252,9 @@ function PurchaseHistory({ checkoutEnabled, onInspect }: { checkoutEnabled: bool
   const [cursors, setCursors] = useState<string[]>([]);
   const currentCursor = cursors[cursors.length - 1] || undefined;
   const queryClient = useQueryClient();
-  
+
   const { data, isLoading, error, refetch } = useListPaymentOrders(
-    currentCursor ? { cursor: currentCursor } : undefined, 
+    currentCursor ? { cursor: currentCursor } : undefined,
     { query: { queryKey: getListPaymentOrdersQueryKey(currentCursor ? { cursor: currentCursor } : undefined), retry: false } }
   );
 
@@ -265,10 +272,10 @@ function PurchaseHistory({ checkoutEnabled, onInspect }: { checkoutEnabled: bool
           <RefreshCw size={14} />
         </button>
       </div>
-      
+
       {isLoading && <p className="text-white/40 text-xs font-mono">LOADING...</p>}
       {error && <div><p role="alert" className="text-red-400 text-xs font-mono mb-2">{errorMessage(error, 'COULD NOT LOAD ORDERS')}</p><button className="studio-text-action text-xs" onClick={refreshHistory}>Retry</button></div>}
-      
+
       {!isLoading && !error && data?.orders && data.orders.length === 0 && (
         <p className="text-white/40 text-xs font-mono">NO PURCHASES FOUND</p>
       )}
@@ -311,17 +318,17 @@ function PurchaseHistory({ checkoutEnabled, onInspect }: { checkoutEnabled: bool
           ))}
         </ul>
       )}
-      
+
       <div className="flex justify-between items-center">
-        <button 
-          disabled={cursors.length === 0} 
+        <button
+          disabled={cursors.length === 0}
           onClick={() => setCursors(cursors.slice(0, -1))}
           className="font-mono text-[10px] uppercase tracking-widest text-white/70 hover:text-white disabled:opacity-30 disabled:hover:text-white/70"
         >
           &larr; Prev
         </button>
-        <button 
-          disabled={!data?.nextCursor} 
+        <button
+          disabled={!data?.nextCursor}
           onClick={() => { if (data?.nextCursor) setCursors([...cursors, data.nextCursor]); }}
           className="font-mono text-[10px] uppercase tracking-widest text-white/70 hover:text-white disabled:opacity-30 disabled:hover:text-white/70"
         >
@@ -330,6 +337,103 @@ function PurchaseHistory({ checkoutEnabled, onInspect }: { checkoutEnabled: bool
       </div>
     </div>
   );
+}
+
+/** The shared account journal must never be overwritten by another shop surface. */
+function DeckSlotCounter({ bootstrap }: { bootstrap: PlayerBootstrap }) {
+  const { profile } = bootstrap;
+  const client = useQueryClient();
+  const lock = useRef(false), mounted = useRef(true);
+  useEffect(() => { mounted.current = true; return () => { mounted.current = false; }; }, []);
+  const tag = useRef<HTMLElement>(null);
+  const search = useSearch();
+  useEffect(() => {
+    if (new URLSearchParams(search).get('item') !== 'deck-slot') return;
+    const frame = requestAnimationFrame(() => tag.current?.scrollIntoView({ block: 'nearest' }));
+    return () => cancelAnimationFrame(frame);
+  }, [search]);
+  const [pending, setPending] = useState<ShopRequest | null>(() => readShopRequest(sessionStorage, profile.id));
+  const [working, setWorking] = useState(false);
+  const [receipt, setReceipt] = useState<ShopReceipt | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const offer = SHOP_OFFERS.find(item => item.id === 'deck-slot')!;
+  const foreign = pending && pending.itemId !== 'deck-slot' ? pending : null;
+  let quote: ReturnType<typeof planShopPurchase> | null = null;
+  let unavailable: string | null = null;
+  try { quote = planShopPurchase(profile, { itemId: 'deck-slot' }); }
+  catch (reason) { unavailable = (reason as Error).message; }
+
+  async function buy() {
+    if (lock.current) return;
+    // Read again at the action boundary: another shop may have saved a request.
+    const saved = readShopRequest(sessionStorage, profile.id);
+    if (saved && saved.itemId !== 'deck-slot') { setPending(saved); return; }
+    const recoverable = saved ?? pending;
+    if (recoverable && recoverable.itemId !== 'deck-slot') return;
+    if (!quote && !recoverable) return;
+    lock.current = true;
+    setWorking(true); setError(null); setReceipt(null);
+    let request: ShopRequest | undefined;
+    const clearMatchingRequest = () => {
+      if (request && readShopRequest(sessionStorage, profile.id)?.idempotencyKey === request.idempotencyKey) clearShopRequest(sessionStorage, profile.id);
+    };
+    try {
+      request = recoverable ?? { itemId: 'deck-slot', idempotencyKey: crypto.randomUUID() };
+      saveShopRequest(sessionStorage, profile.id, request);
+      setPending(request);
+      let result: { receipt: ShopReceipt; bootstrap: PlayerBootstrap };
+      if (e2eAuthEnabled && profile.id === 'e2e-player') {
+        const planned = planShopPurchase(profile, request);
+        result = { receipt: planned.receipt, bootstrap: { ...bootstrap, profile: { ...profile, ...planned.wallet } } };
+      } else result = await customFetch('/api/player/shop/purchases', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(request),
+      });
+      // A late reply must not restore the previous account or erase a newer purchase.
+      const key = getGetPlayerBootstrapQueryKey();
+      const accountIsCurrent = () => !client.getQueryData<PlayerBootstrap>(key)?.profile.id || client.getQueryData<PlayerBootstrap>(key)!.profile.id === profile.id;
+      if (!mounted.current || !accountIsCurrent()) return;
+      await client.cancelQueries({ queryKey: key });
+      if (!mounted.current || !accountIsCurrent()) return;
+      const currentRequest = readShopRequest(sessionStorage, profile.id);
+      if (currentRequest?.idempotencyKey !== request.idempotencyKey) {
+        setPending(currentRequest);
+        void client.invalidateQueries({ queryKey: key });
+        return;
+      }
+      client.setQueryData(key, result.bootstrap);
+      clearMatchingRequest();
+      setPending(readShopRequest(sessionStorage, profile.id)); setReceipt(result.receipt);
+      revealProfileRewards(bootstrap, result.bootstrap, request.idempotencyKey, 'Added to your bag', 'shop');
+      playInteractionSound('register');
+    } catch (reason) {
+      if (!mounted.current) return;
+      if (reason instanceof ApiError && [400, 409].includes(reason.status)) {
+        clearMatchingRequest(); setPending(readShopRequest(sessionStorage, profile.id));
+        setError(errorMessage(reason, reason.message));
+        void client.invalidateQueries({ queryKey: getGetPlayerBootstrapQueryKey() });
+      } else if (reason instanceof ApiError && reason.status === 401) {
+        setError('Sign back in, then recover this purchase. Your original request is kept so it cannot charge twice.');
+      } else setError('Purchase not confirmed. Retry this same purchase to recover it without paying twice.');
+    } finally { lock.current = false; if (mounted.current) setWorking(false); }
+  }
+
+  return <section ref={tag} className="corner-counter-service" id="deck-slot" aria-labelledby="corner-slot-title" data-testid="corner-deck-slot">
+    <img src={getAssetUrl('assets/training/inmate-gang-slot-icon.webp')} alt="" draggable={false} />
+    <div className="corner-counter-service__copy"><h2 id="corner-slot-title">Extra Gang Slot</h2>
+      <p>Save one more deck. <span>{profile.deckSlots} / {MAX_DECK_SLOTS} unlocked</span></p>
+    </div>
+    <div className="corner-counter-service__action">
+      {foreign ? <Link className="corner-counter-service__recover" href={shopPurchaseDestination(foreign)}>Recover pending purchase <ArrowUpRight size={16} aria-hidden="true" /></Link>
+        : <button type="button" disabled={working || (!quote && !pending)} onClick={() => void buy()}>
+          <strong>{quote?.receipt.cost ?? offer.price} <small>Clout</small></strong>
+          <span>{working ? 'Confirming…' : pending ? 'Recover purchase' : 'Add slot'} <ArrowUpRight size={16} aria-hidden="true" /></span>
+        </button>}
+    </div>
+    {foreign && <p className="corner-counter-service__message" role="status">Finish your pending purchase before adding a slot.</p>}
+    {!pending && unavailable && <p className="corner-counter-service__message">{unavailable}</p>}
+    {error && <p className="corner-counter-service__message" role="alert">{error}</p>}
+    {receipt && <p className="corner-counter-service__message" role="status"><strong>{receipt.summary}</strong> · Paid {receipt.cost} Clout</p>}
+  </section>;
 }
 
 export function CornerStore({ bootstrap }: { bootstrap: PlayerBootstrap }) {
@@ -342,7 +446,7 @@ export function CornerStore({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   const returnOrderId = searchParams.get('order');
   const shelf = searchParams.get('shelf');
   const department: MarketShelf = searchParams.get('notification')?.startsWith('daily:') ? 'clout'
-    : shelf === 'pack' || shelf === 'style' || shelf === 'shards' || shelf === 'reactions' ? shelf
+    : shelf === 'pack' || shelf === 'reactions' ? shelf
     : searchParams.get('view') === 'reactions' ? 'reactions' : 'clout';
   function selectDepartment(next: MarketShelf) {
     const params = new URLSearchParams(search);
@@ -350,6 +454,7 @@ export function CornerStore({ bootstrap }: { bootstrap: PlayerBootstrap }) {
     if (next === 'clout') params.delete('shelf');
     else params.set('shelf', next);
     params.delete('notification');
+    params.delete('item');
     setLocation(`/game/shop?${params}`);
   }
   const [selected, setSelected] = useState<StoreOffer | null>(null);
@@ -358,16 +463,16 @@ export function CornerStore({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   const [adultConfirmed, setAdultConfirmed] = useState(false);
   const [unitedStatesConfirmed, setUnitedStatesConfirmed] = useState(false);
   const [historyOpen, setHistoryOpen] = useState(false);
-  
+
   const lock = useRef(false);
   const welcomeVoice = useRef<HTMLAudioElement | null>(null);
-  
+
   const queryClient = useQueryClient();
   const { data: catalog, isLoading: catalogLoading, isFetching: catalogFetching, error: catalogError, refetch: refetchCatalog } = useGetPaymentCatalog({
     query: { queryKey: getGetPaymentCatalogQueryKey(), retry: false }
   });
   const createCheckout = useCreatePaymentCheckout();
-  
+
   const checkoutEnabled = !e2eAuthEnabled && !!catalog?.enabled && (catalog.mode === 'test' || catalog.mode === 'live');
 
   useEffect(() => {
@@ -378,14 +483,16 @@ export function CornerStore({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   function choose(offer: StoreOffer) {
     setAdultConfirmed(false);
     setUnitedStatesConfirmed(false);
-    setCheckoutError(''); 
-    setSelected(offer); 
+    setCheckoutError('');
+    setSelected(offer);
   }
 
   useEffect(() => {
     const params = new URLSearchParams(search);
     const offer = CORNER_OFFERS.find(item => item.id === params.get('offer'));
-    if (offer) choose(offer);
+    if (offer?.kind === 'style' || offer?.kind === 'shards' || params.get('shelf') === 'style' || params.get('shelf') === 'shards') {
+      setLocation('/game/style?view=finishes', { replace: true });
+    } else if (offer) choose(offer);
   }, [search]);
 
   async function purchase(catalogOffer: PaymentOffer) {
@@ -398,7 +505,7 @@ export function CornerStore({ bootstrap }: { bootstrap: PlayerBootstrap }) {
       setCheckoutError('Checkout is not available in the current market mode.');
       return;
     }
-    
+
     lock.current = true;
     setCheckoutBusy(true);
     setCheckoutError('');
@@ -433,7 +540,7 @@ export function CornerStore({ bootstrap }: { bootstrap: PlayerBootstrap }) {
         queryClient.invalidateQueries({ queryKey: getListPaymentOrdersQueryKey() });
         setCheckoutError(`${orderStatusDetail(res.order.status, res.order.clout, res.order.fulfilledAt)} Choose Proceed to Checkout again to intentionally start a new purchase.`);
       } else {
-        setCheckoutError('The purchase is still pending, but Stripe did not provide a verified checkout link. Check Your Orders before trying again.');
+        setCheckoutError('The purchase is still pending, but Stripe did not provide a verified checkout link. Check Receipts before trying again.');
       }
     } catch (err) {
       setCheckoutError(errorMessage(err, err instanceof Error ? err.message : 'Failed to connect to checkout service.'));
@@ -445,23 +552,22 @@ export function CornerStore({ bootstrap }: { bootstrap: PlayerBootstrap }) {
 
   return (
     <main className="corner-store" data-reduce-motion={reducedMotion}>
-      <LayeredVenue scene="fade-market" />
+      <img className="corner-store__interior" src={getAssetUrl('assets/market/corner-v2/interior.webp')} alt="" aria-hidden="true" draggable={false} />
       <div className="corner-store__scroll">
         <header className="corner-store__heading">
           <div className="corner-store__hero-copy">
-            <h1>Fade<br /> <em>Market.</em></h1>
+            <h1><span>Fade</span> <em>Market</em></h1>
+            <span className="corner-store__neon-rule" aria-hidden="true" />
           </div>
-        </header>
-        
-        <section className="corner-store__counter">
-        <div className="corner-store__wallet">
-          <img src={getAssetUrl('assets/rewards/clout-token.webp')} alt="Clout token" />
+          <div className="corner-store__wallet">
+          <img src={getAssetUrl('assets/rewards/clout-token.webp')} alt="" />
           <div>
-            <small>ACCOUNT CLOUT</small>
+            <small>YOUR CLOUT</small>
             <strong><AnimatedNumber value={bootstrap.profile.softCurrency} /></strong>
           </div>
-        </div>
-        
+          </div>
+        </header>
+        <section className="corner-store__counter" aria-label="Market counter">
         {(catalog?.mode === 'test' || e2eAuthEnabled) && (
           <p className="corner-store__notice bg-yellow-500/10 border border-yellow-500/30 text-yellow-200">
             {e2eAuthEnabled ? 'Preview mode · Checkout and resume are disabled.' : 'Test Mode · No real charges will be made.'}
@@ -476,21 +582,24 @@ export function CornerStore({ bootstrap }: { bootstrap: PlayerBootstrap }) {
             <button className="studio-text-action mt-2" disabled={catalogFetching} onClick={() => void refetchCatalog()}>{catalogFetching ? 'Retrying…' : 'Retry catalog'}</button>
           </div>
         )}
-        
+
         {catalog && !catalog.enabled && (
           <p className="corner-store__notice bg-red-500/10 border border-red-500/30 text-red-200">
             {catalog.message || 'Market is currently closed.'}
           </p>
         )}
 
-        <Link href="/game/style?view=mats" className="corner-store__mat-link">PLAYER MATS <span>Style Shards · The Stylist ↗</span></Link>
+        <div className="corner-store__aisle">
         <nav className="corner-store__departments" aria-label="Fade Market shelves">
-          {(['clout', 'pack', 'style', 'shards', 'reactions'] as const).map(d => (
+          {(['clout', 'pack', 'reactions'] as const).map((d, index) => (
             <button key={d} aria-pressed={department === d} onClick={() => selectDepartment(d)}>
-              {{ clout: 'Clout', pack: 'Packs', style: 'Card styles', shards: 'Shards', reactions: 'Reactions' }[d]}
+              <span className="corner-store__aisle-number" aria-hidden="true">0{index + 1}</span>
+              {{ clout: 'Clout', pack: 'Showcase', reactions: 'Reactions' }[d]}
             </button>
           ))}
         </nav>
+        <Link href="/game/style?view=finishes" className="corner-store__closet-link"><img src={getAssetUrl('assets/rewards/style-hanger.webp')} alt="" aria-hidden="true" draggable={false} /><span>Style Closet</span><ArrowUpRight size={19} aria-hidden="true" /></Link>
+        </div>
         {department === 'reactions' ? <ReactionShop bootstrap={bootstrap} /> : <>
           <AnimatePresence mode="wait" initial={false}>
           <motion.div key={department} className={`corner-store__products ${department === 'clout' ? 'corner-store__products--clout' : ''}`} role="region" aria-label={`${department} shelf`} tabIndex={0}
@@ -506,10 +615,9 @@ export function CornerStore({ bootstrap }: { bootstrap: PlayerBootstrap }) {
             const available = !!catalogOffer && catalogOffer.enabled && checkoutEnabled;
             const priceDisplay = catalogOffer ? catalogPriceLabel(catalogOffer.amountMinor, catalogOffer.currency, catalog as TaxAwareCatalog | undefined) : 'Unavailable';
             const priceParts = catalogOffer ? new Intl.NumberFormat('en-US', { style: 'currency', currency: catalogOffer.currency }).formatToParts(catalogOffer.amountMinor / 100) : null;
-            const priceDigits = priceParts?.filter(part => part.type === 'integer' || part.type === 'group').reduce((count, part) => count + part.value.length, 0) ?? 1;
-            
+
             return (
-              <motion.article key={offer.id} initial={reducedMotion ? false : { opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: reducedMotion ? 0 : index * .06 }} className={`corner-product ${department === 'shards' || department === 'style' ? 'corner-product--crate' : ''}`}>
+              <motion.article key={offer.id} initial={reducedMotion ? false : { opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: reducedMotion ? 0 : index * .06 }} className="corner-product">
                 <div className="corner-product__display">
                   <span className="bodega-led" aria-hidden="true" /><span className="bodega-light-cone" aria-hidden="true" />
                   <span className="bodega-cubby-back" aria-hidden="true" />
@@ -518,23 +626,21 @@ export function CornerStore({ bootstrap }: { bootstrap: PlayerBootstrap }) {
                 </div>
                 <div className="corner-product__label">
                   <span className="market-paper-watermark" aria-hidden="true"><img src={getAssetUrl('assets/market/fade-market-ascii-logo.svg')} alt="" draggable={false} /></span>
-                  <div className="market-tag__header"><span>FADE MARKET</span><span>SHELF / 0{index + 1}</span></div>
-                  <span className="market-tag__category">{offer.kind === 'pack' ? 'SHOWCASE PACK · PREVIEW' : offer.kind === 'style' ? 'ARTWORK ONLY' : 'MARKET PICK'}</span>
+                  {offer.kind === 'pack' && <span className="market-tag__category">SHOWCASE · NOT FOR SALE</span>}
                   <h2>{isSupported ? (catalogOffer?.name ?? 'Unavailable bundle') : offer.name}<ItemDot id={`offer:${offer.id}`} /></h2>
-                  <p>{isSupported ? (catalogOffer ? `${catalogOffer.clout.toLocaleString()} Clout for your account.` : 'Catalog details are unavailable.') : offer.description}</p>
-                  {offer.cards && <p className="corner-product__contents">{offer.cards.length} {offer.kind === 'style' ? 'alternate illustration' : 'featured cards'}</p>}
-                  
-                  <button 
+                  <p>{isSupported ? (catalogOffer ? `${catalogOffer.clout.toLocaleString()} Clout` : 'Catalog unavailable') : offer.description}</p>
+                  {offer.cards && <p className="corner-product__contents">{offer.cards.length} featured cards</p>}
+
+                  <button
                     className={isSupported ? 'market-tag__buy' : undefined}
-                    disabled={isSupported && (!available || catalogLoading)} 
+                    disabled={isSupported && (!available || catalogLoading)}
                     onClick={() => choose(offer)}
                   >
                     {isSupported ? <>
-                      <span className="market-tag__price"><strong className={priceParts ? 'market-tag__split-price' : undefined} style={priceParts ? { fontSize: `${94 / (.6 + .39 * priceDigits)}cqi` } : undefined}>{priceParts ? priceParts.map((part, partIndex) => <span key={partIndex} className={`market-tag__price-part--${part.type}`}>{part.value}</span>) : 'Unavailable'}</strong><small>{catalogOffer ? priceDisplay.slice(formatCurrency(catalogOffer.amountMinor, catalogOffer.currency).length) : ''}</small></span>
+                      <span className="market-tag__price"><strong className={priceParts ? 'market-tag__split-price' : undefined}>{priceParts ? priceParts.map((part, partIndex) => <span key={partIndex} className={`market-tag__price-part--${part.type}`}>{part.value}</span>) : 'Unavailable'}</strong><small>{catalogOffer ? priceDisplay.slice(formatCurrency(catalogOffer.amountMinor, catalogOffer.currency).length) : ''}</small></span>
                       <span className="market-tag__action" aria-hidden="true">PICK UP<ArrowUpRight size={18} /></span>
-                    </> : <><span className="market-tag__preview">View <small>SHOWCASE ONLY</small></span><ArrowUpRight size={20} aria-hidden="true" /></>}
+                    </> : <><span className="market-tag__preview">View cards</span><ArrowUpRight size={20} aria-hidden="true" /></>}
                   </button>
-                  <div className="market-tag__footer"><span className="market-print-bars" aria-hidden="true" /><span>{offer.id.toUpperCase()}</span></div>
                 </div>
               </motion.article>
             );
@@ -542,10 +648,12 @@ export function CornerStore({ bootstrap }: { bootstrap: PlayerBootstrap }) {
           </motion.div>
           </AnimatePresence>
         </>}
-        
-        <details className="corner-store__shelf bg-black/60 backdrop-blur-sm border border-white/10 rounded-lg overflow-hidden transition-all duration-300 open:pb-4" open={historyOpen} onToggle={e => setHistoryOpen(e.currentTarget.open)}>
-          <summary className="flex items-center gap-2 p-3 font-sans font-bold text-sm cursor-pointer hover:bg-white/5 transition-colors select-none">
-            <ShoppingBag size={17} className="text-white/60" /> Your Orders
+
+        <div className="corner-store__register">
+        {department === 'clout' && <DeckSlotCounter key={bootstrap.profile.id} bootstrap={bootstrap} />}
+        <details className="corner-store__shelf corner-store__orders" open={historyOpen} onToggle={e => setHistoryOpen(e.currentTarget.open)}>
+          <summary className="corner-store__orders-heading">
+            <ShoppingBag size={17} aria-hidden="true" /> Receipts <span>View orders <ArrowRight size={15} aria-hidden="true" /></span>
           </summary>
           {historyOpen && (
             <div className="px-4">
@@ -558,22 +666,23 @@ export function CornerStore({ bootstrap }: { bootstrap: PlayerBootstrap }) {
             </div>
           )}
         </details>
+        </div>
       </section>
       </div>
 
       <Dialog open={!!selected} onOpenChange={open => { if (!open) setSelected(null); }}>
-        <DialogContent data-notification-id={selected ? `offer:${selected.id}` : undefined} className="corner-checkout corner-checkout--simple">
+        <DialogContent data-notification-id={selected ? `offer:${selected.id}` : undefined} className="corner-checkout corner-checkout--simple game-popup reward-street-file bg-transparent">
           {selected && (
             <>
               <div className="corner-checkout__summary">
                 <img className="corner-checkout__art" src={getAssetUrl(selected.art)} alt="" draggable={false} onContextMenu={event => event.preventDefault()} />
-                <div><span className="corner-checkout__eyebrow">FADE MARKET · AT THE COUNTER</span>
+                <div><span className="corner-checkout__eyebrow">FADE MARKET</span>
                   <DialogTitle>{catalog?.offers?.find(offer => offer.id === selected.id)?.name ?? selected.name}</DialogTitle>
-                  <DialogDescription>{selected.kind === 'clout' ? 'Secure checkout via Stripe.' : 'Showcase preview · not currently for sale.'}</DialogDescription>
-                  <p>{selected.kind === 'clout' ? `${catalog?.offers?.find(offer => offer.id === selected.id)?.clout.toLocaleString() ?? '—'} Clout for your account.` : selected.description}</p>
+                  <DialogDescription>{selected.kind === 'clout' ? `${catalog?.offers?.find(offer => offer.id === selected.id)?.clout.toLocaleString() ?? '—'} Clout · Secure checkout via Stripe.` : 'Showcase preview · not currently for sale.'}</DialogDescription>
+                  {selected.kind !== 'clout' && <p>{selected.description}</p>}
                 </div>
               </div>
-              
+
               {selected.cards && (
                 <div className="corner-checkout__contents">
                   {selected.cards.map(id => (
@@ -584,13 +693,13 @@ export function CornerStore({ bootstrap }: { bootstrap: PlayerBootstrap }) {
                   ))}
                 </div>
               )}
-              
+
               {selected.kind === 'clout' && catalog && (() => {
                 const cOffer = catalog.offers.find(o => o.id === selected.id);
                 if (!cOffer) return <p className="text-red-400 py-4">Item currently unavailable.</p>;
                  const configuredSupportUrl = safeHttpsUrl(catalog.supportUrl);
                  const configuredRefundUrl = safeHttpsUrl(catalog.refundPolicyUrl);
-                
+
                 return (
                   <>
                     <div className="corner-checkout__total">
@@ -605,20 +714,20 @@ export function CornerStore({ bootstrap }: { bootstrap: PlayerBootstrap }) {
                           : 'Tax status is unavailable. Stripe shows the final total before you pay.'}
                     </p>
                     <details className="corner-checkout__details"><summary>Balance after purchase</summary><p className="text-sm text-white/60">Current balance: {bootstrap.profile.softCurrency.toLocaleString()} Clout<br/>After purchase: {(bootstrap.profile.softCurrency + cOffer.clout).toLocaleString()} Clout</p></details>
-                    
+
                     <label className="flex items-center gap-3 py-2 text-sm"><input type="checkbox" checked={adultConfirmed} onChange={event => setAdultConfirmed(event.target.checked)} /> I am at least 18 years old.</label>
                     <label className="flex items-center gap-3 py-2 text-sm"><input type="checkbox" checked={unitedStatesConfirmed} onChange={event => setUnitedStatesConfirmed(event.target.checked)} /> I am located in the United States.</label>
                     <p className="text-xs text-white/60">These are your declarations, not verified age or location.</p>
                     {checkoutError && <p role="alert" className="text-red-400 font-bold bg-red-900/20 p-2 rounded border border-red-500/30 text-sm mt-2">{checkoutError}</p>}
-                    
-                    <button 
-                      className="studio-action studio-action--gold mt-4" 
+
+                    <RewardFileAction
+                      className="corner-checkout__pay"
                      disabled={checkoutBusy || !checkoutEnabled || !cOffer.enabled || !adultConfirmed || !unitedStatesConfirmed}
                        onClick={() => purchase(cOffer)}
                     >
                       {checkoutBusy ? 'Preparing Checkout…' : checkoutEnabled ? 'Proceed to Checkout' : 'Checkout unavailable'}
-                    </button>
-                    
+                    </RewardFileAction>
+
                     <div className="flex justify-center gap-4 mt-4">
                        <a
                          href={configuredSupportUrl ?? appPath('/support')}
@@ -642,36 +751,33 @@ export function CornerStore({ bootstrap }: { bootstrap: PlayerBootstrap }) {
                   </>
                 );
               })()}
-              
-              {selected.kind !== 'clout' && (
-                 <p className="text-sm text-white/60">Showcase preview only. This item is not currently for sale.</p>
-              )}
+
             </>
           )}
         </DialogContent>
       </Dialog>
-      
+
       <Dialog open={!!baggedOffer} onOpenChange={open => { if (!open) setBaggedOffer(null); }}>
-        <DialogContent className="corner-checkout corner-checkout--bagged market-receipt-dialog">
+        <DialogContent className="corner-checkout corner-checkout--bagged market-receipt-dialog game-popup reward-street-file bg-transparent">
           <DialogTitle className="sr-only">{baggedOffer?.daily ? 'Daily pack claimed' : 'Purchase complete'}</DialogTitle>
           <DialogDescription className="sr-only">{baggedOffer?.daily ? 'Your free daily Clout has been added to your account.' : 'Your confirmed purchase has been added to your account.'}</DialogDescription>
           {baggedOffer && <MarketPurchaseSuccess {...baggedOffer} reducedMotion={bootstrap.profile.settings.reducedMotion}>
             {baggedOffer.order ? <OrderAmount order={baggedOffer.order} /> : <div className="market-receipt__gift-total"><span>Daily free pack</span><strong>On the house</strong></div>}
           </MarketPurchaseSuccess>}
-          <button className="studio-action studio-action--gold" onClick={() => setBaggedOffer(null)}>Keep browsing</button>
+          <RewardFileAction onClick={() => setBaggedOffer(null)}>Keep browsing</RewardFileAction>
         </DialogContent>
       </Dialog>
       {returnOrderId && (
-        <OrderStatusModal 
-          orderId={returnOrderId} 
-          bootstrap={bootstrap} 
+        <OrderStatusModal
+          orderId={returnOrderId}
+          bootstrap={bootstrap}
            checkoutEnabled={checkoutEnabled}
           onClose={() => {
             const params = new URLSearchParams(search);
             params.delete('payment');
             params.delete('order');
             setLocation(`${location}?${params.toString()}`, { replace: true });
-          }} 
+          }}
         />
       )}
     </main>

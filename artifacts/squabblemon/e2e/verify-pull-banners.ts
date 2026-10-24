@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { chromium } from '@playwright/test';
 import { cardCatalog, ROOKIE_CORE_IDS, ROOKIE_MENTOR_CORE_IDS } from '../src/data';
 import { STREET_PACK_DISCLOSURES, STREET_PACK_RULES } from '@workspace/squabblemon-engine/packRules';
+import { PULL_BANNER_WEEK_MS, pullBannerOddsVersion, resolvePullBanner } from '@workspace/squabblemon-engine/pullBanners';
 
 process.env.PW_TEST_SCREENSHOT_NO_FONTS_READY = '1';
 const origin = process.env.GACHA_ORIGIN ?? 'http://127.0.0.1:4195/game';
@@ -19,6 +20,7 @@ async function run(width: number, height: number) {
       ['SuperCommon', 'Common', 'Uncommon'].includes(card.rarity)
       && !cards.some((featured) => featured.catalogId === card.catalogId))
     .slice(0, 7);
+  let serverNow = Date.parse('2026-10-19T12:00:00Z');
   let calls = 0;
   let ticketBalance = 12;
   let cloutBalance = 500;
@@ -125,12 +127,12 @@ async function run(width: number, height: number) {
     await page.locator('.market-tabs').waitFor();
   }
   try {
-    await page.clock.install({ time: new Date('2026-10-05T12:00:00Z') });
+    await page.clock.install({ time: new Date(serverNow) });
     await page.addInitScript(() => localStorage.setItem('squabblemon_e2e_user', 'signed-in'));
     await page.route('**/api/player/**', async (route) => {
       const req = route.request(),
         path = new URL(req.url()).pathname;
-      if (path.endsWith('/packs/welcome')) return route.fulfill({ json: { available: false } });
+      if (path.endsWith('/packs/welcome')) return route.fulfill({ json: { available: false, serverNow } });
       if (path.endsWith('/bootstrap')) return route.fulfill({ json: bootstrap() });
       if (path.endsWith('/packs/open')) {
         calls++;
@@ -178,7 +180,7 @@ async function run(width: number, height: number) {
             paymentMethod: body.paymentMethod,
             cost: openingCost,
             pullCount: body.pullCount ?? 1,
-            oddsVersion: `street-pack-v7:banner-${body.bannerId}-v1`,
+            oddsVersion: pullBannerOddsVersion('street-pack-v7', resolvePullBanner(body.bannerId, serverNow, body.bannerOccurrenceId)),
             pityBefore: 4,
             pityAfter: 5,
             createdAt: new Date().toISOString(),
@@ -199,7 +201,12 @@ async function run(width: number, height: number) {
     assert.match(await page.locator('.fight-bill__title').innerText(), /FADE[\s\S]*RECRUITMENT/);
     assert.equal(await page.locator('.gym__arena').evaluate(el => getComputedStyle(el).visibility), 'visible');
     const originalPoster = await page.locator('.fight-bill').boundingBox();
-    for (const [id, name] of [['standard', 'Street Pack'], ['inmates','Inmates'], ['oz','Oz'], ['wonderland','Wonderland'], ['red-blue','Red & Blue']]) {
+    for (const [index, [id, name]] of [['standard', 'Street Pack'], ['inmates','Inmates'], ['oz','Oz'], ['wonderland','Wonderland'], ['red-blue','Red & Blue']].entries()) {
+      if (id !== 'standard') {
+        serverNow = Date.parse('2026-10-19T12:00:00Z') + (index - 1) * PULL_BANNER_WEEK_MS;
+        await page.clock.setSystemTime(new Date(serverNow));
+        await goto();
+      }
       if (id !== 'standard') await page.getByRole('button', {name:'Next banner',exact:true}).click();
       if (id !== 'standard') await page.waitForFunction(() => { const image = document.querySelector<HTMLImageElement>('.pull-feature__backdrop img'); return image?.complete && image.naturalWidth > 0; });
       assert.equal(await page.locator('.pull-feature').getAttribute('data-banner'), id);
@@ -231,6 +238,7 @@ async function run(width: number, height: number) {
     await page.getByRole('alert').filter({visible:true}).waitFor();
     assert.equal(requests[0].bannerId, purchaseBanner);
     assert.equal(await page.getByRole('navigation', {name:'Pull banners'}).getByRole('button').first().isDisabled(), true);
+    serverNow = Date.parse('2026-11-16T00:00:00Z');
     await page.reload();
     await page.locator('.pull-feature__arrows').waitFor();
     assert.equal(await page.locator('.pull-feature').getAttribute('data-banner'), purchaseBanner);

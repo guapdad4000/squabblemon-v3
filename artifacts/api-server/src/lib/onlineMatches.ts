@@ -1,3 +1,4 @@
+import { bankRankedMatchClout } from './rankedMatchClout';
 import { equippedPlayerMat } from '@workspace/squabblemon-engine/playerMats';
 import { PARK_BOT_PERSONAS, parkBotPersona, parkBotUsesSquabble, reactParkBot } from '@workspace/squabblemon-engine/parkBots';
 import { RANKED_SEASON, rankMilestoneRewards } from '@workspace/squabblemon-engine/ranked';
@@ -409,12 +410,13 @@ async function settleRankedRoom(tx: Tx, room: OnlineRoom, now: number, roomId: s
         milestoneKey: `rank:${RANKED_SEASON}:${reward.tier}`, reward }).onConflictDoNothing().returning();
       if (receipt) rewards.push(reward);
     }
+    const matchClout = await bankRankedMatchClout(tx, room, seat, roomId, now);
     await tx.update(playerProfilesTable).set({ storyProgress: { ...profile.storyProgress, fadePark: award.stats },
-      softCurrency: sql`${playerProfilesTable.softCurrency} + ${rewards.reduce((total, reward) => total + reward.softCurrency, 0)}`,
+      softCurrency: sql`${playerProfilesTable.softCurrency} + ${rewards.reduce((total, reward) => total + reward.softCurrency, 0) + matchClout.delta}`,
       packTickets: sql`${playerProfilesTable.packTickets} + ${rewards.reduce((total, reward) => total + reward.packTickets, 0)}`,
       styleShards: sql`${playerProfilesTable.styleShards} + ${rewards.reduce((total, reward) => total + reward.styleShards, 0)}`,
       updatedAt: new Date(now) }).where(eq(playerProfilesTable.clerkUserId, userId));
-    settlement[seat] = { ...award.result, rewards };
+    settlement[seat] = { ...award.result, rewards, matchClout: matchClout.receipt };
   }
   return { ...room, revision: room.revision + 1, ranked: { ...room.ranked, settlement } };
 }

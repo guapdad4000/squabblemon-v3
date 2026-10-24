@@ -972,8 +972,7 @@
     animation: none !important;
   }
   .raid-charge,
-  .raid-impact,
-  .raid-boss[data-hit="true"] .raid-boss-inspect {
+  .raid-impact {
     animation: none !important;
     opacity: 0;
   }

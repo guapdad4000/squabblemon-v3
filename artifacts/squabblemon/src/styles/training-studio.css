@@ -1,80 +1,127 @@
-/* Compact training desk. Keep the art fully colored even before selection. */
-.training-studio.market { padding: 10px clamp(16px, 4vw, 56px) 22px; position: relative; isolation: isolate; background: transparent; }
-.training-studio__venue { position: fixed; inset: 0; width: 100vw; height: 100dvh; z-index: -2; pointer-events: none; }
-.training-studio__venue::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(14, 20, 14, 0.35) 0%, rgba(14, 20, 14, 0.72) 55%, rgba(14, 20, 14, 0.88) 100%); pointer-events: none; }
-.market.training-studio .training-studio__board { margin-bottom: 0; padding: 4px 0; }
-.market.training-studio .training-studio__board > span:first-child { padding: 3px 7px; }
-.market.training-studio .market-hero { min-height: 82px; gap: 18px; }
-.market.training-studio .market-hero h1 { font-size: clamp(32px, 3.6vw, 50px); margin: 6px 0; }
-.market.training-studio .market-hero p { margin: 0; color: #dce3cd; }
-.market.training-studio .market-hero__fade-art { width: 116px; height: 112px; flex: none; }
-.market.training-studio .market-wallet { gap: 18px; }
-.market.training-studio .market-wallet strong { font-size: 21px; }
-.market.training-studio .market-wallet small { color: #d5debf; }
-.market.training-studio .market-style-link { display: block; max-width: 1140px; margin: 8px auto 0; font-size: 10px; color: #e6ca8b; }
-.market.training-studio .market-offers { margin-top: 8px; padding: 4px 0 10px; gap: 7px; }
-.market.training-studio .market-offers button { padding: 7px 5px; gap: 4px; color: #fff5d9; border-color: #9bad8270; background: #14241ff5; box-shadow: 0 3px 7px #0005; }
-.market.training-studio .market-offers button[aria-pressed='true'] { border: 2px solid #ffd16d; padding: 6px 4px; background: linear-gradient(180deg, #4b6138, #354727); box-shadow: inset 0 0 0 1px #ffd16d55, 0 5px 14px #0008, 0 0 16px rgba(255, 209, 109, 0.24); transform: translateY(-2px); }
-.training-session::before { content: ''; position: absolute; width: 220px; height: 64px; bottom: calc(50% - 92px); border-radius: 50%; background: radial-gradient(ellipse, rgba(255, 209, 109, 0.28) 0%, rgba(255, 209, 109, 0.08) 52%, transparent 74%); pointer-events: none; z-index: 0; }
-.training-session > * { position: relative; z-index: 1; }
-.market.training-studio .market-offers .market-offer-art,
-.market.training-studio .market-offers .venue-prop { width: 70px; height: 62px; opacity: 1; mix-blend-mode: normal; filter: saturate(1.12) contrast(1.06) drop-shadow(0 3px 3px #0009); transform: none; }
-.market.training-studio .market-offers .market-offer-art { object-fit: contain; border-radius: 6px; }
-.market.training-studio .market-offers strong { font-size: 11px; font-weight: 800; }
-.market.training-studio .market-offers span { color: #f1dca4; font-size: 10px; }
-.market.training-studio .market-offers button > i { display: none; }
-.market.training-studio .market-layout { grid-template-columns: minmax(180px, 0.8fr) minmax(0, 1.2fr); max-width: 920px; gap: 28px; margin: 12px auto; }
-.market.training-studio .market-showcase > img,
-.market.training-studio .market-showcase > .venue-prop { height: 236px; }
-.market.training-studio .market-checkout { position: relative; overflow: hidden; padding: 16px 20px; }
-.market.training-studio .market-checkout h2 { font-size: 26px; margin: 4px 0; }
-.market.training-studio .market-checkout > p { line-height: 1.45; }
-.market.training-studio .market-checkout label { margin: 10px 0 5px; color: #e2e7d3; }
-.market.training-studio .market-character { margin: 10px 0 4px; gap: 4px 12px; }
-.market.training-studio .market-character details { margin-top: 0; }
-.market.training-studio .market-character summary { padding: 7px 0; }
-.market.training-studio .market-preview,
-.market.training-studio .market-notice { margin: 8px 0; }
-.market.training-studio .market-checkout > .studio-action { margin-top: 4px; min-height: 44px; }
-.market.training-studio .market-receipt { margin-top: 12px; padding-top: 10px; }
-.market.training-studio .market-footer { display: flex; flex-wrap: wrap; align-items: start; justify-content: space-between; gap: 0 18px; margin-top: 10px; padding-top: 5px; }
-.market.training-studio .market-guide { margin: 0; }
-.market.training-studio .market-guide[open] { flex-basis: 100%; }
-.market.training-studio .market-footer > nav { gap: 20px; }
-.training-session { position: absolute; z-index: 3; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 16px; text-align: center; background: radial-gradient(ellipse at 50% 45%, #455b2f, #14231b 75%); }
-.training-session__sprite { width: 180px; height: 180px; flex: none; background-size: 800% 100%; background-repeat: no-repeat; animation: inmate-workout 1.2s steps(8) infinite; filter: drop-shadow(0 6px 3px #0005); }
-.training-session > strong { color: #fff0c2; font-size: 17px; }
-.market.training-studio .training-session > p { max-width: 280px; margin: 5px 0 10px; color: #eff1de; font-size: 12px; }
-.training-session > small { color: #cddbb9; font-size: 10px; margin-top: 7px; }
-.training-session__meter { width: 130px; height: 4px; overflow: hidden; border-radius: 3px; background: #07130c; }
-.training-session__meter > i { display: block; height: 100%; width: 45%; background: #ffcd60; animation: training-meter 1.2s ease-in-out infinite alternate; }
-@keyframes inmate-workout { to { background-position: 114.285714% 0; } }
-@keyframes training-meter { from { transform: translateX(-100%); } to { transform: translateX(225%); } }
-.training-session[data-reduced-motion='true'] .training-session__sprite,
-.training-session[data-reduced-motion='true'] .training-session__meter > i { animation: none; }
-@media (max-width: 700px) {
-  .training-studio.market { padding: 8px 14px 18px; }
-  .market.training-studio .market-hero { grid-template-columns: minmax(0, 1fr) 66px; min-height: 0; gap: 2px 8px; }
-  .market.training-studio .market-hero > div:first-child { width: auto; padding: 6px 0 0; }
-  .market.training-studio .market-hero h1 { font-size: 34px; }
-  .market.training-studio .market-hero p { max-width: none; font-size: 10px; }
-  .market.training-studio .market-hero__fade-art { width: 66px; height: 78px; margin: 0; }
-  .market.training-studio .market-wallet { padding: 4px 0 8px; margin: 0; gap: 10px; }
-  .market.training-studio .market-wallet strong { font-size: 16px; }
-  .market.training-studio .market-offers button { flex: 0 0 106px; min-width: 0; }
-  .market.training-studio .market-layout { margin: 10px auto; gap: 12px; }
-  .market.training-studio .market-checkout { padding: 14px; }
-  .market.training-studio .market-footer > nav { gap: 16px; }
+/* The training club has one counter; real purchase quotes own all rewards/prices. */
+.training-studio.market { --training-paper:#ead8ac; --training-ink:#292319; --training-red:#922d24; padding:16px clamp(12px,4vw,58px) max(26px,env(safe-area-inset-bottom)); position:relative; isolation:isolate; background:transparent; color:#f6e9c7; font-family:var(--font-sans,'Plus Jakarta Sans',sans-serif); }
+.training-studio__venue { position:fixed; inset:0; width:100vw; height:100dvh; z-index:-2; pointer-events:none; }
+.training-studio__venue::after { content:''; position:absolute; inset:0; background:linear-gradient(180deg,#0b171779,#0c1816a8 48%,#071410e8); }
+.training-club__heading { position:relative; display:grid; grid-template-columns:minmax(0,1fr) 112px auto; align-items:center; gap:20px; max-width:1060px; min-height:112px; margin:0 auto 16px; }
+.training-club__label { display:block; color:var(--training-red); font:700 10px/1.4 var(--font-mono,'Space Mono',monospace); letter-spacing:.13em; text-transform:uppercase; }
+.training-club__heading .training-club__label { color:#ecd498; }
+.training-studio .training-club__heading h1 { margin:4px 0 0; color:#fff0c7; font:400 clamp(36px,5vw,65px)/1.06 var(--font-sign,'Blzee',sans-serif); letter-spacing:.015em; text-shadow:3px 4px 0 #07110c; }
+.training-club__coach { width:112px; height:120px; object-fit:contain; filter:drop-shadow(3px 5px 0 #08110b70); }
+.training-club__wallet { display:flex; align-items:center; gap:8px; padding:8px 0; }
+.training-club__wallet > .game-glyph { width:51px; height:51px; }
+.training-club__wallet > span { display:grid; gap:2px; }
+.training-club__wallet strong { color:#fff0c7; font:700 27px/1 var(--font-action-sign,'Hemi Head',sans-serif); font-variant-numeric:tabular-nums; }
+.training-club__wallet small { font:700 10px/1.2 var(--font-mono,'Space Mono',monospace); color:#ddd2b0; text-transform:uppercase; }
+.training-club__passes { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; max-width:1060px; margin:0 auto 26px; }
+.training-club__passes > button { position:relative; display:grid; grid-template-columns:82px minmax(0,1fr); align-items:center; min-width:0; min-height:136px; padding:13px 12px 28px; border:0; border-radius:1px; color:var(--training-ink); background:linear-gradient(110deg,#f2e4c4,#ddc692); box-shadow:2px 6px 0 #06100b80; text-align:left; cursor:pointer; transform:rotate(-.7deg); }
+.training-club__passes > button:nth-child(2) { transform:rotate(.7deg); }
+.training-club__passes > button::after { content:''; position:absolute; bottom:23px; left:8px; right:8px; border-bottom:1px dashed #8a76508c; }
+.training-club__passes > button[aria-pressed='true'] { background:linear-gradient(115deg,#fff1d0,#ead4a3); box-shadow:0 0 0 3px #d5aa5a,3px 7px 0 #06100bb3; }
+.training-club__passes > button:disabled { opacity:.7; cursor:default; }
+.training-club__passes > button > img { position:relative; width:82px; height:84px; object-fit:contain; filter:drop-shadow(2px 3px 1px #5b3e2233); }
+.training-club__pass-number { position:absolute; top:8px; right:9px; color:#79684a; font:700 9px/1 var(--font-mono,'Space Mono',monospace); }
+.training-club__pass-copy { display:grid; min-width:0; gap:7px; padding-right:3px; }
+.training-club__pass-copy > strong { color:var(--training-ink); font:700 clamp(16px,1.8vw,23px)/1 var(--font-action-sign,'Hemi Head',sans-serif); text-transform:uppercase; }
+.training-club__pass-copy > span { color:#3d5135; font:700 12px/1.3 var(--font-sans); }
+.training-club__pass-copy > small { color:#65502f; font:700 10px/1.3 var(--font-mono,'Space Mono',monospace); }
+.training-club__pass-stamp { position:absolute; bottom:6px; left:0; right:0; display:flex; justify-content:center; align-items:center; gap:4px; color:#746043; font:700 8px/1.2 var(--font-mono,'Space Mono',monospace); letter-spacing:.12em; text-transform:uppercase; }
+[aria-pressed='true'] > .training-club__pass-stamp { color:var(--training-red); }
+.training-club__counter { display:grid; grid-template-columns:minmax(0,.8fr) minmax(0,1fr); align-items:center; gap:clamp(20px,5vw,70px); max-width:960px; margin:0 auto; }
+.training-club__fighter { position:relative; display:grid; justify-items:center; align-content:center; margin:0; min-width:0; }
+.training-club__fighter > img { display:block; width:100%; height:clamp(230px,33vh,350px); object-fit:contain; filter:drop-shadow(5px 8px 2px #0009); }
+.training-club__fighter figcaption { position:relative; max-width:100%; min-width:210px; padding:14px 22px; background:#ead8ac; color:var(--training-ink); box-shadow:4px 6px 0 #06100b80; transform:rotate(-3deg); text-align:center; }
+.training-studio .training-club__fighter h2 { margin:5px 0; font:700 clamp(24px,3vw,37px)/1.05 'Hemi Head Italic',var(--font-action-sign,sans-serif); text-transform:uppercase; overflow-wrap:anywhere; }
+.training-club__fighter figcaption > span:last-child { font:700 10px/1.5 var(--font-mono,'Space Mono',monospace); color:#65502f; }
+.training-club__ticket { position:relative; min-width:0; padding:25px clamp(18px,2.8vw,32px) 22px; color:var(--training-ink); background:linear-gradient(92deg,#ead6a8,#f2e5c8 47%,#e8d3a3); box-shadow:5px 7px 0 #06100b80; }
+.training-club__ticket::before { content:''; position:absolute; top:-6px; left:34%; width:32%; height:15px; background:#c7b07fa6; transform:rotate(-3deg); pointer-events:none; }
+.training-club__ticket-heading { margin-bottom:19px; padding-bottom:13px; border-bottom:1px dashed #9b8254; }
+.training-studio .training-club__ticket h2 { margin:6px 0 0; color:var(--training-ink); font:700 clamp(28px,3.4vw,41px)/1.05 'Hemi Head Italic',var(--font-action-sign,sans-serif); text-transform:uppercase; }
+.training-club__ticket > label { margin-bottom:5px; color:#65502f; }
+.training-club__ticket .street-select-trigger { min-width:0; width:100%; min-height:45px; background:#fff2d3; border-color:#a88b54; color:#292319; }
+.training-club__progress { display:grid; grid-template-columns:auto minmax(20px,1fr) auto; align-items:center; gap:9px; margin:12px 0 18px; }
+.training-club__progress > strong { color:#315b3c; white-space:nowrap; font:700 22px/1 var(--font-action-sign,'Hemi Head',sans-serif); }
+.training-club__progress > strong > small { color:#736142; font:700 10px/1 var(--font-mono,'Space Mono',monospace); }
+.training-club__progress > span { color:#65502f; font:700 9px/1.3 var(--font-mono,'Space Mono',monospace); white-space:nowrap; }
+.training-club__progress progress { width:100%; height:7px; border:0; border-radius:0; appearance:none; background:#c8b382; accent-color:#286644; }
+.training-club__progress progress::-webkit-progress-bar { background:#c8b382; }
+.training-club__progress progress::-webkit-progress-value { background:#286644; }
+.training-club__progress progress::-moz-progress-bar { background:#286644; }
+.training-club__lesson { display:grid; gap:6px; padding-bottom:18px; }
+.training-club__lesson > strong { color:#294f36; font:700 25px/1.12 var(--font-action-sign,'Hemi Head',sans-serif); }
+.training-club__lesson--xp { grid-template-columns:minmax(0,1fr) auto; align-items:center; gap:7px 12px; }
+.training-club__lesson--xp > .training-club__label { grid-column:1/-1; }
+.training-club__lesson--xp > strong { font-size:40px; }
+.training-club__lesson--xp > span:not(.training-club__label) { color:#3c5034; font-size:11px; font-weight:700; }
+.training-club__lesson > small { grid-column:1/-1; color:#65502f; font-size:11px; line-height:1.5; }
+.training-studio .training-club__lesson > p { margin:0; color:#4b402c; font-size:12px; line-height:1.5; }
+.training-studio .training-club__notice { margin:0 0 12px; color:#6a4023; font:600 12px/1.5 var(--font-sans); }
+.training-studio .training-club__notice--error { color:#8e281f; }
+.training-club__notice a { display:inline-flex; align-items:center; gap:4px; padding:9px 0; color:#245038; font-weight:800; text-decoration:underline; text-underline-offset:3px; }
+.training-club__purchase { position:relative; isolation:isolate; display:flex; align-items:center; justify-content:space-between; gap:18px; width:100%; min-height:64px; padding:11px 28px 11px 20px; border:0; border-radius:0; color:#fff4d4; background:#f4e8c8; clip-path:polygon(0 0,93% 0,100% 50%,93% 100%,0 100%); cursor:pointer; }
+.training-club__purchase::before { content:''; position:absolute; inset:3px; z-index:-1; clip-path:inherit; background:linear-gradient(#25734f,#104c34); }
+.training-club__purchase > span { display:grid; gap:4px; text-align:left; color:#fff4d4; font:700 24px/1 var(--font-action-sign,'Hemi Head',sans-serif); text-transform:uppercase; }
+.training-club__purchase small { color:#eee0b7; font:700 10px/1.3 var(--font-mono,'Space Mono',monospace); text-transform:none; }
+.training-club__purchase:disabled { opacity:.68; cursor:default; }
+.training-club__purchase:disabled::before { background:#405546; }
+.training-club__purchase:focus-visible { outline:3px solid #b82b22; outline-offset:-6px; }
+.training-club__passes > button:focus-visible, .training-club__notice a:focus-visible { outline:3px solid #b82b22; outline-offset:3px; }
+.training-club__receipt { display:flex; align-items:flex-start; gap:10px; margin-top:18px; padding-top:14px; border-top:1px dashed #9b8254; color:#285438; }
+.training-club__receipt > svg { flex:none; }
+.training-club__receipt strong { font:700 23px/1 var(--font-action-sign,'Hemi Head',sans-serif); text-transform:uppercase; }
+.training-studio .training-club__receipt p { margin:5px 0; color:#3c5034; font-size:12px; line-height:1.5; }
+.training-club__receipt small { color:#65502f; font-size:10px; }
+.training-session { position:absolute; z-index:3; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px; padding:20px; color:#fff0c7; text-align:center; background:radial-gradient(ellipse at 50% 45%,#395c36,#122c21 76%); }
+.training-session::before { content:''; position:absolute; width:220px; height:64px; top:calc(50% + 30px); border-radius:50%; background:radial-gradient(ellipse,#f3cb5952,transparent 72%); pointer-events:none; }
+.training-session > * { position:relative; z-index:1; }
+.training-session > .training-club__label { color:#f1d99c; }
+.training-session__sprite { width:200px; height:200px; flex:none; background-size:800% 100%; background-repeat:no-repeat; animation:inmate-workout 1.2s steps(8) infinite; filter:drop-shadow(0 6px 3px #0005); }
+.training-session > strong { color:#fff0c7; font:700 24px/1.15 var(--font-action-sign,'Hemi Head',sans-serif); }
+.training-session > small { color:#d5e0bf; font-size:11px; }
+.training-session__meter { width:130px; height:4px; overflow:hidden; background:#07130c; }
+.training-session__meter > i { display:block; height:100%; width:45%; background:#ffcd60; animation:training-meter 1.2s ease-in-out infinite alternate; }
+@keyframes inmate-workout { to { background-position:114.285714% 0; } }
+@keyframes training-meter { from { transform:translateX(-100%); } to { transform:translateX(225%); } }
+.training-session[data-reduced-motion='true'] .training-session__sprite, .training-session[data-reduced-motion='true'] .training-session__meter > i { animation:none; }
+@media(max-width:800px) {
+ .training-club__heading { gap:12px; grid-template-columns:minmax(0,1fr) 80px auto; min-height:88px; }
+ .training-club__coach { width:80px; height:94px; }
+ .training-club__passes { gap:9px; }
+ .training-club__passes > button { grid-template-columns:60px minmax(0,1fr); padding:12px 8px 28px; }
+ .training-club__passes > button > img { width:60px; height:72px; }
+ .training-club__counter { gap:24px; grid-template-columns:minmax(0,.7fr) minmax(0,1fr); }
+ .training-club__fighter figcaption { min-width:0; width:100%; padding:12px; }
+ .training-club__progress { gap:6px; }
 }
-@media (max-width: 600px) {
-  .market.training-studio .market-showcase { z-index: 1; top: 8px; right: 8px; width: 68px; opacity: 1; border: 0; }
-  .market.training-studio .market-showcase > img,
-  .market.training-studio .market-showcase > .venue-prop { height: 84px; }
-  .market.training-studio .market-checkout h2 { font-size: 23px; min-height: 0; max-width: calc(100% - 64px); }
-  .market.training-studio .market-checkout > p:first-of-type { min-height: 28px; max-width: calc(100% - 64px); }
-  .market.training-studio .market-checkout > .studio-action { min-width: 0; }
-  .training-session__sprite { width: 164px; height: 164px; }
+@media(max-width:600px) {
+ .training-studio.market { padding:10px 12px 24px; }
+ .training-club__heading { grid-template-columns:minmax(0,1fr) 61px auto; gap:8px; margin-bottom:12px; min-height:76px; }
+ .training-studio .training-club__heading h1 { font-size:clamp(27px,7vw,38px); }
+ .training-club__heading .training-club__label { font-size:8px; }
+ .training-club__coach { width:61px; height:82px; }
+ .training-club__wallet { gap:3px; }
+ .training-club__wallet > .game-glyph { width:27px; height:35px; }
+ .training-club__wallet strong { font-size:19px; }
+ .training-club__wallet small { font-size:8px; }
+ .training-club__passes { gap:8px; margin-bottom:18px; }
+ .training-club__passes > button { grid-template-columns:minmax(0,1fr); justify-items:center; align-content:start; min-height:176px; padding:6px 5px 25px; text-align:center; }
+ .training-club__passes > button > img { width:65px; height:66px; }
+ .training-club__pass-copy { gap:5px; padding:0; }
+ .training-club__pass-copy > strong { min-height:30px; display:grid; place-items:center; font-size:16px; }
+ .training-club__pass-copy > span { font-size:10px; }
+ .training-club__pass-copy > small { font-size:8px; }
+ .training-club__pass-stamp { font-size:7px; letter-spacing:.03em; }
+ .training-club__counter { display:block; }
+ .training-club__fighter { grid-template-columns:115px minmax(0,1fr); gap:8px; margin:0 0 18px; min-height:142px; }
+ .training-club__fighter > img { height:146px; }
+ .training-club__fighter figcaption { text-align:left; width:100%; padding:13px; transform:rotate(-2deg); }
+ .training-studio .training-club__fighter h2 { font-size:29px; }
+ .training-club__fighter .training-club__label { font-size:8px; }
+ .training-club__ticket { padding:20px 18px; }
+ .training-club__ticket-heading { margin-bottom:14px; padding-bottom:11px; }
+ .training-studio .training-club__ticket h2 { font-size:32px; }
+ .training-club__progress > span { font-size:8px; }
+ .training-club__lesson--xp > strong { font-size:36px; }
+ .training-session__sprite { width:180px; height:180px; }
 }
-@media (prefers-reduced-motion: reduce) {
-  .training-session__sprite, .training-session__meter > i { animation: none; }
-}
+@media(prefers-reduced-motion:reduce) { .training-session__sprite,.training-session__meter > i { animation:none; } }
+html[data-reduce-motion='true'] .training-session__sprite,html[data-reduce-motion='true'] .training-session__meter > i { animation:none; }

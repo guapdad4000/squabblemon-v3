@@ -1,0 +1,86 @@
+/* The purchased opening gets the entire room. No offer or instructional panel
+   remains in front of the bag after payment has been confirmed. */
+.trading-post > .gym.gacha-stage:is([data-phase=punching],[data-phase=tenPunching],[data-phase=knockout],[data-phase=tenKnockout],[data-phase=reveal],[data-phase=summary]) {
+  display:block;
+  flex:1 1 0;
+  width:100%;
+  height:calc(100dvh - 116px);
+  min-height:360px;
+  padding:0;
+  overflow:hidden;
+}
+.gym.gacha-stage:is([data-phase=punching],[data-phase=tenPunching],[data-phase=knockout],[data-phase=tenKnockout],[data-phase=reveal],[data-phase=summary]) .gym__arena {
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  max-height:none;
+  margin:0;
+  border:0;
+}
+.gym.gacha-stage:is([data-phase=punching],[data-phase=tenPunching],[data-phase=knockout],[data-phase=tenKnockout],[data-phase=reveal],[data-phase=summary]) .venue-scene { inset:0; }
+.gym.gacha-stage:is([data-phase=punching],[data-phase=tenPunching],[data-phase=knockout],[data-phase=tenKnockout],[data-phase=reveal],[data-phase=summary]) .gym__vignette {
+  background:linear-gradient(0deg,#040b0dce,transparent 26%,transparent 82%,#040b0d4d);
+}
+.pack-gym-controls {
+  position:absolute;
+  z-index:12;
+  left:50%;
+  bottom:max(18px,env(safe-area-inset-bottom));
+  transform:translateX(-50%);
+  display:grid;
+  grid-template-columns:1fr auto;
+  align-items:center;
+  justify-items:center;
+  gap:10px 14px;
+  width:min(300px,calc(100% - 36px));
+}
+.pack-gym-controls__beats { grid-column:1/-1; display:flex; gap:10px; color:#f7e5b4; }
+.pack-gym-controls__beats > span { display:grid; place-items:center; width:27px; height:27px; border:1px solid #f0d5a270; background:#071410c9; font:700 12px/1 var(--font-mono,monospace); transform:skew(-6deg); }
+.pack-gym-controls__beats > span[data-landed=true] { color:#10201b; background:#e3c88d; }
+.pack-gym-controls__beats > span[data-current=true] { border-color:#f8e2b0; box-shadow:0 0 0 2px #06130e; }
+.pack-gym-controls__strike { display:flex; align-items:center; justify-content:center; gap:12px; width:100%; min-height:54px; padding:10px 28px 10px 18px; clip-path:polygon(0 0,90% 0,100% 50%,90% 100%,0 100%); border:0; background:#f1d8a0; color:#111d18; cursor:pointer; font:700 23px/1 'Hemi Head Italic',sans-serif; text-transform:uppercase; box-shadow:inset 0 0 0 2px #fff1bf; transition:transform .1s,background-color .1s; }
+.pack-gym-controls__strike .game-glyph { width:32px; height:32px; }
+.pack-gym-controls__strike:hover { background:#fff0ca; }
+.pack-gym-controls__strike:active { transform:scale(.96); }
+.pack-gym-controls__skip { display:flex; align-items:center; gap:5px; min-height:48px; padding:10px 8px; border:0; background:#071411c9; color:#f1e5c5; font:700 12px/1 var(--font-sans,sans-serif); cursor:pointer; }
+.pack-gym-controls button:focus-visible { outline:3px solid #fff3c8; outline-offset:4px; }
+.pack-gym-controls__strike:focus-visible { outline-offset:-5px; }
+@media(max-width:700px) { .pack-gym-controls { bottom:max(12px,env(safe-area-inset-bottom)); gap:8px 10px; width:min(280px,calc(100% - 28px)); }.pack-gym-controls__strike { min-height:50px; font-size:20px; } }
+@media(max-height:550px) and (orientation:landscape) { .trading-post > .gym.gacha-stage:is([data-phase=punching],[data-phase=tenPunching],[data-phase=knockout],[data-phase=tenKnockout],[data-phase=reveal],[data-phase=summary]) { min-height:220px; }.pack-gym-controls { left:auto; right:16px; bottom:12px; transform:none; width:210px; }.pack-gym-controls__beats { gap:7px; }.pack-gym-controls__strike { min-height:46px; padding:8px 20px 8px 10px; font-size:20px; } }
+@media(prefers-reduced-motion:reduce) { .pack-gym-controls__strike { transition:none; } }
+
+/* Expand after purchase, before the third strike, so knockout starts without
+   resizing the live renderer beneath the full-viewport finale portal.
+   Keep that geometry through the results; restore the shop only on dismissal.
+   The Shop's isolated stacking context and route-entry transform would otherwise
+   keep a fixed child behind the city header or tied to the scrolling route. */
+.trading-post:has(> .gym.gacha-stage:is([data-phase=punching],[data-phase=tenPunching],[data-phase=knockout],[data-phase=tenKnockout],[data-phase=reveal],[data-phase=summary])) {
+  isolation: auto;
+}
+.game-route-stage:has(> .trading-post > .gym.gacha-stage:is([data-phase=punching],[data-phase=tenPunching],[data-phase=knockout],[data-phase=tenKnockout],[data-phase=reveal],[data-phase=summary])) {
+  transform: none !important;
+}
+.trading-post > .gym.gacha-stage:is([data-phase=punching],[data-phase=tenPunching],[data-phase=knockout],[data-phase=tenKnockout],[data-phase=reveal],[data-phase=summary]) {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  width: 100%;
+  height: 100dvh;
+  min-height: 0;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+}
+.trading-post > .gym.gacha-stage:is([data-phase=punching],[data-phase=tenPunching],[data-phase=knockout],[data-phase=tenKnockout],[data-phase=reveal],[data-phase=summary]) > .gym__arena {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+}
+.game-shell:has(.gym.gacha-stage:is([data-phase=punching],[data-phase=tenPunching],[data-phase=knockout],[data-phase=tenKnockout],[data-phase=reveal],[data-phase=summary])) .city-header,
+.trading-post:has(> .gym.gacha-stage:is([data-phase=punching],[data-phase=tenPunching],[data-phase=knockout],[data-phase=tenKnockout],[data-phase=reveal],[data-phase=summary])) > .market-tabs {
+  visibility: hidden;
+  pointer-events: none;
+}

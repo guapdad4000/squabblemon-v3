@@ -7,9 +7,11 @@
  */
 import type { PackOpening } from './packOpening';
 import type { PlayerBootstrap } from './playerBootstrap';
+import type { PullSeasonProgress } from './pullSeasonProgress';
 
 export interface OpenPackResult {
   bootstrap: PlayerBootstrap;
   opening: PackOpening;
+  pullSeason?: PullSeasonProgress;
   alreadyOpened: boolean;
 }

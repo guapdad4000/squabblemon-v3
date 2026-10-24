@@ -1,0 +1,204 @@
+{
+  "tool": "Built-in image_gen.imagegen via imagegen skill",
+  "date": "2026-10-24",
+  "assets": [
+    {
+      "file": "right-wall.webp",
+      "master": "right-wall.png",
+      "source": "exec-c564c910-ea8e-42cb-a308-e38dd6aee7f1.png",
+      "prompt_summary": "Flat orthographic straight-on right-wall elevation of same warm brick, amber factory-window and teal steel anime gym. Wall only, no bag, floor, ceiling, people, text or crowns. For video-generation wall destination.",
+      "bytes": 464698,
+      "shipping": false,
+      "archive": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v1/approved-originals/brand/gacha/rarity-flight-v1/right-wall.webp",
+      "status": "Archived historical source derivative; no runtime consumer in approved video flow."
+    },
+    {
+      "file": "bag-render.webp",
+      "master": "bag-render.png",
+      "source": "exec-f917f708-7dda-4911-890b-998839e73e2a.png",
+      "prompt_summary": "Isolated full black leather punching bag as dimensional studio3D render with cel-shaded contours, gold clenched-fist emblem, crimson slashes, four tabs and short chain. Transparent background; no text, people or crowns.",
+      "bytes": 229608,
+      "shipping": true,
+      "sha256": "f803331f0d0936bd117858a4f29c2269d9bc3f99806ddbda1fca77018a5ca368",
+      "dimensions": [
+        1024,
+        1536
+      ],
+      "encoding": "ffmpeg libwebp quality80 compression_level6; original PNG master, unchanged dimensions and exact alpha",
+      "approvedBeforeOptimization": {
+        "bytes": 273354,
+        "archive": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v1/approved-originals/brand/gacha/rarity-flight-v1/bag-render.webp"
+      },
+      "beforeSecondOptimization": {
+        "bytes": 253452,
+        "archive": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v2/before/brand/gacha/rarity-flight-v1/bag-render.webp"
+      },
+      "qualityComparisonSecondPass": {
+        "path": "brand/gacha/rarity-flight-v1/bag-render.webp",
+        "source": "/home/falcon/.codex/generated_images/01a16c62-60f2-7942-b229-e067daf32b61/exec-f917f708-7dda-4911-890b-998839e73e2a.png",
+        "candidate": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v2/images/bag-render-q80.webp",
+        "quality": 80,
+        "beforeBytes": 253452,
+        "bytes": 229608,
+        "dimensions": [
+          1024,
+          1536
+        ],
+        "alphaExact": true,
+        "compositePsnrToSource": {
+          "dark": 34.11061,
+          "cream": 34.14119
+        }
+      }
+    },
+    {
+      "file": "default-gym.webp",
+      "master": "default-gym.png",
+      "source": "exec-54369831-5c16-4578-a2c4-fd13e73a2e5b.png",
+      "prompt_summary": "Clean pre-punch wide gym environment matching cinematic art, open center-safe training lane, warm brick arched windows, teal iron, dramatic wood floor. No foreground bag/gloves/chains. Replaces entire old layered room.",
+      "bytes": 392400,
+      "shipping": true,
+      "sha256": "fe238003ec2a0b9f40a654c6a93ad72b585cbc889098c8c4aca6404508839fd9",
+      "dimensions": [
+        1672,
+        941
+      ],
+      "encoding": "ffmpeg libwebp quality80 compression_level6; original PNG master, unchanged dimensions and exact alpha",
+      "approvedBeforeOptimization": {
+        "bytes": 517842,
+        "archive": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v1/approved-originals/brand/gacha/rarity-flight-v1/default-gym.webp"
+      },
+      "beforeSecondOptimization": {
+        "bytes": 456782,
+        "archive": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v2/before/brand/gacha/rarity-flight-v1/default-gym.webp"
+      },
+      "qualityComparisonSecondPass": {
+        "path": "brand/gacha/rarity-flight-v1/default-gym.webp",
+        "source": "/home/falcon/.codex/generated_images/01a16c62-60f2-7942-b229-e067daf32b61/exec-54369831-5c16-4578-a2c4-fd13e73a2e5b.png",
+        "candidate": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v2/images/default-gym-q80.webp",
+        "quality": 80,
+        "beforeBytes": 456782,
+        "bytes": 392400,
+        "dimensions": [
+          1672,
+          941
+        ],
+        "alphaExact": true,
+        "compositePsnrToSource": {
+          "dark": 31.19061,
+          "cream": 31.19061
+        }
+      }
+    },
+    {
+      "file": "flight-pov.webp",
+      "master": "flight-pov.png",
+      "source": "exec-f0e5e20c-72ce-4d7b-8554-ad7afb4c1368.png",
+      "prompt_summary": "Corrected bag-mounted forward camera from lower leading edge. Flat stitched circular bag END CAP appears only as bottom semicircle, body trails outside camera view. Face wall ahead across gym with speed lines and dust. Not rounded barrel/dome. No UI/crowns.",
+      "bytes": 386976,
+      "shipping": false,
+      "archive": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v1/approved-originals/brand/gacha/rarity-flight-v1/flight-pov.webp",
+      "status": "Archived historical source derivative; no runtime consumer in approved video flow."
+    },
+    {
+      "file": "compression.webp",
+      "master": "compression.png",
+      "source": "exec-89c52d27-4e4c-419e-9759-3f8cfaadcccd.png",
+      "prompt_summary": "First impact cel: enormous red glove compresses black fist-emblem bag, dark ink/teal hold with narrow gold cracks, same gym; full screen, no text or crowns.",
+      "bytes": 222604,
+      "shipping": true,
+      "sha256": "2b70efb30cfb4d25db91dc6ccd9ecda718b55fe901a8d633a202bee1670e73fd",
+      "dimensions": [
+        1672,
+        941
+      ],
+      "encoding": "ffmpeg libwebp quality80 compression_level6; original PNG master, unchanged dimensions and exact alpha",
+      "approvedBeforeOptimization": {
+        "bytes": 285392,
+        "archive": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v1/approved-originals/brand/gacha/rarity-flight-v1/compression.webp"
+      },
+      "beforeSecondOptimization": {
+        "bytes": 262494,
+        "archive": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v2/before/brand/gacha/rarity-flight-v1/compression.webp"
+      },
+      "qualityComparisonSecondPass": {
+        "path": "brand/gacha/rarity-flight-v1/compression.webp",
+        "source": "/home/falcon/.codex/generated_images/01a16c62-60f2-7942-b229-e067daf32b61/exec-89c52d27-4e4c-419e-9759-3f8cfaadcccd.png",
+        "candidate": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v2/images/compression-q80.webp",
+        "quality": 80,
+        "beforeBytes": 262494,
+        "bytes": 222604,
+        "dimensions": [
+          1672,
+          941
+        ],
+        "alphaExact": true,
+        "compositePsnrToSource": {
+          "dark": 34.47528,
+          "cream": 34.47528
+        }
+      }
+    },
+    {
+      "file": "release.webp",
+      "master": "release.png",
+      "source": "exec-3c26d6c9-f058-4a2c-a197-c9e1739f281e.png",
+      "prompt_summary": "Third impact cel: red glove separates, black bag launches with snapped chains, screen-wide angular ivory/gold force and black lightning; clean authored anime drawing, no UI/text/crowns.",
+      "bytes": 294796,
+      "shipping": true,
+      "sha256": "b7be468a7954c8a9f956eec41c69c9e2887043692ff47c22c8416d164f4981d0",
+      "dimensions": [
+        1672,
+        941
+      ],
+      "encoding": "ffmpeg libwebp quality80 compression_level6; original PNG master, unchanged dimensions and exact alpha",
+      "approvedBeforeOptimization": {
+        "bytes": 363462,
+        "archive": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v1/approved-originals/brand/gacha/rarity-flight-v1/release.webp"
+      },
+      "beforeSecondOptimization": {
+        "bytes": 336414,
+        "archive": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v2/before/brand/gacha/rarity-flight-v1/release.webp"
+      },
+      "qualityComparisonSecondPass": {
+        "path": "brand/gacha/rarity-flight-v1/release.webp",
+        "source": "/home/falcon/.codex/generated_images/01a16c62-60f2-7942-b229-e067daf32b61/exec-3c26d6c9-f058-4a2c-a197-c9e1739f281e.png",
+        "candidate": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v2/images/release-q80.webp",
+        "quality": 80,
+        "beforeBytes": 336414,
+        "bytes": 294796,
+        "dimensions": [
+          1672,
+          941
+        ],
+        "alphaExact": true,
+        "compositePsnrToSource": {
+          "dark": 31.33447,
+          "cream": 31.33447
+        }
+      }
+    },
+    {
+      "file": "wall-impact.webp",
+      "master": "wall-impact.png",
+      "source": "exec-0e17ef58-cdf3-4944-9931-fe678bd0daf6.png",
+      "prompt_summary": "Fourth impact cel: intact fist-emblem bag slams diagonally into gym brick wall, screen-filling debris, dust and black/gold/ivory shock. No cards/UI/crowns. Ten-pull burst follows separately.",
+      "bytes": 496758,
+      "shipping": false,
+      "archive": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v1/approved-originals/brand/gacha/rarity-flight-v1/wall-impact.webp",
+      "status": "Archived historical source derivative; no runtime consumer in approved video flow."
+    }
+  ],
+  "notes": [
+    "Prompts used preceding generated gym and bag as local references. Original generated PNGs preserved.",
+    "Compression, existing cinematic-v2/contact, release, wall-impact are the four authored cels. K10 Leroy/Sho-nuff local edit supplied timing research only; no film frames used in shipped artwork.",
+    "Original flight POV was rejected as a rounded barrel. Corrected final source is explicitly recorded above; rejected drafts are excluded from the video pack and runtime.",
+    "PNG masters are in output/gacha-rarity-flight. Runtime WebP quality87 for wall/bag/default-gym and86 for correctedPOV/newcels, ffmpeg libwebp compression_level6.",
+    "Only the selected opening media is preloaded; reduced/static opens skip cinematic preload. Actual receipt supplies all rarity and reward data.",
+    "All new visual emblems are clenched fists; no crowns.",
+    "2026-10-24 delivery audit: historical unreferenced derivatives are archived outside public; entries retain original provenance and mark shipping=false.",
+    "Current delivery optimization supersedes earlier encoding notes: quality84, transparent burst foreground86, same source PNG masters and dimensions; exact alpha retained. Historical entries remain provenance, not runtime URLs.",
+    "Second delivery optimization supersedes earlier encoding notes for shipping files:quality80 from original PNG masters, unchanged dimensions and exact alpha. Full/detail comparisons reviewed before applying; previous public derivatives archived."
+  ],
+  "publicBasePath": "brand/gacha/rarity-flight-v1/"
+}

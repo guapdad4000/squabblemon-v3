@@ -1,3 +1,4 @@
+import { installGameSurfacePolicy } from '../../lib/gameSurfacePolicy';
 import { installInteractionClickSounds } from '../../lib/interactionClickSounds';
 import './gameStyles';
 import { NotificationProvider } from '../../components/Notifications';
@@ -28,6 +29,8 @@ import '../../styles/paper-tabs.css';
 
 // Development fixtures must never make the production shell parse the full card catalog.
 const E2EGamePreview = import.meta.env.DEV ? lazy(() => import('./E2EGamePreview')) : null;
+const BagRewardArrival = lazy(() => import('../../components/BagRewardArrival').then(module => ({ default: module.BagRewardArrival })));
+const DailyCheckInArrival = lazy(() => import('../../components/DailyCheckInArrival').then(module => ({ default: module.DailyCheckInArrival })));
 
 function BootstrapError({
   onRetry,
@@ -122,8 +125,10 @@ function GameRoutes({ bootstrap }: { bootstrap: PlayerBootstrap }) {
     <CosmeticProvider profile={bootstrap.profile}>
     <NotificationProvider key={bootstrap.profile.id} bootstrap={bootstrap}>
     <RewardRevealGate />
+    {(location === '/game' || location === '/game/shop') && bootstrap.profile.onboardingStep === 'complete' && <Suspense fallback={null}><BagRewardArrival key={bootstrap.profile.id} profile={bootstrap.profile} /></Suspense>}
     <KumiteUnlockGate key={bootstrap.profile.id} bootstrap={bootstrap} />
     <PlayerLevelCelebration profile={bootstrap.profile} />
+    {location === '/game' && bootstrap.profile.onboardingStep === 'complete' && <Suspense fallback={null}><DailyCheckInArrival key={bootstrap.profile.id} bootstrap={bootstrap} /></Suspense>}
     <Suspense fallback={<LoadingScreen phase="scene" />}>
     <Switch>
       <Route path="/game/onboarding">
@@ -208,6 +213,7 @@ function GameShell({
 
 export default function GameApp() {
   useEffect(installInteractionClickSounds, []);
+  useEffect(installGameSurfacePolicy, []);
   const { isLoaded, isSignedIn } = useAppAuth();
   const [location, setLocation] = useLocation();
   const search = useSearch();

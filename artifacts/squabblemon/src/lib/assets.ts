@@ -3,7 +3,10 @@ import storyPortraitRevisions from './storyPortraitRevisions.json';
 import { elementalStandin } from './elementalStandins';
 
 export const getAssetUrl = (path: string) => {
-  const cleanPath = path.replace(/^\/+/, '');
+  const requestedPath = path.replace(/^\/+/, '');
+  // Versioned coin family keeps saved references compatible and avoids stale CDN art.
+  const cleanPath = ({ 'assets/rewards/clout-token.webp': 'assets/rewards/clout-token-v2.webp',
+    'assets/rewards/clout-stack.webp': 'assets/rewards/clout-stack-v2.webp' } as Record<string, string>)[requestedPath] ?? requestedPath;
   const url = `${(import.meta.env?.BASE_URL ?? '/').replace(/\/+$/, '')}/${cleanPath}`;
   // Story dialogue and battle opponents use asset paths, not catalog IDs. Give
   // those portraits the same revision as collection and card views.

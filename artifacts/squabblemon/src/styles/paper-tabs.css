@@ -34,7 +34,7 @@
 .fight-night .fight-tabs a { color: #242119; }
 
 .trading-post { position: relative; isolation: isolate; }
-.trading-post > .market-tabs {
+.trading-post > nav.market-tabs {
   align-self: center;
   justify-content: center;
   width: max-content;

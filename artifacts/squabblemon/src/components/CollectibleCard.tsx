@@ -6,43 +6,12 @@ import { getCardRarity } from './CardRarityTreatment';
 import '../styles/collectible-card.css';
 import '../styles/collectible-layers.css';
 import '../styles/collectible-foil.css';
-import normalPlate from '../assets/collector-v2/normal-plate.webp';
-import normalFist from '../assets/collector-v2/normal-fist.webp';
-import firePlate from '../assets/collector-v2/fire-plate.webp';
-import fireFist from '../assets/collector-v2/fire-fist.webp';
-import waterPlate from '../assets/collector-v2/water-plate.webp';
-import waterFist from '../assets/collector-v2/water-fist.webp';
-import plantPlate from '../assets/collector-v2/plant-plate.webp';
-import plantFist from '../assets/collector-v2/plant-fist.webp';
-import airPlate from '../assets/collector-v2/air-plate.webp';
-import airFist from '../assets/collector-v2/air-fist.webp';
-import electricPlate from '../assets/collector-v2/electric-plate.webp';
-import electricFist from '../assets/collector-v2/electric-fist.webp';
-import poisonPlate from '../assets/collector-v2/poison-plate.webp';
-import poisonFist from '../assets/collector-v2/poison-fist.webp';
-import lightPlate from '../assets/collector-v2/light-plate.webp';
-import lightFist from '../assets/collector-v2/light-fist.webp';
-import darkPlate from '../assets/collector-v2/dark-plate.webp';
-import darkFist from '../assets/collector-v2/dark-fist.webp';
-import earthPlate from '../assets/collector-v2/earth-plate.webp';
-import earthFist from '../assets/collector-v2/earth-fist.webp';
+import { collectibleElementArtwork } from '../lib/collectiblePrintAssets';
 
 type Props = React.ComponentProps<typeof CardView> & { foil?: boolean; showRules?: boolean };
-const art: Record<string, { plate: string; fist: string }> = {
-  Normal: { plate: normalPlate, fist: normalFist },
-  Fire: { plate: firePlate, fist: fireFist },
-  Water: { plate: waterPlate, fist: waterFist },
-  Plant: { plate: plantPlate, fist: plantFist },
-  Air: { plate: airPlate, fist: airFist },
-  Electric: { plate: electricPlate, fist: electricFist },
-  Poison: { plate: poisonPlate, fist: poisonFist },
-  Light: { plate: lightPlate, fist: lightFist },
-  Dark: { plate: darkPlate, fist: darkFist },
-  Earth: { plate: earthPlate, fist: earthFist },
-};
 export function collectibleCardLayers(card: Props['card'], foil = true, showRules = true): CollectibleCardLayers {
-  const element = card.type === 'Rock' ? 'Earth' : card.type;
-  const images = art[element] ?? art.Normal;
+  const images = collectibleElementArtwork(card);
+  const { element } = images;
   const isBlockbuster = card.kind === 'blockbuster';
   return {
     foil,

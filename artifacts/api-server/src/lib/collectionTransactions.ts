@@ -1,4 +1,6 @@
-import { resolvePullBanner } from "@workspace/squabblemon-engine/pullBanners";
+import { grantPullSeasonMilestones, recoverPullSeasonRewards, getPullSeasonProgress } from './pullSeason';
+import type { PullSeasonProgress, PullSeasonReward } from '@workspace/squabblemon-engine/packRules';
+import { pullBannerOddsVersion, resolvePullBanner } from "@workspace/squabblemon-engine/pullBanners";
 import { addStyleShardBalances, spendStyleShards } from '@workspace/squabblemon-engine/styleShards';
 import { and, eq, sql } from "drizzle-orm";
 import {
@@ -13,8 +15,7 @@ import { catalogCardById } from "@workspace/squabblemon-engine/data";
 import { MAX_DECK_SLOTS } from "@workspace/squabblemon-engine/economy";
 import {
   type CollectionRoadDefinition,
-  generateStreetPack,
-  generateStreetTenPull,
+  generateStreetBatch,
   isPullCount,
   STREET_PACK_CONFIG,
   STREET_PACK_TEN_PULL_CONFIG,
@@ -37,10 +38,13 @@ export async function openStreetPackForPlayer(
     paymentMethod: "ticket" | "softCurrency";
     pullCount?: number;
     bannerId?: string;
+    bannerOccurrenceId?: string;
   },
 ): Promise<{
   opening: PlayerPackOpeningRecord;
   alreadyOpened: boolean;
+  pullSeason: PullSeasonProgress;
+  seasonRewards: PullSeasonReward[];
 }> {
   return db.transaction(async (tx) => {
     await tx.execute(
@@ -62,6 +66,8 @@ export async function openStreetPackForPlayer(
       return {
         opening: existing,
         alreadyOpened: true,
+        pullSeason: await getPullSeasonProgress(userId, Date.now(), tx),
+        seasonRewards: await recoverPullSeasonRewards(userId, input.idempotencyKey, existing.createdAt, tx),
       };
     }
 
@@ -73,10 +79,12 @@ export async function openStreetPackForPlayer(
       throw new EconomyTransactionError(404, "Player profile not found");
     }
 
+    const openedAt = Date.now();
     let banner;
-    try { banner = resolvePullBanner(input.bannerId); }
+    try { banner = resolvePullBanner(input.bannerId, openedAt, input.bannerOccurrenceId); }
     catch (error) { throw new EconomyTransactionError(400, (error as Error).message); }
-    const pullCount = isPullCount(input.pullCount) ? input.pullCount : 1;
+    if (input.pullCount !== undefined && !isPullCount(input.pullCount)) throw new EconomyTransactionError(400, 'Pull count must be an integer from 1 to 10');
+    const pullCount = input.pullCount ?? 1;
     const tier = tierForPullCount(pullCount);
     const cost =
       input.paymentMethod === "ticket"
@@ -87,7 +95,7 @@ export async function openStreetPackForPlayer(
         400,
         pullCount === 10
           ? `You need ${STREET_PACK_TEN_PULL_CONFIG.ticketCost} Street Pack tickets for the ten-pull`
-          : "You need a Street Pack ticket",
+          : `You need ${cost} Street Pack ${cost === 1 ? "ticket" : "tickets"}`,
       );
     }
     if (
@@ -100,20 +108,9 @@ export async function openStreetPackForPlayer(
       );
     }
 
-    const generated =
-      pullCount === 10
-        ? generateStreetTenPull({
-            ownedCardIds: profile.ownedCardIds,
-            discoveredCardIds: profile.discoveredCardIds,
-            ownedVariants: profile.ownedVariants,
-            pity: profile.packPity,
-          }, undefined, banner.featuredCardIds)
-        : generateStreetPack({
-            ownedCardIds: profile.ownedCardIds,
-            discoveredCardIds: profile.discoveredCardIds,
-            ownedVariants: profile.ownedVariants,
-            pity: profile.packPity,
-          }, undefined, banner.featuredCardIds);
+    const generated = generateStreetBatch({ ownedCardIds: profile.ownedCardIds,
+      discoveredCardIds: profile.discoveredCardIds, ownedVariants: profile.ownedVariants, pity: profile.packPity,
+    }, pullCount, undefined, banner.featuredCardIds);
     await tx
       .update(playerProfilesTable)
       .set({
@@ -140,7 +137,8 @@ export async function openStreetPackForPlayer(
       .values({
         clerkUserId: userId,
         idempotencyKey: input.idempotencyKey,
-        oddsVersion: banner.id === "standard" ? tier.oddsVersion : `${tier.oddsVersion}:banner-${banner.id}-v1`,
+        oddsVersion: pullBannerOddsVersion(tier.oddsVersion, banner),
+        createdAt: new Date(openedAt),
         paymentMethod: input.paymentMethod,
         cost,
         rewards: generated.rewards,
@@ -148,7 +146,8 @@ export async function openStreetPackForPlayer(
         pityAfter: generated.pityAfter,
       })
       .returning();
-    return { opening, alreadyOpened: false };
+    const season = await grantPullSeasonMilestones(tx, userId, input.idempotencyKey, openedAt);
+    return { opening, alreadyOpened: false, pullSeason: season.progress, seasonRewards: season.rewards };
   });
 }
 

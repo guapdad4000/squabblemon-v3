@@ -1,0 +1,47 @@
+.neighborhood-recruit .pull-feature__poster-art { filter:brightness(.48) saturate(.72); }
+.neighborhood-recruit .pull-feature__title { font:700 italic clamp(44px,5.4vw,80px)/.91 'Hemi Head Italic',sans-serif; letter-spacing:-.03em; }
+.neighborhood-recruit__print { grid-column:2; grid-row:1/3; align-self:center; justify-self:center; width:min(340px,100%); padding:12px; transform:rotate(4deg); filter:drop-shadow(0 12px 12px #0008); }
+.neighborhood-recruit__print>img { width:100%; object-fit:contain; }
+.neighborhood-recruit__offer { align-self:center; max-width:400px; }
+.neighborhood-recruit__offer>label { display:block; margin:20px 0 8px; font:700 10px/1.4 var(--font-mono); letter-spacing:.1em; text-transform:uppercase; color:#f5ddaa; }
+.neighborhood-recruit__offer .street-select { width:100%; }
+.neighborhood-recruit__guarantee { margin:12px 0 20px; color:#f6e9d0; font:600 12px/1.4 var(--font-sans); }
+.neighborhood-recruit .neighborhood-recruit__buy { display:flex; align-items:center; justify-content:center; gap:10px; min-height:54px; width:100%; margin:0; font:700 19px/1.2 'Hemi Head Italic',sans-serif; }
+.neighborhood-recruit__buy .game-glyph { width:27px; height:27px; }
+.neighborhood-recruit__recover { display:flex; align-items:center; gap:8px; color:#fff0c1; padding:12px 0; font:700 14px/1.4 var(--font-sans); }
+.neighborhood-recruit__notice { margin:12px 0 0; font:600 12px/1.5 var(--font-sans); color:#ffe3a4; }
+.neighborhood-recruit__receipt { display:flex; gap:7px; align-items:center; color:#e5f3ce; font:700 13px/1.4 var(--font-sans); }
+@media(max-width:700px) {
+ .neighborhood-recruit .pull-feature__title { font-size:clamp(32px,8vw,52px); max-width:12ch; }
+ .neighborhood-recruit__print { width:min(238px,59vw); margin:14px auto 0; padding:0; flex:none; }
+ .neighborhood-recruit__offer { width:100%; margin:auto; }
+ .neighborhood-recruit__offer>label { margin-top:14px; }
+ .neighborhood-recruit__guarantee { margin:8px 0 12px; font-size:10px; }
+ .neighborhood-recruit .neighborhood-recruit__buy { font-size:17px; min-height:50px; }
+}
+@media(prefers-reduced-motion:reduce) { .neighborhood-recruit__print { transform:none; } }
+
+/* This permanent choice sheet owns its layout; the random-pull fight bill keeps its original staging. */
+.trading-post > .gym.gacha-stage[data-neighborhood=true] { display:block; height:auto; min-height:calc(100dvh - 140px); padding:26px clamp(28px,5vw,70px) 42px; }
+.fight-bill[data-neighborhood=true] { max-width:1040px; padding:0; margin:0 auto 30px; background:none; }
+.fight-bill[data-neighborhood=true]>.fight-bill__inner { display:none; }
+.fight-bill[data-neighborhood=true]>.pull-feature { position:relative; inset:auto; height:auto; }
+.fight-bill[data-neighborhood=true] .neighborhood-recruit { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); align-items:center; min-height:650px; height:auto; padding:38px 46px; gap:0 38px; text-align:left; }
+.fight-bill[data-neighborhood=true] .neighborhood-recruit .pull-feature__billing { grid-column:1; grid-row:1; align-self:end; }
+.fight-bill[data-neighborhood=true] .neighborhood-recruit .pull-feature__edition { font-size:10px; margin-bottom:16px; }
+.fight-bill[data-neighborhood=true] .neighborhood-recruit .pull-feature__title { margin:0; font-size:clamp(42px,4.7vw,68px); max-width:12ch; transform-origin:left center; }
+.fight-bill[data-neighborhood=true] .neighborhood-recruit__print { grid-column:2; grid-row:1/3; width:min(340px,100%); padding:10px; }
+.fight-bill[data-neighborhood=true] .neighborhood-recruit__offer { grid-column:1; grid-row:2; align-self:start; margin:20px 0 0; text-align:left; text-shadow:0 2px 5px #000; }
+.fight-bill .neighborhood-recruit .neighborhood-recruit__buy { position:relative; isolation:isolate; border:0; border-radius:0; padding:12px 24px 12px 12px; color:#fff1cf; background:#e7d6a8; clip-path:polygon(0 0,92% 0,100% 50%,92% 100%,0 100%); text-shadow:none; }
+.fight-bill .neighborhood-recruit .neighborhood-recruit__buy::before { content:''; position:absolute; z-index:-1; inset:3px; clip-path:inherit; background:linear-gradient(#28775b,#13543e); }
+.fight-bill .neighborhood-recruit .neighborhood-recruit__buy:hover:not(:disabled) { filter:brightness(1.1); }
+@media(max-width:700px) {
+ .trading-post > .gym.gacha-stage[data-neighborhood=true] { padding:22px 27px 32px; }
+ .fight-bill[data-neighborhood=true] .neighborhood-recruit { display:flex; gap:0; min-height:0; padding:22px 13px 20px; text-align:center; }
+ .fight-bill[data-neighborhood=true] .neighborhood-recruit .pull-feature__billing { align-self:auto; }
+ .fight-bill[data-neighborhood=true] .neighborhood-recruit .pull-feature__edition { font-size:8px; margin-bottom:10px; }
+ .fight-bill[data-neighborhood=true] .neighborhood-recruit .pull-feature__title { font-size:clamp(30px,8vw,49px); max-width:13ch; margin:auto; transform-origin:center; }
+ .fight-bill[data-neighborhood=true] .neighborhood-recruit__print { width:min(235px,60vw); padding:0; margin:14px auto 0; }
+ .fight-bill[data-neighborhood=true] .neighborhood-recruit__offer { margin:4px auto 0; text-align:center; }
+ .fight-bill[data-neighborhood=true] .pull-feature__arrows button { top:45%; }
+}

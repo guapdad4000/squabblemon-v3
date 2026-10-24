@@ -1,0 +1,90 @@
+import assert from 'node:assert/strict';
+import { mkdir, writeFile } from 'node:fs/promises';
+import { chromium, expect } from '@playwright/test';
+const origin = process.env.UI_ORIGIN ?? 'http://127.0.0.1:4245';
+const output = process.env.POPUP_OUTPUT ?? '/tmp/squabblemon-shared-receipts';
+await mkdir(output, { recursive: true });
+const browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PATH ?? '/usr/bin/google-chrome', args: ['--no-sandbox'] });
+const report = [];
+try {
+  for (const viewport of [{ width: 320, height: 700 }, { width: 390, height: 844 }, { width: 844, height: 390 }, { width: 1440, height: 1000 }]) {
+    const page = await browser.newPage({ viewport, reducedMotion: 'reduce' });
+    const errors = [];
+    page.on('pageerror', error => errors.push(error.message));
+    await page.route('**/api/**', route => {
+      const path = new URL(route.request().url()).pathname;
+      if (path.endsWith('/daily-clout')) return route.fulfill({ json: { date: '2026-10-24', available: false, amount: 100, attemptsRemaining: 0, resetsAt: '2026-10-25T00:00:00Z' } });
+      if (path.endsWith('/notifications/receipts')) return route.fulfill({ json: { ids: [] } });
+      if (path.includes('/mail')) return route.fulfill({ json: { messages: [] } });
+      if (path.includes('/account-rewards')) return route.fulfill({ json: { date: '2026-10-24', pending: [], growth: { ready: false } } });
+      return route.fulfill({ status: 200, json: { ids: [], items: [] } });
+    });
+    await page.goto(`${origin}/e2e/shared-receipts.fixture.html`);
+    await page.getByRole('button', { name: 'Open receipt queue', exact: true }).click();
+    const dialog = page.getByRole('dialog', { name: 'The block came through', exact: true });
+    await expect(dialog).toBeVisible();
+    await page.evaluate(() => document.fonts.ready);
+    await page.waitForFunction(() => [...document.querySelectorAll('.reward-reveal img')].every(image => image.complete && image.naturalWidth > 0));
+    const roles = await dialog.evaluate(element => {
+      const style = selector => { const node = element.querySelector(selector); const css = getComputedStyle(node); return { family: css.fontFamily, size: Number.parseFloat(css.fontSize), weight: css.fontWeight, color: css.color }; };
+      return { title: style('.game-popup__title'), copy: style('.game-popup__copy'), amount: style('.game-popup__amount'), renderedAmount: style('.game-popup__amount .animated-number > span'), paper: getComputedStyle(element.querySelector('.reward-street-file__paper')).backgroundImage, action: getComputedStyle(element.querySelector('.reward-street-file__action')).clipPath };
+    });
+    assert.match(roles.title.family, /Hemi Head Italic/);
+    assert.equal(roles.title.weight, '700');
+    assert.match(roles.copy.family, /Plus Jakarta Sans/);
+    assert.match(roles.amount.family, /Hemi Head/);
+    assert.equal(roles.renderedAmount.size, roles.amount.size);
+    assert.match(roles.paper, /repeating-linear-gradient/);
+    assert.match(roles.action, /polygon/);
+    const assertContained = async root => {
+      const geometry = await root.evaluate(element => ({ client: element.clientWidth, scroll: element.scrollWidth, rect: element.getBoundingClientRect().toJSON(), viewport: { width: innerWidth, height: innerHeight } }));
+      assert.ok(geometry.scroll <= geometry.client + 2, `No internal horizontal clipping: ${JSON.stringify(geometry)}`);
+      assert.ok(geometry.rect.x >= 0 && geometry.rect.right <= geometry.viewport.width + 1);
+      assert.ok(geometry.rect.y >= 0 && geometry.rect.bottom <= geometry.viewport.height + 1);
+    };
+    await assertContained(dialog);
+    const glyphs = await dialog.locator('.reward-reveal__flip .game-glyph').evaluateAll(nodes => nodes.map(node => ({ wrapper: node.getBoundingClientRect().toJSON(), image: node.querySelector('img').getBoundingClientRect().toJSON() })));
+    for (const glyph of glyphs) { assert.ok(glyph.image.height <= glyph.wrapper.height + 1); assert.ok(glyph.image.width <= glyph.wrapper.width + 1); }
+    await expect(dialog.locator('.animated-number[aria-label="+2"]')).toBeVisible();
+    await page.screenshot({ path: `${output}/receipt-${viewport.width}x${viewport.height}.png`, fullPage: true });
+    assert.equal(await page.evaluate(() => window.__sharedReceipt()), 'shared-generic');
+    await dialog.getByRole('button', { name: 'Keep going', exact: false }).click();
+    const story = page.getByRole('dialog', { name: 'The neighborhood remembers', exact: true });
+    await expect(story).toBeVisible();
+    assert.equal(await page.evaluate(() => window.__sharedReceipt()), 'shared-story');
+    await expect(story.locator('.reward-reveal__wallet .animated-number')).toHaveAttribute('aria-label', '1,000');
+    await page.screenshot({ path: `${output}/story-hero-${viewport.width}x${viewport.height}.png`, fullPage: true });
+    const scroll = story.locator('.reward-reveal__story-scroll');
+    assert.ok(await scroll.evaluate(element => element.scrollHeight > element.clientHeight));
+    await scroll.evaluate(element => { element.scrollTop = element.scrollHeight; });
+    const continueButton = story.getByRole('button', { name: 'Keep going', exact: false });
+    await expect(continueButton).toBeVisible();
+    const continueStyle = await continueButton.evaluate(node => ({ color: getComputedStyle(node).color, family: getComputedStyle(node).fontFamily }));
+    assert.equal(continueStyle.color, 'rgb(255, 249, 230)');
+    assert.match(continueStyle.family, /Hemi Head/);
+    await assertContained(story);
+    await page.screenshot({ path: `${output}/story-receipt-${viewport.width}x${viewport.height}.png`, fullPage: true });
+    await continueButton.click();
+    await expect(page.locator('dialog.reward-reveal')).toHaveCount(0);
+    assert.equal(await page.evaluate(() => window.__sharedReceipt()), null);
+    await page.getByRole('button', { name: /^Notifications,/ }).click();
+    const inbox = page.getByRole('dialog', { name: 'On your radar' });
+    await expect(inbox).toBeVisible();
+    assert.match(await inbox.locator('h2').evaluate(element => getComputedStyle(element).fontFamily), /Hemi Head Italic/);
+    await expect(inbox.getByText('Clear alerts here. Your rewards stay available.')).toBeVisible();
+    await assertContained(inbox);
+    const secondary = await inbox.locator('.game-popup__secondary').evaluate(node => ({ color: getComputedStyle(node).color, background: getComputedStyle(node).backgroundColor }));
+    assert.equal(secondary.color, 'rgb(245, 223, 178)');
+    assert.equal(secondary.background, 'rgba(0, 0, 0, 0)');
+    await page.screenshot({ path: `${output}/inbox-${viewport.width}x${viewport.height}.png`, fullPage: true });
+    await inbox.getByRole('button', { name: 'Clear all', exact: true }).click();
+    await expect(inbox.getByRole('button', { name: 'Clear all', exact: true })).toBeFocused();
+    await inbox.getByRole('button', { name: 'Close notifications', exact: true }).click();
+    await expect(page.getByRole('button', { name: /^Notifications,/ })).toBeFocused();
+    assert.deepEqual(errors, []);
+    report.push({ viewport, roles, genericQueueAdvancesExactlyOnce: true, storyScrollAndPinnedContinue: true, confirmedWallet: 1000, queueDrained: true, notificationClearAndCloseFocus: true, pageErrors: errors });
+    await page.close();
+  }
+  await writeFile(`${output}/shared-receipts.json`, JSON.stringify(report, null, 2));
+  console.log(JSON.stringify(report, null, 2));
+} finally { await browser.close(); }

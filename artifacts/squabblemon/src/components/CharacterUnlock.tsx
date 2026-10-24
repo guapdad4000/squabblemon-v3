@@ -5,8 +5,8 @@ import { catalogCardById } from '../data';
 import { cardMotionReduced } from '../lib/cardFinish';
 
 /** Presentation only: pack rewards are committed before this component mounts. */
-export function CharacterUnlock({ cardId, children }: { cardId: string; children: React.ReactNode }) {
-  const [intro, setIntro] = useState(() => !cardMotionReduced());
+export function CharacterUnlock({ cardId, children, cardFirst = false }: { cardId: string; children: React.ReactNode; cardFirst?: boolean }) {
+  const [intro, setIntro] = useState(() => !cardFirst && !cardMotionReduced());
   useEffect(() => { if (!intro) return; const timer = window.setTimeout(() => setIntro(false), 3000); return () => window.clearTimeout(timer); }, [intro]);
   const set = styleSetFor(cardId);
   if (!set) return <>{children}</>;

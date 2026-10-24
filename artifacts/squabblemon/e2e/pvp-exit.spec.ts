@@ -40,7 +40,8 @@ for (const kind of ['ranked', 'friend'] as const) {
       await page.screenshot({ path: `test-results/pvp-exit/${kind}-${viewport.width}-arrival.png` });
       await openBattleExit(page);
       const dialog = page.getByRole('dialog', { name: 'Leave this fade?' });
-      await expect(dialog).toContainText(kind === 'ranked' ? 'ranked loss' : 'gives your rival the win');
+      await expect(dialog).toContainText(kind === 'ranked' ? 'ranked loss' : 'gives The Opps the win');
+      await expect(dialog.getByRole('button', { name: 'Keep playing' })).toBeFocused();
       await hit(dialog.getByRole('button', { name: 'Keep playing' }), page);
       await dialog.getByRole('button', { name: 'Keep playing' }).tap();
       await expect(dialog).toBeHidden();

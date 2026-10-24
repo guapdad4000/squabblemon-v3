@@ -1,4 +1,4 @@
-import { Star } from 'lucide-react';
+import { Check, LockKeyhole, Play, Star } from 'lucide-react';
 import { forwardRef, type KeyboardEvent } from 'react';
 import type { StorySeasonProgress } from '@workspace/api-client-react';
 import { getAssetUrl } from '../../../../data';
@@ -6,6 +6,7 @@ import { getAssetUrl } from '../../../../data';
 type SeasonPosterProps = {
   season: StorySeasonProgress;
   isSelected: boolean;
+  isCurrent?: boolean;
   onSelect: () => void;
   onFocus: () => void;
   onKeyDown: (e: KeyboardEvent<HTMLButtonElement>) => void;
@@ -26,6 +27,7 @@ const SEASON_POSTERS: Record<string, string> = {
 export const SeasonPoster = forwardRef<HTMLButtonElement, SeasonPosterProps>(({
   season,
   isSelected,
+  isCurrent = false,
   onSelect,
   onFocus,
   onKeyDown,
@@ -42,6 +44,8 @@ export const SeasonPoster = forwardRef<HTMLButtonElement, SeasonPosterProps>(({
       onClick={onSelect}
       className={`cinema-poster ${isSelected ? 'is-selected' : ''}`}
       data-selected={isSelected}
+      data-current={isCurrent}
+      aria-label={`${season.title} · ${isCurrent ? 'Continue here' : season.status === 'cleared' ? 'Completed, replay available' : season.status === 'locked' ? 'Locked' : 'Available'} · ${season.starsEarned} of ${season.starsAvailable} stars · ${season.clearedNodes} of ${season.totalNodes} scenes`}
       data-status={season.status}
       data-testid={`button-presentation-${season.id}`}
     >
@@ -59,7 +63,7 @@ export const SeasonPoster = forwardRef<HTMLButtonElement, SeasonPosterProps>(({
       </div>
 
       <div className="cinema-poster-status-badge" data-status={season.status}>
-        {season.status === 'available' ? (season.clearedNodes ? 'Playing' : 'Available') : season.status}
+        {isCurrent ? <><Play aria-hidden="true"/> Continue here</> : season.status === 'cleared' ? <><Check aria-hidden="true"/> Completed · Replay</> : season.status === 'locked' ? <><LockKeyhole aria-hidden="true"/> Locked</> : season.clearedNodes ? 'In progress' : 'Ready to start'}
       </div>
     </button>
   );

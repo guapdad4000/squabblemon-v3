@@ -9,10 +9,15 @@ import { assertCampaignDatabaseTarget } from "./database-safety.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const mailOnly = process.argv.includes('--mail');
+const rankedCloutOnly = process.argv.includes('--ranked-clout');
+const monthlyLoginOnly = process.argv.includes('--monthly-login');
+const flexPullsOnly = process.argv.includes('--flex-pulls');
 const socialBrowser = process.argv.includes('--social-browser');
 const socialOnly = process.argv.includes('--social') || socialBrowser;
 const socialLoad = process.argv.includes('--social-load');
-if (socialLoad && (mailOnly || socialOnly)) throw new Error("--social-load cannot be combined with another test mode.");
+if (flexPullsOnly && (mailOnly || socialOnly || socialLoad || rankedCloutOnly || monthlyLoginOnly)) throw new Error("--flex-pulls cannot be combined with another test mode.");
+if (socialLoad && (mailOnly || socialOnly || rankedCloutOnly || monthlyLoginOnly)) throw new Error("--social-load cannot be combined with another test mode.");
+if (monthlyLoginOnly && (mailOnly || socialOnly || rankedCloutOnly)) throw new Error("--monthly-login cannot be combined with another test mode.");
 process.chdir(root);
 let ownedDirectory;
 let pgBin;
@@ -59,11 +64,11 @@ async function unusedLoopbackPort() {
   return port;
 }
 
-function run(command, args, label, visible = false) {
+function run(command, args, label, visible = false, cwd = root) {
   if (interrupted) throw new Error("Payment database tests interrupted.");
   return new Promise((resolve, reject) => {
     child = spawn(command, args, {
-      cwd: root, env: environment,
+      cwd, env: environment,
       // Setup failures never print connection strings or inherited secrets.
       stdio: visible ? "inherit" : "ignore",
     });
@@ -85,7 +90,7 @@ process.on("SIGTERM", interrupt);
 
 try {
   const provided = process.env.DATABASE_URL?.trim();
-  if ((mailOnly || socialOnly || socialLoad) && "DATABASE_URL" in process.env) throw new Error('These tests require a fresh owned cluster. Unset DATABASE_URL.');
+  if ((mailOnly || socialOnly || socialLoad || rankedCloutOnly || monthlyLoginOnly || flexPullsOnly) && "DATABASE_URL" in process.env) throw new Error('These tests require a fresh owned cluster. Unset DATABASE_URL.');
   if (provided) {
     const target = assertCampaignDatabaseTarget(process.env);
     if (!target.local) throw new Error("Payment database tests refuse remote databases.");
@@ -114,11 +119,17 @@ try {
   }
   const args = socialLoad ? ["--filter", "@workspace/api-server", "exec", "tsx", "src/tools/homies-load.ts", ...process.argv.slice(2).filter(arg => arg !== "--social-load")] :
     socialBrowser ? ["--filter", "@workspace/squabblemon", "exec", "tsx", "e2e/verify-homies.ts"] : ["--filter", "@workspace/api-server", "exec", "tsx", "--test", "--test-concurrency=1",
-    ...(socialOnly ? ['src/lib/social.test.ts', 'src/lib/onlineMatches.test.ts', 'src/lib/rankedMatches.test.ts', 'src/lib/homiesDiagnostics.native.test.ts'] : mailOnly ? ['src/lib/mail.test.ts'] : ["src/lib/payments/provider.test.ts", "src/lib/payments/service.test.ts", "src/lib/payments/geography.test.ts"])];
-  if (socialOnly) environment.SOCIAL_TEST_OWNED = '1';
+    ...(monthlyLoginOnly ? ['src/lib/accountRewards.test.ts'] : rankedCloutOnly ? ['src/lib/rankedMatchClout.test.ts', 'src/lib/onlineMatches.test.ts', 'src/lib/rankedMatches.test.ts'] : socialOnly ? ['src/lib/social.test.ts', 'src/lib/onlineMatches.test.ts', 'src/lib/rankedMatches.test.ts', 'src/lib/homiesDiagnostics.native.test.ts'] : mailOnly ? ['src/lib/mail.test.ts'] : ["src/lib/payments/provider.test.ts", "src/lib/payments/service.test.ts", "src/lib/payments/geography.test.ts"])];
+  if (socialOnly || rankedCloutOnly) environment.SOCIAL_TEST_OWNED = '1';
+  if (rankedCloutOnly) environment.RANKED_CLOUT_TEST_OWNED = '1';
   if (socialLoad) environment.SOCIAL_LOAD_OWNED = '1';
   if (mailOnly) environment.MAIL_TEST_OWNED = '1';
-  if (process.env.npm_execpath) {
+  if (flexPullsOnly) {
+    await run(process.execPath, ['--import', 'tsx', '--test', '--test-concurrency=1', '--experimental-test-isolation=none',
+      'src/lib/flexPulls.test.ts', 'src/lib/collectionEconomy.test.ts', 'src/lib/collectionTransactions.test.ts',
+      '../../artifacts/squabblemon/src/lib/packJournal.test.ts', 'src/lib/pullBanners.test.ts',
+    ], 'Native flexible-pull database tests', true, join(root, 'artifacts/api-server'));
+  } else if (process.env.npm_execpath) {
     await run(process.execPath, [process.env.npm_execpath, ...args], "Payment database tests", true);
   } else {
     await run("pnpm", args, "Payment database tests", true);

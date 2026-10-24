@@ -1,3 +1,8 @@
+import { randomInt } from 'node:crypto';
+import { cardCatalog } from '@workspace/squabblemon-engine/data';
+import { choosePackCardFromTier, type PackRandomInt } from '@workspace/squabblemon-engine/packRules';
+import { addStyleShardBalances, STYLE_SHARD_TIERS, styleShardRarityForCard, totalStyleShardRewards } from '@workspace/squabblemon-engine/styleShards';
+import { isStreetPackCard } from './collectionEconomy';
 import { and, eq, like, sql } from "drizzle-orm";
 import {
   db,
@@ -70,6 +75,39 @@ export async function waterGrowthLab(clerkUserId: string, now = new Date()): Pro
   });
 }
 
+/** Called only inside the profile transaction. The selected identity is saved in the receipt. */
+export function resolveAccountRewardCards(
+  pending: readonly AccountRewardGrant[],
+  ownedCardIds: readonly string[],
+  rng: PackRandomInt = randomInt,
+): AccountRewardGrant[] {
+  const owned = new Set(ownedCardIds);
+  return pending.map(value => {
+    const reward = { ...value };
+    if (reward.key.startsWith('monthly-login:')) {
+      if (!reward.cardRarity) throw new Error('Monthly card tier is missing');
+      const card = choosePackCardFromTier({
+        rarity: reward.cardRarity,
+        tier: cardCatalog.filter(card => card.rarity === reward.cardRarity && isStreetPackCard(card)),
+        pulledCardIds: new Set(), ownedCardIds: owned, protectNew: true, rng,
+      });
+      reward.cardId = card.catalogId;
+      reward.cardName = card.name;
+      reward.isNewCard = !owned.has(card.catalogId);
+      if (!reward.isNewCard) {
+        reward.shardRarity = styleShardRarityForCard(card.rarity);
+        reward.styleShards = STYLE_SHARD_TIERS[reward.shardRarity].duplicatePayout;
+      }
+    } else if (reward.cardId) {
+      reward.isNewCard = !owned.has(reward.cardId);
+      // Preserve the existing universal-shard compensation for the garden recruit.
+      if (reward.cardId === 'buddy' && !reward.isNewCard) reward.styleShards = 25;
+    }
+    if (reward.cardId) owned.add(reward.cardId);
+    return reward;
+  });
+}
+
 export async function claimAccountRewards(
   clerkUserId: string,
   now = new Date(),
@@ -90,7 +128,7 @@ export async function claimAccountRewards(
           like(playerCollectionClaimsTable.milestoneKey, "account:%"),
         ),
       );
-    const { pending } = accountRewardStatus(
+    const { pending: available } = accountRewardStatus(
       profile.level,
       profile.createdAt,
       receipts.flatMap((r) =>
@@ -98,9 +136,11 @@ export async function claimAccountRewards(
       ),
       now,
     );
-    if (!pending.length) return [];
-    const recruit=pending.find(r=>r.cardId);
-    if(recruit&&profile.ownedCardIds.includes('buddy'))recruit.styleShards=25;
+    if (!available.length) return [];
+    const pending = resolveAccountRewardCards(available, profile.ownedCardIds);
+    const cardIds = pending.flatMap(reward => reward.cardId ? [reward.cardId] : []);
+    const ownedCardIds = [...new Set([...profile.ownedCardIds, ...cardIds])];
+    const shards = totalStyleShardRewards(pending.map(reward => ({ kind: 'styleShards', amount: reward.styleShards, shardRarity: reward.shardRarity })));
     for (const reward of pending)
       await tx
         .insert(playerCollectionClaimsTable)
@@ -122,8 +162,9 @@ export async function claimAccountRewards(
       .set({
         softCurrency: profile.softCurrency + total.softCurrency,
         packTickets: profile.packTickets + total.packTickets,
-        styleShards: profile.styleShards + total.styleShards,
-        ...(recruit?{ownedCardIds:[...new Set([...profile.ownedCardIds,'buddy'])],discoveredCardIds:[...new Set([...profile.discoveredCardIds,'buddy'])],collectionProgress:new Set([...profile.ownedCardIds,'buddy']).size}:{}),
+        styleShards: profile.styleShards + shards.styleShardsGained,
+        styleShardBalances: addStyleShardBalances(profile.styleShardBalances, shards.styleShardBalancesGained),
+        ...(cardIds.length ? { ownedCardIds, discoveredCardIds: [...new Set([...profile.discoveredCardIds, ...cardIds])], collectionProgress: ownedCardIds.length } : {}),
         updatedAt: now,
       })
       .where(eq(playerProfilesTable.clerkUserId, clerkUserId));

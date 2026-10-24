@@ -26,6 +26,8 @@ import { RulesModal } from './RulesModal';
 import { BattleFeedback } from '../battleFeedback';
 import { useFeedbackPreferences } from '../hooks/useFeedbackPreferences';
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from './ui/dialog';
+import { GamePopupCopy, GamePopupLabel, GamePopupSecondary, GamePopupTitle, RewardFileAction, RewardFilePaper } from './ui/game-popup';
+import '../styles/pvp-exit-dialog.css';
 import { setBattleMusicMode } from '../musicStore';
 import { runWithoutDeckExitGuard, setDeckExitGuard } from '../lib/deckExitGuard';
 
@@ -144,6 +146,7 @@ export function MultiplayerBattle({ room, busy, connected, reducedMotion: profil
   const [surrenderFailed, setSurrenderFailed] = useState(false);
   const [submittingSurrender, setSubmittingSurrender] = useState(false);
   const surrenderLock = useRef(false);
+  const keepPlayingButton = useRef<HTMLButtonElement>(null);
   const roomIntentLock = useRef(false);
   const [exitBusy, setExitBusy] = useState(false);
   const [exitFailed, setExitFailed] = useState<RoomExitIntent | null>(null);
@@ -340,11 +343,20 @@ export function MultiplayerBattle({ room, busy, connected, reducedMotion: profil
         </p>}
       </ParkResult>}
     </Dialog>
-    <Dialog open={surrender && room.status === 'active'} onOpenChange={open => { if (!open && !submittingSurrender) keepPlaying(); }}><DialogContent className="street-dialog pvp-exit-dialog"><DialogTitle>Leave this fade?</DialogTitle><DialogDescription>Surrendering gives The Opps the win{room.ranked ? ' and records a ranked loss' : ''}. Closing the app or leaving does not pause the server turn clock.</DialogDescription>
-      {(!connected || surrenderFailed) && <p role="alert"> {surrenderFailed ? 'Surrender could not be confirmed.' : 'Connection lost.'} You can return to {room.kumite ? 'Kumite' : room.ranked ? 'Fade Park' : 'friend fades'} without confirming a surrender. The server clock keeps running{room.ranked ? ' and a ranked loss is still possible' : ''}.</p>}
-      <button className="online-primary" disabled={busy || !connected || submittingSurrender} onClick={() => void confirmSurrender()}>{submittingSurrender ? 'Surrendering…' : 'Surrender'}</button>
-      <button className="online-secondary" disabled={submittingSurrender} onClick={keepPlaying}>Keep playing</button>
-      {(!connected || surrenderFailed) && <button className="online-secondary" disabled={submittingSurrender} onClick={returnToHub}>Return to {room.kumite ? 'Kumite' : room.ranked ? 'Fade Park' : 'friend fades'} without surrender confirmation</button>}
-    </DialogContent></Dialog>
+    <Dialog open={surrender && room.status === 'active'} onOpenChange={open => { if (!open && !submittingSurrender) keepPlaying(); }}>
+      <DialogContent className="game-popup reward-street-file game-popup--brick pvp-exit-dialog bg-transparent" data-popup-family="confirmation" data-popup-material="brick" data-popup-tone="destructive"
+        style={{ '--popup-brick-wall': `url("${getAssetUrl('assets/progression/brick-ui-v1.webp')}")` } as CSSProperties}
+        onOpenAutoFocus={event => { event.preventDefault(); keepPlayingButton.current?.focus(); }}>
+        <RewardFilePaper className="pvp-exit-dialog__paper">
+          <GamePopupLabel>Before you go</GamePopupLabel>
+          <DialogTitle asChild><GamePopupTitle>Leave this fade?</GamePopupTitle></DialogTitle>
+          <DialogDescription asChild><GamePopupCopy>Surrendering gives The Opps the win{room.ranked ? ' and records a ranked loss' : ''}. Closing the app or leaving does not pause the server turn clock.</GamePopupCopy></DialogDescription>
+          {(!connected || surrenderFailed) && <GamePopupCopy role="alert" className="pvp-exit-dialog__warning">{surrenderFailed ? 'Surrender could not be confirmed.' : 'Connection lost.'} You can return to {room.kumite ? 'Kumite' : room.ranked ? 'Fade Park' : 'friend fades'} without confirming a surrender. The server clock keeps running{room.ranked ? ' and a ranked loss is still possible' : ''}.</GamePopupCopy>}
+          <RewardFileAction disabled={busy || !connected || submittingSurrender} onClick={() => void confirmSurrender()}>{submittingSurrender ? 'Surrendering…' : 'Surrender'}</RewardFileAction>
+          <GamePopupSecondary ref={keepPlayingButton} disabled={submittingSurrender} onClick={keepPlaying}>Keep playing</GamePopupSecondary>
+          {(!connected || surrenderFailed) && <GamePopupSecondary disabled={submittingSurrender} onClick={returnToHub}>Return to {room.kumite ? 'Kumite' : room.ranked ? 'Fade Park' : 'friend fades'} without surrender confirmation</GamePopupSecondary>}
+        </RewardFilePaper>
+      </DialogContent>
+    </Dialog>
   </main>;
 }

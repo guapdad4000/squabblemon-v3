@@ -25,12 +25,16 @@ room = applyOnlineCommand(room, 'cpu', { type: 'ready' }, now);
 if (ranked) room = { ...room, ranked: { queuedAt: now - 2000, heartbeatAt: now, botAfter: now + 8000, bot: false, ratings: { player: 1000, cpu: 1000 } } };
 let fail = false;
 let count = 0;
+let holdSurrender = false;
+let releaseSurrender: (() => void) | null = null;
 Object.assign(window, {
   pvpFixture: {
     disconnect: () => window.dispatchEvent(new Event('offline')),
     reconnect: () => window.dispatchEvent(new Event('online')),
     fail: (value: boolean) => { fail = value; },
     complete: () => { room = { ...room, status: 'complete', winner: 'cpu', reason: 'districts', deadline: null, revision: room.revision + 1 }; },
+    holdSurrender: () => { holdSurrender = true; },
+    releaseSurrender: () => { holdSurrender = false; releaseSurrender?.(); releaseSurrender = null; },
     requests: () => count,
     status: () => room.status,
   },
@@ -44,7 +48,10 @@ window.fetch = async (input, init) => {
       count++;
       if (fail) return Response.json({ error: 'Surrender not confirmed' }, { status: 409 });
       const command = JSON.parse(String(init?.body)).command;
-      if (command.type === 'surrender') await new Promise(resolve => setTimeout(resolve, 350));
+      if (command.type === 'surrender') {
+        if (holdSurrender) await new Promise<void>(resolve => { releaseSurrender = resolve; });
+        else await new Promise(resolve => setTimeout(resolve, 350));
+      }
       room = applyOnlineCommand(room, 'player', command, Date.now());
     }
     return Response.json(onlineRoomView(room, code, 'host', Date.now()));

@@ -80,7 +80,7 @@ export function Settings({ bootstrap }: { bootstrap: PlayerBootstrap }) {
         {tabs.map((tab, index) => <button key={tab} type="button" role="tab" className="fighter-tab"
           id={`fighter-tab-${tab}`} aria-controls={`fighter-panel-${tab}`} aria-selected={activeTab === tab}
           tabIndex={activeTab === tab ? 0 : -1} disabled={busy} ref={element => { tabRefs.current[index] = element; }}
-          onKeyDown={event => tabKey(event, index)} onClick={() => select(tab)} data-testid={`tab-${tab.toLowerCase()}`}>{tab}{tab === 'Homies' && pendingCount > 0 && <span className="fighter-tab__badge" aria-label={`${pendingCount} pending`}>{pendingCount > 99 ? '99+' : pendingCount}</span>}</button>)}
+          onKeyDown={event => tabKey(event, index)} onClick={() => select(tab)} data-testid={`tab-${tab.toLowerCase()}`}>{tab === 'Homies' ? 'Fadebook' : tab}{tab === 'Homies' && pendingCount > 0 && <span className="fighter-tab__badge" aria-label={`${pendingCount} pending`}>{pendingCount > 99 ? '99+' : pendingCount}</span>}</button>)}
       </div>
       <div ref={panel} className={`fighter-panel${activeTab === 'Homies' ? ' fighter-panel--fadebook' : ''}`} role="tabpanel" tabIndex={0} id={`fighter-panel-${activeTab}`} aria-labelledby={`fighter-tab-${activeTab}`}>
         {activeTab === 'Overview' && <ProfileOverview bootstrap={bootstrap} onBusyChange={setBusy} />}

@@ -97,7 +97,7 @@ async function run(width: number, height: number) {
   }
   async function shot(name: string) {
     await page.evaluate(async () => {
-      await document.fonts.ready;
+      await Promise.race([document.fonts.ready,new Promise(resolve=>setTimeout(resolve,3000))]);
       await Promise.all(
         Array.from(document.images)
           .filter((image) => !image.complete)
@@ -125,48 +125,38 @@ async function run(width: number, height: number) {
     await page.locator('.market-tabs').waitFor();
   }
   async function assertHaulGrid(expectedItems: number) {
-    const grid = page.locator('.gacha-results[data-phase="summary"] .gym-results__grid');
+    const dialog = page.locator('.gacha-reveal-dialog[open]');
+    const grid = dialog.locator('.gacha-reveal__grid');
     await grid.waitFor();
-    const inheritedPaperEdges = await page.locator('.gacha-results').evaluate((element) => ({
-      before: getComputedStyle(element, '::before').content,
-      after: getComputedStyle(element, '::after').content,
-    }));
-    assert.deepEqual(inheritedPaperEdges, { before: 'none', after: 'none' }, 'Full reveal must not inherit torn-paper dialog edges');
-    assert.equal(await grid.evaluate((element) => getComputedStyle(element).display), 'grid', 'Full haul must use a grid');
-    assert.equal(await grid.locator('.gym-results__item').count(), expectedItems);
-    const geometry = await grid.evaluate((element) => {
-      const viewportWidth = document.documentElement.clientWidth;
-      const rects = Array.from(element.children).map((child) => child.getBoundingClientRect());
-      return {
-        scrollWidth: element.scrollWidth,
-        clientWidth: element.clientWidth,
-        offscreen: rects.some((rect) => rect.left < -0.5 || rect.right > viewportWidth + 0.5),
-        columns: new Set(rects.map((rect) => Math.round(rect.left))).size,
-      };
+    assert.equal(await dialog.locator('.gacha-reveal__item').count() + await dialog.locator('.gacha-reveal__resources > button').count(), expectedItems, 'Every card and resource receipt is retained');
+    assert.equal(await grid.evaluate(element => getComputedStyle(element).display), 'grid');
+    const inheritedPaperEdges = await dialog.evaluate(element => ({ before:getComputedStyle(element,'::before').content,after:getComputedStyle(element,'::after').content }));
+    assert.deepEqual(inheritedPaperEdges,{before:'none',after:'none'});
+    const geometry = await grid.evaluate(element => {
+      const rects=Array.from(element.children).map(child=>child.getBoundingClientRect());
+      return {scrollWidth:element.scrollWidth,clientWidth:element.clientWidth,offscreen:rects.some(rect=>rect.left<-.5||rect.right>innerWidth+.5),columns:new Set(rects.map(rect=>Math.round(rect.left))).size};
     });
-    assert(geometry.scrollWidth <= geometry.clientWidth + 1, `Full haul must not be horizontally scrollable: ${JSON.stringify(geometry)}`);
-    assert.equal(geometry.offscreen, false, 'Every haul card must remain inside the viewport horizontally');
-    if (width <= 700) assert.equal(geometry.columns, 3, 'Portrait mobile haul must use three columns');
-    if (height > 550) {
-      const gap = await grid.evaluate(element => {
-        const description = element.parentElement!.querySelector(':scope > p')!;
-        return element.getBoundingClientRect().top - description.getBoundingClientRect().bottom;
-      });
-      assert(gap <= 24, 'Haul cards must follow the description without a large empty spacer');
-    }
-    const lastReward = grid.locator('.gym-results__item').last();
-    await lastReward.scrollIntoViewIfNeeded();
-    await lastReward.click({ trial: true });
-    const returnAction = page.getByRole('button', { name: /^Back to gacha/ });
-    await returnAction.scrollIntoViewIfNeeded();
-    await returnAction.click({ trial: true });
-    await page.locator('.gacha-results').evaluate(element => { element.scrollTop = 0; });
+    assert(geometry.scrollWidth<=geometry.clientWidth+1,JSON.stringify(geometry));assert.equal(geometry.offscreen,false);
+    if(width<=700)assert.equal(geometry.columns,2,'Phone haul keeps two full-width card prints per row');
+    const lastReward=grid.locator('.gacha-reveal__item').last();await lastReward.scrollIntoViewIfNeeded();await lastReward.click({trial:true});
+    await page.getByRole('button',{name:'Back to gacha',exact:true}).click({trial:true});
+    await dialog.locator('.gacha-reveal__content').evaluate(element=>{element.scrollTop=0;});
+  }
+  async function waitForReveal(cardName?: string) {
+    await page.locator('.gacha-reveal[data-view="single"]').waitFor();
+    if(cardName)await page.locator('.gacha-reveal__caption h3').filter({hasText:cardName}).waitFor();
+  }
+  async function closeInspection() {
+    await page.locator('.card-inspector-shell').waitFor();
+    await page.keyboard.press('Escape');
+    await page.locator('.card-inspector-shell').waitFor({state:'hidden'});
+    assert.equal(await page.locator('.gacha-reveal-dialog[open]').count(),1,'Closing details retains the saved haul');
   }
   async function assertPunchingFits() {
     const geometry = await page.evaluate(() => {
       const stage = document.querySelector<HTMLElement>('.gacha-stage');
-      const controls = document.querySelector<HTMLElement>('.gacha-stage__ringside');
-      const actions = document.querySelector<HTMLElement>('.gacha-stage__punch-actions');
+      const controls = document.querySelector<HTMLElement>('.pack-gym-controls');
+      const actions = document.querySelector<HTMLElement>('.pack-gym-controls__strike');
       const arena = document.querySelector<HTMLElement>('.gacha-stage .gym__arena');
       if (!stage || !controls || !actions || !arena) return null;
       const stageRect = stage.getBoundingClientRect();
@@ -179,6 +169,8 @@ async function run(width: number, height: number) {
         actionsBottom: actionsRect.bottom,
         controlsRatio: controlsRect.height / stageRect.height,
         sceneGap: controlsRect.top - arena.getBoundingClientRect().bottom,
+        controlsInsideScene: controlsRect.left >= stageRect.left && controlsRect.right <= stageRect.right + 1 && controlsRect.top >= stageRect.top,
+        strikeHeight: actionsRect.height,
       };
     });
     assert(geometry, 'Punching stage controls must exist');
@@ -186,7 +178,9 @@ async function run(width: number, height: number) {
     assert(geometry.controlsBottom <= geometry.viewportHeight + 2, 'Punching control bar must fit the viewport');
     assert(geometry.actionsBottom <= geometry.viewportHeight + 2, 'Final punching actions must be visible');
     if (width <= 700) assert(geometry.controlsRatio < .38, 'Punching HUD must not create a giant lower spacer');
-    assert(geometry.sceneGap <= 12, 'The bag scene must meet the controls without an empty strip');
+    assert(geometry.controlsInsideScene, 'Compact punching controls stay inside the scene overlay');
+    assert(geometry.strikeHeight >= 44, 'Strike retains a reachable touch target');
+    assert(geometry.sceneGap <= 12, 'The bag scene must meet or sit behind the controls without an empty strip');
   }
   try {
     await page.addInitScript(() => localStorage.setItem('squabblemon_e2e_user', 'signed-in'));
@@ -194,6 +188,7 @@ async function run(width: number, height: number) {
       const req = route.request(),
         path = new URL(req.url()).pathname;
       if (path.endsWith('/bootstrap')) return route.fulfill({ json: bootstrap() });
+      if (path.endsWith('/packs/welcome') && req.method() === 'GET') return route.fulfill({ json: { available: false, supportsFlexibleBatches: false, serverNow: Date.parse('2026-10-24T12:00:00Z') } });
       if (path.endsWith('/packs/open')) {
         calls++;
         const body = req.postDataJSON();
@@ -227,12 +222,14 @@ async function run(width: number, height: number) {
             ? [
                 cardReward(cards[0]),
                 duplicateReward,
-                ...Array.from({ length: 57 }, (_, index) => cardReward(supportingCards[index % supportingCards.length])),
+                ...Array.from({ length: 57 }, (_, index) => index === 56 ? {kind:'softCurrency',cardId:null,variantId:null,name:'Clout',rarity:null,isNew:false,amount:125} : cardReward(supportingCards[index % supportingCards.length])),
                 cardReward(cards[1]),
               ]
             : [
                 cardReward(cards[0]),
-                ...supportingCards.slice(0, 4).map(cardReward),
+                ...supportingCards.slice(0, 2).map(cardReward),
+                {kind:'softCurrency',cardId:null,variantId:null,name:'Clout',rarity:null,isNew:false,amount:125},
+                {kind:'styleShards',cardId:null,variantId:null,name:'Universal Style Shards',rarity:null,isNew:false,amount:5},
                 duplicateReward,
               ];
           opening = {
@@ -268,13 +265,13 @@ async function run(width: number, height: number) {
     const minimumTicketHeight = width <= 700 ? 40 : height <= 550 ? 60 : 110;
     assert(ticketHeights.every((ticketHeight) => ticketHeight >= minimumTicketHeight), 'ticket artwork should own the purchase surface');
     if (width <= 700) {
-      const dock = await page.locator('.gym__offer').boundingBox();
-      assert(dock && dock.height <= height * .5, 'Mobile purchase dock must leave most of the scene visible');
+      const offer = await page.locator('.fight-bill').boundingBox();
+      assert(offer && offer.x >= -1 && offer.x + offer.width <= width + 1, 'Mobile purchase bill stays inside the viewport');
       const payments = await page.locator('.gacha-stage__ticket-choice').evaluateAll(buttons =>
         buttons.map(button => button.getBoundingClientRect().height));
       assert(payments.every(buttonHeight => buttonHeight >= 44), 'Compact payment controls retain touch targets');
     }
-    assert.equal(await page.locator('.gacha-results').isVisible(), false, 'Closed reveal must remain hidden');
+    assert.equal(await page.locator('.gacha-reveal-dialog').isVisible(), false, 'Closed reveal must remain hidden');
     await page.getByRole('button', { name: 'Training', exact: true }).click();
     await page.locator('.market').waitFor();
     assert(page.url().includes('view=training'));
@@ -306,32 +303,31 @@ async function run(width: number, height: number) {
     assert.equal(ticketBalance, 11);
     assert.deepEqual(requests[0], requests[1]);
     assert.equal(await page.getByRole('button', { name: /^Snap the jab/ }).count(), 1);
-    assert.equal(await page.locator('.gacha-stage__bag-cue').isVisible(), true, 'the bag tap cue should be visible');
+    assert.equal(await page.locator('.pack-gym-controls__strike').isVisible(), true, 'the strike control should be visible');
     await page.frameLocator('iframe[title="Interactive heavy bag"]').locator('#webgl-container').click();
-    await page.getByRole('progressbar', { name: 'Rounds to reveal' }).waitFor();
-    await page.locator('.gacha-stage__rounds .is-landed').waitFor();
+    await page.getByRole('progressbar', { name: 'Punches landed' }).waitFor();
+    await page.locator('.pack-gym-controls__beats [data-landed="true"]').waitFor();
     assert.equal(await page.getByRole('button', { name: /^Throw the hook/ }).count(), 1);
     await assertPunchingFits();
     await shot('punching');
-    await page.getByRole('button', { name: 'Auto rush', exact: true }).click();
-    await page.getByRole('heading', { name: 'The crowd gets louder.', exact: true }).waitFor();
+    await page.getByRole('button', { name: 'Throw the hook', exact: true }).click();
+    await page.getByRole('button', { name: 'Launch the finisher', exact: true }).click();
+    await waitForReveal(cards[0].name);
     await shot('reveal');
-    await page.getByRole('button', { name: 'Next reveal', exact: true }).click();
-    await page.getByRole('button', { name: 'Reveal all', exact: true }).click();
+    await page.getByRole('button', { name: 'Next card', exact: true }).click();
+    await page.getByRole('button', { name: /^View all / }).click();
     await shot('haul');
     await assertHaulGrid(6);
-    await page.getByRole('button', { name: `Inspect ${duplicateCard.name}`, exact: true })
-      .filter({ has: page.locator('.gym-reward__conversion') }).click();
-    const conversion = page.locator('.gym-reward__conversion');
-    await conversion.waitFor();
-    assert.match(await conversion.innerText(), new RegExp(`Already on your gang[\\s\\S]*\\+${STREET_PACK_RULES.duplicateStyleShards} Style Shards`, 'i'));
-    assert.equal(await page.locator('.gym-reward--duplicate .collector-card').count(), 1);
-    await page.getByRole('button', { name: 'Reveal all', exact: true }).click();
+    const duplicate = page.getByRole('button', { name: `Inspect ${duplicateCard.name}`, exact: true }).filter({has:page.locator('.gacha-reveal__receipt')});
+    assert.match(await duplicate.innerText(), new RegExp(`Duplicate[\\s\\S]*\\+${STREET_PACK_RULES.duplicateStyleShards}.*Style Shards`,'i'));
+    assert.equal(await duplicate.locator('.collector-card').count(),1);
+    await duplicate.click();await closeInspection();
+    const conversion=page.locator('.gacha-reveal__caption .gacha-reveal__receipt');
     await page.reload({ waitUntil: 'domcontentloaded' });
-    await page.getByRole('heading', { name: 'Meet the haul.', exact: true }).waitFor();
+    await page.getByRole('heading', { name: 'Your haul.', exact: true }).waitFor();
     assert.equal(calls, 2, 'Restoring the reveal must not purchase another pack');
     await page.getByRole('button', { name: `Inspect ${cards[0].name}`, exact: true }).click();
-    await page.getByRole('heading', { name: 'The crowd gets louder.', exact: true }).waitFor();
+    await closeInspection();
     await page.keyboard.press('Escape');
     await page.locator('.gacha-stage[data-phase="idle"]').waitFor();
     assert.equal(await page.evaluate(() => sessionStorage.getItem('squabblemon:pack-reveal:gacha-fixture')), null);
@@ -340,15 +336,15 @@ async function run(width: number, height: number) {
     await page.getByRole('button', { name: 'Close pack information', exact: true }).click();
     await page.emulateMedia({ reducedMotion: 'reduce' });
     await page.getByRole('button', { name: 'Open · 200 Clout', exact: true }).click();
-    await page.getByRole('heading', { name: 'Meet the haul.', exact: true }).waitFor();
+    await page.getByRole('heading', { name: 'Your haul.', exact: true }).waitFor();
     assert.equal(cloutBalance, 300);
-    assert.equal(await page.locator('.gacha-results .gym-reward').first().evaluate(element => getComputedStyle(element).animationName), 'none');
+    assert.equal(await page.locator('.gacha-reveal .gacha-reward-print').first().evaluate(element => getComputedStyle(element).animationName), 'none');
     await page.getByRole('button', { name: 'Back to gacha', exact: true }).click();
     await page.emulateMedia({ reducedMotion: 'no-preference' });
     await page.locator('.venue-scene.is-ready').waitFor();
     await page.getByRole('button', { name: 'Open · 1 ticket', exact: true }).click();
-    await page.getByRole('button', { name: 'Skip animation & reveal', exact: true }).click();
-    await page.getByRole('heading', { name: 'The crowd gets louder.', exact: true }).waitFor();
+    await page.getByRole('button', { name: 'Skip', exact: true }).click();
+    await waitForReveal(cards[0].name);
     await page.getByRole('button', { name: 'Close rewards', exact: true }).click();
     await page.getByRole('button', { name: /^10 pull/i }).click();
     await page.getByRole('button', { name: `Open 10× · ${STREET_PACK_RULES.ten.ticketCost} tickets`, exact: true }).click();
@@ -359,23 +355,21 @@ async function run(width: number, height: number) {
     await page.getByRole('button', { name: /^Triple hook/ }).click();
     await page.getByRole('button', { name: /^Launch the finisher/ }).waitFor();
     await page.getByRole('button', { name: /^Launch the finisher/ }).click();
-    await page.getByRole('heading', { name: 'The crowd gets louder.', exact: true }).waitFor();
-    await page.getByRole('button', { name: 'Next reveal', exact: true }).click();
+    await waitForReveal(cards[0].name);
+    await page.getByRole('button', { name: 'Next card', exact: true }).click();
     await conversion.waitFor();
-    // Use the real 60-reward haul to reach the penultimate reveal; avoid replaying
-    // the same next-button transition 57 times for every viewport.
-    await page.getByRole('button', { name: 'Reveal all', exact: true }).click();
-    await page.locator('.gym-results__item').nth(58).click();
-    await page.getByRole('button', { name: 'Reveal the headliner', exact: true }).click();
-    await page.getByRole('heading', { name: 'The whole gym stands.', exact: true }).waitFor();
-    await page.getByText(/GUARANTEED RARE\+/).waitFor();
-    await page.getByRole('button', { name: 'View the haul', exact: true }).click();
+    // All sixty receipts stay reachable; direct card taps now open the normal inspector.
+    await page.getByRole('button',{name:/^View all /}).click();
     await assertHaulGrid(60);
     await shot('haul-ten');
-    await page.locator('.gym-results__item').last().click();
-    await page.getByRole('heading', { name: 'The whole gym stands.', exact: true }).waitFor();
-    await page.getByRole('button', { name: 'View the haul', exact: true }).click();
-    await page.getByRole('button', { name: 'Back to gacha · 10× earned', exact: true }).click();
+    await page.locator('.gacha-reveal__resources>button').last().click();
+    await page.getByRole('button',{name:'Next card',exact:true}).click();
+    await waitForReveal(cards[1].name);
+    await page.getByText(/GUARANTEED RARE\+/).waitFor();
+    await page.getByRole('button',{name:'View haul',exact:true}).click();
+    await assertHaulGrid(60);
+    await page.locator('.gacha-reveal__item').last().click();await closeInspection();
+    await page.getByRole('button',{name:'Back to gacha',exact:true}).click();
     await page.locator('.gacha-stage[data-phase="idle"]').waitFor();
     ticketBalance = 0;
     cloutBalance = 0;

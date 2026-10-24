@@ -16,7 +16,13 @@ function fixture(t) {
 }
 
 test('current native history covers development SQL, schema, and consolidated online-room baseline', () => {
-  assert.equal(checkNetlifyMigrationCoverage().tables, 19);
+  assert.equal(checkNetlifyMigrationCoverage().tables, 23);
+});
+
+test('ranked daily reward counting requires its forward player/date index mirror', t => {
+  const root = fixture(t);
+  rmSync(path.join(root, 'netlify/database/migrations/202610240001_ranked-clout-daily-index'), { recursive: true });
+  assert.throws(() => checkNetlifyMigrationCoverage(root), /index player_collection_claims_user_created/);
 });
 
 test('historical social uniqueness cannot be removed by editing an applied migration', t => {

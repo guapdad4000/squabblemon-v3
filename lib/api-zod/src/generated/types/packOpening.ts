@@ -7,6 +7,7 @@
  */
 import type { PackOpeningPaymentMethod } from './packOpeningPaymentMethod';
 import type { PackReward } from './packReward';
+import type { PullSeasonReward } from './pullSeasonReward';
 
 export interface PackOpening {
   id: string;
@@ -15,6 +16,7 @@ export interface PackOpening {
   cost: number;
   pullCount: number;
   rewards: PackReward[];
+  seasonRewards?: PullSeasonReward[];
   pityBefore: number;
   pityAfter: number;
   createdAt: Date;

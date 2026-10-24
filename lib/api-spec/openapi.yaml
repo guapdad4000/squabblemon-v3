@@ -1929,6 +1929,10 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/PackReward"
+        seasonRewards:
+          type: array
+          items:
+            $ref: "#/components/schemas/PullSeasonReward"
         pityBefore:
           type: integer
         pityAfter:
@@ -1937,6 +1941,46 @@ components:
           type: string
           format: date-time
       required: [id, oddsVersion, paymentMethod, cost, pullCount, rewards, pityBefore, pityAfter, createdAt]
+    PullSeasonReward:
+      type: object
+      properties:
+        seasonId:
+          type: string
+        threshold:
+          type: integer
+        softCurrency:
+          type: integer
+        packTickets:
+          type: integer
+        styleShards:
+          type: integer
+      required: [seasonId, threshold, softCurrency, packTickets, styleShards]
+    PullSeasonMilestone:
+      allOf:
+        - $ref: "#/components/schemas/PullSeasonReward"
+        - type: object
+          properties:
+            claimed:
+              type: boolean
+          required: [claimed]
+    PullSeasonProgress:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        startsAt:
+          type: string
+        endsAt:
+          type: string
+        count:
+          type: integer
+        milestones:
+          type: array
+          items:
+            $ref: "#/components/schemas/PullSeasonMilestone"
+      required: [id, name, startsAt, endsAt, count, milestones]
     OpenPackInput:
       type: object
       properties:
@@ -1947,6 +1991,10 @@ components:
         bannerId:
           type: string
           description: Selected active pull banner. Defaults to standard.
+        bannerOccurrenceId:
+          type: string
+          maxLength: 80
+          description: Exact weekly occurrence selected by the client. Stale unpaid requests are rejected; completed idempotent retries recover their original receipt.
         paymentMethod:
           type: string
           enum: [ticket, softCurrency]
@@ -1954,7 +2002,7 @@ components:
           type: integer
           minimum: 1
           maximum: 10
-          description: Number of packs to open. Defaults to 1; 10 unlocks the upgraded ten-pull experience.
+          description: Number of packs to open. Defaults to 1. Batches of 2–9 cost the single-pack price per pack; only 10 receives the ten-pull discount and Rare-or-better guarantee.
       required: [idempotencyKey, paymentMethod]
       additionalProperties: false
     OpenPackResult:
@@ -1964,6 +2012,8 @@ components:
           $ref: "#/components/schemas/PlayerBootstrap"
         opening:
           $ref: "#/components/schemas/PackOpening"
+        pullSeason:
+          $ref: "#/components/schemas/PullSeasonProgress"
         alreadyOpened:
           type: boolean
       required: [bootstrap, opening, alreadyOpened]

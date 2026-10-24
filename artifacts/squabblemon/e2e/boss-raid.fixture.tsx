@@ -20,11 +20,13 @@ import {
 import BossRaidGame from "../src/components/fadecade/BossRaidGame";
 import { BossRaidCabinet } from "../src/components/fadecade/BossRaidCabinet";
 import "../src/index.css";
+import { getActiveMusicOverride } from "../src/musicStore";
 const crew = {
   ...decks.find((d) => d.id === "block")!,
   cards: engineIdsToCatalogIds(decks.find((d) => d.id === "block")!.cards),
 };
 const params = new URLSearchParams(location.search),
+  mode = params.get("raid") === "kumite" ? "kumite" : "precinct",
   day = "2026-10-08",
   now = new Date(day + "T12:00:00Z"),
   saved = params.has("reset")
@@ -38,7 +40,7 @@ let campaign = createBossCampaign();
 const tier = Number(params.get("tier") ?? 1) as BossTier;
 if (tier >= 1 && tier <= 5) {
   campaign.tier = tier;
-  campaign.hp = bossForm(tier).hp;
+  campaign.hp = Math.min(bossForm(tier).hp, Number(params.get("hp") ?? bossForm(tier).hp));
 }
 const savedCampaign = localStorage.getItem("boss-campaign-fixture-v2");
 if (savedCampaign) campaign = JSON.parse(savedCampaign);
@@ -63,7 +65,7 @@ if (params.has("demo") && !run) {
   run = createBossRaid(crypto.randomUUID(), day, crew.cards, crew.name, {
     tier: campaign.tier,
     hp: campaign.hp,
-  });
+  }, mode);
   for (let round = 1; round <= 3; round++) {
     let next;
     while ((next = greedy(run))) run = next;
@@ -105,12 +107,12 @@ window.fetch = async (input, init) => {
     });
   if (init?.method === "POST") {
     const body = JSON.parse(String(init.body));
-    if (url.endsWith("/start")) {
+    if (new URL(url, location.href).pathname.endsWith("/start")) {
       if (!run) {
         run = createBossRaid(body.requestId, day, body.cardIds, crew.name, {
           tier: campaign.tier,
           hp: campaign.hp,
-        });
+        }, mode);
         campaign.attacks++;
         campaign.tierAttacks++;
       }
@@ -135,6 +137,8 @@ window.fetch = async (input, init) => {
   }
   return response(status());
 };
+Object.defineProperty(window, "__raidMusic", { get: getActiveMusicOverride });
+Object.defineProperty(window, "__raidStatus", { get: status });
 Object.defineProperty(window, "__raid", { get: () => run });
 Object.defineProperty(window, "__raidLegal", {
   get: () =>
@@ -158,10 +162,13 @@ Object.defineProperty(window, "__raidLegal", {
 const bootstrap = {
   profile: {
     id: "boss-fixture",
+    ownedCardIds: crew.cards,
     settings: { reducedMotion: params.has("reduced"), turnTimerEnabled: false },
   },
 } as PlayerBootstrap;
-createRoot(document.getElementById("root")!).render(
+const fixtureRoot = createRoot(document.getElementById("root")!);
+Object.defineProperty(window, "__raidUnmount", { value: () => fixtureRoot.unmount() });
+fixtureRoot.render(
   <QueryClientProvider
     client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}
   >

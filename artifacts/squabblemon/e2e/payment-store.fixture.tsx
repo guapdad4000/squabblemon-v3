@@ -1,9 +1,13 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { installGameSurfacePolicy } from '../src/lib/gameSurfacePolicy';
+import '../src/styles/game-surface.css';
 import { createRoot } from 'react-dom/client';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ThemeProvider } from 'next-themes';
 import { Router } from 'wouter';
 import { useGetPlayerBootstrap } from '@workspace/api-client-react';
+import { NotificationProvider } from '../src/components/Notifications';
+import { BagRewardArrival } from '../src/components/BagRewardArrival';
 import { CityHeader } from '../src/components/venue/CityHeader';
 import { CosmeticProvider } from '../src/components/CosmeticContext';
 import { Shop } from '../src/pages/game/Shop';
@@ -25,6 +29,7 @@ if (!fixtureParams.has('view')) fixtureParams.set('view', 'corner');
 window.history.replaceState(null, '', `/game/shop?${fixtureParams.toString()}`);
 
 function MountedPaymentStore() {
+  useEffect(installGameSurfacePolicy, []);
   const bootstrap = useGetPlayerBootstrap();
 
   if (bootstrap.isLoading) {
@@ -35,7 +40,7 @@ function MountedPaymentStore() {
   }
 
   return (
-    <CosmeticProvider profile={bootstrap.data.profile}>
+    <CosmeticProvider profile={bootstrap.data.profile}><NotificationProvider bootstrap={bootstrap.data}><BagRewardArrival profile={bootstrap.data.profile} />
       <div className="game-shell game-shell--compact-nav h-[100dvh] bg-[#070707] text-white">
         <div className="noise-overlay" />
         <div className="game-shell__content">
@@ -45,7 +50,7 @@ function MountedPaymentStore() {
           </div>
         </div>
       </div>
-    </CosmeticProvider>
+    </NotificationProvider></CosmeticProvider>
   );
 }
 

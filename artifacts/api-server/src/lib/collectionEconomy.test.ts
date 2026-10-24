@@ -242,3 +242,23 @@ test("future earned IDs remain intact while active rewards come from the current
   assert.ok(result.discoveredCardIds.includes("next-release-character"));
   assert.ok(result.rewards.filter(r => r.kind === "card").every(r => r.cardId && catalogCardById[r.cardId]));
 });
+test('flex batches are exactly sequential singles, including inventory protection and style pity', async () => {
+  const { generateStreetBatch } = await import('./collectionEconomy');
+  const { totalStyleShardRewards } = await import('@workspace/squabblemon-engine/styleShards');
+  const random = () => { let seed = 1807; return (max: number) => { seed = (seed * 1664525 + 1013904223) >>> 0; return seed % max; }; };
+  for (const count of [2, 3, 5, 9] as const) {
+    const initial = { ownedCardIds: [] as string[], discoveredCardIds: [] as string[], ownedVariants: [] as string[], pity: 8 };
+    const actual = generateStreetBatch(initial, count, random());
+    const rng = random(); let state = initial; const rewards = [];
+    for (let index = 0; index < count; index++) {
+      const next = generateStreetPack(state, rng); rewards.push(...next.rewards);
+      state = { ownedCardIds: next.ownedCardIds, discoveredCardIds: next.discoveredCardIds, ownedVariants: next.ownedVariants, pity: next.pityAfter };
+    }
+    assert.deepEqual(actual, { rewards, ownedCardIds: state.ownedCardIds, discoveredCardIds: state.discoveredCardIds, ownedVariants: state.ownedVariants, ...totalStyleShardRewards(rewards), softCurrencyGained: rewards.filter(r => r.kind === 'softCurrency').reduce((sum,r) => sum + r.amount, 0), pityAfter: state.pity });
+    assert.equal(actual.rewards.length, count * 6);
+  }
+  const initial = { ownedCardIds: [], discoveredCardIds: [], ownedVariants: [], pity: 0 };
+  assert.deepEqual(generateStreetBatch(initial, 10, zero), generateStreetTenPull(initial, zero));
+  const ordinary = generateStreetBatch(initial, 9, zero);
+  assert.equal(ordinary.rewards.some(reward => reward.rarity && ['Rare','Epic','Legendary','Mythical'].includes(reward.rarity)), false, 'partial batches do not secretly change rarity odds');
+});

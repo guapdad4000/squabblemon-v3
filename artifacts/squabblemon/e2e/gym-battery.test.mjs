@@ -8,8 +8,8 @@ import * as THREE from '../public/scenes/shared/three.module.js';
 const before = JSON.parse(readFileSync(new URL('./fixtures/gym-dents.before-battery.json', import.meta.url), 'utf8'));
 const source = readFileSync(new URL('../public/scenes/gym/scene.js', import.meta.url), 'utf8');
 const after = {
-  dent: source.slice(source.indexOf('    function dentHeavyBag('), source.indexOf('\n    const OMEN_LIGHTS')),
-  recovery: source.slice(source.indexOf('      if (heavyBagMesh && bagOriginalPositions'), source.indexOf('\n\n      if (screenShake', source.indexOf('      if (heavyBagMesh && bagOriginalPositions'))),
+  dent: source.slice(source.indexOf('    function dentHeavyBag('), source.indexOf('\n    function applyOmen(')),
+  recovery: source.slice(source.indexOf('      if (heavyBagMesh && bagOriginalPositions'), source.indexOf('\n\n      if (finale && !finale.done)', source.indexOf('      if (heavyBagMesh && bagOriginalPositions'))),
   geometry: source.slice(source.indexOf('      const bagRadius ='), source.indexOf('      const bagTex =')),
 };
 

@@ -46,6 +46,29 @@ export const STREET_PACK_RULES = {
   },
 } as const;
 
+/** A batch is ordinary packs; only a full ten-pack gets its authored discount/guarantee. */
+export const ALLOWED_PULL_COUNTS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] as const;
+export type PullCount = (typeof ALLOWED_PULL_COUNTS)[number];
+export const isPullCount = (value: unknown): value is PullCount =>
+  typeof value === 'number' && Number.isInteger(value) && value >= 1 && value <= 10;
+export function streetPackCost(count: PullCount) {
+  return count === 10 ? STREET_PACK_RULES.ten : {
+    ticketCost: count, softCurrencyCost: count * STREET_PACK_RULES.single.softCurrencyCost,
+    rewards: count * STREET_PACK_RULES.single.rewards,
+  };
+}
+export function affordableStreetPacks(balance: number, method: 'ticket' | 'softCurrency'): number {
+  if (!Number.isFinite(balance) || balance < 0) return 0;
+  if (balance >= (method === 'ticket' ? STREET_PACK_RULES.ten.ticketCost : STREET_PACK_RULES.ten.softCurrencyCost)) return 10;
+  return Math.min(9, Math.floor(balance / (method === 'ticket' ? 1 : STREET_PACK_RULES.single.softCurrencyCost)));
+}
+/** Historical singles/ten-pulls and exact batch counts all survive receipt replay. */
+export function packReceiptPullCount(oddsVersion: string): PullCount {
+  if (oddsVersion.startsWith('street-pack-ten-')) return 10;
+  const count = Number(/^street-pack-batch-([2-9])-v1(?:$|:)/.exec(oddsVersion)?.[1]);
+  return isPullCount(count) ? count : 1;
+}
+
 export type PackRandomInt = (maxExclusive: number) => number;
 
 export function rollWeightedRarity<T extends string>(
@@ -129,3 +152,18 @@ export const STREET_PACK_DISCLOSURES = [
     detail: `After all 50 gameplay slots roll, the ten-pull checks gameplay cards only. A duplicate ${PACK_RARITY_LABELS.Rare}, ${PACK_RARITY_LABELS.Epic}, ${PACK_RARITY_LABELS.Legendary}, or ${PACK_RARITY_LABELS.Mythical} counts; cosmetic styles do not. If none appeared, the last gameplay card is replaced so the haul stays at ${STREET_PACK_RULES.ten.rewards} rewards. The replacement rarity rolls ${PACK_RARITY_LABELS.Rare} ${RARE_PLUS_GUARANTEE_WEIGHTS.Rare}%, ${PACK_RARITY_LABELS.Epic} ${RARE_PLUS_GUARANTEE_WEIGHTS.Epic}%, ${PACK_RARITY_LABELS.Legendary} ${RARE_PLUS_GUARANTEE_WEIGHTS.Legendary}%, or ${PACK_RARITY_LABELS.Mythical} ${RARE_PLUS_GUARANTEE_WEIGHTS.Mythical}% independent of ownership, so it is not guaranteed to be a new card.`,
   },
 ] as const;
+
+export type PullSeasonReward = { seasonId: string; threshold: number; softCurrency: number; packTickets: number; styleShards: number };
+export type PullSeasonProgress = { id: string; name: string; startsAt: string; endsAt: string; count: number; milestones: Array<PullSeasonReward & { claimed: boolean }> };
+export const PULL_SEASON_MILESTONES = [
+  { threshold: 5, softCurrency: 100, packTickets: 0, styleShards: 0 },
+  { threshold: 10, softCurrency: 0, packTickets: 1, styleShards: 0 },
+  { threshold: 20, softCurrency: 0, packTickets: 0, styleShards: 15 },
+  { threshold: 30, softCurrency: 0, packTickets: 2, styleShards: 0 },
+] as const;
+export function pullSeasonCalendar(now: number) {
+  const date = new Date(now);
+  const startsAt = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), 1));
+  const endsAt = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth() + 1, 1));
+  return { id: startsAt.toISOString().slice(0, 7), name: `${new Intl.DateTimeFormat('en-US', { month: 'long', year: 'numeric', timeZone: 'UTC' }).format(startsAt)} · Street Pack season`, startsAt: startsAt.toISOString(), endsAt: endsAt.toISOString() };
+}

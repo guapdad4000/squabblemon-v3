@@ -10,7 +10,7 @@ export function BossRaidRoundBlast({ blast }: { blast: BossBlast }) {
   } | null>(null);
   useLayoutEffect(() => {
     const arena = ref.current?.parentElement;
-    const boss = arena?.querySelector<HTMLElement>(".raid-boss-inspect");
+    const boss = arena?.querySelector<HTMLElement>(".raid-boss-impact-anchor");
     if (!arena || !boss) return;
     let frame = 0;
     const measure = () => {
@@ -46,6 +46,7 @@ export function BossRaidRoundBlast({ blast }: { blast: BossBlast }) {
     };
     const observer = new ResizeObserver(measure);
     observer.observe(arena);
+    observer.observe(boss);
     measure();
     return () => {
       observer.disconnect();

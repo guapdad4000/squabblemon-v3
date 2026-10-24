@@ -1,0 +1,1270 @@
+{
+  "date": "2026-10-24",
+  "scope": "New media from approved gacha/reward design update only. No runtime TS/CSS changed by this audit.",
+  "beforeMediaBytes": 20701530,
+  "afterMediaBytes": 12691089,
+  "savedMediaBytes": 8010441,
+  "savedMediaPercent": 38.695,
+  "metadataRemovedFromPublicBytes": 38770,
+  "originalArchive": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v1/approved-originals",
+  "removedMedia": {
+    "assets": [
+      {
+        "path": "brand/gacha/cinematic-v2/single-arrival.webp",
+        "bytes": 507848,
+        "sha256": "df3080d5849ce3cd282e94abba6679057302e1dbfafd761792520f0a8769f616",
+        "archive": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v1/approved-originals/brand/gacha/cinematic-v2/single-arrival.webp",
+        "reason": "Unused historical media; landing.webp duplicate replaced by shared single-arrival-wall-v2 URL."
+      },
+      {
+        "path": "brand/gacha/cinematic-v2/ten-burst.webp",
+        "bytes": 581378,
+        "sha256": "5fd5cb0004b325ce4f6c750cae7eb79a7d83716d636dfb5a4e1e8f19a002b5a3",
+        "archive": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v1/approved-originals/brand/gacha/cinematic-v2/ten-burst.webp",
+        "reason": "Unused historical media; landing.webp duplicate replaced by shared single-arrival-wall-v2 URL."
+      },
+      {
+        "path": "brand/gacha/rarity-flight-v1/right-wall.webp",
+        "bytes": 464698,
+        "sha256": "7ca4f9198f05bac7a053c34e33b3c9404306d6df2695e152bfbe139c339f3506",
+        "archive": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v1/approved-originals/brand/gacha/rarity-flight-v1/right-wall.webp",
+        "reason": "Unused historical media; landing.webp duplicate replaced by shared single-arrival-wall-v2 URL."
+      },
+      {
+        "path": "brand/gacha/rarity-flight-v1/flight-pov.webp",
+        "bytes": 386976,
+        "sha256": "f1ad44f0de45ee097dd46501803f06fd55eff3d6efa1aba67fb6b0e44a3a07cf",
+        "archive": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v1/approved-originals/brand/gacha/rarity-flight-v1/flight-pov.webp",
+        "reason": "Unused historical media; landing.webp duplicate replaced by shared single-arrival-wall-v2 URL."
+      },
+      {
+        "path": "brand/gacha/rarity-flight-v1/wall-impact.webp",
+        "bytes": 496758,
+        "sha256": "031dbe68b2716879c0106885cafc466b96af42c9d8f95fa097c09d7d84128b12",
+        "archive": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v1/approved-originals/brand/gacha/rarity-flight-v1/wall-impact.webp",
+        "reason": "Unused historical media; landing.webp duplicate replaced by shared single-arrival-wall-v2 URL."
+      },
+      {
+        "path": "scenes/gym/audio/rarity-flight-v1/travel-wind.mp3",
+        "bytes": 10412,
+        "sha256": "856306bc6103cc15fbcb92ba872e101e5a576617491e5c11663db2116aa017bc",
+        "archive": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v1/approved-originals/scenes/gym/audio/rarity-flight-v1/travel-wind.mp3",
+        "reason": "Unused historical media; landing.webp duplicate replaced by shared single-arrival-wall-v2 URL."
+      },
+      {
+        "path": "scenes/gym/audio/rarity-flight-v1/travel-wind-long-v2.mp3",
+        "bytes": 49196,
+        "sha256": "358cbbd730c460adce0a170339a2f39007d42c890a0b09949106eb543b93e81f",
+        "archive": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v1/approved-originals/scenes/gym/audio/rarity-flight-v1/travel-wind-long-v2.mp3",
+        "reason": "Unused historical media; landing.webp duplicate replaced by shared single-arrival-wall-v2 URL."
+      },
+      {
+        "path": "brand/gacha/video-flight-v1/landing.webp",
+        "bytes": 420082,
+        "sha256": "adaa98c16c4b21fd0b4a2f9fb05b1daa5fc56d05ee9f45d2fe10be332865bd16",
+        "archive": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v1/approved-originals/brand/gacha/video-flight-v1/landing.webp",
+        "reason": "Unused historical media; landing.webp duplicate replaced by shared single-arrival-wall-v2 URL."
+      }
+    ],
+    "removedBytes": 2917348
+  },
+  "files": [
+    {
+      "path": "assets/rewards/clout-stack-v2.webp",
+      "bytes": 74674,
+      "sha256": "42bb8480268a9c518273f8906ba390e8b5648f5ece936dd62b066ba2a41abbed",
+      "beforeBytes": 74674,
+      "beforeSecondOptimizationBytes": 74674
+    },
+    {
+      "path": "assets/rewards/clout-token-v2.webp",
+      "bytes": 57386,
+      "sha256": "6463db94688ef60045f0227b965721c43eee2f5ccf2e849ba05404e850c1d640",
+      "beforeBytes": 57386,
+      "beforeSecondOptimizationBytes": 57386
+    },
+    {
+      "path": "brand/gacha/cinematic-v2/burst-foreground.webp",
+      "bytes": 599060,
+      "sha256": "a6001db6df5023c10827baa65828e81e00611543feab470b8d19314fecbc394c",
+      "beforeBytes": 737578,
+      "beforeSecondOptimizationBytes": 667332
+    },
+    {
+      "path": "brand/gacha/cinematic-v2/contact.webp",
+      "bytes": 337910,
+      "sha256": "b27a6a2ff806768f10dcdcfae79cd048e77255792fda26e421f72abdf41f3519",
+      "beforeBytes": 450108,
+      "beforeSecondOptimizationBytes": 383820
+    },
+    {
+      "path": "brand/gacha/cinematic-v2/single-arrival-wall-v2.webp",
+      "bytes": 307342,
+      "sha256": "7b7b74c68050f9681f3817d0c0591de6fe24061be6645b4e033c84f0a9614917",
+      "beforeBytes": 420082,
+      "beforeSecondOptimizationBytes": 355422
+    },
+    {
+      "path": "brand/gacha/rarity-flight-v1/bag-render.webp",
+      "bytes": 229608,
+      "sha256": "f803331f0d0936bd117858a4f29c2269d9bc3f99806ddbda1fca77018a5ca368",
+      "beforeBytes": 273354,
+      "beforeSecondOptimizationBytes": 253452
+    },
+    {
+      "path": "brand/gacha/rarity-flight-v1/compression.webp",
+      "bytes": 222604,
+      "sha256": "2b70efb30cfb4d25db91dc6ccd9ecda718b55fe901a8d633a202bee1670e73fd",
+      "beforeBytes": 285392,
+      "beforeSecondOptimizationBytes": 262494
+    },
+    {
+      "path": "brand/gacha/rarity-flight-v1/default-gym.webp",
+      "bytes": 392400,
+      "sha256": "fe238003ec2a0b9f40a654c6a93ad72b585cbc889098c8c4aca6404508839fd9",
+      "beforeBytes": 517842,
+      "beforeSecondOptimizationBytes": 456782
+    },
+    {
+      "path": "brand/gacha/rarity-flight-v1/release.webp",
+      "bytes": 294796,
+      "sha256": "b7be468a7954c8a9f956eec41c69c9e2887043692ff47c22c8416d164f4981d0",
+      "beforeBytes": 363462,
+      "beforeSecondOptimizationBytes": 336414
+    },
+    {
+      "path": "brand/gacha/video-flight-v1/landing.mp4",
+      "bytes": 1999281,
+      "sha256": "b9074bc662237cfd14aef6788530464917cf36bed26bc8668f81338df9487c42",
+      "beforeBytes": 2921142,
+      "beforeSecondOptimizationBytes": 2591337
+    },
+    {
+      "path": "brand/gacha/video-flight-v1/pov-blue.mp4",
+      "bytes": 1046867,
+      "sha256": "82d25805747514a54a364180da098b79aca8a44a83ef5e311a602fb431baf8d7",
+      "beforeBytes": 1501522,
+      "beforeSecondOptimizationBytes": 1340439
+    },
+    {
+      "path": "brand/gacha/video-flight-v1/pov-blue.webp",
+      "bytes": 193968,
+      "sha256": "1ac80d3e525d63536a889588b4fb7ece34325351be9fc1537ee942d7a7cd5dfa",
+      "beforeBytes": 261694,
+      "beforeSecondOptimizationBytes": 222158
+    },
+    {
+      "path": "brand/gacha/video-flight-v1/pov-green.mp4",
+      "bytes": 958619,
+      "sha256": "25ab82ce8f0d4a49796f30f99f2e240047f35e00b6078ab9a60649bb199f5e4f",
+      "beforeBytes": 1378740,
+      "beforeSecondOptimizationBytes": 1230048
+    },
+    {
+      "path": "brand/gacha/video-flight-v1/pov-green.webp",
+      "bytes": 207788,
+      "sha256": "aac7d5b5d6b00141e78e8f2aaf9b82824b74248fd271025cccdd3336f1d67e7d",
+      "beforeBytes": 278492,
+      "beforeSecondOptimizationBytes": 236516
+    },
+    {
+      "path": "brand/gacha/video-flight-v1/pov-neutral.mp4",
+      "bytes": 1800072,
+      "sha256": "17df5eb9c4c60b4909193ac91cd0cec216ed7873cf8cd3f7a4e194961590d4a9",
+      "beforeBytes": 2582449,
+      "beforeSecondOptimizationBytes": 2298411
+    },
+    {
+      "path": "brand/gacha/video-flight-v1/pov-neutral.webp",
+      "bytes": 233104,
+      "sha256": "4bab9df4a5a9f699731dce60ff168af508c9a6d97edb04558bf90eea01c81afb",
+      "beforeBytes": 292900,
+      "beforeSecondOptimizationBytes": 248188
+    },
+    {
+      "path": "brand/gacha/video-flight-v1/pov-purple.mp4",
+      "bytes": 1029325,
+      "sha256": "6cae874bdc3333c5311263562b981db2fa4d545948ad7de70196c2b4a8d314eb",
+      "beforeBytes": 1543911,
+      "beforeSecondOptimizationBytes": 1364223
+    },
+    {
+      "path": "brand/gacha/video-flight-v1/pov-purple.webp",
+      "bytes": 212224,
+      "sha256": "6113105672638fc48123f83d5c82f32c85a066365203a34db11ffc8a2ad611aa",
+      "beforeBytes": 288554,
+      "beforeSecondOptimizationBytes": 240914
+    },
+    {
+      "path": "brand/gacha/video-flight-v1/pov-red.mp4",
+      "bytes": 1132101,
+      "sha256": "33a854da3f7f06a52c1cf2980ac13b2eb10068251f02c0ab69cb02d8fc82fe5b",
+      "beforeBytes": 1646717,
+      "beforeSecondOptimizationBytes": 1462325
+    },
+    {
+      "path": "brand/gacha/video-flight-v1/pov-red.webp",
+      "bytes": 176910,
+      "sha256": "cd28162463b994bcb448e47ef6ce9bbd126fbfbeeaf3dee700cf62a5066997e8",
+      "beforeBytes": 233590,
+      "beforeSecondOptimizationBytes": 199494
+    },
+    {
+      "path": "brand/gacha/video-flight-v1/pov-yellow.mp4",
+      "bytes": 929260,
+      "sha256": "c40e4eeaf930dcaa7ae73317f1f282a13ecbf277c105d2d5cc71bce4dee3108f",
+      "beforeBytes": 1354113,
+      "beforeSecondOptimizationBytes": 1206954
+    },
+    {
+      "path": "brand/gacha/video-flight-v1/pov-yellow.webp",
+      "bytes": 195710,
+      "sha256": "1084787c1dddfec3637585d01bf19c99ba93c27320d8c8ee0d39f1cd6f33d673",
+      "beforeBytes": 260400,
+      "beforeSecondOptimizationBytes": 220300
+    },
+    {
+      "path": "scenes/gym/audio/rarity-flight-v1/bag-impact.mp3",
+      "bytes": 7724,
+      "sha256": "1f630ea6360db1aca24a0f4f35b0f5cec69b19b68f364cf876dac8b4ae29e13e",
+      "beforeBytes": 7724,
+      "beforeSecondOptimizationBytes": 7724
+    },
+    {
+      "path": "scenes/gym/audio/rarity-flight-v1/chain-rattle.mp3",
+      "bytes": 6572,
+      "sha256": "7ab6681911ca7f1b5e2be05c7bafe3183eb9410a9aa853afd7b1af12a40861e2",
+      "beforeBytes": 6572,
+      "beforeSecondOptimizationBytes": 6572
+    },
+    {
+      "path": "scenes/gym/audio/rarity-flight-v1/impact-cels.mp3",
+      "bytes": 6188,
+      "sha256": "984964a317f13c4415507ca3132f56d6b47a5f8d993006c2f9ba5bf74b4f1785",
+      "beforeBytes": 6188,
+      "beforeSecondOptimizationBytes": 6188
+    },
+    {
+      "path": "scenes/gym/audio/rarity-flight-v1/travel-wind-launch-v3.mp3",
+      "bytes": 39596,
+      "sha256": "f9aa080fdfd8b2d26aca6373963e8ee2192773975d22de05bb95db036b9694c7",
+      "beforeBytes": 39596,
+      "beforeSecondOptimizationBytes": 39596
+    }
+  ],
+  "videoMetrics": [
+    {
+      "id": "neutral",
+      "variant": "approved",
+      "path": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v1/approved-originals/brand/gacha/video-flight-v1/pov-neutral.mp4",
+      "bytes": 2582449,
+      "ssimToNormalizedSource": 0.982518,
+      "psnrToNormalizedSource": 41.07266,
+      "alignment": "Both decoded streams set to exact frame-index timestamps on1/30timebase before metric."
+    },
+    {
+      "id": "neutral",
+      "variant": "slow-crf19",
+      "path": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v1/video-candidates/neutral-slow-crf19.mp4",
+      "bytes": 2560587,
+      "ssimToNormalizedSource": 0.982599,
+      "psnrToNormalizedSource": 41.115519,
+      "alignment": "Both decoded streams set to exact frame-index timestamps on1/30timebase before metric."
+    },
+    {
+      "id": "neutral",
+      "variant": "slow-crf20",
+      "path": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v1/video-candidates/neutral-slow-crf20.mp4",
+      "bytes": 2298411,
+      "ssimToNormalizedSource": 0.980642,
+      "psnrToNormalizedSource": 40.52445,
+      "alignment": "Both decoded streams set to exact frame-index timestamps on1/30timebase before metric."
+    },
+    {
+      "id": "purple",
+      "variant": "approved",
+      "path": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v1/approved-originals/brand/gacha/video-flight-v1/pov-purple.mp4",
+      "bytes": 1543911,
+      "ssimToNormalizedSource": 0.987063,
+      "psnrToNormalizedSource": 42.138335,
+      "alignment": "Both decoded streams set to exact frame-index timestamps on1/30timebase before metric."
+    },
+    {
+      "id": "purple",
+      "variant": "slow-crf19",
+      "path": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v1/video-candidates/purple-slow-crf19.mp4",
+      "bytes": 1531919,
+      "ssimToNormalizedSource": 0.987131,
+      "psnrToNormalizedSource": 42.162225,
+      "alignment": "Both decoded streams set to exact frame-index timestamps on1/30timebase before metric."
+    },
+    {
+      "id": "purple",
+      "variant": "slow-crf20",
+      "path": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v1/video-candidates/purple-slow-crf20.mp4",
+      "bytes": 1364223,
+      "ssimToNormalizedSource": 0.985767,
+      "psnrToNormalizedSource": 41.616717,
+      "alignment": "Both decoded streams set to exact frame-index timestamps on1/30timebase before metric."
+    },
+    {
+      "id": "landing",
+      "variant": "approved",
+      "path": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v1/approved-originals/brand/gacha/video-flight-v1/landing.mp4",
+      "bytes": 2921142,
+      "ssimToNormalizedSource": 0.989393,
+      "psnrToNormalizedSource": 44.332658,
+      "alignment": "Both decoded streams set to exact frame-index timestamps on1/30timebase before metric."
+    },
+    {
+      "id": "landing",
+      "variant": "slow-crf19",
+      "path": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v1/video-candidates/landing-slow-crf19.mp4",
+      "bytes": 2890759,
+      "ssimToNormalizedSource": 0.989448,
+      "psnrToNormalizedSource": 44.397284,
+      "alignment": "Both decoded streams set to exact frame-index timestamps on1/30timebase before metric."
+    },
+    {
+      "id": "landing",
+      "variant": "slow-crf20",
+      "path": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v1/video-candidates/landing-slow-crf20.mp4",
+      "bytes": 2591337,
+      "ssimToNormalizedSource": 0.988316,
+      "psnrToNormalizedSource": 43.795906,
+      "alignment": "Both decoded streams set to exact frame-index timestamps on1/30timebase before metric."
+    },
+    {
+      "id": "blue",
+      "variant": "approved",
+      "path": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v1/approved-originals/brand/gacha/video-flight-v1/pov-blue.mp4",
+      "bytes": 1501522,
+      "ssimToNormalizedSource": 0.988808,
+      "psnrToNormalizedSource": 43.12305,
+      "alignment": "Both decoded streams set to frame-index timestamps1/30."
+    },
+    {
+      "id": "blue",
+      "variant": "slow-crf20",
+      "path": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v1/video-candidates/blue-slow-crf20.mp4",
+      "bytes": 1340439,
+      "ssimToNormalizedSource": 0.987574,
+      "psnrToNormalizedSource": 42.561257,
+      "alignment": "Both decoded streams set to frame-index timestamps1/30."
+    },
+    {
+      "id": "yellow",
+      "variant": "approved",
+      "path": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v1/approved-originals/brand/gacha/video-flight-v1/pov-yellow.mp4",
+      "bytes": 1354113,
+      "ssimToNormalizedSource": 0.989261,
+      "psnrToNormalizedSource": 43.034899,
+      "alignment": "Both decoded streams set to frame-index timestamps1/30."
+    },
+    {
+      "id": "yellow",
+      "variant": "slow-crf20",
+      "path": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v1/video-candidates/yellow-slow-crf20.mp4",
+      "bytes": 1206954,
+      "ssimToNormalizedSource": 0.988156,
+      "psnrToNormalizedSource": 42.479735,
+      "alignment": "Both decoded streams set to frame-index timestamps1/30."
+    },
+    {
+      "id": "red",
+      "variant": "approved",
+      "path": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v1/approved-originals/brand/gacha/video-flight-v1/pov-red.mp4",
+      "bytes": 1646717,
+      "ssimToNormalizedSource": 0.985989,
+      "psnrToNormalizedSource": 42.613647,
+      "alignment": "Both decoded streams set to frame-index timestamps1/30."
+    },
+    {
+      "id": "red",
+      "variant": "slow-crf20",
+      "path": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v1/video-candidates/red-slow-crf20.mp4",
+      "bytes": 1462325,
+      "ssimToNormalizedSource": 0.984596,
+      "psnrToNormalizedSource": 42.093263,
+      "alignment": "Both decoded streams set to frame-index timestamps1/30."
+    },
+    {
+      "id": "green",
+      "variant": "approved",
+      "path": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v1/approved-originals/brand/gacha/video-flight-v1/pov-green.mp4",
+      "bytes": 1378740,
+      "ssimToNormalizedSource": 0.988746,
+      "psnrToNormalizedSource": 42.94144,
+      "alignment": "Both decoded streams set to frame-index timestamps1/30."
+    },
+    {
+      "id": "green",
+      "variant": "slow-crf20",
+      "path": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v1/video-candidates/green-slow-crf20.mp4",
+      "bytes": 1230048,
+      "ssimToNormalizedSource": 0.987565,
+      "psnrToNormalizedSource": 42.412008,
+      "alignment": "Both decoded streams set to frame-index timestamps1/30."
+    }
+  ],
+  "imageCandidates": [
+    {
+      "path": "brand/gacha/cinematic-v2/contact.webp",
+      "source": "/home/falcon/.codex/generated_images/01a16c62-60f2-7942-b229-e067daf32b61/exec-9949d9af-601e-4c08-ab4b-56a4b51f7dfc.png",
+      "candidate": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v1/image-candidates/contact.webp",
+      "quality": 84,
+      "beforeBytes": 450108,
+      "afterBytes": 383820,
+      "dimensions": [
+        1672,
+        941
+      ],
+      "alphaExact": true,
+      "metricsToOriginalPng": {
+        "approved": {
+          "ssim": 0.906218,
+          "psnr": 31.601286
+        },
+        "candidate": {
+          "ssim": 0.897483,
+          "psnr": 31.169491
+        }
+      },
+      "visibleCompositePsnrToPng": {
+        "dark": {
+          "approved": 32.92093,
+          "optimized": 32.3842
+        },
+        "cream": {
+          "approved": 32.92093,
+          "optimized": 32.3842
+        }
+      }
+    },
+    {
+      "path": "brand/gacha/cinematic-v2/burst-foreground.webp",
+      "source": "/home/falcon/.codex/generated_images/01a16c62-60f2-7942-b229-e067daf32b61/exec-05ff26d7-5944-43a4-ae46-6a52f2f1ef43.png",
+      "candidate": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v1/image-candidates/burst-foreground.webp",
+      "quality": 86,
+      "beforeBytes": 737578,
+      "afterBytes": 667332,
+      "dimensions": [
+        1672,
+        941
+      ],
+      "alphaExact": true,
+      "metricsToOriginalPng": {
+        "approved": {
+          "ssim": 0.878158,
+          "psnr": 28.574913
+        },
+        "candidate": {
+          "ssim": 0.871248,
+          "psnr": 28.347091
+        }
+      },
+      "visibleCompositePsnrToPng": {
+        "dark": {
+          "approved": 33.5911,
+          "optimized": 33.14816
+        },
+        "cream": {
+          "approved": 33.60575,
+          "optimized": 33.16416
+        }
+      }
+    },
+    {
+      "path": "brand/gacha/cinematic-v2/single-arrival-wall-v2.webp",
+      "source": "/home/falcon/.codex/generated_images/01a16c62-60f2-7942-b229-e067daf32b61/exec-cdc6da07-0829-4ace-a3c9-dcc991739699.png",
+      "candidate": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v1/image-candidates/single-arrival-wall-v2.webp",
+      "quality": 84,
+      "beforeBytes": 420082,
+      "afterBytes": 355422,
+      "dimensions": [
+        1672,
+        941
+      ],
+      "alphaExact": true,
+      "metricsToOriginalPng": {
+        "approved": {
+          "ssim": 0.904135,
+          "psnr": 32.250859
+        },
+        "candidate": {
+          "ssim": 0.896015,
+          "psnr": 31.741557
+        }
+      },
+      "visibleCompositePsnrToPng": {
+        "dark": {
+          "approved": 33.94236,
+          "optimized": 33.20037
+        },
+        "cream": {
+          "approved": 33.94236,
+          "optimized": 33.20037
+        }
+      }
+    },
+    {
+      "path": "brand/gacha/rarity-flight-v1/bag-render.webp",
+      "source": "/home/falcon/.codex/generated_images/01a16c62-60f2-7942-b229-e067daf32b61/exec-f917f708-7dda-4911-890b-998839e73e2a.png",
+      "candidate": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v1/image-candidates/bag-render.webp",
+      "quality": 84,
+      "beforeBytes": 273354,
+      "afterBytes": 253452,
+      "dimensions": [
+        1024,
+        1536
+      ],
+      "alphaExact": true,
+      "metricsToOriginalPng": {
+        "approved": {
+          "ssim": 0.557377,
+          "psnr": 19.052022
+        },
+        "candidate": {
+          "ssim": 0.554237,
+          "psnr": 19.047633
+        }
+      },
+      "visibleCompositePsnrToPng": {
+        "dark": {
+          "approved": 34.90731,
+          "optimized": 34.59936
+        },
+        "cream": {
+          "approved": 34.93706,
+          "optimized": 34.62911
+        }
+      }
+    },
+    {
+      "path": "brand/gacha/rarity-flight-v1/default-gym.webp",
+      "source": "/home/falcon/.codex/generated_images/01a16c62-60f2-7942-b229-e067daf32b61/exec-54369831-5c16-4578-a2c4-fd13e73a2e5b.png",
+      "candidate": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v1/image-candidates/default-gym.webp",
+      "quality": 84,
+      "beforeBytes": 517842,
+      "afterBytes": 456782,
+      "dimensions": [
+        1672,
+        941
+      ],
+      "alphaExact": true,
+      "metricsToOriginalPng": {
+        "approved": {
+          "ssim": 0.916567,
+          "psnr": 30.825399
+        },
+        "candidate": {
+          "ssim": 0.909674,
+          "psnr": 30.492297
+        }
+      },
+      "visibleCompositePsnrToPng": {
+        "dark": {
+          "approved": 32.22126,
+          "optimized": 31.79862
+        },
+        "cream": {
+          "approved": 32.22126,
+          "optimized": 31.79862
+        }
+      }
+    },
+    {
+      "path": "brand/gacha/rarity-flight-v1/compression.webp",
+      "source": "/home/falcon/.codex/generated_images/01a16c62-60f2-7942-b229-e067daf32b61/exec-89c52d27-4e4c-419e-9759-3f8cfaadcccd.png",
+      "candidate": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v1/image-candidates/compression.webp",
+      "quality": 84,
+      "beforeBytes": 285392,
+      "afterBytes": 262494,
+      "dimensions": [
+        1672,
+        941
+      ],
+      "alphaExact": true,
+      "metricsToOriginalPng": {
+        "approved": {
+          "ssim": 0.889947,
+          "psnr": 34.14213
+        },
+        "candidate": {
+          "ssim": 0.88289,
+          "psnr": 33.879535
+        }
+      },
+      "visibleCompositePsnrToPng": {
+        "dark": {
+          "approved": 35.51394,
+          "optimized": 35.21291
+        },
+        "cream": {
+          "approved": 35.51394,
+          "optimized": 35.21291
+        }
+      }
+    },
+    {
+      "path": "brand/gacha/rarity-flight-v1/release.webp",
+      "source": "/home/falcon/.codex/generated_images/01a16c62-60f2-7942-b229-e067daf32b61/exec-3c26d6c9-f058-4a2c-a197-c9e1739f281e.png",
+      "candidate": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v1/image-candidates/release.webp",
+      "quality": 84,
+      "beforeBytes": 363462,
+      "afterBytes": 336414,
+      "dimensions": [
+        1672,
+        941
+      ],
+      "alphaExact": true,
+      "metricsToOriginalPng": {
+        "approved": {
+          "ssim": 0.887273,
+          "psnr": 30.883562
+        },
+        "candidate": {
+          "ssim": 0.884177,
+          "psnr": 30.686265
+        }
+      },
+      "visibleCompositePsnrToPng": {
+        "dark": {
+          "approved": 32.01895,
+          "optimized": 31.75956
+        },
+        "cream": {
+          "approved": 32.01895,
+          "optimized": 31.75956
+        }
+      }
+    }
+  ],
+  "posters": [
+    {
+      "id": "neutral",
+      "path": "brand/gacha/video-flight-v1/pov-neutral.webp",
+      "candidate": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v1/image-candidates/pov-neutral.webp",
+      "beforeBytes": 292900,
+      "afterBytes": 248188,
+      "dimensions": [
+        1600,
+        900
+      ],
+      "quality": 84
+    },
+    {
+      "id": "purple",
+      "path": "brand/gacha/video-flight-v1/pov-purple.webp",
+      "candidate": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v1/image-candidates/pov-purple.webp",
+      "beforeBytes": 288554,
+      "afterBytes": 240914,
+      "dimensions": [
+        1600,
+        900
+      ],
+      "quality": 84
+    },
+    {
+      "id": "blue",
+      "path": "brand/gacha/video-flight-v1/pov-blue.webp",
+      "candidate": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v1/image-candidates/pov-blue.webp",
+      "beforeBytes": 261694,
+      "afterBytes": 222158,
+      "dimensions": [
+        1600,
+        900
+      ],
+      "quality": 84
+    },
+    {
+      "id": "yellow",
+      "path": "brand/gacha/video-flight-v1/pov-yellow.webp",
+      "candidate": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v1/image-candidates/pov-yellow.webp",
+      "beforeBytes": 260400,
+      "afterBytes": 220300,
+      "dimensions": [
+        1600,
+        900
+      ],
+      "quality": 84
+    },
+    {
+      "id": "red",
+      "path": "brand/gacha/video-flight-v1/pov-red.webp",
+      "candidate": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v1/image-candidates/pov-red.webp",
+      "beforeBytes": 233590,
+      "afterBytes": 199494,
+      "dimensions": [
+        1600,
+        900
+      ],
+      "quality": 84
+    },
+    {
+      "id": "green",
+      "path": "brand/gacha/video-flight-v1/pov-green.webp",
+      "candidate": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v1/image-candidates/pov-green.webp",
+      "beforeBytes": 278492,
+      "afterBytes": 236516,
+      "dimensions": [
+        1600,
+        900
+      ],
+      "quality": 84
+    }
+  ],
+  "qualityNotes": [
+    "Video metrics compare decoded outputs against lossless normalized source with exact frame-index alignment, not against an already lossy previous encode.",
+    "Image raw RGB metrics in candidates include hidden RGB in alpha images and are diagnostic only; exact alpha was verified and composites visually compared.",
+    "No resizing, frame removal, source-window changes, color edits, stabilization or synthetic interpolation.",
+    "Active audio and two512px Clout icons retained byte-identically."
+  ],
+  "secondOptimization": {
+    "beforeMediaBytes": 15769163,
+    "afterMediaBytes": 12691089,
+    "savedMediaBytes": 3078074,
+    "savedMediaPercent": 19.52,
+    "archive": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v2/before",
+    "videoTrials": [
+      {
+        "id": "neutral",
+        "variant": "veryslow21",
+        "crf": 21,
+        "preset": "veryslow",
+        "width": 1600,
+        "height": 900,
+        "bytes": 1995865,
+        "path": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v2/videos/neutral-veryslow21.mp4",
+        "ssim": 0.978594,
+        "psnr": 39.918546
+      },
+      {
+        "id": "neutral",
+        "variant": "veryslow22",
+        "crf": 22,
+        "preset": "veryslow",
+        "width": 1600,
+        "height": 900,
+        "bytes": 1800072,
+        "path": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v2/videos/neutral-veryslow22.mp4",
+        "ssim": 0.976112,
+        "psnr": 39.315048
+      },
+      {
+        "id": "neutral",
+        "variant": "720p20",
+        "crf": 20,
+        "preset": "slow",
+        "width": 1280,
+        "height": 720,
+        "bytes": 1703195,
+        "path": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v2/videos/neutral-720p20.mp4",
+        "ssim": 0.974485,
+        "psnr": 38.903648
+      },
+      {
+        "id": "purple",
+        "variant": "veryslow21",
+        "crf": 21,
+        "preset": "veryslow",
+        "width": 1600,
+        "height": 900,
+        "bytes": 1150038,
+        "path": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v2/videos/purple-veryslow21.mp4",
+        "ssim": 0.983985,
+        "psnr": 40.973635
+      },
+      {
+        "id": "purple",
+        "variant": "veryslow22",
+        "crf": 22,
+        "preset": "veryslow",
+        "width": 1600,
+        "height": 900,
+        "bytes": 1029325,
+        "path": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v2/videos/purple-veryslow22.mp4",
+        "ssim": 0.982187,
+        "psnr": 40.397297
+      },
+      {
+        "id": "landing",
+        "variant": "veryslow21",
+        "crf": 21,
+        "preset": "veryslow",
+        "width": 1600,
+        "height": 900,
+        "bytes": 2218498,
+        "path": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v2/videos/landing-veryslow21.mp4",
+        "ssim": 0.986712,
+        "psnr": 42.991172
+      },
+      {
+        "id": "landing",
+        "variant": "veryslow22",
+        "crf": 22,
+        "preset": "veryslow",
+        "width": 1600,
+        "height": 900,
+        "bytes": 1999281,
+        "path": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v2/videos/landing-veryslow22.mp4",
+        "ssim": 0.985283,
+        "psnr": 42.390549
+      },
+      {
+        "id": "blue",
+        "variant": "veryslow22",
+        "crf": 22,
+        "preset": "veryslow",
+        "width": 1600,
+        "height": 900,
+        "bytes": 1046867,
+        "path": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v2/videos/blue-veryslow22.mp4",
+        "ssim": 0.983481,
+        "psnr": 41.013992
+      },
+      {
+        "id": "yellow",
+        "variant": "veryslow22",
+        "crf": 22,
+        "preset": "veryslow",
+        "width": 1600,
+        "height": 900,
+        "bytes": 929260,
+        "path": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v2/videos/yellow-veryslow22.mp4",
+        "ssim": 0.984613,
+        "psnr": 41.048965
+      },
+      {
+        "id": "red",
+        "variant": "veryslow22",
+        "crf": 22,
+        "preset": "veryslow",
+        "width": 1600,
+        "height": 900,
+        "bytes": 1132101,
+        "path": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v2/videos/red-veryslow22.mp4",
+        "ssim": 0.980776,
+        "psnr": 40.820991
+      },
+      {
+        "id": "green",
+        "variant": "veryslow22",
+        "crf": 22,
+        "preset": "veryslow",
+        "width": 1600,
+        "height": 900,
+        "bytes": 958619,
+        "path": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v2/videos/green-veryslow22.mp4",
+        "ssim": 0.983917,
+        "psnr": 41.077103
+      }
+    ],
+    "imageTrials": [
+      {
+        "path": "brand/gacha/cinematic-v2/contact.webp",
+        "source": "/home/falcon/.codex/generated_images/01a16c62-60f2-7942-b229-e067daf32b61/exec-9949d9af-601e-4c08-ab4b-56a4b51f7dfc.png",
+        "candidate": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v2/images/contact-q82.webp",
+        "quality": 82,
+        "beforeBytes": 383820,
+        "bytes": 360444,
+        "dimensions": [
+          1672,
+          941
+        ],
+        "alphaExact": true,
+        "compositePsnrToSource": {
+          "dark": 32.12376,
+          "cream": 32.12376
+        }
+      },
+      {
+        "path": "brand/gacha/cinematic-v2/contact.webp",
+        "source": "/home/falcon/.codex/generated_images/01a16c62-60f2-7942-b229-e067daf32b61/exec-9949d9af-601e-4c08-ab4b-56a4b51f7dfc.png",
+        "candidate": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v2/images/contact-q80.webp",
+        "quality": 80,
+        "beforeBytes": 383820,
+        "bytes": 337910,
+        "dimensions": [
+          1672,
+          941
+        ],
+        "alphaExact": true,
+        "compositePsnrToSource": {
+          "dark": 31.90373,
+          "cream": 31.90373
+        }
+      },
+      {
+        "path": "brand/gacha/cinematic-v2/burst-foreground.webp",
+        "source": "/home/falcon/.codex/generated_images/01a16c62-60f2-7942-b229-e067daf32b61/exec-05ff26d7-5944-43a4-ae46-6a52f2f1ef43.png",
+        "candidate": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v2/images/burst-foreground-q82.webp",
+        "quality": 82,
+        "beforeBytes": 667332,
+        "bytes": 621218,
+        "dimensions": [
+          1672,
+          941
+        ],
+        "alphaExact": true,
+        "compositePsnrToSource": {
+          "dark": 32.72524,
+          "cream": 32.74193
+        }
+      },
+      {
+        "path": "brand/gacha/cinematic-v2/burst-foreground.webp",
+        "source": "/home/falcon/.codex/generated_images/01a16c62-60f2-7942-b229-e067daf32b61/exec-05ff26d7-5944-43a4-ae46-6a52f2f1ef43.png",
+        "candidate": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v2/images/burst-foreground-q80.webp",
+        "quality": 80,
+        "beforeBytes": 667332,
+        "bytes": 599060,
+        "dimensions": [
+          1672,
+          941
+        ],
+        "alphaExact": true,
+        "compositePsnrToSource": {
+          "dark": 32.44594,
+          "cream": 32.46314
+        }
+      },
+      {
+        "path": "brand/gacha/cinematic-v2/single-arrival-wall-v2.webp",
+        "source": "/home/falcon/.codex/generated_images/01a16c62-60f2-7942-b229-e067daf32b61/exec-cdc6da07-0829-4ace-a3c9-dcc991739699.png",
+        "candidate": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v2/images/single-arrival-wall-v2-q82.webp",
+        "quality": 82,
+        "beforeBytes": 355422,
+        "bytes": 331896,
+        "dimensions": [
+          1672,
+          941
+        ],
+        "alphaExact": true,
+        "compositePsnrToSource": {
+          "dark": 32.90607,
+          "cream": 32.90607
+        }
+      },
+      {
+        "path": "brand/gacha/cinematic-v2/single-arrival-wall-v2.webp",
+        "source": "/home/falcon/.codex/generated_images/01a16c62-60f2-7942-b229-e067daf32b61/exec-cdc6da07-0829-4ace-a3c9-dcc991739699.png",
+        "candidate": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v2/images/single-arrival-wall-v2-q80.webp",
+        "quality": 80,
+        "beforeBytes": 355422,
+        "bytes": 307342,
+        "dimensions": [
+          1672,
+          941
+        ],
+        "alphaExact": true,
+        "compositePsnrToSource": {
+          "dark": 32.53073,
+          "cream": 32.53073
+        }
+      },
+      {
+        "path": "brand/gacha/rarity-flight-v1/bag-render.webp",
+        "source": "/home/falcon/.codex/generated_images/01a16c62-60f2-7942-b229-e067daf32b61/exec-f917f708-7dda-4911-890b-998839e73e2a.png",
+        "candidate": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v2/images/bag-render-q82.webp",
+        "quality": 82,
+        "beforeBytes": 253452,
+        "bytes": 241004,
+        "dimensions": [
+          1024,
+          1536
+        ],
+        "alphaExact": true,
+        "compositePsnrToSource": {
+          "dark": 34.36917,
+          "cream": 34.3996
+        }
+      },
+      {
+        "path": "brand/gacha/rarity-flight-v1/bag-render.webp",
+        "source": "/home/falcon/.codex/generated_images/01a16c62-60f2-7942-b229-e067daf32b61/exec-f917f708-7dda-4911-890b-998839e73e2a.png",
+        "candidate": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v2/images/bag-render-q80.webp",
+        "quality": 80,
+        "beforeBytes": 253452,
+        "bytes": 229608,
+        "dimensions": [
+          1024,
+          1536
+        ],
+        "alphaExact": true,
+        "compositePsnrToSource": {
+          "dark": 34.11061,
+          "cream": 34.14119
+        }
+      },
+      {
+        "path": "brand/gacha/rarity-flight-v1/default-gym.webp",
+        "source": "/home/falcon/.codex/generated_images/01a16c62-60f2-7942-b229-e067daf32b61/exec-54369831-5c16-4578-a2c4-fd13e73a2e5b.png",
+        "candidate": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v2/images/default-gym-q82.webp",
+        "quality": 82,
+        "beforeBytes": 456782,
+        "bytes": 424092,
+        "dimensions": [
+          1672,
+          941
+        ],
+        "alphaExact": true,
+        "compositePsnrToSource": {
+          "dark": 31.51445,
+          "cream": 31.51445
+        }
+      },
+      {
+        "path": "brand/gacha/rarity-flight-v1/default-gym.webp",
+        "source": "/home/falcon/.codex/generated_images/01a16c62-60f2-7942-b229-e067daf32b61/exec-54369831-5c16-4578-a2c4-fd13e73a2e5b.png",
+        "candidate": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v2/images/default-gym-q80.webp",
+        "quality": 80,
+        "beforeBytes": 456782,
+        "bytes": 392400,
+        "dimensions": [
+          1672,
+          941
+        ],
+        "alphaExact": true,
+        "compositePsnrToSource": {
+          "dark": 31.19061,
+          "cream": 31.19061
+        }
+      },
+      {
+        "path": "brand/gacha/rarity-flight-v1/compression.webp",
+        "source": "/home/falcon/.codex/generated_images/01a16c62-60f2-7942-b229-e067daf32b61/exec-89c52d27-4e4c-419e-9759-3f8cfaadcccd.png",
+        "candidate": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v2/images/compression-q82.webp",
+        "quality": 82,
+        "beforeBytes": 262494,
+        "bytes": 242842,
+        "dimensions": [
+          1672,
+          941
+        ],
+        "alphaExact": true,
+        "compositePsnrToSource": {
+          "dark": 34.91975,
+          "cream": 34.91975
+        }
+      },
+      {
+        "path": "brand/gacha/rarity-flight-v1/compression.webp",
+        "source": "/home/falcon/.codex/generated_images/01a16c62-60f2-7942-b229-e067daf32b61/exec-89c52d27-4e4c-419e-9759-3f8cfaadcccd.png",
+        "candidate": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v2/images/compression-q80.webp",
+        "quality": 80,
+        "beforeBytes": 262494,
+        "bytes": 222604,
+        "dimensions": [
+          1672,
+          941
+        ],
+        "alphaExact": true,
+        "compositePsnrToSource": {
+          "dark": 34.47528,
+          "cream": 34.47528
+        }
+      },
+      {
+        "path": "brand/gacha/rarity-flight-v1/release.webp",
+        "source": "/home/falcon/.codex/generated_images/01a16c62-60f2-7942-b229-e067daf32b61/exec-3c26d6c9-f058-4a2c-a197-c9e1739f281e.png",
+        "candidate": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v2/images/release-q82.webp",
+        "quality": 82,
+        "beforeBytes": 336414,
+        "bytes": 317238,
+        "dimensions": [
+          1672,
+          941
+        ],
+        "alphaExact": true,
+        "compositePsnrToSource": {
+          "dark": 31.54814,
+          "cream": 31.54814
+        }
+      },
+      {
+        "path": "brand/gacha/rarity-flight-v1/release.webp",
+        "source": "/home/falcon/.codex/generated_images/01a16c62-60f2-7942-b229-e067daf32b61/exec-3c26d6c9-f058-4a2c-a197-c9e1739f281e.png",
+        "candidate": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v2/images/release-q80.webp",
+        "quality": 80,
+        "beforeBytes": 336414,
+        "bytes": 294796,
+        "dimensions": [
+          1672,
+          941
+        ],
+        "alphaExact": true,
+        "compositePsnrToSource": {
+          "dark": 31.33447,
+          "cream": 31.33447
+        }
+      }
+    ],
+    "selectedImageQuality": 80,
+    "selectedVideoCrf": 22,
+    "selectedVideoPreset": "veryslow",
+    "selectedVideoDimensions": [
+      1600,
+      900
+    ],
+    "posters": [
+      {
+        "id": "neutral",
+        "path": "brand/gacha/video-flight-v1/pov-neutral.webp",
+        "candidate": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v2/images/pov-neutral-q80.webp",
+        "source": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v1/video-candidates/neutral-reference.mkv",
+        "sourceDescription": "First frame of lossless normalized original source; not a recompressed current delivery MP4.",
+        "quality": 80,
+        "bytes": 233104,
+        "beforeBytes": 248188,
+        "dimensions": [
+          1600,
+          900
+        ]
+      },
+      {
+        "id": "purple",
+        "path": "brand/gacha/video-flight-v1/pov-purple.webp",
+        "candidate": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v2/images/pov-purple-q80.webp",
+        "source": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v1/video-candidates/purple-reference.mkv",
+        "sourceDescription": "First frame of lossless normalized original source; not a recompressed current delivery MP4.",
+        "quality": 80,
+        "bytes": 212224,
+        "beforeBytes": 240914,
+        "dimensions": [
+          1600,
+          900
+        ]
+      },
+      {
+        "id": "blue",
+        "path": "brand/gacha/video-flight-v1/pov-blue.webp",
+        "candidate": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v2/images/pov-blue-q80.webp",
+        "source": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v1/video-candidates/blue-reference.mkv",
+        "sourceDescription": "First frame of lossless normalized original source; not a recompressed current delivery MP4.",
+        "quality": 80,
+        "bytes": 193968,
+        "beforeBytes": 222158,
+        "dimensions": [
+          1600,
+          900
+        ]
+      },
+      {
+        "id": "yellow",
+        "path": "brand/gacha/video-flight-v1/pov-yellow.webp",
+        "candidate": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v2/images/pov-yellow-q80.webp",
+        "source": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v1/video-candidates/yellow-reference.mkv",
+        "sourceDescription": "First frame of lossless normalized original source; not a recompressed current delivery MP4.",
+        "quality": 80,
+        "bytes": 195710,
+        "beforeBytes": 220300,
+        "dimensions": [
+          1600,
+          900
+        ]
+      },
+      {
+        "id": "red",
+        "path": "brand/gacha/video-flight-v1/pov-red.webp",
+        "candidate": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v2/images/pov-red-q80.webp",
+        "source": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v1/video-candidates/red-reference.mkv",
+        "sourceDescription": "First frame of lossless normalized original source; not a recompressed current delivery MP4.",
+        "quality": 80,
+        "bytes": 176910,
+        "beforeBytes": 199494,
+        "dimensions": [
+          1600,
+          900
+        ]
+      },
+      {
+        "id": "green",
+        "path": "brand/gacha/video-flight-v1/pov-green.webp",
+        "candidate": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v2/images/pov-green-q80.webp",
+        "source": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v1/video-candidates/green-reference.mkv",
+        "sourceDescription": "First frame of lossless normalized original source; not a recompressed current delivery MP4.",
+        "quality": 80,
+        "bytes": 207788,
+        "beforeBytes": 236516,
+        "dimensions": [
+          1600,
+          900
+        ]
+      }
+    ],
+    "verification": [
+      {
+        "id": "neutral",
+        "width": 1600,
+        "height": 900,
+        "frameCount": 42,
+        "durationSeconds": 1.4,
+        "audio": false,
+        "faststart": true,
+        "sourceSha256Unchanged": true
+      },
+      {
+        "id": "purple",
+        "width": 1600,
+        "height": 900,
+        "frameCount": 42,
+        "durationSeconds": 1.4,
+        "audio": false,
+        "faststart": true,
+        "sourceSha256Unchanged": true
+      },
+      {
+        "id": "blue",
+        "width": 1600,
+        "height": 900,
+        "frameCount": 42,
+        "durationSeconds": 1.4,
+        "audio": false,
+        "faststart": true,
+        "sourceSha256Unchanged": true
+      },
+      {
+        "id": "yellow",
+        "width": 1600,
+        "height": 900,
+        "frameCount": 42,
+        "durationSeconds": 1.4,
+        "audio": false,
+        "faststart": true,
+        "sourceSha256Unchanged": true
+      },
+      {
+        "id": "red",
+        "width": 1600,
+        "height": 900,
+        "frameCount": 42,
+        "durationSeconds": 1.4,
+        "audio": false,
+        "faststart": true,
+        "sourceSha256Unchanged": true
+      },
+      {
+        "id": "landing",
+        "width": 1600,
+        "height": 900,
+        "frameCount": 80,
+        "durationSeconds": 2.666667,
+        "audio": false,
+        "faststart": true,
+        "sourceSha256Unchanged": true
+      },
+      {
+        "id": "green",
+        "width": 1600,
+        "height": 900,
+        "frameCount": 42,
+        "durationSeconds": 1.4,
+        "audio": false,
+        "faststart": true,
+        "sourceSha256Unchanged": true
+      }
+    ],
+    "review": "Full/detail900p22 comparisons reviewed independently by media agent and root before approval; seven image comparisons reviewed;720p rejected. Early/middle/final sequence contacts checked after encoding remaining colors. No source-window, timing, aspect, alpha or artwork changes."
+  }
+}

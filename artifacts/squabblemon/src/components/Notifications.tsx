@@ -13,9 +13,11 @@ import { useCollectionNotices } from '../lib/useCollectionNotices';
 import { CORNER_OFFERS } from '../lib/cornerStore';
 import '../styles/notifications.css';
 import { NotificationArrival } from './NotificationArrival';
+import { GamePopupTitle, GamePopupCopy, GamePopupClose, GamePopupSecondary } from './ui/game-popup';
 
 type Section = 'cards' | 'style' | 'bag' | 'mail' | 'missions' | 'challenges' | 'shop' | 'growth' | 'story' | 'profile' | 'friends' | 'friendly fade';
-type Notice = { id: string; section: Section; title: string; href: string; sticky?: boolean; dismissalKey?: string };
+export type BagResource = 'clout' | 'tickets' | 'shards';
+type Notice = { id: string; section: Section; title: string; href: string; sticky?: boolean; dismissalKey?: string; bagReward?: { kind: BagResource; amount: number } };
 type Daily = { date: string; available: boolean; amount: number; attemptsRemaining: number; resetsAt: string };
 type ReceiptResponse = { ids: string[] };
 type NoticeIds = string | readonly string[];
@@ -48,7 +50,7 @@ function PlayerNotifications({ bootstrap, children }: { bootstrap: PlayerBootstr
       try { localStorage.setItem(bagKey, JSON.stringify(bag)); } catch {}
       return;
     }
-    const events: Notice[] = gains.map(([kind, value]) => ({ id: `bag:${kind}:${crypto.randomUUID()}`, section: 'bag', title: `+${value - bag.balances[kind as keyof typeof balances]} ${kind === 'shards' ? 'Style Shards' : kind === 'clout' ? 'Clout' : 'tickets'} added to your bag`, href: '/game/inventory' }));
+    const events: Notice[] = gains.map(([kind, value]) => ({ id: `bag:${kind}:${crypto.randomUUID()}`, section: 'bag', title: `+${value - bag.balances[kind as keyof typeof balances]} ${kind === 'shards' ? 'Style Shards' : kind === 'clout' ? 'Clout' : 'tickets'} added to your bag`, href: '/game/inventory', bagReward: { kind: kind as BagResource, amount: value - bag.balances[kind as BagResource] } }));
     const next = { balances, events: [...bag.events, ...events].slice(-30) };
     setBag(next); try { localStorage.setItem(bagKey, JSON.stringify(next)); } catch {}
   }, [p.softCurrency, p.packTickets, p.styleShards]);
@@ -196,11 +198,11 @@ export function NotificationInbox() {
     clearButton.current?.focus({ preventScroll: true });
   };
   return <><button ref={bell} className="notification-bell" aria-expanded={isOpen} aria-label={`Notifications, ${notices.length} updates`} aria-haspopup="dialog" onClick={() => { if (dialog.current?.open) { dialog.current.close(); setIsOpen(false); } else { dialog.current?.show(); setIsOpen(true); } }}><Bell size={18}/>{notices.length > 0 && <span className="attention-mark attention-mark--dot" />}</button>
-    <dialog className="notification-inbox" aria-label="On your radar" aria-describedby={descriptionId} ref={dialog} onClose={() => setIsOpen(false)}>
+    <dialog className="notification-inbox game-popup" data-popup-family="announcement" aria-label="On your radar" aria-describedby={descriptionId} ref={dialog} onClose={() => setIsOpen(false)}>
       <div className="notification-inbox__top">
-        <header><h2>On your radar</h2><button aria-label="Close notifications" onClick={() => { dialog.current?.close(); bell.current?.focus(); }}><X size={22}/></button></header>
-        <p id={descriptionId}>Clear alerts here. Your rewards stay available.</p>
-        <div className="notification-inbox__actions"><span role="status">{notices.length ? `${notices.length} alerts` : 'You’re all caught up.'}</span><button ref={clearButton} className="notification-clear" aria-disabled={!notices.length} onClick={() => clear(notices.map(n => n.id))}>Clear all</button></div>
+        <header><GamePopupTitle>On your radar</GamePopupTitle><GamePopupClose aria-label="Close notifications" onClick={() => { dialog.current?.close(); bell.current?.focus(); }} /></header>
+        <GamePopupCopy id={descriptionId}>Clear alerts here. Your rewards stay available.</GamePopupCopy>
+        <div className="notification-inbox__actions"><span role="status">{notices.length ? `${notices.length} alerts` : 'You’re all caught up.'}</span><GamePopupSecondary ref={clearButton} className="notification-clear" aria-disabled={!notices.length} onClick={() => clear(notices.map(n => n.id))}>Clear all</GamePopupSecondary></div>
       </div>
       <div className="notification-inbox__list">
         {notices.map(n => <div className="notification-row" key={n.id} data-notice-id={n.id}>

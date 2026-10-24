@@ -1,6 +1,8 @@
 import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
 import test from "node:test";
+import type { AddressInfo } from "node:net";
+import { createApp } from "../app";
 import { and, count, eq } from "drizzle-orm";
 import {
   db,
@@ -283,20 +285,85 @@ test("a concurrent bootstrap read cannot erase a pack reward", async (t) => {
   assert.equal(profile.ownedCardIds.includes(rewardedCardId), true);
 });
 
-test('focused banner charges once, records its identity, and rejects unavailable banners without spending', async t => {
-  t.mock.method(Date, 'now', () => Date.parse('2026-10-05T00:00:00Z'));
+test('weekly banner retries recover the original receipt across rotation without another charge or pity change', async t => {
+  let now = Date.parse('2026-10-25T23:59:59.999Z');
+  t.mock.method(Date, 'now', () => now);
   const clerkUserId = `banner-${randomUUID()}`;
-  await db.insert(playerProfilesTable).values({ clerkUserId, onboardingStep: 'complete', packTickets: 2 });
+  await db.insert(playerProfilesTable).values({ clerkUserId, onboardingStep: 'complete', packTickets: 3, packPity: 8 });
   t.after(async () => { await db.delete(playerProfilesTable).where(eq(playerProfilesTable.clerkUserId, clerkUserId)); });
   await assert.rejects(openStreetPackForPlayer(clerkUserId, { idempotencyKey: randomUUID(), paymentMethod: 'ticket', bannerId: 'missing' }), error => error instanceof EconomyTransactionError && error.status === 400);
-  const request = { idempotencyKey: randomUUID(), paymentMethod: 'ticket' as const, bannerId: 'red-blue' };
+  const request = { idempotencyKey: randomUUID(), paymentMethod: 'ticket' as const, bannerId: 'inmates', bannerOccurrenceId: 'inmates:2026-10-19' };
   const first = await openStreetPackForPlayer(clerkUserId, request);
-  assert.match(first.opening.oddsVersion, /:banner-red-blue-v1$/);
-  t.mock.method(Date, 'now', () => Date.parse('2026-10-18T00:00:00Z'));
-  const retry = await openStreetPackForPlayer(clerkUserId, request);
-  assert.equal(retry.opening.id, first.opening.id);
-  assert.equal(retry.alreadyOpened, true);
+  assert.equal(first.opening.oddsVersion, 'street-pack-v7:banner-inmates-v1:week-2026-10-19');
+  now = Date.parse('2026-10-26T00:00:00Z');
+  const retries = await Promise.all([openStreetPackForPlayer(clerkUserId, request), openStreetPackForPlayer(clerkUserId, request)]);
+  for (const retry of retries) {
+    assert.deepEqual(retry.opening, first.opening);
+    assert.equal(retry.alreadyOpened, true);
+  }
   await assert.rejects(openStreetPackForPlayer(clerkUserId, { ...request, idempotencyKey: randomUUID() }), error => error instanceof EconomyTransactionError && error.status === 400);
+  const [afterRetry] = await db.select().from(playerProfilesTable).where(eq(playerProfilesTable.clerkUserId, clerkUserId));
+  assert.equal(afterRetry.packTickets, 2);
+  assert.equal(afterRetry.packPity, first.opening.pityAfter);
+  // All themes share the existing style counter; a weekly reset cannot reset pity.
+  const next = await openStreetPackForPlayer(clerkUserId, { ...request, idempotencyKey: randomUUID(), bannerId: 'oz', bannerOccurrenceId: 'oz:2026-10-26' });
+  assert.equal(next.opening.pityBefore, first.opening.pityAfter);
+  now = Date.parse('2026-11-16T00:00:00Z');
+  // The same theme returning does not revive an unpaid request from its old week.
+  await assert.rejects(openStreetPackForPlayer(clerkUserId, { ...request, idempotencyKey: randomUUID() }), error => error instanceof EconomyTransactionError && error.status === 400);
+  assert.deepEqual((await openStreetPackForPlayer(clerkUserId, request)).opening, first.opening);
   const [profile] = await db.select().from(playerProfilesTable).where(eq(playerProfilesTable.clerkUserId, clerkUserId));
   assert.equal(profile.packTickets, 1);
+  assert.equal(profile.packPity, next.opening.pityAfter);
+});
+
+test('legacy active-theme requests still work and existing v1 receipts remain recoverable', async t => {
+  t.mock.method(Date, 'now', () => Date.parse('2026-10-19T00:00:00Z'));
+  const clerkUserId = `banner-legacy-${randomUUID()}`;
+  await db.insert(playerProfilesTable).values({ clerkUserId, onboardingStep: 'complete', packTickets: 1 });
+  t.after(async () => { await db.delete(playerProfilesTable).where(eq(playerProfilesTable.clerkUserId, clerkUserId)); });
+  const current = await openStreetPackForPlayer(clerkUserId, { idempotencyKey: randomUUID(), paymentMethod: 'ticket', bannerId: 'inmates' });
+  assert.equal(current.opening.oddsVersion, 'street-pack-v7:banner-inmates-v1:week-2026-10-19');
+  const [legacy] = await db.insert(playerPackOpeningsTable).values({ clerkUserId, idempotencyKey: randomUUID(), oddsVersion: 'street-pack-v7:banner-red-blue-v1', paymentMethod: 'ticket', cost: 1, rewards: current.opening.rewards, pityBefore: 0, pityAfter: 1 }).returning();
+  const retry = await openStreetPackForPlayer(clerkUserId, { idempotencyKey: legacy.idempotencyKey, paymentMethod: 'ticket', bannerId: 'red-blue' });
+  assert.equal(retry.alreadyOpened, true);
+  assert.deepEqual(retry.opening, legacy);
+  const [profile] = await db.select().from(playerProfilesTable).where(eq(playerProfilesTable.clerkUserId, clerkUserId));
+  assert.equal(profile.packTickets, 0);
+});
+
+
+test('HTTP banner transport retains occurrence guards and supplies an uncached server clock', async t => {
+  const now = Date.parse('2026-10-19T12:00:00Z');
+  t.mock.method(Date, 'now', () => now);
+  const clerkUserId = `banner-http-${randomUUID()}`;
+  await db.insert(playerProfilesTable).values({ clerkUserId, onboardingStep: 'complete', packTickets: 2 });
+  const server = createApp((req, _res, next) => {
+    const auth = Object.assign(() => ({ userId: clerkUserId, sessionId: 'banner-test', tokenType: 'session_token', isAuthenticated: true }), { [Symbol.for('@clerk/express.auth')]: true });
+    Object.assign(req, { auth });
+    next();
+  }).listen(0, '127.0.0.1');
+  await new Promise<void>((resolve, reject) => { server.once('listening', resolve); server.once('error', reject); });
+  t.after(async () => {
+    await new Promise<void>((resolve, reject) => server.close(error => error ? reject(error) : resolve()));
+    await db.delete(playerProfilesTable).where(eq(playerProfilesTable.clerkUserId, clerkUserId));
+  });
+  const origin = `http://127.0.0.1:${(server.address() as AddressInfo).port}/api`;
+  const welcome = await fetch(`${origin}/player/packs/welcome`);
+  assert.equal(welcome.status, 200);
+  assert.equal(welcome.headers.get('cache-control'), 'no-store');
+  assert.equal((await welcome.json() as { serverNow: number }).serverNow, now);
+  const input = { idempotencyKey: randomUUID(), paymentMethod: 'ticket', bannerId: 'inmates', bannerOccurrenceId: 'inmates:2026-11-16' };
+  const post = (body: typeof input) => fetch(`${origin}/player/packs/open`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) });
+  const stale = await post(input);
+  assert.equal(stale.status, 400, 'the generated request parser must not strip the occurrence guard');
+  await stale.arrayBuffer();
+  const [uncharged] = await db.select().from(playerProfilesTable).where(eq(playerProfilesTable.clerkUserId, clerkUserId));
+  assert.equal(uncharged.packTickets, 2);
+  const accepted = await post({ ...input, bannerOccurrenceId: 'inmates:2026-10-19' });
+  assert.equal(accepted.status, 200);
+  const result = await accepted.json() as { opening: { oddsVersion: string; pullCount: number }; bootstrap: { profile: { packTickets: number } } };
+  assert.equal(result.opening.oddsVersion, 'street-pack-v7:banner-inmates-v1:week-2026-10-19');
+  assert.equal(result.opening.pullCount, 1);
+  assert.equal(result.bootstrap.profile.packTickets, 1);
 });

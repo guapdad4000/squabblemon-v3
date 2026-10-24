@@ -16,6 +16,7 @@ import {
   STREET_PACK_RULES,
   type PackRandomInt,
   type PackRarity,
+  isPullCount, streetPackCost, type PullCount,
 } from "@workspace/squabblemon-engine/packRules";
 
 export { STREET_PACK_RARITY_WEIGHTS };
@@ -42,13 +43,11 @@ export const STREET_PACK_TEN_PULL_CONFIG = {
   rarePityBonusPerPull: 1,
 } as const;
 
-export type StreetPackTier = typeof STREET_PACK_CONFIG | typeof STREET_PACK_TEN_PULL_CONFIG;
-export const ALLOWED_PULL_COUNTS = [1, 10] as const;
-export type PullCount = (typeof ALLOWED_PULL_COUNTS)[number];
-export const isPullCount = (value: unknown): value is PullCount =>
-  typeof value === "number" && (ALLOWED_PULL_COUNTS as readonly number[]).includes(value);
-export const tierForPullCount = (pullCount: PullCount): StreetPackTier =>
-  pullCount === 10 ? STREET_PACK_TEN_PULL_CONFIG : STREET_PACK_CONFIG;
+export { ALLOWED_PULL_COUNTS, isPullCount, type PullCount } from '@workspace/squabblemon-engine/packRules';
+export const tierForPullCount = (pullCount: PullCount) => pullCount === 10 ? STREET_PACK_TEN_PULL_CONFIG
+  : pullCount === 1 ? STREET_PACK_CONFIG
+    : { ...STREET_PACK_CONFIG, ...streetPackCost(pullCount), oddsVersion: `street-pack-batch-${pullCount}-v1`, pullCount };
+export type StreetPackTier = ReturnType<typeof tierForPullCount>;
 
 export type ApiPackReward = {
   kind: "card" | "styleShards" | "softCurrency" | "variant";
@@ -255,6 +254,24 @@ export function generateStreetTenPull(
     pityAfter: state.pity,
     guaranteedRareIndex,
   };
+}
+
+/** Exactly N sequential singles, sharing inventory and style pity, with no ten-pack guarantee. */
+export function generateStreetBatch(
+  current: { ownedCardIds: string[]; discoveredCardIds: string[]; ownedVariants: string[]; pity: number },
+  count: PullCount, rng: PackRandomInt = randomInt, featuredCardIds: readonly string[] = [],
+): GeneratedStreetPack {
+  if (!isPullCount(count)) throw new Error('Pull count must be an integer from 1 to 10');
+  if (count === 10) return generateStreetTenPull(current, rng, featuredCardIds);
+  let state = { ...current };
+  const rewards: ApiPackReward[] = [];
+  for (let index = 0; index < count; index++) {
+    const next = generateStreetPack(state, rng, featuredCardIds);
+    rewards.push(...next.rewards);
+    state = { ownedCardIds: next.ownedCardIds, discoveredCardIds: next.discoveredCardIds, ownedVariants: next.ownedVariants, pity: next.pityAfter };
+  }
+  return { rewards, ...rebuildInventory(current, rewards), ...totalStyleShardRewards(rewards),
+    softCurrencyGained: rewards.filter(reward => reward.kind === 'softCurrency').reduce((sum, reward) => sum + reward.amount, 0), pityAfter: state.pity };
 }
 
 export type CollectionRoadDefinition = {

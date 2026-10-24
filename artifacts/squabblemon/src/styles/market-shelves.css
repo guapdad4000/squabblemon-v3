@@ -317,3 +317,112 @@ html .corner-store .corner-store__counter, .corner-store__counter { position: re
 
 .corner-store__mat-link {display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;min-height:54px;margin:16px 0;padding:12px 16px;color:#f5dca4;background:#17130e;border:1px solid #d7b97955;font:800 18px var(--font-display);}
 .corner-store__mat-link span {font:600 11px var(--font-sans);}
+
+/* Receipt paper owns its ink. The generic dark-dialog utility is removed at
+   the two call sites; status receipts can also carry utility-colored children. */
+.corner-checkout.market-receipt-dialog :is(.market-receipt__masthead,.market-receipt__register,.market-receipt__item,.market-receipt__totals,.market-receipt__record,.market-receipt__footer) { color:#303c33; text-shadow:none; }
+.corner-checkout.market-receipt-dialog :is(p,span,small,div,strong) { text-shadow:none; }
+.corner-checkout.market-receipt-dialog .market-receipt__confirmation { color:#40503c; }
+.corner-checkout.market-receipt-dialog :is(.market-receipt__record,.market-receipt__footer>span,.market-receipt__totals span) { color:#4b5845; }
+.corner-checkout.market-receipt-dialog :is(.studio-action,.studio-text-action,>button:last-child) { min-height:44px; }
+.corner-checkout--simple :is(h2,label) { color:#fff0d0; }
+
+/* The counter stays open to the painted store. Shelves and their paper tickets
+   carry the hierarchy; account tools no longer add another boxed dashboard. */
+.corner-store { min-height: 0; }
+.corner-store::after { background: linear-gradient(180deg,#0b17145c,#101911ab 55%,#101911ed); }
+.corner-store .corner-store__scroll { display: block; max-width: 1320px; padding: 24px clamp(16px,4vw,52px) 32px; }
+.corner-store .corner-store__heading { display: flex; align-items: center; justify-content: space-between; min-height: 0; gap: 16px; padding: 0 2px 18px; }
+.corner-store .corner-store__heading h1 { margin: 0; font: 400 clamp(34px,4.4vw,62px)/1 var(--font-sign); letter-spacing: .02em; white-space: nowrap; }
+.corner-store .corner-store__heading h1 br { display: none; }
+.corner-store .corner-store__heading h1 em { color: #f1d899; font-style: normal; margin-left: .08em; }
+.corner-store .corner-store__heading h1 em::before { content: none; }
+.corner-store .corner-store__wallet { margin: 0; padding: 0; border: 0; border-radius: 0; background: none; gap: 8px; flex: none; text-shadow: 0 2px 4px #000; }
+.corner-store .corner-store__wallet > img { width: 42px; height: 42px; }
+.corner-store .corner-store__wallet small { color: #d9d9bc; font-size: 9px; letter-spacing: .09em; }
+.corner-store .corner-store__wallet strong { color: #fff1cf; font: 700 28px/1.1 var(--font-action-sign); font-variant-numeric: tabular-nums; }
+html .corner-store .corner-store__counter { padding: 0; border: 0; border-radius: 0; background: none; backdrop-filter: none; }
+.corner-store__aisle { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin: 10px 0 20px; border-bottom: 1px solid #d9c09159; padding-bottom: 14px; }
+.corner-store .corner-store__departments { display: flex; flex-wrap: nowrap; gap: 10px; margin: 0; padding: 0; }
+.corner-store .corner-store__departments button { padding: 8px 20px; min-height: 46px; grid-column: auto; font: 700 25px/1.1 var(--font-hand); }
+.corner-store__closet-link { display: flex; align-items: center; gap: 8px; min-height: 44px; color: #eee3c7; font: 700 13px/1.25 var(--font-sans); text-underline-offset: 4px; white-space: nowrap; }
+.corner-store__closet-link:hover { color: #fff6d9; text-decoration: underline; }
+.corner-store .corner-store__notice { margin: 8px 0; padding: 6px 10px; font-size: 11px; }
+.corner-store .corner-store__products { gap: 22px; padding: 6px 4px 20px; margin: 0 -4px; }
+.corner-store .corner-product { flex-basis: min(30%,330px); }
+.corner-store .corner-store__products--clout > .corner-product { flex-basis: calc((100% - 66px)/4); }
+.corner-store .corner-product__label { margin-top: 20px; padding: 17px 16px 12px; min-height: 198px; }
+.corner-store .corner-product h2 { margin: 0 0 6px; font: 700 30px/1.04 var(--font-hand); text-transform: none; }
+.corner-store .corner-product p { color: #4d5545; font: 500 12px/1.4 var(--font-sans); margin: 0 0 8px; }
+.corner-store .market-tag__category { display: block; color: #814137; margin-bottom: 7px; font-size: 9px; letter-spacing: .03em; }
+/* The daily shelf is shared with Notifications; remove only redundant ticket
+   decoration here, leaving claim state, amount and server reset time visible. */
+.corner-store .corner-product--daily :is(.market-tag__header,.market-tag__category,.market-tag__footer) { display: none; }
+.corner-store .market-daily__reset { color: #59604e; font-size: 9px; line-height: 1.4; }
+.corner-store .corner-product button { min-height: 54px; }
+.corner-store .corner-product button.market-tag__buy { padding: 6px 0 0; color: #9e2f27; container-type: normal; }
+.corner-store .corner-product button.market-tag__buy::before { display: none; }
+.corner-store .market-tag__price:has(.market-tag__split-price), .corner-store .market-tag__claim .market-tag__price { min-height: 77px; justify-content: flex-end; }
+.corner-store .market-tag__price strong, .corner-store .market-tag__price strong.market-tag__free-price { font-size: clamp(43px,4.4vw,64px); line-height: .95; margin: 0; padding: 0; }
+.corner-store .market-tag__price strong.market-tag__split-price { margin: 0; padding: 0; line-height: .95; }
+.corner-store .market-tag__price small { min-height: 24px; padding-right: 64px; font-size: 9px; line-height: 1.35; letter-spacing: 0; }
+.corner-store .market-tag__action { right: 0; bottom: 3px; font-size: 9px; gap: 4px; letter-spacing: 0; }
+.corner-store .market-tag__action svg { width: 14px; height: 14px; padding: 2px; }
+.corner-store .market-tag__preview { font: 700 25px/1 var(--font-hand); }
+.corner-store .corner-product button:disabled { cursor: default; }
+.corner-store .corner-store__orders { margin-top: 12px; border: 0; border-top: 1px solid #d8c49c50; padding: 0; border-radius: 0; background: #1022199c; }
+.corner-store .corner-store__orders-heading { display: flex; min-height: 50px; gap: 8px; padding: 8px 12px; color: #f1e7cd; font: 700 14px/1.2 var(--font-sans); }
+.corner-store__orders-heading > span { display: flex; gap: 6px; align-items: center; margin-left: auto; font-size: 11px; color: #c9cbb8; }
+.corner-counter-service { display: grid; grid-template-columns: 62px minmax(0,1fr) auto; align-items: center; gap: 8px 16px; margin: 4px 3px 0; padding: 12px 18px; color: #263b2d; background: #eee2c5; border-top: 3px solid #a53c2e; box-shadow: 2px 4px 0 #0006; }
+.corner-counter-service > img { width: 62px; height: 64px; object-fit: contain; }
+.corner-counter-service h2 { margin: 0 0 4px; color: #274c38; font: 700 26px/1 var(--font-action-sign); }
+.corner-counter-service__copy > p { margin: 0; color: #5a5b49; font: 500 11px/1.5 var(--font-sans); }
+.corner-counter-service__copy > p > span { display: inline-block; margin-left: 8px; font-variant-numeric: tabular-nums; }
+.corner-counter-service__action button { display: flex; flex-direction: column; align-items: flex-end; justify-content: center; min-height: 52px; padding: 4px 0 4px 18px; color: #a33228; background: none; border: 0; border-left: 1px dashed #9d8d64; cursor: pointer; }
+.corner-counter-service__action strong { font: 700 30px/1 var(--font-hand); }
+.corner-counter-service__action strong small { font: 700 11px var(--font-sans); }
+.corner-counter-service__action button > span, .corner-counter-service__recover { display: flex; align-items: center; gap: 6px; min-height: 24px; font: 700 11px/1.4 var(--font-sans); }
+.corner-counter-service__action button:disabled { color: #72715f; cursor: default; }
+.corner-counter-service__recover { min-height: 44px; max-width: 180px; color: #8b3024; text-decoration: underline; text-underline-offset: 3px; }
+.corner-counter-service__message { grid-column: 2/-1; margin: 0; font: 500 12px/1.5 var(--font-sans); }
+.corner-counter-service__message[role=alert] { color: #9b2b20; }
+.corner-store .corner-counter-service :is(button,a):focus-visible { outline-color: #1b5b40; }
+.corner-checkout.corner-checkout--simple { border-radius: 0; }
+.corner-checkout.corner-checkout--simple .corner-checkout__summary h2 { color: #fff1d1; font: 700 28px/1.08 var(--font-action-sign); }
+.corner-checkout .reward-street-file__action { flex: none; margin-top: 4px; }
+.corner-checkout--simple > .reward-street-file__action { color: #fff9e6; }
+.corner-checkout--simple label { border: 0; border-bottom: 1px solid #c2bc9f26; border-radius: 0; background: none; }
+.corner-checkout--simple .corner-checkout__total strong { color: #fff0ce; font: 700 34px/1 var(--font-hand); }
+.corner-checkout.market-receipt-dialog > .reward-street-file__action { position: relative; inset: auto; padding: 11px 30px 11px 15px; color: #fff9e6; }
+@media (max-width: 900px) {
+  .corner-store .corner-store__products--clout > .corner-product, .corner-store .corner-product { flex-basis: min(40vw,280px); }
+}
+@media (max-width: 540px) {
+  .corner-store .corner-store__scroll { padding: 16px 14px 28px; }
+  .corner-store .corner-store__heading { gap: 10px; padding-bottom: 10px; }
+  .corner-store .corner-store__heading h1 { font-size: clamp(28px,8.2vw,40px); }
+  .corner-store .corner-store__wallet { gap: 4px; }
+  .corner-store .corner-store__wallet > img { width: 28px; height: 28px; }
+  .corner-store .corner-store__wallet small { font-size: 7px; }
+  .corner-store .corner-store__wallet strong { font-size: 22px; }
+  .corner-store__aisle { flex-wrap: wrap; gap: 6px; margin: 9px 0 12px; padding-bottom: 5px; }
+  .corner-store .corner-store__departments { gap: 8px; width: 100%; }
+  .corner-store .corner-store__departments button { flex: 1; padding: 8px 6px; font-size: 23px; }
+  .corner-store__closet-link { margin-left: auto; min-height: 44px; font-size: 12px; }
+  .corner-store .corner-store__products { gap: 14px; margin-right: -14px; padding-right: 14px; }
+  .corner-store .corner-store__products--clout > .corner-product, .corner-store .corner-product { flex-basis: min(66vw,248px); }
+  .corner-store .corner-product__label { padding: 16px 12px 10px; margin-top: 16px; min-height: 195px; }
+  .corner-store .corner-product h2 { font-size: 28px; }
+  .corner-store .market-tag__price strong, .corner-store .market-tag__price strong.market-tag__free-price { font-size: 57px; }
+  .corner-counter-service { grid-template-columns: 42px minmax(0,1fr) auto; padding: 10px; gap: 8px; }
+  .corner-counter-service > img { width: 42px; height: 52px; }
+  .corner-counter-service h2 { font-size: 19px; }
+  .corner-counter-service__copy > p { font-size: 10px; }
+  .corner-counter-service__copy > p > span { display: block; margin: 0; }
+  .corner-counter-service__action button { padding-left: 8px; }
+  .corner-counter-service__action strong { font-size: 25px; }
+  .corner-counter-service__action strong small { display: block; text-align: right; font-size: 10px; }
+  .corner-counter-service__action button > span { font-size: 10px; }
+  .corner-counter-service__recover { max-width: 96px; font-size: 10px; }
+  .corner-counter-service__message { grid-column: 1/-1; }
+}

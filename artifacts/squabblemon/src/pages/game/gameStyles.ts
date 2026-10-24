@@ -73,3 +73,5 @@ import '../../styles/fadecade-road.css';
 import '../../styles/stockz.css';
 import '../../styles/challenges-hub.css';
 import '../../styles/paper-tabs.css';
+
+import '../../styles/game-surface.css';

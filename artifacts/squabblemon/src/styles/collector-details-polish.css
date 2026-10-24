@@ -1,3 +1,8 @@
+/* Native top-layer inspection must cover the viewport, not the opener's box. */
+dialog.card-inspector-shell {
+ margin:0; border:0; width:100%; max-width:none; max-height:none; color:inherit;
+}
+dialog.card-inspector-shell::backdrop { background:transparent; }
 /* Full details use flow layout: long names, finish names and rules may grow. */
 .card-inspector-shell .collector-display-stack { min-width:0; }
 .card-inspector-shell .polaroid { padding:12px 12px 14px; }
@@ -11,7 +16,6 @@
   display:block; margin-top:6px; font:700 10px/1.4 var(--font-action-sign);
   letter-spacing:.08em; font-style:normal; overflow-wrap:normal;
 }
-.card-inspector-shell .card-touch-hint { margin:10px 0 0; font:400 10px/1.5 var(--font-sans,Arial,sans-serif); color:#706851; }
 .card-inspector-shell .collector-finish-controls { margin-top:16px; }
 .card-inspector-shell .collector-finish-controls button { font-family:var(--font-action-sign); letter-spacing:.02em; min-height:44px; line-height:1.3; white-space:normal; }
 .card-inspector-shell .dossier-identity { display:flex; align-items:center; gap:14px; margin:16px 0 18px; }

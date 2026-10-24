@@ -1,5 +1,6 @@
 import {
   jsonb,
+  index,
   pgTable,
   text,
   timestamp,
@@ -11,6 +12,12 @@ import { z } from "zod/v4";
 import { playerProfilesTable } from "./playerProfiles";
 
 export type CollectionRoadRewardRecord = {
+  /** One immutable monthly pull milestone, tied to the successful opening that delivered it. */
+  pullSeason?: { seasonId: string; threshold: number; softCurrency: number; packTickets: number; styleShards: number; openingKey: string };
+  /** Server-saved ranked match payout, separate from once-per-season promotion gifts. */
+  rankedMatchClout?: { receiptId: string; date: string; softCurrency: number;
+    status: 'saved' | 'daily-limit' | 'ineligible'; dailyLimit: number;
+    paidMatchesToday?: number; resetsAt: string; exclusion?: 'bot' | 'not-full-match'; };
   /** Presentation metadata is recorded atomically with the earned card grant. */
   kumiteUnlock?: { newlyOwned: boolean };
   kumitePresentation?: { receiptId: string };
@@ -19,7 +26,10 @@ export type CollectionRoadRewardRecord = {
    * per-player idempotent ledger so logout, a new browser, or a new deploy
    * cannot resurrect already-read alerts. */
   notificationReceipt?: { id: string };
-  accountReward?: { key: string; title: string; softCurrency: number; packTickets: number; styleShards: number; streak?: number; date?: string };
+  accountReward?: { key: string; title: string; softCurrency: number; packTickets: number; styleShards: number; streak?: number; date?: string;
+    cardId?: string; cardName?: string; cardRarity?: 'SuperCommon' | 'Common' | 'Uncommon' | 'Rare' | 'Epic' | 'Legendary' | 'Mythical';
+    isNewCard?: boolean; shardRarity?: 'Common' | 'Uncommon' | 'Rare' | 'Epic' | 'Legendary' | 'Mythical'; monthlyDay?: number;
+  };
   stockzBet?: { id: string; ticker: string; direction: 'up' | 'down'; stake: number; openPrice: number; closePrice: number; startedAt: string; closesAt: string; date: string };
   stockzSettlement?: { betId: string; payout: number };
   /** Promo receipts use a permanent per-account key, independent of request retries. */
@@ -67,6 +77,7 @@ export const playerCollectionClaimsTable = pgTable(
       .defaultNow(),
   },
   (table) => [
+    index("player_collection_claims_user_created").on(table.clerkUserId, table.createdAt),
     uniqueIndex("player_collection_claims_user_milestone_unique").on(
       table.clerkUserId,
       table.milestoneKey,

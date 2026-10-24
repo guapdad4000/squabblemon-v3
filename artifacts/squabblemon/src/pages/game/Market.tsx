@@ -1,10 +1,8 @@
-import { StyleShardWallet, StyleShardCost } from '../../components/StyleShardWallet';
 import { playInteractionSound } from '../../lib/interactionAudio';
 import { StreetSelect } from '../../components/ui/street-select';
 import { revealProfileRewards } from '../../lib/rewardReceipts';
 import { GameGlyph } from '../../components/venue/GameGlyph';
-import { PageDecor } from '../../components/venue/PageDecor';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Link } from 'wouter';
 import { useQueryClient } from '@tanstack/react-query';
 import {
@@ -16,20 +14,18 @@ import {
 import {
   SHOP_OFFERS,
   MOVE_TRAINING_COSTS,
-  battleEarnings,
   planShopPurchase,
   type ShopItemId,
   type ShopReceipt,
   type ShopRequest,
 } from '@workspace/squabblemon-engine/economy';
 import { normalizeCardProgress, cardProgressDetails } from '@workspace/squabblemon-engine/cardProgression';
-import { STREET_PACK_RULES } from '@workspace/squabblemon-engine/packRules';
 import { cardCatalog, catalogCardById, getCardImage, getAssetUrl, CARD_RARITY_DEFINITIONS } from '../../data';
 import { ArrowRight, Check } from 'lucide-react';
 import '../../styles/studio.css';
-import { PropArt } from '../../components/venue/PropArt';
 import { LayeredVenue } from '../../components/venue/LayeredVenue';
 import { clearShopRequest, readShopRequest, saveShopRequest } from '../../lib/shopJournal';
+import { shopPurchaseDestination } from '../../lib/shopDestination';
 import { e2eAuthEnabled } from '../../lib/auth';
 import { loadFeedbackPreferences } from '../../battleFeedback';
 import { playVoiceLine } from '../../lib/sfx';
@@ -38,18 +34,27 @@ import '../../styles/training-studio.css';
 
 const trainingNames: Partial<Record<ShopItemId, string>> = {
   training: 'Quick Training',
+  'training-intensive': 'Intensive Training',
   'move-training': 'Move Training',
 };
 
-const isTraining = (id: ShopItemId) => ['training', 'training-intensive', 'move-training'].includes(id);
+const TRAINING_IDS = ['training', 'training-intensive', 'move-training'] as const;
+const isTraining = (id: ShopItemId) => (TRAINING_IDS as readonly string[]).includes(id);
+const trainingOffers = SHOP_OFFERS.filter(item => isTraining(item.id));
+const categoryArt: Partial<Record<ShopItemId, string>> = {
+  training: 'assets/training/inmate-quick-poster.webp',
+  'training-intensive': 'assets/training/inmate-intensive-poster.webp',
+  'move-training': 'assets/training/inmate-moves-poster.webp',
+};
 
-export function Market({ bootstrap, openPacks }: { bootstrap: PlayerBootstrap; openPacks: () => void }) {
+export function Market({ bootstrap }: { bootstrap: PlayerBootstrap; openPacks?: () => void }) {
   useEventVoice('training-welcome');
   const { profile } = bootstrap;
   const client = useQueryClient();
-  const [selectedId, select] = useState<ShopItemId>(() =>
-    new URLSearchParams(location.search).get('item') === 'move-training' ? 'move-training' : 'training',
-  );
+  const [selectedId, select] = useState<ShopItemId>(() => {
+    const requested = new URLSearchParams(location.search).get('item');
+    return trainingOffers.find(item => item.id === requested)?.id ?? 'training';
+  });
   const [cardId, setCardId] = useState(
     () => new URLSearchParams(location.search).get('card') ?? profile.ownedCardIds[0] ?? '',
   );
@@ -59,20 +64,34 @@ export function Market({ bootstrap, openPacks }: { bootstrap: PlayerBootstrap; o
   const [error, setError] = useState<string | null>(null);
   const [session, setSession] = useState<{ move: boolean; character: string; reducedMotion: boolean } | null>(null);
   const lock = useRef(false);
+  const lifetime = useRef({ active: false, playerId: profile.id });
+  useLayoutEffect(() => {
+    const previous = lifetime.current;
+    const current = { active: true, playerId: profile.id };
+    lifetime.current = current;
+    if (previous.playerId !== profile.id) {
+      lock.current = false;
+      setPending(readShopRequest(sessionStorage, profile.id));
+      setWorking(false); setSession(null); setReceipt(null); setError(null);
+    }
+    return () => { current.active = false; };
+  }, [profile.id]);
+  function isCurrentPurchase(owner: typeof lifetime.current) {
+    const cachedPlayer = client.getQueryData<PlayerBootstrap>(getGetPlayerBootstrapQueryKey())?.profile.id;
+    return owner.active && lifetime.current === owner && (!cachedPlayer || cachedPlayer === owner.playerId);
+  }
   useEffect(() => {
     for (const mode of ['quick', 'moves']) {
       const image = new Image();
       image.src = getAssetUrl(`assets/training/inmate-${mode}-sheet.webp`);
     }
   }, []);
-  const offer = SHOP_OFFERS.find((item) => item.id === (pending?.itemId ?? selectedId))!;
-  const choices = cardCatalog.filter((card) =>
-    offer.id === 'common-recruit'
-      ? card.rarity === 'Common' && !profile.ownedCardIds.includes(card.id)
-      : profile.ownedCardIds.includes(card.id),
-  );
-  const selectedCardId =
-    pending?.cardId ?? (choices.some((card) => card.id === cardId) ? cardId : (choices[0]?.id ?? ''));
+  const trainingPending = pending && isTraining(pending.itemId) ? pending : null;
+  const foreignPending = pending && !isTraining(pending.itemId) ? pending : null;
+  const offer = trainingOffers.find(item => item.id === (trainingPending?.itemId ?? selectedId))!;
+  const choices = cardCatalog.filter(card => profile.ownedCardIds.includes(card.id));
+  const selectedCardId = trainingPending?.cardId ?? (choices.some(card => card.id === cardId) ? cardId : (choices[0]?.id ?? ''));
+  const recoveryHref = foreignPending ? shopPurchaseDestination(foreignPending) : '';
   const card = catalogCardById[selectedCardId];
   const progress = normalizeCardProgress(profile.cardProgression[selectedCardId]);
   const details = cardProgressDetails(progress);
@@ -91,29 +110,39 @@ export function Market({ bootstrap, openPacks }: { bootstrap: PlayerBootstrap; o
   const cost =
     quote?.receipt.cost ??
     (offer.id === 'move-training' ? (MOVE_TRAINING_COSTS[progress.moveTier ?? 0] ?? 0) : offer.price);
-  const currency = offer.currency === 'softCurrency' ? 'Clout' : 'Style Shards';
+  const quotedProgress = quote ? normalizeCardProgress(quote.wallet.cardProgression[selectedCardId]) : null;
+  const xpGain = quotedProgress ? quotedProgress.xp - progress.xp : 0;
   const preview = e2eAuthEnabled && profile.id === 'e2e-player';
-  const winEarnings = battleEarnings('win');
-  const drawEarnings = battleEarnings('draw');
-  const lossEarnings = battleEarnings('loss');
 
   async function buy() {
-    if (lock.current || (!quote && !pending)) return;
+    const owner = lifetime.current;
+    if (lock.current || !isCurrentPurchase(owner)) return;
+    // A purchase left by another counter after mount remains its original intent.
+    const currentPending = readShopRequest(sessionStorage, profile.id);
+    setPending(currentPending);
+    if ((currentPending && !isTraining(currentPending.itemId)) || (!quote && !currentPending)) return;
     lock.current = true;
     setWorking(true);
     setError(null);
     setReceipt(null);
     const startedAt = performance.now();
     const reducedMotion = profile.settings.reducedMotion || window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const training = isTraining(offer.id);
-    if (training) setSession({ move: offer.id === 'move-training', character: card?.name ?? 'Your character', reducedMotion });
+    let request: ShopRequest | undefined;
+    const clearMatchingRequest = () => {
+      if (request && readShopRequest(sessionStorage, owner.playerId)?.idempotencyKey === request.idempotencyKey) {
+        clearShopRequest(sessionStorage, owner.playerId);
+      }
+    };
     try {
-      const request = pending ?? {
+      request = currentPending ?? {
         ...input,
         idempotencyKey: crypto.randomUUID(),
       };
       saveShopRequest(sessionStorage, profile.id, request);
       setPending(request);
+      const training = isTraining(request.itemId);
+      const purchasedCard = request.cardId ? catalogCardById[request.cardId] : undefined;
+      if (training) setSession({ move: request.itemId === 'move-training', character: purchasedCard?.name ?? 'Your character', reducedMotion });
       let result: { receipt: ShopReceipt; bootstrap: PlayerBootstrap };
       if (preview) {
         const planned = planShopPurchase(profile, request);
@@ -130,24 +159,38 @@ export function Market({ bootstrap, openPacks }: { bootstrap: PlayerBootstrap; o
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(request),
         });
+      // Leaving this account/view retains the exact journal request for recovery.
+      if (!isCurrentPurchase(owner)) return;
       // The request starts immediately; a confirmed rep gets a short visual payoff.
       // Errors bypass the presentation delay and retries keep the original request key.
       if (training && !reducedMotion) {
         const remaining = Math.max(0, 2400 - (performance.now() - startedAt));
         if (remaining) await new Promise(resolve => window.setTimeout(resolve, remaining));
       }
-      client.setQueryData(getGetPlayerBootstrapQueryKey(), result.bootstrap);
+      if (!isCurrentPurchase(owner)) return;
+      if (result.bootstrap.profile.id !== owner.playerId) throw new Error('Purchase response belongs to a different account.');
+      const bootstrapKey = getGetPlayerBootstrapQueryKey();
+      await client.cancelQueries({ queryKey: bootstrapKey });
+      if (!isCurrentPurchase(owner)) return;
+      const latestRequest = readShopRequest(sessionStorage, owner.playerId);
+      if (latestRequest && latestRequest.idempotencyKey !== request.idempotencyKey) {
+        setPending(latestRequest);
+        void client.invalidateQueries({ queryKey: bootstrapKey });
+        return;
+      }
+      client.setQueryData(bootstrapKey, result.bootstrap);
       const purchaseTake = request.idempotencyKey.charCodeAt(0) % 2 ? 'purchase-a' : 'purchase-b';
       playVoiceLine(purchaseTake, loadFeedbackPreferences().audioEnabled);
-      revealProfileRewards(bootstrap, result.bootstrap, request.idempotencyKey, 'Added to your bag', isTraining(offer.id) ? undefined : 'shop');
-      clearShopRequest(sessionStorage, profile.id);
-      setPending(null);
+      revealProfileRewards(bootstrap, result.bootstrap, request.idempotencyKey, 'Added to your bag', undefined);
+      clearMatchingRequest();
+      setPending(readShopRequest(sessionStorage, owner.playerId));
       setReceipt(result.receipt);
       playInteractionSound('register');
     } catch (reason) {
+      if (!isCurrentPurchase(owner)) return;
       if (reason instanceof ApiError && [400, 409].includes(reason.status)) {
-        clearShopRequest(sessionStorage, profile.id);
-        setPending(null);
+        clearMatchingRequest();
+        setPending(readShopRequest(sessionStorage, owner.playerId));
         const data = reason.data as { error?: string } | undefined;
         setError(data?.error ?? reason.message);
         void client.invalidateQueries({
@@ -157,270 +200,89 @@ export function Market({ bootstrap, openPacks }: { bootstrap: PlayerBootstrap; o
         setError('Sign back in, then recover this purchase. Your original request is kept so it cannot charge twice.');
       else setError('Purchase not confirmed. Retry this same purchase to recover it without paying twice.');
     } finally {
-      lock.current = false;
-      setWorking(false);
-      setSession(null);
+      if (isCurrentPurchase(owner)) {
+        lock.current = false;
+        setWorking(false);
+        setSession(null);
+      }
     }
   }
 
-  const propFor = (id: string) =>
-    id.includes('training')
-      ? ('portable-speaker' as const)
-      : id === 'ticket'
-        ? ('fight-ticket' as const)
-        : id === 'common-recruit'
-          ? ('collection-box' as const)
-          : id.includes('style')
-            ? ('style-hanger' as const)
-            : ('deck-stack' as const);
-  const categoryArt: Partial<Record<ShopItemId, string>> = {
-    training: 'assets/training/inmate-quick-poster.webp',
-    'training-intensive': 'assets/training/inmate-intensive-poster.webp',
-    'move-training': 'assets/training/inmate-moves-poster.webp',
-    'deck-slot': 'assets/training/inmate-gang-slot-icon.webp',
-    'common-recruit': 'assets/training/inmate-recruit-icon.webp',
-    'tagged-style': 'assets/training/inmate-tagged-icon.webp',
-    'chrome-style': 'assets/training/inmate-chrome-icon.webp',
-  };
   return (
-    <div
-      className="studio-page market training-studio world-decor-host"
-    >
-      <div className="training-studio__venue" aria-hidden="true">
-        <LayeredVenue scene="training-club" />
-      </div>
-      <PageDecor theme="market" />
-      <header className="market-hero">
-        <div>
-          <span className="studio-eyebrow">TRAINING CLUB</span>
-          <h1>Put in <em>work.</em></h1>
-        </div>
-        <picture className="market-hero__fade-art">
-          <img src={getAssetUrl('assets/training/dr-fade-coach.webp')} alt="Dr. Fade coaching at the training club" draggable={false} />
-        </picture>
-        <div className="market-wallet">
-          <span>
-            <GameGlyph name="cloutBag" />
-            <strong>{profile.softCurrency.toLocaleString()}</strong>
-            <small>Clout</small>
-          </span>
-          <span>
-            <GameGlyph name="ticket" />
-            <strong>{profile.packTickets}</strong>
-            <small>Tickets</small>
-          </span>
+    <div className="studio-page market training-studio world-decor-host">
+      <div className="training-studio__venue" aria-hidden="true"><LayeredVenue scene="training-club" /></div>
+      <header className="training-club__heading">
+        <div><span className="training-club__label">DR. FADE'S</span><h1>Training Club</h1></div>
+        <img className="training-club__coach" src={getAssetUrl('assets/training/dr-fade-coach.webp')} alt="Dr. Fade" draggable={false} />
+        <div className="training-club__wallet" aria-label={`${profile.softCurrency.toLocaleString()} Clout available`}>
+          <GameGlyph name="cloutBag" /><span><strong>{profile.softCurrency.toLocaleString()}</strong><small>Clout</small></span>
         </div>
       </header>
-      <StyleShardWallet wallet={profile} cardRarity={card?.rarity} />
-      <nav className="market-offers" aria-label="Shop items">
-        {SHOP_OFFERS.filter((item) => item.id !== 'ticket' && item.id !== 'player-mat' && !item.id.startsWith('reaction-pack') && !item.id.startsWith('character-')).map((item) => (
-          <button
-            key={item.id}
-            disabled={!!pending || working}
-            aria-pressed={offer.id === item.id}
-            onClick={() => {
-              select(item.id);
-              setReceipt(null);
-              setError(null);
-            }}
-          >
-            {categoryArt[item.id] ? (
-              <img className="market-offer-art" src={getAssetUrl(categoryArt[item.id]!)} alt="" />
-            ) : (
-              <PropArt id={propFor(item.id)} />
-            )}
-            <strong>{trainingNames[item.id] ?? item.name}</strong>
-            <span>
-              {item.id === 'move-training' ? `${MOVE_TRAINING_COSTS[0]}–${MOVE_TRAINING_COSTS.at(-1)}` : item.price}{' '}
-              {item.currency === 'softCurrency' ? 'Clout' : 'Shards'}
-            </span>
-            <i />
-          </button>
-        ))}
+      <nav className="training-club__passes" aria-label="Training sessions">
+        {trainingOffers.map((item, index) => <button key={item.id} data-training-offer={item.id}
+          disabled={!!pending || working} aria-pressed={offer.id === item.id}
+          onClick={() => { select(item.id); setReceipt(null); setError(null); }}>
+          <span className="training-club__pass-number" aria-hidden="true">0{index + 1}</span>
+          <img src={getAssetUrl(categoryArt[item.id]!)} alt="" draggable={false} />
+          <span className="training-club__pass-copy"><strong>{trainingNames[item.id]}</strong>
+            <span>{item.id === 'move-training' ? 'Next move tier' : item.id === 'training' ? 'Up to +100 XP' : 'Up to +250 XP'}</span>
+            <small>{item.id === 'move-training' ? `${MOVE_TRAINING_COSTS[0]}–${MOVE_TRAINING_COSTS.at(-1)}` : item.price} Clout</small>
+          </span>
+          <span className="training-club__pass-stamp" aria-hidden="true">{offer.id === item.id ? <><Check size={13} /> Selected</> : 'Session pass'}</span>
+        </button>)}
       </nav>
-      <div className="market-layout">
-        <div className="market-showcase" aria-hidden="true">
-          <div className="market-showcase__light" />
-          {offer.needsCard && card ? (
-            <img key={card.id} src={getCardImage(card.id)} alt="" />
-          ) : categoryArt[offer.id] ? (
-            <img src={getAssetUrl(categoryArt[offer.id]!)} alt="" />
-          ) : (
-            <PropArt id={propFor(offer.id)} />
-          )}
-          <span>{offer.needsCard && card ? card.name : offer.name}</span>
-          {offer.needsCard && card && (
-            <small>
-              {CARD_RARITY_DEFINITIONS[card.rarity].label} · {offer.id === 'common-recruit' ? 'New recruit' : `Level ${progress.level}`}
-            </small>
-          )}
-        </div>
-        <section className="market-checkout" aria-labelledby="purchase-title">
-          <span className="studio-eyebrow">Make your next move</span>
-          <h2 id="purchase-title">{trainingNames[offer.id] ?? offer.name}</h2>
-          <p>{offer.description}</p>
-          {offer.needsCard && (
-            <>
-              <label htmlFor="shop-card">Choose character</label>
-              <StreetSelect skin="paper"
-                id="shop-card"
-                value={selectedCardId}
-                disabled={!!pending || working}
-                onValueChange={event => {
-                  setCardId(event);
-                  setReceipt(null);
-                  setError(null);
-                }}
-              >
-                {!choices.length && (
-                  <option value="">
-                    {offer.id === 'common-recruit' ? 'All Common cards owned' : 'No characters available'}
-                  </option>
-                )}
-                {choices.map((item) => (
-                  <option key={item.id} value={item.id}>
-                    {item.name}
-                  </option>
-                ))}
-              </StreetSelect>
-              {card && offer.id !== 'common-recruit' && (
-                <div className="market-character">
-                  <span>
-                    LV {progress.level}
-                    <small> / 10</small>
-                  </span>
-                  <progress max={100} value={details.progressPercent} aria-label="Character level progress" />
-                  <small>
-                    {details.isMaxLevel ? 'Maximum XP reached' : `${progress.xp} / ${details.nextLevelXp} XP`}
-                  </small>
-                  <details>
-                    <summary>
-                      {progress.moveTier ?? 0} of 3 moves active
-                      {nextMove && ' · Next move'}
-                    </summary>
-                    {nextMove ? (
-                      <p>
-                        <strong>
-                          {nextMove.name} · level {nextMove.unlockLevel}
-                        </strong>
-                        <br />
-                        {nextMove.description}
-                      </p>
-                    ) : (
-                      <p>All moves mastered.</p>
-                    )}
-                  </details>
-                </div>
-              )}
-            </>
-          )}
-          {card && offer.currency === 'styleShards' && <StyleShardCost wallet={profile} rarity={card.rarity} cost={cost}/>}
-          {quote && <p className="market-preview">{quote.receipt.summary}</p>}
-          {pending && !working && (
-            <p role="status" className="market-notice">
-              An earlier purchase needs confirmation. Retry it before starting another.
-            </p>
-          )}
-          {unavailable && !pending && <p className="market-notice">{unavailable}</p>}
-          <button
-            className="studio-action studio-action--gold"
-            disabled={working || (!quote && !pending)}
-            onClick={() => void buy()}
-          >
-            {working ? (session ? 'Training…' : 'Confirming…') : pending ? 'Recover purchase' : `${isTraining(offer.id) ? 'Train' : 'Buy'} · ${cost} ${currency}`}
-            <ArrowRight size={16} />
+      <div className="training-club__counter">
+        <figure className="training-club__fighter">
+          {card && <img key={card.id} src={getCardImage(card.id)} alt={card.name} draggable={false} />}
+          <figcaption><span className="training-club__label">IN YOUR CORNER</span>
+            <h2>{card?.name ?? 'Choose a fighter'}</h2>
+            {card && <span>{CARD_RARITY_DEFINITIONS[card.rarity].label} · Level {progress.level}</span>}
+          </figcaption>
+        </figure>
+        <section className="training-club__ticket" aria-labelledby="purchase-title" aria-busy={working}>
+          <div className="training-club__ticket-heading"><span className="training-club__label">COACHING TICKET</span><h2 id="purchase-title">{trainingNames[offer.id]}</h2></div>
+          <label className="training-club__label" htmlFor="shop-card">Your fighter</label>
+          <StreetSelect skin="paper" id="shop-card" value={selectedCardId} disabled={!!pending || working}
+            onValueChange={value => { setCardId(value); setReceipt(null); setError(null); }}>
+            {!choices.length && <option value="">No fighters available</option>}
+            {choices.map(item => <option key={item.id} value={item.id}>{item.name}</option>)}
+          </StreetSelect>
+          {card && <div className="training-club__progress">
+            <strong>LV {progress.level}<small> / 10</small></strong>
+            <progress max={100} value={details.progressPercent} aria-label="Character level progress" />
+            <span>{details.isMaxLevel ? 'Maximum level' : `${progress.xp} / ${details.nextLevelXp} XP`}</span>
+          </div>}
+          {offer.id === 'move-training' ? <div className="training-club__lesson">
+            <span className="training-club__label">{nextMove ? `MOVE ${(progress.moveTier ?? 0) + 1} · LEVEL ${nextMove.unlockLevel}` : 'MOVES MASTERED'}</span>
+            <strong>{nextMove?.name ?? 'All three moves learned'}</strong>
+            {nextMove && <p>{nextMove.description}</p>}
+          </div> : <div className="training-club__lesson training-club__lesson--xp">
+            <span className="training-club__label">THIS SESSION</span>
+            <strong>{quote ? `+${xpGain} XP` : offer.id === 'training' ? 'Up to +100 XP' : 'Up to +250 XP'}</strong>
+            {quote && quotedProgress && <span>{quotedProgress.level > progress.level ? `Level ${progress.level} → ${quotedProgress.level}` : `Level ${progress.level} progress`}</span>}
+            {nextMove && <small>Next move: {nextMove.name} · Level {nextMove.unlockLevel}</small>}
+          </div>}
+          {foreignPending && <p role="status" className="training-club__notice">Finish your pending purchase first. <Link href={recoveryHref}>Recover purchase <ArrowRight size={13} /></Link></p>}
+          {trainingPending && !working && <p role="status" className="training-club__notice">This session needs confirmation. Recover it without paying twice.</p>}
+          {unavailable && !pending && <p className="training-club__notice">{unavailable}</p>}
+          <button className="training-club__purchase" data-training-purchase disabled={working || !!foreignPending || (!quote && !trainingPending)} onClick={() => void buy()}>
+            <span>{working ? 'Training…' : trainingPending ? 'Recover session' : 'Train'}<small>{working || trainingPending ? 'Confirming your session' : `${cost.toLocaleString()} Clout`}</small></span><ArrowRight size={24} />
           </button>
-          {error && (
-            <p role="alert" className="studio-notice">
-              {error}
-            </p>
-          )}
-          {receipt && (
-            <div className="market-receipt" role="status">
-              <Check size={18} />
-              <div>
-                <strong>{isTraining(receipt.itemId) ? (receipt.itemId === 'move-training' ? 'New move learned!' : 'Reps complete!') : preview ? 'Preview purchase complete' : 'Purchase complete'}</strong>
-                <p>{receipt.summary}</p>
-                <small>
-                  Spent {receipt.cost} {receipt.currency === 'softCurrency' ? 'Clout' : 'Style Shards'}.
-                </small>
-                {receipt.itemId === 'ticket' ? (
-                  <button className="studio-text-action" onClick={openPacks}>
-                    Open your pack
-                    <ArrowRight size={14} />
-                  </button>
-                ) : (
-                  <Link className="studio-text-action" href="/game/collection">
-                    View your collection
-                    <ArrowRight size={14} />
-                  </Link>
-                )}
-              </div>
-            </div>
-          )}
-          {session && (
-            <div className="training-session" role="status" data-reduced-motion={session.reducedMotion}>
-              <span className="studio-eyebrow">{session.move ? 'MOVE TRAINING' : 'GETTING THE REPS IN'}</span>
-              <div
-                className={`training-session__sprite training-session__sprite--${session.move ? 'moves' : 'quick'}`}
-                style={{ backgroundImage: `url(${getAssetUrl(`assets/training/inmate-${session.move ? 'moves' : 'quick'}-sheet.webp`)})` }}
-                aria-hidden="true"
-              />
-              <strong>{session.character} is training…</strong>
-              <p>{session.move ? 'Float like a butterfly. Swing like rent is due.' : 'Tiny weights. Extremely serious business.'}</p>
-              <span className="training-session__meter" aria-hidden="true"><i /></span>
-              <small>Finishing the set & confirming your progress</small>
-            </div>
-          )}
+          {error && <p role="alert" className="training-club__notice training-club__notice--error">{error}</p>}
+          {receipt && <div className="training-club__receipt" role="status"><Check size={24} /><div>
+            <strong>{receipt.itemId === 'move-training' ? 'Move learned' : 'Reps complete'}</strong>
+            <p>{receipt.summary}</p><small>Spent {receipt.cost} Clout</small>
+          </div></div>}
+          {session && <div className="training-session" role="status" data-reduced-motion={session.reducedMotion}>
+            <span className="training-club__label">{session.move ? 'MOVE TRAINING' : 'GETTING THE REPS IN'}</span>
+            <div className={`training-session__sprite training-session__sprite--${session.move ? 'moves' : 'quick'}`}
+              style={{ backgroundImage: `url(${getAssetUrl(`assets/training/inmate-${session.move ? 'moves' : 'quick'}-sheet.webp`)})` }} aria-hidden="true" />
+            <strong>{session.character} is training…</strong>
+            <span className="training-session__meter" aria-hidden="true"><i /></span>
+            <small>Confirming your progress</small>
+          </div>}
         </section>
       </div>
-      <footer className="market-footer">
-        <nav aria-label="Earn more Clout">
-          <Link href="/game/story">
-            Earn in story
-            <ArrowRight size={13} />
-          </Link>
-          <Link href="/game/training">
-            Play a fade
-            <ArrowRight size={13} />
-          </Link>
-          <Link href="/game/missions">
-            Claim bounties
-            <ArrowRight size={13} />
-          </Link>
-        </nav>
-        <details className="market-guide">
-          <summary>How the Trading Post works</summary>
-          <ol>
-            <li>
-              <b>Play</b>
-               <span>Verified wins earn {winEarnings.softCurrency} Clout; draws {drawEarnings.softCurrency}; losses {lossEarnings.softCurrency}. Participating owned characters earn their own XP separately.</span>
-            </li>
-            <li>
-              <b>Train</b>
-              <span>Spend Clout on XP. At levels 2, 5, and 8, buy move coaching to activate a new tier.</span>
-            </li>
-            <li>
-              <b>Pull or choose</b>
-              <span>Use tickets for Street Packs, or save 400 Clout for a guaranteed Common recruit.</span>
-            </li>
-            <li>
-              <b>Build and return</b>
-              <span>
-                Add recruits to your ten-card gang. Replay story for XP and Clout; first clears have separate rewards.
-              </span>
-            </li>
-          </ol>
-          <p>
-             Tickets also come from Rookie Road, weekly bounties, and eligible story rewards. Duplicate card pulls become
-             {STREET_PACK_RULES.duplicateStyleShards} Style Shards for cosmetic finishes.
-          </p>
-          <Link className="studio-text-action" href="/game/decks">
-            Build your gang
-            <ArrowRight size={14} />
-          </Link>
-        </details>
-      </footer>
     </div>
   );
 }

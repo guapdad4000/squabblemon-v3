@@ -2,11 +2,13 @@ import {CharacterRecruitment} from './CharacterRecruitment';
 import { motion, useReducedMotion } from 'framer-motion';
 import { AnimatedNumber } from './AnimatedNumber';
 import '../styles/ui-polish.css';
-import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
+import { useEffect, useRef, useState, useSyncExternalStore, type CSSProperties } from 'react';
 import { canPresentRewardStinger, rewardReceipts, type RewardReceipt } from '../lib/rewardReceipts';
 import { GameGlyph } from './venue/GameGlyph';
 import { getAssetUrl } from '../lib/assets';
 import '../styles/reward-reveal.css';
+import { GamePopupTitle, GamePopupLabel, GamePopupCopy, GamePopupAmount, RewardFilePaper, RewardFileStamp, RewardFileLoot, RewardFileAction } from './ui/game-popup';
+import '../styles/reward-reveal-popup.css';
 import { LevelUpMoment } from './LevelUpMoment';
 import { DepthReveal } from './DepthReveal';
 import { DeferredRewardStinger as RewardStinger } from './DeferredRewardStinger';
@@ -45,9 +47,9 @@ function StoryReceipt({ receipt, reduced }: { receipt: RewardReceipt; reduced: b
         <img className="reward-reveal__story-backdrop" src={getAssetUrl(receipt.story!.backgroundAssetId)} alt="" />
         {receipt.story?.portraitAssetId && <img className="reward-reveal__story-portrait" src={getAssetUrl(receipt.story.portraitAssetId)} data-story-player={receipt.story.portraitAssetId === 'assets/characters/player.webp' || undefined} alt="" />}
         <div className="reward-reveal__story-heading">
-          <span className="studio-eyebrow">{receipt.story?.catchUp ? 'The neighborhood owed you' : 'Story reward delivered'}</span>
-          <p className="reward-reveal__chapter">{receipt.story!.chapterTitle}</p>
-          <h2 id="reward-reveal-title">{receipt.title}</h2>
+          <GamePopupLabel className="studio-eyebrow">{receipt.story?.catchUp ? 'The neighborhood owed you' : 'Story reward delivered'}</GamePopupLabel>
+          <GamePopupCopy className="reward-reveal__chapter">{receipt.story!.chapterTitle}</GamePopupCopy>
+          <GamePopupTitle id="reward-reveal-title">{receipt.title}</GamePopupTitle>
         </div>
       </div>
       {balance && <section className="reward-reveal__collection" aria-label="Clout collection"
@@ -69,16 +71,16 @@ function StoryReceipt({ receipt, reduced }: { receipt: RewardReceipt; reduced: b
         </div>
         <div ref={wallet} className="reward-reveal__wallet">
           <span>Clout balance</span>
-          <strong><AnimatedNumber from={balance.from} value={collected ? balance.to : balance.from} reducedMotion={reduced || (collected && !travel)} /></strong>
+          <GamePopupAmount><AnimatedNumber from={balance.from} value={collected ? balance.to : balance.from} reducedMotion={reduced || (collected && !travel)} /></GamePopupAmount>
         </div>
         {!reduced && !collected && <button type="button" className="reward-reveal__skip" onClick={() => setCollected(true)}>Skip animation</button>}
       </section>}
-      <div className="reward-reveal__story-content">
+      <RewardFilePaper className="reward-reveal__story-content">
         <div className="reward-reveal__story-section">
           <span>{receipt.story?.catchUp ? 'Missing first-clear rewards · added now' : 'Added to your collection'}</span>
           <small>{receipt.items.length} {receipt.items.length === 1 ? 'award' : 'awards'}</small>
         </div>
-        <div className="reward-reveal__items">
+        <RewardFileLoot className="reward-reveal__items">
           {receipt.items.map((item, index) => <motion.div className="reward-reveal__story-item" key={index}
             initial={reduced ? false : { opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
@@ -87,19 +89,19 @@ function StoryReceipt({ receipt, reduced }: { receipt: RewardReceipt; reduced: b
               {item.image ? <img src={item.image} alt="" /> : <GameGlyph name={item.glyph ?? 'mastery'} shardRarity={item.shardRarity} />}
             </div>
             <div className="reward-reveal__story-item-copy">
-              {item.amount !== undefined && <strong>+{item.amount.toLocaleString()}</strong>}
+              {item.amount !== undefined && <GamePopupAmount>+{item.amount.toLocaleString()}</GamePopupAmount>}
               <span>{item.label}</span>
             </div>
           </motion.div>)}
-        </div>
-        <p className="reward-reveal__saved">{receipt.story?.catchUp
+        </RewardFileLoot>
+        <GamePopupCopy className="reward-reveal__saved">{receipt.story?.catchUp
           ? 'These were missing from your earlier first clear. Your past rewards remain yours.'
-          : 'Saved to your account. This stop cannot award the same prize twice.'}</p>
-      </div>
+          : 'Saved to your account. This stop cannot award the same prize twice.'}</GamePopupCopy>
+      </RewardFilePaper>
     </div>
     <div className="reward-reveal__story-footer">
       <span role="status" aria-live="polite">{collected && balance ? `${(balance.to - balance.from).toLocaleString()} Clout collected. Balance ${balance.to.toLocaleString()} Clout.` : 'Rewards saved to your account.'}</span>
-      <button type="button" autoFocus onClick={() => rewardReceipts.dismiss(receipt.id)}>Keep going <span aria-hidden="true">→</span></button>
+      <RewardFileAction autoFocus onClick={() => rewardReceipts.dismiss(receipt.id)}>Keep going <span aria-hidden="true">→</span></RewardFileAction>
     </div>
   </div>;
 }
@@ -129,21 +131,22 @@ export function RewardReveal() {
   if (receipt.characterId) return <CharacterRecruitment key={receipt.id} id={receipt.characterId} items={receipt.items} reduced={Boolean(reduced)} onClose={() => rewardReceipts.dismiss(receipt.id)} />;
   const showReceipt = () => receipt.story ? <StoryReceipt key={receipt.id} receipt={receipt} reduced={Boolean(reduced)} />
     : <div className="reward-reveal__stage">
-      <img className="reward-reveal__backdrop" src={getAssetUrl('assets/results/win-scene-wide.webp')} alt="" />
+      <img className="reward-reveal__backdrop" src={getAssetUrl('assets/selection/underpass.webp')} alt="" />
       <img className="reward-reveal__bag" src={getAssetUrl('assets/rewards/clout-bag.webp')} alt="" />
-      <motion.div className="reward-reveal__receipt" key={receipt.id} initial={reduced ? false : { opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }}>
-        <span className="studio-eyebrow">{receipt.achievement ? 'DR. FADE CERTIFIED' : receipt.preview ? 'Local preview reward' : 'Added to your bag'}</span>
-        <h2 id="reward-reveal-title">{receipt.title}</h2>
-        <div className="reward-reveal__items">{receipt.items.map((item, i) => <motion.div key={i} initial={reduced ? false : { opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * .12 }}>
+      <motion.div className="reward-reveal__receipt reward-street-file__paper" key={receipt.id} initial={reduced ? false : { opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }}>
+        <RewardFileStamp>{receipt.achievement ? 'DR. FADE CERTIFIED' : receipt.preview ? 'Local preview reward' : 'Added to your bag'}</RewardFileStamp>
+        <GamePopupTitle id="reward-reveal-title">{receipt.title}</GamePopupTitle>
+        <RewardFileLoot className="reward-reveal__items">{receipt.items.map((item, i) => <motion.div key={i} initial={reduced ? false : { opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * .12 }}>
           <DepthReveal rarity={item.shardRarity} className="reward-reveal__flip">{item.image ? <img src={item.image} alt="" /> : <GameGlyph name={item.glyph ?? 'mastery'} shardRarity={item.shardRarity} />}</DepthReveal>
-          {item.amount !== undefined && <strong><AnimatedNumber value={item.amount} prefix="+" delay={i * .12} /></strong>}<span>{item.label}</span>
-        </motion.div>)}</div>
-        <p>{receipt.achievement ? 'You read the districts, banked your Motion, and landed your first SQUABBLE. Go make the block remember.' : receipt.preview ? 'Saved to this preview only.' : 'Your rewards are saved. Keep building your legend.'}</p>
+          {item.amount !== undefined && <GamePopupAmount><AnimatedNumber value={item.amount} prefix="+" delay={i * .12} /></GamePopupAmount>}<span>{item.label}</span>
+        </motion.div>)}</RewardFileLoot>
+        <GamePopupCopy>{receipt.achievement ? 'You read the districts, banked your Motion, and landed your first SQUABBLE. Go make the block remember.' : receipt.preview ? 'Saved to this preview only.' : 'Your rewards are saved. Keep building your legend.'}</GamePopupCopy>
         {receipt.kumiteFilmKey && (() => { const unlocked = KUMITE_FILMS.find(item => item.key === receipt.kumiteFilmKey); return unlocked ? <KumiteFilmReplay cardId={unlocked.cardId} ownedCardIds={[unlocked.cardId]} /> : null; })()}
-        <button autoFocus className="studio-action studio-action--gold" onClick={() => rewardReceipts.dismiss(receipt.id)}>Keep going →</button>
+        <RewardFileAction autoFocus onClick={() => rewardReceipts.dismiss(receipt.id)}>Keep going <span aria-hidden="true">→</span></RewardFileAction>
       </motion.div>
     </div>;
-  return <dialog ref={dialog} className={`reward-reveal${receipt.level ? ' reward-reveal--level' : ''}${receipt.story ? ' reward-reveal--story' : ''}${clip ? ' reward-reveal--stinger' : ''}`} aria-labelledby="reward-reveal-title" onCancel={() => rewardReceipts.dismiss(receipt.id)}>
+  const fileStyle = { '--reward-file-scene': `url("${getAssetUrl('assets/selection/underpass.webp')}")`, '--reward-file-folder': `url("${getAssetUrl('assets/selection/dossier.webp')}")` } as CSSProperties;
+  return <dialog ref={dialog} style={!receipt.level && !clip ? fileStyle : undefined} data-popup-family={!receipt.level && !clip ? 'reward' : undefined} className={`reward-reveal${!receipt.level && !clip ? ' game-popup reward-street-file' : ''}${receipt.level ? ' reward-reveal--level' : ''}${receipt.story ? ' reward-reveal--story' : ''}${clip ? ' reward-reveal--stinger' : ''}`} aria-labelledby="reward-reveal-title" onCancel={() => rewardReceipts.dismiss(receipt.id)}>
     {receipt.level ? <LevelUpMoment level={receipt.level} reduced={Boolean(reduced)} onContinue={() => rewardReceipts.dismiss(receipt.id)} />
       : clip ? <div className="reward-reveal__stinger">
         <h2 id="reward-reveal-title" className="reward-reveal__stinger-title">{receipt.title}</h2>

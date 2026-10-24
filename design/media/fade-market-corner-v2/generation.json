@@ -1,0 +1,44 @@
+{
+  "version": 2,
+  "date": "2026-10-24",
+  "tool": "Built-in image_gen.imagegen",
+  "asset": "assets/market/corner-v2/interior.webp",
+  "purpose": "User-requested rich1990s neighborhood Fade Market interior atmosphere. Existing product artwork remains separately rendered.",
+  "prompt": "Use case: stylized-concept / environment background edit. Transform the supplied existing FADE MARKET exterior reference into an original, premium illustrated interior background for the SAME neighborhood corner store in Squabblemon. Reference1 supplies the established warm brick, deep forest-green painted wood, burgundy red awning vocabulary and intimate neighborhood atmosphere. Reference2 supplies the cream/red printed shopping bag and bold clenched-fist graphic vocabulary. Create a new wide16:9 composition, ideally1792x1008, looking straight into a rich1990s Black neighborhood bodega from just outside the counter, slightly above counter height. Thick controlled anime ink outlines, sophisticated cel-shaded planes, hand-painted detail and warm cinematic light; inviting lived-in soul and richness, not a sterile modern retail UI or photoreal generic supermarket. Keep muted dark emerald wood and reddish brick, brass/amber practical lamps, saturated mint-green and cherry-red glass neon tubes tucked along ceiling edges and side displays. Period CRT cash register off to the right, small cassette radio, glass beverage bottles, canned groceries, hanging colorful unbranded snack bags, folded brown paper bags, milk crates, worn paper flyers and a few cream/red thank-you shopping bags around the side shelves. Treat these as believable environmental set dressing, not giant featured purchasable products. A deep scratched wooden service counter crosses the lower15percent; worn cream tiles and rich wooden cubby edges add tactile detail. Strong front-facing horizontal shelf rhythm. Composition for real game UI: keep the upper central50percent relatively dark emerald and uncluttered for a real CSS FADE MARKET neon headline, with no baked letters. Keep middle central45percent visually quieter and open enough for four real illustrated product cubbies placed by the application; rich detail belongs at outer quarters, upper corners and back wall, never a blank flat rectangle. Lower middle counter is a clean usable warm wood surface for a small cream paper tag. Portrait center-crop must still look like a warm neon-lit corner store. Lighting is vivid yet controlled: warm amber shelf pools, mint rim reflections and crimson accent glow; preserve readable midtones and distinct layered depth. No people, no characters, no crowd, no counter clerk, no giant opaque foreground object, no UI panels, no buttons, no prices, no readable labels, no invented words, no watermark. No crowns anywhere; any tiny decorative emblem must be a clenched fist. The only lettering FADE MARKET will be added as real live HTML later, so do not paint any sign text. Opaque background edge to edge.",
+  "references": [
+    {
+      "path": "artifacts/squabblemon/public/assets/scenes/fade-market/background.webp",
+      "sha256": "1ae905e8e6690cb0835ab2436c958cb5d0ba7f3cbe709e1dbce8cdf5e9709186",
+      "role": "Established environment/materials"
+    },
+    {
+      "path": "artifacts/squabblemon/public/assets/market/thank-you-fade-again-bag.webp",
+      "sha256": "266691857f344a3b295dc2d94b2c545ce6cf07ffeaa44003bf24f30a83c0ba26",
+      "role": "Cream/red bag and clenched-fist identity"
+    }
+  ],
+  "original": {
+    "path": "/home/falcon/.codex/generated_images/01a16c74-01ee-71e1-adf1-d0c1c2b8bcf0/exec-d12f4e04-37dc-47a0-baee-bad4555392d1.png",
+    "archive": "/home/falcon/Documents/New project 9/output/fade-market-corner-v2/interior-master.png",
+    "sha256": "ca3cb14c706c75e0e34603f0604b6e113751cb63d7dfbf4e8c890a681f4f3062",
+    "bytes": 2531658
+  },
+  "delivery": {
+    "dimensions": [
+      1672,
+      941
+    ],
+    "format": "webp",
+    "bytes": 256546,
+    "sha256": "52db6e8807282f1c5e00d244d050cb118e88052d03d636ff07b0bd708b8ec8ea",
+    "encoding": "ffmpeg libwebp quality80 compression_level6, two threads; unchanged pixel dimensions",
+    "transparent": false
+  },
+  "review": {
+    "subject": "Amber wooden shelves, emerald back wall, mint/red neon, worn wood counter, period register/radio, existing fist identity. No characters or crowns.",
+    "composition": "Upper center reserved for live FADE MARKET headline. Clear middle shelves hold actual product UI. Dense environmental detail at sides.",
+    "quality": "Compared PNG and quality80/84 WebP at full view and1:1 register/shelf detail; quality80 selected without obvious visual loss.",
+    "comparison": "/home/falcon/Documents/New project 9/output/fade-market-corner-v2/quality-comparison.jpg"
+  },
+  "integration": "Static environmental layer only. Story agent owns CornerStore markup/CSS. No idle animation or generated product replacement. Keep current actual product assets and live prices."
+}

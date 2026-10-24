@@ -749,6 +749,14 @@ export interface PackReward {
   amount: number;
 }
 
+export interface PullSeasonReward {
+  seasonId: string;
+  threshold: number;
+  softCurrency: number;
+  packTickets: number;
+  styleShards: number;
+}
+
 export interface PackOpening {
   id: string;
   oddsVersion: string;
@@ -756,6 +764,7 @@ export interface PackOpening {
   cost: number;
   pullCount: number;
   rewards: PackReward[];
+  seasonRewards?: PullSeasonReward[];
   pityBefore: number;
   pityAfter: number;
   createdAt: string;
@@ -1056,6 +1065,19 @@ export interface SaveDeckInput {
   recipeId: string | null;
 }
 
+export type PullSeasonMilestone = PullSeasonReward & {
+  claimed: boolean;
+};
+
+export interface PullSeasonProgress {
+  id: string;
+  name: string;
+  startsAt: string;
+  endsAt: string;
+  count: number;
+  milestones: PullSeasonMilestone[];
+}
+
 export type OpenPackInputPaymentMethod = typeof OpenPackInputPaymentMethod[keyof typeof OpenPackInputPaymentMethod];
 
 
@@ -1072,9 +1094,14 @@ export interface OpenPackInput {
   idempotencyKey: string;
   /** Selected active pull banner. Defaults to standard. */
   bannerId?: string;
+  /**
+     * Exact weekly occurrence selected by the client. Stale unpaid requests are rejected; completed idempotent retries recover their original receipt.
+     * @maxLength 80
+     */
+  bannerOccurrenceId?: string;
   paymentMethod: OpenPackInputPaymentMethod;
   /**
-     * Number of packs to open. Defaults to 1; 10 unlocks the upgraded ten-pull experience.
+     * Number of packs to open. Defaults to 1. Batches of 2–9 cost the single-pack price per pack; only 10 receives the ten-pull discount and Rare-or-better guarantee.
      * @minimum 1
      * @maximum 10
      */
@@ -1084,6 +1111,7 @@ export interface OpenPackInput {
 export interface OpenPackResult {
   bootstrap: PlayerBootstrap;
   opening: PackOpening;
+  pullSeason?: PullSeasonProgress;
   alreadyOpened: boolean;
 }
 

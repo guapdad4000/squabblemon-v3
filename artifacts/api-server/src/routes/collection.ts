@@ -1,3 +1,4 @@
+import { getPullSeasonProgress } from '../lib/pullSeason';
 import { openWelcomePull, welcomePullAvailable } from '../lib/welcomePull';
 import { getAuth } from "@clerk/express";
 import { and, eq, sql } from "drizzle-orm";
@@ -243,7 +244,9 @@ router.get("/player/packs/welcome", async (req, res): Promise<void> => {
   const userId = authenticatedUserId(req, res);
   if (!userId) return;
   await ensurePlayer(userId);
-  res.json({ available: await welcomePullAvailable(userId) });
+  const available = await welcomePullAvailable(userId);
+  res.set('Cache-Control', 'no-store');
+  res.json({ available, serverNow: Date.now(), supportsFlexibleBatches: true, pullSeason: await getPullSeasonProgress(userId) });
 });
 router.post("/player/packs/welcome", async (req, res): Promise<void> => {
   const userId = authenticatedUserId(req, res);
@@ -272,8 +275,9 @@ router.post("/player/packs/open", async (req, res): Promise<void> => {
       OpenPlayerPackResponse.parse({
         bootstrap: await getPlayerBootstrap(userId),
         opening: serializePackOpening(
-          result.opening as PlayerPackOpeningRecord,
+          result.opening as PlayerPackOpeningRecord, result.seasonRewards,
         ),
+        pullSeason: result.pullSeason,
         alreadyOpened: result.alreadyOpened,
       }),
     );

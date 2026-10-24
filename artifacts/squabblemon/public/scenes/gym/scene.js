@@ -1,51 +1,16 @@
 import * as THREE from '../shared/three.module.js';
 import {detectGPUQuality} from '../shared/gpu-quality.js';
+import { packGymFinaleSpeed, createPackGymAudio, takePackGymFinaleSounds, bagFinaleFrame, normalizePackGymRarity, PACK_GYM_FINALE_TIMING, PACK_GYM_FINALE_EFFECTS } from './finale.js';
 const quality=await detectGPUQuality();
 let disposed=false,sceneInitialized=false;
+let presentationSpeed=1,armedRarity='Common';
 let armed=false,reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
 const emit=payload=>parent.postMessage({channel:'squabblemon-scene',...payload},location.origin);
-const AudioEngine={
-  enabled:false,
-  context:null,
-  sampleRoot:new URL('../../audio/sfx/gacha/',location.href),
-  init(){
-    if(!this.enabled)return;
-    try{this.context??=new AudioContext();this.context.resume();}catch{}
-    for(const name of ['jab','hook','finisher','knockout'])this.preload(name);
-  },
-  source(name){
-    const probe=document.createElement('audio');
-    const extension=probe.canPlayType('audio/ogg; codecs=\"vorbis\"')?'ogg':'m4a';
-    return new URL(`${name}.${extension}`,this.sampleRoot).href;
-  },
-  preload(name){
-    const audio=new Audio(this.source(name));
-    audio.preload='auto';
-  },
-  sample(name,volume=.82){
-    if(!this.enabled)return;
-    const audio=new Audio(this.source(name));
-    audio.volume=volume;
-    audio.play().catch(()=>this.tone(name==='knockout'?52:95,name==='knockout'?.5:.14));
-  },
-  playPunch(intensity='normal'){
-    this.sample(intensity==='finisher'?'finisher':intensity==='heavy'?'hook':'jab',intensity==='finisher'?1:.84);
-  },
-  playKO(){this.sample('knockout',1)},
-  tone(hz,duration){
-    if(!this.enabled)return;
-    this.init();
-    const c=this.context;
-    if(!c)return;
-    const o=c.createOscillator(),g=c.createGain();
-    o.frequency.setValueAtTime(hz,c.currentTime);
-    o.frequency.exponentialRampToValueAtTime(28,c.currentTime+duration);
-    g.gain.setValueAtTime(.16,c.currentTime);
-    g.gain.exponentialRampToValueAtTime(.001,c.currentTime+duration);
-    o.connect(g);g.connect(c.destination);o.start();o.stop(c.currentTime+duration);
-    o.onended=()=>{o.disconnect();g.disconnect()}
-  }
-};
+const AudioEngine = createPackGymAudio({
+  source: name => new URL(`audio/rarity-flight-v1/${name}.mp3`, location.href).href,
+  createAudio: source => new Audio(source),
+  blocked: () => document.hidden || disposed,
+});
     function createPunchingBagTexture() {
       const canvas = document.createElement("canvas");
       canvas.width = 2048;
@@ -114,7 +79,7 @@ const AudioEngine={
     let gloveGhosts = [];
     let cardMeshStack = [];
     let sharedCardBackTexture;
-    let spotLight, rimCyan, rimGold, heavyBagMaterial;
+    let spotLight, rimLeft, rimRight, heavyBagMaterial;
     let bagSurfaceCanvas, bagSurfaceCtx, bagSurfaceTexture, bagWrapImage;
     let lastBagDamageStage = -1, currentBagDamageStage = 0;
 
@@ -182,13 +147,14 @@ const AudioEngine={
       scene.add(spotLight);
       scene.add(spotLight.target);
 
-      rimCyan = new THREE.DirectionalLight(0x38bdf8, 2.2);
-      rimCyan.position.set(-6, 2.5, -4);
-      scene.add(rimCyan);
+      // The live boxing light stays warm white for every receipt. Rarity is revealed by the POV film.
+      rimLeft = new THREE.DirectionalLight(0xfff4e6, 2.2);
+      rimLeft.position.set(-6, 2.5, -4);
+      scene.add(rimLeft);
 
-      rimGold = new THREE.DirectionalLight(0xf59e0b, 2.4);
-      rimGold.position.set(6, -0.5, -3);
-      scene.add(rimGold);
+      rimRight = new THREE.DirectionalLight(0xfff0dc, 2.4);
+      rimRight.position.set(6, -0.5, -3);
+      scene.add(rimRight);
 
       
       buildGymEnvironment();
@@ -204,8 +170,8 @@ const AudioEngine={
 
       // Listen for container layout shifts
       if (window.ResizeObserver) {
-        const ro = new ResizeObserver(() => onWindowResize());
-        ro.observe(container);
+        resizeObserver = new ResizeObserver(() => onWindowResize());
+        resizeObserver.observe(container);
       }
 
       // Re-trigger layout after first frame
@@ -606,26 +572,9 @@ const AudioEngine={
       }
     }
 
-    const OMEN_LIGHTS = {
-      SuperCommon: { key: 0xd7c7ab, left: 0x9c8b72, right: 0xd7c7ab, floor: 0x17120d },
-      Common: { key: 0xfff1d2, left: 0x8b9a93, right: 0xd6b778, floor: 0x15140f },
-      Uncommon: { key: 0xc9ffd7, left: 0x36d67d, right: 0xd6b778, floor: 0x07190e },
-      Rare: { key: 0xd8eaff, left: 0x3b82f6, right: 0x72d8ff, floor: 0x071225 },
-      Epic: { key: 0xf1dcff, left: 0xa855f7, right: 0xe85d9e, floor: 0x190722 },
-      Legendary: { key: 0xffedb0, left: 0xf5b829, right: 0xffe08a, floor: 0x231704 },
-      Mythical: { key: 0xffd6c7, left: 0xef3340, right: 0xffa62b, floor: 0x260408 }
-    };
-
     function applyOmen(rarity = "Common") {
-      const colors = OMEN_LIGHTS[rarity] || OMEN_LIGHTS.Common;
-      spotLight?.color.setHex(colors.key);
-      rimCyan?.color.setHex(colors.left);
-      rimGold?.color.setHex(colors.right);
-      if (spotLight) spotLight.intensity = rarity === "Mythical" ? 125 : rarity === "Legendary" ? 112 : 95;
-      if (rimCyan) rimCyan.intensity = rarity === "Mythical" ? 4.8 : rarity === "Legendary" ? 3.7 : 2.6;
-      if (rimGold) rimGold.intensity = rarity === "Mythical" ? 4.1 : rarity === "Legendary" ? 4.4 : 2.8;
-      heavyBagMaterial?.emissive.setHex(colors.floor);
-      if (heavyBagMaterial) heavyBagMaterial.emissiveIntensity = rarity === "Mythical" ? 0.38 : 0.16;
+      // Keep the receipt-driven travel distance without tinting the gym or bag.
+      armedRarity = normalizePackGymRarity(rarity);
     }
 
     function paintBagDamage(stage = 0) {
@@ -676,6 +625,70 @@ const AudioEngine={
     let bagVelocity = { x: 0, z: 0 };
     let screenShake = 0;
     let currentHand = "left";
+    let finale = null;
+    const finaleFragments = [];
+    const jabFrames = new Set();
+    let animationFrame = 0;
+    let resizeObserver;
+
+    function clearFinaleFragments() {
+      for (const mesh of finaleFragments) { scene.remove(mesh); mesh.traverse(part => { part.geometry?.dispose(); part.material?.dispose(); }); }
+      finaleFragments.length = 0;
+    }
+    function resetFinale() {
+      AudioEngine.stop(); finale = null; clearFinaleFragments();
+      if (!document.hidden && !disposed && !animationFrame) animationFrame = requestAnimationFrame(animateLoop);
+      if (camera) { camera.fov = 45; camera.rotation.z = 0; camera.position.x = 0; camera.position.y = .35; camera.updateProjectionMatrix(); }
+      if (!heavyBagMesh) return;
+      bagAssembly.add(heavyBagMesh);
+      heavyBagMesh.position.set(0, -3.2, 0); heavyBagMesh.rotation.set(0, 0, 0);
+      heavyBagMesh.scale.setScalar(1); heavyBagMesh.visible = true;
+      document.documentElement.dataset.finaleStage = 'idle';
+    }
+    function burstBag() {
+      const count = quality.tier === 'low' ? 8 : 12;
+      for (let i = 0; i < count; i++) {
+        const angle = i * Math.PI * 2 / count;
+        const geometry = new THREE.CylinderGeometry(1.18, 1.18, 4.1, 4, 3, true, angle, Math.PI * 2 / count * .86);
+        const material = heavyBagMaterial.clone(); material.transparent = true; material.side = THREE.DoubleSide;
+        const fragment = new THREE.Mesh(geometry, material);
+        fragment.position.copy(heavyBagMesh.position); fragment.scale.setScalar(1.08);
+        fragment.add(createAnimeOutline(geometry, .065));
+        fragment.userData.origin = fragment.position.clone();
+        fragment.userData.velocity = new THREE.Vector3(Math.cos(angle) * (10 + i % 3 * 2), Math.sin(angle) * 8 + 3, 12 + i % 4 * 2);
+        fragment.userData.spin = new THREE.Vector3(.6 + i % 3, Math.sin(angle) * 2, Math.cos(angle) * 2);
+        scene.add(fragment); finaleFragments.push(fragment);
+      }
+    }
+    function updateFinale(now) {
+      if (!finale) return;
+      const elapsed = Math.max(0, (now - finale.started - finale.pausedFor) * finale.speed);
+      const pose = bagFinaleFrame(elapsed, finale.ten, finale.rarity);
+      for (const cue of takePackGymFinaleSounds(elapsed, finale.sounds)) AudioEngine.sample(cue.name, cue.gain, finale.speed);
+      heavyBagMesh.position.copy(finale.origin).add(new THREE.Vector3(pose.x, pose.y, pose.z));
+      heavyBagMesh.rotation.set(finale.rotation.x * (1 - Math.min(1, elapsed / PACK_GYM_FINALE_TIMING.impact)), finale.rotation.y, finale.rotation.z + pose.rotate);
+      heavyBagMesh.scale.setScalar(pose.scale); heavyBagMesh.visible = pose.visible;
+      if (pose.impact && !finale.impacted) {
+        finale.impacted = true;
+        if (finale.ten) burstBag();
+      }
+      for (const fragment of finaleFragments) {
+        const t = pose.burst * PACK_GYM_FINALE_EFFECTS.debris / 1000;
+        fragment.position.copy(fragment.userData.origin).addScaledVector(fragment.userData.velocity, t);
+        fragment.position.y -= 5 * t * t;
+        fragment.rotation.set(fragment.userData.spin.x * t, fragment.userData.spin.y * t, fragment.userData.spin.z * t);
+        fragment.material.opacity = 1 - pose.burst;
+        for (const outline of fragment.children) { outline.material.transparent = true; outline.material.opacity = 1 - pose.burst; }
+      }
+      camera.position.set(pose.cameraX, .35 + pose.cameraY, (camera.aspect < .75 ? 14.8 : 12.9) + pose.cameraZ);
+      camera.rotation.z = pose.cameraRoll;
+      if (camera.fov !== pose.cameraFov) { camera.fov = pose.cameraFov; camera.updateProjectionMatrix(); }
+      document.documentElement.dataset.finaleStage = pose.done ? 'done' : pose.impact ? (finale.ten ? 'burst' : 'impact') : elapsed < PACK_GYM_FINALE_TIMING.contact ? 'compression' : elapsed < PACK_GYM_FINALE_TIMING.release ? 'contact' : elapsed < PACK_GYM_FINALE_TIMING.flight ? 'release' : 'flight';
+      // Do not keep transparent debris alive during the longer crash-film hold.
+      if (pose.burst >= 1 && finaleFragments.length) clearFinaleFragments();
+      if (pose.done) finale.done = true;
+    }
+
 
     function deliverPunch(requestedIntensity) {
       if (isGachaTriggered || !armed) return;
@@ -693,12 +706,12 @@ const AudioEngine={
       const heatRatio = Math.min(punchHits / targetKoHits, 1.0);
       const speedFactor = (1.0 + heatRatio * 2.8) * impactBoost;
 
-      AudioEngine.playPunch(intensity);
+      if (nextRatio < 1) AudioEngine.playPunch();
       screenShake = reduced ? 0 : Math.min(0.2, (0.025 + heatRatio * 0.07) * impactBoost);
 
-      hitStopRemaining = intensity === "finisher" ? 6 : intensity === "heavy" ? 3 : 1;
+      hitStopRemaining = nextRatio >= 1 ? 0 : intensity === "heavy" ? 3 : 1;
 
-      if (intensity !== "normal") {
+      if (intensity !== "normal" && nextRatio < 1) {
         triggerImpactFrame(intensity === "finisher" ? "crimson" : "mono", intensity === "finisher" ? 5 : 2);
       }
 
@@ -714,10 +727,12 @@ const AudioEngine={
       currentHand = currentHand === "left" ? "right" : "left";
 
       const contactZ = 0.9;
-      spawnHitSpark(pushX * 0.5, 0.2, contactZ, intensity === "finisher");
-      spawnShockwave(pushX * 0.3, 0.2, contactZ, (0.8 + heatRatio * 0.8) * impactBoost);
-      if (intensity !== "normal") {
-        spawnComicSFX(pushX * 0.4, 0.4, contactZ);
+      // The third strike has its own authored fist cut and distant debris impact.
+      // Keep ordinary hit feedback out of that flight path.
+      if (nextRatio < 1) {
+        spawnHitSpark(pushX * 0.5, 0.2, contactZ, false);
+        spawnShockwave(pushX * 0.3, 0.2, contactZ, (0.8 + heatRatio * 0.8) * impactBoost);
+        if (intensity !== "normal") spawnComicSFX(pushX * 0.4, 0.4, contactZ);
       }
 
       speedlineIntensity = reduced ? 0 : Math.min(0.35, speedlineIntensity + 0.10);
@@ -736,13 +751,17 @@ const AudioEngine={
       const targetPos = new THREE.Vector3((hand === "left" ? -0.28 : 0.28), -.1, 2.1 - camera.position.z);
 
       const startTime = performance.now();
-      const duration = Math.max(85, 210 / speed);
+      const duration = Math.max(85, 210 / speed) / presentationSpeed;
 
       if (speed > 1.8) {
         spawnGloveGhost(glove);
       }
 
+      let handle;
+      function queueJab() { handle = requestAnimationFrame(stepJab); jabFrames.add(handle); }
       function stepJab(now) {
+        jabFrames.delete(handle);
+        if (disposed || document.hidden) { glove.position.copy(restPos); return; }
         const p = (now - startTime) / duration;
         if (p < 0.38) {
           const f = p / 0.38;
@@ -754,9 +773,9 @@ const AudioEngine={
           glove.position.copy(restPos);
           return;
         }
-        requestAnimationFrame(stepJab);
+        queueJab();
       }
-      requestAnimationFrame(stepJab);
+      queueJab();
     }
 
     function spawnGloveGhost(originalGlove) {
@@ -780,21 +799,32 @@ const AudioEngine={
 
 
 function updateComboHud(){}
-function triggerGachaKnockout(){if(isGachaTriggered)return;isGachaTriggered=true;armed=false;AudioEngine.playKO();spawnShockwave(0,0,1.2,2);emit({type:'complete'});}
+function triggerGachaKnockout(){
+  if(isGachaTriggered)return;
+  isGachaTriggered=true;armed=false;
+  for(const spark of activeSparks)scene.remove(spark);activeSparks.length=0;
+  for(const effect of [...activeComicSFX,...activeShockwaves]){scene.remove(effect);effect.geometry.dispose();effect.material.map?.dispose();effect.material.dispose();}
+  activeComicSFX.length=0;activeShockwaves.length=0;
+  // Detach only the leather body: chains and ceiling mount stay in the foreground.
+  scene.attach(heavyBagMesh);
+  finale={started:performance.now(),pausedFor:0,hiddenAt:null,speed:packGymFinaleSpeed(presentationSpeed),rarity:armedRarity,sounds:new Set(),ten:targetKoHits===9&&hitsPerPunch===3,origin:heavyBagMesh.position.clone(),rotation:heavyBagMesh.rotation.clone(),impacted:false,done:false};
+  screenShake=0; speedlineIntensity=0;
+  emit({type:'complete'});
+}
 function bindInteractions(){document.getElementById('webgl-container').addEventListener('pointerdown',()=>{if(!reduced)deliverPunch()});}
 addEventListener('message',e=>{
  if(e.origin!==location.origin||e.source!==parent||e.data?.channel!=='squabblemon-scene')return;
  const d=e.data;
- if(d.type==='settings'){reduced=Boolean(d.reducedMotion)||matchMedia('(prefers-reduced-motion: reduce)').matches;AudioEngine.enabled=Boolean(d.sound);}
-  if(d.type==='arm'){punchHits=0;targetKoHits=Number.isInteger(d.targetHits)&&d.targetHits>0?d.targetHits:3;hitsPerPunch=Number.isInteger(d.hitsPerPunch)&&d.hitsPerPunch>0?d.hitsPerPunch:1;isGachaTriggered=false;paintBagDamage(0);applyOmen(d.omen);armed=true;if(camera){camera.position.z=camera.aspect<.75?14.8:12.9;camera.updateProjectionMatrix();}}
+ if(d.type==='settings'){reduced=Boolean(d.reducedMotion)||matchMedia('(prefers-reduced-motion: reduce)').matches;presentationSpeed=Number.isFinite(d.speed)?Math.max(.5,Math.min(2,d.speed)):1;AudioEngine.configure({enabled:Boolean(d.sound),volume:d.volume,speed:presentationSpeed});}
+  if(d.type==='arm'){resetFinale();punchHits=0;targetKoHits=Number.isInteger(d.targetHits)&&d.targetHits>0?d.targetHits:3;hitsPerPunch=Number.isInteger(d.hitsPerPunch)&&d.hitsPerPunch>0?d.hitsPerPunch:1;isGachaTriggered=false;paintBagDamage(0);applyOmen(d.omen);armed=true;if(camera){camera.position.z=camera.aspect<.75?14.8:12.9;camera.updateProjectionMatrix();}}
  if(d.type==='punch'&&!reduced)deliverPunch(d.intensity);
-  if(d.type==='reset'){armed=false;punchHits=0;targetKoHits=3;hitsPerPunch=1;isGachaTriggered=false;bagVelocity={x:0,z:0};paintBagDamage(0);applyOmen("Common");if(camera){camera.position.z=camera.aspect<.75?11.6:10.2;camera.updateProjectionMatrix();}}
+  if(d.type==='reset'){resetFinale();armed=false;punchHits=0;targetKoHits=3;hitsPerPunch=1;isGachaTriggered=false;bagVelocity={x:0,z:0};paintBagDamage(0);applyOmen("Common");if(camera){camera.position.z=camera.aspect<.75?11.6:10.2;camera.updateProjectionMatrix();}}
 });
     function onWindowResize() {
       if (!renderer || !camera) return;
       const size = getContainerSize();
       camera.aspect = size.w / size.h;
-      camera.position.z = armed
+      camera.position.z = (armed || finale)
         ? (camera.aspect < .75 ? 14.8 : 12.9)
         : (camera.aspect < .75 ? 11.6 : 10.2);
       camera.updateProjectionMatrix();
@@ -806,6 +836,7 @@ addEventListener('message',e=>{
       }
       resizeSpeedlines();
       resizeImpactCanvas();
+      if (finale?.done && !document.hidden && !disposed) renderer.render(scene, camera);
     }
 
     /* =========================================================
@@ -815,9 +846,9 @@ addEventListener('message',e=>{
 
     let lastDraw=0;
     function animateLoop(now=0) {
-      requestAnimationFrame(animateLoop);
-
-      if(document.hidden||disposed)return;
+      animationFrame = 0;
+      if(document.hidden||disposed||finale?.done)return;
+      animationFrame = requestAnimationFrame(animateLoop);
       if(lastDraw&&now-lastDraw<1000/quality.fps)return;
       lastDraw=now;
       if (hitStopRemaining > 0) {
@@ -851,6 +882,8 @@ addEventListener('message',e=>{
         bagAssembly.rotation.y = reduced ? 0 : Math.sin(time * 0.8) * 0.025;
       }
 
+      if (finale && !finale.done) updateFinale(now);
+
       if (heavyBagMesh && bagOriginalPositions && activeBagDents.size) {
         const pos = heavyBagMesh.geometry.attributes.position;
         let needsUpdate = false;
@@ -872,7 +905,9 @@ addEventListener('message',e=>{
         }
       }
 
-      if (screenShake > 0.001) {
+      if (finale && !finale.done) {
+        // The absolute finale pose owns the camera until its recoil settles.
+      } else if (screenShake > 0.001) {
         camera.position.x = (Math.random() - 0.5) * screenShake;
         camera.position.y = 0.35 + (Math.random() - 0.5) * screenShake;
         screenShake *= 0.86;
@@ -938,7 +973,7 @@ addEventListener('message',e=>{
         }
       }
 
-      if (!isGachaTriggered) {
+      {
         speedlineIntensity = Math.max(0, speedlineIntensity - delta * 0.45);
       }
       renderSpeedLines();
@@ -947,6 +982,8 @@ addEventListener('message',e=>{
       if (renderer && scene && camera) {
         renderer.render(scene, camera);
       }
+      // The arrival still covers the room; keep the last frame and stop hidden GPU work.
+      if (finale?.done) { cancelAnimationFrame(animationFrame); animationFrame = 0; }
     }
 
 
@@ -954,7 +991,8 @@ addEventListener('error',event=>{if(event.error)emit({type:'error',message:event
 addEventListener('unhandledrejection',event=>emit({type:'error',message:String(event.reason || 'The gym could not be rendered.')}));
 try{init3DExperience();renderer.domElement.addEventListener('webglcontextlost',e=>{e.preventDefault();armed=false;sceneInitialized=false;emit({type:'error'});});renderer.render(scene,camera);sceneInitialized=true;emit({type:'ready',gpuTier:quality.tier});}catch(e){emit({type:'error',message:'The gym could not be rendered.'});}
 
-addEventListener('pagehide',()=>{disposed=true;AudioEngine.context?.close();scene?.traverse(object=>{object.geometry?.dispose();const materials=Array.isArray(object.material)?object.material:[object.material];for(const material of materials){if(!material)continue;for(const value of Object.values(material))if(value?.isTexture)value.dispose();material.dispose();}});renderer?.dispose();});
+document.addEventListener('visibilitychange',()=>{if(document.hidden){cancelAnimationFrame(animationFrame);animationFrame=0;for(const id of jabFrames)cancelAnimationFrame(id);jabFrames.clear();if(leftGloveMesh)leftGloveMesh.position.copy(gloveRestPosition(true));if(rightGloveMesh)rightGloveMesh.position.copy(gloveRestPosition(false));AudioEngine.stop();if(finale&&!finale.done)finale.hiddenAt=performance.now();}else if(!disposed){if(finale?.hiddenAt!==null&&finale?.hiddenAt!==undefined){finale.pausedFor+=performance.now()-finale.hiddenAt;finale.hiddenAt=null;}lastDraw=0;if(!animationFrame&&!finale?.done)animationFrame=requestAnimationFrame(animateLoop);}});
+addEventListener('pagehide',()=>{disposed=true;cancelAnimationFrame(animationFrame);for(const id of jabFrames)cancelAnimationFrame(id);jabFrames.clear();resizeObserver?.disconnect();AudioEngine.stop();clearFinaleFragments();AudioEngine.dispose();scene?.traverse(object=>{object.geometry?.dispose();const materials=Array.isArray(object.material)?object.material:[object.material];for(const material of materials){if(!material)continue;for(const value of Object.values(material))if(value?.isTexture)value.dispose();material.dispose();}});renderer?.dispose();});
 
 addEventListener('message', event => {
   if (event.origin === location.origin && event.source === parent && event.data?.channel === 'squabblemon-scene' && event.data.type === 'ping' && sceneInitialized && renderer && !disposed && !renderer.getContext().isContextLost()) emit({type:'ready',gpuTier:quality.tier});

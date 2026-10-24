@@ -62,14 +62,19 @@ export function CardInspector({ card, onClose, bootstrap, variantId, initialPrev
   const alternatePreview = Boolean(formPreview && form?.cardId === sourceCard.id && form?.alternate);
   card = formPreview ? previewCardForm(sourceCard, alternatePreview) : sourceCard;
   const isInstance = 'instanceId' in card;
-  const panel = React.useRef<HTMLDivElement>(null);
-  // Escape transformed route containers while staying inside a native dialog's top layer.
-  const [portalHost] = React.useState(() => typeof document === 'undefined' ? null
-    : document.activeElement?.closest<HTMLDialogElement>('dialog[open]') ?? document.body);
-  React.useEffect(() => {
+  const panel = React.useRef<HTMLDialogElement>(null);
+  // A separate top-layer dialog escapes transformed/clipped parents, including
+  // an already-open pack or deck dialog. Closing leaves that parent intact.
+  const portalHost = typeof document === 'undefined' ? null : document.body;
+  React.useLayoutEffect(() => {
     const previous = document.activeElement as HTMLElement | null;
-    panel.current?.querySelector<HTMLButtonElement>('[data-testid=button-close-inspector]')?.focus({ preventScroll: true });
-    return () => { if (previous?.isConnected) previous.focus({ preventScroll: true }); };
+    const dialog = panel.current;
+    dialog?.showModal();
+    dialog?.querySelector<HTMLButtonElement>('[data-testid=button-close-inspector]')?.focus({ preventScroll: true });
+    return () => {
+      dialog?.close();
+      if (previous?.isConnected) previous.focus({ preventScroll: true });
+    };
   }, []);
   const instance = isInstance ? card as CardInstance : null;
   const isCovered = Boolean(instance && match?.timedEffects?.some((effect: any) => (effect.kind === 'church-protection' || effect.kind === 'salon-protection') && effect.targetInstanceId === instance.instanceId));
@@ -138,7 +143,7 @@ export function CardInspector({ card, onClose, bootstrap, variantId, initialPrev
   };
 
   const inspector = (
-    <div ref={panel} data-notification-id={initialPreviewVariant ? `style:${initialPreviewVariant}` : undefined} role="dialog" aria-modal="true" aria-label={card.name + (match ? ' battle details' : ' card details')} className={'card-inspector-shell bg-black/95 backdrop-blur-xl ' + (match ? 'battle-inspector' : 'collection-inspector fighter-resume world-decor-host')} onClick={onClose} onKeyDown={event => {
+    <dialog ref={panel} onCancel={event => { event.preventDefault(); event.stopPropagation(); onClose(); }} data-notification-id={initialPreviewVariant ? `style:${initialPreviewVariant}` : undefined} role="dialog" aria-modal="true" aria-label={card.name + (match ? ' battle details' : ' card details')} className={'card-inspector-shell bg-black/95 backdrop-blur-xl ' + (match ? 'battle-inspector' : 'collection-inspector fighter-resume world-decor-host')} onClick={onClose} onKeyDown={event => {
       if (event.key === 'Escape') { event.preventDefault(); event.stopPropagation(); onClose(); }
       if (event.key === 'Tab') {
         const elements = [...(panel.current?.querySelectorAll<HTMLElement>('button:not(:disabled),a[href],[tabindex="0"]') ?? [])].filter(element => element.getClientRects().length > 0);
@@ -152,7 +157,7 @@ export function CardInspector({ card, onClose, bootstrap, variantId, initialPrev
       <button type="button" className="card-inspector-close" data-testid="button-close-inspector" aria-label="Close card details" onClick={event => { event.stopPropagation(); onClose(); }}><X size={22} aria-hidden="true" /><span>{match ? 'Back to battle' : 'Close details'}</span></button>
       <div className="card-inspector-scroll">
       {isSummon ? <SummonDetails card={card} match={match} /> : <motion.div
-        initial={{ opacity: 0, y: reduceMotion ? 0 : 20 }}
+        initial={reduceMotion ? false : { opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: reduceMotion ? 0 : -20 }}
         className="card-inspector-layout relative my-auto w-full max-w-5xl flex items-start"
@@ -178,7 +183,6 @@ export function CardInspector({ card, onClose, bootstrap, variantId, initialPrev
             {card.name}
             <em>{finishLabel}</em>
           </div>
-          <p className="card-touch-hint">Drag the card to catch the light</p>
           {!isBattleMode && isCardOwned && bootstrap && catalogCard && <KumiteFilmReplay cardId={catalogCard.catalogId} ownedCardIds={bootstrap.profile.ownedCardIds} />}
           <div className="collector-display-caption sr-only">
             <span>{catalogCard ? CARD_FINISH[catalogCard.rarity] : 'Collector edition'}</span>
@@ -192,7 +196,6 @@ export function CardInspector({ card, onClose, bootstrap, variantId, initialPrev
               <button type="button" aria-pressed={!displayedVariant} onClick={() => setPreview({cardId: sourceCard.id, variant: null})}>Original</button>
               {variantSlots.map((slot: any) => <button type="button" key={slot.id} data-finish={getVariantKind(slot.id)} aria-pressed={displayedVariant === slot.id} onClick={() => setPreview({cardId: sourceCard.id, variant: slot.id})}>{slot.name}</button>)}
             </nav>
-            <small>Touch or hover to catch the light. Arrow keys work too.</small>
           </div>}
         </div>
 
@@ -450,7 +453,7 @@ export function CardInspector({ card, onClose, bootstrap, variantId, initialPrev
         </div>
       </motion.div>}
       </div>
-    </div>
+    </dialog>
   );
   return portalHost ? createPortal(inspector, portalHost) : inspector;
 }

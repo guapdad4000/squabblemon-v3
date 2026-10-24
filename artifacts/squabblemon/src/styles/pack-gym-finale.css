@@ -1,0 +1,33 @@
+.pack-gym-finale{position:fixed;inset:0;z-index:10000;width:100%;height:100dvh;overflow:hidden;isolation:isolate;pointer-events:auto;touch-action:none;contain:layout style paint}
+.pack-gym-finale__beat,.pack-gym-finale__distance,.pack-gym-finale__foreground,.pack-gym-finale__film{position:absolute;inset:0;width:100%;height:100%;opacity:0;transform-origin:50% 50%}
+/* The opening cels cover the viewport; the following real 3D launch stays uncovered for 900ms. */
+.pack-gym-finale__beat::before,.pack-gym-finale__distance::before{content:"";position:absolute;inset:0;z-index:-1;background:radial-gradient(ellipse at 50% 44%,#fff9dfd9 0%,#f6d58d66 16%,#f6d58d00 58%);pointer-events:none}
+.pack-gym-finale__beat>img,.pack-gym-finale__distance>img,.pack-gym-finale__foreground,.pack-gym-finale__film>img,.pack-gym-finale__film>video{display:block;width:100%;height:100%;object-fit:cover;object-position:50% 50%}
+.pack-gym-finale[data-stage=compression] .pack-gym-finale__compression,.pack-gym-finale[data-stage=contact] .pack-gym-finale__contact,.pack-gym-finale[data-stage=release] .pack-gym-finale__release{opacity:1;transform:none}
+.pack-gym-finale__film{background:#101813;overflow:hidden}
+.pack-gym-finale__film>img,.pack-gym-finale__film>video{position:absolute;inset:0}
+.pack-gym-finale__film>video{opacity:0}
+.pack-gym-finale__film[data-video-state=playing]>video{opacity:1}
+.pack-gym-finale__film[data-video-state=playing]>img{opacity:0}
+.pack-gym-finale[data-stage=flight-pov] [data-film=pov],.pack-gym-finale[data-stage=impact] [data-film=landing]{opacity:1}
+/* On unsupported or delayed playback the selected POV remains visible, without replaying an expired shot. */
+.pack-gym-finale[data-stage=flight-pov] .pack-gym-finale__film-poster{animation:pack-gym-poster-travel calc(1400ms / var(--finale-speed)) linear both;transform-origin:50% 100%}
+.pack-gym-finale__skip{position:absolute;z-index:5;right:max(18px,env(safe-area-inset-right));bottom:max(18px,env(safe-area-inset-bottom));min-width:76px;min-height:44px;padding:8px 13px;border:1px solid #fff7;border-radius:4px;background:#0d110edb;color:#fff;font:700 12px var(--font-mono,monospace);letter-spacing:.04em;cursor:pointer}
+.pack-gym-finale__skip>span{padding-left:8px;font-size:20px;line-height:1}
+.pack-gym-finale__skip:focus-visible{outline:3px solid #fff;outline-offset:3px}
+.pack-gym-finale__foreground{mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent),linear-gradient(transparent,#000 10%,#000 90%,transparent);mask-composite:intersect}
+.pack-gym-finale[data-stage=impact] .pack-gym-finale__foreground{animation:pack-gym-burst-depth calc(330ms / var(--finale-speed)) calc(120ms / var(--finale-speed)) cubic-bezier(.2,.65,.35,1) both}
+/* The film's final 150ms blends to this exact still and crop, shared by the card reveal. */
+.pack-gym-finale:is([data-stage=settle],[data-stage=done]) .pack-gym-finale__distance{opacity:1;transform:none}
+.pack-gym-finale[data-paused=true] *{animation-play-state:paused!important}
+.pack-gym-finale[data-reduced-motion=true] :is(.pack-gym-finale__beat,.pack-gym-finale__foreground,.pack-gym-finale__film){display:none}
+.pack-gym-finale[data-reduced-motion=true][data-stage] .pack-gym-finale__distance{animation:none!important;opacity:1;transform:none}
+@keyframes pack-gym-poster-travel{from{transform:scale(1)}to{transform:scale(1.06)}}
+@keyframes pack-gym-burst-depth{0%{opacity:0;transform:scale(1.12)}10%,22%{opacity:1;transform:scale(1.12)}76%{opacity:.45;transform:scale(.42)}to{opacity:0;transform:scale(.24)}}
+@media(prefers-reduced-motion:reduce){.pack-gym-finale__beat,.pack-gym-finale__foreground,.pack-gym-finale__film{display:none}.pack-gym-finale__distance{animation:none!important;opacity:1!important;transform:none!important}}
+@media(max-aspect-ratio:3/4){.pack-gym-finale__release>img{object-position:30% 50%}}
+/* Preparing the selected receipt never covers or intercepts the live gym. */
+.pack-gym-finale[data-active=false]{pointer-events:none}
+.pack-gym-finale[data-active=false] :is(.pack-gym-finale__beat,.pack-gym-finale__distance,.pack-gym-finale__foreground,.pack-gym-finale__film){opacity:0!important;animation:none!important}
+/* Portrait framing keeps the source's left energy plume and attached lower cap in shot. */
+@media(max-aspect-ratio:3/4){.pack-gym-finale__film[data-film=pov]>img,.pack-gym-finale__film[data-film=pov]>video{object-position:30% 50%}}

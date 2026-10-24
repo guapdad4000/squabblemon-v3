@@ -12,7 +12,14 @@ export type RankedStats = {
   draws: number; botWins: number; games: number; streak: number; bestPoints: number;
 };
 export type RankReward = { tier: string; softCurrency: number; packTickets: number; styleShards: number };
-export type RankedResult = { before: number; after: number; delta: number; tier: string; outcome: 'win' | 'loss' | 'draw'; bot: boolean; rewards?: RankReward[] };
+export const RANKED_MATCH_CLOUT_LIMIT = 5;
+export const RANKED_MATCH_CLOUT = { win: 50, draw: 20, loss: 10 } as const;
+export type RankedMatchClout = {
+  receiptId: string; date: string; softCurrency: number;
+  status: 'saved' | 'daily-limit' | 'ineligible'; dailyLimit: number;
+  paidMatchesToday?: number; resetsAt: string; exclusion?: 'bot' | 'not-full-match';
+};
+export type RankedResult = { before: number; after: number; delta: number; tier: string; outcome: 'win' | 'loss' | 'draw'; bot: boolean; rewards?: RankReward[]; matchClout?: RankedMatchClout };
 /** Season milestones are paid once, including skipped tiers. Demotion cannot farm them. */
 export function rankMilestoneRewards(beforeBest: number, after: number): RankReward[] {
   return RANK_TIERS.flatMap((tier, index) => index > 0 && beforeBest < tier.floor && after >= tier.floor

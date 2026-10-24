@@ -48,7 +48,9 @@ const click = (source: HTMLElement) => source.dispatchEvent(new MouseEvent('clic
 async function closeDetails() {
   const button = document.querySelector<HTMLElement>('[data-testid=button-close-inspector]') ?? [...document.querySelectorAll('button')].find(button => button.textContent === 'Back to battle');
   check(button,'Close control exists');
-  pointerId++; pointer(button!,'pointerdown','mouse'); pointer(button!,'pointerup','mouse'); click(button!); await pause();
+  pointerId++; pointer(button!,'pointerdown','mouse'); pointer(button!,'pointerup','mouse'); click(button!);
+  // PvP owns AnimatePresence: wait for its real exit, not a 35ms synchronous assumption.
+  for (let i=0; i<30 && document.querySelector('[role=dialog]'); i++) await pause(35);
   check(!document.querySelector('[role=dialog]'),'Details close normally after release');
 }
 function Fixture() {
@@ -59,14 +61,17 @@ function Fixture() {
     try {
       for (const view of ['deck','solo','waiting','online']) {
         setMode(view); setRun(value=>value+1); await pause(150);
-        const selector = view === 'deck' ? '[data-testid=deck-roster-grid] button[aria-label^="Replace"]' : view === 'online' ? '[data-testid=online-hand] [data-card-id]' : '[data-testid=hand-tray] [data-card-id]';
+        // PvP now shares the same hand component and its real versus arrival.
+        const arrival = document.querySelector<HTMLElement>('[data-testid=match-arrival]');
+        if (arrival) { click(arrival); await pause(60); }
+        const selector = view === 'deck' ? '[data-testid=deck-roster-grid] button[data-guide-slot]' : '[data-testid=hand-tray] [data-card-id]';
         const card = find(selector); card.scrollIntoView({block:'nearest'}); await pause(60);
         for (const kind of ['mouse','touch','pen']) {
           pointerId++; pointer(card,'pointerdown',kind); await pause(CARD_HOLD_MS+60); await waitForDialog();
           check(document.querySelector('[role=dialog]'),`${view}/${kind}: hold opens details`);
           check(card.getAttribute('aria-pressed') !== 'true',`${view}/${kind}: hold did not select`);
           pointer(card,'pointerup',kind);
-          click(find('[role=dialog]')); await pause();
+          click(find('[role=dialog]')); await pause(view === 'online' ? 400 : 35);
           check(document.querySelector('[role=dialog]'),`${view}/${kind}: release did not dismiss dialog`);
           check(!document.querySelector('[data-testid=battle-drag-preview]'),`${view}/${kind}: no drag remains`);
           await closeDetails(); pass(`${view}: ${kind} hold inspects without selecting or releasing into an action`);
@@ -103,7 +108,7 @@ function Fixture() {
       }
       // An owned recruit in the lineup must not be swapped in by a hold.
       setMode('deck'); setRun(value=>value+1); await pause(150);
-      const slot=find('[data-testid=deck-roster-grid] button[aria-label^="Replace"]'); click(slot); await pause();
+      const slot=find('[data-testid=deck-roster-grid] button[data-guide-slot]'); click(slot); await pause();
       const before=find('[data-testid=deck-roster-grid]').textContent;
       const recruit=find('[data-testid=deck-collection-grid] button[aria-label^="Add"]'); recruit.scrollIntoView({block:'center'}); await pause(60);
       pointerId++; pointer(recruit,'pointerdown','touch'); await pause(CARD_HOLD_MS+60); await waitForDialog(); check(document.querySelector('[role=dialog]'),'Recruit details opened');

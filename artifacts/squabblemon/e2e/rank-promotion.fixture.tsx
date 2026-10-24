@@ -26,6 +26,15 @@ export const scenarios: Record<string, Scenario> = {
   'promotion-no-gift': { ranked: true, outcome: 'win', rank: rank(75, 100, 'win', []) },
   'promotion-silver': { ranked: true, outcome: 'win', rank: rank(295, 320, 'win', rankMilestoneRewards(295, 320)) },
 };
+// Match payouts are server-receipt props; these fixtures deliberately include
+// capped/ineligible responses and keep milestone gifts separate.
+const receipt = { receiptId: 'ranked-clout:fixture-room:1:player', date: '2026-10-24', softCurrency: 50, status: 'saved' as const, dailyLimit: 5, paidMatchesToday: 3, resetsAt: '2026-10-25T00:00:00.000Z' };
+scenarios['match-clout-win'] = { ranked: true, outcome: 'win', rank: { ...rank(25, 50, 'win'), matchClout: receipt } };
+scenarios['match-clout-draw'] = { ranked: true, outcome: 'draw', rank: { ...rank(25, 30, 'draw'), matchClout: { ...receipt, softCurrency: 20 } } };
+scenarios['match-clout-loss'] = { ranked: true, outcome: 'loss', rank: { ...rank(25, 10, 'loss'), matchClout: { ...receipt, softCurrency: 10 } } };
+scenarios['match-clout-cap'] = { ranked: true, outcome: 'win', rank: { ...rank(25, 50, 'win'), matchClout: { ...receipt, status: 'daily-limit', softCurrency: 0, paidMatchesToday: 5 } } };
+scenarios['match-clout-bot'] = { ranked: true, outcome: 'win', rank: { ...rank(25, 37, 'win'), bot: true, matchClout: { ...receipt, status: 'ineligible', softCurrency: 0, paidMatchesToday: undefined, exclusion: 'bot' } } };
+scenarios['match-clout-promotion'] = { ...scenarios['promotion-win'], rank: { ...scenarios['promotion-win'].rank!, matchClout: receipt } };
 type FixtureApi = { setScenario: (name: string, resultKey?: string) => void; remount: () => void; close: () => void; open: () => void };
 declare global { interface Window { rankPromotionFixture: FixtureApi } }
 

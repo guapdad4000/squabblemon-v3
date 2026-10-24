@@ -1,0 +1,11 @@
+.ranked-match-clout { display:flex; justify-content:center; align-items:center; gap:10px; margin:12px 0; padding:12px; border-block:1px solid #e5c17b55; color:#f2dfac; background:#112b22; text-align:left; }
+.ranked-match-clout > .game-glyph { width:42px; height:42px; flex:none; }
+.ranked-match-clout > div { display:grid; gap:4px; }
+.ranked-match-clout strong { font:700 23px/1.1 var(--font-action-sign,sans-serif); }
+.ranked-match-clout small { display:block; font:600 11px/1.4 var(--font-sans,sans-serif); }
+.ranked-match-clout[data-status="daily-limit"] strong { font-size:18px; }
+.ranked-match-clout[data-status="ineligible"] { border:0; background:none; padding:0 8px; color:inherit; }
+
+/* ParkResult intentionally enforces dark ink on its paper. Preserve that ink
+   and give the match receipt a light, opaque fill; promotion uses dark green. */
+.park-result--illustrated .ranked-match-clout:not([data-status="ineligible"]) { background:#e3ead7; border-color:#657a58; }

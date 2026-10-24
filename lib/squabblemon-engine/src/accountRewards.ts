@@ -1,3 +1,6 @@
+import type { CardRarity } from './data';
+import type { StyleShardRarity } from './styleShards';
+
 export type AccountReward = {
   softCurrency: number;
   packTickets: number;
@@ -29,6 +32,12 @@ export type AccountRewardGrant = AccountReward & {
   key: string;
   title: string;
   cardId?: string;
+  cardName?: string;
+  cardRarity?: CardRarity;
+  isNewCard?: boolean;
+  /** Matching shards from an exhausted monthly rarity pool; omitted means Universal. */
+  shardRarity?: StyleShardRarity;
+  monthlyDay?: number;
   streak?: number;
   date?: string;
 };
@@ -39,7 +48,52 @@ export type AccountRewardStatus = {
   nextResetAt: string;
   pending: AccountRewardGrant[];
   growth: GrowthLabStatus;
+  monthly: MonthlyLoginStatus;
 };
+/** Extra free gameplay cards; the existing seven-day currency track is unchanged. */
+export const MONTHLY_LOGIN_MILESTONES = [
+  { day: 1, rarity: 'SuperCommon', label: 'Super Common' },
+  { day: 5, rarity: 'Common', label: 'Common' },
+  { day: 10, rarity: 'Uncommon', label: 'Uncommon' },
+  { day: 15, rarity: 'Rare', label: 'Rare' },
+  { day: 20, rarity: 'Epic', label: 'Super Rare' },
+  { day: 25, rarity: 'Legendary', label: 'Legendary' },
+  { day: 30, rarity: 'Mythical', label: 'Mythical' },
+] as const satisfies readonly { day: number; rarity: CardRarity; label: string }[];
+export type MonthlyLoginStatus = {
+  month: string;
+  claimedDays: number;
+  requiredDays: number;
+  claimedToday: boolean;
+  nextResetAt: string;
+  milestones: {
+    key: string;
+    day: number;
+    rarity: CardRarity;
+    label: string;
+    /** Ready includes today's still-unclaimed check-in. */
+    ready: boolean;
+    reward: AccountRewardGrant | null;
+  }[];
+};
+/** Count distinct saved UTC check-ins, never browser dates or consecutive-day streaks. */
+export function monthlyLoginStatus(receipts: AccountRewardGrant[], now = new Date()): MonthlyLoginStatus {
+  const date = now.toISOString().slice(0, 10), month = date.slice(0, 7);
+  const nextMonth = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() + 1, 1));
+  const requiredDays = Math.min(30, new Date(nextMonth.getTime() - 86400000).getUTCDate());
+  const dates = new Set(receipts.filter(reward => reward.date && reward.key === `login:${reward.date}` && reward.date.startsWith(`${month}-`) && reward.date <= date).map(reward => reward.date!));
+  const claimedToday = dates.has(date), claimedDays = Math.min(requiredDays, dates.size);
+  const availableDays = Math.min(requiredDays, claimedDays + Number(!claimedToday));
+  return {
+    month, claimedDays, requiredDays, claimedToday, nextResetAt: nextMonth.toISOString(),
+    milestones: MONTHLY_LOGIN_MILESTONES.map(milestone => {
+      const key = `monthly-login:${month}:${milestone.rarity}`;
+      const day = Math.min(milestone.day, requiredDays);
+      const reward = receipts.find(receipt => receipt.key === key) ?? null;
+      return { ...milestone, key, day, ready: !reward && availableDays >= day, reward };
+    }),
+  };
+}
 export const GROWTH_GARDEN_SIZE = 7;
 export const GROWTH_GARDEN_REWARD: AccountReward = { softCurrency: 350, packTickets: 1, styleShards: 25 };
 export const GROWTH_TASKS = [
@@ -153,6 +207,14 @@ export function accountRewardStatus(
       });
   }
   if(growthLabStatus(receipts,missions,now,growthDaily).completedGardens>=GROWTH_BUDDY_CYCLES&&!keys.has('growth:buddy'))pending.push({key:'growth:buddy',title:'Buddy joins your crew',cardId:'buddy',softCurrency:0,packTickets:0,styleShards:0});
+  const monthly = monthlyLoginStatus(receipts, now);
+  for (const milestone of monthly.milestones) {
+    if (milestone.ready) pending.push({
+      key: milestone.key, title: `Monthly ${milestone.label} card`, date,
+      cardRarity: milestone.rarity, monthlyDay: milestone.day,
+      softCurrency: 0, packTickets: 0, styleShards: 0,
+    });
+  }
   const nextResetAt = new Date(`${date}T00:00:00Z`);
   nextResetAt.setUTCDate(nextResetAt.getUTCDate() + 1);
   return {
@@ -161,6 +223,7 @@ export function accountRewardStatus(
     claimedToday,
     nextResetAt: nextResetAt.toISOString(),
     pending,
+    monthly,
     growth: growthLabStatus(receipts, missions, now,growthDaily),
   };
 }

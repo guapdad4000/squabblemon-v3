@@ -1565,6 +1565,13 @@ export const GetPlayerBootstrapResponse = zod.object({
   "isNew": zod.boolean(),
   "amount": zod.number()
 })),
+  "seasonRewards": zod.array(zod.object({
+  "seasonId": zod.string(),
+  "threshold": zod.number(),
+  "softCurrency": zod.number(),
+  "packTickets": zod.number(),
+  "styleShards": zod.number()
+})).optional(),
   "pityBefore": zod.number(),
   "pityAfter": zod.number(),
   "createdAt": zod.coerce.date()
@@ -1820,6 +1827,13 @@ export const GetPlayerStoryResponse = zod.object({
   "isNew": zod.boolean(),
   "amount": zod.number()
 })),
+  "seasonRewards": zod.array(zod.object({
+  "seasonId": zod.string(),
+  "threshold": zod.number(),
+  "softCurrency": zod.number(),
+  "packTickets": zod.number(),
+  "styleShards": zod.number()
+})).optional(),
   "pityBefore": zod.number(),
   "pityAfter": zod.number(),
   "createdAt": zod.coerce.date()
@@ -2085,6 +2099,13 @@ export const ResetPlayerStoryDevelopmentResponse = zod.object({
   "isNew": zod.boolean(),
   "amount": zod.number()
 })),
+  "seasonRewards": zod.array(zod.object({
+  "seasonId": zod.string(),
+  "threshold": zod.number(),
+  "softCurrency": zod.number(),
+  "packTickets": zod.number(),
+  "styleShards": zod.number()
+})).optional(),
   "pityBefore": zod.number(),
   "pityAfter": zod.number(),
   "createdAt": zod.coerce.date()
@@ -2401,6 +2422,13 @@ export const CompletePlayerStoryNodeResponse = zod.object({
   "isNew": zod.boolean(),
   "amount": zod.number()
 })),
+  "seasonRewards": zod.array(zod.object({
+  "seasonId": zod.string(),
+  "threshold": zod.number(),
+  "softCurrency": zod.number(),
+  "packTickets": zod.number(),
+  "styleShards": zod.number()
+})).optional(),
   "pityBefore": zod.number(),
   "pityAfter": zod.number(),
   "createdAt": zod.coerce.date()
@@ -2544,6 +2572,13 @@ export const CompletePlayerStoryNodeResponse = zod.object({
   "isNew": zod.boolean(),
   "amount": zod.number()
 })),
+  "seasonRewards": zod.array(zod.object({
+  "seasonId": zod.string(),
+  "threshold": zod.number(),
+  "softCurrency": zod.number(),
+  "packTickets": zod.number(),
+  "styleShards": zod.number()
+})).optional(),
   "pityBefore": zod.number(),
   "pityAfter": zod.number(),
   "createdAt": zod.coerce.date()
@@ -2869,6 +2904,13 @@ export const CompletePlayerStoryPuzzleResponse = zod.object({
   "isNew": zod.boolean(),
   "amount": zod.number()
 })),
+  "seasonRewards": zod.array(zod.object({
+  "seasonId": zod.string(),
+  "threshold": zod.number(),
+  "softCurrency": zod.number(),
+  "packTickets": zod.number(),
+  "styleShards": zod.number()
+})).optional(),
   "pityBefore": zod.number(),
   "pityAfter": zod.number(),
   "createdAt": zod.coerce.date()
@@ -3012,6 +3054,13 @@ export const CompletePlayerStoryPuzzleResponse = zod.object({
   "isNew": zod.boolean(),
   "amount": zod.number()
 })),
+  "seasonRewards": zod.array(zod.object({
+  "seasonId": zod.string(),
+  "threshold": zod.number(),
+  "softCurrency": zod.number(),
+  "packTickets": zod.number(),
+  "styleShards": zod.number()
+})).optional(),
   "pityBefore": zod.number(),
   "pityAfter": zod.number(),
   "createdAt": zod.coerce.date()
@@ -3337,6 +3386,13 @@ export const SavePlayerStoryDialogueResponse = zod.object({
   "isNew": zod.boolean(),
   "amount": zod.number()
 })),
+  "seasonRewards": zod.array(zod.object({
+  "seasonId": zod.string(),
+  "threshold": zod.number(),
+  "softCurrency": zod.number(),
+  "packTickets": zod.number(),
+  "styleShards": zod.number()
+})).optional(),
   "pityBefore": zod.number(),
   "pityAfter": zod.number(),
   "createdAt": zod.coerce.date()
@@ -3480,6 +3536,13 @@ export const SavePlayerStoryDialogueResponse = zod.object({
   "isNew": zod.boolean(),
   "amount": zod.number()
 })),
+  "seasonRewards": zod.array(zod.object({
+  "seasonId": zod.string(),
+  "threshold": zod.number(),
+  "softCurrency": zod.number(),
+  "packTickets": zod.number(),
+  "styleShards": zod.number()
+})).optional(),
   "pityBefore": zod.number(),
   "pityAfter": zod.number(),
   "createdAt": zod.coerce.date()
@@ -3709,6 +3772,13 @@ export const UpdatePlayerProfileResponse = zod.object({
   "isNew": zod.boolean(),
   "amount": zod.number()
 })),
+  "seasonRewards": zod.array(zod.object({
+  "seasonId": zod.string(),
+  "threshold": zod.number(),
+  "softCurrency": zod.number(),
+  "packTickets": zod.number(),
+  "styleShards": zod.number()
+})).optional(),
   "pityBefore": zod.number(),
   "pityAfter": zod.number(),
   "createdAt": zod.coerce.date()
@@ -3907,6 +3977,13 @@ export const AdvancePlayerOnboardingResponse = zod.object({
   "isNew": zod.boolean(),
   "amount": zod.number()
 })),
+  "seasonRewards": zod.array(zod.object({
+  "seasonId": zod.string(),
+  "threshold": zod.number(),
+  "softCurrency": zod.number(),
+  "packTickets": zod.number(),
+  "styleShards": zod.number()
+})).optional(),
   "pityBefore": zod.number(),
   "pityAfter": zod.number(),
   "createdAt": zod.coerce.date()
@@ -4098,6 +4175,13 @@ export const ClaimExperimentCardResponse = zod.object({
   "isNew": zod.boolean(),
   "amount": zod.number()
 })),
+  "seasonRewards": zod.array(zod.object({
+  "seasonId": zod.string(),
+  "threshold": zod.number(),
+  "softCurrency": zod.number(),
+  "packTickets": zod.number(),
+  "styleShards": zod.number()
+})).optional(),
   "pityBefore": zod.number(),
   "pityAfter": zod.number(),
   "createdAt": zod.coerce.date()
@@ -4416,6 +4500,13 @@ export const CompletePlayerMatchResponse = zod.object({
   "isNew": zod.boolean(),
   "amount": zod.number()
 })),
+  "seasonRewards": zod.array(zod.object({
+  "seasonId": zod.string(),
+  "threshold": zod.number(),
+  "softCurrency": zod.number(),
+  "packTickets": zod.number(),
+  "styleShards": zod.number()
+})).optional(),
   "pityBefore": zod.number(),
   "pityAfter": zod.number(),
   "createdAt": zod.coerce.date()
@@ -4621,6 +4712,13 @@ export const CompletePlayerMatchResponse = zod.object({
   "isNew": zod.boolean(),
   "amount": zod.number()
 })),
+  "seasonRewards": zod.array(zod.object({
+  "seasonId": zod.string(),
+  "threshold": zod.number(),
+  "softCurrency": zod.number(),
+  "packTickets": zod.number(),
+  "styleShards": zod.number()
+})).optional(),
   "pityBefore": zod.number(),
   "pityAfter": zod.number(),
   "createdAt": zod.coerce.date()
@@ -4843,6 +4941,13 @@ export const SavePlayerDeckResponse = zod.object({
   "isNew": zod.boolean(),
   "amount": zod.number()
 })),
+  "seasonRewards": zod.array(zod.object({
+  "seasonId": zod.string(),
+  "threshold": zod.number(),
+  "softCurrency": zod.number(),
+  "packTickets": zod.number(),
+  "styleShards": zod.number()
+})).optional(),
   "pityBefore": zod.number(),
   "pityAfter": zod.number(),
   "createdAt": zod.coerce.date()
@@ -5035,6 +5140,13 @@ export const DeletePlayerDeckResponse = zod.object({
   "isNew": zod.boolean(),
   "amount": zod.number()
 })),
+  "seasonRewards": zod.array(zod.object({
+  "seasonId": zod.string(),
+  "threshold": zod.number(),
+  "softCurrency": zod.number(),
+  "packTickets": zod.number(),
+  "styleShards": zod.number()
+})).optional(),
   "pityBefore": zod.number(),
   "pityAfter": zod.number(),
   "createdAt": zod.coerce.date()
@@ -5103,6 +5215,8 @@ export const DeletePlayerDeckResponse = zod.object({
 export const openPlayerPackBodyIdempotencyKeyMin = 8;
 export const openPlayerPackBodyIdempotencyKeyMax = 80;
 
+export const openPlayerPackBodyBannerOccurrenceIdMax = 80;
+
 export const openPlayerPackBodyPullCountMax = 10;
 
 
@@ -5110,8 +5224,9 @@ export const openPlayerPackBodyPullCountMax = 10;
 export const OpenPlayerPackBody = zod.object({
   "idempotencyKey": zod.string().min(openPlayerPackBodyIdempotencyKeyMin).max(openPlayerPackBodyIdempotencyKeyMax),
   "bannerId": zod.string().optional().describe('Selected active pull banner. Defaults to standard.'),
+  "bannerOccurrenceId": zod.string().max(openPlayerPackBodyBannerOccurrenceIdMax).optional().describe('Exact weekly occurrence selected by the client. Stale unpaid requests are rejected; completed idempotent retries recover their original receipt.'),
   "paymentMethod": zod.enum(['ticket', 'softCurrency']),
-  "pullCount": zod.number().min(1).max(openPlayerPackBodyPullCountMax).optional().describe('Number of packs to open. Defaults to 1; 10 unlocks the upgraded ten-pull experience.')
+  "pullCount": zod.number().min(1).max(openPlayerPackBodyPullCountMax).optional().describe('Number of packs to open. Defaults to 1. Batches of 2–9 cost the single-pack price per pack; only 10 receives the ten-pull discount and Rare-or-better guarantee.')
 })
 
 export const openPlayerPackResponseBootstrapProfileStyleShardBalancesCommonMin = 0;
@@ -5233,6 +5348,13 @@ export const OpenPlayerPackResponse = zod.object({
   "isNew": zod.boolean(),
   "amount": zod.number()
 })),
+  "seasonRewards": zod.array(zod.object({
+  "seasonId": zod.string(),
+  "threshold": zod.number(),
+  "softCurrency": zod.number(),
+  "packTickets": zod.number(),
+  "styleShards": zod.number()
+})).optional(),
   "pityBefore": zod.number(),
   "pityAfter": zod.number(),
   "createdAt": zod.coerce.date()
@@ -5309,10 +5431,33 @@ export const OpenPlayerPackResponse = zod.object({
   "isNew": zod.boolean(),
   "amount": zod.number()
 })),
+  "seasonRewards": zod.array(zod.object({
+  "seasonId": zod.string(),
+  "threshold": zod.number(),
+  "softCurrency": zod.number(),
+  "packTickets": zod.number(),
+  "styleShards": zod.number()
+})).optional(),
   "pityBefore": zod.number(),
   "pityAfter": zod.number(),
   "createdAt": zod.coerce.date()
 }),
+  "pullSeason": zod.object({
+  "id": zod.string(),
+  "name": zod.string(),
+  "startsAt": zod.string(),
+  "endsAt": zod.string(),
+  "count": zod.number(),
+  "milestones": zod.array(zod.object({
+  "seasonId": zod.string(),
+  "threshold": zod.number(),
+  "softCurrency": zod.number(),
+  "packTickets": zod.number(),
+  "styleShards": zod.number()
+}).and(zod.object({
+  "claimed": zod.boolean()
+})))
+}).optional(),
   "alreadyOpened": zod.boolean()
 })
 
@@ -5450,6 +5595,13 @@ export const CraftPlayerVariantResponse = zod.object({
   "isNew": zod.boolean(),
   "amount": zod.number()
 })),
+  "seasonRewards": zod.array(zod.object({
+  "seasonId": zod.string(),
+  "threshold": zod.number(),
+  "softCurrency": zod.number(),
+  "packTickets": zod.number(),
+  "styleShards": zod.number()
+})).optional(),
   "pityBefore": zod.number(),
   "pityAfter": zod.number(),
   "createdAt": zod.coerce.date()
@@ -5646,6 +5798,13 @@ export const EquipPlayerVariantResponse = zod.object({
   "isNew": zod.boolean(),
   "amount": zod.number()
 })),
+  "seasonRewards": zod.array(zod.object({
+  "seasonId": zod.string(),
+  "threshold": zod.number(),
+  "softCurrency": zod.number(),
+  "packTickets": zod.number(),
+  "styleShards": zod.number()
+})).optional(),
   "pityBefore": zod.number(),
   "pityAfter": zod.number(),
   "createdAt": zod.coerce.date()
@@ -5839,6 +5998,13 @@ export const ClaimCollectionRoadMilestoneResponse = zod.object({
   "isNew": zod.boolean(),
   "amount": zod.number()
 })),
+  "seasonRewards": zod.array(zod.object({
+  "seasonId": zod.string(),
+  "threshold": zod.number(),
+  "softCurrency": zod.number(),
+  "packTickets": zod.number(),
+  "styleShards": zod.number()
+})).optional(),
   "pityBefore": zod.number(),
   "pityAfter": zod.number(),
   "createdAt": zod.coerce.date()
@@ -6035,6 +6201,13 @@ export const ClaimPlayerMissionResponse = zod.object({
   "isNew": zod.boolean(),
   "amount": zod.number()
 })),
+  "seasonRewards": zod.array(zod.object({
+  "seasonId": zod.string(),
+  "threshold": zod.number(),
+  "softCurrency": zod.number(),
+  "packTickets": zod.number(),
+  "styleShards": zod.number()
+})).optional(),
   "pityBefore": zod.number(),
   "pityAfter": zod.number(),
   "createdAt": zod.coerce.date()
@@ -6236,6 +6409,13 @@ export const EquipPlayerCosmeticsResponse = zod.object({
   "isNew": zod.boolean(),
   "amount": zod.number()
 })),
+  "seasonRewards": zod.array(zod.object({
+  "seasonId": zod.string(),
+  "threshold": zod.number(),
+  "softCurrency": zod.number(),
+  "packTickets": zod.number(),
+  "styleShards": zod.number()
+})).optional(),
   "pityBefore": zod.number(),
   "pityAfter": zod.number(),
   "createdAt": zod.coerce.date()
@@ -6445,6 +6625,13 @@ export const PurchasePlayerShopItemResponse = zod.object({
   "isNew": zod.boolean(),
   "amount": zod.number()
 })),
+  "seasonRewards": zod.array(zod.object({
+  "seasonId": zod.string(),
+  "threshold": zod.number(),
+  "softCurrency": zod.number(),
+  "packTickets": zod.number(),
+  "styleShards": zod.number()
+})).optional(),
   "pityBefore": zod.number(),
   "pityAfter": zod.number(),
   "createdAt": zod.coerce.date()
@@ -6652,6 +6839,13 @@ export const RedeemPlayerPromoCodeResponse = zod.object({
   "isNew": zod.boolean(),
   "amount": zod.number()
 })),
+  "seasonRewards": zod.array(zod.object({
+  "seasonId": zod.string(),
+  "threshold": zod.number(),
+  "softCurrency": zod.number(),
+  "packTickets": zod.number(),
+  "styleShards": zod.number()
+})).optional(),
   "pityBefore": zod.number(),
   "pityAfter": zod.number(),
   "createdAt": zod.coerce.date()

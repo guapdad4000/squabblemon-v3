@@ -1,0 +1,41 @@
+/* Local adapters preserve receipt artwork, scrolling and choreography. */
+.reward-reveal.game-popup .game-popup__title { font-family:var(--popup-font-title); font-weight:700; font-style:normal; font-synthesis:none; line-height:1.08; letter-spacing:-.025em; color:var(--popup-ink); }
+.reward-reveal.game-popup .game-popup__copy { color:var(--popup-muted); font:500 14px/1.5 var(--popup-font-body); }
+.reward-reveal.game-popup .game-popup__amount { color:#254b32; font-family:var(--popup-font-amount); font-weight:700; font-style:normal; font-synthesis:none; }
+.reward-reveal.game-popup .reward-reveal__stage { background:none; gap:24px; }
+.reward-reveal.game-popup .reward-reveal__backdrop { opacity:.25; }
+.reward-reveal.game-popup .reward-reveal__receipt.reward-street-file__paper { background:repeating-linear-gradient(0deg,transparent 0 27px,#846a2820 28px 29px),linear-gradient(110deg,#f1e2bded,#e3c98fde),var(--reward-file-folder) center / 100% 100%,var(--popup-paper); border:1px solid #9e7c48; border-top:5px solid var(--popup-stamp); border-radius:0; box-shadow:4px 5px 0 #0006; }
+.reward-reveal.game-popup .reward-street-file__loot { flex-wrap:wrap; }
+.reward-reveal.game-popup .reward-street-file__loot > div { background:#f6edcf; padding:14px 8px 10px; border:1px solid #aa9466; box-shadow:2px 3px 0 #5940214d; rotate:-2deg; }
+.reward-reveal.game-popup .reward-street-file__loot > div:nth-child(even) { rotate:2deg; }
+.reward-reveal.game-popup .reward-street-file__loot > div > span { color:#57452e; font:700 12px/1.35 var(--popup-font-body); }
+/* Keep supplied collectible art uncropped and at its existing readable size. */
+.reward-reveal.game-popup .reward-reveal__flip img { width:110px; height:145px; object-fit:contain; }
+.reward-reveal.game-popup .reward-reveal__flip .game-glyph { width:88px; height:88px; --glyph-size:88px; }
+.reward-reveal.game-popup .reward-reveal__flip .depth-reveal__turn { min-width:0; }
+.reward-reveal.game-popup .reward-reveal__flip .game-glyph > img { width:100%; height:100%; }
+.reward-reveal.game-popup .reward-reveal__story-heading .game-popup__title { color:#fff3d3; }
+.reward-reveal.game-popup .reward-reveal__story-heading .game-popup__label { color:#f1d293; font-family:var(--popup-font-label); font-weight:700; }
+.reward-reveal.game-popup .reward-reveal__story-heading .game-popup__copy { color:#ccdac6; font:700 11px/1.5 var(--popup-font-label); }
+.reward-reveal.game-popup .reward-reveal__token-origin { font-family:var(--popup-font-amount); font-weight:700; }
+.reward-reveal.game-popup .reward-reveal__wallet .game-popup__amount { color:#ffe0a0; }
+.reward-reveal.game-popup .reward-reveal__story-content.reward-street-file__paper { margin:16px; padding:22px; }
+.reward-reveal.game-popup .reward-reveal__story-section { color:var(--popup-stamp); font-family:var(--popup-font-label); font-weight:700; }
+.reward-reveal.game-popup .reward-reveal__story-section small { color:var(--popup-muted); }
+.reward-reveal.game-popup .reward-reveal__story-item-copy span { color:var(--popup-ink); font-family:var(--popup-font-body); }
+.reward-reveal.game-popup .reward-reveal__story-item-art img { width:100%; height:100%; object-fit:contain; }
+.reward-reveal.game-popup .reward-reveal__story-item-art .game-glyph { width:84px; height:84px; --glyph-size:84px; }
+.reward-reveal.game-popup .reward-reveal__story-footer .reward-street-file__action { width:auto; min-width:170px; min-height:44px; margin:0; color:#fff9e6; background:var(--popup-rim); font:700 15px/1.2 var(--popup-font-amount); }
+@media(max-width:639px) {
+ .reward-reveal.game-popup .reward-reveal__stage { gap:10px; }
+ .reward-reveal.game-popup .reward-reveal__receipt.reward-street-file__paper { padding:18px 12px; }
+ .reward-reveal.game-popup .game-popup__title { font-size:clamp(26px,7vw,38px); margin:12px 0 20px; }
+ .reward-reveal.game-popup .reward-reveal__flip .game-glyph { width:64px; height:64px; --glyph-size:64px; }
+ .reward-reveal.game-popup .reward-reveal__story-content.reward-street-file__paper { margin:12px; padding:18px 12px; }
+ .reward-reveal.game-popup .reward-reveal__story-item-art .game-glyph { width:76px; height:76px; --glyph-size:76px; }
+ .reward-reveal.game-popup .reward-reveal__story-footer { flex-wrap:wrap; padding-inline:16px; }
+ .reward-reveal.game-popup .reward-reveal__story-footer .reward-street-file__action { flex:1; }
+}
+/* AnimatedNumber's nested spans must inherit the amount role, not item-label styling. */
+.reward-reveal.game-popup .game-popup__amount .animated-number,
+.reward-reveal.game-popup .game-popup__amount .animated-number span { font:inherit; color:inherit; letter-spacing:inherit; }

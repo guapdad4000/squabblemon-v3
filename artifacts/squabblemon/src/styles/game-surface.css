@@ -1,0 +1,21 @@
+/* Mounted only during game/practice. Portalled details share the same policy. */
+html[data-game-surface=active], html[data-game-surface=active] body {
+  max-width:100%; overflow-x:clip; overscroll-behavior-x:none;
+}
+html[data-game-surface=active] body {
+  -webkit-user-select:none; user-select:none; -webkit-touch-callout:none; cursor:default;
+}
+html[data-game-surface=active] :where(img,svg,canvas,video) {
+  -webkit-user-drag:none; -webkit-touch-callout:none;
+}
+html[data-game-surface=active] :where(input,textarea,[contenteditable]:not([contenteditable=false]),[role=textbox]) {
+  -webkit-user-select:text; user-select:text; -webkit-touch-callout:default; cursor:text;
+}
+html[data-game-surface=active] :where(select,[data-native-selection],.ff-code strong,.fa-session__code strong,.online-room-code strong,.sq-code) {
+  -webkit-user-select:all; user-select:all; -webkit-touch-callout:default;
+}
+html[data-game-surface=active] :where(a[href],button,[role=button],select,summary,label[for],input[type=checkbox],input[type=radio],input[type=range]) { cursor:pointer; }
+html[data-game-surface=active] .game-shell { min-width:0; max-width:100%; overflow-x:clip; }
+html[data-game-surface=active] :is(.game-route-stage,.immersive-shell) {
+  min-width:0; max-width:100%; overflow-x:hidden; overflow-y:auto; overscroll-behavior-x:none;
+}

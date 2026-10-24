@@ -39,3 +39,11 @@
 .collection-card-grid > [data-notification-focus="true"] { position: relative; z-index: 2; }
 
 .notification-inbox { position:fixed; inset:64px 12px auto auto; margin:0; max-height:calc(100dvh - 90px); z-index:1000; box-shadow:0 16px 45px #0009; }
+
+/* The announcement inbox shares popup lettering while keeping its existing dark surface. */
+.notification-inbox.game-popup { --popup-ink:#f5dfb2; --popup-muted:#c6c3b6; --popup-stamp:#d5bb83; font-family:var(--popup-font-body); }
+.notification-inbox.game-popup .game-popup__title { margin:4px 0 10px; font:700 26px/1.12 var(--popup-font-title); color:var(--popup-ink); }
+.notification-inbox.game-popup .game-popup__copy { margin:6px 0 12px; color:var(--popup-muted); font:500 13px/1.5 var(--popup-font-body); }
+.notification-inbox.game-popup .game-popup__close { position:static; flex:none; box-shadow:none; background:none; border:0; }
+.notification-inbox.game-popup .game-popup__secondary { margin:0; color:var(--popup-ink); background:none; border-radius:0; }
+.notification-inbox.game-popup .notification-item small { font-family:var(--popup-font-label); font-weight:700; }

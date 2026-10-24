@@ -1,0 +1,186 @@
+/* The market sign, shelf rail and register are physical store fixtures.
+   Their light is static: no ambient flicker, running blur or idle animation. */
+.corner-store .corner-store__scroll { max-width: 1260px; padding-top: 30px; }
+.corner-store > .corner-store__interior { position: fixed; inset: 0; z-index: -2; width: 100%; height: 100dvh; max-width: none; object-fit: cover; object-position: center; pointer-events: none; }
+.corner-store::after { background: linear-gradient(180deg,#04130d12,#04130d14 65%,#06110994); }
+.corner-store .corner-store__heading { position: relative; gap: 28px; min-height: 154px; padding: 14px 18px 22px; }
+.corner-store__hero-copy { position: relative; padding: 8px 20px 19px 0; }
+.corner-store .corner-store__heading h1 { position: relative; z-index: 1; font-size: clamp(46px,6.6vw,88px); letter-spacing: .025em; transform: rotate(-2deg); filter: drop-shadow(0 5px 2px #03110b); }
+.corner-store .corner-store__heading h1 > span { color: #e2fff0; -webkit-text-stroke: 1px #76e6ba; text-shadow: 0 0 3px #fff,0 0 9px #57edac,0 0 20px #16bb8077; }
+.corner-store .corner-store__heading h1 em { color: #ffe6d3; -webkit-text-stroke: 1px #ff846d; text-shadow: 0 0 3px #fff1dd,0 0 9px #ff5b48,0 0 22px #e6483777; }
+.corner-store__neon-rule { position: absolute; left: 0; right: 13px; bottom: 7px; height: 4px; border: 1px solid #9effce; background: #c8ffe2; border-radius: 5px; transform: rotate(-2deg); box-shadow: 0 0 7px #35ce8f,0 5px 18px #29a46866; }
+.corner-store__neon-rule::after { content: ''; position: absolute; top: 9px; left: 14px; right: -12px; height: 2px; background: #fb8673; box-shadow: 0 0 8px #f3523e; }
+.corner-store .corner-store__wallet { position: relative; padding: 13px 19px 12px 12px; border: 3px solid #7b8c7e; border-bottom-color: #425849; border-right-color: #425849; border-radius: 3px; background: linear-gradient(#1c3027,#081a12); box-shadow: 3px 5px 0 #06120be0,inset 0 0 0 2px #06120b; transform: rotate(2deg); }
+.corner-store .corner-store__wallet::before, .corner-store .corner-store__wallet::after { content: ''; position: absolute; width: 4px; height: 4px; border-radius: 50%; background: #bac4b1; box-shadow: inset 0 -1px #354938; }
+.corner-store .corner-store__wallet::before { top: 4px; left: 4px; }
+.corner-store .corner-store__wallet::after { bottom: 4px; right: 4px; }
+.corner-store .corner-store__wallet small { color: #b4d5b8; }
+.corner-store .corner-store__wallet strong { color: #d1ffd7; text-shadow: 0 0 6px #8ed69d66; }
+.corner-store__aisle { position: relative; padding: 14px 18px 15px; margin-bottom: 22px; border-top: 3px solid #bd5a48; border-bottom: 5px solid #192c20; background: repeating-linear-gradient(0deg,#ffffff06 0 1px,transparent 1px 5px),linear-gradient(110deg,#2a4f3b,#183528 55%,#1c3b2c); box-shadow: 0 3px 0 #bf936f,0 8px 11px #0005; }
+.corner-store .corner-store__departments { gap: 14px; }
+.corner-store .corner-store__departments button { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 8px 18px; font: 700 23px/1.1 var(--font-action-sign); text-transform: uppercase; border: 1px solid #bdad83; border-bottom: 3px solid #9b7d54; box-shadow: 2px 3px 0 #091b12; }
+.corner-store .corner-store__departments button::before { width: 23px; left: 10px; top: -8px; transform: rotate(-10deg); background: #d8b97580; }
+.corner-store__aisle-number { font: 700 10px/1 var(--font-mono); border-right: 1px solid #866b4b55; padding-right: 8px; color: #715a3d; }
+.corner-store__closet-link { padding: 7px 0 7px 12px; color: #fff0c8; font: 700 16px/1.2 var(--font-hand); }
+.corner-store .corner-store__products { gap: 20px; padding-bottom: 28px; }
+.corner-store .corner-store__products--clout > .corner-product { flex-basis: calc((100% - 60px)/4); }
+.corner-store .corner-product__display { aspect-ratio: 1.14; border-width: 10px; border-top-color: #c6985c; border-bottom-color: #b9844b; box-shadow: 0 0 0 2px #2e2417,inset 0 0 0 2px #17120df0,inset 0 18px 22px #000a,0 8px 0 #402b19,0 14px 17px #0008; }
+.corner-store .corner-product__display > img { width: 78%; height: 82%; }
+.corner-store .corner-product--daily .corner-product__display > img { width: 67%; height: 72%; }
+.corner-store .corner-product__display::before { inset: -10px; border-width: 10px; }
+.corner-store .corner-product__label { transform: rotate(-1deg); }
+.corner-store .corner-product:nth-child(even) .corner-product__label { transform: rotate(1deg); }
+.corner-store .corner-product:is(:hover,:focus-within) .corner-product__label { transform: rotate(0); }
+.corner-store__register { position: relative; padding: 15px 20px 18px; margin-top: 0; border-top: 9px solid #b9824b; border-bottom: 5px solid #32271a; background: repeating-linear-gradient(3deg,#09070430 0 1px,transparent 1px 8px),linear-gradient(90deg,#6d462c,#49351e 55%,#65482b); box-shadow: 0 -3px 0 #ddad72,0 5px 0 #17180f,0 10px 24px #0008; }
+.corner-counter-service { margin: 0 3px; transform: rotate(-.4deg); }
+.corner-store .corner-store__orders { margin-top: 14px; border-top: 2px solid #a69574; border-bottom: 3px solid #0b1711; background: #11271ee8; box-shadow: inset 0 1px #243d2b; }
+.corner-store .corner-store__orders-heading { padding-inline: 14px; font-family: var(--font-action-sign); font-size: 18px; }
+.corner-store__orders-heading > span { font-family: var(--font-sans); font-weight: 500; }
+@media (max-width:900px) {
+ .corner-store .corner-store__products--clout > .corner-product, .corner-store .corner-product { flex-basis: min(42vw,290px); }
+ .corner-store .corner-store__heading { min-height: 130px; padding-inline: 0; }
+ .corner-store .corner-store__heading h1 { font-size: clamp(42px,6.8vw,66px); }
+}
+@media (max-width:540px) {
+ .corner-store .corner-store__scroll { padding: 14px 14px 28px; }
+ .corner-store > .corner-store__interior { object-position: 78% center; }
+ .corner-store::after { background: linear-gradient(180deg,#04130d33,#04130d22 65%,#06110994); }
+ .corner-store .corner-store__heading { display: block; min-height: 0; padding: 6px 4px 14px; }
+ .corner-store__hero-copy { width: fit-content; padding: 4px 10px 18px 0; }
+ .corner-store .corner-store__heading h1 { font-size: clamp(38px,11.1vw,58px); }
+ .corner-store .corner-store__wallet { width: fit-content; margin: 15px 0 0 auto; padding: 5px 11px 5px 7px; gap: 5px; border-width: 2px; }
+ .corner-store .corner-store__wallet > img { width: 25px; height: 25px; }
+ .corner-store .corner-store__wallet strong { font-size: 21px; }
+ .corner-store .corner-store__wallet small { font-size: 7px; }
+ .corner-store__aisle { padding: 11px 9px 3px; margin: 7px 0 18px; gap: 2px; }
+ .corner-store .corner-store__departments { gap: 7px; }
+ .corner-store .corner-store__departments button { padding: 8px 4px; gap: 4px; font-size: clamp(15px,4.4vw,20px); }
+ .corner-store__aisle-number { display: none; }
+ .corner-store__closet-link { min-height: 44px; font-size: 17px; }
+ .corner-store .corner-store__products { gap: 16px; }
+ .corner-store .corner-store__products--clout > .corner-product, .corner-store .corner-product { flex-basis: min(70vw,262px); }
+ .corner-store .corner-product__display { border-width: 7px; aspect-ratio: 1.18; }
+ .corner-store .corner-product__display::before { inset: -7px; border-width: 7px; }
+ .corner-store__register { padding: 13px 8px 14px; margin-inline: -4px; border-top-width: 7px; }
+ .corner-counter-service { padding-inline: 8px; }
+}
+@media(prefers-reduced-motion:reduce) { .corner-store .corner-product__label { transition:none; } }
+.corner-store[data-reduce-motion=true] .corner-product__label { transition:none; }
+
+/* This is an open merchandise rail, not a default chalkboard panel. Its three
+   owned classes outrank the shared panel selector regardless of CSS load order. */
+html .corner-store .corner-store__scroll > .corner-store__counter {
+  padding: 0; border: 0; border-radius: 0;
+  background-color: transparent; background-image: none;
+  backdrop-filter: none;
+  container-name: market-counter; container-type: inline-size;
+}
+.corner-store .corner-store__scroll { width: 100%; max-width: 1640px; }
+.corner-store .corner-store__products {
+  --market-shelf-gap: clamp(14px, 1.5cqi, 24px);
+  --market-product-width: clamp(220px, calc((100% - var(--market-shelf-gap)) / 1.22), 350px);
+  gap: var(--market-shelf-gap);
+  margin-inline: -4px; padding-inline: 4px;
+  scroll-padding-inline: 4px;
+}
+.corner-store .corner-store__products > .corner-product {
+  flex: 0 0 var(--market-product-width);
+  min-width: 0; container-type: inline-size;
+}
+.corner-store .corner-product__display { aspect-ratio: 1.2; }
+.corner-store .corner-product__label { min-height: 188px; }
+.corner-store .corner-product h2 { font-size: clamp(26px, 10cqi, 36px); }
+.corner-store .market-tag__price strong,
+.corner-store .market-tag__price strong.market-tag__free-price { font-size: clamp(50px, 20cqi, 72px); }
+@container market-counter (min-width: 560px) {
+  .corner-store .corner-store__products {
+    --market-product-width: calc((100% - 2 * var(--market-shelf-gap)) / 2.18);
+  }
+}
+@container market-counter (min-width: 850px) {
+  .corner-store .corner-store__products {
+    --market-product-width: calc((100% - 3 * var(--market-shelf-gap)) / 3.18);
+  }
+}
+@container market-counter (min-width: 1120px) {
+  .corner-store .corner-store__products {
+    --market-product-width: calc((100% - 3 * var(--market-shelf-gap)) / 4);
+  }
+}
+
+/* Only the shelf signs sit on the short painted board; the Closet is a sticker. */
+.corner-store .corner-store__aisle {
+  padding:0; margin:10px 0 24px; border:0; background:none; box-shadow:none;
+}
+.corner-store .corner-store__departments {
+  flex:0 1 auto; width:max-content; max-width:100%; justify-content:flex-start;
+  padding:14px 18px 15px; border-top:3px solid #bd5a48; border-bottom:5px solid #192c20;
+  background:repeating-linear-gradient(0deg,#ffffff06 0 1px,transparent 1px 5px),linear-gradient(110deg,#2a4f3b,#183528 55%,#1c3b2c);
+  box-shadow:0 3px 0 #bf936f,0 8px 11px #0005;
+}
+.corner-store .corner-store__departments button { flex:0 0 auto; }
+.corner-store .corner-store__closet-link {
+  position:relative; isolation:isolate; flex:none; display:flex; align-items:center; gap:8px;
+  min-height:64px; margin:0 7px 0 0; padding:7px 12px 7px 8px;
+  border:4px solid #fff7e4; border-radius:13px 5px 16px 6px;
+  color:#1c4934; background:#e8d9a8; box-shadow:0 0 0 1px #263f2a,3px 5px 0 #07180ba8;
+  font:700 italic 24px/.94 'Hemi Head Italic',sans-serif; text-transform:uppercase; text-decoration:none;
+  transform:rotate(4deg); transition:transform .16s ease;
+}
+.corner-store .corner-store__closet-link::after {
+  content:''; position:absolute; right:-4px; bottom:-4px; width:13px; height:13px;
+  border-radius:0 0 10px 0; background:linear-gradient(135deg,#c2ab77 45%,#fff7e4 48%);
+}
+.corner-store .corner-store__closet-link img { width:42px; height:46px; object-fit:contain; filter:drop-shadow(0 2px 1px #314f3844); }
+.corner-store .corner-store__closet-link span { max-width:5.2ch; white-space:normal; }
+.corner-store .corner-store__closet-link > svg { flex:none; }
+.corner-store .corner-store__closet-link:hover { color:#a73525; text-decoration:none; transform:rotate(1deg) translateY(-2px); }
+.corner-store .corner-store__closet-link:focus-visible { outline:3px solid #ffdf64; outline-offset:4px; }
+@media(max-width:540px) {
+  .corner-store .corner-store__aisle { gap:13px; margin:8px 0 22px; }
+  .corner-store .corner-store__departments { width:max-content; padding:11px 9px 12px; }
+  .corner-store .corner-store__closet-link { margin:0 8px 0 auto; min-height:58px; padding:5px 10px 5px 7px; font-size:20px; }
+  .corner-store .corner-store__closet-link img { width:34px; height:38px; }
+}
+@media(prefers-reduced-motion:reduce) { .corner-store .corner-store__closet-link { transition:none; } }
+.corner-store[data-reduce-motion=true] .corner-store__closet-link { transition:none; }
+
+/* Phone shelves are merchandise cubbies, with two complete products in view. */
+@media(max-width:540px) {
+  .corner-store .corner-store__products {
+    --market-shelf-gap:10px;
+    --market-product-width:calc((100% - var(--market-shelf-gap)) / 2);
+    padding-bottom:18px;
+  }
+  .corner-store .corner-product__display { border-width:5px; }
+  .corner-store .corner-product__display::before { inset:-5px; border-width:5px; }
+  .corner-store .corner-product__label { min-height:160px; margin:13px 2px 3px; padding:11px 8px 8px; }
+  .corner-store .corner-product__label::before { width:25px; height:14px; left:calc(50% - 12.5px); top:-9px; }
+  .corner-store .corner-product h2 { min-height:1.1em; margin:0 0 4px; font-size:clamp(20px,12cqi,25px); line-height:1.05; }
+  .corner-store .corner-product p { font-size:11px; line-height:1.3; margin-bottom:4px; }
+  .corner-store .market-daily__reset { font-size:8px; line-height:1.3; margin-bottom:5px; }
+  .corner-store .corner-product button.market-tag__buy { min-height:68px; padding:3px 0 0; }
+  .corner-store .market-tag__price:has(.market-tag__split-price),
+  .corner-store .market-tag__claim .market-tag__price { min-height:52px; }
+  .corner-store .market-tag__price strong,
+  .corner-store .market-tag__price strong.market-tag__free-price { font-size:clamp(34px,22cqi,44px); }
+  .corner-store .market-tag__price small { min-height:16px; padding-right:0; font-size:8px; line-height:1.2; }
+  .corner-store .market-tag__action { position:static; justify-content:flex-end; min-height:22px; font-size:8px; }
+  .corner-store .market-tag__action svg { width:12px; height:12px; padding:1px; }
+  .corner-store .market-tag__preview { font-size:22px; }
+  .corner-store .market-daily__seal { right:4px; bottom:14px; padding:5px 7px 4px; font-size:16px; }
+  .corner-store .market-daily__seal small { margin-top:3px; font-size:5px; }
+  .corner-store .corner-store__aisle { flex-direction:column; flex-wrap:nowrap; align-items:flex-start; gap:0; margin-bottom:13px; }
+  .corner-store .corner-store__closet-link {
+    order:-1; align-self:flex-end; min-height:44px; padding:0 6px; gap:3px; margin:0 3px 0 auto;
+    border:0; border-radius:0; background:none; box-shadow:none; font-size:12px; transform:rotate(2deg);
+  }
+  .corner-store .corner-store__closet-link::before {
+    content:''; position:absolute; z-index:-1; inset:11px 0; border:1.5px solid #fff7e4;
+    border-radius:6px 3px 8px 3px; background:#e8d9a8; box-shadow:0 0 0 1px #263f2a,2px 3px 0 #07180b88;
+  }
+  .corner-store .corner-store__closet-link::after { right:0; bottom:11px; width:5px; height:5px; border-radius:0 0 4px 0; }
+  .corner-store .corner-store__closet-link span { max-width:none; white-space:nowrap; }
+  .corner-store .corner-store__closet-link img { width:16px; height:18px; }
+  .corner-store .corner-store__closet-link > svg { width:10px; height:10px; }
+}

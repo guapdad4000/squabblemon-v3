@@ -1,11 +1,13 @@
 import {CharacterRecruitment} from './CharacterRecruitment';
+import { AccountCheckInCalendar } from './AccountCheckInCalendar';
+import { MonthlyLoginTrack } from './MonthlyLoginTrack';
 import { playInteractionSound, stopInteractionSound } from '../lib/interactionAudio';
 import { useEffect, useId, useRef, useState, type CSSProperties } from 'react';
 import { Link } from 'wouter';
 import { Check, ArrowUpRight, Gift, Leaf } from 'lucide-react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { customFetch, getGetPlayerBootstrapQueryKey, type PlayerBootstrap } from '@workspace/api-client-react';
-import { GROWTH_GARDEN_SIZE, GROWTH_BUDDY_CYCLES, LOGIN_REWARDS, type AccountRewardGrant, type AccountRewardStatus } from '@workspace/squabblemon-engine/accountRewards';
+import { GROWTH_GARDEN_SIZE, GROWTH_BUDDY_CYCLES, GROWTH_GARDEN_REWARD, type AccountRewardGrant, type AccountRewardStatus } from '@workspace/squabblemon-engine/accountRewards';
 import { getAssetUrl } from '../lib/assets';
 import '../styles/account-rewards.css';
 
@@ -103,12 +105,13 @@ export function BuddyGrowthLab({ bootstrap, open, onOpenChange }: { bootstrap: P
     try {
       const result = await customFetch<ClaimResult>('/api/player/rewards/account/claim', { method: 'POST' });
       save(result);
-      if(result.rewards.some(r=>r.cardId==='buddy'))setCelebrating(true);
+      if(result.rewards.some(r=>r.cardId==='buddy'&&r.styleShards===0&&r.isNewCard!==false))setCelebrating(true);
       if (mounted.current) {
         const clout = result.rewards.reduce((n, r) => n + r.softCurrency, 0);
         const tickets = result.rewards.reduce((n, r) => n + r.packTickets, 0);
         const shards = result.rewards.reduce((n, r) => n + r.styleShards, 0);
-        setNotice(result.rewards.length ? `Collected ${clout} Clout${tickets ? ` · ${tickets} tickets` : ''}${shards ? ` · ${shards} Style Shards` : ''}. Looking good!` : 'Your check-in is already saved.');
+        const cards = result.rewards.filter(reward => reward.cardId && reward.isNewCard !== false && reward.styleShards === 0).map(reward => reward.cardName ?? reward.cardId);
+        setNotice(result.rewards.length ? `Collected ${clout} Clout${tickets ? ` · ${tickets} tickets` : ''}${shards ? ` · ${shards} Style Shards` : ''}${cards.length ? ` · ${cards.join(', ')} joined your collection` : ''}.` : 'Your check-in is already saved.');
       }
     } catch { if (mounted.current) setError('Your check-in could not be confirmed. Try again; saved rewards are never paid twice.'); }
     finally { lock.current = false; if (mounted.current) setBusy(false); }
@@ -128,7 +131,7 @@ export function BuddyGrowthLab({ bootstrap, open, onOpenChange }: { bootstrap: P
         const before = after === 1 ? 0 : after - 1;
         setAnimation({ phase: 'filling', before, after });
         setNotice('Can full. A little water goes a long way.');
-        const finish = () => { if(result.rewards.some(r=>r.cardId==='buddy'))setCelebrating(true);setAnimation(null); setGardenBonus(bonus); setNotice(bonus ? 'Garden complete! Your harvest reward is in your bag.' : 'One more plant, one better day. Your garden is saved.'); };
+        const finish = () => { if(result.rewards.some(r=>r.cardId==='buddy'&&r.styleShards===0&&r.isNewCard!==false))setCelebrating(true);setAnimation(null); setGardenBonus(bonus); setNotice(bonus ? 'Garden complete! Your harvest reward is in your bag.' : 'One more plant, one better day. Your garden is saved.'); };
         if (reduced) finish();
         else {
           later(650, () => setAnimation({ phase: 'watering', before, after }));
@@ -141,6 +144,9 @@ export function BuddyGrowthLab({ bootstrap, open, onOpenChange }: { bootstrap: P
   }
   const visiblePlants = animation ? animation.phase === 'growing' ? animation.after : animation.before : growth?.plantsInGarden ?? 0;
   const fill = animation ? animation.phase === 'filling' ? 1 : 0 : growth?.water ?? 0;
+  const plantsToHarvest = GROWTH_GARDEN_SIZE - ((growth?.totalPlants ?? 0) % GROWTH_GARDEN_SIZE);
+  const buddyNextHarvest = (growth?.completedGardens ?? 0) === GROWTH_BUDDY_CYCLES - 1;
+  const pendingBonuses = status?.pending.filter(reward => !reward.key.startsWith('login:') && !reward.key.startsWith('monthly-login:')) ?? [];
   const resetMinutes = status ? Math.max(0, Math.ceil((Date.parse(status.nextResetAt) - clock) / 60000)) : 0;
   useEffect(() => {
     if (!open || !animation) return;
@@ -154,15 +160,18 @@ export function BuddyGrowthLab({ bootstrap, open, onOpenChange }: { bootstrap: P
    <dialog ref={dialog} className="growth-dialog growth-dialog--compact" aria-labelledby="growth-title" onCancel={()=>onOpenChange(false)} onClose={()=>onOpenChange(false)} data-reduced-motion={reduced}>
     <div className="growth-lab-shell" data-phase={animation?.phase??'idle'}>
      <div className="growth-garden" aria-hidden="true">{Array.from({length:visiblePlants},(_,index)=><BuddyPlant key={index} index={index} fresh={animation?.phase==='growing'&&index===animation.after-1}/>)}</div>
-     <article className="growth-clipboard"><div className="growth-clipboard__clip" aria-hidden="true"><Leaf size={16}/></div><button autoFocus className="growth-close" aria-label="Close Growth Lab" onClick={()=>onOpenChange(false)}><svg viewBox="0 0 48 48" aria-hidden="true" focusable="false"><path d="M9 8 17 12 40 36 38 41 32 39 7 14Z" fill="currentColor"/><path d="M35 6 42 10 35 19 15 41 8 38 10 31 25 16Z" fill="currentColor" opacity=".9"/><path d="m11 11 26 27M38 10 12 36" fill="none" stroke="#ff8270" strokeWidth="1.3" opacity=".4"/></svg></button><header className="growth-heading"><span className="growth-eyebrow">BUDDY’S DAILY RITUAL</span><h2 id="growth-title"><em className="buddy-growth-word">Growth</em> Lab.</h2></header>
-      <div className="growth-hero"><img className="growth-buddy" src={art('buddy-clipboard')} alt="Buddy tending his plants with his clipboard" width="720" height="960"/><div className="growth-hero__note"><span className="growth-eyebrow">GARDEN {growth?.gardenNumber??1}</span><p><em>Watch it grow.</em></p><span>{visiblePlants} / {GROWTH_GARDEN_SIZE} plants</span></div><WateringCan fill={fill} pouring={animation?.phase==='watering'}/></div>
+     <article className="growth-clipboard"><div className="growth-clipboard__clip" aria-hidden="true"><Leaf size={16}/></div><button autoFocus className="growth-close" aria-label="Close Growth Lab" onClick={()=>onOpenChange(false)}><svg viewBox="0 0 48 48" aria-hidden="true" focusable="false"><path d="M9 8 17 12 40 36 38 41 32 39 7 14Z" fill="currentColor"/><path d="M35 6 42 10 35 19 15 41 8 38 10 31 25 16Z" fill="currentColor" opacity=".9"/><path d="m11 11 26 27M38 10 12 36" fill="none" stroke="#ff8270" strokeWidth="1.3" opacity=".4"/></svg></button><header className="growth-heading"><h2 id="growth-title"><em className="buddy-growth-word">Growth</em> Lab.</h2></header>
+      <div className="growth-hero"><img className="growth-buddy" src={art('buddy-clipboard')} alt="Buddy tending his plants with his clipboard" width="720" height="960"/><div className="growth-hero__note"><span className="growth-eyebrow">GARDEN {growth?.gardenNumber??1}</span><p><em>{visiblePlants} / {GROWTH_GARDEN_SIZE}</em></p><span>plants grown</span></div><WateringCan fill={fill} pouring={animation?.phase==='watering'}/></div>
       <div className="growth-task-heading"><h3>Today’s care</h3><span>{growth?.wateredToday?'WATERED':`${growth?.tasks.filter(t=>t.complete).length??0} / 3`}</span></div>
       {query.isPending&&<p role="status">Loading your garden…</p>}{query.isError&&<div role="alert"><p>Could not load your garden.</p><button onClick={()=>void query.refetch()}>Retry loading</button></div>}
-      {status&&growth&&<><ol className="growth-tasks">{growth.tasks.map((task,index)=><li key={task.key} data-complete={task.complete} style={{'--task-index':index} as CSSProperties}><span className="growth-task-check">{task.complete?<Check size={16}/>:index+1}</span><div><h4>{task.title}</h4><p>{task.detail}</p></div>{task.complete?<span className="growth-task-done">✓</span>:task.key==='login'?<button disabled={busy||!!animation} onClick={()=>void claim()}>Check in</button>:<Link href={task.href} onClick={()=>onOpenChange(false)} aria-label={`${task.action}: ${task.detail}`}><ArrowUpRight size={18}/></Link>}</li>)}</ol>
-       <section className="growth-roadmap" aria-label="Garden reward roadmap"><header><b>Grow your crew</b><span>{Math.min(3,growth.completedGardens)} / 3 cycles</span></header><ol>{[1,2,3].map(cycle=><li key={cycle} data-complete={growth.completedGardens>=cycle}><span>{growth.completedGardens>=cycle?<Check size={14}/>:cycle}</span><b>{cycle===3?'BUDDY':'Harvest'}</b><small>{cycle===3?'Character unlock':'350 Clout · 1 ticket'}</small></li>)}</ol><p>{growth.completedGardens>=GROWTH_BUDDY_CYCLES?'Every future cycle: 350 Clout · 1 ticket · 25 Style Shards':'7 plants = 1 cycle · 350 Clout + 1 ticket + 25 Shards each'}</p>{status.pending.some(r=>r.key==='growth:buddy')&&<button disabled={busy} onClick={()=>void claim()}>Collect BUDDY</button>}</section>
-       {gardenBonus&&<div className="growth-bonus" role="status"><Gift size={18}/><span>Harvest saved · +350 Clout · +1 ticket · +25 Shards</span></div>}
-       <details className="growth-checkins"><summary>Check-in rewards <span>Day {status.streak}</span></summary><ol>{LOGIN_REWARDS.map((r,i)=><li key={i} data-current={(status.streak-1)%7===i}><span>{i+1}</span><b>{r.softCurrency}</b><small>Clout</small></li>)}</ol>{status.pending.filter(r=>!r.key.startsWith('login:')&&r.key!=='growth:buddy').map(r=><p key={r.key}>{r.title} · {r.softCurrency} Clout</p>)}{status.claimedToday&&status.pending.length>0&&<button disabled={busy} onClick={()=>void claim()}>Collect bonuses</button>}</details>
-       <footer className="growth-footer"><span>Tasks rotate daily · Plants stay saved</span><span>{Math.floor(resetMinutes/60)}h {resetMinutes%60}m to reset</span></footer>
+      {status&&growth&&<><ol className="growth-tasks">{growth.tasks.map((task,index)=><li key={task.key} data-complete={task.complete} style={{'--task-index':index} as CSSProperties}><span className="growth-task-check">{task.complete?<Check size={16}/>:index+1}</span><div><h4>{task.detail}</h4></div>{task.complete?<span className="growth-task-done">✓</span>:task.key==='login'?<button disabled={busy||!!animation} onClick={()=>void claim()}>Check in</button>:<Link href={task.href} onClick={()=>onOpenChange(false)} aria-label={`${task.action}: ${task.detail}`}><ArrowUpRight size={18}/></Link>}</li>)}</ol>
+       <section className="growth-next-reward" aria-label="Next garden reward"><div><span className="growth-eyebrow">NEXT HARVEST</span><h3>{plantsToHarvest} {plantsToHarvest === 1 ? 'plant' : 'plants'} to go{buddyNextHarvest ? ' · BUDDY joins' : ''}</h3></div><p>{GROWTH_GARDEN_REWARD.softCurrency} Clout · {GROWTH_GARDEN_REWARD.packTickets} ticket · {GROWTH_GARDEN_REWARD.styleShards} Shards</p>{growth.completedGardens < GROWTH_BUDDY_CYCLES && !buddyNextHarvest && <small>BUDDY joins after garden {GROWTH_BUDDY_CYCLES} · {growth.completedGardens} / {GROWTH_BUDDY_CYCLES} complete</small>}</section>
+       {gardenBonus&&<div className="growth-bonus" role="status"><Gift size={18}/><span>Harvest saved · +{gardenBonus.softCurrency} Clout · +{gardenBonus.packTickets} ticket · +{gardenBonus.styleShards} Shards</span></div>}
+       <div className="growth-check-in-tracks"><AccountCheckInCalendar streak={status.streak} claimedToday={status.claimedToday}/>
+       {status.monthly && <MonthlyLoginTrack status={status.monthly}/>}</div>
+       {status.claimedToday && status.monthly?.milestones.some(milestone => milestone.ready) && <button className="growth-monthly-claim" disabled={busy || !!animation} onClick={()=>void claim()}>Collect monthly cards</button>}
+       {pendingBonuses.length > 0 && <div className="growth-pending-bonuses"><p>{pendingBonuses.map(reward => [reward.title, ...[reward.softCurrency ? `${reward.softCurrency} Clout` : '', reward.packTickets ? `${reward.packTickets} tickets` : '', reward.styleShards ? `${reward.styleShards} Shards` : ''].filter(Boolean)].join(' · ')).join(' / ')}</p>{status.claimedToday && <button disabled={busy || !!animation} onClick={()=>void claim()}>Collect bonuses</button>}</div>}
+       <footer className="growth-footer"><span>Plants stay saved</span><span>{Math.floor(resetMinutes/60)}h {resetMinutes%60}m to reset</span></footer>
       </>}
       <p className="growth-live" role="status">{notice}</p>{error&&<div className="growth-error" role="alert"><p>{error}</p><button disabled={busy} onClick={()=>growth?.ready?void water():void claim()}>Retry</button></div>}
       <div className="growth-rain" aria-hidden="true">{Array.from({length:18},(_,i)=><i key={i} style={{'--drop':i} as CSSProperties}/>)}</div>

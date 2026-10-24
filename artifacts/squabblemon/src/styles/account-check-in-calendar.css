@@ -1,0 +1,27 @@
+.account-check-in-calendar{color:inherit;min-width:0;container-type:inline-size}
+.account-check-in-calendar>header{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:6px}
+.account-check-in-calendar h3{margin:0;font:800 13px/1.2 var(--font-sans,sans-serif)}
+.account-check-in-calendar>header>span{font:600 10px/1.3 var(--font-sans,sans-serif);white-space:nowrap}
+.account-check-in-calendar ol{position:relative;isolation:isolate;display:grid;grid-template-columns:repeat(6,minmax(0,1fr)) minmax(48px,1.5fr);gap:5px;list-style:none;margin:0;padding:0}
+.account-check-in-calendar ol::before{content:"";position:absolute;z-index:-1;left:5%;right:7%;top:9px;height:2px;background:repeating-linear-gradient(90deg,#8e7747 0 5px,transparent 5px 8px)}
+.account-check-in-calendar li{position:relative;min-width:0;display:flex;flex-direction:column;align-items:center;gap:2px;padding:0;border:0;background:none;opacity:1}
+.account-check-in-calendar__day{position:relative;display:grid;place-items:center;flex:none;width:20px;height:20px;border:1px solid #79633d;border-radius:50%;background:#f8edcf;color:#44351d;font:700 10px/1 var(--font-mono,monospace);box-shadow:0 0 0 2px #ead8ac}
+.account-check-in-calendar__parcel{position:relative;display:flex;flex-direction:column;align-items:center;width:100%;min-width:0;height:60px;padding:3px 0 2px;border:1px solid #b59b68;background:linear-gradient(145deg,#faf0d6,#e7d4a5);box-shadow:1px 2px 0 #5c431f30;transform:rotate(-1deg)}
+.account-check-in-calendar li:nth-child(even) .account-check-in-calendar__parcel{transform:rotate(1deg)}
+.account-check-in-calendar__parcel>.account-check-in-calendar__art{display:block;width:28px;height:28px;flex:none}
+.account-check-in-calendar__amount{color:#302514;font:700 13px/1 var(--font-action-sign,sans-serif);font-variant-numeric:tabular-nums}
+.account-check-in-calendar__bonus{display:flex;justify-content:center;align-items:center;gap:4px;min-height:11px;margin-top:1px}
+.account-check-in-calendar__reward{display:flex;align-items:center;gap:1px;color:#302514;font:800 10px/1 var(--font-sans,sans-serif);white-space:nowrap}
+.account-check-in-calendar__reward>.game-glyph{width:12px;height:12px;flex:none}
+.account-check-in-calendar__marker{display:block;min-height:9px;color:#63502e;font:700 7px/9px var(--font-mono,monospace);letter-spacing:.015em;white-space:nowrap}
+.account-check-in-calendar li[data-jackpot=true] .account-check-in-calendar__parcel{background:linear-gradient(145deg,#ffe8a3,#edc969);border-color:#8d5b1f;transform:rotate(1deg)}
+.account-check-in-calendar li[data-jackpot=true] .account-check-in-calendar__art{width:32px;height:28px}
+.account-check-in-calendar li[data-jackpot=true] .account-check-in-calendar__marker{color:#83251c;font-weight:800}
+.account-check-in-calendar li[data-state=ready] .account-check-in-calendar__day{background:#164832;color:#fff0bf;border-color:#164832}
+.account-check-in-calendar li[data-state=ready] .account-check-in-calendar__parcel{outline:2px solid #245a3c;outline-offset:-2px;background:#dfebc4;transform:none}
+.account-check-in-calendar li[data-state=ready] .account-check-in-calendar__marker{color:#164832;font-weight:800}
+.account-check-in-calendar li[data-state=next] .account-check-in-calendar__day{border:2px dashed #8d5b1f}
+.account-check-in-calendar li[data-state=next] .account-check-in-calendar__marker{color:#705020}
+.account-check-in-calendar__stamp{position:absolute;top:-3px;right:-6px;display:grid;place-items:center;width:14px;height:14px;border:1px solid #942c24;color:#942c24;background:#fff0cf;border-radius:2px;font:900 12px/1 var(--font-sans,sans-serif);font-style:normal;transform:rotate(12deg)}
+.account-check-in-calendar li[data-collected=true] .account-check-in-calendar__parcel{background:#e4dcc5;border-style:dashed}
+@container(max-width:300px){.account-check-in-calendar ol{gap:4px;grid-template-columns:repeat(6,minmax(0,1fr)) minmax(47px,1.5fr)}.account-check-in-calendar__parcel>.account-check-in-calendar__art{width:25px}.account-check-in-calendar__amount{font-size:12px}.account-check-in-calendar__bonus{gap:2px}.account-check-in-calendar__reward>.game-glyph{width:11px;height:11px}}

@@ -1,0 +1,60 @@
+/* Popup roles are local: expressive lettering must never leak into body copy or card rules. */
+.game-popup, .reward-street-file {
+  --popup-font-title: 'Hemi Head Italic', 'Clash Display', sans-serif;
+  --popup-font-feature: var(--font-sign, 'Blzee', sans-serif);
+  --popup-font-body: var(--font-sans, 'Plus Jakarta Sans', sans-serif);
+  --popup-font-label: var(--font-mono, 'Space Mono', monospace);
+  --popup-font-amount: var(--font-action-sign, 'Hemi Head', sans-serif);
+  --popup-paper: #ead8ac;
+  --popup-ink: #292319;
+  --popup-muted: #64523b;
+  --popup-stamp: #942c24;
+  --popup-sign: #176b49;
+  --popup-sign-dark: #07442f;
+  --popup-rim: #f2deb0;
+  --popup-gap: clamp(12px, 2.3vw, 22px);
+  color: var(--popup-ink);
+  font: 500 14px/1.5 var(--popup-font-body);
+  text-align: left;
+  font-synthesis: none;
+  overflow-wrap: break-word;
+}
+:is(.game-popup,.reward-street-file) .game-popup__title {
+  margin: 8px 0 16px;
+  color: var(--popup-ink);
+  font: 700 clamp(28px, 4.5vw, 46px)/1.04 var(--popup-font-title);
+  letter-spacing: -.025em;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+:is(.game-popup,.reward-street-file) :is(.game-popup__title[data-lettering="feature"],.game-popup__title--feature) { font-family: var(--popup-font-feature); font-weight: 400; letter-spacing: .015em; }
+.game-popup__label { color: var(--popup-stamp); font: 700 10px/1.4 var(--popup-font-label); letter-spacing: .1em; text-transform: uppercase; }
+:is(.game-popup,.reward-street-file) .game-popup__copy { color: var(--popup-muted); font: 500 14px/1.5 var(--popup-font-body); margin: 10px 0; }
+.game-popup__close { position: absolute; z-index: 5; top: 8px; right: 8px; display: grid; place-items: center; width: 44px; height: 44px; padding: 0; border: 2px solid var(--popup-rim); border-radius: 0; color: var(--popup-rim); background: #103c2e; font: 700 26px/1 var(--popup-font-body); cursor: pointer; box-shadow: 2px 3px 0 #0008; }
+.game-popup__secondary { display: flex; justify-content: center; align-items: center; gap: 8px; min-height: 44px; margin: 3px auto 0; padding: 7px 10px; border: 0; border-radius: 0; background: none; color: #254936; font: 700 12px/1.4 var(--popup-font-body); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+.game-popup :is(button,a):focus-visible, .reward-street-file :is(button,a):focus-visible { outline: 3px solid #f9d44a; outline-offset: -5px; }
+.game-popup :is(button,a):disabled, .reward-street-file button:disabled { opacity: .65; cursor: wait; }
+.game-popup[data-popup-tone="destructive"], .reward-street-file[data-popup-tone="destructive"] { --popup-sign: #a52d25; --popup-sign-dark: #6d1b18; }
+.game-popup[data-popup-family="announcement"] { --popup-stamp: #244c39; }
+@media(prefers-reduced-motion:reduce) { .game-popup, .reward-street-file { scroll-behavior: auto; } .game-popup *, .reward-street-file * { animation-duration: 0s; transition-duration: 0s; } }
+html[data-reduce-motion="true"] :is(.game-popup,.reward-street-file) * { animation-duration: 0s; transition-duration: 0s; }
+
+:is(.game-popup,.reward-street-file) .game-popup__amount { color: #254b32; font: 700 clamp(23px, 3.7vw, 34px)/1.1 var(--popup-font-amount); font-variant-numeric: tabular-nums; letter-spacing: -.035em; }
+
+/* Compact notices and confirmations borrow the main deck picker's brick wall.
+   Large reward ceremonies retain the dossier. These are deliberate materials,
+   not viewport-dependent automatic swaps. */
+.game-popup.game-popup--brick {
+ --popup-font-title: var(--font-sign, 'Blzee', sans-serif);
+ --popup-title-weight: 400;
+ --popup-ink: #f7edcf; --popup-muted: #d1d7c7; --popup-stamp: #d6b979;
+ color: var(--popup-ink); border: 2px solid #adb89d; border-radius: 0;
+ background: linear-gradient(100deg,#071a16e6,#0a181ab8),var(--popup-brick-wall) center / cover,#10251d;
+ box-shadow: 0 20px 65px #000b,inset 0 0 0 4px #0a1d16;
+}
+.game-popup--brick .game-popup__title { font-family:var(--popup-font-title); font-weight:400; letter-spacing:.025em; line-height:1.1; text-shadow:2px 3px 0 #020906; }
+.game-popup--brick .game-popup__secondary { color:#f2dfae; }
+.game-popup--brick .reward-street-file__paper { color:var(--popup-ink); background:#091d16b8; border:0; box-shadow:none; }
+.game-popup--brick .reward-street-file__paper::before { display:none; }
+.reward-street-file__paper .game-popup__secondary:focus-visible { outline-color:#274d36; }
+.game-popup--brick .game-popup__secondary:focus-visible { outline-color:#f9d44a; }

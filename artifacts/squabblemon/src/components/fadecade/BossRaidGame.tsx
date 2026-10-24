@@ -1,4 +1,5 @@
 import { policeRevealDuration } from "./bossRaidPresentation";
+import { setBattleMusicMode } from "../../musicStore";
 import { getAssetUrl } from "../../lib/assets";
 import { useEffect, useRef, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -30,6 +31,10 @@ export default function BossRaidGame({
   crews: Deck[];
   onExit: () => void;
 }) {
+  useEffect(() => {
+    setBattleMusicMode("boss");
+    return () => setBattleMusicMode(null);
+  }, []);
   const [mode, setMode] = useState<BossRaidMode>(() =>
     typeof window !== "undefined" &&
     new URLSearchParams(window.location.search).get("raid") === "kumite"
@@ -143,7 +148,7 @@ export default function BossRaidGame({
     return (
       <main className="boss-raid raid-loading">
         <button onClick={onExit}>← Fadecade</button>
-        <h1>{query.isError ? "PRECINCT RADIO LOST" : "CALLING THE BLOCK…"}</h1>
+        <h1>{query.isError ? mode === "kumite" ? "DOJO CONNECTION LOST" : "PRECINCT RADIO LOST" : "CALLING THE BLOCK…"}</h1>
         {query.isError && (
           <button onClick={() => void query.refetch()}>Retry connection</button>
         )}
@@ -253,7 +258,7 @@ export default function BossRaidGame({
           </h1>
           <p>
             {mode === "kumite"
-              ? `Challenge ${kumiteForm.bossTitle} (${kumiteForm.hp} HP · ×${kumiteForm.multiplier} Hands). Every full raid, 50+ DMG win, and defeated tier advances your Kumite Fighter Unlocks (${unlockedKumiteCount}/${KUMITE_LINEUP_REWARDS.length} unlocked).`
+              ? `Challenge ${kumiteForm.bossTitle} (${kumiteForm.hp} HP · ×${kumiteForm.multiplier} damage). Every full raid, 50+ DMG win, and defeated tier advances your Kumite Fighter Unlocks (${unlockedKumiteCount}/${KUMITE_LINEUP_REWARDS.length} unlocked).`
               : "Five evolving bosses. Your damage stays on Oink between days—and every completed raid, 50+ DMG win, and tier clear also advances your Kumite Fighter Unlocks."}
           </p>
           <div className="raid-kumite-unlock-strip" aria-label="Kumite fighter unlock connection">

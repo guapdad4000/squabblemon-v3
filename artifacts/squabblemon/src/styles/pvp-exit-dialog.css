@@ -1,0 +1,11 @@
+/* The Radix content owns focus and dismissal; these rules only size this confirmation. */
+.pvp-exit-dialog.game-popup{display:block;width:min(540px,calc(100vw - 20px));max-width:calc(100vw - 20px);padding:12px;overflow-x:hidden;overscroll-behavior:contain}
+.pvp-exit-dialog__paper{padding:30px 22px 12px}
+.pvp-exit-dialog__paper>.game-popup__label{display:block;padding-right:40px}
+.pvp-exit-dialog .game-popup__title{font-size:clamp(28px,4.5vw,40px);padding-right:20px}
+.pvp-exit-dialog .pvp-exit-dialog__warning{padding:10px 12px;border:1px solid var(--popup-stamp);background:#8a2e221f;color:#ffc9ac}
+/* Keep the existing Radix Close control and its behavior. */
+.pvp-exit-dialog>button:last-child{position:absolute;top:8px;right:8px;display:grid;place-items:center;width:44px;height:44px;opacity:1;border:2px solid var(--popup-rim);border-radius:0;background:#103c2e;color:var(--popup-rim);box-shadow:2px 3px 0 #0008}
+.pvp-exit-dialog>button:last-child svg{width:22px;height:22px}
+@media(max-width:380px){.pvp-exit-dialog__paper{padding:28px 14px 10px}.pvp-exit-dialog .game-popup__copy{font-size:13px}}
+@media(max-height:500px){.pvp-exit-dialog__paper{padding-top:24px}.pvp-exit-dialog .game-popup__title{margin-bottom:10px;font-size:28px}.pvp-exit-dialog .game-popup__copy{margin-block:8px}}

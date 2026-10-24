@@ -1,0 +1,19 @@
+.rewards-review { min-height: 100dvh; background: #0e1915; color: #f4ead0; font: 14px/1.45 "Plus Jakarta Sans", sans-serif; }
+.rewards-review__header { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; padding: 16px 20px 8px; }
+.rewards-review__header strong { font-size: 20px; }
+.rewards-review__header p { margin: 4px 0 0; font: 10px/1.4 "Space Mono", monospace; letter-spacing: .08em; color: #b9c9bc; }
+.rewards-review__header nav { display: flex; flex-wrap: wrap; gap: 6px; }
+.rewards-review__header button, .rewards-review-sample>button { min-height: 44px; border: 1px solid #829385; border-radius: 5px; padding: 8px 13px; background: #22382c; color: #f4ead0; font-weight: 700; }
+.rewards-review__header button[aria-pressed="true"] { background: #f0d282; color: #172319; border-color: #f0d282; }
+.rewards-review__note { margin: 0; padding: 4px 20px 12px; color: #d0d9cf; font-size: 12px; }
+.rewards-review__note a { margin-left: 8px; color: #f4dc9b; text-decoration: underline; }
+.rewards-review__panes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; padding: 0 12px 12px; }
+.rewards-review[data-view="daily"] .rewards-review__panes, .rewards-review[data-view="growth"] .rewards-review__panes { grid-template-columns: minmax(0, 1fr); }
+.rewards-review__pane { min-width: 0; border: 1px solid #536b59; border-radius: 8px; overflow: hidden; }
+.rewards-review__pane[hidden] { display: none; }
+.rewards-review__pane h1 { margin: 0; padding: 8px 12px; background: #22382c; font: 700 13px/1.5 "Plus Jakarta Sans", sans-serif; }
+.rewards-review__pane iframe { display: block; width: 100%; height: max(750px, calc(100dvh - 170px)); border: 0; background: #102219; }
+.rewards-review-sample { min-height: 100dvh; padding: 28px; background: radial-gradient(ellipse at 50% 35%, #345244, #0a1813 70%); color: #efe4bb; }
+.rewards-review-sample>p { margin-bottom: 12px; }
+.rewards-review-sample>button { margin: 0 8px 8px 0; }
+@media (max-width: 800px) { .rewards-review__panes { grid-template-columns: minmax(0, 1fr); } .rewards-review__header { padding: 12px; } .rewards-review__note { padding-inline: 12px; } .rewards-review__header button { padding-inline: 10px; font-size: 12px; } }

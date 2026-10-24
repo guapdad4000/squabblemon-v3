@@ -1491,11 +1491,6 @@
   --omen-color: #d5c39d;
   --omen-haze: #d5c39d20;
 }
-.gacha-stage[data-omen='uncommon'] { --omen-color: #4ade80; --omen-haze: #4ade8024; }
-.gacha-stage[data-omen='rare'] { --omen-color: #60a5fa; --omen-haze: #3b82f638; }
-.gacha-stage[data-omen='epic'] { --omen-color: #c084fc; --omen-haze: #a855f73d; }
-.gacha-stage[data-omen='legendary'] { --omen-color: #f6cf67; --omen-haze: #eab30846; }
-.gacha-stage[data-omen='mythical'] { --omen-color: #ff5a53; --omen-haze: #ef444454; }
 .gacha-stage:is([data-phase='punching'], [data-phase='tenPunching']) .gym__arena::after {
   content: '';
   position: absolute;
@@ -1529,7 +1524,7 @@
 }
 .gacha-stage[data-strike-intensity='finisher'] .gym__arena::after {
   background:
-    radial-gradient(circle at 60% 38%, #fff3 0 4%, transparent 18%, var(--omen-haze) 42%, rgba(229, 72, 77, 0.34) 100%),
+    radial-gradient(circle at 60% 38%, #fff3 0 4%, transparent 18%, var(--omen-haze) 42%, rgba(255, 241, 217, 0.16) 100%),
     repeating-conic-gradient(from 12deg at 60% 38%, transparent 0 8deg, color-mix(in srgb, var(--omen-color) 18%, transparent) 8deg 9deg);
   animation-duration: 0.95s;
 }
@@ -2411,3 +2406,31 @@ html[data-reduce-motion='true'] :is(
 .welcome-pull__coach{position:absolute;z-index:15;top:16px;left:50%;transform:translateX(-50%);width:min(400px,90%);padding:12px 18px;border-radius:12px;background:#09141ef2;border:1px solid #f1c56a80;color:white;pointer-events:none}.welcome-pull__coach strong,.welcome-pull__receipt strong{font-size:11px;color:#f7d58f;letter-spacing:.12em}.welcome-pull__coach p{margin:6px 0;font-size:15px}
 .welcome-pull__receipt{position:relative;z-index:2;margin:0 auto 12px;padding:14px 18px;max-width:660px;border:1px solid #f1c56a66;border-radius:12px;background:#0b1720ed;color:white}.welcome-pull__receipt p{font-size:14px;line-height:1.4;margin:6px 0}.welcome-pull__receipt small{color:#c5d0d7;line-height:1.4;display:block}
 @media(max-width:600px){.welcome-pull{top:8%;right:4%;padding:18px;gap:8px;max-height:84%;overflow-y:auto}.welcome-pull>img{width:58px;height:100px}.welcome-pull h2{font-size:24px}.welcome-pull p{font-size:14px}.welcome-pull__coach{top:6px}.welcome-pull__receipt{padding:10px 12px}}
+
+.gacha-batch-options { grid-column:1/-1; grid-row:3; display:flex; flex-wrap:wrap; justify-content:center; gap:10px; width:min(760px,calc(100% - 24px)); margin:12px auto; position:relative; z-index:2; }
+.gacha-batch-options small { flex-basis:100%; text-align:center; color:#ead8b0; font:500 12px/1.5 var(--font-sans); }
+.gacha-batch-options:has(>small:only-child) { display:none; }
+
+.pull-season-track { grid-column:1/-1; grid-row:4; width:min(900px,calc(100% - 24px)); margin:20px auto; padding:18px; border-block:1px solid #dbc18a55; color:#eddfc2; position:relative; z-index:2; }
+.pull-season-track header { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:12px; }
+.pull-season-track h3,.pull-season-bonus h3 { font:700 21px/1.2 var(--font-action-sign); margin:0; }
+.pull-season-track p,.pull-season-track>small,.pull-season-bonus small { font:500 12px/1.5 var(--font-sans); }
+.pull-season-track ol { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:10px; margin:16px 0; list-style:none; padding:0; }
+.pull-season-track li { display:flex; flex-direction:column; gap:6px; padding:12px; border:1px solid #c7aa6d66; background:#102820; }
+.pull-season-track li[data-claimed=true] { background:#27452a; border-color:#baca83; }
+.pull-season-track li>b { font:700 19px var(--font-action-sign); }.pull-season-track li>span { font:600 12px/1.4 var(--font-sans); }.pull-season-track li>small { font:700 10px/1.4 var(--font-mono); color:#cfcbad; }
+.pull-season-bonus { padding:16px; border-block:1px solid #dfc48666; background:#132e23; margin-block:16px; }.pull-season-bonus p { display:flex; flex-wrap:wrap; justify-content:space-between; gap:10px; }.pull-season-bonus p>span { color:#f4df9f; font-weight:700; }
+@media(max-width:600px) { .pull-season-track ol { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+/* The old generic venue offer can load after this page. Standard remains a paper
+   fight bill; weekly artwork owns its own frame and is deliberately excluded. */
+.gacha-stage .fight-bill[data-focus='false'] {
+  background-color: var(--sq-paper-aged, #f4ead5);
+  background-image:
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.08'/%3E%3C/svg%3E"),
+    radial-gradient(ellipse at center, transparent 30%, rgba(133, 114, 85, 0.25) 100%);
+  color: var(--sq-ink-700, #1a1a1a);
+}
+.gacha-stage .fight-bill[data-focus='false'] .fight-bill__title h2 {
+  color: var(--sq-ink-700, #1a1a1a);
+  font-family: var(--font-action-sign, 'Hemi Head', sans-serif);
+}

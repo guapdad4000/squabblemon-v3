@@ -1,3 +1,5 @@
+import { installGameSurfacePolicy } from '../lib/gameSurfacePolicy';
+import '../styles/game-surface.css';
 import { completeDefeatBeat } from '../lib/battleMediaEvents';
 import type { BattleArtCue } from '@workspace/squabblemon-engine/battleArtwork';
 import { shareEqual } from '../lib/structuralShare';
@@ -124,6 +126,7 @@ const resultBroadcastHoldMs = (speed: 1 | 1.5, fast = false) => scaleBattleBeat(
 ), speed);
 
 export function PlayLoop({ mode = 'practice', onExit, onTutorialComplete, onVerifiedComplete, initialDeckId = 'block', initialRivalId = 'combo', hideLobby = false, turnTimerEnabled = true, customPlayerDeck, availableDeckIds, storyNodeId, challengeRunId, equippedVariants, cardProgression = {}, activity, trainingCircuit = false, draftWeek, draftPicks, loanerPractice = false }: { loanerPractice?: boolean; activity?: string; trainingCircuit?: boolean; draftWeek?: string; draftPicks?: string[]; mode?: 'guest' | 'practice' | 'tutorial' | 'story'; onExit: () => void; onTutorialComplete?: () => void; onVerifiedComplete?: (match: Match, serverMatchId?: string) => void; initialDeckId?: string; initialRivalId?: string; hideLobby?: boolean; turnTimerEnabled?: boolean; customPlayerDeck?: Deck; availableDeckIds?: string[]; storyNodeId?: string; challengeRunId?: string; equippedVariants?: EquippedVariantMap; cardProgression?: CardProgressionMap }) {
+  useEffect(installGameSurfacePolicy, []);
   const effectiveTurnTimerEnabled = shouldRunTurnTimer(mode, turnTimerEnabled);
   const [screen, setScreen] = useState<'lobby' | 'battle' | 'result'>(hideLobby ? 'battle' : 'lobby');
   const [reviewBoard, setReviewBoard] = useState(false);

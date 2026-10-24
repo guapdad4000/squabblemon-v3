@@ -33,12 +33,10 @@ try {
     );
     await page.getByRole("button", { name: "FIGHT THE PRECINCT →" }).click();
     await page.locator("[data-testid=boss-raid-stage]").waitFor();
-    const counters = await page.evaluate(() => ({
-      draw: document.querySelector('.raid-deck-counter')!.getBoundingClientRect().x,
-      damage: document.querySelector('.raid-damage-counter')!.getBoundingClientRect().x,
-    }));
-    assert.ok(counters.draw < counters.damage, 'Draw counter must precede damage');
     const initial = await page.evaluate(() => (window as any).__raid);
+    // The cinematic header consolidates the old floating counters into one readout.
+    assert.equal(await page.locator('.raid-crew-pressure > span').nth(1).innerText(), `−${initial.score} BANKED`);
+    assert.equal(await page.locator('.raid-crew-pressure > span').nth(2).innerText(), `${Math.max(0, initial.match.cpuCardIds.length - initial.match.cpuDrawIndex)} TO DRAW`);
     assert.equal(initial.match.round, 1);
     await page.getByRole("button", { name: "How to fight" }).click();
     await page.getByRole("dialog").waitFor();

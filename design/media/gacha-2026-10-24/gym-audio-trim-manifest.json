@@ -1,0 +1,254 @@
+{
+  "revision": 4,
+  "timeline_ms": {
+    "compression": 0,
+    "contact": 90,
+    "release": 230,
+    "flight": 350,
+    "pov": 1250,
+    "wall": 2650,
+    "settle": 5317,
+    "single_complete": 5317,
+    "ten_complete": 5317
+  },
+  "source_directory": "/home/falcon/Downloads",
+  "originals_preserved": true,
+  "analysis": "10ms stereo RMS envelope and -36dB/80ms silence detection. Bag impact is one decaying event; rattle contains isolated events. No time stretching, denoising or dynamic compression. Source distortion is retained; attenuation gives playback headroom.",
+  "originals": {
+    "bag-impact.wav": {
+      "bytes": 1536078,
+      "duration_seconds": 8.0,
+      "codec": "pcm_s16le",
+      "sample_rate": 48000,
+      "channels": 2,
+      "sha256": "d3fc5a3b57f33a1e3ebf157a5aa4c28b3278be220231e294d457f2673c72ba90"
+    },
+    "bag-travel-wind.wav": {
+      "bytes": 2012238,
+      "duration_seconds": 10.48,
+      "codec": "pcm_s16le",
+      "sample_rate": 48000,
+      "channels": 2,
+      "sha256": "98578735a5b407185c97f6c11d9af0939ec76b40b06892fecd3e98ed2a0eb1b7"
+    },
+    "impact-frame-sound.wav": {
+      "bytes": 683598,
+      "duration_seconds": 3.56,
+      "codec": "pcm_s16le",
+      "sample_rate": 48000,
+      "channels": 2,
+      "sha256": "83fb274ee57ca5efeb07afaa52209c451f368d5e2b359964494e3adf8f87efc0"
+    },
+    "punchng-bag-chain-rattle.wav": {
+      "bytes": 960078,
+      "duration_seconds": 5.0,
+      "codec": "pcm_s16le",
+      "sample_rate": 48000,
+      "channels": 2,
+      "sha256": "704fe0b86d944d78ec393a1128cbdd6c07d417aff96ccea09a935fc083794f97"
+    }
+  },
+  "outputs": [
+    {
+      "name": "bag-impact",
+      "source": "bag-impact.wav",
+      "start": 0,
+      "end": 0.42,
+      "fade_in": 0.003,
+      "fade_out": 0.08,
+      "gain_db": -6,
+      "active": true,
+      "stage": "Contact at90ms. One continuous impact source; no separate punch takes invented.",
+      "duration_seconds": 0.42,
+      "relative_public_path": "scenes/gym/audio/rarity-flight-v1/bag-impact.mp3",
+      "filter": "atrim=start=0:end=0.42,asetpts=PTS-STARTPTS,volume=-6dB,afade=t=in:st=0:d=0.003,afade=t=out:st=0.340000:d=0.08",
+      "reference_wav": "/home/falcon/Documents/New project 9/output/gacha-rarity-flight/audio/bag-impact-trim-reference.wav",
+      "output": {
+        "bytes": 7724,
+        "duration_seconds": 0.456,
+        "codec": "mp3",
+        "sample_rate": 48000,
+        "channels": 2,
+        "sha256": "1f630ea6360db1aca24a0f4f35b0f5cec69b19b68f364cf876dac8b4ae29e13e"
+      },
+      "decoded_verification": {
+        "decoded_samples_per_channel": 20160,
+        "decoded_duration_seconds": 0.42,
+        "peak_dbfs": -6.133,
+        "rms_dbfs": -10.445,
+        "clipped_samples": 0
+      },
+      "shipping": true
+    },
+    {
+      "name": "travel-wind",
+      "source": "bag-travel-wind.wav",
+      "start": 1.54,
+      "end": 2.14,
+      "fade_in": 0.02,
+      "fade_out": 0.1,
+      "gain_db": -1,
+      "active": false,
+      "stage": "Legacy short cue retained unchanged; superseded by travel-wind-long-v2 for the longer visible flight.",
+      "duration_seconds": 0.6,
+      "relative_public_path": "scenes/gym/audio/rarity-flight-v1/travel-wind.mp3",
+      "filter": "atrim=start=1.54:end=2.14,asetpts=PTS-STARTPTS,volume=-1dB,afade=t=in:st=0:d=0.02,afade=t=out:st=0.500000:d=0.1",
+      "reference_wav": "/home/falcon/Documents/New project 9/output/gacha-rarity-flight/audio/travel-wind-trim-reference.wav",
+      "output": {
+        "bytes": 10412,
+        "duration_seconds": 0.624,
+        "codec": "mp3",
+        "sample_rate": 48000,
+        "channels": 2,
+        "sha256": "856306bc6103cc15fbcb92ba872e101e5a576617491e5c11663db2116aa017bc"
+      },
+      "decoded_verification": {
+        "decoded_samples_per_channel": 28800,
+        "decoded_duration_seconds": 0.6,
+        "peak_dbfs": -5.913,
+        "rms_dbfs": -17.646,
+        "clipped_samples": 0
+      },
+      "shipping": false,
+      "archive": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v1/approved-originals/scenes/gym/audio/rarity-flight-v1/travel-wind.mp3"
+    },
+    {
+      "name": "travel-wind-long-v2",
+      "source": "bag-travel-wind.wav",
+      "start": 1.4,
+      "end": 4.42,
+      "fade_in": 0.02,
+      "fade_out": 0.12,
+      "gain_db": -5,
+      "active": false,
+      "stage": "Previous 3020ms wind retained unchanged; superseded by travel-wind-launch-v3 for the faster 900ms live launch.",
+      "duration_seconds": 3.02,
+      "relative_public_path": "scenes/gym/audio/rarity-flight-v1/travel-wind-long-v2.mp3",
+      "filter": "atrim=start=1.4:end=4.42,asetpts=PTS-STARTPTS,volume=-5dB,afade=t=in:st=0:d=0.02,afade=t=out:st=2.900000:d=0.12",
+      "reference_wav": "/home/falcon/Documents/New project 9/output/gacha-rarity-flight/audio/travel-wind-long-v2-trim-reference.wav",
+      "output": {
+        "bytes": 49196,
+        "duration_seconds": 3.048,
+        "codec": "mp3",
+        "sample_rate": 48000,
+        "channels": 2,
+        "sha256": "358cbbd730c460adce0a170339a2f39007d42c890a0b09949106eb543b93e81f"
+      },
+      "decoded_verification": {
+        "decoded_samples_per_channel": 144960,
+        "decoded_duration_seconds": 3.02,
+        "peak_dbfs": -6.397,
+        "rms_dbfs": -18.966,
+        "clipped_samples": 0
+      },
+      "shipping": false,
+      "archive": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v1/approved-originals/scenes/gym/audio/rarity-flight-v1/travel-wind-long-v2.mp3"
+    },
+    {
+      "name": "travel-wind-launch-v3",
+      "source": "bag-travel-wind.wav",
+      "start": 1.4,
+      "end": 3.82,
+      "fade_in": 0.02,
+      "fade_out": 0.12,
+      "gain_db": -5,
+      "active": true,
+      "stage": "Release230ms through wall impact2650ms, exactly2420ms at1x. Original native-pitch continuous section; no loop or time stretch.",
+      "duration_seconds": 2.42,
+      "relative_public_path": "scenes/gym/audio/rarity-flight-v1/travel-wind-launch-v3.mp3",
+      "filter": "atrim=start=1.4:end=3.82,asetpts=PTS-STARTPTS,volume=-5dB,afade=t=in:st=0:d=0.02,afade=t=out:st=2.300000:d=0.12",
+      "reference_wav": "/home/falcon/Documents/New project 9/output/gacha-rarity-flight/audio/travel-wind-launch-v3-trim-reference.wav",
+      "output": {
+        "bytes": 39596,
+        "duration_seconds": 2.448,
+        "codec": "mp3",
+        "sample_rate": 48000,
+        "channels": 2,
+        "sha256": "f9aa080fdfd8b2d26aca6373963e8ee2192773975d22de05bb95db036b9694c7"
+      },
+      "decoded_verification": {
+        "decoded_samples_per_channel": 116160,
+        "decoded_duration_seconds": 2.42,
+        "peak_dbfs": -6.411,
+        "rms_dbfs": -19.155,
+        "clipped_samples": 0
+      },
+      "shipping": true
+    },
+    {
+      "name": "impact-cels",
+      "source": "impact-frame-sound.wav",
+      "start": 0,
+      "end": 0.32,
+      "fade_in": 0.002,
+      "fade_out": 0.05,
+      "gain_db": -9,
+      "active": true,
+      "stage": "Wall impact at 2650ms. Keep the existing 320ms transient; the 2666.667ms crash film holds through settle at 5317ms without stretching or looping this cue.",
+      "duration_seconds": 0.32,
+      "relative_public_path": "scenes/gym/audio/rarity-flight-v1/impact-cels.mp3",
+      "filter": "atrim=start=0:end=0.32,asetpts=PTS-STARTPTS,volume=-9dB,afade=t=in:st=0:d=0.002,afade=t=out:st=0.270000:d=0.05",
+      "reference_wav": "/home/falcon/Documents/New project 9/output/gacha-rarity-flight/audio/impact-cels-trim-reference.wav",
+      "output": {
+        "bytes": 6188,
+        "duration_seconds": 0.36,
+        "codec": "mp3",
+        "sample_rate": 48000,
+        "channels": 2,
+        "sha256": "984964a317f13c4415507ca3132f56d6b47a5f8d993006c2f9ba5bf74b4f1785"
+      },
+      "decoded_verification": {
+        "decoded_samples_per_channel": 15360,
+        "decoded_duration_seconds": 0.32,
+        "peak_dbfs": -9.364,
+        "rms_dbfs": -12.264,
+        "clipped_samples": 0
+      },
+      "shipping": true
+    },
+    {
+      "name": "chain-rattle",
+      "source": "punchng-bag-chain-rattle.wav",
+      "start": 2.425,
+      "end": 2.785,
+      "fade_in": 0.003,
+      "fade_out": 0.035,
+      "gain_db": -1,
+      "active": true,
+      "stage": "Release230ms. Third isolated rattle; keep the existing360ms accent and avoid replaying at every finale stage.",
+      "duration_seconds": 0.36,
+      "relative_public_path": "scenes/gym/audio/rarity-flight-v1/chain-rattle.mp3",
+      "filter": "atrim=start=2.425:end=2.785,asetpts=PTS-STARTPTS,volume=-1dB,afade=t=in:st=0:d=0.003,afade=t=out:st=0.325000:d=0.035",
+      "reference_wav": "/home/falcon/Documents/New project 9/output/gacha-rarity-flight/audio/chain-rattle-trim-reference.wav",
+      "output": {
+        "bytes": 6572,
+        "duration_seconds": 0.384,
+        "codec": "mp3",
+        "sample_rate": 48000,
+        "channels": 2,
+        "sha256": "7ab6681911ca7f1b5e2be05c7bafe3183eb9410a9aa853afd7b1af12a40861e2"
+      },
+      "decoded_verification": {
+        "decoded_samples_per_channel": 17280,
+        "decoded_duration_seconds": 0.36,
+        "peak_dbfs": -6.5,
+        "rms_dbfs": -30.852,
+        "clipped_samples": 0
+      },
+      "shipping": true
+    }
+  ],
+  "totals": {
+    "original_bytes": 5191992,
+    "export_bytes": 119688,
+    "original_duration_seconds": 27.04,
+    "trimmed_duration_seconds": 7.14,
+    "active_export_bytes": 60080,
+    "active_trimmed_duration_seconds": 3.52,
+    "shipping_export_bytes": 60080
+  },
+  "encoder": "ffmpeg version 7.1.1-1ubuntu4.2 Copyright (c) 2000-2025 the FFmpeg developers",
+  "notes": [
+    "2026-10-24 delivery audit: active MP3 bytes retained exactly; two superseded wind exports archived outside public."
+  ]
+}

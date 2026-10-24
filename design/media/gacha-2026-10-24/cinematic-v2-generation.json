@@ -1,0 +1,150 @@
+{
+  "tool": "Built-in image_gen.imagegen via imagegen skill",
+  "purpose": "Original cel-shaded Squabblemon gacha impact and connected card arrival, requested 2026-10-24. No third-party game frames used in the implementation.",
+  "assets": [
+    {
+      "file": "contact.webp",
+      "source": "exec-9949d9af-601e-4c08-ab4b-56a4b51f7dfc.png",
+      "prompt": "Full-screen landscape16:9 original street-boxing anime impact frame. A gigantic foreground red boxing glove dents a black heavy bag with a gold clenched-fist emblem and crimson slashes. Jagged white-hot contact, branching black lightning and broken chains fill every edge. Industrial brick gym silhouettes in corners. Thick ink, sharp two-tone cel shadows, red/gold/ivory/black. Central hit survives phone cropping. No text, UI, card, border or crowns. Opaque.",
+      "shipping": true,
+      "bytes": 337910,
+      "sha256": "b27a6a2ff806768f10dcdcfae79cd048e77255792fda26e421f72abdf41f3519",
+      "dimensions": [
+        1672,
+        941
+      ],
+      "encoding": "ffmpeg libwebp quality80 compression_level6; original PNG master, unchanged dimensions and exact alpha",
+      "approvedBeforeOptimization": {
+        "bytes": 450108,
+        "archive": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v1/approved-originals/brand/gacha/cinematic-v2/contact.webp"
+      },
+      "beforeSecondOptimization": {
+        "bytes": 383820,
+        "archive": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v2/before/brand/gacha/cinematic-v2/contact.webp"
+      },
+      "qualityComparisonSecondPass": {
+        "path": "brand/gacha/cinematic-v2/contact.webp",
+        "source": "/home/falcon/.codex/generated_images/01a16c62-60f2-7942-b229-e067daf32b61/exec-9949d9af-601e-4c08-ab4b-56a4b51f7dfc.png",
+        "candidate": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v2/images/contact-q80.webp",
+        "quality": 80,
+        "beforeBytes": 383820,
+        "bytes": 337910,
+        "dimensions": [
+          1672,
+          941
+        ],
+        "alphaExact": true,
+        "compositePsnrToSource": {
+          "dark": 31.90373,
+          "cream": 31.90373
+        }
+      }
+    },
+    {
+      "file": "ten-burst.webp",
+      "source": "exec-5f22d706-4181-469e-91b6-2a440ecea19c.png",
+      "prompt": "Continue the impact art in the same wide industrial gym after the bag explodes. Torn black leather with red slashes, broken chains, graphic floorboard/brick chunks and cel-shaded curling smoke burst outward. Black lightning reaches all edges. Clear central35 percent width for the real card. Bold controlled ink, hard shadows, teal/gold/ivory/crimson. No glove, people, text, card, UI, border or crowns. Opaque.",
+      "shipping": false,
+      "archive": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v1/approved-originals/brand/gacha/cinematic-v2/ten-burst.webp",
+      "status": "Archived historical source derivative; no runtime consumer in approved video flow."
+    },
+    {
+      "file": "burst-foreground.webp",
+      "source": "exec-05ff26d7-5944-43a4-ae46-6a52f2f1ef43.png",
+      "prompt": "Transparent16:9 foreground VFX cutout matching the blast art. An irregular asymmetric perimeter of jagged black/ivory lightning, torn black heavy-bag leather with crimson slashes, snapped gold chain links and floor splinters exploding toward corners. Large foreshortened edge fragments; central40 percent width and70 percent height transparent, with genuine alpha between all fragments. No backdrop, filled rectangle, fog sheet, regular ring, disc, text, card, people, glove, UI or crowns.",
+      "shipping": true,
+      "bytes": 599060,
+      "sha256": "a6001db6df5023c10827baa65828e81e00611543feab470b8d19314fecbc394c",
+      "dimensions": [
+        1672,
+        941
+      ],
+      "encoding": "ffmpeg libwebp quality80 compression_level6; original PNG master, unchanged dimensions and exact alpha",
+      "approvedBeforeOptimization": {
+        "bytes": 737578,
+        "archive": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v1/approved-originals/brand/gacha/cinematic-v2/burst-foreground.webp"
+      },
+      "beforeSecondOptimization": {
+        "bytes": 667332,
+        "archive": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v2/before/brand/gacha/cinematic-v2/burst-foreground.webp"
+      },
+      "qualityComparisonSecondPass": {
+        "path": "brand/gacha/cinematic-v2/burst-foreground.webp",
+        "source": "/home/falcon/.codex/generated_images/01a16c62-60f2-7942-b229-e067daf32b61/exec-05ff26d7-5944-43a4-ae46-6a52f2f1ef43.png",
+        "candidate": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v2/images/burst-foreground-q80.webp",
+        "quality": 80,
+        "beforeBytes": 667332,
+        "bytes": 599060,
+        "dimensions": [
+          1672,
+          941
+        ],
+        "alphaExact": true,
+        "compositePsnrToSource": {
+          "dark": 32.44594,
+          "cream": 32.46314
+        }
+      }
+    },
+    {
+      "file": "single-arrival.webp",
+      "source": "exec-4cb46b40-a5f4-4a8f-b28e-4b4d17db4f0f.png",
+      "prompt": "Same16:9 cel-shaded industrial boxing gym after a single pull: intact black fist-emblem heavy bag flies far back high in the center with a broken chain trailing. Huge black/ivory speed slashes sweep along the perimeter and ropes; gold spotlights cut through teal/gold curling smoke around clear central card space. Rushing floor perspective. No exploded bag halves, brown rubble carpet, text, card, UI, people, border or crowns. Opaque.",
+      "shipping": false,
+      "archive": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v1/approved-originals/brand/gacha/cinematic-v2/single-arrival.webp",
+      "status": "Archived historical source derivative; no runtime consumer in approved video flow."
+    },
+    {
+      "file": "single-arrival-wall-v2.webp",
+      "source": "exec-cdc6da07-0829-4ace-a3c9-dcc991739699.png",
+      "tool": "Built-in image_gen.imagegen edit",
+      "edit_target": "codex-clipboard-3d5ffd30-a12f-4b6c-bf67-02525c720d24.png",
+      "prompt": "Preserve exact low wide gym camera, wooden floor perspective, rings, ceiling, gold/teal cel-shaded art, smoke and speed lines. Remove only the central airborne bag and trailing loose chain. Replace with an architecturally integrated brick back wall and a jagged punched-through hole at that position, cracked brick edges, dark opening, dust and a few brick fragments. No bag in the hole; preserve side hanging equipment. No camera change, foreground wall, text, people, border or new emblems.",
+      "dimensions": [
+        1672,
+        941
+      ],
+      "bytes": 307342,
+      "encoding": "ffmpeg libwebp quality80 compression_level6; original PNG master, unchanged dimensions and exact alpha",
+      "usage": "Shared single/partial/ten finale, video landing poster and reveal backdrop.",
+      "shipping": true,
+      "sha256": "7b7b74c68050f9681f3817d0c0591de6fe24061be6645b4e033c84f0a9614917",
+      "approvedBeforeOptimization": {
+        "bytes": 420082,
+        "archive": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v1/approved-originals/brand/gacha/cinematic-v2/single-arrival-wall-v2.webp"
+      },
+      "beforeSecondOptimization": {
+        "bytes": 355422,
+        "archive": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v2/before/brand/gacha/cinematic-v2/single-arrival-wall-v2.webp"
+      },
+      "qualityComparisonSecondPass": {
+        "path": "brand/gacha/cinematic-v2/single-arrival-wall-v2.webp",
+        "source": "/home/falcon/.codex/generated_images/01a16c62-60f2-7942-b229-e067daf32b61/exec-cdc6da07-0829-4ace-a3c9-dcc991739699.png",
+        "candidate": "/home/falcon/Documents/New project 9/output/gacha-media-optimization-v2/images/single-arrival-wall-v2-q80.webp",
+        "quality": 80,
+        "beforeBytes": 355422,
+        "bytes": 307342,
+        "dimensions": [
+          1672,
+          941
+        ],
+        "alphaExact": true,
+        "compositePsnrToSource": {
+          "dark": 32.53073,
+          "cream": 32.53073
+        }
+      }
+    }
+  ],
+  "notes": [
+    "Prompts summarized here; references were the local gym background, local black-lightning art, and the preceding generated plates.",
+    "Generated PNG originals remain in the Codex generated_images folder; project uses these versioned WebP derivatives.",
+    "Conversion: ffmpeg libwebp, compression_level6, quality88 (foreground90); no generative edits during conversion.",
+    "The foreground has an alpha channel. Composition centers remain usable under object-fit:cover for portrait screens.",
+    "Artwork contains no rewards or card text. All actual cards, rarity, duplicates and amounts come from the saved opening.",
+    "2026-10-24 delivery audit: historical unreferenced derivatives are archived outside public; entries retain original provenance and mark shipping=false.",
+    "Current delivery optimization supersedes earlier encoding notes: quality84, transparent burst foreground86, same source PNG masters and dimensions; exact alpha retained. Historical entries remain provenance, not runtime URLs.",
+    "Second delivery optimization supersedes earlier encoding notes for shipping files:quality80 from original PNG masters, unchanged dimensions and exact alpha. Full/detail comparisons reviewed before applying; previous public derivatives archived."
+  ],
+  "publicBasePath": "brand/gacha/cinematic-v2/"
+}
