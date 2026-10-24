@@ -1,3 +1,4 @@
+import { presentCardForm } from '../lib/cardFormPresentation';
 import { BattleStatus } from './BattleEffects';
 import { BattleFxImage } from './BattleFxImage';
 import { DrFadeArt } from './DrFadeArt';
@@ -100,6 +101,7 @@ function CardViewComponent({
   fillContainer, presentationOnly, dragEnabled = false, covered = false,
   entryBurst, scoreStance, portraitPop, backgroundUrl, currentRound, collectibleLayers,
 }: CardViewProps) {
+  card = presentCardForm(card);
   const inspection = useCardInspection(card, inspectable ?? (!presentationOnly && !isInspector), onInspect, variantId);
   const combatPresentation = isBoard && !isInspector && boardPresentation === 'combat';
   const decoration = !combatPresentation && (isInspector || fillContainer) ? collectibleLayers : undefined;

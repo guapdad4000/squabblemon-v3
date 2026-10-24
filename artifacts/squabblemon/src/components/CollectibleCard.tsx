@@ -1,3 +1,4 @@
+import { presentCardForm } from '../lib/cardFormPresentation';
 import React, { memo, useEffect, useMemo, useRef } from 'react';
 import { CardView, type CollectibleCardLayers } from './CardView';
 import { CardRarityStamp } from './CardRarityStamp';
@@ -63,7 +64,7 @@ let typeReady: Promise<FontFace[]> | undefined;
  * CardView still rejects layers on battle hand and combat faces. */
 export const CollectibleCard = memo(function CollectibleCard({ foil = true, showRules = true, ...props }: Props) {
   const host = useRef<HTMLDivElement>(null);
-  const layers = useMemo(() => collectibleCardLayers(props.card, foil, showRules), [props.card, foil, showRules]);
+  const layers = useMemo(() => collectibleCardLayers(presentCardForm(props.card), foil, showRules), [props.card, foil, showRules]);
   const name = props.card.name;
   useEffect(() => {
     let disposed = false;

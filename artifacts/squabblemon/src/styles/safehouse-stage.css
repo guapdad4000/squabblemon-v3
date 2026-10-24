@@ -68,19 +68,46 @@
    Pin only the Events marker into the clear floor area at lower-left (above the card fan). */
 @media (max-width:480px) and (max-height:560px){.safehouse-stage:not([data-scene-fallback="static"]):not([data-scene-fallback="error"]) .safehouse-room-markers button[data-station="events"][data-anchor-positioned="true"]{left:72px!important;top:90px!important;z-index:3}}
 
-/* Kumite hangs below the existing announcement rail. */
-.safehouse > .kumite-shortcut { position:absolute; right:10px; top:274px; z-index:20; width:88px; }
-/* Keep the whole chibi action above the painted fan on short phones. */
-@media(max-width:600px) and (max-height:620px) {
-  .safehouse > .kumite-shortcut { width:68px; }
-  .safehouse > .kumite-shortcut .kumite-shortcut__cta { min-height:22px; font-size:11px; }
+/* Reward components remove their own claimed shortcuts. Normal flow closes the
+   gap immediately without copying server reward state into the home screen. */
+.safehouse-shortcuts{position:absolute;z-index:20;top:76px;right:12px;width:84px;max-height:calc(100% - 76px - var(--fan-clearance,170px) - 12px);display:flex;flex-direction:column;align-items:center;gap:10px;overflow-y:auto;overflow-x:hidden;scrollbar-width:none;padding:4px 2px 8px;box-sizing:content-box;pointer-events:none}
+.safehouse-shortcuts > dialog{pointer-events:auto}
+.safehouse-shortcuts::-webkit-scrollbar{display:none}
+.safehouse-shortcuts > :is(.safehouse-bounty-logo,.john-henry-shortcut,.starter-mythic-shortcut,.kumite-shortcut){position:relative;inset:auto;width:100%;flex:none;margin:0;pointer-events:auto}
+.safehouse-shortcuts > :is(.john-henry-shortcut,.starter-mythic-shortcut) img{width:100%;object-fit:contain}
+.safehouse-shortcuts > .safehouse-bounty-logo img{display:block}
+.safehouse-shortcuts :is(a,button):focus-visible{outline-offset:-2px}
+@media(max-width:600px) and (max-height:720px){
+ .safehouse-shortcuts{top:84px;right:8px;width:64px;gap:7px;max-height:calc(100% - 84px - var(--fan-clearance,130px) - 8px)}
+ .safehouse-shortcuts > .safehouse-bounty-logo img{height:52px}
+ .safehouse-shortcuts > .john-henry-shortcut img{height:47px}
+ .safehouse-shortcuts > .starter-mythic-shortcut img{height:67px}
+ .safehouse-shortcuts > :is(.john-henry-shortcut,.starter-mythic-shortcut) span{font-size:7px;padding:3px 0;letter-spacing:0}
+ .safehouse-shortcuts .kumite-shortcut__cta{min-height:22px;font-size:10px}
 }
-@media(max-height:550px) and (orientation:landscape) {
-  .safehouse > .safehouse-bounty-logo { top:54px; width:60px; }
-  .safehouse > .safehouse-bounty-logo img { height:48px; }
-  .safehouse > .starter-mythic-shortcut { top:109px; width:60px; }
-  .safehouse > .starter-mythic-shortcut img { width:60px; height:62px; }
-  .safehouse > .starter-mythic-shortcut span { font-size:7px; padding:2px 0; }
-  .safehouse > .kumite-shortcut { top:193px; width:60px; }
-  .safehouse > .kumite-shortcut .kumite-shortcut__cta { min-height:22px; font-size:10px; }
+@media(max-height:550px) and (orientation:landscape){
+ .safehouse-shortcuts{top:54px;right:10px;width:60px;gap:6px;max-height:calc(100% - 54px - var(--fan-clearance,100px) - 8px)}
+ .safehouse-shortcuts > .safehouse-bounty-logo img{height:44px}
+ .safehouse-shortcuts > .john-henry-shortcut img{height:44px}
+ .safehouse-shortcuts > .starter-mythic-shortcut img{height:62px}
+ .safehouse-shortcuts > :is(.john-henry-shortcut,.starter-mythic-shortcut) span{font-size:7px;padding:2px 0}
+ .safehouse-shortcuts .kumite-shortcut__cta{min-height:22px;font-size:10px}
+}
+
+/* A short portrait cannot fit eleven projected 44px targets in its shallow
+   marker band. Keep a scrollable two-column list beside the shortcut rail. */
+@media(max-width:480px) and (max-height:720px){
+ .safehouse-stage .safehouse-room-markers:not([hidden]){inset:140px 88px calc(var(--fan-clearance,130px) + 12px) 10px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-content:start;gap:2px 0;overflow-y:auto;overflow-x:hidden;scrollbar-width:none;pointer-events:auto}
+ .safehouse-stage .safehouse-room-markers:not([hidden]) button{position:static;transform:none;min-width:0;min-height:44px;width:100%;padding:8px 3px;gap:3px;justify-content:flex-start}
+ .safehouse-stage .safehouse-room-markers:not([hidden]) button span{font-size:10px;letter-spacing:0}
+ .safehouse-stage .safehouse-room-markers::-webkit-scrollbar{display:none}
+}
+
+@media(max-height:550px) and (orientation:landscape){
+ .safehouse-stage[data-view="phone"] .safehouse-room-title{visibility:hidden}
+ .safehouse-stage[data-view="phone"] .safehouse-room-bottom{left:20px;right:auto;width:42vw;max-width:360px}
+ .safehouse-stage[data-view="phone"] .safehouse-room-detail__body{flex-direction:column;align-items:flex-start;gap:6px}
+ .safehouse-stage[data-view="phone"] .safehouse-room-detail{padding:27px 20px 12px}
+ .safehouse-stage[data-view="phone"] .safehouse-room-detail h2{font-size:18px}
+ .safehouse-stage[data-view="phone"] .safehouse-room-detail p{font-size:9px}
 }

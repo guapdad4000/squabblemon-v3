@@ -13,12 +13,16 @@ export function CompactDeckPicker({ decks, selectedId, onSelect, disabled = fals
       const right = node.scrollWidth - node.clientWidth - node.scrollLeft > 2;
       setEdges(previous => previous.left === left && previous.right === right ? previous : { left, right });
     };
-    const observer = new ResizeObserver(update);
+    let frame = 0;
+    const schedule = () => {
+      if (!frame) frame = requestAnimationFrame(() => { frame = 0; update(); });
+    };
+    const observer = new ResizeObserver(schedule);
     observer.observe(node);
     for (const child of node.children) observer.observe(child);
-    node.addEventListener('scroll', update, { passive: true });
+    node.addEventListener('scroll', schedule, { passive: true });
     update();
-    return () => { observer.disconnect(); node.removeEventListener('scroll', update); };
+    return () => { observer.disconnect(); node.removeEventListener('scroll', schedule); cancelAnimationFrame(frame); };
   }, [decks]);
   useLayoutEffect(() => {
     const node = rail.current;
@@ -32,7 +36,7 @@ export function CompactDeckPicker({ decks, selectedId, onSelect, disabled = fals
     <div ref={rail} className="compact-deck-picker__rail">
     {!decks.length && <span>No battle-ready crew available</span>}
     {decks.map(deck => <button type="button" key={deck.id} aria-pressed={selectedId === deck.id} disabled={disabled} onClick={() => onSelect(deck.id)} className="compact-deck-picker__deck">
-      <span className="compact-deck-picker__box" aria-hidden="true"><img src={getCardImage(deck.heroCardId)} alt="" loading="lazy" /></span>
+      <span className="compact-deck-picker__box" aria-hidden="true"><img src={getCardImage(deck.heroCardId)} alt="" loading="lazy" draggable={false} decoding="async" /></span>
       <span><strong>{deck.name}</strong><small>{deck.cardIds.length} cards {selectedId === deck.id ? '· READY' : ''}</small></span>
     </button>)}
     </div>

@@ -16,12 +16,28 @@ export function clampCameraOrbit(orbit, maxRadius = 17) {
   return orbit;
 }
 
+// The low TV faces into the room from the left wall. Moving toward the couch
+// must lift the eye and slide it in front of the cabinet, including eased frames.
+export const TV_CAMERA_CLEARANCE = Object.freeze({ frontX: -3.27, minZ: -2.96, maxZ: .72, eyeY: 3.05, approach: 1.2 });
+const smooth = value => { const t = clamp(value, 0, 1); return t * t * (3 - 2 * t); };
+export function clearTelevision(position) {
+  const zone = TV_CAMERA_CLEARANCE;
+  const side = Math.min(smooth((position.z - zone.minZ + zone.approach) / zone.approach), smooth((zone.maxZ + zone.approach - position.z) / zone.approach));
+  if (!side || position.x >= zone.frontX + zone.approach) return position;
+  const approach = smooth((zone.frontX + zone.approach - position.x) / zone.approach) * side;
+  position.y += Math.max(0, zone.eyeY - position.y) * approach;
+  // A continuously moving boundary avoids a positional jump at either TV edge.
+  position.x = Math.max(position.x, ROOM_INTERIOR.minX + CAMERA_CLEARANCE + (zone.frontX - ROOM_INTERIOR.minX - CAMERA_CLEARANCE) * side);
+  return position;
+}
+
 export function positionRoomCamera(orbit, position, contain = true) {
   const { yaw, pitch, radius, target } = orbit;
   const horizontal = Math.cos(pitch) * radius;
   position.x = target.x + Math.sin(yaw) * horizontal;
   position.y = target.y + Math.sin(pitch) * radius;
   position.z = target.z + Math.cos(yaw) * horizontal;
+  clearTelevision(position);
   // Portrait screens keep their elevated overview and open roof for visibility.
   if (!contain) return position;
   // Clamp world space after easing: presets and the whole transition between

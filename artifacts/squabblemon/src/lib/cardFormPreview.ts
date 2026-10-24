@@ -1,3 +1,4 @@
+import { BUDDY_EARTH_COPY } from './cardFormPresentation';
 import type { Card } from '../data';
 import { createCardInstance, type CardInstance } from '../gameEngine';
 import { LUIGION_POWERED } from '../../../../lib/squabblemon-engine/src/neighborhoodWave';
@@ -10,8 +11,7 @@ export function previewBuddyForm(card: Card, squabbled: boolean): Card | CardIns
     ...card, ...normal,
     type: 'Earth', buddyForm: 'squabble-earth' as const,
     power: normal.basePower * 2, powerModifier: normal.basePower,
-    ability: 'Earth Squabble',
-    effect: 'Squabble: Double base Hands and transform from Plant into Earth. For two rounds, friendly Earth characters (including BUDDY) gain +2 Hands and enemies lose 1 Hand. The Earth form remains after those temporary modifiers expire. This form does not plant Buds or provide the normal district discount.',
+    ...BUDDY_EARTH_COPY,
   };
 }
 

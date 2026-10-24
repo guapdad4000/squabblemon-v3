@@ -1,3 +1,4 @@
+import { presentCardForm } from '../lib/cardFormPresentation';
 import { SummonDetails } from './SummonDetails';
 import { BOSS_NPCS } from "@workspace/squabblemon-engine/bossNpcCards";
 import { quoteStyleShards } from '@workspace/squabblemon-engine/styleShards';
@@ -54,6 +55,7 @@ function scoutNote(card: any): string {
 export function CardInspector({ card, onClose, bootstrap, variantId, initialPreviewVariant, match, useCachedProfile = false, renderCard }: any) {
   const reduceMotion = useReducedMotion() || (typeof window !== 'undefined' && cardMotionReduced());
   card = match?.boards?.flat().find((current: CardInstance) => current.instanceId === card.instanceId) ?? card;
+  card = presentCardForm(card);
   const sourceCard = card;
   const formPreview = !match && !('instanceId' in sourceCard) ? getCardFormPreview(sourceCard) : undefined;
   const [form, setForm] = React.useState<{cardId: string; alternate: boolean} | null>(null);
@@ -170,7 +172,7 @@ export function CardInspector({ card, onClose, bootstrap, variantId, initialPrev
         <div className="polaroid mx-auto md:mx-0">
           <div className="polaroid__tape" aria-hidden="true" />
           <div className="polaroid__photo">
-            {renderCard ? renderCard(inspectorCardProps) : match ? <CardView {...inspectorCardProps} /> : <CollectibleCard {...inspectorCardProps} />}
+            {renderCard ? renderCard(inspectorCardProps) : <CollectibleCard {...inspectorCardProps} />}
           </div>
           <div className="polaroid__caption">
             {card.name}

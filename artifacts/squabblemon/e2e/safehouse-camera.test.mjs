@@ -78,3 +78,18 @@ test('zoom can return to the room overview but never go beyond it', () => {
     assert.equal(orbit.radius, 2.4);
   }
 });
+
+test('couch-facing sweeps rise above and move in front of the TV instead of behind its cabinet', () => {
+  const target = new T.Vector3(.1, 1.52, -.45);
+  const positions = [];
+  for (let step = 0; step <= 2400; step++) {
+    const orbit = { yaw: -Math.PI / 2 + step * Math.PI / 2400, pitch: .06, radius: 10.7, target };
+    const eye = positionRoomCamera(orbit, new T.Vector3()); positions.push(eye);
+    assertInside(eye);
+    if (eye.z >= -2.96 && eye.z <= .72 && eye.x < -2.57) {
+      assert.ok(eye.x >= -3.27 - 1e-9, 'Eye stays on the room-facing side of the TV');
+      if (eye.x <= -3.27 + 1e-9) assert.ok(eye.y >= 3.05 - 1e-9, 'The TV does not occlude the couch-facing eye');
+    }
+  }
+  for (let index = 1; index < positions.length; index++) assert.ok(positions[index].distanceTo(positions[index - 1]) < .04, 'Clearance enters and leaves continuously');
+});

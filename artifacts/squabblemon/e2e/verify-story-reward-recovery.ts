@@ -6,6 +6,7 @@ const appBasePath = new URL(origin).pathname.replace(/\/+$/, '');
 const browser = await chromium.launch();
 try {
  const page = await browser.newPage({reducedMotion:'reduce'});
+ await page.routeWebSocket('**', socket => socket.close());
  const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));
  const assertInViewport = async (selector:string) => {
   const target=page.locator(selector).last();
@@ -57,6 +58,8 @@ try {
    await page.getByRole('button',{name:'Keep going'}).focus();
   await page.screenshot({path:`/tmp/story-reward-${chapter.id}.png`,fullPage:true});
   await page.getByRole('button',{name:'Keep going'}).click();
+  assert.equal(await page.locator('.story-reward-completion').count(),0,'one receipt returns to the map instead of a second rewards screen');
+  await page.getByTestId('reopen-story-node').click();
   await page.getByRole('button',{name:'Check reward delivery',exact:true}).click();
   await page.getByText('These rewards were already saved to your account.').waitFor();
   assert.equal(requests,3);

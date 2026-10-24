@@ -307,10 +307,10 @@ export function Missions({ bootstrap }: { bootstrap: PlayerBootstrap }) {
         </div>
       )}
       {tab === 'bounties' && <LegendBountyBar openJourney={openJourney} statuses={legends.data ?? []} busy={!!claimState} onClaim={id => void collectAll(id)} loading={legends.isPending} error={legends.isError} onRetry={() => void legends.refetch()} />}
-      {tab === 'bounties' && <><StarterMythic bootstrap={bootstrap} placement="banner" /><JohnHenryMythic bootstrap={bootstrap} placement="banner" /></>}
+      {tab === 'bounties' && <div className="bounty-milestones" aria-label="Mythical contracts"><StarterMythic bootstrap={bootstrap} placement="banner" /><JohnHenryMythic bootstrap={bootstrap} placement="banner" /></div>}
       </div>
       {tab === 'bounties' && claimState && (
-          <div className="bounty-hunter__pov" data-phase={claimState?.phase || 'idle'} data-testid="bounty-pistol" aria-hidden="true">
+          <div className="bounty-hunter__pov" data-phase={claimState.phase} data-weapon={sweepActive ? 'minigun' : 'pistol'} data-testid="bounty-pistol" aria-hidden="true">
             <div className="bounty-hunter__pov-inner">
               <img
                 className="bounty-hunter__pistol bounty-hunter__pistol--idle"

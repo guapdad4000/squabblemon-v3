@@ -16,10 +16,10 @@
 }
 .battle-arena.battle-hud .battle-side button.battle-formation-continuation,
 .battle-arena.battle-hud .battle-side button.formation-expand.battle-formation-inspect {
-  position: absolute; z-index: 24; bottom: 0;
+  position: absolute; z-index: 24; bottom: var(--formation-control-inset,0px);
   display: flex; align-items: center; justify-content: center; gap: 3px;
-  height: 32px; min-height: 32px; border: 1px solid #d8bd795e;
-  border-radius: 5px; background: #07111bed; color: #fff0d4;
+  height: 32px; min-height: 32px; border: 1px solid #f1eadd26;
+  border-radius: 20px; background: #060c1666; color: #f1eadd;
   font: 800 9px/1 var(--font-display); text-shadow: 0 1px 2px #000;
   cursor: pointer; touch-action: manipulation;
   transition: transform 120ms ease, background-color 120ms ease;
@@ -31,7 +31,7 @@
   overflow: hidden; text-overflow: ellipsis; font-variant-numeric: tabular-nums;
 }
 .battle-arena.battle-hud .battle-side .formation-expand.battle-formation-inspect {
-  right: 2px; min-width: 48px; max-width: calc(100% - 42px); padding: 2px 5px;
+  right: 2px; min-width: 36px; max-width: calc(100% - 42px); padding: 2px 5px;
 }
 .battle-arena.battle-hud .battle-formation-inspect > span { white-space: nowrap; }
 .battle-arena.battle-hud .battle-side :is(.battle-formation-continuation,.battle-formation-inspect):active {

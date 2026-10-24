@@ -596,6 +596,14 @@ export function NodeOverlay({
     if (bootstrap) queryClient.setQueryData(getGetPlayerBootstrapQueryKey(), bootstrap);
   };
 
+  const showCompletion = (result: { rewards: StoryGrantedReward[]; bootstrap: PlayerBootstrap }) => {
+    const hasReceipt = revealStoryRewards({ nodeId, title: storyNode.title, story: rewardArt, rewards: result.rewards, bootstrap: result.bootstrap, resolveCharacter: resolveStoryRewardCharacter, presentation: 'story' });
+    // The receipt is the completed reward screen. Return its backdrop to the map,
+    // so acknowledging it does not expose a second collection screen underneath.
+    if (hasReceipt) onClose();
+    else setScreen('completed');
+  };
+
   const recoverSceneRewards = async () => {
     if (actionLock.current || isBattle || hasPuzzle) return;
     actionLock.current = true;
@@ -609,8 +617,7 @@ export function NodeOverlay({
       setDeliveryStatus(result.rewards.length
         ? result.alreadyCompleted ? 'Missing first-clear rewards were added to your account.' : 'Rewards saved to your account.'
         : 'These rewards were already saved to your account.');
-      revealStoryRewards({ nodeId, title: storyNode.title, story: rewardArt, rewards: result.rewards, bootstrap: result.bootstrap, resolveCharacter: resolveStoryRewardCharacter, presentation: 'story' });
-      setScreen('completed');
+      showCompletion(result);
     } catch {
       setActionError('Rewards could not be saved. Try again; the same reward cannot be granted twice.');
     } finally { actionLock.current = false; }
@@ -637,8 +644,7 @@ export function NodeOverlay({
         setDeliveryStatus(result.rewards.length
           ? result.alreadyCompleted ? 'Missing first-clear rewards were added to your account.' : 'Rewards saved to your account.'
           : 'These rewards were already saved to your account.');
-        revealStoryRewards({ nodeId, title: storyNode.title, story: rewardArt, rewards: result.rewards, bootstrap: result.bootstrap, resolveCharacter: resolveStoryRewardCharacter, presentation: 'story' });
-        setScreen('completed');
+        showCompletion(result);
         return;
       }
       const result = await saveDialogue.mutateAsync({
@@ -729,8 +735,7 @@ export function NodeOverlay({
             setDeliveryStatus(result.rewards.length
               ? result.alreadyCompleted ? 'Missing first-clear rewards were added to your account.' : 'Rewards saved to your account.'
               : 'These rewards were already saved to your account.');
-            revealStoryRewards({ nodeId, title: storyNode.title, story: rewardArt, rewards: result.rewards, bootstrap: result.bootstrap, resolveCharacter: resolveStoryRewardCharacter, presentation: 'story' });
-            setScreen('completed');
+            showCompletion(result);
           }}
           onClose={onClose}
         />

@@ -1,7 +1,7 @@
 import { CompactDeckPicker } from './CompactDeckPicker';
 import useEmblaCarousel from 'embla-carousel-react';
 import { Check, ChevronLeft, ChevronRight, Layers } from 'lucide-react';
-import { useCallback, useEffect, useId, useRef } from 'react';
+import { useCallback, useEffect, useId, useRef, useState } from 'react';
 import { catalogCardById, getCardImage } from '../data';
 import { styleSetFor } from '@workspace/squabblemon-engine/cosmetics';
 import { getAssetUrl } from '../lib/assets';
@@ -40,10 +40,12 @@ function DeckBox({
   name,
   heroCardId,
   active,
+  renderScene,
 }: {
   name: string;
   heroCardId: string;
   active: boolean;
+  renderScene: boolean;
 }) {
   const hostRef = useRef<HTMLSpanElement>(null);
   const cover = styleSetFor(heroCardId)?.deckCover;
@@ -51,7 +53,7 @@ function DeckBox({
 
   useEffect(() => {
     const host = hostRef.current;
-    if (!host || !active) return;
+    if (!host || !renderScene) return;
 
     let disposed = false;
     let generation = 0;
@@ -89,7 +91,9 @@ function DeckBox({
     });
     const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
     const mutation = new MutationObserver(update);
-    intersection.observe(host);
+    // The outgoing cover may leave the clipped viewport before Embla settles.
+    // Visibility follows the whole carousel so a swipe never disposes its scene.
+    intersection.observe(host.closest('.deck-carousel') ?? host);
     motion.addEventListener('change', update);
     mutation.observe(document.documentElement, {
       attributes: true,
@@ -105,7 +109,7 @@ function DeckBox({
       mutation.disconnect();
       motion.removeEventListener('change', update);
     };
-  }, [active, name, image, cover]);
+  }, [renderScene, name, image, cover]);
 
   return (
     <span className="deck-box" ref={hostRef} aria-hidden="true">
@@ -139,6 +143,9 @@ export function DeckCarousel({
 }: DeckCarouselProps) {
   const selectedIndex = Math.max(0, decks.findIndex((deck) => deck.id === selectedId));
   const initialIndex = useRef(selectedIndex).current;
+  // Keep the current renderer during a swipe; constructing the next scene can
+  // wait until the carousel stops without delaying the selected deck itself.
+  const [sceneDeckId, setSceneDeckId] = useState(decks[selectedIndex]?.id ?? '');
   const [viewportRef, api] = useEmblaCarousel({
     align: 'center',
     containScroll: 'trimSnaps',
@@ -158,16 +165,20 @@ export function DeckCarousel({
 
   useEffect(() => {
     if (!api) return;
-    const reset = () => api.scrollTo(latest.current.index, true);
-    api.on('select', syncSelection).on('reInit', reset);
+    const settle = () => setSceneDeckId(latest.current.decks[api.selectedScrollSnap()]?.id ?? '');
+    const reset = () => { api.scrollTo(latest.current.index, true); settle(); };
+    api.on('select', syncSelection).on('settle', settle).on('reInit', reset);
+    settle();
     return () => {
-      api.off('select', syncSelection).off('reInit', reset);
+      api.off('select', syncSelection).off('settle', settle).off('reInit', reset);
     };
   }, [api, syncSelection]);
 
   useEffect(() => {
     if (api && api.selectedScrollSnap() !== selectedIndex) {
-      api.scrollTo(selectedIndex, reducedMotionRequested());
+      const instant = reducedMotionRequested();
+      api.scrollTo(selectedIndex, instant);
+      if (instant) setSceneDeckId(decks[selectedIndex]?.id ?? '');
     }
   }, [api, selectedIndex, decks.length]);
 
@@ -248,7 +259,7 @@ export function DeckCarousel({
                   aria-label={`${openLabel}: ${deck.name}`}
                   onClick={() => onOpen(deck.id)}
                 >
-                  <DeckBox name={deck.name} heroCardId={deck.heroCardId} active={active} />
+                  <DeckBox name={deck.name} heroCardId={deck.heroCardId} active={active} renderScene={deck.id === sceneDeckId} />
                 </button>
                 <div className="deck-carousel__copy">
                   <span className="deck-carousel__eyebrow">{deck.subtitle ?? 'YOUR PERSONAL LINEUP'}</span>

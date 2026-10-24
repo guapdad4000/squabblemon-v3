@@ -123,7 +123,14 @@
     "test:battle-layout": "node e2e/verify-battle-layout.mjs",
     "test:panel-surface-parity": "node e2e/verify-panel-surface-parity.mjs",
     "test:battle-badge-layout": "node e2e/verify-battle-badge-layout.mjs",
-    "test:death-browser": "node e2e/verify-death-media-lifecycle.mjs"
+    "test:death-browser": "node e2e/verify-death-media-lifecycle.mjs",
+    "test:bounty-qa": "node --import tsx e2e/verify-bounty-qa.mjs",
+    "test:card-qa": "node e2e/verify-card-qa-refinement.mjs",
+    "test:card-forms": "node --import ../../scripts/battle-test-css.mjs --import tsx --test src/lib/cardFormPresentation.test.tsx src/lib/cardFormPreview.test.ts src/components/CardView.collectibleLayers.test.tsx",
+    "test:deck-swipe": "node e2e/verify-deck-swipe.mjs",
+    "test:battle-desktop-lanes": "node e2e/verify-battle-desktop-lanes.mjs",
+    "test:safehouse-refinement": "node --import tsx e2e/verify-safehouse-refinement.mjs",
+    "test:safehouse-render-budget": "node e2e/verify-safehouse-render-budget.mjs"
   },
   "devDependencies": {
     "@clerk/react": "^6.15.1",

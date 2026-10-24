@@ -28,7 +28,7 @@ import {
 } from '@workspace/api-client-react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { cardCatalog, catalogCardById, getCardImage, CARD_RARITY_DEFINITIONS, type CardRarity } from '../../data';
-import { CardView } from '../../components/CardView';
+import { CollectibleCard } from '../../components/CollectibleCard';
 import { DepthReveal } from '../../components/DepthReveal';
 import { SceneFrame, sendScene } from '../../components/venue/SceneFrame';
 import { e2eAuthEnabled } from '../../lib/auth';
@@ -127,7 +127,7 @@ const rewardDisplayName = (reward: PackReward) => {
   return card?.name ?? reward.name ?? resourceName(reward);
 };
 
-function RewardCard({ reward, large = false }: { reward: PackReward; large?: boolean }) {
+export function RewardCard({ reward, large = false }: { reward: PackReward; large?: boolean }) {
   const card = reward.cardId ? catalogCardById[reward.cardId] : undefined;
   const isDuplicate = reward.kind === 'styleShards' && Boolean(card);
   return (
@@ -136,7 +136,7 @@ function RewardCard({ reward, large = false }: { reward: PackReward; large?: boo
       data-rarity={rewardRarity(reward).toLowerCase()}
     >
       {card && (reward.kind === 'card' || reward.kind === 'variant' || isDuplicate) ? (
-        <CardView
+        <CollectibleCard
           card={card}
           variantId={reward.variantId ?? undefined}
           isInspector={large}

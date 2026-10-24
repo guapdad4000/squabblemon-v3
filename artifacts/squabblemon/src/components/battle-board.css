@@ -429,3 +429,11 @@
   .battle-arena.battle-hud #hand-tray { height:162px; }
   .battle-arena.battle-hud .battle-hand-row { height:142px; }
 }
+
+/* Broad desktop boards continue into the hand's clear upper margin. The
+   formations gain real scroll space, while their controls remain above cards.
+   Side-docked tablets and short/phone layouts keep their existing geometry. */
+@media (min-width:1200px) and (min-height:700px) and (orientation:landscape) {
+  .battle-arena.battle-hud .battle-command-deck { margin-top: -48px; }
+  .battle-arena.battle-hud .battle-side-player { --formation-control-inset: 48px; }
+}

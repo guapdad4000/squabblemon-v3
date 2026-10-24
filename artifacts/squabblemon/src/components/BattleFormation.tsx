@@ -160,7 +160,7 @@ export function BattleFormation({ children, count, inspectCount = count, crowded
       </button>
     </>}
     {inspectable && <button type="button" className="formation-expand battle-formation-inspect" aria-label={`Inspect all ${inspectCount} ${inspectCount === 1 ? 'card' : 'cards'} in ${label}`} onClick={event => { event.stopPropagation(); event.currentTarget.focus({ preventScroll: true }); onInspect(event); }}>
-      <Swords size={12} aria-hidden="true" /><span>View {inspectCount}</span>
+      <Swords size={13} aria-hidden="true" /><span aria-hidden="true">{inspectCount}</span>
     </button>}
   </>;
 }

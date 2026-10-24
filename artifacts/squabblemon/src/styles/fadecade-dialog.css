@@ -257,11 +257,11 @@
 .challenge-field-label { font:800 10px var(--font-mono); letter-spacing:.1em; color:var(--sq-gold-bright); text-transform:uppercase; }
 .challenge-crew-preview { padding:12px; border:1px solid #ffe44955; border-bottom:3px solid var(--sq-gold-bright); background:#090c19; }
 .challenge-crew-preview>div:first-child { display:flex; align-items:baseline; flex-wrap:wrap; gap:8px; margin-bottom:10px; }
-.challenge-crew-preview span,.challenge-crew-preview small { font:700 8px var(--font-mono); color:#bfc6db; }
-.challenge-crew-preview strong { font:900 italic 13px var(--font-display); color:var(--sq-gold-bright); }
-.challenge-crew-preview small { margin-left:auto; }
+.challenge-crew-preview>div:first-child span,.challenge-crew-preview>div:first-child small { font:700 8px var(--font-mono); color:#bfc6db; }
+.challenge-crew-preview>div:first-child strong { font:900 italic 13px var(--font-display); color:var(--sq-gold-bright); }
+.challenge-crew-preview>div:first-child small { margin-left:auto; }
 .challenge-crew-cards { display:grid; grid-template-columns:repeat(10,minmax(0,1fr)); gap:4px; }
-.challenge-crew-cards img { width:100%; aspect-ratio:2/3; object-fit:contain; }
+.challenge-crew-card>img { width:100%; aspect-ratio:2/3; object-fit:contain; }
 .fadecade-dialog-scroll-body .bounty-item { border:1px solid #ffffff26; border-left:4px solid var(--sq-gold-bright); padding:16px; gap:10px; }
 .fadecade-dialog-scroll-body .bounty-item[data-status=claimable] { border-color:#4ade8080; box-shadow:inset 0 0 22px #4ade8009; }
 .fadecade-dialog-scroll-body .bounty-item[data-status=claimed] { opacity:.65; }
@@ -406,7 +406,7 @@
   background:linear-gradient(145deg,rgba(var(--machine-accent-rgb),.12),#060913 64%);
   clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,0 100%);
 }
-.challenge-crew-preview strong { color:var(--machine-accent); }
+.challenge-crew-preview>div:first-child strong { color:var(--machine-accent); }
 .fadecade-dialog-scroll-body .bounty-item {
   position:relative;
   border-left-color:var(--machine-accent);
@@ -545,3 +545,9 @@
   .fadecade-dialog-art-header { min-height:38px; }
   .fadecade-dialog-art-footer,.fadecade-dialog-footer-ink { min-height:25px; height:25px; }
 }
+
+.challenge-crew-card { min-width:0; aspect-ratio:2/3; }
+/* These are miniature lineup prints: retain the approved name-paper proportions
+   instead of applying the full-card minimum font size over the entire figure. */
+.challenge-crew-card .collector-card[data-layered-card] .collector-card-copy>h4 { font-size:9.7cqw!important; }
+.challenge-crew-card .collector-card[data-layered-card].collector-card--long-name .collector-card-copy>h4 { font-size:6.6cqw!important; }

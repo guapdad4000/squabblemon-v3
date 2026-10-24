@@ -1,95 +1,647 @@
-.bounty-hunter-page{--bounty-gold:#dfbd79;--bounty-cream:#f8ead0;background:#101e1c;color:var(--bounty-cream)}
-.bounty-hunter__backdrop{opacity:.22!important;filter:saturate(.6)}
-.bounty-hunter__scroll{padding-bottom:160px!important}
-.bounty-hunter__hero{padding-top:24px!important}
-.bounty-hunter__logo{max-height:145px;object-fit:contain}
-.bounty-collect-toolbar{display:flex;align-items:center;justify-content:space-between;gap:24px;max-width:1280px;margin:10px auto 24px;padding:24px 28px;border-block:1px solid #c6a76b60;background:linear-gradient(90deg,#233c35e8,#102621d9)}
-.bounty-collect-toolbar span,.legend-bar header>span{font-size:11px;letter-spacing:.22em;color:var(--bounty-gold);font-weight:900}
-.bounty-collect-toolbar h2,.legend-bar h2{font-family:Georgia,serif;font-size:clamp(26px,3vw,40px);margin:5px 0 8px;color:#fff1d9}
-.bounty-collect-toolbar p{font-size:13px;color:#c7d2c9;margin:0}
-.bounty-collect-toolbar>button{flex-shrink:0;padding:17px 26px;border:1px solid #ffe6a5;border-radius:5px;background:linear-gradient(#efce8e,#bc8945);color:#272315;font-size:15px;font-weight:900;box-shadow:0 5px 0 #6e4d28,0 10px 25px #0006;cursor:pointer}
-.bounty-collect-toolbar>button:disabled{opacity:.55;cursor:default}
-.bounty-ledger-layout{grid-template-columns:minmax(140px,180px) minmax(0,1fr) minmax(140px,190px)!important;max-width:1320px;margin:auto;gap:20px!important;align-items:start}
-.bounty-ledger{background:linear-gradient(145deg,#31473d,#172e27)!important;border:1px solid #b8975c!important;border-radius:5px!important;color:#f1e6ce!important;box-shadow:0 12px 25px #0006}
-.bounty-ledger h2{color:#efce8e!important;font-family:Georgia,serif}
-.bounty-ledger dt{color:#b9c9bd!important}.bounty-ledger dd{color:#f9dfaa!important}
-.bounty-award-case{position:relative;min-width:0;aspect-ratio:2/3;filter:drop-shadow(0 14px 12px #0007)}
-.bounty-award-case>img{width:100%;height:100%;object-fit:contain}
-.bounty-award-case>div{position:absolute;inset:21% 17% 21%;display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px;color:#f7ddb3}
-.bounty-award-case>div img{width:75%;height:90px;object-fit:contain;filter:drop-shadow(0 3px 8px #e9b66e70)}
-.bounty-award-case h2{font-size:15px;margin:0;font-family:Georgia,serif}.bounty-award-case b{font-size:26px}.bounty-award-case p{font-size:11px;margin:0}.bounty-award-case small{font-size:10px;color:#c5bb9f}
-.bounty-hunter__board{padding-bottom:24px!important}
-.legend-bar{max-width:1320px;margin:40px auto 24px;overflow:hidden;border:1px solid #a68648;border-radius:8px;background:#111b18;box-shadow:0 16px 45px #0006}
-.legend-bar header{padding:28px 32px 24px;background:linear-gradient(100deg,#203e32,#351e24);border-bottom:1px solid #a68648}
-.legend-bar header p{color:#d5c7b0;margin:0;font-size:14px}
-.legend-bar__scene{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px;padding:30px 18px 20px;background-size:cover;background-position:center;position:relative}
-.legend-seat{position:relative;min-width:0;text-align:center;display:flex;flex-direction:column}
-.legend-seat__portrait{height:190px;position:relative;display:flex;align-items:flex-end;justify-content:center;overflow:hidden}
-.legend-seat__portrait img{width:100%;height:100%;object-fit:contain;filter:brightness(0) drop-shadow(0 0 8px #ffc86275);transition:filter .6s,transform .6s}
-.legend-seat[data-state=ready] .legend-seat__portrait img{filter:brightness(.08) drop-shadow(0 0 12px #ffd77dbb)}
-.legend-seat[data-state=claimed] .legend-seat__portrait img{filter:drop-shadow(0 0 12px #ffc86275)}
-.legend-seat__portrait span{position:absolute;bottom:9px;left:50%;transform:translateX(-50%);border-radius:50%;width:30px;height:30px;line-height:30px;font-size:21px;font-weight:900;color:#efd3a0;background:#17251e;border:1px solid #ba955b}
-.legend-seat__caption{flex:1;padding:16px 10px 12px;background:linear-gradient(#151e19eb,#151a17fc);border:1px solid #b58b444d;border-top:3px solid #ab8040;display:flex;flex-direction:column;align-items:center}
-.legend-seat small{font-size:9px;letter-spacing:.04em;color:#bea577;min-height:24px}.legend-seat h3{font-size:17px;font-family:Georgia,serif;margin:2px 0 8px;color:#ffdeb0}
-.legend-seat p{font-size:11px;line-height:1.5;color:#d6c9b4;min-height:48px;margin:0 0 12px}
-.legend-seat progress{width:100%;height:6px;accent-color:#dfb366}.legend-seat__count{font-size:10px;color:#d4bc8c;margin:5px 0 12px}
-.legend-seat button{margin-top:auto;padding:9px 6px;border:1px solid #c79d55;background:#d4ad65;color:#17251e;border-radius:3px;font-weight:900;font-size:11px;width:100%;cursor:pointer}.legend-seat button:disabled{background:#26372d;color:#bda984;border-color:#6f6545;cursor:default}
-.bounty-hunter__pov{left:auto!important;right:0!important;width:260px!important;height:235px!important;filter:drop-shadow(0 8px 18px #0009);pointer-events:none}
-.bounty-hunter__pov-inner{width:100%!important;height:100%!important}.bounty-hunter__pistol{width:100%!important;height:100%!important;object-fit:contain;object-position:bottom right}
-.bounty-hunter__pov[data-phase=firing] .bounty-hunter__pov-inner{animation:bounty-minigun-kick .09s steps(2,end) infinite!important}
-@keyframes bounty-minigun-kick{0%{transform:translate(0,0) rotate(0)}100%{transform:translate(4px,5px) rotate(1deg)}}
-@media(max-width:1100px){.bounty-ledger-layout{grid-template-columns:150px minmax(0,1fr)!important}.bounty-award-case{display:none}.legend-bar__scene{grid-template-columns:repeat(4,minmax(0,1fr))}}
-@media(max-width:700px){.bounty-collect-toolbar{margin:10px 12px 20px;padding:18px;gap:16px;flex-wrap:wrap}.bounty-collect-toolbar>button{width:100%}.bounty-ledger-layout{display:block!important}.bounty-ledger{margin:0 12px 18px}.bounty-ledger dl{display:grid;grid-template-columns:1fr 1fr;gap:10px}.bounty-ledger h2{font-size:23px;margin:6px 0}.legend-bar{margin:28px 12px}.legend-bar header{padding:22px}.legend-bar__scene{grid-template-columns:repeat(2,minmax(0,1fr));padding:16px 12px;gap:14px}.legend-seat__portrait{height:170px}.legend-seat p{min-height:34px}.bounty-hunter__pov{width:155px!important;height:145px!important}.bounty-hunter__scroll{padding-bottom:110px!important}}
-@media(prefers-reduced-motion:reduce){.legend-seat__portrait img{transition:none}.bounty-hunter__pov-inner{animation:none!important}}
-.bounty-hunter-page[data-reduced-motion=true] .bounty-hunter__pov-inner{animation:none!important}
-.bounty-award-case:after{content:"";position:absolute;inset:22% 17% 23%;pointer-events:none;background:linear-gradient(115deg,transparent 20%,#fff4c814 45%,#fff4c83a 50%,transparent 65%);background-size:300% 100%;animation:bounty-case-glint 8s ease-in-out infinite}
-@keyframes bounty-case-glint{0%,65%{background-position:150% 0}100%{background-position:-100% 0}}
-@media(prefers-reduced-motion:reduce){.bounty-award-case:after{animation:none}}
-.bounty-hunter-page[data-reduced-motion=true] .bounty-award-case:after{animation:none}
-.legend-seat[data-owned=true] .legend-seat__portrait img{filter:drop-shadow(0 0 12px #ffc86275)}
-@media(max-width:700px){.legend-bar__scene{background-size:auto 385px;background-repeat:repeat-y;background-position:center top}}
-/* Urban Western palette drawn from the original Bounty Hunter wanted displays. */
-.bounty-hunter-page{--bounty-gold:#e7b95e;--bounty-cream:#f5e4c2;background:#211a15}
-.bounty-collect-toolbar{background:linear-gradient(100deg,#302019ed,#171512eb);border-block-color:#c6954c80}
-.bounty-collect-toolbar h2,.legend-bar h2,.bounty-ledger h2,.bounty-award-case h2,.legend-seat h3{font-family:inherit;font-weight:900;letter-spacing:-.035em}
-.bounty-collect-toolbar h2,.legend-bar h2{text-transform:uppercase}
-.bounty-collect-toolbar>button{background:linear-gradient(#eab947,#b47c24);border-color:#f6d887;color:#23190b}
-.bounty-ledger{background:linear-gradient(145deg,#33251eef,#1c1713f2)!important;border-color:#987047!important}
-.bounty-ledger dt{color:#cfbca1!important}
-.legend-bar{background:#211812;border-color:#9f7339;border-radius:3px}
-.legend-bar header{background:linear-gradient(110deg,#302219,#211513);border-bottom:3px solid #a63a2d}
-.legend-seat__caption{background:linear-gradient(#241a14eb,#171411fa);border-color:#98704780;border-top:3px solid #a73125;border-radius:0}
-.legend-seat h3{color:#f0d397;font-size:17px}.legend-seat small{color:#dba76c}
-.legend-seat__portrait span{background:#271813;border-color:#ce9e48}
-.legend-seat button:disabled{background:#33291e;color:#c7ab81;border-color:#775639}
-.legend-seat button{background:#b33226;color:#fff0d2;border-color:#df8650}
-.bounty-hunter__pov{width:260px!important;height:275px!important;right:10px!important}
-@media(max-width:700px){.bounty-hunter__pov{width:135px!important;height:170px!important;right:0!important}.legend-bar h2{font-size:29px}}
-.bounty-hunter__pov{opacity:0;transform:translateY(35px);transition:opacity .15s,transform .2s}
-.bounty-hunter__pov[data-phase=loading],.bounty-hunter__pov[data-phase=firing],.bounty-hunter__pov[data-phase=impact]{opacity:1;transform:translateY(0)}
-@media(prefers-reduced-motion:reduce){.bounty-hunter__pov{transition:none;opacity:0!important}}
-.bounty-hunter-page[data-reduced-motion=true] .bounty-hunter__pov{opacity:0!important;transition:none}
-/* Seated cast: one flyer and one independent transparent unlock sprite per seat. */
-.legend-bar__scene{padding:24px 24px 18px;gap:14px;background-size:100% 452px;background-position:center top;background-repeat:no-repeat;background-color:#211813}
-.legend-seat__flier{height:130px;width:min(100%,125px);margin:0 auto 9px;padding:7px 8px;background:linear-gradient(115deg,#edd4a4,#cfb386);color:#21170f;border:1px solid #80603c;box-shadow:2px 4px 8px #0008;position:relative;display:flex;align-items:center;flex-direction:column;transform:rotate(-2deg)}
-.legend-seat:nth-child(even) .legend-seat__flier{transform:rotate(2deg)}
-.legend-seat__flier:before{content:"";position:absolute;top:2px;left:50%;width:4px;height:4px;background:#29221c;border-radius:50%;box-shadow:0 1px 2px #000}
-.legend-seat__flier strong{font-family:Georgia,serif;font-size:19px;line-height:1.1;font-weight:900;letter-spacing:.055em}
-.legend-seat__flier>span{font-size:9px;font-weight:900;text-transform:uppercase;line-height:1.1;margin:4px 0;text-align:center;min-height:11px}
-.legend-seat__flier img{width:100%;height:79px;object-fit:contain;filter:grayscale(1) sepia(.7) contrast(1.3);mix-blend-mode:multiply}
-.legend-seat__portrait{height:275px;overflow:visible;isolation:isolate}
-.legend-seat__portrait img{width:100%;height:100%;object-fit:contain;object-position:center bottom}
-.legend-seat__portrait>span{bottom:7px;font-size:15px;width:24px;height:24px;line-height:24px}
-.legend-seat__caption{margin-top:16px;border-top-color:#9f3122}
-.legend-seat[data-revealed=true] .legend-seat__portrait img{animation:legend-seat-arrival .75s cubic-bezier(.2,.8,.3,1) both}
-@keyframes legend-seat-arrival{0%{transform:translateY(14px) scale(.95);filter:brightness(1.7) drop-shadow(0 0 20px #ffd273)}70%{transform:translateY(-3px) scale(1.025)}100%{transform:none;filter:drop-shadow(0 0 12px #ffc86275)}}
-@media(max-width:1100px){.legend-bar__scene{background-size:auto 442px;background-repeat:repeat-y;gap:24px 16px}.legend-seat__caption{margin-bottom:12px}}
-@media(max-width:700px){.legend-bar__scene{padding:20px 14px;gap:22px 16px;background-size:auto 646px}.legend-seat__flier{height:125px}.legend-seat__flier img{height:75px}.legend-seat__portrait{height:235px}.legend-seat__caption{margin-top:12px}.legend-seat__flier strong{font-size:18px}}
-@media(prefers-reduced-motion:reduce){.legend-seat[data-revealed=true] .legend-seat__portrait img{animation:none}}
-.bounty-hunter-page[data-reduced-motion=true] .legend-seat[data-revealed=true] .legend-seat__portrait img{animation:none}
-@media(max-width:1100px){.legend-seat__portrait:before{content:"";position:absolute;left:50%;bottom:10px;transform:translateX(-50%);width:85px;height:130px;background:var(--legend-stool) center/contain no-repeat;z-index:-1}}
-@media(max-width:700px){.legend-seat__portrait:before{width:75px;height:115px;bottom:9px}}
+/* One presentation layer for the yard, payout weapons, and seated contracts. */
+.bounty-hunter-page {
+  --bounty-gold: #e7b95e;
+  --bounty-cream: #f5e4c2;
+  --bounty-gutter: 24px;
+  background: #211a15;
+  color: var(--bounty-cream);
+}
+.bounty-hunter__backdrop {
+  opacity: 0.22;
+  filter: saturate(0.6);
+}
+.bounty-hunter__scroll {
+  padding-bottom: 32px;
+}
+.bounty-hunter__hero {
+  padding-top: 24px;
+}
+.bounty-hunter__logo {
+  max-height: 145px;
+  object-fit: contain;
+}
+.bounty-collect-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: calc(100% - var(--bounty-gutter) * 2);
+  max-width: 1320px;
+  margin: 10px auto 24px;
+  padding: 12px 0;
+}
+.bounty-collect-toolbar > span,
+.legend-bar > header > span {
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  color: var(--bounty-gold);
+  font-weight: 800;
+}
+.bounty-collect-toolbar > button {
+  flex-shrink: 0;
+  min-height: 44px;
+  padding: 10px 18px;
+  border: 1px solid #efc0698c;
+  border-radius: 4px;
+  background: #261b10;
+  color: #ffe7a8;
+  font: 700 14px var(--font-action-sign, sans-serif);
+  cursor: pointer;
+}
+.bounty-collect-toolbar > button:hover:enabled {
+  background: #49321a;
+}
+.bounty-collect-toolbar > button:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+.bounty-ledger-layout {
+  width: calc(100% - var(--bounty-gutter) * 2);
+  max-width: 1320px;
+  margin: auto;
+  grid-template-columns: minmax(140px, 180px) minmax(0, 1fr) minmax(
+      140px,
+      190px
+    );
+  gap: 20px;
+  align-items: start;
+}
+.bounty-ledger {
+  background: linear-gradient(145deg, #33251eef, #1c1713f2);
+  border: 1px solid #987047;
+  border-radius: 5px;
+  color: #f1e6ce;
+  box-shadow: 0 12px 25px #0006;
+}
+.bounty-ledger h2 {
+  color: #efce8e;
+  font-weight: 900;
+  letter-spacing: -0.035em;
+}
+.bounty-ledger dt {
+  color: #cfbca1;
+}
+.bounty-ledger dd {
+  color: #f9dfaa;
+}
+.bounty-hunter__board {
+  padding-bottom: 24px;
+}
+.bounty-award-case {
+  position: relative;
+  min-width: 0;
+  aspect-ratio: 2/3;
+  padding: 0;
+  filter: drop-shadow(0 14px 12px #0007);
+  cursor: pointer;
+  color: inherit;
+  text-align: center;
+  border: 0;
+  background: transparent;
+}
+.bounty-award-case > img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.bounty-award-case > div {
+  position: absolute;
+  inset: 21% 17%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 4px;
+  color: #f7ddb3;
+}
+.bounty-award-case > div img {
+  width: 65%;
+  height: 60px;
+  object-fit: contain;
+  filter: drop-shadow(0 3px 8px #e9b66e70);
+}
+.bounty-award-case h2 {
+  font-size: 13px;
+  margin: 0;
+  font-weight: 900;
+  line-height: 1.1;
+}
+.bounty-award-case b {
+  font-size: 22px;
+  line-height: 1.1;
+}
+.bounty-award-case small {
+  font-size: 9px;
+  line-height: 1.2;
+  color: #ffe2a1;
+}
+.bounty-award-case:after {
+  content: "";
+  position: absolute;
+  inset: 22% 17% 23%;
+  pointer-events: none;
+  background: linear-gradient(
+    115deg,
+    transparent 20%,
+    #fff4c814 45%,
+    #fff4c83a 50%,
+    transparent 65%
+  );
+  background-size: 300% 100%;
+  animation: bounty-case-glint 8s ease-in-out infinite;
+}
+@keyframes bounty-case-glint {
+  0%,
+  65% {
+    background-position: 150% 0;
+  }
+  to {
+    background-position: -100% 0;
+  }
+}
+.bounty-award-case:disabled {
+  opacity: 0.65;
+  cursor: wait;
+}
+.bounty-hall-return {
+  color: #ffda86;
+  background: none;
+  padding: 10px 0;
+  font-weight: 900;
+}
 
-.bounty-collect-toolbar{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 18px;background:none;border:0;min-height:0}.bounty-collect-toolbar>span{font-size:10px;font-weight:900;letter-spacing:.16em;color:#d1bc92}.bounty-collect-toolbar>button{width:auto;min-width:0;min-height:40px;padding:9px 16px;border:1px solid #efc0698c;border-radius:30px;background:#261b10;color:#ffe7a8;font-size:12px;font-weight:900;box-shadow:0 0 15px #ecb04b35,inset 0 0 12px #ecb04b15}.bounty-collect-toolbar>button:not(:disabled):hover{box-shadow:0 0 24px #ecb04b65}.bounty-collect-toolbar>button:disabled{opacity:.45;box-shadow:none}
-.bounty-award-case{cursor:pointer;color:inherit;text-align:center;border:0;background:transparent;padding:0}.bounty-award-case:focus-visible{outline:3px solid #ffda86;outline-offset:5px}.bounty-hall-return{color:#ffda86;background:none;padding:10px 0;font-weight:900}.bounty-award-case:disabled{opacity:.65;cursor:wait}@media(max-width:1100px){.bounty-award-case{display:block;width:150px;height:240px;justify-self:center;margin:16px auto;grid-column:1/-1}}
-.bounty-award-case>div{gap:4px}.bounty-award-case>div img{height:60px;width:65%}.bounty-award-case h2{font-size:13px;line-height:1.1}.bounty-award-case b{font-size:22px;line-height:1.1}.bounty-award-case small{font-size:9px;line-height:1.2;color:#ffe2a1}
+.legend-bar {
+  width: calc(100% - var(--bounty-gutter) * 2);
+  max-width: 1320px;
+  margin: 40px auto 0;
+  overflow: hidden;
+  border: 1px solid #9f7339;
+  border-radius: 6px;
+  background: #211812;
+  box-shadow: 0 16px 45px #0006;
+}
+.legend-bar > header {
+  padding: 26px 32px 20px;
+  background: linear-gradient(110deg, #302219, #211513);
+}
+.legend-bar > header h2 {
+  font: 700 clamp(26px, 3vw, 40px)/1.1 var(--font-action-sign, sans-serif);
+  margin: 10px 0;
+  color: #fff1d9;
+  text-transform: uppercase;
+  font-synthesis: none;
+}
+.legend-bar > header p {
+  color: #d5c7b0;
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.6;
+}
+.legend-bar .bounty-contract-trail {
+  margin: 0;
+  padding: 12px 24px;
+  gap: 8px;
+  border-top: 1px solid #b18a4938;
+}
+.legend-bar .bounty-contract-trail button {
+  min-height: 44px;
+  border-color: #a9844559;
+  border-radius: 3px;
+  padding: 8px 10px;
+}
+.legend-bar .bounty-contract-trail button[data-state="active"],
+.legend-bar .bounty-contract-trail button[data-state="ready"] {
+  border-color: #efbf6b;
+  color: #ffda94;
+  background: #4b321c;
+}
+/* Retain the original seven separate sprites, flyers and bar artwork. */
+.legend-bar__scene {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 14px;
+  padding: 24px;
+  background-size: 100% 452px;
+  background-position: center top;
+  background-repeat: no-repeat;
+  background-color: #211813;
+  position: relative;
+}
+.legend-seat {
+  position: relative;
+  min-width: 0;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+}
+.legend-seat__flier {
+  height: 130px;
+  width: min(100%, 125px);
+  margin: 0 auto 9px;
+  padding: 7px 8px;
+  background: linear-gradient(115deg, #edd4a4, #cfb386);
+  color: #21170f;
+  border: 1px solid #80603c;
+  box-shadow: 2px 4px 8px #0008;
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  transform: rotate(-2deg);
+}
+.legend-seat:nth-child(even) .legend-seat__flier {
+  transform: rotate(2deg);
+}
+.legend-seat__flier:before {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 50%;
+  width: 4px;
+  height: 4px;
+  background: #29221c;
+  border-radius: 50%;
+}
+.legend-seat__flier strong {
+  font:
+    900 19px/1.1 Georgia,
+    serif;
+  letter-spacing: 0.055em;
+}
+.legend-seat__flier > span {
+  font-size: 9px;
+  font-weight: 900;
+  text-transform: uppercase;
+  line-height: 1.1;
+  margin: 4px 0;
+  min-height: 11px;
+}
+.legend-seat__flier img {
+  width: 100%;
+  height: 79px;
+  object-fit: contain;
+  filter: grayscale(1) sepia(0.7) contrast(1.3);
+  mix-blend-mode: multiply;
+}
+.legend-seat__portrait {
+  height: 275px;
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  isolation: isolate;
+}
+.legend-seat__portrait img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center bottom;
+  filter: brightness(0) drop-shadow(0 0 8px #ffc86275);
+  transition:
+    filter 0.6s,
+    transform 0.6s;
+}
+.legend-seat[data-state="ready"] .legend-seat__portrait img {
+  filter: brightness(0.08) drop-shadow(0 0 12px #ffd77dbb);
+}
+.legend-seat[data-state="claimed"] .legend-seat__portrait img,
+.legend-seat[data-owned="true"] .legend-seat__portrait img {
+  filter: drop-shadow(0 0 12px #ffc86275);
+}
+.legend-seat__portrait > span {
+  position: absolute;
+  bottom: 7px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  line-height: 24px;
+  font-size: 15px;
+  font-weight: 900;
+  color: #efd3a0;
+  background: #271813;
+  border: 1px solid #ce9e48;
+}
+.legend-seat__caption {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 18px;
+  padding: 16px 10px 12px;
+  position: relative;
+  background: linear-gradient(145deg, #30251b, #171310 70%);
+  border: 1px solid #92714780;
+  border-radius: 10px 2px 10px 2px;
+}
+.legend-seat__state {
+  font: 800 9px/1.4 var(--font-sans, sans-serif);
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: #c8ad83;
+}
+.legend-seat h3 {
+  font: 700 20px/1.08 var(--font-action-sign, sans-serif);
+  color: #ffdfa4;
+  margin: 10px 0 5px;
+}
+.legend-seat small {
+  font-size: 10px;
+  color: #c5ad88;
+  line-height: 1.4;
+}
+.legend-seat p {
+  font-size: 12px;
+  line-height: 1.5;
+  color: #e4d4bc;
+  margin: 12px 0;
+  flex: 1;
+}
+.legend-seat__nodes {
+  display: flex;
+  justify-content: center;
+  gap: 7px;
+  list-style: none;
+  padding: 0;
+  margin: 4px 0 15px;
+}
+.legend-seat__nodes li {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border: 1px solid #a3845359;
+  border-radius: 50%;
+  color: #b6a085;
+  font: 700 10px var(--font-mono, monospace);
+}
+.legend-seat__nodes li[data-state="claimed"] {
+  background: #e9bc6c;
+  color: #23170e;
+  border-color: #f2d294;
+}
+.legend-seat__nodes li[data-state="active"],
+.legend-seat__nodes li[data-state="ready"] {
+  color: #ffdda1;
+  border-color: #e9bc6c;
+}
+.legend-seat__nodes li[data-state="ready"] {
+  background: #715226;
+}
+.legend-seat button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: auto;
+  padding: 10px 5px;
+  min-height: 44px;
+  width: 100%;
+  border: 1px solid #bc914c80;
+  background: #44301c;
+  color: #fbe3bc;
+  border-radius: 3px;
+  font: 700 13px/1.15 var(--font-action-sign, sans-serif);
+  cursor: pointer;
+}
+.legend-seat button svg {
+  flex-shrink: 0;
+}
+.legend-seat[data-state="active"] button,
+.legend-seat[data-state="ready"] button {
+  background: #e4b567;
+  color: #24170c;
+  border-color: #f4d399;
+}
+.legend-seat button:hover:enabled {
+  filter: brightness(1.18);
+}
+.legend-seat button:disabled {
+  opacity: 0.5;
+  cursor: wait;
+}
+.legend-bar :focus-visible,
+.bounty-collect-toolbar button:focus-visible,
+.bounty-award-case:focus-visible {
+  outline: 3px solid #ffda86;
+  outline-offset: 3px;
+}
+
+/* Shared gutters keep both permanent reward banners off the screen edges. */
+.bounty-milestones {
+  display: grid;
+  gap: 20px;
+  width: calc(100% - var(--bounty-gutter) * 2);
+  max-width: 1320px;
+  margin: 28px auto 0;
+  padding: 16px;
+  border: 1px solid #a984453d;
+  border-radius: 8px;
+  background: #17120fcc;
+}
+.bounty-milestones > .starter-mythic-banner,
+.bounty-milestones > .john-henry-banner {
+  width: 100%;
+  margin: 0;
+  min-width: 0;
+  border: 1px solid #ad8548;
+  border-radius: 5px;
+  box-shadow: none;
+}
+/* Center the first-person weapon at every width; only recoil moves the inner sprite. */
+.bounty-hunter__pov {
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: var(--bounty-gun-height);
+  filter: drop-shadow(0 8px 18px #0009);
+  opacity: 0;
+  transform: translateY(35px);
+  transition:
+    opacity 0.15s,
+    transform 0.2s;
+}
+.bounty-hunter__pov-inner {
+  width: min(520px, 100%);
+  height: 100%;
+}
+.bounty-hunter__pistol {
+  object-position: bottom center;
+}
+.bounty-hunter__pov[data-phase="loading"],
+.bounty-hunter__pov[data-phase="firing"],
+.bounty-hunter__pov[data-phase="impact"] {
+  opacity: 1;
+  transform: translateY(0);
+}
+.bounty-hunter__pov[data-weapon="minigun"][data-phase="firing"]
+  .bounty-hunter__pov-inner {
+  animation: bounty-minigun-kick 0.09s steps(2, end) infinite;
+}
+@keyframes bounty-minigun-kick {
+  to {
+    transform: translate(4px, 5px) rotate(1deg);
+  }
+}
+.legend-seat[data-revealed="true"] .legend-seat__portrait img {
+  animation: legend-seat-arrival 0.75s cubic-bezier(0.2, 0.8, 0.3, 1) both;
+}
+@keyframes legend-seat-arrival {
+  from {
+    transform: translateY(14px) scale(0.95);
+  }
+  70% {
+    transform: translateY(-3px) scale(1.025);
+  }
+  to {
+    transform: none;
+  }
+}
+@media (max-width: 1100px) {
+  .bounty-ledger-layout {
+    grid-template-columns: 150px minmax(0, 1fr);
+  }
+  .bounty-award-case {
+    width: 150px;
+    height: 240px;
+    justify-self: center;
+    margin: 16px auto;
+    grid-column: 1/-1;
+  }
+  .legend-bar__scene {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    background-size: auto 442px;
+    background-repeat: repeat-y;
+    gap: 24px 16px;
+  }
+  .legend-seat__portrait:before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: 10px;
+    transform: translateX(-50%);
+    width: 85px;
+    height: 130px;
+    background: var(--legend-stool) center/contain no-repeat;
+    z-index: -1;
+  }
+}
+@media (max-width: 700px) {
+  .bounty-hunter-page {
+    --bounty-gutter: 12px;
+  }
+  .bounty-collect-toolbar {
+    margin-block: 10px 20px;
+    flex-wrap: wrap;
+  }
+  .bounty-ledger-layout {
+    display: block;
+  }
+  .bounty-ledger {
+    margin-bottom: 18px;
+  }
+  .bounty-ledger h2 {
+    font-size: 23px;
+    margin: 6px 0;
+  }
+  .legend-bar {
+    margin-top: 28px;
+  }
+  .legend-bar > header {
+    padding: 22px 18px;
+  }
+  .legend-bar > header h2 {
+    font-size: 29px;
+  }
+  .legend-bar .bounty-contract-trail {
+    padding: 12px;
+  }
+  .legend-bar__scene {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    padding: 20px 10px;
+    gap: 22px 10px;
+    background-size: auto 646px;
+  }
+  .legend-seat__flier {
+    height: 125px;
+  }
+  .legend-seat__flier img {
+    height: 75px;
+  }
+  .legend-seat__flier strong {
+    font-size: 18px;
+  }
+  .legend-seat__portrait {
+    height: 235px;
+  }
+  .legend-seat__portrait:before {
+    width: 75px;
+    height: 115px;
+    bottom: 9px;
+  }
+  .legend-seat__caption {
+    margin-top: 12px;
+    padding: 14px 8px 10px;
+  }
+  .legend-seat h3 {
+    font-size: 19px;
+  }
+  .legend-seat p {
+    font-size: 11px;
+  }
+  .legend-seat button {
+    font-size: 12px;
+    gap: 5px;
+  }
+  .bounty-milestones {
+    padding: 10px;
+    gap: 14px;
+  }
+  .bounty-hunter__pov-inner {
+    width: min(380px, 100%);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .bounty-award-case:after {
+    animation: none;
+  }
+  .legend-seat__portrait img {
+    transition: none;
+    animation: none !important;
+  }
+  .bounty-hunter__pov {
+    transition: none;
+    opacity: 0 !important;
+  }
+  .bounty-hunter__pov-inner {
+    animation: none !important;
+  }
+}
+.bounty-hunter-page[data-reduced-motion="true"] .legend-seat__portrait img {
+  transition: none;
+  animation: none;
+}
+.bounty-hunter-page[data-reduced-motion="true"] .bounty-hunter__pov {
+  opacity: 0;
+  transition: none;
+}
+.bounty-hunter-page[data-reduced-motion="true"] .bounty-hunter__pov-inner {
+  animation: none;
+}
+
+.bounty-hunter-page[data-reduced-motion="true"] .bounty-award-case:after {
+  animation: none;
+}
+
+/* A pending claim still needs a readable label on its pale wanted poster. */
+.bounty-hunter-page .bounty-poster .studio-action {
+  border-radius: 3px;
+  font-family: var(--font-action-sign, sans-serif);
+}
+.bounty-hunter-page .bounty-poster .studio-action:disabled {
+  opacity: 1;
+  filter: none;
+  background: #665039;
+  color: #f5e4c2;
+}
