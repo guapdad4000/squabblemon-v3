@@ -1,0 +1,33 @@
+/* A small gym punch card, with exact rewards and state names in the ordered list. */
+.gacha-stage .pull-season-track { width:min(680px,calc(100% - 32px)); min-width:0; margin:12px auto 18px; padding:8px 10px 9px; border:0; color:#efdfb6; }
+.gacha-stage .pull-season-track header { display:flex; flex-wrap:nowrap; align-items:baseline; gap:10px; margin:0 0 12px; }
+.gacha-stage .pull-season-track h3 { flex:1; font:700 italic 17px/1.1 'Hemi Head Italic',sans-serif; text-transform:uppercase; letter-spacing:.025em; }
+.gacha-stage .pull-season-track header > strong { font:700 10px/1.2 var(--font-mono); white-space:nowrap; }
+.gacha-stage .pull-season-track time { color:#c0baa4; font:500 8px/1.2 var(--font-mono); white-space:nowrap; }
+.gacha-stage .pull-season-track ol { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:7px; margin:0; padding:0; list-style:none; }
+.gacha-stage .pull-season-track li { position:relative; display:grid; place-items:center; min-width:0; min-height:49px; padding:7px 3px 5px; gap:0; border:2px solid #e3d3aa; color:#3e4530; background:linear-gradient(110deg,#e6d7b3,#f4e8c9); box-shadow:1px 3px 0 #0006; transform:rotate(-1deg); }
+.gacha-stage .pull-season-track li:nth-child(even) { transform:rotate(1deg); }
+.gacha-stage .pull-season-track li[data-state=delivered] { border-color:#9eb791; background:#c8d2ae; }
+.gacha-stage .pull-season-track li[data-state=earned] { border-color:#f8dfa5; background:#fff0c7; }
+.gacha-stage .pull-season-track .pull-season-track__step { position:absolute; left:5px; top:-8px; min-width:19px; padding:2px 4px; color:#eadab4; background:#244a37; border:1px solid #d4bd89; font:700 10px/1 var(--font-mono); text-align:center; }
+.pull-season-track__reward { min-width:0; display:flex; flex-wrap:wrap; justify-content:center; gap:4px; }
+.pull-season-track__reward > span { display:flex; align-items:center; justify-content:center; gap:3px; }
+.pull-season-track__reward .game-glyph { width:25px; height:25px; flex:none; }
+.pull-season-track__reward strong { color:#293d2c; font:700 19px/1 'Hemi Head',sans-serif; }
+.pull-season-track__stamp { position:absolute; right:-4px; top:-6px; display:grid; place-items:center; width:16px; height:16px; color:#f4eacb; background:#3d623d; border:1px solid #b7c49a; border-radius:50%; font:800 11px/1 var(--font-sans); }
+.pull-season-track .pull-season-track__earned { position:absolute; bottom:-6px; padding:1px 3px; color:#234831; background:#fff0c7; border:1px solid #c4ad72; font:700 7px/1.1 var(--font-mono); white-space:nowrap; }
+@media(max-width:700px) {
+  /* Never end-align overflowing content above the route's scroll origin. */
+  .trading-post > .gym.gacha-stage:is([data-phase=idle],[data-phase=requesting]):not([data-neighborhood=true],[data-welcome-offer=true]) {
+    height:auto; min-height:calc(100svh - 130px); flex:1 0 auto; justify-content:flex-start;
+    padding:clamp(170px,25svh,230px) 0 18px;
+  }
+  .trading-post > .gym.gacha-stage:is([data-phase=idle],[data-phase=requesting]) > :is(.fight-bill,.pull-season-track) { flex-shrink:0; }
+  .gacha-stage .pull-season-track { margin:8px auto 12px; padding:6px 0 8px; }
+  .gacha-stage .pull-season-track header { gap:7px; }
+  .gacha-stage .pull-season-track h3 { font-size:15px; }
+  .gacha-stage .pull-season-track ol { gap:6px; }
+  .gacha-stage .pull-season-track li { min-height:46px; }
+  .pull-season-track__reward .game-glyph { width:22px; height:22px; }
+  .pull-season-track__reward strong { font-size:17px; }
+}

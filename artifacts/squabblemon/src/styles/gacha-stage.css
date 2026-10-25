@@ -2407,10 +2407,6 @@ html[data-reduce-motion='true'] :is(
 .welcome-pull__receipt{position:relative;z-index:2;margin:0 auto 12px;padding:14px 18px;max-width:660px;border:1px solid #f1c56a66;border-radius:12px;background:#0b1720ed;color:white}.welcome-pull__receipt p{font-size:14px;line-height:1.4;margin:6px 0}.welcome-pull__receipt small{color:#c5d0d7;line-height:1.4;display:block}
 @media(max-width:600px){.welcome-pull{top:8%;right:4%;padding:18px;gap:8px;max-height:84%;overflow-y:auto}.welcome-pull>img{width:58px;height:100px}.welcome-pull h2{font-size:24px}.welcome-pull p{font-size:14px}.welcome-pull__coach{top:6px}.welcome-pull__receipt{padding:10px 12px}}
 
-.gacha-batch-options { grid-column:1/-1; grid-row:3; display:flex; flex-wrap:wrap; justify-content:center; gap:10px; width:min(760px,calc(100% - 24px)); margin:12px auto; position:relative; z-index:2; }
-.gacha-batch-options small { flex-basis:100%; text-align:center; color:#ead8b0; font:500 12px/1.5 var(--font-sans); }
-.gacha-batch-options:has(>small:only-child) { display:none; }
-
 .pull-season-track { grid-column:1/-1; grid-row:4; width:min(900px,calc(100% - 24px)); margin:20px auto; padding:18px; border-block:1px solid #dbc18a55; color:#eddfc2; position:relative; z-index:2; }
 .pull-season-track header { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:12px; }
 .pull-season-track h3,.pull-season-bonus h3 { font:700 21px/1.2 var(--font-action-sign); margin:0; }

@@ -252,7 +252,7 @@ async function run(width: number, height: number) {
     await page.getByRole('button', {name:'Undo last change',exact:true}).click();
     await visit('/shop');
     await page.locator('.venue-scene.is-ready').waitFor({state:'attached'});
-    await page.getByRole('button',{name:'10 PULL',exact:true}).click();
+    await page.getByRole('button',{name:'Multi pull',exact:true}).click();
     await page.getByRole('button',{name:'Open 10× · 10 tickets',exact:true}).click();
     await page.getByRole('alert').filter({visible:true}).waitFor();
     await page.evaluate(() => {

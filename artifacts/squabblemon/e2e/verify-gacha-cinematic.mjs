@@ -85,7 +85,7 @@ try {
     console.log(label,'loading');
     await page.goto(`${origin}/e2e/gacha-cinematic.fixture.html`,{waitUntil:'domcontentloaded'});
     await expect(page.locator('.venue-scene.is-ready')).toBeVisible({timeout:30000});
-    if(count===10)await page.getByRole('button',{name:'10 PULL',exact:true}).click();
+    if(count===10)await page.getByRole('button',{name:'Multi pull',exact:true}).click();
     await page.getByRole('button',{name:count===10?'Open 10× · 10 tickets':'Open · 1 ticket',exact:true}).click();
     await expect(page.locator('.pack-gym-controls__strike')).toBeVisible();
     await expect(page.locator('.fight-bill')).toBeHidden();

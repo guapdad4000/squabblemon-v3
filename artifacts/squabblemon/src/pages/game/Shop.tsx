@@ -7,7 +7,7 @@ import { GymVenue, GYM_BAG_POSTER } from '../../components/venue/GymVenue';
 import { CornerStore } from './CornerStore';
 import '../../styles/ui-polish.css';
 import { PULL_BANNERS, getPullBannerSchedule, getPullBannerOccurrence, isPullBannerActive, pullBannerOddsVersion, pullBannerReceiptIdentity } from "@workspace/squabblemon-engine/pullBanners";
-import { STREET_PACK_RULES, affordableStreetPacks, streetPackCost, packReceiptPullCount, isPullCount, type PullCount, type PullSeasonProgress } from '@workspace/squabblemon-engine/packRules';
+import { STREET_PACK_RULES, streetPackCost, packReceiptPullCount, isPullCount, type PullCount, type PullSeasonProgress } from '@workspace/squabblemon-engine/packRules';
 import { GameGlyph } from '../../components/venue/GameGlyph';
 import { useLocation, useSearch } from 'wouter';
 import { Market } from './Market';
@@ -15,6 +15,7 @@ import { NeighborhoodRecruit } from '../../components/NeighborhoodRecruit';
 import { LegacyTicketRecovery } from '../../components/LegacyTicketRecovery';
 import { readShopRequest } from '../../lib/shopJournal';
 import { shopPurchaseDestination } from '../../lib/shopDestination';
+import { quotePullPayment } from '../../lib/pullPayment';
 import '../../styles/market.css';
 import '../../styles/gacha-stage.css';
 import '../../styles/gacha-cinematic.css';
@@ -23,6 +24,7 @@ import { GachaRevealSequence, rewardResourceName as resourceName } from '../../c
 import { PackGymFinale, preloadPackGymFinale } from '../../components/PackGymFinale';
 export { RewardCard } from '../../components/GachaRevealSequence';
 import '../../styles/pull-banners.css';
+import '../../styles/gacha-pull-footer.css';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import {
   customFetch,
@@ -229,7 +231,13 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   };
   const rewards = Array.isArray(opening?.rewards) ? opening.rewards : [];
   const isTenPull = pullSize === 10;
-  const selectedTier = isTenPull ? tenPullConfig : { ...bootstrap.packConfig, ...streetPackCost(pullSize) };
+  const isMultiPull = pullSize > 1;
+  const paymentQuote = (paymentMethod: Payment) => quotePullPayment({
+    paymentMethod, selectedCount: pullSize,
+    balance: paymentMethod === 'ticket' ? bootstrap.profile.packTickets : bootstrap.profile.softCurrency,
+    supportsFlexibleBatches: preview || Boolean(welcome.data?.supportsFlexibleBatches),
+    pendingCount: pending?.pullCount,
+  });
   const isPunching = phase === 'punching' || phase === 'tenPunching';
   const isFinale = phase === 'knockout' || phase === 'tenKnockout';
   const preparingReveal = isFinale && revealPrepared;
@@ -528,6 +536,7 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
       data-phase={phase}
       data-banner-view={false}
       data-neighborhood={neighborhood || undefined}
+      data-welcome-offer={welcomeOffer || undefined}
       data-pull-size={pullSize}
       data-reduced-motion={reduced}
       data-round={isPunching ? beatIndex + 1 : undefined}
@@ -616,8 +625,8 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
               <div className="fight-bill__season-lines" />
               <h4>
                 {preview
-                  ? (isTenPull ? 'STREET PACK · 10X' : 'PREVIEW DROP')
-                  : (isTenPull ? tenPullConfig.name.toUpperCase() : bootstrap.packConfig.name.toUpperCase())}
+                  ? (isMultiPull ? 'STREET PACK · MULTI' : 'PREVIEW DROP')
+                  : `${bootstrap.packConfig.name.toUpperCase()}${isMultiPull ? ' · MULTI' : ''}`}
               </h4>
               <div className="fight-bill__season-lines" />
             </div>
@@ -634,23 +643,23 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
               <div className="fight-bill__action-wrap">
                 {(() => {
                   const method = 'ticket';
-                  const cost = selectedTier.ticketCost;
+                  const { count, cost } = paymentQuote(method);
                   const balance = bootstrap.profile.packTickets;
                   const affordable = balance >= cost;
                   const pendingSize = pending?.pullCount ?? 1;
                   if (pending && (pending.paymentMethod !== method || pendingSize !== pullSize)) return null;
                   const actionLabel = phase === 'requesting'
-                    ? `Securing ${isTenPull ? 'ten pulls' : 'your pull'}`
+                    ? `Securing ${count} ${count === 1 ? 'pull' : 'pulls'}`
                     : pending
                       ? isTenPull ? 'Retry this 10-pull' : 'Retry this opening'
-                      : `Open${pullSize > 1 ? ` ${pullSize}×` : ''} · ${cost} ${cost === 1 ? 'ticket' : 'tickets'}`;
+                      : `${count > 1 && count < 10 ? `Open ${count} packs` : `Open${count === 10 ? ' 10×' : ''}`} · ${cost} ${cost === 1 ? 'ticket' : 'tickets'}`;
                   return (
                     <button
                       type="button"
                       className="fight-bill__pay-btn gacha-stage__ticket-choice gacha-stage__ticket-choice--fight"
                       aria-label={actionLabel}
                       disabled={phase !== 'idle' || (!affordable && !pending)}
-                      onClick={() => void handleOpen(method, pullSize)}
+                      onClick={() => void handleOpen(method, count)}
                     >
                       <img src={`${PUBLIC_BASE}assets/rewards/fight-ticket.webp`} alt="" aria-hidden="true" />
                       <div className="fight-bill__pay-info">
@@ -658,7 +667,7 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
                         <small>{balance.toLocaleString()} OWNED</small>
                       </div>
                       <div className="fight-bill__pay-action">
-                        {phase === 'requesting' ? 'SECURING' : pending ? 'RETRY' : 'ADMIT ONE'}
+                        {phase === 'requesting' ? 'SECURING' : pending ? 'RETRY' : count === 1 ? 'ADMIT ONE' : `ADMIT ${count}`}
                       </div>
                     </button>
                   );
@@ -684,11 +693,12 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
                  </button>
                  <button
                   type="button"
-                  aria-pressed={isTenPull}
+                  aria-pressed={isMultiPull}
+                  aria-label="Multi pull"
                   disabled={phase !== 'idle' || Boolean(pending)}
                   onClick={() => setPullSize(10)}
                  >
-                   10 PULL
+                   MULTI
                  </button>
               </div>
 
@@ -714,7 +724,7 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
                        <span className="fight-bill__bell-clapper" aria-hidden="true" />
                      </span>
                      <span>
-                       {isTenPull
+                       {isMultiPull
                          ? '1 RARE+ PER 10-PULL'
                          : unownedCosmeticVariants === 0
                            ? 'ALL FEATURED STYLES OWNED'
@@ -735,23 +745,23 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
               <div className="fight-bill__action-wrap">
                 {(() => {
                   const method = 'softCurrency';
-                  const cost = selectedTier.softCurrencyCost;
+                  const { count, cost } = paymentQuote(method);
                   const balance = bootstrap.profile.softCurrency;
                   const affordable = balance >= cost;
                   const pendingSize = pending?.pullCount ?? 1;
                   if (pending && (pending.paymentMethod !== method || pendingSize !== pullSize)) return null;
                   const actionLabel = phase === 'requesting'
-                    ? `Securing ${isTenPull ? 'ten pulls' : 'your pull'}`
+                    ? `Securing ${count} ${count === 1 ? 'pull' : 'pulls'}`
                     : pending
                       ? isTenPull ? 'Retry this 10-pull' : 'Retry this opening'
-                      : `Open${pullSize > 1 ? ` ${pullSize}×` : ''} · ${cost.toLocaleString()} Clout`;
+                      : `${count > 1 && count < 10 ? `Open ${count} packs` : `Open${count === 10 ? ' 10×' : ''}`} · ${cost.toLocaleString()} Clout`;
                   return (
                     <button
                       type="button"
                       className="fight-bill__pay-btn gacha-stage__ticket-choice gacha-stage__ticket-choice--clout"
                       aria-label={actionLabel}
                       disabled={phase !== 'idle' || (!affordable && !pending)}
-                      onClick={() => void handleOpen(method, pullSize)}
+                      onClick={() => void handleOpen(method, count)}
                     >
                       <img src={`${PUBLIC_BASE}assets/rewards/clout-ticket.webp`} alt="" aria-hidden="true" />
                       <div className="fight-bill__pay-info">
@@ -759,7 +769,7 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
                         <small>{balance.toLocaleString()} OWNED</small>
                       </div>
                       <div className="fight-bill__pay-action">
-                        {phase === 'requesting' ? 'SECURING' : pending ? 'RETRY' : 'ADMIT ONE'}
+                        {phase === 'requesting' ? 'SECURING' : pending ? 'RETRY' : count === 1 ? 'ADMIT ONE' : `ADMIT ${count}`}
                       </div>
                     </button>
                   );
@@ -811,19 +821,19 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
             <div className="pull-feature__size" role="group" aria-label="Pull size">
               <button type="button" aria-pressed={pullSize === 1} disabled={browseLocked} onClick={() => setPullSize(1)}>1 PULL</button>
               <span aria-hidden="true">/</span>
-              <button type="button" aria-pressed={isTenPull} disabled={browseLocked} onClick={() => setPullSize(10)}>10 PULLS</button>
+              <button type="button" aria-pressed={isMultiPull} aria-label="Multi pull" disabled={browseLocked} onClick={() => setPullSize(10)}>MULTI</button>
             </div>
             <div className="pull-feature__payments">
               {(['ticket', 'softCurrency'] as const).map(method => {
-                const cost = method === 'ticket' ? selectedTier.ticketCost : selectedTier.softCurrencyCost;
+                const { count, cost } = paymentQuote(method);
                 const balance = method === 'ticket' ? bootstrap.profile.packTickets : bootstrap.profile.softCurrency;
                 if (pending && (pending.paymentMethod !== method || (pending.pullCount ?? 1) !== pullSize)) return null;
                 const currency = method === 'ticket' ? (cost === 1 ? 'ticket' : 'tickets') : 'Clout';
                 const label = phase === 'requesting' ? 'Securing your pull' : pending ? 'Retry this opening'
-                  : `Open${pullSize > 1 ? ` ${pullSize}×` : ''} · ${cost.toLocaleString()} ${currency}`;
+                  : `${count > 1 && count < 10 ? `Open ${count} packs` : `Open${count === 10 ? ' 10×' : ''}`} · ${cost.toLocaleString()} ${currency}`;
                 return <button key={method} type="button" className="pull-feature__pay" aria-label={label}
                   disabled={phase !== 'idle' || (!pending && (balance < cost || !bannerActive))}
-                  onClick={() => void handleOpen(method, pullSize)}>
+                  onClick={() => void handleOpen(method, count)}>
                   <img src={`${PUBLIC_BASE}assets/rewards/${method === 'ticket' ? 'fight' : 'clout'}-ticket.webp`} alt="" />
                   <span><strong>{phase === 'requesting' ? 'SECURING…' : pending ? 'RETRY PULL' : `${cost.toLocaleString()} ${currency.toUpperCase()}`}</strong>
                     <small>{balance.toLocaleString()} owned</small></span>
@@ -831,7 +841,7 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
                 </button>;
               })}
             </div>
-            <p className="pull-feature__pity">{preview ? 'Preview · sample rewards' : isTenPull ? 'Every 10-pull includes Rare or better'
+            <p className="pull-feature__pity">{preview ? 'Preview · sample rewards' : isMultiPull ? 'Rare+ per full 10-pull'
               : unownedCosmeticVariants === 0 ? 'All featured styles owned'
               : `Style guarantee ${bootstrap.profile.packPity} / ${bootstrap.packConfig.pityLimit}`}</p>
             {error && <p className="pull-feature__error" role="alert">{error}</p>}
@@ -851,25 +861,26 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
         </p>
       </section>
       </aside>
-      {(preview || welcome.data?.supportsFlexibleBatches) && !welcomeOffer && !pending && !opening && phase === 'idle' && bannerActive && !neighborhood && <section className="gacha-batch-options" aria-label="Use your available packs">
-        {(['ticket', 'softCurrency'] as const).map(method => {
-          const balance = method === 'ticket' ? bootstrap.profile.packTickets : bootstrap.profile.softCurrency;
-          const count = affordableStreetPacks(balance, method);
-          if (!isPullCount(count) || count === 1 || count === 10) return null;
-          const cost = streetPackCost(count);
-          return <button key={method} className="studio-action" type="button" onClick={() => void handleOpen(method, count)}>
-            Open {count} packs · {method === 'ticket' ? `${cost.ticketCost} tickets` : `${cost.softCurrencyCost.toLocaleString()} Clout`}
-          </button>;
-        })}
-        <small>10-pull: discount + Rare or better.</small>
-      </section>}
-      {phase === 'idle' && !welcomeOffer && !preview && welcome.data?.pullSeason && <section className="pull-season-track" aria-label="Monthly pull milestones">
-        <header><h3>{welcome.data.pullSeason.name}</h3><strong>{welcome.data.pullSeason.count} packs opened</strong></header>
-        <p>Ends <time dateTime={welcome.data.pullSeason.endsAt}>{bannerDateLabel(welcome.data.pullSeason.endsAt)}</time>.</p>
-        <ol>{welcome.data.pullSeason.milestones.map(milestone => <li key={milestone.threshold} data-claimed={milestone.claimed}>
-          <b>{milestone.threshold} packs</b><span>{milestone.softCurrency ? `${milestone.softCurrency} Clout` : milestone.packTickets ? `${milestone.packTickets} Street Pack ${milestone.packTickets === 1 ? 'ticket' : 'tickets'}` : `${milestone.styleShards} Universal Style Shards`}</span>
-          <small>{milestone.claimed ? 'Delivered' : welcome.data.pullSeason!.count >= milestone.threshold ? 'Delivered with your next pack' : `${milestone.threshold - welcome.data.pullSeason!.count} to go`}</small>
-        </li>)}</ol>
+      {phase === 'idle' && !welcomeOffer && !preview && welcome.data?.pullSeason && <section className="pull-season-track" aria-label="Monthly pull milestones" aria-description={welcome.data.pullSeason.name}>
+        <header><h3>Pull rewards</h3><strong>{welcome.data.pullSeason.count} pulls</strong><time dateTime={welcome.data.pullSeason.endsAt} aria-label={`Resets ${new Date(welcome.data.pullSeason.endsAt).toUTCString()}`}>{bannerDateLabel(welcome.data.pullSeason.endsAt)}</time></header>
+        <ol>{welcome.data.pullSeason.milestones.map(milestone => {
+          const season = welcome.data!.pullSeason!;
+          const state = milestone.claimed ? 'delivered' : season.count >= milestone.threshold ? 'earned' : 'locked';
+          const values = [
+            { amount: milestone.softCurrency, name: 'Clout', glyph: 'clout' as const },
+            { amount: milestone.packTickets, name: `Street Pack ${milestone.packTickets === 1 ? 'ticket' : 'tickets'}`, glyph: 'ticket' as const },
+            { amount: milestone.styleShards, name: 'Universal Style Shards', glyph: 'shards' as const },
+          ].filter(value => value.amount > 0);
+          const status = milestone.claimed ? 'Delivered.' : state === 'earned' ? 'Earned; delivered with your next pack.' : `${milestone.threshold - season.count} to go.`;
+          return <li key={milestone.threshold} data-claimed={milestone.claimed} data-state={state}
+            aria-current={season.milestones.find(item => !item.claimed)?.threshold === milestone.threshold ? 'step' : undefined}
+            aria-label={`${milestone.threshold} packs: ${values.map(value => `${value.amount} ${value.name}`).join(', ')}. ${status}`}>
+            <b className="pull-season-track__step" aria-hidden="true">{milestone.threshold}</b>
+            <div className="pull-season-track__reward" aria-hidden="true">{values.map(value => <span key={value.glyph}><GameGlyph name={value.glyph} /><strong>{value.amount.toLocaleString()}</strong></span>)}</div>
+            {milestone.claimed && <span className="pull-season-track__stamp" aria-hidden="true">✓</span>}
+            {state === 'earned' && <small className="pull-season-track__earned" aria-hidden="true">Next pack</small>}
+          </li>;
+        })}</ol>
       </section>}
 
       {isPunching && <div className="pack-gym-controls">

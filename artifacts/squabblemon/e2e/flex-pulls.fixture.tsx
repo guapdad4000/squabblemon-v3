@@ -1,4 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { installGameSurfacePolicy } from '../src/lib/gameSurfacePolicy';
+import '../src/styles/game-surface.css';
 import { createRoot } from 'react-dom/client';
 import { QueryClient, QueryClientProvider, useQuery } from '@tanstack/react-query';
 import { getGetPlayerBootstrapQueryKey, type PlayerBootstrap } from '@workspace/api-client-react';
@@ -14,7 +16,8 @@ const client = new QueryClient({ defaultOptions: { queries: { retry: false } } }
 client.setQueryData(getGetPlayerBootstrapQueryKey(), initial);
 (window as any).__flexBootstrap = () => client.getQueryData(getGetPlayerBootstrapQueryKey());
 function Fixture() {
+  useEffect(installGameSurfacePolicy, []);
   const { data = initial } = useQuery({ queryKey: getGetPlayerBootstrapQueryKey(), queryFn: async () => initial, staleTime: Infinity });
-  return <div style={{ minHeight: '100dvh' }}><Shop bootstrap={data} /></div>;
+  return <div className="game-shell game-shell--compact-nav" style={{height:'100dvh'}}><div className="game-shell__content" style={{marginLeft:0}}><div className="game-route-stage"><Shop bootstrap={data} /></div></div></div>;
 }
 createRoot(document.getElementById('root')!).render(<QueryClientProvider client={client}><Fixture /></QueryClientProvider>);
