@@ -14,3 +14,7 @@ scripts/results/squabblehouse-counter-revision-comparison/corrected-original/din
 scripts/results/squabblehouse-counter-revision-comparison/current-v31/diner/current-rules.json filter=lfs diff=lfs merge=lfs -text
 scripts/results/squabblehouse-counter-revision-comparison/griddle-only/diner/current-rules.json filter=lfs diff=lfs merge=lfs -text
 scripts/results/squabblehouse-counter-revision-comparison/janitor-only/diner/current-rules.json filter=lfs diff=lfs merge=lfs -text
+
+# Preserve checksummed CSV CRLF and literal whitespace in archived patches.
+artifacts/deliverables/**/*.csv whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+artifacts/deliverables/**/*.patch -whitespace

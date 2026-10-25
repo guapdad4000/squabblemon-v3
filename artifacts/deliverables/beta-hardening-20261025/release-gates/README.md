@@ -38,4 +38,3 @@ This is local source and isolated browser evidence, not hosted, physical-device,
 - Final `git diff --check`: clean. All owned test/browser/server processes closed.
 
 This executes the shared frontend release pipeline used by local and Netlify builds. The full Netlify wrapper’s API/function packaging and hosted deployment were not run by this agent. Native database/browser/physical-device tiers remain distinct evidence; see the parent’s coordinated results.
-
