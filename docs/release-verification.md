@@ -4,6 +4,8 @@ The shared required inventory is [release-checks.mjs](../scripts/release-checks.
 
 The critical suites cover exact purchase quotes and retry journals, counter/account recovery, gacha films and reveal lifecycle, actual reward receipts, weekly/monthly presentation, current tutorial card promises and audio cues, payment configuration/geography boundaries, and negative tests for the guards themselves. Required test files must exist and register test cases. Failures, cancellation, skips, todos, empty files and missing completion reports fail the gate, including conditions for which Node itself can return exit zero. There is no filtering or skip flag on the release command.
 
+Every check is bounded, so a hang fails the gate instead of stalling a local or Netlify build. Each required test has a 2-minute limit (`--test-timeout`), each test process 10 minutes and each command (including Vite) 15 minutes; an exceeded process limit is killed and reported as `<check> timed out`. The per-test limit matters on Node 24, which waits indefinitely on a never-settling test where Node 22 cancels it once the event loop drains. The limits sit well above the slowest observed suite (about 21 s) and Vite build (about 40 s) on a 2-core host; raise them deliberately with that rationale rather than removing them.
+
 ## Commands and evidence
 
 From the repository root:
