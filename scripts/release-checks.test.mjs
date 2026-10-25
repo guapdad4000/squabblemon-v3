@@ -6,7 +6,8 @@ import path from 'node:path';
 import { createRequire } from 'node:module';
 import { pathToFileURL } from 'node:url';
 import test from 'node:test';
-import { workspaceRoot, criticalSuites, requiredSourceChecks, frontendBuildChecks, executeChecks, runCheck, assertStableReleaseIdentity, runReleaseChecks } from './release-checks.mjs';
+import { workspaceRoot, criticalSuites, requiredSourceChecks, frontendBuildChecks, executeChecks, runCheck, assertStableReleaseIdentity, runReleaseChecks,
+  defaultTestTimeoutMs, defaultTestProcessTimeoutMs, defaultCommandTimeoutMs } from './release-checks.mjs';
 const require = createRequire(import.meta.url);
 const tsx = pathToFileURL(require.resolve('tsx', { paths: [path.join(workspaceRoot, 'artifacts/squabblemon')] })).href;
 const childEnv = { ...process.env }; delete childEnv.NODE_TEST_CONTEXT;
@@ -52,10 +53,34 @@ for (const [name, source, message] of [
 ]) {
   test(`${name} blocks the build even when Node would otherwise exit zero`, t => {
     const dir = fixture(t), file = testFile(dir, source);
-    assert.throws(() => executeChecks([testGate(file), markerGate(dir)], check => runCheck(check, { quiet: true })), message);
+    // A short per-test limit keeps the never-settling case fast; Node 24 would
+    // otherwise wait forever instead of cancelling it when the loop drains.
+    assert.throws(() => executeChecks([testGate(file), markerGate(dir)], check => runCheck(check, { quiet: true, testTimeoutMs: 2000 })), message);
     assert.equal(existsSync(path.join(dir, 'built')), false);
   });
 }
+
+test('every required check is bounded by default and the limits leave headroom', () => {
+  assert.ok(defaultTestTimeoutMs >= 60_000, 'per-test limit must exceed the slowest suite');
+  assert.ok(defaultTestProcessTimeoutMs > defaultTestTimeoutMs, 'process limit must exceed the per-test limit');
+  assert.ok(defaultCommandTimeoutMs >= 5 * 60_000, 'command limit must allow a full Vite build');
+});
+
+test('a never-settling required test fails by its per-test limit on every Node version', t => {
+  const dir = fixture(t), file = testFile(dir, "import test from 'node:test'; test('unfinished recovery', () => new Promise(() => {}));");
+  const started = Date.now();
+  assert.throws(() => runCheck(testGate(file), { quiet: true, testTimeoutMs: 1000 }), /Critical tests failed/);
+  assert.ok(Date.now() - started < 30_000, 'the gate must not wait for the event loop to drain');
+});
+
+test('a hung test process or command is killed and fails the gate instead of stalling the build', t => {
+  const dir = fixture(t);
+  const hungTests = testFile(dir, "import test from 'node:test'; test('holds the process', () => { setInterval(() => {}, 1000); });");
+  assert.throws(() => executeChecks([{ ...testGate(hungTests), timeoutMs: 1500 }, markerGate(dir)], check => runCheck(check, { quiet: true })), /fixture-critical timed out after 1500 ms/);
+  assert.equal(existsSync(path.join(dir, 'built')), false);
+  const hungCommand = { id: 'hung-command', kind: 'command', args: ['-e', 'setInterval(() => {}, 1000)'], timeoutMs: 1500 };
+  assert.throws(() => runCheck(hungCommand, { quiet: true }), /hung-command timed out after 1500 ms and was killed/);
+});
 
 test('a missing required file and an explicitly skipped result cannot become a passed gate', t => {
   const dir = fixture(t);

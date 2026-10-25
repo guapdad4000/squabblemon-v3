@@ -11,6 +11,15 @@ const sourceTest = name => `${frontend}/src/${name}`;
 const require = createRequire(import.meta.url);
 const sha256 = value => createHash('sha256').update(value).digest('hex');
 
+// Bounded execution: a hung check must fail the gate, never stall a build.
+// Node 24 does not cancel a never-settling test when its event loop drains
+// (Node 22 does), so every test gets an explicit per-test limit, and every
+// check process gets a hard wall-clock limit. Defaults are well above the
+// slowest observed suite (~21 s) and Vite build (~40 s) on a 2-core host.
+export const defaultTestTimeoutMs = 2 * 60 * 1000;
+export const defaultTestProcessTimeoutMs = 10 * 60 * 1000;
+export const defaultCommandTimeoutMs = 15 * 60 * 1000;
+
 // Required on every local frontend build and every Netlify build. Add new
 // critical helpers here, not to a separate optional npm test list.
 export const criticalSuites = [
@@ -76,6 +85,13 @@ export function frontendBuildChecks(root = workspaceRoot) {
   ];
 }
 
+function assertProcessFinished(result, id, timeoutMs) {
+  if (result.error?.code === 'ETIMEDOUT') {
+    throw new Error(`${id} timed out after ${timeoutMs} ms and was killed; a hung check cannot pass the gate.`);
+  }
+  if (result.error) throw result.error;
+}
+
 export function assertStrictTestResult(result, files, cwd) {
   if (result.error) throw result.error;
   if (result.signal || result.status !== 0) throw new Error(`Critical tests failed (${result.signal || `exit ${result.status ?? 'unknown'}`}).`);
@@ -95,13 +111,16 @@ export function assertStrictTestResult(result, files, cwd) {
   return summary.counts;
 }
 
-export function runCheck(check, { root = workspaceRoot, env = process.env, quiet = false } = {}) {
+export function runCheck(check, { root = workspaceRoot, env = process.env, quiet = false,
+  testTimeoutMs = check.testTimeoutMs ?? defaultTestTimeoutMs,
+  timeoutMs = check.timeoutMs ?? (check.kind === 'tests' ? defaultTestProcessTimeoutMs : defaultCommandTimeoutMs) } = {}) {
   const cwd = path.resolve(root, check.cwd ?? '.');
   const files = check.files?.map(file => path.resolve(root, file));
   if (files) for (const file of files) if (!existsSync(file)) throw new Error(`Required test is missing: ${file}`);
   const args = check.kind === 'tests' ? [
     '--import', path.join(root, 'scripts/battle-test-css.mjs'), '--import', tsxLoader(root),
-    '--test', '--test-concurrency=2', `--test-reporter=${path.join(root, 'scripts/release-test-reporter.mjs')}`, ...files,
+    '--test', '--test-concurrency=2', `--test-timeout=${testTimeoutMs}`,
+    `--test-reporter=${path.join(root, 'scripts/release-test-reporter.mjs')}`, ...files,
   ] : check.args;
   const started = Date.now();
   // No database access belongs to this fast tier. Native tests have separate,
@@ -109,12 +128,13 @@ export function runCheck(check, { root = workspaceRoot, env = process.env, quiet
   const childEnv = { ...env, DATABASE_URL: '' };
   if (check.kind === 'tests' && check.nodeEnv) childEnv.NODE_ENV = check.nodeEnv;
   delete childEnv.NODE_TEST_CONTEXT;
-  const result = spawnSync(process.execPath, args, { cwd, env: childEnv, encoding: 'utf8', maxBuffer: 32 * 1024 * 1024 });
+  const result = spawnSync(process.execPath, args, { cwd, env: childEnv, encoding: 'utf8', maxBuffer: 32 * 1024 * 1024,
+    timeout: timeoutMs, killSignal: 'SIGKILL' });
   let counts;
   try {
+    assertProcessFinished(result, check.id, timeoutMs);
     if (check.kind === 'tests') counts = assertStrictTestResult(result, files, cwd);
     else {
-      if (result.error) throw result.error;
       if (result.signal || result.status !== 0) throw new Error(`${check.id} failed (${result.signal || `exit ${result.status ?? 'unknown'}`}).`);
     }
   } catch (error) {
