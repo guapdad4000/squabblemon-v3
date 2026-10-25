@@ -1,6 +1,7 @@
+import { storeOnlineRoom as stored, restoreOnlineRoom as restore } from './onlineRoomPersistence';
 import { bankRankedMatchClout } from './rankedMatchClout';
 import { equippedPlayerMat } from '@workspace/squabblemon-engine/playerMats';
-import { PARK_BOT_PERSONAS, parkBotPersona, parkBotUsesSquabble, reactParkBot } from '@workspace/squabblemon-engine/parkBots';
+import { PARK_BOT_PERSONAS, parkBotPersona, reactParkBot } from '@workspace/squabblemon-engine/parkBots';
 import { RANKED_SEASON, rankMilestoneRewards } from '@workspace/squabblemon-engine/ranked';
 import { addReaction, ownedReactions, resolveReactionTray, ReactionError } from '@workspace/squabblemon-engine/reactions';
 import { progressBountyEvent } from './legendBountyProgress';
@@ -25,6 +26,8 @@ import {
   applyOnlineCommand,
   createOnlineRoom,
   expireOnlineRoom,
+  retireIncompatibleOnlineRoom,
+  ONLINE_RULES_VERSION,
   joinOnlineRoom,
   memberSeat,
   onlineRoomView,
@@ -40,10 +43,6 @@ import { lockSocial, guardTargetedRoom, syncRoomInvitation } from "./socialRoomG
 import { homiesDiagnostics, homiesTransaction } from "./homiesDiagnosticsRuntime";
 
 type Tx = Parameters<Parameters<typeof db.transaction>[0]>[0];
-const stored = (state: OnlineRoom) =>
-  state as unknown as Record<string, unknown>;
-const restore = (state: Record<string, unknown>) =>
-  state as unknown as OnlineRoom;
 const commandFingerprint = (command: object) =>
   JSON.stringify(
     Object.entries(command).sort(([a], [b]) => a.localeCompare(b)),
@@ -95,7 +94,7 @@ export async function createFriendRoom(
   deckId: string,
   requestId: string,
 ) {
-  return db.transaction(async (tx) => {
+  const result = await db.transaction(async (tx) => {
     // Serializes create retries and the per-account open-room limit.
     const member = await loadMember(tx, userId, deckId);
     const [existing] = await tx
@@ -112,12 +111,7 @@ export async function createFriendRoom(
         throw new OnlineError(
           "This request was already used for another gang.",
         );
-      return onlineRoomView(
-        expireOnlineRoom(restore(existing.state), Date.now()),
-        existing.code,
-        userId,
-        Date.now(),
-      );
+      return { existingCode: existing.code };
     }
     const now = Date.now();
     const open = await tx
@@ -153,6 +147,7 @@ export async function createFriendRoom(
     });
     return onlineRoomView(room, code, userId, now);
   });
+  return 'existingCode' in result ? accessFriendRoom(result.existingCode, userId) : result;
 }
 
 export async function listFriendRooms(userId: string) {
@@ -213,6 +208,29 @@ export async function accessFriendRoom(
     () => accessFriendRoomOperation(code, userId, mutation));
 }
 
+/** Authenticated conditional read. The token hashes every persisted field,
+ * including corrections/reactions that do not advance the board revision. */
+export async function pollFriendRoom(code: string, userId: string, token?: string) {
+  if (token && /^[a-f0-9]{32}$/.test(token)) {
+    const [row] = await db.select({ live: onlineRoomsTable.liveState, token: onlineRoomsTable.syncToken })
+      .from(onlineRoomsTable).where(eq(onlineRoomsTable.code, code));
+    if (row?.live) {
+      const room = row.live as unknown as OnlineRoom;
+      memberSeat(room, userId);
+      const now = Date.now();
+      // Only settled paired human battles can skip authoritative advancement.
+      // Waiting/invited, bot, complete/settlement and incompatible rooms retain
+      // the original row/social-lock ordering and recovery path.
+      if (row.token === token && room.members.cpu && room.status === 'active' &&
+          room.rulesVersion === ONLINE_RULES_VERSION && !room.ranked?.bot &&
+          room.expiresAt > now && room.deadline !== null && room.deadline > now &&
+          (!room.kumite || room.kumite.roundDeadline > now))
+        return { unchanged: true as const, syncToken: token, serverTime: now };
+    }
+  }
+  return accessFriendRoom(code, userId);
+}
+
 async function accessFriendRoomOperation(code: string, userId: string, mutation?: Mutation) {
   const access = (forceSocialLock: boolean) => homiesTransaction(async (tx) => {
     // This unlocked hint only chooses a lock path; it never authorizes access.
@@ -233,6 +251,7 @@ async function accessFriendRoomOperation(code: string, userId: string, mutation?
       .where(eq(onlineRoomsTable.code, code))
       .for("update");
     if (!row) throw new OnlineError("Room not found.", 404);
+    let syncToken = row.syncToken;
     let room = restore(row.state);
     // Recheck under the row lock. If the hint ever becomes stale, end this
     // transaction before retrying: never acquire social after a room lock.
@@ -241,11 +260,16 @@ async function accessFriendRoomOperation(code: string, userId: string, mutation?
     await guardTargetedRoom(tx, row.id, room, userId, mutation?.kind === "join", row.inviteOnly);
     if (mutation?.kind !== "join") memberSeat(room, userId);
     const now = Date.now();
+    room = retireIncompatibleOnlineRoom(room, now);
     room = advanceRankedBot(room, now);
     room = expireOnlineRoom(room, now);
     let failure: OnlineError | undefined;
     try {
-      if (mutation?.kind === "join") {
+      if (room.rulesVersion !== ONLINE_RULES_VERSION || room.reason === 'rules-updated') {
+        // Return the neutral exit even for an in-flight/retried action. It must
+        // not create a command receipt, result, or new match under old rules.
+        if (mutation?.kind === 'join') memberSeat(room, userId);
+      } else if (mutation?.kind === "join") {
         if (room.ranked) throw new OnlineError("Find ranked opponents through Fade Park.", 403);
         if (
           room.members.player.userId !== userId &&
@@ -324,8 +348,8 @@ async function accessFriendRoomOperation(code: string, userId: string, mutation?
     room = await settleRankedRoom(tx, room, now, row.id);
     room = await syncRoomInvitation(tx, row.id, room);
     // Persist expired turns even when rejecting a late/stale action.
-    if (room.revision !== restore(row.state).revision)
-      await tx
+    if (room.revision !== restore(row.state).revision) {
+      const [saved] = await tx
         .update(onlineRoomsTable)
         .set({
           state: stored(room),
@@ -333,10 +357,12 @@ async function accessFriendRoomOperation(code: string, userId: string, mutation?
           updatedAt: new Date(now),
           expiresAt: new Date(room.status === "closed" ? now : room.expiresAt),
         })
-        .where(eq(onlineRoomsTable.id, row.id));
+        .where(eq(onlineRoomsTable.id, row.id)).returning({ syncToken: onlineRoomsTable.syncToken });
+      syncToken = saved.syncToken;
+    }
     return failure
       ? { failure }
-      : { view: onlineRoomView(room, code, userId, now) };
+      : { view: { ...onlineRoomView(room, code, userId, now), syncToken: syncToken ?? undefined } };
   });
   let result = await access(false);
   if (result.retryWithSocialLock) {
@@ -379,6 +405,8 @@ async function saveRoom(tx: Tx, row: RoomRow, room: OnlineRoom, now: number) {
 
 /** Room lock + profile locks make the result and both rating changes a single receipt. */
 async function settleRankedRoom(tx: Tx, room: OnlineRoom, now: number, roomId: string): Promise<OnlineRoom> {
+  if (room.rulesVersion !== ONLINE_RULES_VERSION || room.reason === 'rules-updated')
+    return retireIncompatibleOnlineRoom(room, now);
   // Full human battles only. Timeouts, concessions and ranked bot matches never advance these tasks.
   if (room.status === 'complete' && room.reason === 'districts' && !room.ranked?.bot && room.members.cpu) {
     const seats = (['player','cpu'] as const).slice().sort((a,b)=>room.members[a]!.userId.localeCompare(room.members[b]!.userId));
@@ -423,7 +451,7 @@ async function settleRankedRoom(tx: Tx, room: OnlineRoom, now: number, roomId: s
 
 /** Bots use the same legal commands and the engine's public-board-only decision policy. */
 function advanceRankedBot(input: OnlineRoom, now: number): OnlineRoom {
-  let room = input;
+  let room = retireIncompatibleOnlineRoom(input, now);
   if (!room.ranked?.bot || room.status !== 'active' || room.activeSeat !== 'cpu' || !room.match) return room;
   if ((room.ranked.botNextAt ?? 0) > now) return room;
   // Serverless polling may sleep while the app is backgrounded. Catch up the bot's
@@ -432,10 +460,7 @@ function advanceRankedBot(input: OnlineRoom, now: number): OnlineRoom {
   for (let step = 0; step < (catchUp ? 12 : 1); step++) {
     if (room.status !== 'active' || room.activeSeat !== 'cpu' || !room.match) break;
     const choice = chooseCpuPlay(room.match, false);
-    const card = choice && room.match.cpuHand.find(c => c.instanceId === choice.instanceId);
-    const command: OnlineCommand = choice ? { type: 'play', ...choice,
-      squabble: parkBotUsesSquabble(room, card),
-    } : { type: 'end-turn' };
+    const command: OnlineCommand = choice ? { type: 'play', ...choice } : { type: 'end-turn' };
     const previous = room;
     room = reactParkBot(previous, applyOnlineCommand(room, 'cpu', command, Math.min(now, (room.deadline ?? now + 1) - 1)), now);
     room = { ...room, ranked: { ...room.ranked!, botNextAt: now + parkBotPersona(room.ranked?.botPersona).pace } };
@@ -445,7 +470,7 @@ function advanceRankedBot(input: OnlineRoom, now: number): OnlineRoom {
 }
 
 async function refreshRankedRoom(tx: Tx, row: RoomRow, now: number) {
-  let room = restore(row.state);
+  let room = retireIncompatibleOnlineRoom(restore(row.state), now);
   if (room.status === 'waiting' && room.ranked && now - room.ranked.heartbeatAt > RANKED_QUEUE_IDLE_MS)
     room = { ...room, status: 'closed', revision: room.revision + 1, reason: 'expired' };
   room = await settleRankedRoom(tx, expireOnlineRoom(advanceRankedBot(room, now), now), now, row.id);
@@ -469,8 +494,8 @@ async function matchWaitingRoom(tx: Tx, own: RoomRow, input: OnlineRoom, now: nu
   const candidates = await tx.select().from(onlineRoomsTable).where(claimableRankedRooms(own.hostUserId, now))
     .orderBy(asc(onlineRoomsTable.createdAt)).limit(40).for('update', { skipLocked: true });
   for (const candidate of candidates) {
-    const rival = restore(candidate.state);
-    if (!rival.ranked || rival.members.cpu) continue;
+    const rival = await refreshRankedRoom(tx, candidate, now);
+    if (rival.status !== 'waiting' || !rival.ranked || rival.members.cpu) continue;
     const waited = Math.max(now - room.ranked!.queuedAt, now - rival.ranked.queuedAt);
     const range = waited >= 4000 ? Infinity : 300 + Math.floor(waited / 1000) * 150;
     if (Math.abs(room.ranked!.ratings.player - rival.ranked.ratings.player) > range) continue;
@@ -603,16 +628,31 @@ export async function cancelRankedSearch(userId: string, code: string) {
 
 /** Reactions share the room lock but never change a card-play revision or turn clock. */
 export async function accessRoomReactions(code: string, userId: string, input?: { requestId: string; reactionId: string; gameNumber: number }) {
+  if (!input) {
+    const [row] = await db.select({ live: onlineRoomsTable.liveState }).from(onlineRoomsTable).where(eq(onlineRoomsTable.code, code));
+    if (!row) throw new OnlineError('Room not found.', 404);
+    const room = row.live as unknown as OnlineRoom | null;
+    if (room && room.rulesVersion === ONLINE_RULES_VERSION) {
+      memberSeat(room, userId);
+      const [profile] = await db.select({ unlockedCosmeticIds: playerProfilesTable.unlockedCosmeticIds, settings: playerProfilesTable.settings })
+        .from(playerProfilesTable).where(eq(playerProfilesTable.clerkUserId, userId));
+      if (!profile) throw new OnlineError('Player profile not found.', 404);
+      return { ...(room.reactions ?? { revision: 0, latest: {} }), serverTime: Date.now(), owned: ownedReactions(profile.unlockedCosmeticIds),
+        tray: resolveReactionTray(profile.settings.reactionTray, profile.unlockedCosmeticIds) };
+    }
+  }
   return db.transaction(async tx => {
     const [row] = await tx.select().from(onlineRoomsTable).where(eq(onlineRoomsTable.code, code)).for('update');
     if (!row) throw new OnlineError('Room not found.', 404);
-    const room = restore(row.state);
-    const seat = memberSeat(room, userId);
+    const previous = restore(row.state);
+    const seat = memberSeat(previous, userId);
     const now = Date.now();
+    const room = retireIncompatibleOnlineRoom(previous, now);
+    if (room.revision !== previous.revision) await saveRoom(tx, row, room, now);
     const [profile] = await tx.select().from(playerProfilesTable).where(eq(playerProfilesTable.clerkUserId, userId));
     if (!profile) throw new OnlineError('Player profile not found.', 404);
     const owned = ownedReactions(profile.unlockedCosmeticIds);
-    if (input) {
+    if (input && room.reason !== 'rules-updated') {
       if (room.status !== 'active' || room.expiresAt <= now || (room.deadline !== null && room.deadline <= now) || room.gameNumber !== input.gameNumber) throw new OnlineError('Reactions are available during the current battle.', 409);
       try {
         const reactions = addReaction(room.reactions, { id: input.requestId, reactionId: input.reactionId, gameNumber: input.gameNumber, seat }, owned, now);

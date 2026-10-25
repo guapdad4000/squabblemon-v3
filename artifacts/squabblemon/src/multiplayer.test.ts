@@ -64,10 +64,11 @@ test("unplayed and legacy rooms do not invent a last-played timestamp", () => {
 test("card balance and online room versions reject incompatible in-progress fades safely", () => {
   const room = fixture();
   assert.equal(room.rulesVersion >= CARD_BALANCE_VERSION, true);
-  assert.throws(
-    () => applyOnlineCommand({ ...room, rulesVersion: room.rulesVersion - 1 }, "player", { type: "end-turn" }, 3),
-    /older rules version|new room/,
-  );
+  const retired = applyOnlineCommand({ ...room, rulesVersion: room.rulesVersion - 1 }, "player", { type: "end-turn" }, 3);
+  assert.equal(retired.status, 'closed');
+  assert.equal(retired.reason, 'rules-updated');
+  assert.equal(retired.winner, null);
+  assert.equal(retired.match, room.match, 'old snapshots are retained without executing the attempted action');
 });
 
 test("locked-lane mythical plays are accepted online and reproduce in authoritative transcript replay", () => {
@@ -636,5 +637,23 @@ test('public rank points remain earned points and are separate from matchmaking 
     assert.equal(view.members.player!.rp, 1400);
     assert.equal(view.members.cpu!.rp, 1050);
     assert.equal('userId' in view.members.player!, false);
+  }
+});
+
+
+test('incompatible rooms retire before either timeout and never count a game on reconnect', () => {
+  for (const version of [undefined, 0, fixture().rulesVersion - 1, fixture().rulesVersion + 1]) {
+    const original = fixture();
+    const stale = { ...original, rulesVersion: version, series: { player: 2, cpu: 1, draws: 1 },
+      kumite: { tournamentId: 'week', matchId: 'r1-m1', roundDeadline: original.deadline! + 10 } } as OnlineRoom;
+    const retired = expireOnlineRoom(stale, stale.deadline! + 100);
+    assert.equal(retired.status, 'closed'); assert.equal(retired.reason, 'rules-updated');
+    assert.equal(retired.winner, null); assert.equal(retired.deadline, null); assert.equal(retired.closedBy, null);
+    assert.deepEqual(retired.series, stale.series); assert.equal(retired.kumite?.finishedAt, undefined);
+    assert.equal(retired.revision, stale.revision + 1);
+    assert.equal(expireOnlineRoom(retired, stale.deadline! + 200), retired);
+    assert.equal(applyOnlineCommand(retired, 'player', { type: 'surrender' }, 100), retired);
+    const view = onlineRoomView({ ...retired, match: {} as Match }, 'RETIRED', 'a', 100);
+    assert.deepEqual(view.hand, []); assert.deepEqual(view.boards, [[], [], []]); assert.deepEqual(view.events, []);
   }
 });

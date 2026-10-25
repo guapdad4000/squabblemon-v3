@@ -1,0 +1,10 @@
+{
+  "reason": "Invalid fixture roster IDs prevented crowded case mounting; production runtime unchanged",
+  "file": "BattlePerfHarness-BQnLy-xz.js",
+  "before": "00499545baa00baadca520deeead3b623472adff33f54d617aee956dbbe38223",
+  "after": "ab0f2a192d1a23a952f43b22ea71c9be7ee0d10741e175eef4dbf480e7d3e39d",
+  "replacement": {
+    "sho-nuff": "shonuff",
+    "dr-fade": "drfade"
+  }
+}

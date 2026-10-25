@@ -3,11 +3,11 @@ import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState, 
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import {
   getStoryNode,
-  storyContent,
+  storyIndex as storyContent,
   type StoryChapter,
   type StoryDialogueLine,
   type StoryNode,
-} from '@workspace/squabblemon-engine/story';
+} from '../../lib/story/catalog';
 import { getAssetUrl } from '../../lib/assets';
 import './story-stage.css';
 
@@ -54,7 +54,7 @@ const STORY_STAGES: Readonly<Record<string, StoryStageDefinition>> = {
 export function resolveStoryStage(
   nodeId: string,
   node?: StoryNode,
-  chapter?: StoryChapter,
+  chapter?: Pick<StoryChapter, 'mapAssetId' | 'subtitle'>,
 ): StoryStageDefinition {
   return STORY_STAGES[nodeId] ?? {
     backdropAssetId: node?.cinematic.environmentAssetId
@@ -66,7 +66,7 @@ export function resolveStoryStage(
 }
 
 export type StoryStageProps = {
-  nodeId: string; section: 'pre' | 'post' | 'main'; line: StoryDialogueLine;
+  nodeId: string; node?: StoryNode; section: 'pre' | 'post' | 'main'; line: StoryDialogueLine;
   position: number; total: number; pending?: boolean; error?: string | null;
   onNext: () => void; onSkip: () => void; onClose: () => void;
   onHistory?: () => void; historyDisabled?: boolean;
@@ -332,7 +332,7 @@ const StoryDialogue = forwardRef<StoryDialogueHandle, StoryDialogueProps>(functi
   </>;
 });
 
-export function StoryStage({ nodeId, section, line, position, total, pending, error, onNext, onSkip, onClose, onHistory, historyDisabled }: StoryStageProps) {
+export function StoryStage({ nodeId, node: authoredNode, section, line, position, total, pending, error, onNext, onSkip, onClose, onHistory, historyDisabled }: StoryStageProps) {
   const [still, setStill] = useState(false);
   const systemReducedMotion = useReducedMotion();
   const lineKey = `${nodeId}:${section}:${position}`;
@@ -341,7 +341,7 @@ export function StoryStage({ nodeId, section, line, position, total, pending, er
   const dialogueRef = useRef<StoryDialogueHandle | null>(null);
   const motionOff = still || systemReducedMotion;
   const advanceFromSurface = () => dialogueRef.current?.advance();
-  const node = getStoryNode(nodeId);
+  const node = authoredNode ?? getStoryNode(nodeId);
   const chapter = storyContent.chapters.find((item) => item.nodes.some((entry) => entry.id === nodeId));
   const houseScene = chapter?.id.startsWith('squabble-house-') ?? false;
   const displayChapter = houseScene ? storyContent.chapters.filter(item => item.id.startsWith('squabble-house-')).findIndex(item => item.id === chapter?.id) + 1 : chapter?.order ?? 1;

@@ -3,6 +3,7 @@ import { LayoutGroup, MotionConfig } from 'framer-motion';
 import { decks } from '../data';
 import { canAffordSelection, createMatch, nextRound, playCard, type CardInstance, type Lane, type Match, type ScoreState } from '../gameEngine';
 import { Battle } from './Battle';
+import { BattleThermalHarness } from './BattleThermalHarness';
 import { applyEventState, EFFECT_PRESENTATION_TIMING, type PresentationEffect, type PresentationPhase } from './PlayLoop';
 
 declare global {
@@ -111,6 +112,10 @@ function buildSixRoundScript() {
 }
 
 export function BattlePerfHarness() {
+  return new URLSearchParams(location.search).has('thermal') ? <BattleThermalHarness /> : <BattleSequenceHarness />;
+}
+
+function BattleSequenceHarness() {
   const script = useMemo(buildSixRoundScript, []);
   const [frame, setFrame] = useState<ScriptedFrame>(() => ({
     match: createMatch('block', 'combo'),

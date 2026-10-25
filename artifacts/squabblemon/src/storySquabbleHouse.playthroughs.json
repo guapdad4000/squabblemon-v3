@@ -478,7 +478,7 @@
         },
         {
           "cardInstanceId": "player:house-proof-squabble-house-hands-on-the-clock-battle-3:8:soulfood",
-          "lane": 0,
+          "lane": 1,
           "squabble": false,
           "endTurn": false
         },
@@ -617,7 +617,7 @@
         },
         {
           "cardInstanceId": "player:house-proof-squabble-house-wet-floor-battle-4:9:cognac",
-          "lane": 2,
+          "lane": 0,
           "squabble": false,
           "endTurn": false
         },

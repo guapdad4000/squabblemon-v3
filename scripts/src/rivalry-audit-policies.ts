@@ -4,7 +4,7 @@ import {
 } from '@workspace/squabblemon-engine/balanceLab';
 
 const order = (a: BalancePlayOption, b: BalancePlayOption) => a.cost - b.cost
-  || Number(a.squabble) - Number(b.squabble) || a.cardId.localeCompare(b.cardId) || a.lane - b.lane;
+  || Number(a.squabble) - Number(b.squabble) || a.cardId.localeCompare(b.cardId) || a.lane - b.lane || a.investment - b.investment;
 
 /** Common random priorities: excludes seat/global action index and keys by logical deck.
  * Paired seats retain the same card/lane priorities for a side's nth decision.
@@ -17,7 +17,7 @@ export function pairedSeededPolicy(seed: string): BalancePolicy {
     const decision = decisions.get(deck) ?? 0;
     decisions.set(deck, decision + 1);
     const priority = (option: BalancePlayOption) => createHash('sha256')
-      .update(`${seed}:${deck}:${decision}:${option.cardId}:${option.lane}:${option.squabble}`).digest('hex');
+      .update(`${seed}:${deck}:${decision}:${option.cardId}:${option.lane}:${option.squabble}:${option.investment}`).digest('hex');
     return [...legalPlays].sort((a, b) => priority(a).localeCompare(priority(b)) || order(a, b))[0] ?? null;
   };
 }

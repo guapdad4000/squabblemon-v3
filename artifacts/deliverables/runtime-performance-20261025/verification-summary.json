@@ -1,0 +1,221 @@
+{
+  "schemaVersion": 1,
+  "completedAt": "2026-10-25T22:53:29.106415+00:00",
+  "status": "implemented-and-locally-verified-with-documented-historical-fixture-gap",
+  "baseCommit": "61e9a86c1bd1ba49e350bd4a488671ab37d26ad2",
+  "trackedDiffSha256": "fbea1ab957328031379519d9f2b1c41670aa3dbc6f03d439fdaa208b59ce7a0b",
+  "sourceFilesVerified": 1227,
+  "release": {
+    "status": "passed",
+    "command": "PORT=5173 BASE_PATH=/ NODE_ENV=production VITE_E2E_AUTH=false node scripts/release-checks.mjs --build",
+    "evidence": "release-build.json",
+    "criticalTests": 262,
+    "verifiedAt": "2026-10-25T22:53:00.923Z"
+  },
+  "checks": [
+    {
+      "description": "Complete frontend/game tests and chained guards",
+      "status": "passed",
+      "evidence": "frontend-tests.log",
+      "tapRuns": {
+        "tests": [
+          2435,
+          19,
+          9,
+          8
+        ],
+        "pass": [
+          2435,
+          19,
+          9,
+          8
+        ],
+        "fail": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "skipped": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "todo": [
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "description": "Native PostgreSQL online polling, retirement and rewards",
+      "status": "passed",
+      "evidence": "online-native-final.log",
+      "tapRuns": {
+        "tests": [
+          22
+        ],
+        "pass": [
+          22
+        ],
+        "fail": [
+          0
+        ],
+        "skipped": [
+          0
+        ],
+        "todo": [
+          0
+        ]
+      }
+    },
+    {
+      "description": "Native PostgreSQL social integration",
+      "status": "passed",
+      "evidence": "social-native.log",
+      "tapRuns": {
+        "tests": [
+          35
+        ],
+        "pass": [
+          35
+        ],
+        "fail": [
+          0
+        ],
+        "skipped": [
+          0
+        ],
+        "todo": [
+          0
+        ]
+      }
+    },
+    {
+      "description": "Native PostgreSQL ranked settlement",
+      "status": "passed",
+      "evidence": "ranked-clout-native.log",
+      "tapRuns": {
+        "tests": [
+          15
+        ],
+        "pass": [
+          15
+        ],
+        "fail": [
+          0
+        ],
+        "skipped": [
+          0
+        ],
+        "todo": [
+          0
+        ]
+      }
+    },
+    {
+      "description": "Quiet embedded campaign recheck with unchanged solver limits",
+      "status": "passed",
+      "evidence": "campaign-quiet-recheck.log",
+      "tapRuns": {
+        "tests": [
+          13
+        ],
+        "pass": [
+          13
+        ],
+        "fail": [
+          0
+        ],
+        "skipped": [
+          0
+        ],
+        "todo": [
+          0
+        ]
+      }
+    },
+    {
+      "description": "Focused malformed-room TypeError contract",
+      "status": "passed",
+      "evidence": "social-records-malformed-row-test.log",
+      "tapRuns": {
+        "tests": [
+          1
+        ],
+        "pass": [
+          1
+        ],
+        "fail": [
+          0
+        ],
+        "skipped": [
+          0
+        ],
+        "todo": [
+          0
+        ]
+      }
+    },
+    {
+      "description": "Current diagnostic classifier tests",
+      "status": "passed",
+      "evidence": "current-telemetry-tests.log",
+      "tapRuns": {
+        "tests": [
+          6
+        ],
+        "pass": [
+          6
+        ],
+        "fail": [
+          0
+        ],
+        "skipped": [
+          0
+        ],
+        "todo": [
+          0
+        ]
+      }
+    }
+  ],
+  "apiInitialRun": {
+    "tests": 365,
+    "passed": 363,
+    "failed": 2,
+    "evidence": "campaign-database-initial.log",
+    "resolution": "Both initial failures passed targeted rechecks recorded above; this is not a fresh one-shot 365/365 run."
+  },
+  "freshDeckAudit": {
+    "cases": 20368,
+    "gameplayMismatches": 0,
+    "currentClassificationMismatches": 0,
+    "sourceHash": "db4e1aae087bbbee4ba1b76abe013eed25625c8a120ac7557fa540a83f8afe19",
+    "report": "../current-deck-audit-20261025-runtime-v64-telemetry/README.md"
+  },
+  "browserEvidence": [
+    "worker-browser.json",
+    "online-browser.json",
+    "responsive-browser.json",
+    "story-browser.json",
+    "battle-performance.json",
+    "player-journey.log"
+  ],
+  "otherEvidence": [
+    "migrations.log",
+    "frontend-typecheck.log",
+    "api-typecheck.log"
+  ],
+  "limits": [
+    "Historical saved-report Git LFS object is unavailable; its original assertion remains failing and unweakened. See historical-fixture-status.json.",
+    "Browser evidence uses local fixtures and isolated mocked endpoints; native database evidence uses fresh owned clusters.",
+    "No physical-phone heat, battery or live PvP performance claim.",
+    "No push, hosted deploy, live migration or compact-write activation.",
+    "Repeated final build initially omitted required PORT; successful rerun used the required local environment. Original invocation retained in release-build-missing-environment files.",
+    "Test inventories overlap; counts must not be summed as unique tests."
+  ]
+}

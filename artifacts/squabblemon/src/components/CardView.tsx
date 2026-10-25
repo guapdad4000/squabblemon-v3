@@ -23,6 +23,7 @@ import cardWordmarkUrl from '../assets/card-wordmark-white.webp';
 import { useCardScene } from './CosmeticContext';
 import { getCardArtworkId } from '../lib/assets';
 import { battlePortraitUrl } from '../lib/battlePortrait';
+import { observePlayback } from '../lib/battleMediaPlayback';
 
 export interface CollectibleCardLayers {
   foil: boolean;
@@ -214,6 +215,26 @@ function CardViewComponent({
         whileTap: presentationOnly ? undefined : !isInspector ? { scale: 0.95 } : {},
       };
 
+  const boardCardRef = React.useRef<HTMLElement>(null);
+  const captureBoardCard = React.useCallback((node: HTMLElement | null) => { boardCardRef.current = node; }, []);
+  React.useEffect(() => {
+    const node = boardCardRef.current;
+    if (!node || !isBoard || fillContainer) return;
+    // Only the idle shorthand reads this property. Finite stance/impact motion
+    // and the shared inspection projection keep their existing lifecycle.
+    let previous: string | undefined;
+    const stop = observePlayback(node, moving => {
+      const next = moving ? 'running' : 'paused';
+      if (next === previous) return;
+      previous = next;
+      node.style.setProperty('--battle-idle-play-state', next);
+    });
+    return () => {
+      stop();
+      node.style.removeProperty('--battle-idle-play-state');
+    };
+  }, [isBoard, fillContainer, useStaticShell, presentationOnly]);
+
   const aliveClass = isBoard && !isFrozen && !isSilenced && !isBlocked
     ? (isEnemy ? 'is-alive-rival' : 'is-alive-owner')
     : '';
@@ -242,6 +263,7 @@ function CardViewComponent({
     <><MotionElement
       {...inspection.props}
       {...motionProps}
+      ref={captureBoardCard}
       data-testid={testId ?? `card-${card.id}`}
       data-card-id={card.id}
       data-layered-card={decoration ? true : undefined}

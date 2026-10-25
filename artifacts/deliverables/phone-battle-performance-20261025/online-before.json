@@ -1,0 +1,416 @@
+{
+  "baseline": true,
+  "kind": "actual online hook/battle/card fixture, mocked local GETs; not production/device performance",
+  "checks": [
+    {
+      "name": "baseline-clock-only-heartbeats",
+      "renders": [
+        {
+          "id": "cpu:projection-fixture:1:hooper",
+          "zone": "board"
+        },
+        {
+          "id": "cpu:projection-fixture:7:hooper",
+          "zone": "board"
+        },
+        {
+          "id": "player:projection-fixture:0:hooper",
+          "zone": "board"
+        },
+        {
+          "id": "player:projection-fixture:6:hooper",
+          "zone": "board"
+        },
+        {
+          "id": "cpu:projection-fixture:3:hooper",
+          "zone": "board"
+        },
+        {
+          "id": "cpu:projection-fixture:9:hooper",
+          "zone": "board"
+        },
+        {
+          "id": "player:projection-fixture:2:hooper",
+          "zone": "board"
+        },
+        {
+          "id": "player:projection-fixture:8:hooper",
+          "zone": "board"
+        },
+        {
+          "id": "cpu:projection-fixture:5:hooper",
+          "zone": "board"
+        },
+        {
+          "id": "player:projection-fixture:4:hooper",
+          "zone": "board"
+        },
+        {
+          "id": "player:block:0:cornball",
+          "zone": "hand",
+          "cost": 1
+        },
+        {
+          "id": "player:block:1:snow",
+          "zone": "hand",
+          "cost": 3
+        },
+        {
+          "id": "player:block:2:roaster",
+          "zone": "hand",
+          "cost": 3
+        },
+        {
+          "id": "player:block:3:rastamon",
+          "zone": "hand",
+          "cost": 2
+        },
+        {
+          "id": "player:block:4:wifey",
+          "zone": "hand",
+          "cost": 3
+        },
+        {
+          "id": "cpu:projection-fixture:1:hooper",
+          "zone": "board"
+        },
+        {
+          "id": "cpu:projection-fixture:7:hooper",
+          "zone": "board"
+        },
+        {
+          "id": "player:projection-fixture:0:hooper",
+          "zone": "board"
+        },
+        {
+          "id": "player:projection-fixture:6:hooper",
+          "zone": "board"
+        },
+        {
+          "id": "cpu:projection-fixture:3:hooper",
+          "zone": "board"
+        },
+        {
+          "id": "cpu:projection-fixture:9:hooper",
+          "zone": "board"
+        },
+        {
+          "id": "player:projection-fixture:2:hooper",
+          "zone": "board"
+        },
+        {
+          "id": "player:projection-fixture:8:hooper",
+          "zone": "board"
+        },
+        {
+          "id": "cpu:projection-fixture:5:hooper",
+          "zone": "board"
+        },
+        {
+          "id": "player:projection-fixture:4:hooper",
+          "zone": "board"
+        },
+        {
+          "id": "player:block:0:cornball",
+          "zone": "hand",
+          "cost": 1
+        },
+        {
+          "id": "player:block:1:snow",
+          "zone": "hand",
+          "cost": 3
+        },
+        {
+          "id": "player:block:2:roaster",
+          "zone": "hand",
+          "cost": 3
+        },
+        {
+          "id": "player:block:3:rastamon",
+          "zone": "hand",
+          "cost": 2
+        },
+        {
+          "id": "player:block:4:wifey",
+          "zone": "hand",
+          "cost": 3
+        },
+        {
+          "id": "cpu:projection-fixture:1:hooper",
+          "zone": "board"
+        },
+        {
+          "id": "cpu:projection-fixture:7:hooper",
+          "zone": "board"
+        },
+        {
+          "id": "player:projection-fixture:0:hooper",
+          "zone": "board"
+        },
+        {
+          "id": "player:projection-fixture:6:hooper",
+          "zone": "board"
+        },
+        {
+          "id": "cpu:projection-fixture:3:hooper",
+          "zone": "board"
+        },
+        {
+          "id": "cpu:projection-fixture:9:hooper",
+          "zone": "board"
+        },
+        {
+          "id": "player:projection-fixture:2:hooper",
+          "zone": "board"
+        },
+        {
+          "id": "player:projection-fixture:8:hooper",
+          "zone": "board"
+        },
+        {
+          "id": "cpu:projection-fixture:5:hooper",
+          "zone": "board"
+        },
+        {
+          "id": "player:projection-fixture:4:hooper",
+          "zone": "board"
+        },
+        {
+          "id": "player:block:0:cornball",
+          "zone": "hand",
+          "cost": 1
+        },
+        {
+          "id": "player:block:1:snow",
+          "zone": "hand",
+          "cost": 3
+        },
+        {
+          "id": "player:block:2:roaster",
+          "zone": "hand",
+          "cost": 3
+        },
+        {
+          "id": "player:block:3:rastamon",
+          "zone": "hand",
+          "cost": 2
+        },
+        {
+          "id": "player:block:4:wifey",
+          "zone": "hand",
+          "cost": 3
+        }
+      ],
+      "commits": [
+        {
+          "id": "cpu:projection-fixture:1:hooper",
+          "zone": "board"
+        },
+        {
+          "id": "cpu:projection-fixture:7:hooper",
+          "zone": "board"
+        },
+        {
+          "id": "player:projection-fixture:0:hooper",
+          "zone": "board"
+        },
+        {
+          "id": "player:projection-fixture:6:hooper",
+          "zone": "board"
+        },
+        {
+          "id": "cpu:projection-fixture:3:hooper",
+          "zone": "board"
+        },
+        {
+          "id": "cpu:projection-fixture:9:hooper",
+          "zone": "board"
+        },
+        {
+          "id": "player:projection-fixture:2:hooper",
+          "zone": "board"
+        },
+        {
+          "id": "player:projection-fixture:8:hooper",
+          "zone": "board"
+        },
+        {
+          "id": "cpu:projection-fixture:5:hooper",
+          "zone": "board"
+        },
+        {
+          "id": "player:projection-fixture:4:hooper",
+          "zone": "board"
+        },
+        {
+          "id": "player:block:0:cornball",
+          "zone": "hand",
+          "cost": 1
+        },
+        {
+          "id": "player:block:1:snow",
+          "zone": "hand",
+          "cost": 3
+        },
+        {
+          "id": "player:block:2:roaster",
+          "zone": "hand",
+          "cost": 3
+        },
+        {
+          "id": "player:block:3:rastamon",
+          "zone": "hand",
+          "cost": 2
+        },
+        {
+          "id": "player:block:4:wifey",
+          "zone": "hand",
+          "cost": 3
+        },
+        {
+          "id": "cpu:projection-fixture:1:hooper",
+          "zone": "board"
+        },
+        {
+          "id": "cpu:projection-fixture:7:hooper",
+          "zone": "board"
+        },
+        {
+          "id": "player:projection-fixture:0:hooper",
+          "zone": "board"
+        },
+        {
+          "id": "player:projection-fixture:6:hooper",
+          "zone": "board"
+        },
+        {
+          "id": "cpu:projection-fixture:3:hooper",
+          "zone": "board"
+        },
+        {
+          "id": "cpu:projection-fixture:9:hooper",
+          "zone": "board"
+        },
+        {
+          "id": "player:projection-fixture:2:hooper",
+          "zone": "board"
+        },
+        {
+          "id": "player:projection-fixture:8:hooper",
+          "zone": "board"
+        },
+        {
+          "id": "cpu:projection-fixture:5:hooper",
+          "zone": "board"
+        },
+        {
+          "id": "player:projection-fixture:4:hooper",
+          "zone": "board"
+        },
+        {
+          "id": "player:block:0:cornball",
+          "zone": "hand",
+          "cost": 1
+        },
+        {
+          "id": "player:block:1:snow",
+          "zone": "hand",
+          "cost": 3
+        },
+        {
+          "id": "player:block:2:roaster",
+          "zone": "hand",
+          "cost": 3
+        },
+        {
+          "id": "player:block:3:rastamon",
+          "zone": "hand",
+          "cost": 2
+        },
+        {
+          "id": "player:block:4:wifey",
+          "zone": "hand",
+          "cost": 3
+        },
+        {
+          "id": "cpu:projection-fixture:1:hooper",
+          "zone": "board"
+        },
+        {
+          "id": "cpu:projection-fixture:7:hooper",
+          "zone": "board"
+        },
+        {
+          "id": "player:projection-fixture:0:hooper",
+          "zone": "board"
+        },
+        {
+          "id": "player:projection-fixture:6:hooper",
+          "zone": "board"
+        },
+        {
+          "id": "cpu:projection-fixture:3:hooper",
+          "zone": "board"
+        },
+        {
+          "id": "cpu:projection-fixture:9:hooper",
+          "zone": "board"
+        },
+        {
+          "id": "player:projection-fixture:2:hooper",
+          "zone": "board"
+        },
+        {
+          "id": "player:projection-fixture:8:hooper",
+          "zone": "board"
+        },
+        {
+          "id": "cpu:projection-fixture:5:hooper",
+          "zone": "board"
+        },
+        {
+          "id": "player:projection-fixture:4:hooper",
+          "zone": "board"
+        },
+        {
+          "id": "player:block:0:cornball",
+          "zone": "hand",
+          "cost": 1
+        },
+        {
+          "id": "player:block:1:snow",
+          "zone": "hand",
+          "cost": 3
+        },
+        {
+          "id": "player:block:2:roaster",
+          "zone": "hand",
+          "cost": 3
+        },
+        {
+          "id": "player:block:3:rastamon",
+          "zone": "hand",
+          "cost": 2
+        },
+        {
+          "id": "player:block:4:wifey",
+          "zone": "hand",
+          "cost": 3
+        }
+      ],
+      "snapshot": {
+        "reads": 6,
+        "writes": 0,
+        "revision": 3,
+        "status": "active",
+        "boardId": "player:projection-fixture:0:hooper",
+        "handId": "player:block:0:cornball",
+        "deadline": 1792963580823
+      },
+      "timer": "61"
+    }
+  ],
+  "errors": [],
+  "status": "passed",
+  "projectionSourceHash": "da3ba6b3917d5e6e2e8b94f83c5001cb15aa86ca387cf04ef8b61e5f923cc6b3"
+}

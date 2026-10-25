@@ -1055,9 +1055,9 @@ html[data-reduce-motion="true"] .battle-start-smoke { display: none; }
 @keyframes squabble-confetti { 0% { transform: translate(0, 0) rotate(0); opacity: 0; } 20% { opacity: 1; } 100% { transform: translate(var(--cx, 60px), var(--cy, -40px)) rotate(720deg); opacity: 0; } }
 
 .portrait-pop { animation: portrait-pop calc(.55s / var(--presentation-speed, 1)) cubic-bezier(.2, .8, .2, 1) both; }
-.battle-board-card { will-change: transform; }
-.battle-board-card.is-alive-owner { animation: idle-breathe-player 4s ease-in-out infinite; transform-origin: center bottom; }
-.battle-board-card.is-alive-rival { animation: idle-breathe-rival 4s ease-in-out infinite; transform-origin: center bottom; }
+/* Retain idle motion only while visible; finite animation shorthands reset play state. */
+.battle-board-card.is-alive-owner { animation: idle-breathe-player 4s ease-in-out infinite var(--battle-idle-play-state, running); transform-origin: center bottom; }
+.battle-board-card.is-alive-rival { animation: idle-breathe-rival 4s ease-in-out infinite var(--battle-idle-play-state, running); transform-origin: center bottom; }
 .battle-board-card.is-leading { animation: lean-into-lead calc(.9s / var(--presentation-speed, 1)) cubic-bezier(.2, .8, .2, 1); }
 .battle-board-card.is-trailing { animation: lean-out-of-lead calc(.9s / var(--presentation-speed, 1)) cubic-bezier(.2, .8, .2, 1); }
 .battle-board-card.is-frozen { animation: none; }

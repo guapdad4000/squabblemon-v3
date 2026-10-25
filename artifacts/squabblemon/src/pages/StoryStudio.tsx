@@ -35,7 +35,7 @@ export default function StoryStudio() {
       </StreetSelect>
     </nav>
     <div className="story-studio-stage">
-      <StoryStage key={`${scene.node.id}:${scene.section}`} nodeId={scene.node.id} section={scene.section} line={scene.lines[lineIndex]} position={lineIndex + 1} total={scene.lines.length}
+      <StoryStage key={`${scene.node.id}:${scene.section}`} nodeId={scene.node.id} node={scene.node} section={scene.section} line={scene.lines[lineIndex]} position={lineIndex + 1} total={scene.lines.length}
         onNext={() => lineIndex + 1 < scene.lines.length ? setLineIndex(lineIndex + 1) : finish()}
         onSkip={finish} onClose={() => select(0)} onHistory={() => setHistory(true)} />
       {(intermission || history) && <div className="story-studio-dialog" role="dialog" aria-modal="true" aria-label={history ? 'Scene transcript' : 'Scene complete'} style={{ position: 'absolute', inset: 0, zIndex: 10, background: '#101218f5', display: 'grid', placeItems: 'center', padding: 28, overflow: 'auto' }}>

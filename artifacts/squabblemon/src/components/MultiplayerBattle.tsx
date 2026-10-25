@@ -10,6 +10,7 @@ import { useBattleResultExit } from '../lib/useBattleResultExit';
 import { useTurnClockCues } from '../lib/turnClockCues';
 import { useEffect, useLayoutEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
 import { createPortal } from 'react-dom';
+import { replaceEqualDeep } from '@tanstack/react-query';
 import { LayoutGroup, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { cards, getAssetUrl, type Card } from '../data';
 import { KumiteArena } from './kumite/KumiteArena';
@@ -81,11 +82,17 @@ export function computeTurnSecondsRemaining(deadline: number | null | undefined,
 }
 
 /** A display-only projection. Never simulate online actions or invent an opponent hand. */
-export function onlineBattleProjection(room: OnlineRoomView): { match: Match; presentation: Omit<OnlineBattlePresentation, 'status' | 'clockRunning' | 'yourTurn'> } {
+export function onlineBattleProjection(room: OnlineRoomView, mappedCards = new WeakMap<PublicCard, CardInstance>()): { match: Match; presentation: Omit<OnlineBattlePresentation, 'status' | 'clockRunning' | 'yourTurn'> } {
   const rival = otherSeat(room.seat);
   const owner = (seat: Seat) => seat === room.seat ? 'player' as const : 'cpu' as const;
-  const card = (c: PublicCard): CardInstance => ({ ...asCard(c as OnlinePublicCard), owner: owner(c.owner),
-    ...(c.smileBomb ? { smileBomb: { ...c.smileBomb, sourceOwner: owner(c.smileBomb.sourceOwner) } } : {}) });
+  const card = (c: PublicCard): CardInstance => {
+    const existing = mappedCards.get(c);
+    if (existing) return existing;
+    const projected = { ...asCard(c as OnlinePublicCard), owner: owner(c.owner),
+      ...(c.smileBomb ? { smileBomb: { ...c.smileBomb, sourceOwner: owner(c.smileBomb.sourceOwner) } } : {}) };
+    mappedCards.set(c, projected);
+    return projected;
+  };
   const scores = room.scores.map(score => ({ ...score, player: score[room.seat], cpu: score[rival],
     winner: score.winner === 'draw' ? 'draw' as const : owner(score.winner) }));
   const match: Match = {
@@ -116,6 +123,28 @@ export function onlineBattleProjection(room: OnlineRoomView): { match: Match; pr
     rivalIdentity: room.members[rival] ?? undefined,
     mode: room.kumite ? 'Kumite' : room.ranked ? room.ranked.opponent === 'bot' ? 'Park bot' : 'Ranked' : 'Friend fade',
   } };
+}
+
+/** One cache per mounted battle, with no revision-only freshness assumption. */
+export function createOnlineBattleProjector() {
+  type Input = Omit<OnlineRoomView, 'serverTime' | 'deadline'>;
+  let previous: Input | undefined;
+  let projection: ReturnType<typeof onlineBattleProjection> | undefined;
+  let mappedCards = new WeakMap<PublicCard, CardInstance>();
+  return (room: OnlineRoomView) => {
+    // The clock consumes these directly below. Every other authoritative field,
+    // including same-revision corrections and private hand costs, stays observed.
+    const { serverTime, deadline, ...incoming } = room;
+    const sameGame = previous?.code === room.code && previous.gameNumber === room.gameNumber && previous.seat === room.seat;
+    if (!sameGame) mappedCards = new WeakMap();
+    // Query data normally already shares unchanged JSON. Also retain identities
+    // after an equivalent reconnect payload instead of repainting every card.
+    const input = replaceEqualDeep(sameGame ? previous : undefined, incoming);
+    if (input === previous && projection) return projection;
+    previous = input;
+    projection = onlineBattleProjection({ ...input, serverTime, deadline }, mappedCards);
+    return projection;
+  };
 }
 
 type Props = { room: OnlineRoomView; busy: boolean; connected: boolean; reducedMotion: boolean;
@@ -216,7 +245,8 @@ export function MultiplayerBattle({ room, busy, connected, reducedMotion: profil
   useEffect(() => { if (!myTurn || (selected && !room.hand.some(c => c.instanceId === selected))) {
     setSelected(null); setLane(null); setSquabble(false);
   } }, [myTurn, room.hand, selected]);
-  const projected = useMemo(() => onlineBattleProjection(room), [room]);
+  const projectRoom = useMemo(createOnlineBattleProjector, []);
+  const projected = useMemo(() => projectRoom(room), [projectRoom, room]);
   const { effect: liveEffect, presenting: presentingEffects, pendingEffects, playedSpecialMoves } = useOnlineEffectPresenter(room, projected.presentation.scores, Boolean(reducedMotion) || (room.status !== 'active' && room.status !== 'complete'));
   const remembered = useRef({ key: `${room.code}:${room.gameNumber}`, cards: new Map<string, CardInstance>() });
   const matchKey = `${room.code}:${room.gameNumber}`;

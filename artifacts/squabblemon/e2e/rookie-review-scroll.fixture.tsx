@@ -70,9 +70,14 @@ const bootstrap = {
 
 function ReviewFixture() {
   const [action, setAction] = useState('');
+  const [liveBootstrap, setLiveBootstrap] = useState(bootstrap);
+  if (screen === 'late-review') Object.assign(window, { __rookieReviewTest: {
+    savedBattleArrives: () => setLiveBootstrap(value => ({ ...value, nextAction: { ...value.nextAction, id: 'rookie-tested' } })),
+    refreshSavedBattle: () => setLiveBootstrap(value => ({ ...value, profile: { ...value.profile, xp: value.profile.xp + 1 } })),
+  } });
   const content = screen === 'handoff'
     ? <RookieHandoff onReview={() => setAction('review')} onComplete={() => setAction('complete')} />
-    : <FirstDeckWorkshop bootstrap={bootstrap} onComplete={() => setAction('complete')} />;
+    : <FirstDeckWorkshop bootstrap={liveBootstrap} onComplete={() => setAction('complete')} />;
 
   return <>
     {shell

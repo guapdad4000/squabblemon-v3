@@ -6,12 +6,12 @@ import {
 import { seededDeckRotation } from '@workspace/squabblemon-engine/balanceLab';
 import { createOnlineRoom, joinOnlineRoom, applyOnlineCommand, type OnlineRoom, type OnlineMember } from '@workspace/squabblemon-engine/multiplayer';
 
-export const rivalryRecipes = {
+export const rivalryRecipes: Readonly<Record<'blue' | 'red', readonly string[]>> = {
   blue: ['triple-og-blue', 'look-out', 'blueside1', 'ganger-blue', 'blue-nose-pit', 'initiation', 'waterboy', 'alchy', 'cognac', 'bustdown'],
   red: [...RED_SET_BENCHMARK_CARD_IDS],
 };
 export type RivalrySettings = { first: 'blue' | 'red'; tier: number; seed: string; openingSeat?: Owner; recipes?: { blue: readonly string[]; red: readonly string[] } };
-export type RivalryCommand = { kind: 'play'; owner: Owner; id: string; lane: Lane; squabble: boolean } | { kind: 'pass'; owner: Owner };
+export type RivalryCommand = { kind: 'play'; owner: Owner; id: string; lane: Lane; squabble: boolean; investment?: number } | { kind: 'pass'; owner: Owner };
 /** In-memory local fixture only. No room is published or network request made. */
 export function createRivalryRoom(settings: RivalrySettings): OnlineRoom {
   const other = settings.first === 'blue' ? 'red' : 'blue';
@@ -31,6 +31,6 @@ export function createRivalryRoom(settings: RivalrySettings): OnlineRoom {
 }
 export function applyRivalryCommand(room: OnlineRoom, command: RivalryCommand): OnlineRoom {
   return applyOnlineCommand(room, command.owner, command.kind === 'play'
-    ? { type: 'play', instanceId: command.id, lane: command.lane, squabble: command.squabble }
+    ? { type: 'play', instanceId: command.id, lane: command.lane, squabble: command.squabble, investment: command.investment ?? 0 }
     : { type: 'end-turn' }, 0);
 }

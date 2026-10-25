@@ -8,6 +8,7 @@ import { createRequire } from "node:module";
 import { assertCampaignDatabaseTarget } from "./database-safety.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
+const onlineRetirementOnly = process.argv.includes('--online-retirement');
 const mailOnly = process.argv.includes('--mail');
 const rankedCloutOnly = process.argv.includes('--ranked-clout');
 const monthlyLoginOnly = process.argv.includes('--monthly-login');
@@ -18,6 +19,7 @@ const socialLoad = process.argv.includes('--social-load');
 if (flexPullsOnly && (mailOnly || socialOnly || socialLoad || rankedCloutOnly || monthlyLoginOnly)) throw new Error("--flex-pulls cannot be combined with another test mode.");
 if (socialLoad && (mailOnly || socialOnly || rankedCloutOnly || monthlyLoginOnly)) throw new Error("--social-load cannot be combined with another test mode.");
 if (monthlyLoginOnly && (mailOnly || socialOnly || rankedCloutOnly)) throw new Error("--monthly-login cannot be combined with another test mode.");
+if (onlineRetirementOnly && process.argv.slice(2).some(arg => arg !== '--online-retirement')) throw new Error('--online-retirement cannot be combined with another test mode.');
 process.chdir(root);
 let ownedDirectory;
 let pgBin;
@@ -90,7 +92,7 @@ process.on("SIGTERM", interrupt);
 
 try {
   const provided = process.env.DATABASE_URL?.trim();
-  if ((mailOnly || socialOnly || socialLoad || rankedCloutOnly || monthlyLoginOnly || flexPullsOnly) && "DATABASE_URL" in process.env) throw new Error('These tests require a fresh owned cluster. Unset DATABASE_URL.');
+  if ((onlineRetirementOnly || mailOnly || socialOnly || socialLoad || rankedCloutOnly || monthlyLoginOnly || flexPullsOnly) && "DATABASE_URL" in process.env) throw new Error('These tests require a fresh owned cluster. Unset DATABASE_URL.');
   if (provided) {
     const target = assertCampaignDatabaseTarget(process.env);
     if (!target.local) throw new Error("Payment database tests refuse remote databases.");
@@ -124,7 +126,11 @@ try {
   if (rankedCloutOnly) environment.RANKED_CLOUT_TEST_OWNED = '1';
   if (socialLoad) environment.SOCIAL_LOAD_OWNED = '1';
   if (mailOnly) environment.MAIL_TEST_OWNED = '1';
-  if (flexPullsOnly) {
+  if (onlineRetirementOnly) {
+    environment.ONLINE_RETIREMENT_TEST_OWNED = '1';
+    await run(process.execPath, ['--import', 'tsx', '--test', '--test-concurrency=1',
+      'src/lib/onlineRetirement.native.test.ts', 'src/lib/onlinePolling.native.test.ts', 'src/lib/playerRewardRoutes.test.ts'], 'Native online synchronization, retirement and replay-compatibility database tests', true, join(root, 'artifacts/api-server'));
+  } else if (flexPullsOnly) {
     await run(process.execPath, ['--import', 'tsx', '--test', '--test-concurrency=1', '--experimental-test-isolation=none',
       'src/lib/flexPulls.test.ts', 'src/lib/collectionEconomy.test.ts', 'src/lib/collectionTransactions.test.ts',
       '../../artifacts/squabblemon/src/lib/packJournal.test.ts', 'src/lib/pullBanners.test.ts',

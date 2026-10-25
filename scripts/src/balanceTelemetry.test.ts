@@ -3,6 +3,7 @@ import test from 'node:test';
 import {
   BALANCE_LAB_SCHEMA_VERSION,
   classifyBalanceAbilityEvent,
+  isSuccessfulBalanceAbilityEvent,
   classifyBalanceSquabblePlay,
   observeBalanceCards,
   runBalanceMatrix,
@@ -298,5 +299,47 @@ test('the sweep carries structured evidence for both crews without restoring a m
       assert.equal(card.squabbles, null);
       assert.equal(card.abilitySuccessRateWhenObserved, null);
     }
+  }
+});
+
+test('current ability evidence ignores object key order while retaining legacy counters and real changes', () => {
+  const played = playEvent(fixture('player', 'ptang'), 'player', 'ptang');
+  const template = played.match.effectLog.find(event => event.type === 'ability' && event.cardId === 'ptang')!;
+  assert(template);
+  const card = createCardInstance('waterboy', 'player', 'order-fixture', 0);
+  card.lane = 0; card.roles = ['Support', 'Movement'];
+  const reordered = Object.fromEntries(Object.entries(card).reverse()) as typeof card;
+  const state = template.replay.before;
+  const event: EffectLogEntry = { ...template, note: 'Belt Check: waiting for its condition or blocked.',
+    resources: { before: template.resources.before, after: template.resources.before },
+    replay: { before: { ...state, boards: [[card], [], []] }, after: { ...state, boards: [[reordered], [], []] } } };
+  assert.equal(isSuccessfulBalanceAbilityEvent(event), true, 'historical JSON-string heuristic stays available explicitly');
+  assert.equal(classifyBalanceAbilityEvent(event)?.outcome, 'no-observed-effect');
+  const changed: EffectLogEntry = { ...event, replay: { ...event.replay, after: { ...event.replay.after,
+    boards: [[{ ...reordered, powerModifier: reordered.powerModifier + 1 }], [], []] } } };
+  assert.equal(classifyBalanceAbilityEvent(changed)?.outcome, 'direct-effect');
+  const changedOrder: EffectLogEntry = { ...event, replay: { ...event.replay, after: { ...event.replay.after,
+    boards: [[{ ...reordered, roles: [...reordered.roles!].reverse() }], [], []] } } };
+  assert.equal(classifyBalanceAbilityEvent(changedOrder)?.outcome, 'direct-effect', 'array ordering remains meaningful JSON data');
+});
+
+test('exact Ptang/Waterboy stress probes do not turn equivalent snapshot order into an effect', async () => {
+  const { inventory, simulateSweepCase, scenario } = await import('./fullBalanceSweepCore');
+  const inv = inventory(), decks = new Map([...inv.decks, ...inv.probes, inv.historicalRed].map(deck => [deck.id, deck]));
+  for (const target of ['delivery', 'transplant']) {
+    const test = scenario({ stage: 'catalog-probe', a: `probe-${target}`, b: 'focused-blue-set', policy: 'seeded-legal',
+      seed: 'base-pvp-b64-r64-beta-v64-corrected-base-probe-0', rotation: 0, tierA: 0, tierB: 0, seat: 'b-player', target });
+    let observed = false;
+    const result = simulateSweepCase(test, decks, match => {
+      const event = match.effectLog.find(entry => entry.sequence === 75 && entry.cardId === 'ptang' && entry.type === 'ability');
+      if (!event) return;
+      observed = true;
+      assert.equal(isSuccessfulBalanceAbilityEvent(event), true, 'explicit legacy heuristic exposes the old false positive');
+      assert.equal(classifyBalanceAbilityEvent(event, match.effectLog)?.outcome, 'no-observed-effect');
+    });
+    assert(observed, `${target}: diagnosed actual event must be exercised`);
+    const ptang = result.cardsA.find(card => card.cardId === 'ptang')!;
+    assert.equal(ptang.abilityEvidence.baseDirectEffectEvents, 0);
+    assert.equal(ptang.abilityEvidence.baseNoObservedEffectEvents, 2);
   }
 });

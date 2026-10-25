@@ -1,0 +1,34 @@
+{
+  "status": "passed",
+  "sourceHash": "f3c57f54175c45cdb8493ea1d7b7178f801ba8664612e87c5c3a4d867f4c7193",
+  "scheduledMatches": 20400,
+  "failedCases": 0,
+  "observedPlayableCards": 301,
+  "namedDecks": 46,
+  "namedSlots": 460,
+  "fullCompactComparisons": 276,
+  "testCounts": {
+    "runtime": 60,
+    "harness": 12,
+    "rivalryModel": 7,
+    "renderer": 16
+  },
+  "typechecks": {
+    "frontend": "passed",
+    "scripts": "passed"
+  },
+  "sourceArchiveSha256": "0268e04587d516968660a5de5f7c58694d360d6a6610f837de271237b64e47e6",
+  "supplementalInitializerSha256": "4ef54f3b24472af0638bcf8b126abb22ec98fa4c4e104a348b47c9d1e49dbfe0",
+  "retainedLogs": {
+    "current-deck-frontend-typecheck.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "current-deck-harness-tests.log": "1b5eb9fcd55761bf20e06871bd28c2a804ea7863b062fa1886d290ad7e285a47",
+    "current-deck-runner-verification.log": "348bba196bb91727c69477588bea6e6f03994a13d903777af5ff9d0629f77aa7",
+    "current-deck-runtime-tests.log": "5432146a5c1a85b04daa46ca989360f95290c6aa91d74f57dd3a636d24276b9b",
+    "current-deck-scripts-typecheck.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "limits": [
+    "Local source, unit tests and automated simulation only",
+    "No human, physical-device or deployment validation",
+    "No push performed"
+  ]
+}

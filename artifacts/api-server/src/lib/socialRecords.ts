@@ -1,3 +1,4 @@
+import { restoreOnlineRoom } from './onlineRoomPersistence';
 import { and, eq, inArray, or, sql } from "drizzle-orm";
 import {
   db,
@@ -57,7 +58,7 @@ export function tallyFadeRecords(
         (seat === "player" ? row.guestUserId : row.hostUserId) !== opponent)
     )
       continue;
-    addFadeRecord(total, row.state as unknown as OnlineRoom, seat);
+    addFadeRecord(total, restoreOnlineRoom(row.state), seat);
   }
   return total;
 }
@@ -82,7 +83,7 @@ export function tallySocialFadeRecords(
     // A legacy room with the same ID in both seats counts only its host seat.
     const guest = guestId !== null && guestId !== hostId ? players.get(guestId) : undefined;
     if (!seat && !host && !guest) continue;
-    const room = row.state as unknown as OnlineRoom;
+    const room = restoreOnlineRoom(row.state);
     if (seat) addFadeRecord(self, room, seat);
     if (host) addFadeRecord(host.overall, room, "player");
     if (guest) addFadeRecord(guest.overall, room, "cpu");

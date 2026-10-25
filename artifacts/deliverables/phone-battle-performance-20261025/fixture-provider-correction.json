@@ -1,0 +1,91 @@
+{
+  "baseline": false,
+  "kind": "actual online hook/battle/card fixture, mocked local GETs; not production/device performance",
+  "checks": [
+    {
+      "name": "clock-only-heartbeats",
+      "renders": [],
+      "commits": [],
+      "snapshot": {
+        "reads": 6,
+        "writes": 0,
+        "revision": 3,
+        "status": "active",
+        "boardId": "player:projection-fixture:0:hooper",
+        "handId": "player:block:0:cornball",
+        "deadline": 1792963505010
+      },
+      "timer": "61"
+    },
+    {
+      "name": "deadline-correction",
+      "renders": [],
+      "commits": [],
+      "snapshot": {
+        "reads": 7,
+        "writes": 0,
+        "revision": 3,
+        "status": "active",
+        "boardId": "player:projection-fixture:0:hooper",
+        "handId": "player:block:0:cornball",
+        "deadline": 1792963489390
+      },
+      "timer": "45"
+    },
+    {
+      "name": "same-revision-card-form-and-status",
+      "renders": [
+        {
+          "id": "player:projection-fixture:0:hooper",
+          "zone": "board"
+        }
+      ],
+      "commits": [
+        {
+          "id": "player:projection-fixture:0:hooper",
+          "zone": "board"
+        }
+      ],
+      "snapshot": {
+        "reads": 8,
+        "writes": 0,
+        "revision": 3,
+        "status": "active",
+        "boardId": "player:projection-fixture:0:hooper",
+        "handId": "player:block:0:cornball",
+        "deadline": 1792963489390
+      },
+      "timer": "45"
+    },
+    {
+      "name": "same-revision-private-cost",
+      "renders": [
+        {
+          "id": "player:block:0:cornball",
+          "zone": "hand",
+          "cost": 0
+        }
+      ],
+      "commits": [
+        {
+          "id": "player:block:0:cornball",
+          "zone": "hand",
+          "cost": 0
+        }
+      ],
+      "snapshot": {
+        "reads": 9,
+        "writes": 0,
+        "revision": 3,
+        "status": "active",
+        "boardId": "player:projection-fixture:0:hooper",
+        "handId": "player:block:0:cornball",
+        "deadline": 1792963489390
+      },
+      "timer": "45"
+    }
+  ],
+  "status": "failed",
+  "error": "Error: expect(locator).toHaveAttribute(expected) failed\n\nLocator: getByTestId('online-battle')\nExpected: \"complete\"\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n  - Expect \"toHaveAttribute\" getByTestId('online-battle') with timeout 5000ms\n  - waiting for getByTestId('online-battle')\n\n    at captureRawStack (/home/falcon/Documents/New project 9/node_modules/.pnpm/playwright-core@1.63.0/node_modules/playwright-core/lib/coreBundle.js:8588:17)\n    at callMatcherAsStep (/home/falcon/Documents/New project 9/node_modules/.pnpm/playwright@1.63.0/node_modules/playwright/lib/matchers/expect.js:13310:57)\n    at Object.toHaveAttribute (/home/falcon/Documents/New project 9/node_modules/.pnpm/playwright@1.63.0/node_modules/playwright/lib/matchers/expect.js:13302:23)\n    at /home/falcon/.codex/worktrees/v2-performance-parity/New project 9/artifacts/squabblemon/e2e/verify-online-projection.mjs:116:51",
+  "projectionSourceHash": "c9842ee225704ebad8a7c1346115d45c3f9bdc7d05d4bbf87d7bc5c6ec2ebfbc"
+}

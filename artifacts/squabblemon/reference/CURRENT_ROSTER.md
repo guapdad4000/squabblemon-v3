@@ -1,5 +1,7 @@
 # Current Roster — 36 Squabblemon
 
+> **Historical prototype art handoff.** “Current” and the 36-card/20-art counts describe this original prototype snapshot, not the live game catalog. For current tested rosters and coverage, use the [deck evidence index](../../../docs/balance/README.md); runtime definitions come from `lib/squabblemon-engine/src/data.ts` and its assembled catalog. This art checklist is preserved unchanged below.
+
 Production art status: **20 / 36 wired in the new unified style.**
 
 ## New production art wired

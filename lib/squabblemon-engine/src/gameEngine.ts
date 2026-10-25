@@ -1,3 +1,5 @@
+import { shareReplaySnapshot } from './replayCodec';
+export { compactMatchReplay, restoreMatchReplay } from './replayCodec';
 import { PVP_SUPPORT } from './basePvpBalance';
 import { selectedCards, fakeMarriage } from './selectedWave';
 import { selectedReveal, selectedArrived, selectedMoved, selectedGain, selectedDamage, selectedResolved, type SelectedTools } from './selectedAbilities';
@@ -822,6 +824,36 @@ export function canAffordSelection(match: Match, owner: Owner, instanceId: strin
     && (isMythicalTripleOg(card.cardId) || !getStoryLockedLanes(match, owner).includes(targetLane))
     && getLegalCardCost(match, owner, card, targetLane) + (card.cardId === 'the-dice-game' ? 1 : 0) <= (owner === "player" ? match.playerMotion : match.cpuMotion)
     && (card.cardId !== 'the-dice-game' || (owner === 'player' ? match.cpuMotion : match.playerMotion) >= 1);
+}
+
+export type LegalPlayIntent = { instanceId: string; cardId: string; lane: Lane; cost: number; squabble: boolean; investment: number };
+/** Shared policy candidates; authority still validates the chosen single command. */
+export function listLegalPlayIntents(match: Match, owner: Owner, allowSquabble = true): LegalPlayIntent[] {
+  if (match.phase !== (owner === 'player' ? 'player' : 'cpu-reveal')) return [];
+  const hand = owner === 'player' ? match.playerHand : match.cpuHand;
+  const motion = owner === 'player' ? match.playerMotion : match.cpuMotion;
+  const opposingMotion = owner === 'player' ? match.cpuMotion : match.playerMotion;
+  const squabbleAvailable = allowSquabble && (match.squabbleByOwner ? !match.squabbleByOwner[owner] : owner === 'player' && !match.squabbleUsed);
+  const result: LegalPlayIntent[] = [];
+  for (const card of hand) {
+    if (squabblehouseMovementLocked(match, card)) continue;
+    // Dice's zero choice is its canonical one-Motion wager; do not duplicate it as choice1.
+    const investments = card.cardId === 'the-dice-game' ? [0, 2, 3]
+      : card.cardId === 'the-concert' ? [0, 1]
+      : card.cardId === 'homelessguy' && activeAbility(card) ? [0, 1, 2, 3, 4] : [0];
+    const forms = squabbleAvailable && card.kind !== 'support' && card.kind !== 'blockbuster' ? [false, true] : [false];
+    for (const target of [0, 1, 2] as Lane[]) {
+      if (!canAffordSelection(match, owner, card.instanceId, target)) continue;
+      const baseCost = getLegalCardCost(match, owner, card, target);
+      for (const investment of investments) {
+        const extraCost = blockbusterExtraCost(card.cardId, investment);
+        if (baseCost + extraCost > motion || (card.cardId === 'the-dice-game' && extraCost > opposingMotion)) continue;
+        for (const squabble of forms) result.push({ instanceId: card.instanceId, cardId: card.cardId,
+          lane: target, cost: baseCost + extraCost, squabble, investment });
+      }
+    }
+  }
+  return result;
 }
 
 /** Cards whose Hands can never be reduced. Extend through the Triple OG set, not new hardcodes. */
@@ -5494,15 +5526,12 @@ export function getRivalIntent(match: Match): RivalIntent {
     : `Balances district bonuses and open lanes; watch ${laneName}.`;
   return { style, tell, likelyLane };
 }
-export function chooseCpuPlay(match: Match, lookAhead = true): { instanceId: string; lane: Lane; investment: number } | null {
+export function chooseCpuPlay(match: Match, lookAhead = true): { instanceId: string; lane: Lane; investment: number; squabble: boolean } | null {
   if (match.phase !== "cpu-reveal") return null;
-  match = { ...match, effectLog: [], playerHand: [], playerCardIds: [], playerDrawIndex: 0 };
-  const options = match.cpuHand.flatMap(card => ([0, 1, 2] as Lane[])
-    .filter(l => canAffordSelection(match, 'cpu', card.instanceId, l)).flatMap(l => {
-      const cost = getLegalCardCost(match, 'cpu', card, l);
-      const max = card.cardId === 'homelessguy' && activeAbility(card) ? Math.min(4, match.cpuMotion - cost) : 0;
-      return Array.from({ length: max + 1 }, (_, investment) => ({ card, lane: l, cost: cost + investment, investment }));
-    }));
+  // Current own hand is known; opposing cards and either unseen draw order are not.
+  match = suppressMatchPresentationEvents({ ...match, playerHand: [], playerCardIds: [], playerDrawIndex: 0, cpuCardIds: [], cpuDrawIndex: 0 });
+  const hand = new Map(match.cpuHand.map(card => [card.instanceId, card]));
+  const options = listLegalPlayIntents(match, 'cpu').map(option => ({ ...option, card: hand.get(option.instanceId)! }));
   if (!options.length) return null;
   // Resolve each candidate through the real rules, including movement, cleansing,
   // protection, upgrades and story effects. Never reward an existing stack itself.
@@ -5521,7 +5550,7 @@ export function chooseCpuPlay(match: Match, lookAhead = true): { instanceId: str
     const active = board.boards.flat().filter(c => !c.hazard && c.owner === 'cpu' && !c.statuses.frozen && !c.statuses.silenced);
     const cheap = board.cpuHand.filter(c => c.cost <= 2).length;
     const setup = board.round < getMatchRoundLimit(board) ? active.reduce((sum, c) => sum
-      + (abilityCardId(c) === 'gamer' ? Math.min(2, cheap) : abilityCardId(c) === 'streamer' ? Math.min(2 - board.cheapBuffsUsed.cpu, cheap) : abilityCardId(c) === 'bossbabe' ? 2 - (c.networkBoosts ?? 0) : 0)
+      + (abilityCardId(c) === 'streamer' ? Math.min(Math.max(0, 2 - board.cheapBuffsUsed.cpu), cheap) : abilityCardId(c) === 'bossbabe' ? Math.max(0, 2 - (c.networkBoosts ?? 0)) : 0)
       + (c.statuses.protected ? 0.7 : 0), 0) + Math.min(2, board.discountTokens.filter(t => t.owner === 'cpu').length) : 0;
     const styleValue = /movement|Movement/.test(style) ? board.boards.filter(items => items.some(c => c.owner === 'cpu')).length * 0.7
       : /support|Growth|combo/.test(style) ? setup * 0.7
@@ -5530,27 +5559,27 @@ export function chooseCpuPlay(match: Match, lookAhead = true): { instanceId: str
     return finish + control * 15 + margins + setup + styleValue;
   };
   const ranked = options.map(option => {
-    const resolved = playCard(match, 'cpu', option.card.instanceId, option.lane, false, option.investment);
+    const resolved = playCard(match, 'cpu', option.card.instanceId, option.lane, option.squabble, option.investment);
     return { ...option, resolved, score: value(resolved) };
   });
   const passed = pass(match, 'cpu');
-  const candidates = [...ranked, { card: null, lane: 0 as Lane, cost: 0, investment: 0, resolved: passed, score: value(passed) }];
+  const candidates = [...ranked, { card: null, lane: 0 as Lane, cost: 0, investment: 0, squabble: false, resolved: passed, score: value(passed) }];
   candidates.sort((a, b) => b.score - a.score);
   // A bounded second turn values setup and saving removal. The opponent's private
   // hand is never read: this is an optimistic own-turn plan, weighted below now.
   if (lookAhead && match.round < getMatchRoundLimit(match)) for (const candidate of candidates.slice(0, 4)) {
     const future = pass(nextRound(candidate.resolved), 'player');
     const choice = chooseCpuPlay(future, false);
-    const after = choice ? playCard(future, 'cpu', choice.instanceId, choice.lane, false, choice.investment) : pass(future, 'cpu');
+    const after = choice ? playCard(future, 'cpu', choice.instanceId, choice.lane, choice.squabble, choice.investment) : pass(future, 'cpu');
     candidate.score += 0.35 * (value(after) - value(candidate.resolved));
   }
-  candidates.sort((a, b) => b.score - a.score || a.cost - b.cost
+  candidates.sort((a, b) => b.score - a.score || a.cost - b.cost || Number(a.squabble) - Number(b.squabble)
     || (a.card?.instanceId ?? '').localeCompare(b.card?.instanceId ?? '')
     || ((a.lane + match.round) % 3) - ((b.lane + match.round) % 3));
   const best = candidates[0];
-  return best.card ? { instanceId: best.card.instanceId, lane: best.lane, investment: best.investment } : null;
+  return best.card ? { instanceId: best.card.instanceId, lane: best.lane, investment: best.investment, squabble: best.squabble } : null;
 }
-export function revealCpu(match: Match): Match { const choice = chooseCpuPlay(match); return choice ? playCard(match, 'cpu', choice.instanceId, choice.lane, false, choice.investment) : pass(match, 'cpu'); }
+export function revealCpu(match: Match): Match { const choice = chooseCpuPlay(match); return choice ? playCard(match, 'cpu', choice.instanceId, choice.lane, choice.squabble, choice.investment) : pass(match, 'cpu'); }
 /** Resolve the rival's whole turn with the same per-card Motion budget. */
 export function revealCpuTurn(match: Match): Match {
   if (match.phase !== 'cpu-reveal') throw new Error('It is not The Opps’ turn');
@@ -5558,7 +5587,7 @@ export function revealCpuTurn(match: Match): Match {
   while (true) {
     const choice = chooseCpuPlay(next);
     if (!choice) return pass(next, 'cpu');
-    next = playTurnCard(next, 'cpu', choice.instanceId, choice.lane, false, choice.investment);
+    next = playTurnCard(next, 'cpu', choice.instanceId, choice.lane, choice.squabble, choice.investment);
   }
 }
 function applyDistrictRoundStart(match: Match): Match {
@@ -5810,6 +5839,17 @@ function detonateSmileBombs(match: Match): Match {
     m = settleLeaderReactions(m);
   }
   return m;
+}
+
+/** A bounded policy forecast of existing public fuses, not a predicted future turn.
+ * Keeps the current board/shields and resolves only bombs due at the next round;
+ * callers discount this estimate because opponents may move or remove targets. */
+export function previewPendingSmileBombs(match: Match): Match {
+  const next = match.round + 1;
+  if (match.phase === 'complete' || next > getMatchRoundLimit(match)
+    || !match.boards.some(lane => lane.some(card => card.smileBomb && card.smileBomb.detonatesAtRound <= next))) return match;
+  return detonateSmileBombs(suppressMatchPresentationEvents({ ...match, round: next,
+    playerHand: [], cpuHand: [], playerCardIds: [], cpuCardIds: [], playerDrawIndex: 0, cpuDrawIndex: 0 }));
 }
 
 export function nextRound(match: Match, onRoundSettled?: (settled: Match) => Match | void): Match {
@@ -6216,7 +6256,7 @@ export type ResourceState = { playerMotion: number; cpuMotion: number };
 
 const resources = (m: Match): ResourceState => ({ playerMotion: m.playerMotion, cpuMotion: m.cpuMotion });
 
-const replayState = (m: Match): ReplayState => JSON.parse(JSON.stringify({
+const replayState = (m: Match, previous?: ReplayState): ReplayState => shareReplaySnapshot({
   afterParty: m.afterParty,
   laneDamage: m.laneDamage ?? [],
   undercovaPayouts: m.undercovaPayouts ?? {},
@@ -6259,7 +6299,7 @@ const replayState = (m: Match): ReplayState => JSON.parse(JSON.stringify({
   storyRuntime: m.storyRuntime,
   abilityUpgradeSnapshot: m.abilityUpgradeSnapshot,
   squabblehouseRevealHistory: m.squabblehouseRevealHistory ?? [],
-})) as ReplayState;
+} as ReplayState, previous);
 
 export type ScoreState = { lane: Lane; player: number; cpu: number };
 
@@ -6295,6 +6335,8 @@ const addEvent = (before: Match, after: Match, input: EventInput): Match => {
     .filter((id) => id !== input.sourceId);
   const sourceCard = input.sourceId ? findCard(after, input.sourceId) ?? findCard(before, input.sourceId) : undefined;
   const neutralIds = new Set(neutralDepartures.map(card => card.instanceId));
+  const beforeReplay = replayState(before, before.effectLog.at(-1)?.replay?.after);
+  const afterReplay = replayState(after, beforeReplay);
   const event: EffectLogEntry = {
     sequence: after.nextEventSequence,
     round: after.round,
@@ -6306,7 +6348,7 @@ const addEvent = (before: Match, after: Match, input: EventInput): Match => {
     scores: { before: scores(before), after: scores(after) },
     resources: { before: resources(before), after: resources(after) },
     state: { before: roundState(before), after: roundState(after) },
-    replay: { before: replayState(before), after: replayState(after) },
+    replay: { before: beforeReplay, after: afterReplay },
     cardInstanceId: sourceCard?.instanceId ?? input.type,
     cardId: sourceCard?.cardId ?? input.type,
     owner: sourceCard?.owner ?? input.owner,

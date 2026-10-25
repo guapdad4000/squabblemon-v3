@@ -7,7 +7,7 @@ import { tutorialScript } from '../lib/tutorialVoice';
 import { useTutorialVoice } from '../lib/useTutorialVoice';
 
 export function DrFadeWelcome({ onContinue }: { onContinue: () => void }) {
-  useTutorialVoice(tutorialScript('legendary-catchphrase', 'legendary-explanation', 'legendary-squabble'));
+  useTutorialVoice(tutorialScript('legendary-catchphrase'));
   const reduced = useReducedMotion() || (typeof document !== 'undefined' && document.documentElement.dataset.reduceMotion === 'true');
   return <section className="dr-fade-welcome" data-testid="dr-fade-welcome" aria-labelledby="dr-fade-welcome-title">
     <div className="dr-fade-welcome__rays" aria-hidden="true" />
@@ -18,8 +18,8 @@ export function DrFadeWelcome({ onContinue }: { onContinue: () => void }) {
       <h1 id="dr-fade-welcome-title">Your coach.<br />Now in your corner.</h1>
       <p>“Watch close. You’re next.”</p>
       <h2>Dr. Fade joins your gang.</h2>
-      <p>Play him for <b>4 Motion</b>. He brings <b>6 Hands</b>, hits the strongest enemy in his district for <b>−2 Hands</b>, and gives your weakest ally in another district <b>+2 Hands</b>.</p>
-      <p className="dr-fade-welcome__lesson">We’ll save him for your first SQUABBLE: <b>12 base Hands</b> in one play. Follow the highlights and see it happen.</p>
+      <p>Play him for <b>{cards.drfade.cost} Motion</b>. He brings <b>{cards.drfade.power} Hands</b>, hits the strongest enemy in his district for <b>−2 Hands</b>, and gives your weakest ally in another district <b>+2 Hands</b>.</p>
+      <p className="dr-fade-welcome__lesson">We’ll save him for your first SQUABBLE: <b>{cards.drfade.power * 2} base Hands</b> in one play. Follow the highlights and see it happen.</p>
       <button className="venue-button venue-button--gold" onClick={onContinue}>Build with Dr. Fade</button>
       <span className="dr-fade-welcome__note">Already added to your first gang. Chapter rewards help train him.</span>
     </motion.div>

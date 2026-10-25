@@ -19,7 +19,7 @@ import { PageDecor } from './venue/PageDecor';
 import { DistrictEffects, MotionEnergy } from './BattleEffects';
 import { DrFadePortrait } from './DrFade';
 import { BattleDragOverlay, useBattleDrag } from './useBattleDrag';
-import { previewBattlePlay } from '../battlePreview';
+import { useBattlePreviews } from '../lib/useBattleComputation';
 import { RivalTell, BattleRound } from './BattleReadability';
 import { BattleDistrictView } from './BattleDistrictView';
 import { BattleTargetLine } from './BattleTargetLine';
@@ -336,7 +336,7 @@ export function Battle({
   replay, onReplayStep, onExitReplay, onFeedback,
   playedSpecialMoves, online: onlineInput, helpOpen = false,
   guidedReadingCue, onContinueGuidedReading, reviewingFinalBoard = false,
-  battleSpeed, onToggleBattleSpeed,
+  battleSpeed, onToggleBattleSpeed, computationWorker,
 }: any) {
   const squabbleCinematicLaneValue = squabbleCinematicLane as Lane | null | undefined;
   const m = match as Match;
@@ -706,11 +706,10 @@ export function Battle({
   const coachedTitle = tutorialCoach && tutorialGuidance
     ? (tutorialGuidance as TutorialGuidance).title
     : null;
-  const previews = React.useMemo(() => !online && selectedCard && interactive
-    ? ([0, 1, 2] as Lane[]).map(lane => isCardLaneAllowed(selectedCard, lane)
-      ? previewBattlePlay(m, selectedCard.instanceId, lane, selectedCard.kind === 'blockbuster' ? false : squabble, lane === selectedLane ? investment : 0)
-      : null) : [],
+  const previewInput = React.useMemo(() => !online && selectedCard && interactive
+    ? { match: m, instanceId: selectedCard.instanceId, squabble, lane: selectedLane, investment } : null,
     [m, selectedCard, selectedLane, interactive, squabble, online, investment]);
+  const previews = useBattlePreviews(previewInput, !online, computationWorker);
   const previewTargets = selectedLane === null ? [] : previews[selectedLane]?.targets ?? [];
   const effectLanded = presentedEffect?.impact ?? (phase === 'player-impact' || phase === 'rival-impact' || (phase === 'effects' && presentationScores === presentedEffect?.scores.after));
   const squabbledIds = React.useMemo(() => online?.squabbledIds ?? squabbledCardIds(m.effectLog, presentedEffect ? presentedEffect.sequence - (effectLanded ? 0 : 1) : Infinity), [online?.squabbledIds, m.effectLog, presentedEffect?.sequence, effectLanded]);

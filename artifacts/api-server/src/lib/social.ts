@@ -1,3 +1,4 @@
+import { restoreOnlineRoom, storeOnlineRoom } from './onlineRoomPersistence';
 import { randomBytes, randomInt, randomUUID } from "node:crypto";
 import { and, eq, or, desc, sql } from "drizzle-orm";
 import { socialIdentitiesTable as identities,
@@ -61,7 +62,7 @@ async function invitationView(tx: SocialTx, row: typeof invites.$inferSelect, us
   const [room] = await (live ? query.for("update") : query);
   if (!room) throw new OnlineError("Invitation not found.", 404);
   if (live) {
-    await syncRoomInvitation(tx, room.id, expireOnlineRoom(room.state as unknown as OnlineRoom, Date.now()));
+    await syncRoomInvitation(tx, room.id, expireOnlineRoom(restoreOnlineRoom(room.state), Date.now()));
     [row] = await tx.select().from(invites).where(eq(invites.id, row.id));
   }
   return invitationReceipt(row, room.code, userId,
@@ -136,7 +137,7 @@ async function invalidate(tx: SocialTx, a: string, b: string) {
   const pending = await tx.select().from(invites).where(and(eq(invites.low, low), eq(invites.high, high), eq(invites.status, "pending")));
   for (const row of pending) {
     const [room] = await tx.select().from(rooms).where(eq(rooms.id, row.roomId)).for("update");
-    const current = room.state as unknown as OnlineRoom;
+    const current = restoreOnlineRoom(room.state);
     if (current.members.cpu) { await syncRoomInvitation(tx, room.id, current); continue; }
     await tx.update(invites).set({ status: "unavailable" }).where(eq(invites.id, row.id));
     await tx.update(rooms).set({ state: { ...current, status: "closed", revision: current.revision + 1 }, expiresAt: new Date(), updatedAt: new Date() }).where(eq(rooms.id, room.id));
@@ -209,12 +210,12 @@ export async function sendFadeInvitation(userId: string, input: { friendCode: st
     if (active && Date.now() - active.createdAt.getTime() < 60_000) throw new OnlineError("Wait a minute before inviting this homie again.", 429);
     const member = await loadMember(tx, userId, input.deckId);
     const open = await tx.select().from(rooms).where(and(eq(rooms.hostUserId, userId), sql`${rooms.expiresAt} > now()`));
-    if (open.filter(r => ["waiting", "active"].includes((r.state as unknown as OnlineRoom).status)).length >= 5) throw new OnlineError("Close an existing room first.", 429);
+    if (open.filter(r => ["waiting", "active"].includes((restoreOnlineRoom(r.state)).status)).length >= 5) throw new OnlineError("Close an existing room first.", 429);
     const current = createOnlineRoom(member, randomInt(2) ? "player" : "cpu", Date.now());
     // Invitations expire quickly; an accepted room keeps the ordinary lifecycle.
     const expiresAt = new Date(Date.now() + 10 * 60_000);
     const [room] = await tx.insert(rooms).values({ code: randomBytes(6).toString("hex").toUpperCase(), hostUserId: userId,
-      inviteOnly: true, createRequestId: input.requestId, state: current as unknown as Record<string, unknown>, expiresAt: new Date(current.expiresAt) }).returning();
+      inviteOnly: true, createRequestId: input.requestId, state: storeOnlineRoom(current), expiresAt: new Date(current.expiresAt) }).returning();
     const [invitation] = await tx.insert(invites).values({ sender: userId, recipient: other, low, high, roomId: room.id,
       requestId: input.requestId, deckId: input.deckId, expiresAt }).returning();
     return invitationView(tx, invitation, userId);
@@ -230,7 +231,7 @@ export async function accessInvitation(userId: string, id: string, input?: { act
     if (input.action === "cancel" ? row.sender !== userId : row.recipient !== userId) throw new OnlineError("Invitation not found.", 404);
     if (view.status !== "pending") return view;
     const [room] = await tx.select().from(rooms).where(eq(rooms.id, row.roomId)).for("update");
-    let current = expireOnlineRoom(room.state as unknown as OnlineRoom, Date.now());
+    let current = expireOnlineRoom(restoreOnlineRoom(room.state), Date.now());
     if (input.action === "accept") {
       if (!input.deckId) throw new OnlineError("Choose a gang.", 400);
       if (!(await eligiblePair(tx, row.sender, row.recipient))) throw new OnlineError("This invitation is unavailable.", 409);
@@ -240,7 +241,7 @@ export async function accessInvitation(userId: string, id: string, input?: { act
       await tx.update(invites).set({ status: input.action === "cancel" ? "cancelled" : "declined" }).where(eq(invites.id, id));
       current = { ...current, status: "closed", revision: current.revision + 1 };
     }
-    await tx.update(rooms).set({ state: current as unknown as Record<string, unknown>, guestUserId: current.members.cpu?.userId ?? null,
+    await tx.update(rooms).set({ state: storeOnlineRoom(current), guestUserId: current.members.cpu?.userId ?? null,
       expiresAt: new Date(current.status === "closed" ? Date.now() : current.expiresAt), updatedAt: new Date() }).where(eq(rooms.id, room.id));
     view = await invitationView(tx, row, userId);
     return view;

@@ -29,6 +29,10 @@ export const onlineRoomsTable = pgTable(
     ),
     createRequestId: uuid("create_request_id").notNull(),
     state: jsonb("state").$type<Record<string, unknown>>().notNull(),
+    // Stored generated columns update atomically for every writer, including
+    // invitation/Kumite writers and older API versions. Polls never select state.
+    syncToken: text("sync_token").generatedAlwaysAs(sql`md5(state::text)`),
+    liveState: jsonb("live_state").$type<Record<string, unknown>>().generatedAlwaysAs(sql`state - 'match'`),
     expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
     createdAt: timestamp("created_at", { withTimezone: true })
       .defaultNow()

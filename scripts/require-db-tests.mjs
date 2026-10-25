@@ -3,6 +3,7 @@ import { spawnSync } from "node:child_process";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { assertCampaignDatabaseTarget } from "./database-safety.mjs";
+import { partitionDatabaseTests } from "./database-test-tiers.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 if (process.env.CAMPAIGN_DATABASE_TESTS !== "1") {
@@ -10,14 +11,13 @@ if (process.env.CAMPAIGN_DATABASE_TESTS !== "1") {
 }
 assertCampaignDatabaseTarget(process.env);
 const testDirectory = join(root, "artifacts", "api-server", "src", "lib");
-const dedicatedNativeTests = new Set(["social.test.ts", "patches.test.ts"]);
-const tests = readdirSync(testDirectory)
-  .filter(name => name.endsWith(".test.ts") && !name.endsWith(".native.test.ts") && !dedicatedNativeTests.has(name))
-  .map(name => `src/lib/${name}`);
-// Native suites need fresh owned PostgreSQL clusters and independent leases:
-//   pnpm --filter @workspace/api-server test:social (Homies + native diagnostics)
-//   pnpm --filter @workspace/api-server test:events-feedback (feedback + patches)
-// Payment tests live below lib/payments and run with test:payments separately.
+const { embedded: tests, native } = partitionDatabaseTests(readdirSync(testDirectory));
+console.log("Running the embedded-compatible database tier. Native suites are separate required checks, not passed or skipped by this command:");
+for (const command of new Set(native.map(entry => entry.command))) {
+  console.log(`  REQUIRED: ${command} (${native.filter(entry => entry.command === command).map(entry => entry.name).join(", ")})`);
+}
+// mail.test.ts retains its generic cases here; the full owned-mail suite and
+// payment tests below lib/payments also have separately inventoried commands.
 if (!tests.some(name => name.endsWith("newAccountCampaignRoutes.test.ts"))) {
   throw new Error("The full campaign database suite is missing.");
 }

@@ -2,6 +2,7 @@ import { spawnSync } from 'node:child_process';
 import { createRequire } from 'node:module';
 import { pathToFileURL } from 'node:url';
 import path from 'node:path';
+import { runReleaseChecks } from './release-checks.mjs';
 
 const previewContexts = new Set(['deploy-preview', 'branch-deploy', 'staging']);
 
@@ -79,7 +80,8 @@ if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.ar
   run(['--import',pathToFileURL(createRequire(import.meta.url).resolve('tsx', { paths: [path.resolve('artifacts/squabblemon')] })).href,'--test','artifacts/squabblemon/src/storySeasons.test.ts','artifacts/squabblemon/src/seasonOneRewrite.test.ts','artifacts/squabblemon/src/storyAssets.test.ts','artifacts/squabblemon/src/storyContentExpansion.test.ts'],env);
   run(['scripts/build-netlify-function.mjs'],env);
   run(['scripts/check-netlify-function.mjs'],env);
-  run(['node_modules/vite/bin/vite.js','build','--config','artifacts/squabblemon/vite.config.ts'],env);
+  // Use the identical required critical tests, story metadata, Vite build and
+  // emitted bundle/CSS gates as the local frontend package build.
+  runReleaseChecks({ build: true, env });
   run(['scripts/stage-netlify-migrations.mjs'],env);
-  run(['scripts/check-entry-bundle.mjs'],env,'artifacts/squabblemon');
 }

@@ -1,0 +1,83 @@
+{
+  "exploratorySourceHash": "dfbfacef31b2fe22c0cfb012f0b0013b8b32fb66c4df325c138f320b25956a5b",
+  "rankingsUsed": [
+    "element-light",
+    "element-air",
+    "focus-wiz",
+    "starter-music-tour",
+    "focus-late-scaling",
+    "focus-detective",
+    "focus-demario-luigion",
+    "focus-counterplay"
+  ],
+  "pairs": [
+    [
+      "element-light",
+      "starter-block"
+    ],
+    [
+      "element-light",
+      "focused-red-set"
+    ],
+    [
+      "element-air",
+      "focused-red-set"
+    ],
+    [
+      "element-air",
+      "focused-blue-set"
+    ],
+    [
+      "focus-wiz",
+      "focused-blue-set"
+    ],
+    [
+      "focus-wiz",
+      "starter-squabblehouse-shift"
+    ],
+    [
+      "starter-music-tour",
+      "starter-squabblehouse-shift"
+    ],
+    [
+      "starter-block",
+      "starter-music-tour"
+    ],
+    [
+      "focus-late-scaling",
+      "starter-block"
+    ],
+    [
+      "focus-late-scaling",
+      "focused-red-set"
+    ],
+    [
+      "focus-detective",
+      "focused-red-set"
+    ],
+    [
+      "focus-detective",
+      "focused-blue-set"
+    ],
+    [
+      "focus-demario-luigion",
+      "focused-blue-set"
+    ],
+    [
+      "focus-demario-luigion",
+      "starter-squabblehouse-shift"
+    ],
+    [
+      "focus-counterplay",
+      "starter-squabblehouse-shift"
+    ],
+    [
+      "focus-counterplay",
+      "starter-block"
+    ]
+  ],
+  "limitations": [
+    "Outliers selected after exploratory matrix; holdout seeds/rotations are disjoint.",
+    "Two-play chain policy sees own hand and public board and considers top4 current options; it is bounded optimistic planning, not human strength."
+  ]
+}

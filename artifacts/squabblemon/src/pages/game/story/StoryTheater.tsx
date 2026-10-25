@@ -1,5 +1,5 @@
 import { type StoryCampaign, type StorySeasonProgress } from '@workspace/api-client-react';
-import { storyContent, storySeasons } from '@workspace/squabblemon-engine/story';
+import { storyIndex as storyContent, storySeasons } from '../../../lib/story/catalog';
 import { ChevronLeft, ChevronRight, LockKeyhole, Play } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState, type KeyboardEvent } from 'react';
 import { createPortal } from 'react-dom';

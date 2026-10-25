@@ -4,7 +4,7 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import { recommendedWorkshopCrews, replaceDeckCard, summarizeDeckTest, workshopSuggestions } from './deckWorkshop';
 import { ROOKIE_CORE_IDS, ROOKIE_MENTOR_CORE_IDS, LATER_DROP_STARTER_IDS, STARTER_STREET_REPLACEMENTS, starterStreetCrew, catalogCardById, ROOKIE_FOUNDATION_IDS, catalogIdsToEngineIds, engineIdsToCatalogIds, decks } from '../data';
-import { createMatchFromEngineCards, pass, playCard, revealCpu, nextRound, verifyMatchTranscript } from '../gameEngine';
+import { createMatchFromEngineCards, createMatch, createCardInstance, pass, playCard, revealCpu, nextRound, verifyMatchTranscript } from '../gameEngine';
 import { createDefaultBalanceDecks } from '@workspace/squabblemon-engine/balanceLab';
 
 test('Counterplay audit distinguishes the legacy shell from the recommended practice crew', () => {
@@ -51,6 +51,23 @@ test('custom deck transcript replays the issued roster even if the saved deck ch
   assert.match(summarizeDeckTest(match, 'nail-tech'), /Nail Tech/);
 });
 
+test('deck review retains a defeated card play and ability through its event identity', () => {
+  const focus = createCardInstance('nail', 'player', 'review', 0);
+  const ally = { ...createCardInstance('edgar', 'player', 'review', 1), lane: 0 as const };
+  const played = playCard({ ...createMatch('block', 'block'), round: 3, playerMotion: 9,
+    playerHand: [focus], boards: [[ally], [], []] }, 'player', focus.instanceId, 0);
+  const ended = { ...played, playerHand: [], boards: [[ally], [], []] as typeof played.boards,
+    effectLog: played.effectLog.map(event => ({ ...event, source: null })) };
+  const ability = ended.effectLog.find(event => event.type === 'ability' && event.cardInstanceId === focus.instanceId)!;
+  assert(ability, 'the actual played ability emitted an event');
+  assert.equal(summarizeDeckTest(ended, 'nail-tech'), `Nail Tech: ${ability.note}`);
+  assert.equal(summarizeDeckTest(ended, 'nail'), summarizeDeckTest(ended, 'nail-tech'));
+  const noAbility = { ...ended, effectLog: ended.effectLog.filter(event => event.type !== 'ability') };
+  assert.match(summarizeDeckTest(noAbility, 'nail-tech'), /played in round 3/);
+  const opponentOnly = { ...ended, effectLog: ended.effectLog.map(event => ({ ...event, owner: 'cpu' as const })) };
+  assert.match(summarizeDeckTest(opponentOnly, 'nail-tech'), /was not played/);
+});
+
 test('workshop teaches each affected archetype without creating or replacing decks', () => {
   assert.deepEqual(
     workshopSuggestions.map(lesson => lesson.cardId),
@@ -85,7 +102,7 @@ test('revised workshop copy explains the dependable setup and bounded payoff', (
   const detail = (cardId: string) => workshopSuggestions.find(lesson => lesson.cardId === cardId)!.detail;
   assert.match(detail('inmate-crafty'), /another inmate or a real support card first/i);
   assert(detail('inmate-crafty').includes(`${cards['inmate-crafty'].cost}/${cards['inmate-crafty'].power} Crafty`));
-  assert.match(detail('inmate-crafty'), /\+3 locally and \+3 across districts/);
+  assert.match(detail('inmate-crafty'), /\+3 locally and \+2 across districts/);
   assert.match(detail('sherlock'), /actual Sherlock cancellation/i);
   assert.match(detail('sherlock'), /weakest other character \+2/i);
   assert(detail('sherlock').includes(`Watson is a ${cards.watson.cost}/${cards.watson.power}`));

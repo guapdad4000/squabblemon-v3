@@ -8,6 +8,7 @@ import { catalogIdsToEngineIds, starterRecipes } from "@workspace/squabblemon-en
 import { randomInt } from "node:crypto";
 import { isDeepStrictEqual } from "node:util";
 import { createCardProgressionSnapshot, normalizeCatalogCardId } from "../lib/cardProgression";
+import { hasCurrentMatchRules, rulesUpdatedResponse } from "../lib/rewardMatchCompatibility";
 
 const router: IRouter = Router();
 const user = (req: Request, res: Response) => {
@@ -99,6 +100,11 @@ router.post("/player/challenges/runs/:runId/checkpoint", async (req, res) => {
       if (!run) throw new Error("Challenge run not found");
       const encounter = run.encounterSnapshot as { playerMatchId?: string; rivalDeckId?: string };
       if (!encounter.playerMatchId) throw new Error("Challenge encounter has not started");
+      const [match] = await tx.select().from(playerMatchesTable).where(and(eq(playerMatchesTable.id, encounter.playerMatchId), eq(playerMatchesTable.clerkUserId, clerkUserId))).limit(1);
+      if (!match || !match.storyEncounterSnapshot) throw new Error("Challenge match not found");
+      // Compatibility precedes prefix validation and replay: an old CPU policy
+      // must not turn a saved checkpoint into a false invalid-transcript result.
+      if (!hasCurrentMatchRules(match.playerCardProgressionSnapshot)) return null;
       const moves = req.body?.moves;
       if (!Array.isArray(moves)) throw new Error("Checkpoint moves are required");
       const previous = (run.checkpoints as Array<Record<string, unknown>>)
@@ -110,8 +116,6 @@ router.post("/player/challenges/runs/:runId/checkpoint", async (req, res) => {
           previousMoves.some((move, index) => !isDeepStrictEqual(move, moves[index]))) {
         throw new Error("Checkpoint must extend the existing transcript prefix");
       }
-      const [match] = await tx.select().from(playerMatchesTable).where(and(eq(playerMatchesTable.id, encounter.playerMatchId), eq(playerMatchesTable.clerkUserId, clerkUserId))).limit(1);
-      if (!match || !match.storyEncounterSnapshot) throw new Error("Challenge match not found");
       const roster = (run.crewSnapshot as { cards: Array<{ cardId: string }> }).cards.map(card => card.cardId);
       const progression = match.playerCardProgressionSnapshot as { abilityUpgradeSnapshot?: unknown; districtSnapshot?: unknown } | null;
       replayMatchPrefix(createStoryMatch(match.storyEncounterSnapshot as never, roster, match.playerDeckId, progression?.abilityUpgradeSnapshot as never, progression?.districtSnapshot as never), moves as TranscriptMove[]);
@@ -120,6 +124,7 @@ router.post("/player/challenges/runs/:runId/checkpoint", async (req, res) => {
       const [updated] = await tx.update(challengeRunsTable).set({ checkpoints: [...prior, checkpoint], updatedAt: new Date() }).where(eq(challengeRunsTable.id, run.id)).returning();
       return updated;
     });
+    if (!saved) { res.status(409).json(rulesUpdatedResponse); return; }
     res.json(response(saved));
   } catch (error) { res.status(400).json({ error: error instanceof Error ? error.message : "Invalid checkpoint" }); }
 });

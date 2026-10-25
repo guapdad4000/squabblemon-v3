@@ -4,6 +4,7 @@ const browserErrors = new WeakMap<Page, string[]>();
 const missingResources = new WeakMap<Page, string[]>();
 
 test.setTimeout(90_000);
+test.use({ actionTimeout: 15_000 });
 
 async function enterGame(page: Page) {
   await page.addInitScript(() => {
@@ -25,8 +26,10 @@ async function enterGame(page: Page) {
     '/api/player/notifications/receipts': { ids: [] },
     '/api/player/rewards/account': { date: '2026-09-27', pending: [], growth: { ready: false } },
     '/api/player/rewards/starter-mythic': { state: 'claimed' },
+    '/api/player/rewards/john-henry': { state: 'claimed', ownsCard: true, chapters: [] },
+    '/api/social': { self: { friendCode: 'TEST01', displayName: 'Test Player', avatarKey: 'hooper', level: 1 }, homies: [], incomingRequests: [], outgoingRequests: [], blocked: [], invitations: [], counts: { requests: 0, invitations: 0 } },
   };
-  await page.route('**/api/player/**', route => {
+  await page.route('**/api/**', route => {
     const path = new URL(route.request().url()).pathname;
     if (route.request().method() === 'GET' && Object.hasOwn(shellReads, path)) {
       return route.fulfill({ json: shellReads[path] });
@@ -37,7 +40,7 @@ async function enterGame(page: Page) {
 
 async function openFirstExample(page: Page) {
   await page.goto('/squabblemon/game/decks');
-  await page.getByRole('group').filter({ has: page.getByText(/Learning examples ·/) }).locator('summary').click();
+  await page.locator('summary').filter({ hasText: /^Starter Deck Templates$/ }).click();
   await page.getByRole('button', { name: /Build from example:/ }).first().click();
   await expect(page.getByRole('textbox', { name: 'Deck name' })).toBeVisible({ timeout: 20_000 });
   await expect(page.getByRole('navigation', { name: 'Your cards and gangs' }).getByRole('link', { name: /Decks/ })).toBeVisible();
@@ -126,7 +129,7 @@ test('unsaved edits offer save, discard, or stay for in-app and browser exits', 
   await dialog.getByRole('button', { name: 'Discard changes' }).click();
   await expect(page).toHaveURL(/\/game\/decks$/);
 
-  await page.getByRole('group').filter({ has: page.getByText(/Learning examples ·/) }).locator('summary').click();
+  await page.locator('summary').filter({ hasText: /^Starter Deck Templates$/ }).click();
   await page.getByRole('button', { name: /Build from example:/ }).first().click();
   await page.getByRole('textbox', { name: 'Deck name' }).fill('Saved While Leaving');
   await decksTab.click();

@@ -21,7 +21,7 @@ import {
   STORY_CHARACTERS,
   isStoryCharacterId,
   type StoryCharacterRosterEntry,
-} from "@workspace/squabblemon-engine/story";
+} from "./catalog";
 
 export type StoryCharacter = StoryCharacterRosterEntry;
 export type StoryCharacterCrew = StoryCharacterRosterEntry["crew"];

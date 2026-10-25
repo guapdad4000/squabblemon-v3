@@ -1,5 +1,5 @@
 import {
-  canAffordSelection,
+  listLegalPlayIntents,
   getDistrictResults,
   getMatchRoundLimit,
   getMatchWinner,
@@ -8,19 +8,24 @@ import {
   playTurnCard,
   revealCpuTurn,
   suppressMatchPresentationEvents,
-  type CardInstance,
   type Lane,
   type Match,
   type PlayerMove,
 } from "@workspace/squabblemon-engine/gameEngine";
 
 export type StorySolveOutcome = "win" | "loss";
+type SearchScore = "margin" | "control";
 type SearchState = { match: Match; moves: PlayerMove[] };
 type SearchBudget = {
   deadline: number;
   expansions: number;
   maximumExpansions: number;
   preserveBanks?: boolean;
+  score: SearchScore;
+  // Engine transitions are immutable. Reuse exact states between beam attempts
+  // without trusting the semantic key to substitute one Match for another.
+  plays: WeakMap<Match, Map<string, Match>>;
+  cpuTurns: WeakMap<Match, Match>;
 };
 
 export const STORY_SOLVER_NODE_BUDGET_MS = 10_000;
@@ -65,7 +70,7 @@ function laneMargins(match: Match): [number, number, number] {
   return evaluateMatch(match).margins;
 }
 
-function value(match: Match, desired: StorySolveOutcome): number {
+function value(match: Match, desired: StorySolveOutcome, score: SearchScore = "margin"): number {
   const evaluation = evaluateMatch(match);
   const winner = match.phase !== "complete"
     ? null
@@ -93,7 +98,16 @@ function value(match: Match, desired: StorySolveOutcome): number {
     match.playerMotion * 3 +
     match.playerHand.length * 0.1 +
     match.playerHand.reduce((total, card) => total + card.basePower, 0) * 25;
-  return desired === "win" ? playerValue : -playerValue;
+  // Conditional comeback cards punish overcommitting to a temporary lead.
+  // This alternative values actual district control with diminishing returns,
+  // preserving contested lanes and banked setup instead of only raw margins.
+  const controlValue = terminal
+    + evaluation.playerDistricts * 150 - evaluation.cpuDistricts * 150
+    + evaluation.margins.reduce((total, margin) => total + 120 * margin / (4 + Math.abs(margin)), 0)
+    + match.playerMotion * 3
+    + match.playerHand.reduce((total, card) => total + card.basePower, 0) * 2;
+  const result = score === "control" ? controlValue : playerValue;
+  return desired === "win" ? result : -result;
 }
 function assertBudget(budget: SearchBudget): void {
   if (
@@ -106,59 +120,19 @@ function assertBudget(budget: SearchBudget): void {
   }
 }
 
-function cardKey(card: CardInstance): string {
-  const status = card.statuses;
-  return [
-    card.instanceId,
-    card.lane ?? "h",
-    card.playedRound ?? "h",
-    card.basePower,
-    card.powerModifier,
-    card.moved ? 1 : 0,
-    status.frozen ? 1 : 0,
-    status.silenced ? 1 : 0,
-    status.protected ? 1 : 0,
-    status.blocked ? 1 : 0,
-    status.uncounterable ? 1 : 0,
-    status.weakened ? 1 : 0,
-    status.locked ? 1 : 0,
-    status.boosted ? 1 : 0,
-    status.burnStacks,
-    card.copiedAbilityCardId ?? "",
-    card.networkBoosts ?? 0,
-  ].join(",");
-}
-
-function semanticMatchKey(match: Match): string {
+export function storySearchStateKey(match: Match): string {
   const cached = semanticKeyCache.get(match);
   if (cached) return cached;
-  // Static encounter/deck/upgrade data is shared by every state in one solve.
-  // Key only mutable rule state; preserve hand/board order because tie-breaking
-  // abilities use deterministic array order.
-  const key = [
-    match.round,
-    match.phase,
-    match.playerMotion,
-    match.cpuMotion,
-    match.playerDrawIndex,
-    match.cpuDrawIndex,
-    match.squabbleUsed ? 1 : 0,
-    match.squabbleByOwner
-      ? `${match.squabbleByOwner.player ? 1 : 0}${match.squabbleByOwner.cpu ? 1 : 0}`
-      : "legacy",
-    `${match.plugDiscountLane.player ?? "n"}${match.plugDiscountLane.cpu ?? "n"}`,
-    `${match.cheapBuffsUsed.player},${match.cheapBuffsUsed.cpu}`,
-    JSON.stringify(match.discountTokens),
-    JSON.stringify(match.landlordTaxUsed),
-    JSON.stringify(match.sneakerTriggered),
-    match.lastRevealedCardId ?? "",
-    JSON.stringify(match.timedEffects),
-    JSON.stringify(match.storyRuntime),
-    JSON.stringify(match.districtRuntime),
-    match.playerHand.map(cardKey).join(";"),
-    match.cpuHand.map(cardKey).join(";"),
-    match.boards.map(cards => cards.map(cardKey).join(";")).join("/"),
-  ].join("|");
+  // Only immutable inputs shared by a single solve and presentation bookkeeping
+  // are omitted. nextEventSequence stays: it also seeds deterministic effects.
+  // Traps, counters, delayed effects and future engine fields stay
+  // in the identity; a hand-picked field list merged distinct legal branches.
+  const { effectLog: _events,
+    playerDeck: _playerDeck, cpuDeck: _cpuDeck, playerCardIds: _playerDeckCards,
+    cpuCardIds: _cpuDeckCards, storyEncounter: _encounter,
+    abilityUpgradeSnapshot: _upgrades, districtSnapshot: _districts,
+    ...state } = match;
+  const key = JSON.stringify(state, (key, value) => key === "lastEffectNote" ? undefined : value);
   semanticKeyCache.set(match, key);
   return key;
 }
@@ -201,11 +175,12 @@ function selectStates(
   desired: StorySolveOutcome,
   limit: number,
   perBucket = 1,
+  score: SearchScore = "margin",
 ): SearchState[] {
   const ranked = states.map(state => ({
     state,
-    score: value(state.match, desired),
-    semanticKey: semanticMatchKey(state.match),
+    score: value(state.match, desired, score),
+    semanticKey: storySearchStateKey(state.match),
     bucket: diversityKey(state),
   })).sort((a, b) => b.score - a.score);
   const selected: SearchState[] = [];
@@ -238,7 +213,7 @@ function turnOptions(
   budget: SearchBudget,
 ): SearchState[] {
   const localWidth = Math.max(8, width * 2);
-  let frontier = selectStates(states, desired, localWidth, 2);
+  let frontier = selectStates(states, desired, localWidth, 2, budget.score);
   const stoppable = [...frontier];
 
   for (
@@ -249,92 +224,50 @@ function turnOptions(
     const expanded: SearchState[] = [];
     for (const current of frontier) {
       const candidates: SearchState[] = [];
-      const squabbleAvailable =
-        !(
-          current.match.squabbleByOwner?.player ??
-          current.match.squabbleUsed
-        );
-      const squabbleCardByLane = new Map<Lane, string>();
-      if (squabbleAvailable) {
-        for (const lane of [0, 1, 2] as Lane[]) {
-          const strongest = current.match.playerHand
-            .filter(card => canAffordSelection(
-              current.match,
-              "player",
-              card.instanceId,
-              lane,
-            ))
-            .sort((a, b) =>
-              b.basePower - a.basePower ||
-              a.instanceId.localeCompare(b.instanceId),
-            )[0];
-          if (strongest) {
-            squabbleCardByLane.set(lane, strongest.instanceId);
-          }
+      for (const choice of listLegalPlayIntents(current.match, "player")) {
+        let plays = budget.plays.get(current.match);
+        if (!plays) {
+          plays = new Map();
+          budget.plays.set(current.match, plays);
         }
-      }
-      for (const card of current.match.playerHand) {
-        for (const lane of [0, 1, 2] as Lane[]) {
-          if (
-            !canAffordSelection(
-              current.match,
-              "player",
-              card.instanceId,
-              lane,
-            )
-          ) {
+        const key = `${choice.instanceId}:${choice.lane}:${choice.squabble}:${choice.investment}`;
+        let resolved = plays.get(key);
+        if (!resolved) {
+          budget.expansions += 1;
+          if ((budget.expansions & 7) === 0) assertBudget(budget);
+          try {
+            resolved = compact(playTurnCard(
+              current.match, "player", choice.instanceId, choice.lane,
+              choice.squabble, choice.investment,
+            ));
+            plays.set(key, resolved);
+          } catch {
+            // Encounter-specific restrictions may still reject a generic intent.
             continue;
           }
-          const canSquabble =
-            squabbleAvailable &&
-            (current.match.round >= getMatchRoundLimit(current.match) - 1 ||
-              squabbleCardByLane.get(lane) === card.instanceId);
-          for (const squabble of canSquabble
-            ? [false, true]
-            : [false]) {
-            budget.expansions += 1;
-            if ((budget.expansions & 7) === 0) {
-              assertBudget(budget);
-            }
-            try {
-              candidates.push({
-                match: compact(
-                  playTurnCard(
-                    current.match,
-                    "player",
-                    card.instanceId,
-                    lane,
-                    squabble,
-                  ),
-                ),
-                moves: [
-                  ...current.moves,
-                  {
-                    cardInstanceId: card.instanceId,
-                    lane,
-                    squabble,
-                    endTurn: false,
-                  },
-                ],
-              });
-            } catch {
-              // A story modifier can reject a choice after the generic cost
-              // check. That branch is not a legal candidate.
-            }
-          }
         }
+        candidates.push({
+          match: resolved,
+          moves: [...current.moves, {
+            cardInstanceId: choice.instanceId,
+            lane: choice.lane,
+            squabble: choice.squabble,
+            investment: choice.investment,
+            endTurn: false,
+          }],
+        });
       }
       assertBudget(budget);
-      expanded.push(...selectStates(candidates, desired, Math.max(8, width), 2));
+      expanded.push(...selectStates(candidates, desired, Math.max(8, width), 2, budget.score));
       assertBudget(budget);
     }
     if (expanded.length === 0) break;
-    frontier = selectStates(expanded, desired, localWidth, 2);
+    frontier = selectStates(expanded, desired, localWidth, 2, budget.score);
     stoppable.push(...frontier);
     assertBudget(budget);
   }
 
-  if (!budget.preserveBanks) return selectStates(stoppable, desired, width, 1);
+  if (!budget.preserveBanks) return selectStates(stoppable, desired, width, 1, budget.score);
   // A cheap play must not crowd every bank-and-save option out of the beam.
   // Keep the best outcome for each remaining-hand / SQUABBLE combination,
   // then fill the rest by the usual district score and semantic diversity.
@@ -342,12 +275,12 @@ function turnOptions(
   for (const state of stoppable) {
     const key = `${state.match.playerHand.length}:${state.match.squabbleUsed ? 1 : 0}`;
     const previous = bankedOptions.get(key);
-    if (!previous || value(state.match, desired) > value(previous.match, desired)) bankedOptions.set(key, state);
+    if (!previous || value(state.match, desired, budget.score) > value(previous.match, desired, budget.score)) bankedOptions.set(key, state);
   }
-  const reserved = selectStates([...bankedOptions.values()], desired, Math.ceil(width / 2));
-  const seen = new Set(reserved.map(state => semanticMatchKey(state.match)));
-  return [...reserved, ...selectStates(stoppable, desired, width, 1)
-    .filter(state => !seen.has(semanticMatchKey(state.match)))].slice(0, width);
+  const reserved = selectStates([...bankedOptions.values()], desired, Math.ceil(width / 2), 1, budget.score);
+  const seen = new Set(reserved.map(state => storySearchStateKey(state.match)));
+  return [...reserved, ...selectStates(stoppable, desired, width, 1, budget.score)
+    .filter(state => !seen.has(storySearchStateKey(state.match)))].slice(0, width);
 }
 
 function allPassTranscript(initial: Match): {
@@ -384,7 +317,7 @@ function search(
   let frontier: SearchState[] = [
     { match: compact(initial), moves: [] },
   ];
-  const cpuTransitionCache = new Map<string, Match>();
+
   const roundLimit = getMatchRoundLimit(initial);
 
   for (let round = 0; round < roundLimit; round += 1) {
@@ -401,15 +334,14 @@ function search(
         advanced.push(option);
         continue;
       }
-      const cacheKey = semanticMatchKey(option.match);
-      let match = cpuTransitionCache.get(cacheKey);
+      let match = budget.cpuTurns.get(option.match);
       if (!match) {
         match = compact(
           nextRound(
             revealCpuTurn(pass(option.match, "player")),
           ),
         );
-        cpuTransitionCache.set(cacheKey, match);
+        budget.cpuTurns.set(option.match, match);
       }
       const next = {
         match,
@@ -435,7 +367,7 @@ function search(
       advanced.push(next);
       assertBudget(budget);
     }
-    frontier = selectStates(advanced, desired, width, 2);
+    frontier = selectStates(advanced, desired, width, 2, budget.score);
     if (frontier.length === 0) break;
   }
 
@@ -459,7 +391,10 @@ export function solveStoryMoves(
   const budget: SearchBudget = {
     deadline: Date.now() + STORY_SOLVER_NODE_BUDGET_MS,
     expansions: 0,
+    score: "margin",
     maximumExpansions: STORY_SOLVER_MAX_EXPANSIONS,
+    plays: new WeakMap(),
+    cpuTurns: new WeakMap(),
   };
 
   const searchInitial = suppressMatchPresentationEvents(initial);
@@ -479,21 +414,27 @@ export function solveStoryMoves(
   // A medium beam handles ordinary turns cheaply. Multi-phase bosses may
   // demand banking for a scripted late swing; non-phased matches can need a
   // wider greedy beam to survive the rival's full response.
-  // Try the likely expensive line before exhausting smaller alternatives.
+  // Try a genuinely different evaluation before repeating smaller beams.
+  // All policies share one deadline, expansion ceiling and transition cache.
   const bankFirst = (initial.storyEncounter?.phases?.length ?? 0) > 0;
-  const attempts: Array<[number, boolean]> = [
-    [16, false],
-    ...(bankFirst ? [[16, true]] as Array<[number, boolean]> : []),
-    [64, false],
-    ...widths.flatMap((width): Array<[number, boolean]> => [
-      [width, false], [width, true],
+  const attempts: Array<[number, boolean, SearchScore]> = [
+    [16, false, "margin"],
+    ...(bankFirst ? [[16, true, "margin"]] as Array<[number, boolean, SearchScore]> : []),
+    [16, false, "control"],
+    [64, false, "control"],
+    [64, false, "margin"],
+    ...widths.flatMap((width): Array<[number, boolean, SearchScore]> => [
+      [width, false, "margin"], [width, true, "margin"],
+      [width, false, "control"], [width, true, "control"],
     ]),
   ];
   const attempted = new Set<string>();
-  for (const [width, preserveBanks] of attempts) {
-    if (width > maximumWidth || attempted.has(`${width}:${preserveBanks}`)) continue;
-    attempted.add(`${width}:${preserveBanks}`);
+  for (const [width, preserveBanks, score] of attempts) {
+    const policy = `${width}:${preserveBanks}:${score}`;
+    if (width > maximumWidth || attempted.has(policy)) continue;
+    attempted.add(policy);
     budget.preserveBanks = preserveBanks;
+    budget.score = score;
     const moves = search(searchInitial, desired, width, budget);
     if (moves) {
       assertBudget(budget);

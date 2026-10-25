@@ -1,0 +1,338 @@
+{
+  "delayedDelta": 0,
+  "choices": {
+    "concert": null,
+    "dice": null
+  },
+  "gamerCases": [
+    {
+      "alt": "cornball",
+      "power": -2,
+      "choice": {
+        "instanceId": "cpu:policy-evidence:0:gamer",
+        "lane": 1,
+        "investment": 0
+      }
+    },
+    {
+      "alt": "cornball",
+      "power": -1,
+      "choice": {
+        "instanceId": "cpu:policy-evidence:0:gamer",
+        "lane": 1,
+        "investment": 0
+      }
+    },
+    {
+      "alt": "cornball",
+      "power": 0,
+      "choice": {
+        "instanceId": "cpu:policy-evidence:0:gamer",
+        "lane": 1,
+        "investment": 0
+      }
+    },
+    {
+      "alt": "cornball",
+      "power": 1,
+      "choice": {
+        "instanceId": "cpu:policy-evidence:3:sideofhands",
+        "lane": 0,
+        "investment": 0
+      }
+    },
+    {
+      "alt": "cornball",
+      "power": 2,
+      "choice": {
+        "instanceId": "cpu:policy-evidence:0:gamer",
+        "lane": 1,
+        "investment": 0
+      }
+    },
+    {
+      "alt": "cornball",
+      "power": 3,
+      "choice": {
+        "instanceId": "cpu:policy-evidence:1:cornball",
+        "lane": 1,
+        "investment": 0
+      }
+    },
+    {
+      "alt": "roaster",
+      "power": -2,
+      "choice": {
+        "instanceId": "cpu:policy-evidence:0:gamer",
+        "lane": 1,
+        "investment": 0
+      }
+    },
+    {
+      "alt": "roaster",
+      "power": -1,
+      "choice": {
+        "instanceId": "cpu:policy-evidence:0:gamer",
+        "lane": 1,
+        "investment": 0
+      }
+    },
+    {
+      "alt": "roaster",
+      "power": 0,
+      "choice": {
+        "instanceId": "cpu:policy-evidence:0:gamer",
+        "lane": 1,
+        "investment": 0
+      }
+    },
+    {
+      "alt": "roaster",
+      "power": 1,
+      "choice": {
+        "instanceId": "cpu:policy-evidence:3:sideofhands",
+        "lane": 0,
+        "investment": 0
+      }
+    },
+    {
+      "alt": "roaster",
+      "power": 2,
+      "choice": {
+        "instanceId": "cpu:policy-evidence:1:roaster",
+        "lane": 1,
+        "investment": 0
+      }
+    },
+    {
+      "alt": "roaster",
+      "power": 3,
+      "choice": {
+        "instanceId": "cpu:policy-evidence:1:roaster",
+        "lane": 1,
+        "investment": 0
+      }
+    },
+    {
+      "alt": "redside1",
+      "power": -2,
+      "choice": {
+        "instanceId": "cpu:policy-evidence:0:gamer",
+        "lane": 1,
+        "investment": 0
+      }
+    },
+    {
+      "alt": "redside1",
+      "power": -1,
+      "choice": {
+        "instanceId": "cpu:policy-evidence:0:gamer",
+        "lane": 1,
+        "investment": 0
+      }
+    },
+    {
+      "alt": "redside1",
+      "power": 0,
+      "choice": {
+        "instanceId": "cpu:policy-evidence:0:gamer",
+        "lane": 1,
+        "investment": 0
+      }
+    },
+    {
+      "alt": "redside1",
+      "power": 1,
+      "choice": {
+        "instanceId": "cpu:policy-evidence:3:sideofhands",
+        "lane": 0,
+        "investment": 0
+      }
+    },
+    {
+      "alt": "redside1",
+      "power": 2,
+      "choice": {
+        "instanceId": "cpu:policy-evidence:0:gamer",
+        "lane": 1,
+        "investment": 0
+      }
+    },
+    {
+      "alt": "redside1",
+      "power": 3,
+      "choice": {
+        "instanceId": "cpu:policy-evidence:1:redside1",
+        "lane": 1,
+        "investment": 0
+      }
+    },
+    {
+      "alt": "counter",
+      "power": -2,
+      "choice": {
+        "instanceId": "cpu:policy-evidence:0:gamer",
+        "lane": 1,
+        "investment": 0
+      }
+    },
+    {
+      "alt": "counter",
+      "power": -1,
+      "choice": {
+        "instanceId": "cpu:policy-evidence:0:gamer",
+        "lane": 1,
+        "investment": 0
+      }
+    },
+    {
+      "alt": "counter",
+      "power": 0,
+      "choice": {
+        "instanceId": "cpu:policy-evidence:1:counter",
+        "lane": 0,
+        "investment": 0
+      }
+    },
+    {
+      "alt": "counter",
+      "power": 1,
+      "choice": {
+        "instanceId": "cpu:policy-evidence:1:counter",
+        "lane": 0,
+        "investment": 0
+      }
+    },
+    {
+      "alt": "counter",
+      "power": 2,
+      "choice": {
+        "instanceId": "cpu:policy-evidence:1:counter",
+        "lane": 0,
+        "investment": 0
+      }
+    },
+    {
+      "alt": "counter",
+      "power": 3,
+      "choice": {
+        "instanceId": "cpu:policy-evidence:1:counter",
+        "lane": 0,
+        "investment": 0
+      }
+    },
+    {
+      "alt": "streamer",
+      "power": -2,
+      "choice": {
+        "instanceId": "cpu:policy-evidence:0:gamer",
+        "lane": 1,
+        "investment": 0
+      }
+    },
+    {
+      "alt": "streamer",
+      "power": -1,
+      "choice": {
+        "instanceId": "cpu:policy-evidence:0:gamer",
+        "lane": 1,
+        "investment": 0
+      }
+    },
+    {
+      "alt": "streamer",
+      "power": 0,
+      "choice": {
+        "instanceId": "cpu:policy-evidence:1:streamer",
+        "lane": 0,
+        "investment": 0
+      }
+    },
+    {
+      "alt": "streamer",
+      "power": 1,
+      "choice": {
+        "instanceId": "cpu:policy-evidence:1:streamer",
+        "lane": 0,
+        "investment": 0
+      }
+    },
+    {
+      "alt": "streamer",
+      "power": 2,
+      "choice": {
+        "instanceId": "cpu:policy-evidence:1:streamer",
+        "lane": 2,
+        "investment": 0
+      }
+    },
+    {
+      "alt": "streamer",
+      "power": 3,
+      "choice": {
+        "instanceId": "cpu:policy-evidence:1:streamer",
+        "lane": 2,
+        "investment": 0
+      }
+    },
+    {
+      "alt": "gothkid",
+      "power": -2,
+      "choice": {
+        "instanceId": "cpu:policy-evidence:0:gamer",
+        "lane": 1,
+        "investment": 0
+      }
+    },
+    {
+      "alt": "gothkid",
+      "power": -1,
+      "choice": {
+        "instanceId": "cpu:policy-evidence:0:gamer",
+        "lane": 1,
+        "investment": 0
+      }
+    },
+    {
+      "alt": "gothkid",
+      "power": 0,
+      "choice": {
+        "instanceId": "cpu:policy-evidence:0:gamer",
+        "lane": 1,
+        "investment": 0
+      }
+    },
+    {
+      "alt": "gothkid",
+      "power": 1,
+      "choice": {
+        "instanceId": "cpu:policy-evidence:3:sideofhands",
+        "lane": 0,
+        "investment": 0
+      }
+    },
+    {
+      "alt": "gothkid",
+      "power": 2,
+      "choice": {
+        "instanceId": "cpu:policy-evidence:1:gothkid",
+        "lane": 2,
+        "investment": 0
+      }
+    },
+    {
+      "alt": "gothkid",
+      "power": 3,
+      "choice": {
+        "instanceId": "cpu:policy-evidence:1:gothkid",
+        "lane": 2,
+        "investment": 0
+      }
+    }
+  ],
+  "evaluations": {
+    "extended": 0,
+    "ordinary": 0
+  },
+  "twentyMixedDecisionsMs": 218.179869
+}

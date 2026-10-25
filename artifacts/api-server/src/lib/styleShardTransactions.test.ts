@@ -7,6 +7,7 @@ import {
   pool,
   playerProfilesTable,
   playerPackOpeningsTable,
+  playerCollectionClaimsTable,
 } from "@workspace/db";
 import { cardCatalog } from "@workspace/squabblemon-engine/data";
 import {
@@ -32,7 +33,8 @@ async function profile(id: string) {
   return row;
 }
 
-test("pack retry credits each currency exactly once and survives bootstrap reload", async (t) => {
+test("pack retry credits each currency and earned monthly milestone exactly once and survives bootstrap reload", async (t) => {
+  t.mock.method(Date, "now", () => Date.parse("2026-10-15T12:00:00Z"));
   const id = `rarity-pack-${randomUUID()}`;
   await db
     .insert(playerProfilesTable)
@@ -58,10 +60,23 @@ test("pack retry credits each currency exactly once and survives bootstrap reloa
     openStreetPackForPlayer(id, input),
     openStreetPackForPlayer(id, input),
   ]);
-  assert.equal(results[0].opening.id, results[1].opening.id);
+  assert.equal(results.filter(result => !result.alreadyOpened).length, 1);
+  assert.deepEqual(results[0].opening, results[1].opening);
+  assert.equal(results[0].opening.cost, 10);
+  assert.equal(results[0].opening.rewards.length, 60, "ten normal packs retain all six slots each");
+  assert.deepEqual(results[0].seasonRewards, [
+    { seasonId: "2026-10", threshold: 5, softCurrency: 100, packTickets: 0, styleShards: 0 },
+    { seasonId: "2026-10", threshold: 10, softCurrency: 0, packTickets: 1, styleShards: 0 },
+  ]);
+  assert.deepEqual(results[1].seasonRewards, results[0].seasonRewards, "retry recovers the same milestone receipt");
+  assert.equal((await db.select().from(playerPackOpeningsTable).where(eq(playerPackOpeningsTable.clerkUserId, id))).length, 1);
+  const claims = await db.select().from(playerCollectionClaimsTable).where(eq(playerCollectionClaimsTable.clerkUserId, id));
+  assert.deepEqual(claims.map(claim => claim.milestoneKey).sort(), ["pull-season:2026-10:10", "pull-season:2026-10:5"]);
   const issued = totalStyleShardRewards(results[0].opening.rewards);
   const row = await profile(id);
-  assert.equal(row.packTickets, 10);
+  assert.equal(row.packTickets, 20 - 10 + 1, "one ten-ticket debit plus the earned threshold-ten ticket");
+  const packClout = results[0].opening.rewards.reduce((total, reward) => total + (reward.kind === "softCurrency" ? reward.amount : 0), 0);
+  assert.equal(row.softCurrency, packClout + 100, "pack Clout and the threshold-five bonus are separate exact credits");
   assert.equal(row.styleShards, 777 + issued.styleShardsGained);
   assert.deepEqual(row.styleShardBalances, {
     ...issued.styleShardBalancesGained,

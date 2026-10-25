@@ -6,12 +6,14 @@
   "scripts": {
     "hello": "tsx ./src/hello.ts",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "test": "node --import tsx --test ./src/rivalry-online-model.test.ts ./src/rivalry-audit-policies.test.ts ./src/balanceLab.test.ts ./src/balanceTelemetry.test.ts ./src/balanceSweepTelemetry.test.ts ./src/challenge.test.ts ./src/challengeApiRoutes.test.ts ./src/challengesHub.test.ts ./src/deck-balance-audit.test.ts ./src/element-balance-audit-cli.test.ts ./src/squabblehouse-counterbenchmark.test.ts ./src/squabblehouse-diner-comparison.test.ts ./src/squabblehouse-diner-verify.test.ts ./src/squabblehouse-counter-revision.test.ts && node --test ./fadecade-art.test.mjs",
+    "test": "node --import tsx --test ./src/fullBalanceSweep.test.ts ./src/rivalry-online-model.test.ts ./src/rivalry-audit-policies.test.ts ./src/balanceLab.test.ts ./src/balanceTelemetry.test.ts ./src/balanceSweepTelemetry.test.ts ./src/challenge.test.ts ./src/challengeApiRoutes.test.ts ./src/challengesHub.test.ts ./src/deck-balance-audit.test.ts ./src/element-balance-audit-cli.test.ts ./src/squabblehouse-counterbenchmark.test.ts ./src/squabblehouse-diner-comparison.test.ts ./src/squabblehouse-diner-verify.test.ts ./src/squabblehouse-counter-revision.test.ts && node --test ./fadecade-art.test.mjs",
     "balance:smoke": "tsx ./src/balance-lab.ts --smoke",
     "balance:full": "tsx ./src/balance-lab.ts --full",
     "balance:elements": "tsx ./src/element-balance-audit.ts",
     "balance:dark-composition": "tsx ./src/dark-composition-audit.ts",
     "balance:dark-sweep": "tsx ./src/dark-card-sweep.ts",
+    "test:balance:current": "node --import tsx --test src/fullBalanceSweep.test.ts",
+    "balance:current": "node --import tsx src/fullBalanceSweep.ts",
     "balance:pvp": "node --import tsx src/fullBalanceSweep.ts",
     "balance:pvp:pairs": "node --import tsx src/fullBalanceInteractions.ts --run"
   },

@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { ApiError } from "@workspace/api-client-react";
 import { friendMatchPollInterval, isOnlineConnectionFresh, isOnlineSnapshotSynchronized, isTransientOnlineError, ONLINE_READ_TIMEOUT_MS,
-  ONLINE_WRITE_TIMEOUT_MS, request, searchRanked } from "./multiplayer";
+  ONLINE_WRITE_TIMEOUT_MS, request, searchRanked, readFriendMatch } from "./multiplayer";
 
 const json = (value: unknown, status = 200) => new Response(JSON.stringify(value), {
   status, headers: { "Content-Type": "application/json" },
@@ -199,4 +199,25 @@ test("visible active turns keep their original cadence and terminal rooms stop",
   for (const status of [400, 401, 403, 404])
     assert.equal(friendMatchPollInterval("active", apiError(status)), false);
   assert.equal(friendMatchPollInterval("active", apiError(503)), 800);
+});
+
+
+test('conditional reads reuse only the submitted snapshot and accept older full-response APIs', async t => {
+  const cached = { syncToken: 'a'.repeat(32), revision: 7, serverTime: 100, hand: [{ private: 'own hand' }] } as unknown as import('@workspace/squabblemon-engine/multiplayer').OnlineRoomView;
+  let calls: string[] = [];
+  t.mock.method(globalThis, 'fetch', (url: RequestInfo | URL) => {
+    calls.push(String(url)); return Promise.resolve(json({ unchanged: true, syncToken: cached.syncToken, serverTime: 200 }));
+  });
+  const unchanged = await readFriendMatch('ABCDEF123456', cached);
+  assert.equal(unchanged.hand, cached.hand); assert.equal(unchanged.serverTime, 200);
+  assert(calls[0].includes('?since='));
+  t.mock.method(globalThis, 'fetch', () => Promise.resolve(json({ ...cached, revision: 8, syncToken: undefined })));
+  assert.equal((await readFriendMatch('ABCDEF123456', cached)).revision, 8);
+  calls = [];
+  t.mock.method(globalThis, 'fetch', (url: RequestInfo | URL) => {
+    calls.push(String(url));
+    return Promise.resolve(json(calls.length === 1 ? { unchanged: true, syncToken: 'b'.repeat(32), serverTime: 300 } : { ...cached, revision: 9 }));
+  });
+  assert.equal((await readFriendMatch('ABCDEF123456', cached)).revision, 9);
+  assert.equal(calls.length, 2); assert(!calls[1].includes('?since='));
 });

@@ -8,7 +8,9 @@ import {
   catalogIdsToEngineIds,
 } from "@workspace/squabblemon-engine/data";
 import {
+  canAffordSelection,
   createDistrictSnapshot,
+  listLegalPlayIntents,
   createStoryMatch,
   getMatchWinner,
   nextRound,
@@ -24,6 +26,7 @@ import { getStoryBattle } from "@workspace/squabblemon-engine/story";
 import {
   STORY_SOLVER_NODE_BUDGET_MS,
   solveStoryMoves,
+  storySearchStateKey,
 } from "./storyMoveSolver";
 
 function replay(initial: Match, moves: readonly PlayerMove[]): Match {
@@ -39,6 +42,7 @@ function replay(initial: Match, moves: readonly PlayerMove[]): Match {
         move.cardInstanceId,
         move.lane!,
         move.squabble,
+        move.investment,
       );
       if (move.endTurn === true) match = pass(match, "player");
     }
@@ -394,7 +398,47 @@ test("Dead Air Soundcheck stays solvable within the existing budget with the cam
   const startedAt = performance.now();
   const moves = solveStoryMoves(initial);
   const elapsed = performance.now() - startedAt;
+  const first = moves[0];
+  assert.equal(first.squabble, true);
+  const utility = initial.playerHand.find(card => card.instanceId === first.cardInstanceId)!;
+  assert.equal(utility.cardId, "wifey");
+  assert(initial.playerHand.some(card => card.basePower > utility.basePower
+    && canAffordSelection(initial, "player", card.instanceId, first.lane!)),
+  "the legal utility form must not be filtered out by a stronger affordable card");
   const completed = verifyStoryMatchTranscript(battle.encounter, cards, moves, ROOKIE_DECK_ID, undefined, districts);
   assert.equal(getMatchWinner(completed), "player");
   assert(elapsed <= STORY_SOLVER_NODE_BUDGET_MS + 500, `Soundcheck solve took ${elapsed.toFixed(1)}ms`);
+});
+
+
+test("Baby Momma's Truth has a bounded legal win against the current comeback-aware rival", {
+  timeout: STORY_SOLVER_NODE_BUDGET_MS + 2_000,
+}, () => {
+  const battle = getStoryBattle("baby-mommas-truth");
+  assert(battle);
+  const cards = catalogIdsToEngineIds(ROOKIE_CORE_IDS.map(id => id === "hooper" ? "dr-fade" : id));
+  const districts = createDistrictSnapshot("story-node-v1:baby-mommas-truth");
+  const initial = createStoryMatch(battle.encounter, cards, ROOKIE_DECK_ID, undefined, districts);
+  const startedAt = performance.now();
+  const moves = solveStoryMoves(initial);
+  assert(performance.now() - startedAt <= STORY_SOLVER_NODE_BUDGET_MS + 500);
+  const completed = verifyStoryMatchTranscript(battle.encounter, cards, moves, ROOKIE_DECK_ID, undefined, districts);
+  assert.equal(getMatchWinner(completed), "player");
+});
+
+test("search identity preserves traps and deterministic effect seeds but ignores presentation notes", () => {
+  const battle = getStoryBattle("baby-mommas-truth");
+  assert(battle);
+  const cards = catalogIdsToEngineIds([...ROOKIE_CORE_IDS]);
+  const initial = createStoryMatch(battle.encounter, cards, ROOKIE_DECK_ID);
+  const match = { ...initial, playerMotion: 1 };
+  const cornball = match.playerHand.find(card => card.cardId === "cornball")!;
+  assert(cornball);
+  const taxed: Match = { ...match, districtTraps: [{ kind: "dmv", owner: "cpu", lane: 0, source: match.cpuHand[0], expiresAfterRound: match.round + 1 }] };
+  assert(listLegalPlayIntents(match, "player").some(choice => choice.instanceId === cornball.instanceId && choice.lane === 0));
+  assert(!listLegalPlayIntents(taxed, "player").some(choice => choice.instanceId === cornball.instanceId && choice.lane === 0));
+  assert.notEqual(storySearchStateKey(taxed), storySearchStateKey(match));
+  assert.notEqual(storySearchStateKey({ ...match, nextEventSequence: match.nextEventSequence + 1 }), storySearchStateKey(match));
+  const presentationOnly = { ...match, playerHand: match.playerHand.map(card => ({ ...card, lastEffectNote: "Presentation only" })) };
+  assert.equal(storySearchStateKey(presentationOnly), storySearchStateKey(match));
 });

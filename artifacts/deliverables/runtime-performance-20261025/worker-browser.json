@@ -1,0 +1,31 @@
+{
+  "evidence": "development module worker, synthetic engine-generated histories, Chromium phone viewport; no physical-phone or production thermal claim",
+  "workerUrls": [
+    "http://127.0.0.1:5175/src/lib/battleComputation.worker.ts?worker_file&type=module"
+  ],
+  "errors": [],
+  "trials": [
+    {
+      "boardCards": 12,
+      "events": 37,
+      "fullBytes": 1515461,
+      "inputBytes": 121955,
+      "equal": true,
+      "syncMs": 32.200000047683716,
+      "dispatchMs": 0.09999996423721313,
+      "elapsedMs": 39.30000001192093,
+      "timerTicks": 14
+    },
+    {
+      "boardCards": 36,
+      "events": 109,
+      "fullBytes": 12573488,
+      "inputBytes": 354416,
+      "equal": true,
+      "syncMs": 48.5,
+      "dispatchMs": 0.5,
+      "elapsedMs": 53,
+      "timerTicks": 14
+    }
+  ]
+}

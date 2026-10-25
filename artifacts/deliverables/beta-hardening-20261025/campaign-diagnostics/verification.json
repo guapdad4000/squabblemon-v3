@@ -1,0 +1,67 @@
+{
+  "baseHead": "61e9a86c1bd1ba49e350bd4a488671ab37d26ad2",
+  "scope": "working-tree QA helper and tier dispatcher; engine manifest unchanged by these files",
+  "files": {
+    "artifacts/api-server/src/lib/storyMoveSolver.ts": "cbc4998b86519ccee3bffeeae232710561c1bc627b19e5ef24cae5d631faa316",
+    "artifacts/api-server/src/lib/storyMoveSolver.test.ts": "9fb780faced3bb02c11722dc929c21e50ad11e757df03b3fd9814faab2d1e928",
+    "artifacts/api-server/src/lib/styleShardTransactions.test.ts": "f38f8e3e113ad764317aae601f6132650e6090b686dfc602eeaa33d406d56470",
+    "scripts/require-db-tests.mjs": "d94023a0bdd6592f41718a419a6c6965d9c14647c9f6947ab7070dea83787d87",
+    "scripts/database-test-tiers.mjs": "d00300a62f870ad4c67a1e04d2b00436b19d6e209bf8afa6610f86f520d2276a",
+    "scripts/database-test-tiers.test.mjs": "62f19da59a67e71a3c2f7d6191f06b3aa8adda8409cba2ee3bf89f3441e62c1d"
+  },
+  "checks": {
+    "focusedSolver": {
+      "passed": 12,
+      "failed": 0,
+      "skipped": 0,
+      "durationMs": 21795.148428
+    },
+    "campaignAndSolver": {
+      "passed": 13,
+      "failed": 0,
+      "skipped": 0,
+      "durationMs": 201517.908804
+    },
+    "nativeFeedbackPatches": {
+      "passed": 12,
+      "failed": 0,
+      "skipped": 0,
+      "durationMs": 23182.877894
+    },
+    "nativeStyleShards": {
+      "passed": 4,
+      "failed": 0,
+      "skipped": 0
+    },
+    "partition": {
+      "passed": 2,
+      "failed": 0,
+      "skipped": 0
+    },
+    "apiTypecheck": {
+      "exitCode": 0,
+      "command": "/usr/bin/node node_modules/typescript/bin/tsc --noEmit -p artifacts/api-server/tsconfig.json"
+    },
+    "embedded": {
+      "status": "passed",
+      "passed": 365,
+      "failed": 0,
+      "skipped": 0,
+      "cancelled": 0,
+      "durationMs": 553796.730533,
+      "command": "env -u DATABASE_URL npm_execpath=<installed pnpm CLI> /usr/bin/node scripts/test-api-database.mjs",
+      "log": "embedded-final.log"
+    },
+    "nativeSocial": {
+      "status": "passed",
+      "passed": 35,
+      "failed": 0,
+      "skipped": 0,
+      "cancelled": 0,
+      "durationMs": 20986.335464,
+      "command": "env -u DATABASE_URL npm_execpath=<installed pnpm CLI> /usr/bin/node scripts/test-payments-database.mjs --social",
+      "log": "social-native-final.log"
+    }
+  },
+  "sourceHashesReverified": true
+}

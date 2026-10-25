@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
-import { readFileSync, readdirSync } from 'node:fs';
+import { readFileSync, readdirSync, realpathSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { cards, cardCatalog, catalogCardByEngineId, validateSavedDeck } from '@workspace/squabblemon-engine/data';
@@ -11,22 +11,89 @@ import {
 } from '@workspace/squabblemon-engine/balanceLab';
 import {
   createAbilityUpgradeSnapshot, createMatchFromEngineCards, createDistrictSnapshot,
-  getDistrictResults, getMatchWinner, playTurnCard, suppressMatchPresentationEvents,
+  getDistrictResults, getMatchWinner, suppressMatchPresentationEvents,
   type Match, type Owner, type EffectLogEntry,
 } from '@workspace/squabblemon-engine/gameEngine';
-import { createOnlineRoom, joinOnlineRoom, applyOnlineCommand, type OnlineRoom } from '@workspace/squabblemon-engine/multiplayer';
+import { CARD_BALANCE_VERSION, ONLINE_RULES_VERSION, createOnlineRoom, joinOnlineRoom, applyOnlineCommand, type OnlineRoom } from '@workspace/squabblemon-engine/multiplayer';
 import { authoredRankingDecks, allRankingDecks } from './all-decks-ranking-decks';
 
 export const sweepRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const { recommendedWorkshopCrews } = await import(new URL('../../artifacts/squabblemon/src/lib/deckWorkshop.ts', import.meta.url).href);
 export const telemetryColumns = ['cardId','played','finalCopies','finalPower','activatedPlays','normalPlays','unknownPlays','baseEvents','baseDirectEffectEvents','baseNoObservedEffectEvents','baseNestedEffectEvents','baseNestedNoObservedEffectEvents','baseUnknownEvents','upgradeEvents','upgradeAppliedEvents'] as const;
 export const telemetrySemantics = BALANCE_TELEMETRY_SEMANTICS;
+export const SWEEP_POLICY_VERSION = 'online-base-shared-legal-delayed-horizon-v3';
 export type SweepPolicy = 'greedy' | 'seeded-legal' | 'greedy-paid' | 'forced-deployment' | 'chain-two';
 export type SweepCase = {key:string; stage:string; a:string; b:string; policy:SweepPolicy; seed:string; rotation:number; tierA:BalanceTier; tierB:BalanceTier; seat:BalanceSeat; target?:string};
 export type SweepResult = {winner:Owner|'draw'; logicalWinner:'a'|'b'|'draw'; districtIds:readonly string[]; playerDistricts:number; cpuDistricts:number; laneMargins:number[]; plays:number; passes:number; effectEvents:number; investments:Record<string,number>; choices:Record<string,number>; cardsA:readonly BalanceCardObservation[]; cardsB:readonly BalanceCardObservation[]};
 
+/** Refuse a workspace symlink that executes different sources than the manifest hashes. */
+export function runtimeProvenance() {
+  const root=realpathSync(sweepRoot);
+  const engineSources=Object.fromEntries(['data','gameEngine','multiplayer','balanceLab'].map(name=>{
+    const resolved=realpathSync(fileURLToPath(import.meta.resolve(`@workspace/squabblemon-engine/${name}`)));
+    const expected=realpathSync(path.join(root,`lib/squabblemon-engine/src/${name}.ts`));
+    assert.equal(resolved,expected,`Engine ${name} must resolve inside the audited worktree`);
+    return [name,path.relative(root,resolved)];
+  }));
+  return {node:process.version,platform:process.platform,arch:process.arch,engineSources};
+}
+
+export function auditSeedNamespace(label:string|undefined) {
+  assert(label&&/^[a-zA-Z0-9][a-zA-Z0-9._-]{0,79}$/.test(label),'Supply a unique run label (1–80 letters, digits, dots, dashes or underscores)');
+  return `base-pvp-b${CARD_BALANCE_VERSION}-r${ONLINE_RULES_VERSION}-${label}`;
+}
+
+/** Stable across JSON key order, but sensitive to any schedule or provenance change. */
+export function planFingerprint(plan:object):string {
+  const canonical=(value:unknown):unknown=>Array.isArray(value)?value.map(canonical):value&&typeof value==='object'
+    ?Object.fromEntries(Object.entries(value).sort(([a],[b])=>a<b?-1:a>b?1:0).map(([key,item])=>[key,canonical(item)])):value;
+  const {planHash:_ignored,...payload}=plan as Record<string,unknown>;
+  return createHash('sha256').update(JSON.stringify(canonical(payload))).digest('hex');
+}
+
+export function assertPlanFingerprint(plan:object&{schemaVersion?:number;planHash?:string}) {
+  assert.equal(plan.schemaVersion,2,'Legacy plans must be regenerated for this harness');
+  assert.equal(plan.planHash,planFingerprint(plan),'Plan changed after initialization');
+}
+
+export function assertSuccessfulSummary(plan:{planHash:string;sourceHash:string;cases:readonly unknown[];balanceVersion:number;rulesVersion:number;policyVersion:string},summary:Record<string,any>) {
+  assert.equal(summary.schemaVersion,2,'Current summary schema required');
+  for(const key of ['planHash','sourceHash','balanceVersion','rulesVersion','policyVersion'] as const) assert.equal(summary[key],plan[key],`Summary ${key} differs from its plan`);
+  assert.equal(summary.status,'complete','Only complete successful evidence is current');
+  assert(Array.isArray(summary.failures));assert.equal(summary.failures.length,0);
+  for(const key of ['scheduled','completed','successful']) assert.equal(summary[key],plan.cases.length,`Summary ${key} must include every case`);
+}
+
+/** A bye becomes that deck's mirror, giving odd and even inventories equal seed exposure. */
+export function competitiveSchedule(deckIds:readonly string[],namespace:string) {
+  assert(deckIds.length>0,'At least one deck required');
+  assert.equal(new Set(deckIds).size,deckIds.length,'Deck IDs must be unique');
+  const rotating:(number|null)[]=deckIds.map((_,index)=>index);
+  const odd=rotating.length%2===1;
+  if(odd) rotating.push(null);
+  const pairs:{a:number;b:number;round:number}[]=[];
+  for(let round=0;round<rotating.length-1;round++) {
+    for(let i=0;i<rotating.length/2;i++) {
+      const left=rotating[i],right=rotating[rotating.length-1-i];
+      const [a,b]=left===null?[right!,right!]:right===null?[left,left]:[left,right].sort((a,b)=>a-b);
+      pairs.push({a,b,round});
+    }
+    rotating.splice(1,0,rotating.pop()!);
+  }
+  if(!odd) for(let a=0;a<deckIds.length;a++) pairs.push({a,b:a,round:deckIds.length-1});
+  assert.equal(pairs.length,deckIds.length*(deckIds.length+1)/2);
+  assert.equal(new Set(pairs.map(({a,b})=>`${a}|${b}`)).size,pairs.length,'Every unordered pair occurs once');
+  const seeds=Array.from({length:deckIds.length*4},(_,i)=>`${namespace}-${i}`),cases:SweepCase[]=[];
+  for(const {a,b,round} of pairs)for(let repeat=0;repeat<4;repeat++)for(const policy of ['greedy','chain-two'] as const)for(const seat of ['a-player','b-player'] as const)
+    cases.push(scenario({stage:'matrix',a:deckIds[a],b:deckIds[b],policy,seed:seeds[round*4+repeat],rotation:(repeat*3+round)%10,tierA:0,tierB:0,seat}));
+  const perDeck=Object.fromEntries(deckIds.map(id=>[id,new Set(cases.filter(c=>c.a===id||c.b===id).map(c=>c.seed)).size]));
+  assert(Object.values(perDeck).every(count=>count===seeds.length),'Every deck sees the complete seed pool');
+  return {cases,seeds,perDeck};
+}
+
 export function sourceManifest() {
-  const files = new Set(['scripts/src/all-decks-ranking-decks.ts','scripts/src/element-balance-audit-decks.ts','artifacts/squabblemon/src/lib/deckWorkshop.ts','artifacts/squabblemon/src/data.ts']);
+  runtimeProvenance();
+  const files = new Set(['package.json','pnpm-lock.yaml','tsconfig.base.json','scripts/package.json','scripts/tsconfig.json','lib/squabblemon-engine/package.json','scripts/src/all-decks-ranking-decks.ts','scripts/src/element-balance-audit-decks.ts','artifacts/squabblemon/src/lib/deckWorkshop.ts','artifacts/squabblemon/src/data.ts']);
   const visit = (relative:string) => {
     for(const entry of readdirSync(path.join(sweepRoot,relative),{withFileTypes:true})) {
       const name=path.join(relative,entry.name);
@@ -38,7 +105,7 @@ export function sourceManifest() {
   const entries=[...files].sort().map(file=>({file,sha256:createHash('sha256').update(readFileSync(path.join(sweepRoot,file))).digest('hex')}));
   const hash=createHash('sha256');
   for(const entry of entries) hash.update(entry.file).update('\0').update(readFileSync(path.join(sweepRoot,entry.file))).update('\0');
-  return {sha256:hash.digest('hex'),files:entries};
+  return {sha256:hash.digest('hex'),policyVersion:SWEEP_POLICY_VERSION,files:entries};
 }
 
 export function assertLegalDeck(deck:BalanceDeck) {
@@ -67,7 +134,7 @@ export function inventory() {
   const decks=[...byComposition.values()];
   const historicalRed={...authored.find(deck=>deck.id==='focused-red-set')!,cardIds:['triple-og-red','block-spinner','redside1','ganger-red','cane-corso-red','initiation','guap','folks','cognac','bustdown'],id:'historical-red-guap-folks',name:'Historical red shell with GUAP/FOLKS (diagnostic only)'};
   assertLegalDeck(historicalRed);
-  const catalog=cardCatalog.filter(card=>card.kind!=='token'&&!card.hazard).map(card=>({id:card.engineId,name:card.name,kind:card.kind??'character',type:card.type,cost:card.cost}));
+  const catalog=cardCatalog.filter(card=>card.kind!=='token'&&!card.hazard).map(card=>({id:card.engineId,catalogId:card.catalogId,name:card.name,kind:card.kind??'character',type:card.type,rarity:card.rarity,cost:card.cost,power:card.power,ability:card.ability,effect:card.effect}));
   const included=new Set(decks.flatMap(deck=>deck.cardIds));
   const missing=catalog.filter(card=>!included.has(card.id));
   const probes=missing.map(card=>representativeDeck(card.id,decks));
@@ -96,22 +163,8 @@ export function progression(cardIds:readonly string[],tier:BalanceTier) {
   return Object.fromEntries(cardIds.map(id=>[id,{xp:0,level:1,moveTier:0}]));
 }
 
-type PaidOption=BalancePlayOption&{investment:number};
-function paidOptions(match:Match,owner:Owner,options:readonly BalancePlayOption[]):PaidOption[] {
-  const result=options.map(option=>({...option,investment:0}));
-  const motion=owner==='player'?match.playerMotion:match.cpuMotion;
-  const opposingMotion=owner==='player'?match.cpuMotion:match.playerMotion;
-  for(const option of options.filter(option=>!option.squabble&&['homelessguy','the-dice-game','the-concert'].includes(option.cardId))) {
-    const max=option.cardId==='the-concert'?1:option.cardId==='the-dice-game'?3:4;
-    for(let investment=1;investment<=max;investment++) {
-      // Dice choice0 already means wager1. Concert's mode1 is free; all other investments spend Motion.
-      if(option.cardId==='the-dice-game'&&investment===1) continue;
-      if(option.cardId!=='the-concert'&&(motion<option.cost+investment||(option.cardId==='the-dice-game'&&opposingMotion<investment))) continue;
-      try {result.push({...option,investment,cost:option.cardId==='the-concert'?option.cost:option.cost+investment,preview:playTurnCard(match,owner,option.instanceId,option.lane,false,investment)});}
-      catch(error) {if(!(error instanceof Error)||error.message!=='Invalid extra Motion investment') throw error;}
-    }
-  }
-  return result;
+export function listLegalSweepPlays(match:Match,owner:Owner):BalancePlayOption[] {
+  return listLegalBalancePlays(match,owner,true);
 }
 
 /** Conservative previews cannot anticipate hidden hand contents or unseen draws.
@@ -125,12 +178,15 @@ export function evaluatePublicState(match:Match,owner:Owner) {
   return evaluateBalanceState({...match,[owner==='player'?'cpuHand':'playerHand']:[]},owner);
 }
 
+export function evaluateSweepContinuation(match:Match,owner:Owner) {
+  return Math.max(evaluatePublicState(match,owner),...listLegalSweepPlays(match,owner).map(option=>evaluatePublicState(option.preview,owner)));
+}
+
 function chooseChain(match:Match,owner:Owner,options:readonly BalancePlayOption[]):BalancePlayOption|null {
   const baseline=evaluatePublicState(match,owner);
   const ranked=options.map(option=>({option,now:evaluatePublicState(option.preview,owner)})).sort((a,b)=>b.now-a.now||a.option.cardId.localeCompare(b.option.cardId)||a.option.lane-b.option.lane||Number(a.option.squabble)-Number(b.option.squabble));
   const shortlist=ranked.slice(0,4).map(item=>{
-    const follow=listLegalBalancePlays(item.option.preview,owner,true);
-    const then=Math.max(item.now,...follow.map(option=>evaluatePublicState(option.preview,owner)));
+    const then=evaluateSweepContinuation(item.option.preview,owner);
     return {...item,score:item.now+0.65*(then-item.now)};
   }).sort((a,b)=>b.score-a.score||a.option.cardId.localeCompare(b.option.cardId)||a.option.lane-b.option.lane);
   return shortlist[0]&&shortlist[0].score>baseline+0.05?shortlist[0].option:null;
@@ -157,8 +213,7 @@ export function simulateSweepCase(test:SweepCase,decks:ReadonlyMap<string,Balanc
     const expectedFirst=match.round%2===1?room.openingSeat:room.openingSeat==='player'?'cpu':'player';
     assert.equal(owner,room.turnsEnded===0?expectedFirst:expectedFirst==='player'?'cpu':'player','Actual PvP alternates round initiative');
     const searchMatch=policySearchState(compactPreviews?suppressMatchPresentationEvents(match):match,owner);
-    const legal=listLegalBalancePlays(searchMatch,owner,true);
-    const options:readonly BalancePlayOption[]=paidOptions(searchMatch,owner,legal);
+    const options:readonly BalancePlayOption[]=listLegalSweepPlays(searchMatch,owner);
     const context={match:searchMatch,owner,legalPlays:options,actionIndex:actionIndex-1,seed:`${test.seed}:${test.rotation}:0:${test.seat}`,evaluate:evaluatePublicState};
     let chosen:BalancePlayOption|null;
     if(test.policy==='forced-deployment'&&owner===aOwner&&test.target) {
@@ -168,7 +223,7 @@ export function simulateSweepCase(test:SweepCase,decks:ReadonlyMap<string,Balanc
     else chosen=(test.policy==='seeded-legal'||test.policy==='forced-deployment')?seededLegalBalancePolicy(context):greedyBalancePolicy(context);
     if(!chosen) {room=applyOnlineCommand(room,owner,{type:'end-turn'},actionIndex);continue;}
     assert(options.includes(chosen),'Policy selected canonical legal option');
-    const investment=(chosen as Partial<PaidOption>).investment??0;
+    const investment=chosen.investment;
     if(investment) investments[chosen.cardId]=(investments[chosen.cardId]??0)+investment;
     choices[`${chosen.cardId}:${investment}`]=(choices[`${chosen.cardId}:${investment}`]??0)+1;
     room=applyOnlineCommand(room,owner,{type:'play',instanceId:chosen.instanceId,lane:chosen.lane,squabble:chosen.squabble,investment},actionIndex);plays++;

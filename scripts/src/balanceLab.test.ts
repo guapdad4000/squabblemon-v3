@@ -348,3 +348,57 @@ for (const tier of [1, 2] as const) test(`intermediate balance tier ${tier} pres
   simulateBalanceMatch({ deckA, deckB, districtSeed: 'intermediate-tier', rotation: 0, tier, seat: 'a-player', policy });
   assert(inspected);
 });
+
+test('policy evaluator discounts visible KYLE fuses without inventing targets or post-match damage', async () => {
+  const { evaluateBalanceState } = await import('@workspace/squabblemon-engine/balanceLab');
+  const { playTurnCard, previewPendingSmileBombs } = await import('@workspace/squabblemon-engine/gameEngine');
+  const kyle = createCardInstance('kyle', 'player', 'delayed-policy', 0);
+  const enemies = ([0, 1, 2] as const).map(lane => [{ ...createCardInstance('cornball', 'cpu', 'delayed-target', lane), lane }]);
+  const initial: Match = { ...createMatch('vibes', 'vibes'), round: 2, playerMotion: 9, playerHand: [kyle], boards: enemies as Match['boards'] };
+  const armed = playTurnCard(initial, 'player', kyle.instanceId, 0);
+  const before = structuredClone(armed);
+  const noFuses = { ...armed, boards: armed.boards.map(lane => lane.filter(card => !card.smileBomb)) as Match['boards'] };
+  assert.ok(evaluateBalanceState(armed, 'player') > evaluateBalanceState(noFuses, 'player'), 'already planted bombs have a discounted future payoff');
+  const projected = previewPendingSmileBombs(armed);
+  assert.ok(projected.boards.flat().find(card => card.instanceId === kyle.instanceId)!.powerModifier > armed.boards.flat().find(card => card.instanceId === kyle.instanceId)!.powerModifier);
+  assert.deepEqual(armed, before, 'forecast cannot mutate the match');
+  assert.equal(previewPendingSmileBombs({ ...armed, round: 6 }).round, 6, 'normal final round cannot cash future bombs');
+  const empty = playTurnCard({ ...initial, boards: [[], [], []] }, 'player', kyle.instanceId, 0);
+  const emptyWithout = { ...empty, boards: empty.boards.map(lane => lane.filter(card => !card.smileBomb)) as Match['boards'] };
+  assert.equal(evaluateBalanceState(empty, 'player'), evaluateBalanceState(emptyWithout, 'player'), 'empty districts do not get imagined targets');
+  const immune = { ...armed, boards: armed.boards.map(lane => lane.map(card => card.owner === 'cpu' && !card.hazard ? { ...card, statuses: { ...card.statuses, uncounterable: true } } : card)) as Match['boards'] };
+  const immuneWithout = { ...immune, boards: immune.boards.map(lane => lane.filter(card => !card.smileBomb)) as Match['boards'] };
+  assert.equal(evaluateBalanceState(immune, 'player'), evaluateBalanceState(immuneWithout, 'player'), 'actual immunity blocks expected payoff');
+});
+
+test('policy evaluator preserves resource horizon through After Party and ignores opposing private hands', async () => {
+  const { evaluateBalanceState } = await import('@workspace/squabblemon-engine/balanceLab');
+  const match: Match = { ...createMatch('vibes', 'vibes'), round: 6, playerHand: [], cpuHand: [], playerMotion: 5, cpuMotion: 1,
+    boards: [[], [], []], squabbleByOwner: { player: false, cpu: true } };
+  assert.equal(evaluateBalanceState(match, 'player'), 0, 'normal round6 has no future resource reserve');
+  assert.equal(evaluateBalanceState({ ...match, afterParty: true }, 'player'), 1.73, 'After Party still has round7');
+  assert.equal(evaluateBalanceState({ ...match, afterParty: true, round: 7 }, 'player'), 0);
+  const streamer = { ...createCardInstance('streamer', 'cpu', 'private-policy', 0), lane: 0 as const };
+  const publicBoard = { ...match, round: 2, boards: [[streamer], [], []] as Match['boards'] };
+  assert.equal(evaluateBalanceState(publicBoard, 'player'), evaluateBalanceState({ ...publicBoard,
+    cpuHand: [createCardInstance('cornball', 'cpu', 'private-policy', 1), createCardInstance('redside1', 'cpu', 'private-policy', 2)] }, 'player'));
+});
+
+test('balance match commits the exact paid candidate instead of canonicalizing it back to zero', () => {
+  const decks = createDefaultBalanceDecks();
+  const deckA = decks.find(deck => deck.cardIds.includes('homelessguy'))!;
+  let selected = false, observed = false;
+  simulateBalanceMatch({ deckA, deckB: decks[0], districtSeed: 'paid-canonical-regression', rotation: 0, tier: 0, seat: 'a-player',
+    policy: ({ owner, legalPlays }) => {
+      if (owner !== 'player' || selected) return null;
+      const chosen = legalPlays.find(option => option.cardId === 'homelessguy' && option.investment === 2 && !option.squabble);
+      if (chosen) selected = true;
+      return chosen ?? null;
+    },
+    observeComplete: match => {
+      observed = true;
+      assert.equal(match.boards.flat().find(card => card.owner === 'player' && card.cardId === 'homelessguy')?.wildInvestment, 2);
+    },
+  });
+  assert.ok(selected && observed);
+});

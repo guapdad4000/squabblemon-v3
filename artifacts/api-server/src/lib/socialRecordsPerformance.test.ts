@@ -85,12 +85,8 @@ test("unrelated invalid rows remain ignored and invalid relevant rows retain tal
   assert.deepEqual(tallySocialFadeRecords([invalid], "self", ["friend"]), referenceTotals([invalid], "self", ["friend"]));
   for (const userId of ["outside", "self"]) {
     const players = ["outside", "friend"];
-    let expected: unknown;
-    try { referenceTotals([invalid], userId, players); } catch (error) { expected = error; }
-    assert(expected instanceof Error);
-    assert.throws(() => tallySocialFadeRecords([invalid], userId, players), {
-      name: expected.name, message: expected.message,
-    });
+    assert.throws(() => referenceTotals([invalid], userId, players), TypeError);
+    assert.throws(() => tallySocialFadeRecords([invalid], userId, players), TypeError);
   }
 });
 

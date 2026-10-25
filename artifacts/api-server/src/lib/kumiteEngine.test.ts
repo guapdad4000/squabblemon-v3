@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import { applyOnlineCommand, createOnlineRoom, expireOnlineRoom, joinOnlineRoom, type OnlineMember } from '@workspace/squabblemon-engine/multiplayer';
 import { ROOKIE_CORE_IDS, catalogIdsToEngineIds } from '@workspace/squabblemon-engine/data';
-import { advanceKumite, createKumite, kumiteView, kumiteWeek, settleKumiteRoom, startKumite, type KumiteState } from './kumiteEngine';
+import { advanceKumite, createKumite, kumiteView, kumiteWeek, retireIncompatibleKumite, settleKumiteRoom, startKumite, type KumiteState } from './kumiteEngine';
 
 const monday = Date.UTC(2026, 9, 12);
 const member = (index: number): OnlineMember => ({ userId: `private-user-${index}`, name: `Fighter ${index}`, ready: false,
@@ -95,4 +95,24 @@ test('turn deadlines and tournament cutoff are server enforced; draws replay, ro
   assert.equal(replay.rounds[0][0].status, 'ready');
   assert.equal(replay.rounds[0][0].roomCode, null);
   assert.equal(replay.rounds[0][0].winnerId, null);
+});
+
+
+test('rules retirement cancels only an active affected bracket without advancing or rewriting history', () => {
+  const state = start();
+  const match = state.rounds[0][0];
+  match.roomCode = 'STALE'; match.roomCodes = ['STALE']; match.status = 'playing';
+  const entries = match.entrantIds.map(id => state.entrants.find(entry => entry.id === id)!);
+  const room = joinOnlineRoom(createOnlineRoom(entries[0].member, 'player', state.startsAt), entries[1].member, state.startsAt);
+  room.kumite = { tournamentId: state.id, matchId: match.id, roundDeadline: match.deadline };
+  room.rulesVersion--;
+  const retired = retireIncompatibleKumite(state, room);
+  assert.equal(retired.status, 'cancelled'); assert.equal(retired.cancellationReason, 'rules-updated');
+  assert.equal(retired.championId, null); assert.deepEqual(retired.rounds, state.rounds);
+  assert.equal(advanceKumite(retired, state.endsAt + 1), retired, 'no deployment-caused bye or timeout');
+  assert.equal(retireIncompatibleKumite(retired, room), retired);
+  assert.equal(kumiteView(retired, entries[0].member.userId, state.startsAt).currentMatch, null);
+  const complete = { ...state, status: 'complete' as const, championId: entries[0].id };
+  assert.equal(retireIncompatibleKumite(complete, room), complete);
+  assert.equal(settleKumiteRoom(complete, match.id, 'STALE', room), complete);
 });

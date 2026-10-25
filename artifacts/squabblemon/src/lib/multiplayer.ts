@@ -96,6 +96,19 @@ export const request = async <T>(
     signal?.removeEventListener("abort", cancel);
   }
 };
+/** A new client accepts full responses from old APIs. An unchanged response
+ * can only reuse the exact account-scoped snapshot whose token was submitted. */
+export async function readFriendMatch(code: string, cached?: OnlineRoomView, signal?: AbortSignal): Promise<OnlineRoomView> {
+  const token = cached?.syncToken;
+  const response = await request<OnlineRoomView | { unchanged: true; syncToken: string; serverTime: number }>(
+    `/${code}${token ? `?since=${encodeURIComponent(token)}` : ''}`, undefined, signal);
+  return 'unchanged' in response
+    ? cached && cached.syncToken === response.syncToken
+      ? { ...cached, serverTime: response.serverTime }
+      : request<OnlineRoomView>(`/${code}`, undefined, signal)
+    : response;
+}
+
 export const createFriendMatch = (deckId: string, requestId: string) =>
   request<OnlineRoomView>("", { deckId, requestId });
 export const joinFriendMatch = (code: string, deckId: string) =>
@@ -135,7 +148,7 @@ export function useFriendMatch(accountId: string, code?: string) {
     enabled: !!code && online && visible,
     queryFn: async ({ signal }) => {
       const generation = readGeneration.current;
-      const incoming = await request<OnlineRoomView>(`/${code}`, undefined, signal);
+      const incoming = await readFriendMatch(code!, client.getQueryData<OnlineRoomView>(key), signal);
       // Cache timestamps also change on mutation acknowledgements. Only a GET
       // started in this foreground generation can unlock resumed turn controls.
       if (scope === currentScope.current && generation === readGeneration.current && !document.hidden && navigator.onLine)

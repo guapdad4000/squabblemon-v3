@@ -88,7 +88,7 @@ import {
   type CardProgressionSnapshot,
 } from "../lib/cardProgression";
 import { selectTrainingRival } from "@workspace/squabblemon-engine/training";
-import { CARD_BALANCE_VERSION } from "@workspace/squabblemon-engine/multiplayer";
+import { hasCurrentMatchRules, recoverChallengeMatchStart, rulesUpdatedResponse } from "../lib/rewardMatchCompatibility";
 
 const router: IRouter = Router();
 
@@ -391,11 +391,7 @@ router.post("/player/matches", async (req, res): Promise<void> => {
     return;
   }
   const challengeRun = challengeRunId
-    ? (await db.select().from(challengeRunsTable).where(and(
-      eq(challengeRunsTable.id, challengeRunId),
-      eq(challengeRunsTable.clerkUserId, userId),
-      eq(challengeRunsTable.status, "active"),
-    )).limit(1))[0]
+    ? await recoverChallengeMatchStart(challengeRunId, userId)
     : null;
   if (challengeRunId && !challengeRun) {
     res.status(409).json({ error: "Challenge run is not active" });
@@ -415,6 +411,12 @@ router.post("/player/matches", async (req, res): Promise<void> => {
       )).limit(1);
       if (!existing) {
         res.status(409).json({ error: "Challenge encounter binding is missing" });
+        return;
+      }
+      if (!hasCurrentMatchRules(existing.playerCardProgressionSnapshot)) {
+        // Completed rewards are recoverable through /complete, but their old
+        // transcript must never be sent back for client replay under new rules.
+        res.status(409).json(rulesUpdatedResponse);
         return;
       }
       const checkpoint = (challengeRun.checkpoints as Array<Record<string, unknown>>)
@@ -706,6 +708,17 @@ router.post(
     let storyProgression: StoryMatchProgressionSnapshot | null = null;
     let verifiedProgression: CardProgressionSnapshot | null = null;
 
+    // A card rebalance changes authoritative outcomes. Never reinterpret an
+    // unfinished reward fade under new values; it is a safe restart, not a
+    // cheating/forfeit result. Completed rows intentionally skip this check
+    // so already-issued rewards and account state remain immutable.
+    if (!alreadyCompleted && !hasCurrentMatchRules(match.playerCardProgressionSnapshot)) {
+      req.log.info({ matchId: match.id }, "Rejected reward fade issued under incompatible card rules");
+      res.status(409).json(rulesUpdatedResponse);
+      return;
+    }
+
+
     // Completed results use their stored receipt, even if legacy encounter snapshots are missing.
     if (match.mode === "story" && !alreadyCompleted) {
       try {
@@ -724,21 +737,6 @@ router.post(
       }
     }
 
-    // A card rebalance changes authoritative outcomes. Never reinterpret an
-    // unfinished reward fade under new values; it is a safe restart, not a
-    // cheating/forfeit result. Completed rows intentionally skip this check
-    // so already-issued rewards and account state remain immutable.
-    if (!alreadyCompleted && (
-      !match.playerCardProgressionSnapshot ||
-      Array.isArray(match.playerCardProgressionSnapshot) ||
-      match.playerCardProgressionSnapshot.balanceRulesVersion !== CARD_BALANCE_VERSION
-    )) {
-      req.log.info({ matchId: match.id }, "Rejected reward fade issued under incompatible card rules");
-      res.status(409).json({
-        error: "This fade uses an older card balance. Start a new fade to continue; your account rewards are unchanged.",
-      });
-      return;
-    }
 
     if (!alreadyCompleted) {
       try {

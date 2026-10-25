@@ -1,0 +1,66 @@
+{
+  "status": "local-scoped-checks-passed",
+  "recordedAt": "2026-10-25T08:36:44.262342+00:00",
+  "baseCommit": "61e9a86c1bd1ba49e350bd4a488671ab37d26ad2",
+  "trackedDiffSha256": "4169d75cf3bd084c0641f45d822ac9330e7f4549205e5b2ea81f103d18226544",
+  "sourceIdentityRecheckedAfterBuild": true,
+  "sourceBuild": {
+    "status": "passed",
+    "tests": 209,
+    "evidence": "release-gates/shared-production-build.json"
+  },
+  "embeddedDatabase": {
+    "status": "passed",
+    "tests": 365,
+    "failed": 0,
+    "skipped": 0,
+    "cancelled": 0,
+    "evidence": "logs/beta-embedded-final.log"
+  },
+  "nativeDatabase": {
+    "retirementAndRewardHttp": 19,
+    "rankedOnline": 15,
+    "social": 35,
+    "feedbackPatches": 12,
+    "flexPulls": 47,
+    "monthlyLogin": 13,
+    "payments": 23,
+    "styleShards": 4,
+    "status": "passed",
+    "countsOverlap": true
+  },
+  "browserFixtures": {
+    "purchaseRecoveryScenarios": 9,
+    "deckJourneyCases": 10,
+    "pveRecoveryScenarios": 2,
+    "onlineRecoveryCases": 4,
+    "completeRookieViewports": 2,
+    "storyRewardChapters": 8,
+    "status": "passed",
+    "httpMocked": true
+  },
+  "balance": {
+    "sourceHash": "dfbfacef31b2fe22c0cfb012f0b0013b8b32fb66c4df325c138f320b25956a5b",
+    "scheduledMatches": 20368,
+    "failedCases": 0,
+    "decks": 46,
+    "observedCards": 301,
+    "fullCompactComparisonPairs": 276,
+    "freshnessAfterBuild": "current",
+    "humanWinRates": false,
+    "numericalBalanceChanges": false
+  },
+  "notExecuted": [
+    "Authenticated hosted staging journey",
+    "Real two-client update/reconnect",
+    "Connected physical phone/tablet checks",
+    "Human crossed-seat balance playtests",
+    "Hosted release/rollback verification"
+  ],
+  "warnings": [
+    "Vite generic Story chunk size advisory; enforced budgets passed",
+    "Static reduced-motion recovery does not verify optional Three.js development import"
+  ],
+  "history": "Earlier failed attempts retained and resolved by the documented corrections; counts across overlapping suites must not be summed.",
+  "commitPushDeploy": false
+}

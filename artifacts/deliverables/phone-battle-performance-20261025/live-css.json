@@ -1,0 +1,24 @@
+{
+  "pageUrl": "https://squabble.today/",
+  "pageStatus": 200,
+  "pageEtag": "\"b310a635700ed2b23ac47e293a2ecbd2-ssl\"",
+  "assetUrl": "https://squabble.today/assets/index-D-llOBRd.css",
+  "finalAssetUrl": "https://squabble.today/assets/index-D-llOBRd.css",
+  "accessedAt": "2026-10-25T20:55:52.530013+00:00",
+  "status": 200,
+  "bytes": 300552,
+  "sha256": "9789edfd7ad5cabcc3ec0130e84308dfccb222f304810587575dddc9ea1106ea",
+  "matches": [
+    {
+      "rule": ".battle-board-card{will-change:auto}",
+      "offset": 221001,
+      "context": "imary-action{flex-basis:100%;order:3;min-height:3.5rem}}@media(max-width:640px)and (pointer:coarse){.battle-board-card{will-change:auto}.district-impact,.district-verdict,.effect-source,.effect-target{will-change:transform,opacity}.dist"
+    },
+    {
+      "rule": ".battle-board-card{will-change:transform}",
+      "offset": 225418,
+      "context": "t-pop{animation:portrait-pop calc(.55s / var(--presentation-speed,1)) cubic-bezier(.2,.8,.2,1) both}.battle-board-card{will-change:transform}.battle-board-card.is-alive-owner{transform-origin:bottom;animation:4s ease-in-out infinite idle-bre"
+    }
+  ],
+  "scope": "Unauthenticated public HTML and linked CSS GETs only; deployed commit not identified."
+}

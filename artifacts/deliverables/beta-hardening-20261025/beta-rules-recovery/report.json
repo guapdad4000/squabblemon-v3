@@ -1,0 +1,18 @@
+[
+  {
+    "scenario": "checkpoint",
+    "starts": 2,
+    "checkpoints": 1,
+    "completions": 0,
+    "passed": true,
+    "evidence": "Real PlayLoop with intercepted HTTP; server transaction correctness is covered separately by native PostgreSQL tests."
+  },
+  {
+    "scenario": "completion",
+    "starts": 2,
+    "checkpoints": 0,
+    "completions": 1,
+    "passed": true,
+    "evidence": "Real PlayLoop with intercepted HTTP; server transaction correctness is covered separately by native PostgreSQL tests."
+  }
+]

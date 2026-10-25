@@ -8,8 +8,12 @@ export function previewBattlePlay(match: Match, instanceId: string, lane: Lane, 
   if (['the-dice-game','the-shootout','the-cookout'].includes(card.cardId)) return null;
   const cost = getLegalCardCost(match, 'player', card, lane) + blockbusterExtraCost(card.cardId, investment);
   if (cost > match.playerMotion) return null;
-  const publicMatch: Match = JSON.parse(JSON.stringify(match));
-  publicMatch.cpuHand = []; publicMatch.cpuCardIds = []; publicMatch.cpuDrawIndex = 0;
+  // Replay entries contain whole before/after boards and grow throughout a fade.
+  // The engine appends/replaces entries immutably, so retain that history (and
+  // every sequence/seed dependency) while isolating the current public state.
+  const publicMatch: Match = JSON.parse(JSON.stringify({ ...match, effectLog: [],
+    cpuHand: [], cpuCardIds: [], cpuDrawIndex: 0 }));
+  publicMatch.effectLog = match.effectLog;
   const result = playTurnCard(publicMatch, 'player', instanceId, lane, squabble, investment);
   const visible = new Set(match.boards.flat().map(card => card.instanceId));
   const targets = [...new Set(result.effectLog.filter(event => event.sequence >= match.nextEventSequence).flatMap(event => event.targets.map(target => target.cardInstanceId)))].filter(id => visible.has(id));

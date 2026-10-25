@@ -16,8 +16,10 @@ export const BATTLE_MEDIA = {
 export type BattleMediaKind = keyof typeof BATTLE_MEDIA;
 
 /** Preprocessed transparent art: no green-screen canvas, per-frame JS, or GPU context. */
-export function BattleFxImage({ kind, className = '', animated = true }: {
+export function BattleFxImage({ kind, className = '', animated = true, retireOnParentAnimationEnd }: {
   kind: BattleMediaKind; className?: string; animated?: boolean;
+  /** Stop looping media when its parent's authored finite fade has completed. */
+  retireOnParentAnimationEnd?: string;
 }) {
   const image = useRef<HTMLImageElement>(null);
   const failed = useRef(false);
@@ -25,10 +27,11 @@ export function BattleFxImage({ kind, className = '', animated = true }: {
     const node = image.current;
     if (!node) return;
     failed.current = false;
+    let retired = false;
     // Playback is decorative DOM state. Visibility changes must not commit React
     // updates across the battle tree or restart unrelated card animations.
     const setPlaying = (playing: boolean) => {
-      const moving = animated && kind !== 'fire-impact' && playing && !failed.current;
+      const moving = animated && kind !== 'fire-impact' && playing && !failed.current && !retired;
       node.dataset.mediaAnimated = moving ? 'true' : 'false';
       const src = getAssetUrl(`assets/combat/supplied/${kind}${moving ? '' : '-still'}.webp`);
       if (node.getAttribute('src') !== src) node.setAttribute('src', src);
@@ -37,13 +40,28 @@ export function BattleFxImage({ kind, className = '', animated = true }: {
     if (!animated || kind === 'fire-impact') return;
     let disposed = false;
     let stop: (() => void) | undefined;
+    const parent = retireOnParentAnimationEnd ? node.parentElement : null;
+    const retire = (event: AnimationEvent) => {
+      // Ignore descendant animations and unrelated/cancelled transitions. Reduced
+      // motion has no fade animation and therefore keeps its visible still art.
+      if (disposed || retired || event.target !== parent || event.animationName !== retireOnParentAnimationEnd) return;
+      retired = true;
+      setPlaying(false);
+      stop?.();
+      stop = undefined;
+    };
+    parent?.addEventListener('animationend', retire);
     // Playback observers are optional; keep the static art if this chunk fails.
     void import('../lib/battleMediaPlayback').then(({ observePlayback }) => {
-      if (!disposed) stop = observePlayback(node, setPlaying);
+      if (!disposed && !retired) stop = observePlayback(node, setPlaying);
     }).catch(() => {});
-    return () => { disposed = true; stop?.(); };
+    return () => {
+      disposed = true;
+      parent?.removeEventListener('animationend', retire);
+      stop?.();
+    };
 
-  }, [animated, kind]);
+  }, [animated, kind, retireOnParentAnimationEnd]);
   return <img ref={image} className={`supplied-battle-fx ${className}`} data-battle-media={kind}
     data-media-animated="false"
     src={getAssetUrl(`assets/combat/supplied/${kind}-still.webp`)}

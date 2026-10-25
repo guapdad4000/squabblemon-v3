@@ -1,3 +1,4 @@
+import { storeOnlineRoom } from './onlineRoomPersistence';
 import { and, eq, or, sql } from "drizzle-orm";
 import { db, onlineRoomsTable as rooms, socialInvitationsTable as invites, socialRelationshipsTable as relationships, socialBlocksTable as blocks } from "@workspace/db";
 import { OnlineError, type OnlineRoom } from "@workspace/squabblemon-engine/multiplayer";
@@ -37,7 +38,7 @@ export async function syncRoomInvitation(tx: SocialTx, roomId: string, room: Onl
     const [row] = await tx.select({ inviteOnly: rooms.inviteOnly }).from(rooms).where(eq(rooms.id, roomId));
     if (row?.inviteOnly) {
       room = { ...room, status: "closed", reason: "expired", revision: room.revision + 1 };
-      await tx.update(rooms).set({ state: room as unknown as Record<string, unknown>, expiresAt: new Date(), updatedAt: new Date() }).where(eq(rooms.id, roomId));
+      await tx.update(rooms).set({ state: storeOnlineRoom(room), expiresAt: new Date(), updatedAt: new Date() }).where(eq(rooms.id, roomId));
     }
   }
   if (!invite || !["pending", "accepted"].includes(invite.status)) return room;
@@ -48,7 +49,7 @@ export async function syncRoomInvitation(tx: SocialTx, roomId: string, room: Onl
   if (status !== invite.status) await tx.update(invites).set({ status }).where(eq(invites.id, invite.id));
   if (status === "expired" && !room.members.cpu && room.status !== "closed") {
     room = { ...room, status: "closed", reason: "expired", revision: room.revision + 1 };
-    await tx.update(rooms).set({ state: room as unknown as Record<string, unknown>, expiresAt: new Date(), updatedAt: new Date() }).where(eq(rooms.id, roomId));
+    await tx.update(rooms).set({ state: storeOnlineRoom(room), expiresAt: new Date(), updatedAt: new Date() }).where(eq(rooms.id, roomId));
   }
   return room;
 }

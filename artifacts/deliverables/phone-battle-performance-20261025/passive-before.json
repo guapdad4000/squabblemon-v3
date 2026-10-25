@@ -1,0 +1,1214 @@
+[
+  {
+    "name": "ten",
+    "seconds": 12,
+    "cpuThrottle": 4,
+    "viewport": [
+      390,
+      844
+    ],
+    "idle": {
+      "frames": 0,
+      "p95FrameMs": null,
+      "over34ms": 0,
+      "longTasks": 0,
+      "longTaskMs": 0,
+      "react": {
+        "commits": 0,
+        "durationMs": 0
+      }
+    },
+    "counters": {
+      "TaskDuration": 0.11096799999999996,
+      "ScriptDuration": 0.0006120000000000014,
+      "LayoutDuration": 0,
+      "RecalcStyleDuration": 0.018535000000000024,
+      "LayoutCount": 0,
+      "RecalcStyleCount": 20
+    },
+    "dom": {
+      "boardCards": 10,
+      "willChangeCards": 10,
+      "animations": 5,
+      "infiniteAnimations": 5,
+      "animatedMedia": 4,
+      "domNodes": 1001,
+      "depth": "full",
+      "horizontalOverflow": 0,
+      "dpr": 3,
+      "pointer": "coarse",
+      "cards": [
+        {
+          "id": "cpu:thermal-0:1:hooper",
+          "animation": "idle-breathe-rival",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "cpu:thermal-0:3:cornball",
+          "animation": "idle-breathe-rival",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "player:thermal-0:0:hooper",
+          "animation": "idle-breathe-player",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "player:thermal-0:2:cornball",
+          "animation": "idle-breathe-player",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "cpu:thermal-1:1:hooper",
+          "animation": "lean-out-of-lead",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "player:thermal-1:0:hooper",
+          "animation": "lean-into-lead",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "player:thermal-1:2:cornball",
+          "animation": "lean-into-lead",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "cpu:thermal-2:1:hooper",
+          "animation": "lean-out-of-lead",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "player:thermal-2:0:hooper",
+          "animation": "lean-into-lead",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "player:thermal-2:2:cornball",
+          "animation": "lean-into-lead",
+          "playState": "running",
+          "willChange": "transform"
+        }
+      ]
+    },
+    "layerStats": {
+      "total": 49,
+      "drawing": 25,
+      "pixelArea": 1993548
+    },
+    "traceWork": {},
+    "tapToTwoFramesMs": [
+      204.5,
+      172.30000001192093,
+      92.60000002384186,
+      95.39999997615814
+    ],
+    "heapUsed": 7567956,
+    "errors": [],
+    "failed": []
+  },
+  {
+    "name": "ten-status",
+    "seconds": 12,
+    "cpuThrottle": 4,
+    "viewport": [
+      390,
+      844
+    ],
+    "idle": {
+      "frames": 0,
+      "p95FrameMs": null,
+      "over34ms": 0,
+      "longTasks": 0,
+      "longTaskMs": 0,
+      "react": {
+        "commits": 0,
+        "durationMs": 0
+      }
+    },
+    "counters": {
+      "TaskDuration": 0.12816499999999964,
+      "ScriptDuration": 0.0010119999999999574,
+      "LayoutDuration": 0,
+      "RecalcStyleDuration": 0.026796000000000042,
+      "LayoutCount": 0,
+      "RecalcStyleCount": 20
+    },
+    "dom": {
+      "boardCards": 10,
+      "willChangeCards": 10,
+      "animations": 5,
+      "infiniteAnimations": 5,
+      "animatedMedia": 12,
+      "domNodes": 1028,
+      "depth": "full",
+      "horizontalOverflow": 0,
+      "dpr": 3,
+      "pointer": "coarse",
+      "cards": [
+        {
+          "id": "cpu:thermal-0:1:hooper",
+          "animation": "idle-breathe-rival",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "cpu:thermal-0:3:cornball",
+          "animation": "idle-breathe-rival",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "player:thermal-0:0:hooper",
+          "animation": "idle-breathe-player",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "player:thermal-0:2:cornball",
+          "animation": "idle-breathe-player",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "cpu:thermal-1:1:hooper",
+          "animation": "lean-out-of-lead",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "player:thermal-1:0:hooper",
+          "animation": "lean-into-lead",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "player:thermal-1:2:cornball",
+          "animation": "lean-into-lead",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "cpu:thermal-2:1:hooper",
+          "animation": "lean-out-of-lead",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "player:thermal-2:0:hooper",
+          "animation": "lean-into-lead",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "player:thermal-2:2:cornball",
+          "animation": "lean-into-lead",
+          "playState": "running",
+          "willChange": "transform"
+        }
+      ]
+    },
+    "layerStats": {
+      "total": 49,
+      "drawing": 25,
+      "pixelArea": 1993548
+    },
+    "traceWork": {},
+    "tapToTwoFramesMs": [
+      154.5999999642372,
+      152.10000002384186,
+      86.5,
+      90.20000004768372
+    ],
+    "heapUsed": 7646760,
+    "errors": [],
+    "failed": []
+  },
+  {
+    "name": "crowded",
+    "seconds": 12,
+    "cpuThrottle": 4,
+    "viewport": [
+      390,
+      844
+    ],
+    "idle": {
+      "frames": 0,
+      "p95FrameMs": null,
+      "over34ms": 0,
+      "longTasks": 0,
+      "longTaskMs": 0,
+      "react": {
+        "commits": 3,
+        "durationMs": 3.9999999403953552
+      }
+    },
+    "counters": {
+      "TaskDuration": 0.33046799999999976,
+      "ScriptDuration": 0.019967999999999986,
+      "LayoutDuration": 0,
+      "RecalcStyleDuration": 0.10101300000000002,
+      "LayoutCount": 0,
+      "RecalcStyleCount": 14
+    },
+    "dom": {
+      "boardCards": 72,
+      "willChangeCards": 72,
+      "animations": 73,
+      "infiniteAnimations": 73,
+      "animatedMedia": 2,
+      "domNodes": 3201,
+      "depth": "full",
+      "horizontalOverflow": 0,
+      "dpr": 3,
+      "pointer": "coarse",
+      "cards": [
+        {
+          "id": "cpu:thermal-0:1:hooper",
+          "animation": "idle-breathe-rival",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "cpu:thermal-0:3:cornball",
+          "animation": "idle-breathe-rival",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "cpu:thermal-0:5:barber",
+          "animation": "idle-breathe-rival",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "cpu:thermal-0:7:plug",
+          "animation": "idle-breathe-rival",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "cpu:thermal-0:9:wifey",
+          "animation": "idle-breathe-rival",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "cpu:thermal-0:11:snow",
+          "animation": "idle-breathe-rival",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "cpu:thermal-0:13:guap",
+          "animation": "idle-breathe-rival",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "cpu:thermal-0:15:leroy",
+          "animation": "idle-breathe-rival",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "cpu:thermal-0:17:shonuff",
+          "animation": "idle-breathe-rival",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "cpu:thermal-0:19:drfade",
+          "animation": "idle-breathe-rival",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "cpu:thermal-0:21:roaster",
+          "animation": "idle-breathe-rival",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "cpu:thermal-0:23:landlord",
+          "animation": "idle-breathe-rival",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "player:thermal-0:0:hooper",
+          "animation": "idle-breathe-player",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "player:thermal-0:2:cornball",
+          "animation": "idle-breathe-player",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "player:thermal-0:4:barber",
+          "animation": "idle-breathe-player",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "player:thermal-0:6:plug",
+          "animation": "idle-breathe-player",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "player:thermal-0:8:wifey",
+          "animation": "idle-breathe-player",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "player:thermal-0:10:snow",
+          "animation": "idle-breathe-player",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "player:thermal-0:12:guap",
+          "animation": "idle-breathe-player",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "player:thermal-0:14:leroy",
+          "animation": "idle-breathe-player",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "player:thermal-0:16:shonuff",
+          "animation": "idle-breathe-player",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "player:thermal-0:18:drfade",
+          "animation": "idle-breathe-player",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "player:thermal-0:20:roaster",
+          "animation": "idle-breathe-player",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "player:thermal-0:22:landlord",
+          "animation": "idle-breathe-player",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "cpu:thermal-1:1:hooper",
+          "animation": "idle-breathe-rival",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "cpu:thermal-1:3:cornball",
+          "animation": "idle-breathe-rival",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "cpu:thermal-1:5:barber",
+          "animation": "idle-breathe-rival",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "cpu:thermal-1:7:plug",
+          "animation": "idle-breathe-rival",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "cpu:thermal-1:9:wifey",
+          "animation": "idle-breathe-rival",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "cpu:thermal-1:11:snow",
+          "animation": "idle-breathe-rival",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "cpu:thermal-1:13:guap",
+          "animation": "idle-breathe-rival",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "cpu:thermal-1:15:leroy",
+          "animation": "idle-breathe-rival",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "cpu:thermal-1:17:shonuff",
+          "animation": "idle-breathe-rival",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "cpu:thermal-1:19:drfade",
+          "animation": "idle-breathe-rival",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "cpu:thermal-1:21:roaster",
+          "animation": "idle-breathe-rival",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "cpu:thermal-1:23:landlord",
+          "animation": "idle-breathe-rival",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "player:thermal-1:0:hooper",
+          "animation": "idle-breathe-player",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "player:thermal-1:2:cornball",
+          "animation": "idle-breathe-player",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "player:thermal-1:4:barber",
+          "animation": "idle-breathe-player",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "player:thermal-1:6:plug",
+          "animation": "idle-breathe-player",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "player:thermal-1:8:wifey",
+          "animation": "idle-breathe-player",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "player:thermal-1:10:snow",
+          "animation": "idle-breathe-player",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "player:thermal-1:12:guap",
+          "animation": "idle-breathe-player",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "player:thermal-1:14:leroy",
+          "animation": "idle-breathe-player",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "player:thermal-1:16:shonuff",
+          "animation": "idle-breathe-player",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "player:thermal-1:18:drfade",
+          "animation": "idle-breathe-player",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "player:thermal-1:20:roaster",
+          "animation": "idle-breathe-player",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "player:thermal-1:22:landlord",
+          "animation": "idle-breathe-player",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "cpu:thermal-2:1:hooper",
+          "animation": "idle-breathe-rival",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "cpu:thermal-2:3:cornball",
+          "animation": "idle-breathe-rival",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "cpu:thermal-2:5:barber",
+          "animation": "idle-breathe-rival",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "cpu:thermal-2:7:plug",
+          "animation": "idle-breathe-rival",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "cpu:thermal-2:9:wifey",
+          "animation": "idle-breathe-rival",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "cpu:thermal-2:11:snow",
+          "animation": "idle-breathe-rival",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "cpu:thermal-2:13:guap",
+          "animation": "idle-breathe-rival",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "cpu:thermal-2:15:leroy",
+          "animation": "idle-breathe-rival",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "cpu:thermal-2:17:shonuff",
+          "animation": "idle-breathe-rival",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "cpu:thermal-2:19:drfade",
+          "animation": "idle-breathe-rival",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "cpu:thermal-2:21:roaster",
+          "animation": "idle-breathe-rival",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "cpu:thermal-2:23:landlord",
+          "animation": "idle-breathe-rival",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "player:thermal-2:0:hooper",
+          "animation": "idle-breathe-player",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "player:thermal-2:2:cornball",
+          "animation": "idle-breathe-player",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "player:thermal-2:4:barber",
+          "animation": "idle-breathe-player",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "player:thermal-2:6:plug",
+          "animation": "idle-breathe-player",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "player:thermal-2:8:wifey",
+          "animation": "idle-breathe-player",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "player:thermal-2:10:snow",
+          "animation": "idle-breathe-player",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "player:thermal-2:12:guap",
+          "animation": "idle-breathe-player",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "player:thermal-2:14:leroy",
+          "animation": "idle-breathe-player",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "player:thermal-2:16:shonuff",
+          "animation": "idle-breathe-player",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "player:thermal-2:18:drfade",
+          "animation": "idle-breathe-player",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "player:thermal-2:20:roaster",
+          "animation": "idle-breathe-player",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "player:thermal-2:22:landlord",
+          "animation": "idle-breathe-player",
+          "playState": "running",
+          "willChange": "transform"
+        }
+      ]
+    },
+    "layerStats": {
+      "total": 114,
+      "drawing": 90,
+      "pixelArea": 2366194
+    },
+    "traceWork": {},
+    "tapToTwoFramesMs": [
+      356.30000001192093,
+      247.5,
+      327.4000000357628,
+      234.9000000357628
+    ],
+    "heapUsed": 8636844,
+    "errors": [],
+    "failed": []
+  },
+  {
+    "name": "crowded-status",
+    "seconds": 12,
+    "cpuThrottle": 4,
+    "viewport": [
+      390,
+      844
+    ],
+    "idle": {
+      "frames": 0,
+      "p95FrameMs": null,
+      "over34ms": 0,
+      "longTasks": 0,
+      "longTaskMs": 0,
+      "react": {
+        "commits": 3,
+        "durationMs": 4.400000035762787
+      }
+    },
+    "counters": {
+      "TaskDuration": 0.39724800000000027,
+      "ScriptDuration": 0.01597200000000004,
+      "LayoutDuration": 0,
+      "RecalcStyleDuration": 0.099526,
+      "LayoutCount": 0,
+      "RecalcStyleCount": 16
+    },
+    "dom": {
+      "boardCards": 72,
+      "willChangeCards": 72,
+      "animations": 73,
+      "infiniteAnimations": 73,
+      "animatedMedia": 20,
+      "domNodes": 3348,
+      "depth": "full",
+      "horizontalOverflow": 0,
+      "dpr": 3,
+      "pointer": "coarse",
+      "cards": [
+        {
+          "id": "cpu:thermal-0:1:hooper",
+          "animation": "idle-breathe-rival",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "cpu:thermal-0:3:cornball",
+          "animation": "idle-breathe-rival",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "cpu:thermal-0:5:barber",
+          "animation": "idle-breathe-rival",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "cpu:thermal-0:7:plug",
+          "animation": "idle-breathe-rival",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "cpu:thermal-0:9:wifey",
+          "animation": "idle-breathe-rival",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "cpu:thermal-0:11:snow",
+          "animation": "idle-breathe-rival",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "cpu:thermal-0:13:guap",
+          "animation": "idle-breathe-rival",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "cpu:thermal-0:15:leroy",
+          "animation": "idle-breathe-rival",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "cpu:thermal-0:17:shonuff",
+          "animation": "idle-breathe-rival",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "cpu:thermal-0:19:drfade",
+          "animation": "idle-breathe-rival",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "cpu:thermal-0:21:roaster",
+          "animation": "idle-breathe-rival",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "cpu:thermal-0:23:landlord",
+          "animation": "idle-breathe-rival",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "player:thermal-0:0:hooper",
+          "animation": "idle-breathe-player",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "player:thermal-0:2:cornball",
+          "animation": "idle-breathe-player",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "player:thermal-0:4:barber",
+          "animation": "idle-breathe-player",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "player:thermal-0:6:plug",
+          "animation": "idle-breathe-player",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "player:thermal-0:8:wifey",
+          "animation": "idle-breathe-player",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "player:thermal-0:10:snow",
+          "animation": "idle-breathe-player",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "player:thermal-0:12:guap",
+          "animation": "idle-breathe-player",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "player:thermal-0:14:leroy",
+          "animation": "idle-breathe-player",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "player:thermal-0:16:shonuff",
+          "animation": "idle-breathe-player",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "player:thermal-0:18:drfade",
+          "animation": "idle-breathe-player",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "player:thermal-0:20:roaster",
+          "animation": "idle-breathe-player",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "player:thermal-0:22:landlord",
+          "animation": "idle-breathe-player",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "cpu:thermal-1:1:hooper",
+          "animation": "idle-breathe-rival",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "cpu:thermal-1:3:cornball",
+          "animation": "idle-breathe-rival",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "cpu:thermal-1:5:barber",
+          "animation": "idle-breathe-rival",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "cpu:thermal-1:7:plug",
+          "animation": "idle-breathe-rival",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "cpu:thermal-1:9:wifey",
+          "animation": "idle-breathe-rival",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "cpu:thermal-1:11:snow",
+          "animation": "idle-breathe-rival",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "cpu:thermal-1:13:guap",
+          "animation": "idle-breathe-rival",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "cpu:thermal-1:15:leroy",
+          "animation": "idle-breathe-rival",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "cpu:thermal-1:17:shonuff",
+          "animation": "idle-breathe-rival",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "cpu:thermal-1:19:drfade",
+          "animation": "idle-breathe-rival",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "cpu:thermal-1:21:roaster",
+          "animation": "idle-breathe-rival",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "cpu:thermal-1:23:landlord",
+          "animation": "idle-breathe-rival",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "player:thermal-1:0:hooper",
+          "animation": "idle-breathe-player",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "player:thermal-1:2:cornball",
+          "animation": "idle-breathe-player",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "player:thermal-1:4:barber",
+          "animation": "idle-breathe-player",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "player:thermal-1:6:plug",
+          "animation": "idle-breathe-player",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "player:thermal-1:8:wifey",
+          "animation": "idle-breathe-player",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "player:thermal-1:10:snow",
+          "animation": "idle-breathe-player",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "player:thermal-1:12:guap",
+          "animation": "idle-breathe-player",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "player:thermal-1:14:leroy",
+          "animation": "idle-breathe-player",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "player:thermal-1:16:shonuff",
+          "animation": "idle-breathe-player",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "player:thermal-1:18:drfade",
+          "animation": "idle-breathe-player",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "player:thermal-1:20:roaster",
+          "animation": "idle-breathe-player",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "player:thermal-1:22:landlord",
+          "animation": "idle-breathe-player",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "cpu:thermal-2:1:hooper",
+          "animation": "idle-breathe-rival",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "cpu:thermal-2:3:cornball",
+          "animation": "idle-breathe-rival",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "cpu:thermal-2:5:barber",
+          "animation": "idle-breathe-rival",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "cpu:thermal-2:7:plug",
+          "animation": "idle-breathe-rival",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "cpu:thermal-2:9:wifey",
+          "animation": "idle-breathe-rival",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "cpu:thermal-2:11:snow",
+          "animation": "idle-breathe-rival",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "cpu:thermal-2:13:guap",
+          "animation": "idle-breathe-rival",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "cpu:thermal-2:15:leroy",
+          "animation": "idle-breathe-rival",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "cpu:thermal-2:17:shonuff",
+          "animation": "idle-breathe-rival",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "cpu:thermal-2:19:drfade",
+          "animation": "idle-breathe-rival",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "cpu:thermal-2:21:roaster",
+          "animation": "idle-breathe-rival",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "cpu:thermal-2:23:landlord",
+          "animation": "idle-breathe-rival",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "player:thermal-2:0:hooper",
+          "animation": "idle-breathe-player",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "player:thermal-2:2:cornball",
+          "animation": "idle-breathe-player",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "player:thermal-2:4:barber",
+          "animation": "idle-breathe-player",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "player:thermal-2:6:plug",
+          "animation": "idle-breathe-player",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "player:thermal-2:8:wifey",
+          "animation": "idle-breathe-player",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "player:thermal-2:10:snow",
+          "animation": "idle-breathe-player",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "player:thermal-2:12:guap",
+          "animation": "idle-breathe-player",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "player:thermal-2:14:leroy",
+          "animation": "idle-breathe-player",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "player:thermal-2:16:shonuff",
+          "animation": "idle-breathe-player",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "player:thermal-2:18:drfade",
+          "animation": "idle-breathe-player",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "player:thermal-2:20:roaster",
+          "animation": "idle-breathe-player",
+          "playState": "running",
+          "willChange": "transform"
+        },
+        {
+          "id": "player:thermal-2:22:landlord",
+          "animation": "idle-breathe-player",
+          "playState": "running",
+          "willChange": "transform"
+        }
+      ]
+    },
+    "layerStats": {
+      "total": 114,
+      "drawing": 90,
+      "pixelArea": 2364886
+    },
+    "traceWork": {},
+    "tapToTwoFramesMs": [
+      337.39999997615814,
+      263,
+      236.19999998807907,
+      275.10000002384186
+    ],
+    "heapUsed": 8743032,
+    "errors": [],
+    "failed": []
+  }
+]

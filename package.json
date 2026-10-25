@@ -25,7 +25,11 @@
     "test:monthly-login:native": "node scripts/test-payments-database.mjs --monthly-login",
     "test:ranked-clout:native": "node scripts/test-payments-database.mjs --ranked-clout",
     "test:flex-pulls:native": "node scripts/test-payments-database.mjs --flex-pulls",
-    "test:flex-pulls:db": "node scripts/test-api-database.mjs flex-pulls"
+    "test:flex-pulls:db": "node scripts/test-api-database.mjs flex-pulls",
+    "verify:release": "node scripts/release-checks.mjs",
+    "verify:release:inventory": "node scripts/release-checks.mjs --inventory",
+    "test:release-gates": "node --test scripts/release-checks.test.mjs scripts/build-netlify.test.mjs",
+    "build:release": "node scripts/build-netlify.mjs"
   },
   "private": true,
   "dependencies": {

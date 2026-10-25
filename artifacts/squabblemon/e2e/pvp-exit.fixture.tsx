@@ -2,8 +2,9 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Route, Router, Switch } from 'wouter';
-import { applyOnlineCommand, createOnlineRoom, joinOnlineRoom, onlineRoomView, type OnlineRoom } from '@workspace/squabblemon-engine/multiplayer';
+import { applyOnlineCommand, createOnlineRoom, joinOnlineRoom, onlineRoomView, retireOnlineRoomForRulesUpdate, type OnlineRoom } from '@workspace/squabblemon-engine/multiplayer';
 import { decks } from '../src/data';
+import { basePath } from '../src/lib/routing';
 import { Multiplayer } from '../src/pages/game/Multiplayer';
 import { fadecadeBootstrap } from './fadecade.fixture';
 import { guardDeckRouteNavigation } from '../src/lib/deckExitGuard';
@@ -13,6 +14,7 @@ import '../src/index.css';
 
 const params = new URLSearchParams(location.search);
 const ranked = params.get('kind') === 'ranked';
+const kumite = params.get('kind') === 'kumite';
 const code = 'AABBCCDDEEFF';
 const now = Date.now();
 const deck = decks.find(value => value.id === 'block')!;
@@ -23,12 +25,21 @@ let room: OnlineRoom = joinOnlineRoom(
 room = applyOnlineCommand(room, 'player', { type: 'ready' }, now);
 room = applyOnlineCommand(room, 'cpu', { type: 'ready' }, now);
 if (ranked) room = { ...room, ranked: { queuedAt: now - 2000, heartbeatAt: now, botAfter: now + 8000, bot: false, ratings: { player: 1000, cpu: 1000 } } };
+if (kumite) room = { ...room, kumite: { tournamentId: 'rules-cup', matchId: 'rules-bracket', roundDeadline: now + 60000 } };
+const client = new QueryClient({ defaultOptions: { queries: { retry: false }, mutations: { retry: false } } });
 let fail = false;
 let count = 0;
+let reads = 0;
 let holdSurrender = false;
 let releaseSurrender: (() => void) | null = null;
 Object.assign(window, {
   pvpFixture: {
+    basePath,
+    retireForRules: async () => {
+      room = retireOnlineRoomForRulesUpdate(room, Date.now());
+      await client.refetchQueries({ queryKey: ['friend-match', bootstrap.profile.id, code] });
+      return { status: room.status, reason: room.reason, revision: room.revision };
+    },
     disconnect: () => window.dispatchEvent(new Event('offline')),
     reconnect: () => window.dispatchEvent(new Event('online')),
     fail: (value: boolean) => { fail = value; },
@@ -36,6 +47,7 @@ Object.assign(window, {
     holdSurrender: () => { holdSurrender = true; },
     releaseSurrender: () => { holdSurrender = false; releaseSurrender?.(); releaseSurrender = null; },
     requests: () => count,
+    reads: () => reads,
     status: () => room.status,
   },
 });
@@ -54,20 +66,21 @@ window.fetch = async (input, init) => {
       }
       room = applyOnlineCommand(room, 'player', command, Date.now());
     }
+    reads++;
     return Response.json(onlineRoomView(room, code, 'host', Date.now()));
   }
   return nativeFetch(input, init);
 };
 // Preserve a real back entry while starting on the mounted match route.
-history.replaceState({}, '', `/squabblemon/game/online${ranked ? '' : '?tab=friends'}`);
-history.pushState({}, '', `/squabblemon/game/online/${code}`);
+history.replaceState({}, '', `${basePath}${kumite ? '/game/kumite?view=arena' : `/game/online${ranked ? '' : '?tab=friends'}`}`);
+history.pushState({}, '', `${basePath}/game/online/${code}`);
 const bootstrap = fadecadeBootstrap();
 bootstrap.profile.settings.reducedMotion = params.get('motion') !== 'full';
 localStorage.setItem('squabblemon_e2e_user', 'signed-in');
 createRoot(document.getElementById('root')!).render(
   <AppAuthProvider publishableKey="pk_test_fixture">
-  <Router base="/squabblemon" aroundNav={guardDeckRouteNavigation}>
-    <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false }, mutations: { retry: false } } })}>
+  <Router base={basePath} aroundNav={guardDeckRouteNavigation}>
+    <QueryClientProvider client={client}>
       <SocialProvider accountId="host" enabled={false}>
       <Switch>
         <Route path="/game/online/:code">{() => <Multiplayer bootstrap={bootstrap} code={code} />}</Route>

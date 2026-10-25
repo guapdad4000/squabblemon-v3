@@ -1,3 +1,4 @@
+import { restoreOnlineRoom } from './onlineRoomPersistence';
 import { and, eq, inArray, or, sql } from "drizzle-orm";
 import { playerProfilesTable as profiles, socialIdentitiesTable as identities, socialRelationshipsTable as relations, socialBlocksTable as blocks, onlineRoomsTable as rooms } from "@workspace/db";
 import type { SocialLookup } from "@workspace/api-zod";
@@ -47,7 +48,7 @@ export async function getSocialMatchOpponent(userId: string, code: string) {
     // No expiry filter: persisted members survive completion, surrender and closing.
     const [row] = await tx.select().from(rooms).where(eq(rooms.code, normalized));
     if (!row) throw new OnlineError("Room not found.", 404);
-    const room = row.state as unknown as OnlineRoom;
+    const room = restoreOnlineRoom(row.state);
     const seat = room.members.player.userId === userId ? "player" : room.members.cpu?.userId === userId ? "cpu" : null;
     if (!seat) throw new OnlineError("Only room participants can view an opponent.", 403);
     const other = room.members[seat === "player" ? "cpu" : "player"]?.userId;

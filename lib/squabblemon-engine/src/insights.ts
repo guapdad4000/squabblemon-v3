@@ -1,6 +1,16 @@
 import { MAX_MOTION, cards, catalogCardById } from './data';
 import { getDistrictResults, getMatchWinner, type Match } from './gameEngine';
 
+// Cards with a current route to cleanse Freeze, including conditional and
+// movement-triggered cleanses. Silence-only/Weaken-only removal is excluded.
+const freezeCleanserIds = new Set([
+  'pinaynurse', 'rastamon', 'soulfood', 'firstaid', 'laundry', 'nightmedic',
+  'concrete', 'conductor', 'stonerjr', 'stonersr', 'foodz', 'passportbro', 'lola',
+  'community-cook', 'hair-stylist', 'lebron-james', 'squabbleserver',
+  'stillwatermedic', 'rootnurse', 'blueside4', 'miami-surgeon', 'redneck',
+  'lawyer', 'the-cookout', 'suga-mama', 'apartment-maintenance-sage',
+]);
+
 export function crewInsights(ids: readonly string[]) {
   const crew = ids.map(id => cards[id] ?? cards[catalogCardById[id]?.engineId]).filter(Boolean);
   const engines = ids.map(id => cards[id] ? id : catalogCardById[id]?.engineId);
@@ -9,10 +19,11 @@ export function crewInsights(ids: readonly string[]) {
   const tips: string[] = [];
   if (opening < 2) tips.push('Your opening hand has fewer than two cards you can summon with 2 Motion. Move a cheap card earlier or add one.');
   if (engines.includes('nguyen')) tips.push('Nguyen gains Hands when an ally is in another district. Spread an opener before summoning him.');
-  if (engines.includes('gamer')) tips.push(crew.filter(c => c.cost <= 2).length < 3 ? 'Gamer has few cheap partners. Add another 1- or 2-cost card to give his ability more chances.' : 'Play Gamer before your cheap arrivals; each arrival here strengthens both cards.');
-  if (engines.includes('icecream') || engines.includes('manman')) tips.push('Your gang rewards gathering allies. Keep enough plays available to contest a second district.');
+  if (engines.includes('gamer')) tips.push('Spread allies before Gamer: City Tour gives your lowest-Hands ally in each other district +2 Hands. While Gamer is on board, newly Silence or Weaken an enemy to give your lowest-Hands Dark ally +2, once per round.');
+  if (engines.includes('icecream')) tips.push('Ice Cream Truck serves one Treat per district, moving at round start to your weakest legal unvisited district. A Treat waits for an ally if the truck arrives alone.');
+  else if (engines.includes('manman')) tips.push('Man Man needs two other friendly characters here for his +3 Hands. Keep enough plays available to contest a second district.');
   if (engines.some(id => ['earthy', 'nail', 'abuela', 'pinaynurse', 'boombox', 'workboots', 'charger'].includes(id))) tips.push('Your support cards need an ally already on the board. Lead with an opener.');
-  if (!engines.some(id => ['pinaynurse', 'rastamon', 'soulfood', 'firstaid', 'laundry', 'nightmedic'].includes(id))) tips.push('You have no cleanser. Freeze will need to be prevented, avoided, or played around.');
+  if (!engines.some(id => freezeCleanserIds.has(id))) tips.push('Your crew has no Freeze cleanser. Plan to prevent Freeze, avoid it, or play around it.');
   if (engines.some(id => ['bikelife', 'delivery', 'carmeet', 'vibe', 'subwaymap'].includes(id))) tips.push('Movement can shift Hands to a second district without spending another summon there.');
   return { opening, curve, tips: tips.slice(0, 5) };
 }

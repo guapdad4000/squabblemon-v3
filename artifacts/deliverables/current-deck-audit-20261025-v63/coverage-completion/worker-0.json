@@ -1,0 +1,4666 @@
+{
+  "index": 0,
+  "count": 1,
+  "sourceHash": "f3c57f54175c45cdb8493ea1d7b7178f801ba8664612e87c5c3a4d867f4c7193",
+  "planHash": "33a18bf7b03a7ea8b2f45f0355663591c3fdbe903a818b4b376f74b130e64205",
+  "completed": 32,
+  "elapsedMs": 1814.9022420000001,
+  "failures": [],
+  "proofs": {
+    "youngbull": {
+      "caseIndex": 0,
+      "round": 1,
+      "proof": {
+        "owner": "player",
+        "cardId": "youngbull",
+        "type": "ability",
+        "kind": "fire",
+        "note": "Step Up: +1 Hands.",
+        "source": {
+          "cardInstanceId": "player:element-fire:4:youngbull",
+          "cardId": "youngbull",
+          "owner": "player",
+          "before": {
+            "cardInstanceId": "player:element-fire:4:youngbull",
+            "cardId": "youngbull",
+            "owner": "player",
+            "lane": 1,
+            "power": 4,
+            "basePower": 4,
+            "powerModifier": 0,
+            "moved": false,
+            "statuses": {
+              "frozen": false,
+              "silenced": false,
+              "protected": false,
+              "blocked": false,
+              "uncounterable": false,
+              "weakened": false,
+              "locked": false,
+              "boosted": false,
+              "burnStacks": 0
+            },
+            "lastEffectNote": "Played for 2 Motion."
+          },
+          "after": {
+            "cardInstanceId": "player:element-fire:4:youngbull",
+            "cardId": "youngbull",
+            "owner": "player",
+            "lane": 1,
+            "power": 5,
+            "basePower": 4,
+            "powerModifier": 1,
+            "moved": false,
+            "statuses": {
+              "frozen": false,
+              "silenced": false,
+              "protected": false,
+              "blocked": false,
+              "uncounterable": false,
+              "weakened": false,
+              "locked": false,
+              "boosted": false,
+              "burnStacks": 0
+            },
+            "lastEffectNote": "Step Up: +1 Hands."
+          }
+        },
+        "targets": []
+      }
+    },
+    "rastamon": {
+      "caseIndex": 0,
+      "round": 1,
+      "proof": {
+        "owner": "cpu",
+        "cardId": "rastamon",
+        "type": "ability",
+        "kind": "ability",
+        "note": "Natural Cure found no other ally.",
+        "source": {
+          "cardInstanceId": "cpu:starter-block:3:rastamon",
+          "cardId": "rastamon",
+          "owner": "cpu",
+          "before": {
+            "cardInstanceId": "cpu:starter-block:3:rastamon",
+            "cardId": "rastamon",
+            "owner": "cpu",
+            "lane": 0,
+            "power": 4,
+            "basePower": 2,
+            "powerModifier": 2,
+            "moved": false,
+            "statuses": {
+              "frozen": false,
+              "silenced": false,
+              "protected": true,
+              "blocked": false,
+              "uncounterable": false,
+              "weakened": false,
+              "locked": false,
+              "boosted": false,
+              "burnStacks": 0
+            },
+            "lastEffectNote": "NAIL SALON: this arrival blocks its next targeted enemy ability."
+          },
+          "after": {
+            "cardInstanceId": "cpu:starter-block:3:rastamon",
+            "cardId": "rastamon",
+            "owner": "cpu",
+            "lane": 0,
+            "power": 4,
+            "basePower": 2,
+            "powerModifier": 2,
+            "moved": false,
+            "statuses": {
+              "frozen": false,
+              "silenced": false,
+              "protected": true,
+              "blocked": false,
+              "uncounterable": false,
+              "weakened": false,
+              "locked": false,
+              "boosted": false,
+              "burnStacks": 0
+            },
+            "lastEffectNote": "NAIL SALON: this arrival blocks its next targeted enemy ability."
+          }
+        },
+        "targets": []
+      }
+    },
+    "buspass": {
+      "caseIndex": 0,
+      "round": 1,
+      "proof": {
+        "owner": "cpu",
+        "cardId": "buspass",
+        "type": "ability",
+        "kind": "ability",
+        "note": "Transfer Ticket: next character costs 1 less Motion and arrives with +2 Hands.",
+        "source": {
+          "cardInstanceId": "cpu:starter-block:0:buspass",
+          "cardId": "buspass",
+          "owner": "cpu",
+          "before": {
+            "cardInstanceId": "cpu:starter-block:0:buspass",
+            "cardId": "buspass",
+            "owner": "cpu",
+            "lane": 0,
+            "power": 0,
+            "basePower": 0,
+            "powerModifier": 0,
+            "moved": false,
+            "statuses": {
+              "frozen": false,
+              "silenced": false,
+              "protected": false,
+              "blocked": false,
+              "uncounterable": false,
+              "weakened": false,
+              "locked": false,
+              "boosted": false,
+              "burnStacks": 0
+            },
+            "lastEffectNote": "Played for 0 Motion."
+          },
+          "after": {
+            "cardInstanceId": "cpu:starter-block:0:buspass",
+            "cardId": "buspass",
+            "owner": "cpu",
+            "lane": 0,
+            "power": 0,
+            "basePower": 0,
+            "powerModifier": 0,
+            "moved": false,
+            "statuses": {
+              "frozen": false,
+              "silenced": false,
+              "protected": false,
+              "blocked": false,
+              "uncounterable": false,
+              "weakened": false,
+              "locked": false,
+              "boosted": false,
+              "burnStacks": 0
+            },
+            "lastEffectNote": "Played for 0 Motion."
+          }
+        },
+        "targets": []
+      }
+    },
+    "cornball": {
+      "caseIndex": 0,
+      "round": 1,
+      "proof": {
+        "owner": "cpu",
+        "cardId": "cornball",
+        "type": "ability",
+        "kind": "ability",
+        "note": "Scare the Hoes applied 1 Burn to 1 enemies.",
+        "source": {
+          "cardInstanceId": "cpu:starter-block:4:cornball",
+          "cardId": "cornball",
+          "owner": "cpu",
+          "before": {
+            "cardInstanceId": "cpu:starter-block:4:cornball",
+            "cardId": "cornball",
+            "owner": "cpu",
+            "lane": 1,
+            "power": 4,
+            "basePower": 2,
+            "powerModifier": 2,
+            "moved": false,
+            "statuses": {
+              "frozen": false,
+              "silenced": false,
+              "protected": false,
+              "blocked": false,
+              "uncounterable": false,
+              "weakened": false,
+              "locked": false,
+              "boosted": false,
+              "burnStacks": 0
+            },
+            "lastEffectNote": "Transfer Ticket: discounted deployment, +2 Hands."
+          },
+          "after": {
+            "cardInstanceId": "cpu:starter-block:4:cornball",
+            "cardId": "cornball",
+            "owner": "cpu",
+            "lane": 1,
+            "power": 4,
+            "basePower": 2,
+            "powerModifier": 2,
+            "moved": false,
+            "statuses": {
+              "frozen": false,
+              "silenced": false,
+              "protected": false,
+              "blocked": false,
+              "uncounterable": false,
+              "weakened": false,
+              "locked": false,
+              "boosted": false,
+              "burnStacks": 0
+            },
+            "lastEffectNote": "Transfer Ticket: discounted deployment, +2 Hands."
+          }
+        },
+        "targets": [
+          {
+            "cardInstanceId": "player:element-fire:4:youngbull",
+            "cardId": "youngbull",
+            "owner": "player",
+            "before": {
+              "cardInstanceId": "player:element-fire:4:youngbull",
+              "cardId": "youngbull",
+              "owner": "player",
+              "lane": 1,
+              "power": 5,
+              "basePower": 4,
+              "powerModifier": 1,
+              "moved": false,
+              "statuses": {
+                "frozen": false,
+                "silenced": false,
+                "protected": false,
+                "blocked": false,
+                "uncounterable": false,
+                "weakened": false,
+                "locked": false,
+                "boosted": false,
+                "burnStacks": 0
+              },
+              "lastEffectNote": "Step Up: +1 Hands."
+            },
+            "after": {
+              "cardInstanceId": "player:element-fire:4:youngbull",
+              "cardId": "youngbull",
+              "owner": "player",
+              "lane": 1,
+              "power": 5,
+              "basePower": 4,
+              "powerModifier": 1,
+              "moved": false,
+              "statuses": {
+                "frozen": false,
+                "silenced": false,
+                "protected": false,
+                "blocked": false,
+                "uncounterable": false,
+                "weakened": false,
+                "locked": false,
+                "boosted": false,
+                "burnStacks": 1
+              },
+              "lastEffectNote": "Scare the Hoes: 1 Burn."
+            }
+          }
+        ]
+      }
+    },
+    "cognac": {
+      "caseIndex": 0,
+      "round": 2,
+      "proof": {
+        "owner": "cpu",
+        "cardId": "cognac",
+        "type": "ability",
+        "kind": "fire",
+        "note": "Liquid Courage gave 1 allies +3 Hands.",
+        "source": {
+          "cardInstanceId": "cpu:starter-block:5:cognac",
+          "cardId": "cognac",
+          "owner": "cpu",
+          "before": {
+            "cardInstanceId": "cpu:starter-block:5:cognac",
+            "cardId": "cognac",
+            "owner": "cpu",
+            "lane": 0,
+            "power": 0,
+            "basePower": 0,
+            "powerModifier": 0,
+            "moved": false,
+            "statuses": {
+              "frozen": false,
+              "silenced": false,
+              "protected": true,
+              "blocked": false,
+              "uncounterable": false,
+              "weakened": false,
+              "locked": false,
+              "boosted": false,
+              "burnStacks": 0
+            },
+            "lastEffectNote": "NAIL SALON: this arrival blocks its next targeted enemy ability."
+          },
+          "after": {
+            "cardInstanceId": "cpu:starter-block:5:cognac",
+            "cardId": "cognac",
+            "owner": "cpu",
+            "lane": 0,
+            "power": 0,
+            "basePower": 0,
+            "powerModifier": 0,
+            "moved": false,
+            "statuses": {
+              "frozen": false,
+              "silenced": false,
+              "protected": true,
+              "blocked": false,
+              "uncounterable": false,
+              "weakened": false,
+              "locked": false,
+              "boosted": false,
+              "burnStacks": 0
+            },
+            "lastEffectNote": "NAIL SALON: this arrival blocks its next targeted enemy ability."
+          }
+        },
+        "targets": [
+          {
+            "cardInstanceId": "cpu:starter-block:3:rastamon",
+            "cardId": "rastamon",
+            "owner": "cpu",
+            "before": {
+              "cardInstanceId": "cpu:starter-block:3:rastamon",
+              "cardId": "rastamon",
+              "owner": "cpu",
+              "lane": 0,
+              "power": 4,
+              "basePower": 2,
+              "powerModifier": 2,
+              "moved": false,
+              "statuses": {
+                "frozen": false,
+                "silenced": false,
+                "protected": true,
+                "blocked": false,
+                "uncounterable": false,
+                "weakened": false,
+                "locked": false,
+                "boosted": false,
+                "burnStacks": 0
+              },
+              "lastEffectNote": "NAIL SALON: this arrival blocks its next targeted enemy ability."
+            },
+            "after": {
+              "cardInstanceId": "cpu:starter-block:3:rastamon",
+              "cardId": "rastamon",
+              "owner": "cpu",
+              "lane": 0,
+              "power": 7,
+              "basePower": 2,
+              "powerModifier": 5,
+              "moved": false,
+              "statuses": {
+                "frozen": false,
+                "silenced": false,
+                "protected": true,
+                "blocked": false,
+                "uncounterable": false,
+                "weakened": false,
+                "locked": false,
+                "boosted": false,
+                "burnStacks": 0
+              },
+              "lastEffectNote": "Liquid Courage: +3 Hands."
+            }
+          }
+        ]
+      }
+    },
+    "kyle": {
+      "caseIndex": 0,
+      "round": 3,
+      "proof": {
+        "owner": "player",
+        "cardId": "kyle",
+        "type": "ability",
+        "kind": "fire",
+        "note": "Smile Bombs planted 4 bombs in enemy districts. Each hits one random enemy for -2 Hands next round.",
+        "source": {
+          "cardInstanceId": "player:element-fire:0:kyle",
+          "cardId": "kyle",
+          "owner": "player",
+          "before": {
+            "cardInstanceId": "player:element-fire:0:kyle",
+            "cardId": "kyle",
+            "owner": "player",
+            "lane": 2,
+            "power": 3,
+            "basePower": 3,
+            "powerModifier": 0,
+            "moved": false,
+            "statuses": {
+              "frozen": false,
+              "silenced": false,
+              "protected": false,
+              "blocked": false,
+              "uncounterable": false,
+              "weakened": false,
+              "locked": false,
+              "boosted": false,
+              "burnStacks": 0
+            },
+            "lastEffectNote": "Played for 4 Motion."
+          },
+          "after": {
+            "cardInstanceId": "player:element-fire:0:kyle",
+            "cardId": "kyle",
+            "owner": "player",
+            "lane": 2,
+            "power": 3,
+            "basePower": 3,
+            "powerModifier": 0,
+            "moved": false,
+            "statuses": {
+              "frozen": false,
+              "silenced": false,
+              "protected": false,
+              "blocked": false,
+              "uncounterable": false,
+              "weakened": false,
+              "locked": false,
+              "boosted": false,
+              "burnStacks": 0
+            },
+            "lastEffectNote": "Played for 4 Motion."
+          }
+        },
+        "targets": [
+          {
+            "cardInstanceId": "summon:cpu:player:element-fire:0:kyle:3:smile-bomb:30:6",
+            "cardId": "smile-bomb",
+            "owner": "cpu",
+            "before": null,
+            "after": {
+              "cardInstanceId": "summon:cpu:player:element-fire:0:kyle:3:smile-bomb:30:6",
+              "cardId": "smile-bomb",
+              "owner": "cpu",
+              "lane": 2,
+              "power": 0,
+              "basePower": 0,
+              "powerModifier": 0,
+              "moved": false,
+              "statuses": {
+                "frozen": false,
+                "silenced": false,
+                "protected": false,
+                "blocked": false,
+                "uncounterable": false,
+                "weakened": false,
+                "locked": false,
+                "boosted": false,
+                "burnStacks": 0
+              },
+              "lastEffectNote": "Planted by KYLE. Explodes at the start of round 4."
+            }
+          },
+          {
+            "cardInstanceId": "summon:cpu:player:element-fire:0:kyle:3:smile-bomb:30:7",
+            "cardId": "smile-bomb",
+            "owner": "cpu",
+            "before": null,
+            "after": {
+              "cardInstanceId": "summon:cpu:player:element-fire:0:kyle:3:smile-bomb:30:7",
+              "cardId": "smile-bomb",
+              "owner": "cpu",
+              "lane": 2,
+              "power": 0,
+              "basePower": 0,
+              "powerModifier": 0,
+              "moved": false,
+              "statuses": {
+                "frozen": false,
+                "silenced": false,
+                "protected": false,
+                "blocked": false,
+                "uncounterable": false,
+                "weakened": false,
+                "locked": false,
+                "boosted": false,
+                "burnStacks": 0
+              },
+              "lastEffectNote": "Planted by KYLE. Explodes at the start of round 4."
+            }
+          },
+          {
+            "cardInstanceId": "summon:cpu:player:element-fire:0:kyle:3:smile-bomb:30:8",
+            "cardId": "smile-bomb",
+            "owner": "cpu",
+            "before": null,
+            "after": {
+              "cardInstanceId": "summon:cpu:player:element-fire:0:kyle:3:smile-bomb:30:8",
+              "cardId": "smile-bomb",
+              "owner": "cpu",
+              "lane": 1,
+              "power": 0,
+              "basePower": 0,
+              "powerModifier": 0,
+              "moved": false,
+              "statuses": {
+                "frozen": false,
+                "silenced": false,
+                "protected": false,
+                "blocked": false,
+                "uncounterable": false,
+                "weakened": false,
+                "locked": false,
+                "boosted": false,
+                "burnStacks": 0
+              },
+              "lastEffectNote": "Planted by KYLE. Explodes at the start of round 4."
+            }
+          },
+          {
+            "cardInstanceId": "summon:cpu:player:element-fire:0:kyle:3:smile-bomb:30:9",
+            "cardId": "smile-bomb",
+            "owner": "cpu",
+            "before": null,
+            "after": {
+              "cardInstanceId": "summon:cpu:player:element-fire:0:kyle:3:smile-bomb:30:9",
+              "cardId": "smile-bomb",
+              "owner": "cpu",
+              "lane": 1,
+              "power": 0,
+              "basePower": 0,
+              "powerModifier": 0,
+              "moved": false,
+              "statuses": {
+                "frozen": false,
+                "silenced": false,
+                "protected": false,
+                "blocked": false,
+                "uncounterable": false,
+                "weakened": false,
+                "locked": false,
+                "boosted": false,
+                "burnStacks": 0
+              },
+              "lastEffectNote": "Planted by KYLE. Explodes at the start of round 4."
+            }
+          }
+        ]
+      }
+    },
+    "roaster": {
+      "caseIndex": 0,
+      "round": 3,
+      "proof": {
+        "owner": "cpu",
+        "cardId": "roaster",
+        "type": "ability",
+        "kind": "ability",
+        "note": "Ratio'd Receipts targeted Young Bull (1 Burn + 1 immediate Hands loss).",
+        "source": {
+          "cardInstanceId": "cpu:starter-block:2:roaster",
+          "cardId": "roaster",
+          "owner": "cpu",
+          "before": {
+            "cardInstanceId": "cpu:starter-block:2:roaster",
+            "cardId": "roaster",
+            "owner": "cpu",
+            "lane": 1,
+            "power": 3,
+            "basePower": 3,
+            "powerModifier": 0,
+            "moved": false,
+            "statuses": {
+              "frozen": false,
+              "silenced": false,
+              "protected": false,
+              "blocked": false,
+              "uncounterable": false,
+              "weakened": false,
+              "locked": false,
+              "boosted": false,
+              "burnStacks": 0
+            },
+            "lastEffectNote": "Played for 3 Motion."
+          },
+          "after": {
+            "cardInstanceId": "cpu:starter-block:2:roaster",
+            "cardId": "roaster",
+            "owner": "cpu",
+            "lane": 1,
+            "power": 3,
+            "basePower": 3,
+            "powerModifier": 0,
+            "moved": false,
+            "statuses": {
+              "frozen": false,
+              "silenced": false,
+              "protected": false,
+              "blocked": false,
+              "uncounterable": false,
+              "weakened": false,
+              "locked": false,
+              "boosted": false,
+              "burnStacks": 0
+            },
+            "lastEffectNote": "Played for 3 Motion."
+          }
+        },
+        "targets": [
+          {
+            "cardInstanceId": "player:element-fire:4:youngbull",
+            "cardId": "youngbull",
+            "owner": "player",
+            "before": {
+              "cardInstanceId": "player:element-fire:4:youngbull",
+              "cardId": "youngbull",
+              "owner": "player",
+              "lane": 1,
+              "power": 5,
+              "basePower": 4,
+              "powerModifier": 1,
+              "moved": false,
+              "statuses": {
+                "frozen": false,
+                "silenced": false,
+                "protected": false,
+                "blocked": false,
+                "uncounterable": false,
+                "weakened": false,
+                "locked": false,
+                "boosted": false,
+                "burnStacks": 0
+              },
+              "lastEffectNote": "GUAP: Fire bond +1 Hands."
+            },
+            "after": {
+              "cardInstanceId": "player:element-fire:4:youngbull",
+              "cardId": "youngbull",
+              "owner": "player",
+              "lane": 1,
+              "power": 4,
+              "basePower": 4,
+              "powerModifier": 0,
+              "moved": false,
+              "statuses": {
+                "frozen": false,
+                "silenced": false,
+                "protected": false,
+                "blocked": false,
+                "uncounterable": false,
+                "weakened": false,
+                "locked": false,
+                "boosted": false,
+                "burnStacks": 1
+              },
+              "lastEffectNote": "Ratio'd Receipts: 1 Burn, 1 immediate Hands loss."
+            }
+          }
+        ]
+      }
+    },
+    "soulfood": {
+      "caseIndex": 0,
+      "round": 3,
+      "proof": {
+        "owner": "cpu",
+        "cardId": "soulfood",
+        "type": "ability",
+        "kind": "ability",
+        "note": "Full Plate cleansed an ally and gave +3 Hands.",
+        "source": {
+          "cardInstanceId": "cpu:starter-block:8:soulfood",
+          "cardId": "soulfood",
+          "owner": "cpu",
+          "before": {
+            "cardInstanceId": "cpu:starter-block:8:soulfood",
+            "cardId": "soulfood",
+            "owner": "cpu",
+            "lane": 1,
+            "power": 0,
+            "basePower": 0,
+            "powerModifier": 0,
+            "moved": false,
+            "statuses": {
+              "frozen": false,
+              "silenced": false,
+              "protected": false,
+              "blocked": false,
+              "uncounterable": false,
+              "weakened": false,
+              "locked": false,
+              "boosted": false,
+              "burnStacks": 0
+            },
+            "lastEffectNote": "Played for 1 Motion."
+          },
+          "after": {
+            "cardInstanceId": "cpu:starter-block:8:soulfood",
+            "cardId": "soulfood",
+            "owner": "cpu",
+            "lane": 1,
+            "power": 0,
+            "basePower": 0,
+            "powerModifier": 0,
+            "moved": false,
+            "statuses": {
+              "frozen": false,
+              "silenced": false,
+              "protected": false,
+              "blocked": false,
+              "uncounterable": false,
+              "weakened": false,
+              "locked": false,
+              "boosted": false,
+              "burnStacks": 0
+            },
+            "lastEffectNote": "Played for 1 Motion."
+          }
+        },
+        "targets": [
+          {
+            "cardInstanceId": "cpu:starter-block:2:roaster",
+            "cardId": "roaster",
+            "owner": "cpu",
+            "before": {
+              "cardInstanceId": "cpu:starter-block:2:roaster",
+              "cardId": "roaster",
+              "owner": "cpu",
+              "lane": 1,
+              "power": 3,
+              "basePower": 3,
+              "powerModifier": 0,
+              "moved": false,
+              "statuses": {
+                "frozen": false,
+                "silenced": false,
+                "protected": false,
+                "blocked": false,
+                "uncounterable": false,
+                "weakened": false,
+                "locked": false,
+                "boosted": false,
+                "burnStacks": 0
+              },
+              "lastEffectNote": "Played for 3 Motion."
+            },
+            "after": {
+              "cardInstanceId": "cpu:starter-block:2:roaster",
+              "cardId": "roaster",
+              "owner": "cpu",
+              "lane": 1,
+              "power": 6,
+              "basePower": 3,
+              "powerModifier": 3,
+              "moved": false,
+              "statuses": {
+                "frozen": false,
+                "silenced": false,
+                "protected": false,
+                "blocked": false,
+                "uncounterable": false,
+                "weakened": false,
+                "locked": false,
+                "boosted": false,
+                "burnStacks": 0
+              },
+              "lastEffectNote": "Full Plate: cleansed, +3 Hands."
+            }
+          }
+        ]
+      }
+    },
+    "snow": {
+      "caseIndex": 0,
+      "round": 4,
+      "proof": {
+        "owner": "cpu",
+        "cardId": "snow",
+        "type": "ability",
+        "kind": "water",
+        "note": "Cold Shoulder froze the highest enemy.",
+        "source": {
+          "cardInstanceId": "cpu:starter-block:9:snow",
+          "cardId": "snow",
+          "owner": "cpu",
+          "before": {
+            "cardInstanceId": "cpu:starter-block:9:snow",
+            "cardId": "snow",
+            "owner": "cpu",
+            "lane": 2,
+            "power": 3,
+            "basePower": 3,
+            "powerModifier": 0,
+            "moved": false,
+            "statuses": {
+              "frozen": false,
+              "silenced": false,
+              "protected": false,
+              "blocked": false,
+              "uncounterable": false,
+              "weakened": false,
+              "locked": false,
+              "boosted": false,
+              "burnStacks": 0
+            },
+            "lastEffectNote": "Played for 3 Motion."
+          },
+          "after": {
+            "cardInstanceId": "cpu:starter-block:9:snow",
+            "cardId": "snow",
+            "owner": "cpu",
+            "lane": 2,
+            "power": 3,
+            "basePower": 3,
+            "powerModifier": 0,
+            "moved": false,
+            "statuses": {
+              "frozen": false,
+              "silenced": false,
+              "protected": false,
+              "blocked": false,
+              "uncounterable": false,
+              "weakened": false,
+              "locked": false,
+              "boosted": false,
+              "burnStacks": 0
+            },
+            "lastEffectNote": "Played for 3 Motion."
+          }
+        },
+        "targets": [
+          {
+            "cardInstanceId": "player:element-fire:0:kyle",
+            "cardId": "kyle",
+            "owner": "player",
+            "before": {
+              "cardInstanceId": "player:element-fire:0:kyle",
+              "cardId": "kyle",
+              "owner": "player",
+              "lane": 2,
+              "power": 7,
+              "basePower": 3,
+              "powerModifier": 4,
+              "moved": false,
+              "statuses": {
+                "frozen": false,
+                "silenced": false,
+                "protected": false,
+                "blocked": false,
+                "uncounterable": false,
+                "weakened": false,
+                "locked": false,
+                "boosted": false,
+                "burnStacks": 0
+              },
+              "lastEffectNote": "Smile Bomb knockout: +2 Hands."
+            },
+            "after": {
+              "cardInstanceId": "player:element-fire:0:kyle",
+              "cardId": "kyle",
+              "owner": "player",
+              "lane": 2,
+              "power": 0,
+              "basePower": 3,
+              "powerModifier": 4,
+              "moved": false,
+              "statuses": {
+                "frozen": true,
+                "silenced": false,
+                "protected": false,
+                "blocked": false,
+                "uncounterable": false,
+                "weakened": false,
+                "locked": false,
+                "boosted": false,
+                "burnStacks": 0
+              },
+              "lastEffectNote": "Cold Shoulder: frozen."
+            }
+          }
+        ]
+      }
+    },
+    "baby": {
+      "caseIndex": 0,
+      "round": 4,
+      "proof": {
+        "owner": "player",
+        "cardId": "baby",
+        "type": "ability",
+        "kind": "fire",
+        "note": "Mama Bear: resolved.",
+        "source": {
+          "cardInstanceId": "player:element-fire:8:baby",
+          "cardId": "baby",
+          "owner": "player",
+          "before": {
+            "cardInstanceId": "player:element-fire:8:baby",
+            "cardId": "baby",
+            "owner": "player",
+            "lane": 1,
+            "power": 10,
+            "basePower": 5,
+            "powerModifier": 5,
+            "moved": false,
+            "statuses": {
+              "frozen": false,
+              "silenced": false,
+              "protected": false,
+              "blocked": false,
+              "uncounterable": false,
+              "weakened": false,
+              "locked": false,
+              "boosted": false,
+              "burnStacks": 0
+            },
+            "lastEffectNote": "SQUABBLE doubled base Hands."
+          },
+          "after": {
+            "cardInstanceId": "player:element-fire:8:baby",
+            "cardId": "baby",
+            "owner": "player",
+            "lane": 1,
+            "power": 10,
+            "basePower": 5,
+            "powerModifier": 5,
+            "moved": false,
+            "statuses": {
+              "frozen": false,
+              "silenced": false,
+              "protected": false,
+              "blocked": false,
+              "uncounterable": false,
+              "weakened": false,
+              "locked": false,
+              "boosted": false,
+              "burnStacks": 0
+            },
+            "lastEffectNote": "Mama Bear: resolved."
+          }
+        },
+        "targets": []
+      }
+    },
+    "folks": {
+      "caseIndex": 0,
+      "round": 5,
+      "proof": {
+        "owner": "player",
+        "cardId": "folks",
+        "type": "ability",
+        "kind": "fire",
+        "note": "Whole Block Hot: 3 Burn across the enemy board; other Fire allies +1 Hand. Rastamon: NAIL SALON blocked a targeted hostile ability.",
+        "source": {
+          "cardInstanceId": "player:element-fire:7:folks",
+          "cardId": "folks",
+          "owner": "player",
+          "before": {
+            "cardInstanceId": "player:element-fire:7:folks",
+            "cardId": "folks",
+            "owner": "player",
+            "lane": 1,
+            "power": 2,
+            "basePower": 2,
+            "powerModifier": 0,
+            "moved": false,
+            "statuses": {
+              "frozen": false,
+              "silenced": false,
+              "protected": false,
+              "blocked": false,
+              "uncounterable": false,
+              "weakened": false,
+              "locked": false,
+              "boosted": false,
+              "burnStacks": 0
+            },
+            "lastEffectNote": "Played for 4 Motion."
+          },
+          "after": {
+            "cardInstanceId": "player:element-fire:7:folks",
+            "cardId": "folks",
+            "owner": "player",
+            "lane": 1,
+            "power": 2,
+            "basePower": 2,
+            "powerModifier": 0,
+            "moved": false,
+            "statuses": {
+              "frozen": false,
+              "silenced": false,
+              "protected": false,
+              "blocked": false,
+              "uncounterable": false,
+              "weakened": false,
+              "locked": false,
+              "boosted": false,
+              "burnStacks": 0
+            },
+            "lastEffectNote": "Played for 4 Motion."
+          }
+        },
+        "targets": [
+          {
+            "cardInstanceId": "cpu:starter-block:3:rastamon",
+            "cardId": "rastamon",
+            "owner": "cpu",
+            "before": {
+              "cardInstanceId": "cpu:starter-block:3:rastamon",
+              "cardId": "rastamon",
+              "owner": "cpu",
+              "lane": 0,
+              "power": 7,
+              "basePower": 2,
+              "powerModifier": 5,
+              "moved": false,
+              "statuses": {
+                "frozen": false,
+                "silenced": false,
+                "protected": true,
+                "blocked": false,
+                "uncounterable": false,
+                "weakened": false,
+                "locked": false,
+                "boosted": false,
+                "burnStacks": 0
+              },
+              "lastEffectNote": "Liquid Courage: +3 Hands."
+            },
+            "after": {
+              "cardInstanceId": "cpu:starter-block:3:rastamon",
+              "cardId": "rastamon",
+              "owner": "cpu",
+              "lane": 0,
+              "power": 7,
+              "basePower": 2,
+              "powerModifier": 5,
+              "moved": false,
+              "statuses": {
+                "frozen": false,
+                "silenced": false,
+                "protected": false,
+                "blocked": false,
+                "uncounterable": false,
+                "weakened": false,
+                "locked": false,
+                "boosted": false,
+                "burnStacks": 0
+              },
+              "lastEffectNote": "NAIL SALON blocked a targeted hostile ability."
+            }
+          },
+          {
+            "cardInstanceId": "cpu:starter-block:0:buspass",
+            "cardId": "buspass",
+            "owner": "cpu",
+            "before": {
+              "cardInstanceId": "cpu:starter-block:0:buspass",
+              "cardId": "buspass",
+              "owner": "cpu",
+              "lane": 0,
+              "power": 0,
+              "basePower": 0,
+              "powerModifier": 0,
+              "moved": false,
+              "statuses": {
+                "frozen": false,
+                "silenced": false,
+                "protected": false,
+                "blocked": false,
+                "uncounterable": false,
+                "weakened": false,
+                "locked": false,
+                "boosted": false,
+                "burnStacks": 0
+              },
+              "lastEffectNote": "Played for 0 Motion."
+            },
+            "after": {
+              "cardInstanceId": "cpu:starter-block:0:buspass",
+              "cardId": "buspass",
+              "owner": "cpu",
+              "lane": 0,
+              "power": 0,
+              "basePower": 0,
+              "powerModifier": 0,
+              "moved": false,
+              "statuses": {
+                "frozen": false,
+                "silenced": false,
+                "protected": false,
+                "blocked": false,
+                "uncounterable": false,
+                "weakened": false,
+                "locked": false,
+                "boosted": false,
+                "burnStacks": 3
+              },
+              "lastEffectNote": "Whole Block Hot: 3 Burn."
+            }
+          },
+          {
+            "cardInstanceId": "cpu:starter-block:5:cognac",
+            "cardId": "cognac",
+            "owner": "cpu",
+            "before": {
+              "cardInstanceId": "cpu:starter-block:5:cognac",
+              "cardId": "cognac",
+              "owner": "cpu",
+              "lane": 0,
+              "power": 0,
+              "basePower": 0,
+              "powerModifier": 0,
+              "moved": false,
+              "statuses": {
+                "frozen": false,
+                "silenced": false,
+                "protected": true,
+                "blocked": false,
+                "uncounterable": false,
+                "weakened": false,
+                "locked": false,
+                "boosted": false,
+                "burnStacks": 0
+              },
+              "lastEffectNote": "NAIL SALON: this arrival blocks its next targeted enemy ability."
+            },
+            "after": {
+              "cardInstanceId": "cpu:starter-block:5:cognac",
+              "cardId": "cognac",
+              "owner": "cpu",
+              "lane": 0,
+              "power": 0,
+              "basePower": 0,
+              "powerModifier": 0,
+              "moved": false,
+              "statuses": {
+                "frozen": false,
+                "silenced": false,
+                "protected": false,
+                "blocked": false,
+                "uncounterable": false,
+                "weakened": false,
+                "locked": false,
+                "boosted": false,
+                "burnStacks": 0
+              },
+              "lastEffectNote": "NAIL SALON blocked a targeted hostile ability."
+            }
+          },
+          {
+            "cardInstanceId": "cpu:starter-block:2:roaster",
+            "cardId": "roaster",
+            "owner": "cpu",
+            "before": {
+              "cardInstanceId": "cpu:starter-block:2:roaster",
+              "cardId": "roaster",
+              "owner": "cpu",
+              "lane": 1,
+              "power": 6,
+              "basePower": 3,
+              "powerModifier": 3,
+              "moved": false,
+              "statuses": {
+                "frozen": false,
+                "silenced": false,
+                "protected": false,
+                "blocked": false,
+                "uncounterable": false,
+                "weakened": false,
+                "locked": false,
+                "boosted": false,
+                "burnStacks": 0
+              },
+              "lastEffectNote": "Full Plate: cleansed, +3 Hands."
+            },
+            "after": {
+              "cardInstanceId": "cpu:starter-block:2:roaster",
+              "cardId": "roaster",
+              "owner": "cpu",
+              "lane": 1,
+              "power": 6,
+              "basePower": 3,
+              "powerModifier": 3,
+              "moved": false,
+              "statuses": {
+                "frozen": false,
+                "silenced": false,
+                "protected": false,
+                "blocked": false,
+                "uncounterable": false,
+                "weakened": false,
+                "locked": false,
+                "boosted": false,
+                "burnStacks": 3
+              },
+              "lastEffectNote": "Whole Block Hot: 3 Burn."
+            }
+          },
+          {
+            "cardInstanceId": "cpu:starter-block:8:soulfood",
+            "cardId": "soulfood",
+            "owner": "cpu",
+            "before": {
+              "cardInstanceId": "cpu:starter-block:8:soulfood",
+              "cardId": "soulfood",
+              "owner": "cpu",
+              "lane": 1,
+              "power": 0,
+              "basePower": 0,
+              "powerModifier": 0,
+              "moved": false,
+              "statuses": {
+                "frozen": false,
+                "silenced": false,
+                "protected": false,
+                "blocked": false,
+                "uncounterable": false,
+                "weakened": false,
+                "locked": false,
+                "boosted": false,
+                "burnStacks": 0
+              },
+              "lastEffectNote": "Played for 1 Motion."
+            },
+            "after": {
+              "cardInstanceId": "cpu:starter-block:8:soulfood",
+              "cardId": "soulfood",
+              "owner": "cpu",
+              "lane": 1,
+              "power": 0,
+              "basePower": 0,
+              "powerModifier": 0,
+              "moved": false,
+              "statuses": {
+                "frozen": false,
+                "silenced": false,
+                "protected": false,
+                "blocked": false,
+                "uncounterable": false,
+                "weakened": false,
+                "locked": false,
+                "boosted": false,
+                "burnStacks": 4
+              },
+              "lastEffectNote": "Whole Block Hot: 3 Burn. (+1 elemental bonus)"
+            }
+          },
+          {
+            "cardInstanceId": "cpu:starter-block:9:snow",
+            "cardId": "snow",
+            "owner": "cpu",
+            "before": {
+              "cardInstanceId": "cpu:starter-block:9:snow",
+              "cardId": "snow",
+              "owner": "cpu",
+              "lane": 2,
+              "power": 3,
+              "basePower": 3,
+              "powerModifier": 0,
+              "moved": false,
+              "statuses": {
+                "frozen": false,
+                "silenced": false,
+                "protected": false,
+                "blocked": false,
+                "uncounterable": false,
+                "weakened": false,
+                "locked": false,
+                "boosted": false,
+                "burnStacks": 0
+              },
+              "lastEffectNote": "Played for 3 Motion."
+            },
+            "after": {
+              "cardInstanceId": "cpu:starter-block:9:snow",
+              "cardId": "snow",
+              "owner": "cpu",
+              "lane": 2,
+              "power": 3,
+              "basePower": 3,
+              "powerModifier": 0,
+              "moved": false,
+              "statuses": {
+                "frozen": false,
+                "silenced": false,
+                "protected": false,
+                "blocked": false,
+                "uncounterable": false,
+                "weakened": false,
+                "locked": false,
+                "boosted": false,
+                "burnStacks": 3
+              },
+              "lastEffectNote": "Whole Block Hot: 3 Burn."
+            }
+          },
+          {
+            "cardInstanceId": "player:element-fire:4:youngbull",
+            "cardId": "youngbull",
+            "owner": "player",
+            "before": {
+              "cardInstanceId": "player:element-fire:4:youngbull",
+              "cardId": "youngbull",
+              "owner": "player",
+              "lane": 1,
+              "power": 5,
+              "basePower": 4,
+              "powerModifier": 1,
+              "moved": false,
+              "statuses": {
+                "frozen": false,
+                "silenced": false,
+                "protected": false,
+                "blocked": false,
+                "uncounterable": false,
+                "weakened": false,
+                "locked": false,
+                "boosted": false,
+                "burnStacks": 0
+              },
+              "lastEffectNote": "GUAP: Fire bond +1 Hands."
+            },
+            "after": {
+              "cardInstanceId": "player:element-fire:4:youngbull",
+              "cardId": "youngbull",
+              "owner": "player",
+              "lane": 1,
+              "power": 6,
+              "basePower": 4,
+              "powerModifier": 2,
+              "moved": false,
+              "statuses": {
+                "frozen": false,
+                "silenced": false,
+                "protected": false,
+                "blocked": false,
+                "uncounterable": false,
+                "weakened": false,
+                "locked": false,
+                "boosted": false,
+                "burnStacks": 0
+              },
+              "lastEffectNote": "Whole Block Hot: Fire ally +1 Hand."
+            }
+          },
+          {
+            "cardInstanceId": "player:element-fire:8:baby",
+            "cardId": "baby",
+            "owner": "player",
+            "before": {
+              "cardInstanceId": "player:element-fire:8:baby",
+              "cardId": "baby",
+              "owner": "player",
+              "lane": 1,
+              "power": 11,
+              "basePower": 5,
+              "powerModifier": 6,
+              "moved": false,
+              "statuses": {
+                "frozen": false,
+                "silenced": false,
+                "protected": false,
+                "blocked": false,
+                "uncounterable": false,
+                "weakened": false,
+                "locked": false,
+                "boosted": false,
+                "burnStacks": 0
+              },
+              "lastEffectNote": "GUAP: Fire bond +1 Hands."
+            },
+            "after": {
+              "cardInstanceId": "player:element-fire:8:baby",
+              "cardId": "baby",
+              "owner": "player",
+              "lane": 1,
+              "power": 12,
+              "basePower": 5,
+              "powerModifier": 7,
+              "moved": false,
+              "statuses": {
+                "frozen": false,
+                "silenced": false,
+                "protected": false,
+                "blocked": false,
+                "uncounterable": false,
+                "weakened": false,
+                "locked": false,
+                "boosted": false,
+                "burnStacks": 0
+              },
+              "lastEffectNote": "Whole Block Hot: Fire ally +1 Hand."
+            }
+          },
+          {
+            "cardInstanceId": "player:element-fire:0:kyle",
+            "cardId": "kyle",
+            "owner": "player",
+            "before": {
+              "cardInstanceId": "player:element-fire:0:kyle",
+              "cardId": "kyle",
+              "owner": "player",
+              "lane": 2,
+              "power": 0,
+              "basePower": 3,
+              "powerModifier": 5,
+              "moved": false,
+              "statuses": {
+                "frozen": true,
+                "silenced": false,
+                "protected": false,
+                "blocked": false,
+                "uncounterable": false,
+                "weakened": false,
+                "locked": false,
+                "boosted": false,
+                "burnStacks": 0
+              },
+              "lastEffectNote": "GUAP: Fire bond +1 Hands."
+            },
+            "after": {
+              "cardInstanceId": "player:element-fire:0:kyle",
+              "cardId": "kyle",
+              "owner": "player",
+              "lane": 2,
+              "power": 0,
+              "basePower": 3,
+              "powerModifier": 6,
+              "moved": false,
+              "statuses": {
+                "frozen": true,
+                "silenced": false,
+                "protected": false,
+                "blocked": false,
+                "uncounterable": false,
+                "weakened": false,
+                "locked": false,
+                "boosted": false,
+                "burnStacks": 0
+              },
+              "lastEffectNote": "Whole Block Hot: Fire ally +1 Hand."
+            }
+          }
+        ]
+      }
+    },
+    "oink": {
+      "caseIndex": 0,
+      "round": 6,
+      "proof": {
+        "owner": "cpu",
+        "cardId": "oink",
+        "type": "ability",
+        "kind": "ability",
+        "note": "Civic Pressure weakened 3 enemies.",
+        "source": {
+          "cardInstanceId": "cpu:starter-block:7:oink",
+          "cardId": "oink",
+          "owner": "cpu",
+          "before": {
+            "cardInstanceId": "cpu:starter-block:7:oink",
+            "cardId": "oink",
+            "owner": "cpu",
+            "lane": 1,
+            "power": 4,
+            "basePower": 4,
+            "powerModifier": 0,
+            "moved": false,
+            "statuses": {
+              "frozen": false,
+              "silenced": false,
+              "protected": false,
+              "blocked": false,
+              "uncounterable": false,
+              "weakened": false,
+              "locked": false,
+              "boosted": false,
+              "burnStacks": 0
+            },
+            "lastEffectNote": "Played for 4 Motion."
+          },
+          "after": {
+            "cardInstanceId": "cpu:starter-block:7:oink",
+            "cardId": "oink",
+            "owner": "cpu",
+            "lane": 1,
+            "power": 7,
+            "basePower": 4,
+            "powerModifier": 3,
+            "moved": false,
+            "statuses": {
+              "frozen": false,
+              "silenced": false,
+              "protected": false,
+              "blocked": false,
+              "uncounterable": false,
+              "weakened": false,
+              "locked": false,
+              "boosted": false,
+              "burnStacks": 0
+            },
+            "lastEffectNote": "Civic Pressure: +3 Hands."
+          }
+        },
+        "targets": [
+          {
+            "cardInstanceId": "player:element-fire:4:youngbull",
+            "cardId": "youngbull",
+            "owner": "player",
+            "before": {
+              "cardInstanceId": "player:element-fire:4:youngbull",
+              "cardId": "youngbull",
+              "owner": "player",
+              "lane": 1,
+              "power": 7,
+              "basePower": 4,
+              "powerModifier": 3,
+              "moved": false,
+              "statuses": {
+                "frozen": false,
+                "silenced": false,
+                "protected": false,
+                "blocked": false,
+                "uncounterable": false,
+                "weakened": false,
+                "locked": false,
+                "boosted": false,
+                "burnStacks": 0
+              },
+              "lastEffectNote": "GUAP: Fire bond +1 Hands."
+            },
+            "after": {
+              "cardInstanceId": "player:element-fire:4:youngbull",
+              "cardId": "youngbull",
+              "owner": "player",
+              "lane": 1,
+              "power": 7,
+              "basePower": 4,
+              "powerModifier": 3,
+              "moved": false,
+              "statuses": {
+                "frozen": false,
+                "silenced": false,
+                "protected": false,
+                "blocked": false,
+                "uncounterable": false,
+                "weakened": true,
+                "locked": false,
+                "boosted": false,
+                "burnStacks": 0
+              },
+              "lastEffectNote": "Civic Pressure: Weakened."
+            }
+          },
+          {
+            "cardInstanceId": "player:element-fire:8:baby",
+            "cardId": "baby",
+            "owner": "player",
+            "before": {
+              "cardInstanceId": "player:element-fire:8:baby",
+              "cardId": "baby",
+              "owner": "player",
+              "lane": 1,
+              "power": 13,
+              "basePower": 5,
+              "powerModifier": 8,
+              "moved": false,
+              "statuses": {
+                "frozen": false,
+                "silenced": false,
+                "protected": false,
+                "blocked": false,
+                "uncounterable": false,
+                "weakened": false,
+                "locked": false,
+                "boosted": false,
+                "burnStacks": 0
+              },
+              "lastEffectNote": "GUAP: Fire bond +1 Hands."
+            },
+            "after": {
+              "cardInstanceId": "player:element-fire:8:baby",
+              "cardId": "baby",
+              "owner": "player",
+              "lane": 1,
+              "power": 13,
+              "basePower": 5,
+              "powerModifier": 8,
+              "moved": false,
+              "statuses": {
+                "frozen": false,
+                "silenced": false,
+                "protected": false,
+                "blocked": false,
+                "uncounterable": false,
+                "weakened": true,
+                "locked": false,
+                "boosted": false,
+                "burnStacks": 0
+              },
+              "lastEffectNote": "Civic Pressure: Weakened."
+            }
+          },
+          {
+            "cardInstanceId": "player:element-fire:7:folks",
+            "cardId": "folks",
+            "owner": "player",
+            "before": {
+              "cardInstanceId": "player:element-fire:7:folks",
+              "cardId": "folks",
+              "owner": "player",
+              "lane": 1,
+              "power": 3,
+              "basePower": 2,
+              "powerModifier": 1,
+              "moved": false,
+              "statuses": {
+                "frozen": false,
+                "silenced": false,
+                "protected": false,
+                "blocked": false,
+                "uncounterable": false,
+                "weakened": false,
+                "locked": false,
+                "boosted": false,
+                "burnStacks": 0
+              },
+              "lastEffectNote": "GUAP: Fire bond +1 Hands."
+            },
+            "after": {
+              "cardInstanceId": "player:element-fire:7:folks",
+              "cardId": "folks",
+              "owner": "player",
+              "lane": 1,
+              "power": 3,
+              "basePower": 2,
+              "powerModifier": 1,
+              "moved": false,
+              "statuses": {
+                "frozen": false,
+                "silenced": false,
+                "protected": false,
+                "blocked": false,
+                "uncounterable": false,
+                "weakened": true,
+                "locked": false,
+                "boosted": false,
+                "burnStacks": 0
+              },
+              "lastEffectNote": "Civic Pressure: Weakened."
+            }
+          }
+        ]
+      }
+    },
+    "wifey": {
+      "caseIndex": 0,
+      "round": 6,
+      "proof": {
+        "owner": "cpu",
+        "cardId": "wifey",
+        "type": "ability",
+        "kind": "ability",
+        "note": "Side Eye will block one targeted effect this round.",
+        "source": {
+          "cardInstanceId": "cpu:starter-block:1:wifey",
+          "cardId": "wifey",
+          "owner": "cpu",
+          "before": {
+            "cardInstanceId": "cpu:starter-block:1:wifey",
+            "cardId": "wifey",
+            "owner": "cpu",
+            "lane": 0,
+            "power": 3,
+            "basePower": 3,
+            "powerModifier": 0,
+            "moved": false,
+            "statuses": {
+              "frozen": false,
+              "silenced": false,
+              "protected": true,
+              "blocked": false,
+              "uncounterable": false,
+              "weakened": false,
+              "locked": false,
+              "boosted": false,
+              "burnStacks": 0
+            },
+            "lastEffectNote": "NAIL SALON: this arrival blocks its next targeted enemy ability."
+          },
+          "after": {
+            "cardInstanceId": "cpu:starter-block:1:wifey",
+            "cardId": "wifey",
+            "owner": "cpu",
+            "lane": 0,
+            "power": 3,
+            "basePower": 3,
+            "powerModifier": 0,
+            "moved": false,
+            "statuses": {
+              "frozen": false,
+              "silenced": false,
+              "protected": true,
+              "blocked": false,
+              "uncounterable": false,
+              "weakened": false,
+              "locked": false,
+              "boosted": false,
+              "burnStacks": 0
+            },
+            "lastEffectNote": "Side Eye is protecting this lane."
+          }
+        },
+        "targets": []
+      }
+    },
+    "bbldemon": {
+      "caseIndex": 0,
+      "round": 6,
+      "proof": {
+        "owner": "player",
+        "cardId": "bbldemon",
+        "type": "ability",
+        "kind": "fire",
+        "note": "Problem Energy: resolved.",
+        "source": {
+          "cardInstanceId": "player:element-fire:3:bbldemon",
+          "cardId": "bbldemon",
+          "owner": "player",
+          "before": {
+            "cardInstanceId": "player:element-fire:3:bbldemon",
+            "cardId": "bbldemon",
+            "owner": "player",
+            "lane": 1,
+            "power": 4,
+            "basePower": 4,
+            "powerModifier": 0,
+            "moved": false,
+            "statuses": {
+              "frozen": false,
+              "silenced": false,
+              "protected": false,
+              "blocked": false,
+              "uncounterable": false,
+              "weakened": false,
+              "locked": false,
+              "boosted": false,
+              "burnStacks": 0
+            },
+            "lastEffectNote": "Played for 4 Motion."
+          },
+          "after": {
+            "cardInstanceId": "player:element-fire:3:bbldemon",
+            "cardId": "bbldemon",
+            "owner": "player",
+            "lane": 1,
+            "power": 4,
+            "basePower": 4,
+            "powerModifier": 0,
+            "moved": false,
+            "statuses": {
+              "frozen": false,
+              "silenced": false,
+              "protected": false,
+              "blocked": false,
+              "uncounterable": false,
+              "weakened": false,
+              "locked": false,
+              "boosted": false,
+              "burnStacks": 0
+            },
+            "lastEffectNote": "Problem Energy: resolved."
+          }
+        },
+        "targets": []
+      }
+    },
+    "cornercoach": {
+      "caseIndex": 0,
+      "round": 6,
+      "proof": {
+        "owner": "player",
+        "cardId": "cornercoach",
+        "type": "ability",
+        "kind": "fire",
+        "note": "Run It Back: no eligible setup.",
+        "source": {
+          "cardInstanceId": "player:element-fire:1:cornercoach",
+          "cardId": "cornercoach",
+          "owner": "player",
+          "before": {
+            "cardInstanceId": "player:element-fire:1:cornercoach",
+            "cardId": "cornercoach",
+            "owner": "player",
+            "lane": 0,
+            "power": 1,
+            "basePower": 1,
+            "powerModifier": 0,
+            "moved": false,
+            "statuses": {
+              "frozen": false,
+              "silenced": false,
+              "protected": true,
+              "blocked": false,
+              "uncounterable": false,
+              "weakened": false,
+              "locked": false,
+              "boosted": false,
+              "burnStacks": 0
+            },
+            "lastEffectNote": "NAIL SALON: this arrival blocks its next targeted enemy ability."
+          },
+          "after": {
+            "cardInstanceId": "player:element-fire:1:cornercoach",
+            "cardId": "cornercoach",
+            "owner": "player",
+            "lane": 0,
+            "power": 1,
+            "basePower": 1,
+            "powerModifier": 0,
+            "moved": false,
+            "statuses": {
+              "frozen": false,
+              "silenced": false,
+              "protected": true,
+              "blocked": false,
+              "uncounterable": false,
+              "weakened": false,
+              "locked": false,
+              "boosted": false,
+              "burnStacks": 0
+            },
+            "lastEffectNote": "Run It Back: no eligible setup."
+          }
+        },
+        "targets": []
+      }
+    },
+    "hooper": {
+      "caseIndex": 1,
+      "round": 4,
+      "proof": {
+        "owner": "cpu",
+        "cardId": "hooper",
+        "type": "ability",
+        "kind": "fire",
+        "note": "Ankle Breaker: no eligible setup.",
+        "source": {
+          "cardInstanceId": "cpu:element-fire:5:hooper",
+          "cardId": "hooper",
+          "owner": "cpu",
+          "before": {
+            "cardInstanceId": "cpu:element-fire:5:hooper",
+            "cardId": "hooper",
+            "owner": "cpu",
+            "lane": 1,
+            "power": 4,
+            "basePower": 4,
+            "powerModifier": 0,
+            "moved": false,
+            "statuses": {
+              "frozen": false,
+              "silenced": false,
+              "protected": false,
+              "blocked": false,
+              "uncounterable": false,
+              "weakened": false,
+              "locked": false,
+              "boosted": false,
+              "burnStacks": 0
+            },
+            "lastEffectNote": "Played for 4 Motion."
+          },
+          "after": {
+            "cardInstanceId": "cpu:element-fire:5:hooper",
+            "cardId": "hooper",
+            "owner": "cpu",
+            "lane": 1,
+            "power": 4,
+            "basePower": 4,
+            "powerModifier": 0,
+            "moved": false,
+            "statuses": {
+              "frozen": false,
+              "silenced": false,
+              "protected": false,
+              "blocked": false,
+              "uncounterable": false,
+              "weakened": false,
+              "locked": false,
+              "boosted": false,
+              "burnStacks": 0
+            },
+            "lastEffectNote": "Ankle Breaker: no eligible setup."
+          }
+        },
+        "targets": []
+      }
+    },
+    "krump": {
+      "caseIndex": 1,
+      "round": 5,
+      "proof": {
+        "owner": "cpu",
+        "cardId": "krump",
+        "type": "ability",
+        "kind": "fire",
+        "note": "Chest Pop resolved. Bus Pass was destroyed.",
+        "source": {
+          "cardInstanceId": "cpu:element-fire:9:krump",
+          "cardId": "krump",
+          "owner": "cpu",
+          "before": {
+            "cardInstanceId": "cpu:element-fire:9:krump",
+            "cardId": "krump",
+            "owner": "cpu",
+            "lane": 2,
+            "power": 1,
+            "basePower": 1,
+            "powerModifier": 0,
+            "moved": false,
+            "statuses": {
+              "frozen": false,
+              "silenced": false,
+              "protected": false,
+              "blocked": false,
+              "uncounterable": false,
+              "weakened": false,
+              "locked": false,
+              "boosted": false,
+              "burnStacks": 0
+            },
+            "lastEffectNote": "Played for 3 Motion."
+          },
+          "after": {
+            "cardInstanceId": "cpu:element-fire:9:krump",
+            "cardId": "krump",
+            "owner": "cpu",
+            "lane": 2,
+            "power": 3,
+            "basePower": 1,
+            "powerModifier": 2,
+            "moved": false,
+            "statuses": {
+              "frozen": false,
+              "silenced": false,
+              "protected": false,
+              "blocked": false,
+              "uncounterable": false,
+              "weakened": false,
+              "locked": false,
+              "boosted": false,
+              "burnStacks": 0
+            },
+            "lastEffectNote": "Chest Pop: +2 Hands."
+          }
+        },
+        "targets": [
+          {
+            "cardInstanceId": "player:starter-block:0:buspass",
+            "cardId": "buspass",
+            "owner": "player",
+            "before": {
+              "cardInstanceId": "player:starter-block:0:buspass",
+              "cardId": "buspass",
+              "owner": "player",
+              "lane": 2,
+              "power": 0,
+              "basePower": 0,
+              "powerModifier": -1,
+              "moved": false,
+              "statuses": {
+                "frozen": false,
+                "silenced": false,
+                "protected": false,
+                "blocked": false,
+                "uncounterable": false,
+                "weakened": false,
+                "locked": false,
+                "boosted": false,
+                "burnStacks": 0
+              },
+              "lastEffectNote": "BURN: −1 Hands at round end."
+            },
+            "after": null
+          }
+        ]
+      }
+    },
+    "og": {
+      "caseIndex": 4,
+      "round": 4,
+      "proof": {
+        "owner": "player",
+        "cardId": "og",
+        "type": "ability",
+        "kind": "fire",
+        "note": "Back In My Day punished the board advantage. Bus Pass was destroyed.",
+        "source": {
+          "cardInstanceId": "player:element-fire:2:og",
+          "cardId": "og",
+          "owner": "player",
+          "before": {
+            "cardInstanceId": "player:element-fire:2:og",
+            "cardId": "og",
+            "owner": "player",
+            "lane": 0,
+            "power": 4,
+            "basePower": 4,
+            "powerModifier": 0,
+            "moved": false,
+            "statuses": {
+              "frozen": false,
+              "silenced": false,
+              "protected": true,
+              "blocked": false,
+              "uncounterable": false,
+              "weakened": false,
+              "locked": false,
+              "boosted": false,
+              "burnStacks": 0
+            },
+            "lastEffectNote": "NAIL SALON: this arrival blocks its next targeted enemy ability."
+          },
+          "after": {
+            "cardInstanceId": "player:element-fire:2:og",
+            "cardId": "og",
+            "owner": "player",
+            "lane": 0,
+            "power": 7,
+            "basePower": 4,
+            "powerModifier": 3,
+            "moved": false,
+            "statuses": {
+              "frozen": false,
+              "silenced": false,
+              "protected": true,
+              "blocked": false,
+              "uncounterable": false,
+              "weakened": false,
+              "locked": false,
+              "boosted": false,
+              "burnStacks": 0
+            },
+            "lastEffectNote": "Back In My Day: +3 Hands."
+          }
+        },
+        "targets": [
+          {
+            "cardInstanceId": "cpu:starter-block:0:buspass",
+            "cardId": "buspass",
+            "owner": "cpu",
+            "before": {
+              "cardInstanceId": "cpu:starter-block:0:buspass",
+              "cardId": "buspass",
+              "owner": "cpu",
+              "lane": 0,
+              "power": 0,
+              "basePower": 0,
+              "powerModifier": 0,
+              "moved": false,
+              "statuses": {
+                "frozen": false,
+                "silenced": false,
+                "protected": false,
+                "blocked": false,
+                "uncounterable": false,
+                "weakened": false,
+                "locked": false,
+                "boosted": false,
+                "burnStacks": 0
+              },
+              "lastEffectNote": "Played for 0 Motion."
+            },
+            "after": null
+          }
+        ]
+      }
+    },
+    "initiation": {
+      "caseIndex": 8,
+      "round": 1,
+      "proof": {
+        "owner": "cpu",
+        "cardId": "initiation",
+        "type": "ability",
+        "kind": "ability",
+        "note": "Marked Territory: this district is marked. Your next character here gets put on by your set.",
+        "source": {
+          "cardInstanceId": "cpu:focused-red-set:4:initiation",
+          "cardId": "initiation",
+          "owner": "cpu",
+          "before": {
+            "cardInstanceId": "cpu:focused-red-set:4:initiation",
+            "cardId": "initiation",
+            "owner": "cpu",
+            "lane": 1,
+            "power": 0,
+            "basePower": 0,
+            "powerModifier": 0,
+            "moved": false,
+            "statuses": {
+              "frozen": false,
+              "silenced": false,
+              "protected": false,
+              "blocked": false,
+              "uncounterable": false,
+              "weakened": false,
+              "locked": false,
+              "boosted": false,
+              "burnStacks": 0
+            },
+            "lastEffectNote": "Played for 1 Motion."
+          },
+          "after": {
+            "cardInstanceId": "cpu:focused-red-set:4:initiation",
+            "cardId": "initiation",
+            "owner": "cpu",
+            "lane": 1,
+            "power": 0,
+            "basePower": 0,
+            "powerModifier": 0,
+            "moved": false,
+            "statuses": {
+              "frozen": false,
+              "silenced": false,
+              "protected": false,
+              "blocked": false,
+              "uncounterable": false,
+              "weakened": false,
+              "locked": false,
+              "boosted": false,
+              "burnStacks": 0
+            },
+            "lastEffectNote": "Played for 1 Motion."
+          }
+        },
+        "targets": []
+      }
+    },
+    "bustdown": {
+      "caseIndex": 8,
+      "round": 1,
+      "proof": {
+        "owner": "cpu",
+        "cardId": "bustdown",
+        "type": "ability",
+        "kind": "ability",
+        "note": "Wrist Check: no eligible setup.",
+        "source": {
+          "cardInstanceId": "cpu:focused-red-set:3:bustdown",
+          "cardId": "bustdown",
+          "owner": "cpu",
+          "before": {
+            "cardInstanceId": "cpu:focused-red-set:3:bustdown",
+            "cardId": "bustdown",
+            "owner": "cpu",
+            "lane": 0,
+            "power": 0,
+            "basePower": 0,
+            "powerModifier": 0,
+            "moved": false,
+            "statuses": {
+              "frozen": false,
+              "silenced": false,
+              "protected": true,
+              "blocked": false,
+              "uncounterable": false,
+              "weakened": false,
+              "locked": false,
+              "boosted": false,
+              "burnStacks": 0
+            },
+            "lastEffectNote": "NAIL SALON: this arrival blocks its next targeted enemy ability."
+          },
+          "after": {
+            "cardInstanceId": "cpu:focused-red-set:3:bustdown",
+            "cardId": "bustdown",
+            "owner": "cpu",
+            "lane": 0,
+            "power": 0,
+            "basePower": 0,
+            "powerModifier": 0,
+            "moved": false,
+            "statuses": {
+              "frozen": false,
+              "silenced": false,
+              "protected": true,
+              "blocked": false,
+              "uncounterable": false,
+              "weakened": false,
+              "locked": false,
+              "boosted": false,
+              "burnStacks": 0
+            },
+            "lastEffectNote": "Wrist Check: no eligible setup."
+          }
+        },
+        "targets": []
+      }
+    },
+    "block-spinner": {
+      "caseIndex": 8,
+      "round": 2,
+      "proof": {
+        "owner": "cpu",
+        "cardId": "block-spinner",
+        "type": "ability",
+        "kind": "fire",
+        "note": "Spin the Block: Young Bull took 1 Burn. The block keeps spinning for the next enemy played here.",
+        "source": {
+          "cardInstanceId": "cpu:focused-red-set:6:block-spinner",
+          "cardId": "block-spinner",
+          "owner": "cpu",
+          "before": {
+            "cardInstanceId": "cpu:focused-red-set:6:block-spinner",
+            "cardId": "block-spinner",
+            "owner": "cpu",
+            "lane": 1,
+            "power": 8,
+            "basePower": 3,
+            "powerModifier": 5,
+            "moved": false,
+            "statuses": {
+              "frozen": false,
+              "silenced": false,
+              "protected": false,
+              "blocked": false,
+              "uncounterable": false,
+              "weakened": false,
+              "locked": false,
+              "boosted": false,
+              "burnStacks": 0
+            },
+            "lastEffectNote": "Marked Territory: claimed the block; +2 Hands."
+          },
+          "after": {
+            "cardInstanceId": "cpu:focused-red-set:6:block-spinner",
+            "cardId": "block-spinner",
+            "owner": "cpu",
+            "lane": 1,
+            "power": 8,
+            "basePower": 3,
+            "powerModifier": 5,
+            "moved": false,
+            "statuses": {
+              "frozen": false,
+              "silenced": false,
+              "protected": false,
+              "blocked": false,
+              "uncounterable": false,
+              "weakened": false,
+              "locked": false,
+              "boosted": false,
+              "burnStacks": 0
+            },
+            "lastEffectNote": "Marked Territory: claimed the block; +2 Hands."
+          }
+        },
+        "targets": [
+          {
+            "cardInstanceId": "player:element-fire:4:youngbull",
+            "cardId": "youngbull",
+            "owner": "player",
+            "before": {
+              "cardInstanceId": "player:element-fire:4:youngbull",
+              "cardId": "youngbull",
+              "owner": "player",
+              "lane": 1,
+              "power": 5,
+              "basePower": 4,
+              "powerModifier": 1,
+              "moved": false,
+              "statuses": {
+                "frozen": false,
+                "silenced": false,
+                "protected": false,
+                "blocked": false,
+                "uncounterable": false,
+                "weakened": false,
+                "locked": false,
+                "boosted": false,
+                "burnStacks": 0
+              },
+              "lastEffectNote": "Step Up: +1 Hands."
+            },
+            "after": {
+              "cardInstanceId": "player:element-fire:4:youngbull",
+              "cardId": "youngbull",
+              "owner": "player",
+              "lane": 1,
+              "power": 5,
+              "basePower": 4,
+              "powerModifier": 1,
+              "moved": false,
+              "statuses": {
+                "frozen": false,
+                "silenced": false,
+                "protected": false,
+                "blocked": false,
+                "uncounterable": false,
+                "weakened": false,
+                "locked": false,
+                "boosted": false,
+                "burnStacks": 1
+              },
+              "lastEffectNote": "Spin the Block: 1 Burn."
+            }
+          }
+        ]
+      }
+    },
+    "redside1": {
+      "caseIndex": 8,
+      "round": 2,
+      "proof": {
+        "owner": "cpu",
+        "cardId": "redside1",
+        "type": "ability",
+        "kind": "ability",
+        "note": "Take the Shortcut moved Red Plaid Petey, granted +1 Hand, and discounted the next Red Side card.",
+        "source": {
+          "cardInstanceId": "cpu:focused-red-set:1:redside1",
+          "cardId": "redside1",
+          "owner": "cpu",
+          "before": {
+            "cardInstanceId": "cpu:focused-red-set:1:redside1",
+            "cardId": "redside1",
+            "owner": "cpu",
+            "lane": 0,
+            "power": 2,
+            "basePower": 2,
+            "powerModifier": 0,
+            "moved": false,
+            "statuses": {
+              "frozen": false,
+              "silenced": false,
+              "protected": true,
+              "blocked": false,
+              "uncounterable": false,
+              "weakened": false,
+              "locked": false,
+              "boosted": false,
+              "burnStacks": 0
+            },
+            "lastEffectNote": "NAIL SALON: this arrival blocks its next targeted enemy ability."
+          },
+          "after": {
+            "cardInstanceId": "cpu:focused-red-set:1:redside1",
+            "cardId": "redside1",
+            "owner": "cpu",
+            "lane": 2,
+            "power": 3,
+            "basePower": 2,
+            "powerModifier": 1,
+            "moved": true,
+            "statuses": {
+              "frozen": false,
+              "silenced": false,
+              "protected": true,
+              "blocked": false,
+              "uncounterable": false,
+              "weakened": false,
+              "locked": false,
+              "boosted": false,
+              "burnStacks": 0
+            },
+            "lastEffectNote": "Take the Shortcut: successful move, +1 Hand."
+          }
+        },
+        "targets": []
+      }
+    },
+    "redside5": {
+      "caseIndex": 8,
+      "round": 3,
+      "proof": {
+        "owner": "cpu",
+        "cardId": "redside5",
+        "type": "ability",
+        "kind": "ability",
+        "note": "Red Plaid Petey gained +3 Hands.",
+        "source": {
+          "cardInstanceId": "cpu:focused-red-set:5:redside5",
+          "cardId": "redside5",
+          "owner": "cpu",
+          "before": {
+            "cardInstanceId": "cpu:focused-red-set:5:redside5",
+            "cardId": "redside5",
+            "owner": "cpu",
+            "lane": 1,
+            "power": 2,
+            "basePower": 2,
+            "powerModifier": 0,
+            "moved": false,
+            "statuses": {
+              "frozen": false,
+              "silenced": false,
+              "protected": false,
+              "blocked": false,
+              "uncounterable": false,
+              "weakened": false,
+              "locked": false,
+              "boosted": false,
+              "burnStacks": 0
+            },
+            "lastEffectNote": "Played for 1 Motion."
+          },
+          "after": {
+            "cardInstanceId": "cpu:focused-red-set:5:redside5",
+            "cardId": "redside5",
+            "owner": "cpu",
+            "lane": 1,
+            "power": 2,
+            "basePower": 2,
+            "powerModifier": 0,
+            "moved": false,
+            "statuses": {
+              "frozen": false,
+              "silenced": false,
+              "protected": false,
+              "blocked": false,
+              "uncounterable": false,
+              "weakened": false,
+              "locked": false,
+              "boosted": false,
+              "burnStacks": 0
+            },
+            "lastEffectNote": "Played for 1 Motion."
+          }
+        },
+        "targets": [
+          {
+            "cardInstanceId": "cpu:focused-red-set:1:redside1",
+            "cardId": "redside1",
+            "owner": "cpu",
+            "before": {
+              "cardInstanceId": "cpu:focused-red-set:1:redside1",
+              "cardId": "redside1",
+              "owner": "cpu",
+              "lane": 2,
+              "power": 3,
+              "basePower": 2,
+              "powerModifier": 1,
+              "moved": true,
+              "statuses": {
+                "frozen": false,
+                "silenced": false,
+                "protected": true,
+                "blocked": false,
+                "uncounterable": false,
+                "weakened": false,
+                "locked": false,
+                "boosted": false,
+                "burnStacks": 0
+              },
+              "lastEffectNote": "Take the Shortcut: successful move, +1 Hand."
+            },
+            "after": {
+              "cardInstanceId": "cpu:focused-red-set:1:redside1",
+              "cardId": "redside1",
+              "owner": "cpu",
+              "lane": 2,
+              "power": 6,
+              "basePower": 2,
+              "powerModifier": 4,
+              "moved": true,
+              "statuses": {
+                "frozen": false,
+                "silenced": false,
+                "protected": true,
+                "blocked": false,
+                "uncounterable": false,
+                "weakened": false,
+                "locked": false,
+                "boosted": false,
+                "burnStacks": 0
+              },
+              "lastEffectNote": "Raise the Colors: +3 Hands."
+            }
+          }
+        ]
+      }
+    },
+    "cane-corso-red": {
+      "caseIndex": 8,
+      "round": 3,
+      "proof": {
+        "owner": "cpu",
+        "cardId": "cane-corso-red",
+        "type": "ability",
+        "kind": "fire",
+        "note": "Red-Line Bodyguard: Cane Corso (Red) waits for a support opportunity in its matching OG’s district.",
+        "source": {
+          "cardInstanceId": "cpu:focused-red-set:2:cane-corso-red",
+          "cardId": "cane-corso-red",
+          "owner": "cpu",
+          "before": {
+            "cardInstanceId": "cpu:focused-red-set:2:cane-corso-red",
+            "cardId": "cane-corso-red",
+            "owner": "cpu",
+            "lane": 1,
+            "power": 3,
+            "basePower": 3,
+            "powerModifier": 0,
+            "moved": false,
+            "statuses": {
+              "frozen": false,
+              "silenced": false,
+              "protected": false,
+              "blocked": false,
+              "uncounterable": false,
+              "weakened": false,
+              "locked": false,
+              "boosted": false,
+              "burnStacks": 0
+            },
+            "lastEffectNote": "Played for 2 Motion."
+          },
+          "after": {
+            "cardInstanceId": "cpu:focused-red-set:2:cane-corso-red",
+            "cardId": "cane-corso-red",
+            "owner": "cpu",
+            "lane": 1,
+            "power": 3,
+            "basePower": 3,
+            "powerModifier": 0,
+            "moved": false,
+            "statuses": {
+              "frozen": false,
+              "silenced": false,
+              "protected": false,
+              "blocked": false,
+              "uncounterable": false,
+              "weakened": false,
+              "locked": false,
+              "boosted": false,
+              "burnStacks": 0
+            },
+            "lastEffectNote": "Played for 2 Motion."
+          }
+        },
+        "targets": []
+      }
+    },
+    "redneck-evil": {
+      "caseIndex": 8,
+      "round": 4,
+      "proof": {
+        "owner": "cpu",
+        "cardId": "redneck-evil",
+        "type": "ability",
+        "kind": "fire",
+        "note": "Chain Reaction: resolved.",
+        "source": {
+          "cardInstanceId": "cpu:focused-red-set:0:redneck-evil",
+          "cardId": "redneck-evil",
+          "owner": "cpu",
+          "before": {
+            "cardInstanceId": "cpu:focused-red-set:0:redneck-evil",
+            "cardId": "redneck-evil",
+            "owner": "cpu",
+            "lane": 1,
+            "power": 5,
+            "basePower": 5,
+            "powerModifier": 0,
+            "moved": false,
+            "statuses": {
+              "frozen": false,
+              "silenced": false,
+              "protected": false,
+              "blocked": false,
+              "uncounterable": false,
+              "weakened": false,
+              "locked": false,
+              "boosted": false,
+              "burnStacks": 0
+            },
+            "lastEffectNote": "Played for 4 Motion."
+          },
+          "after": {
+            "cardInstanceId": "cpu:focused-red-set:0:redneck-evil",
+            "cardId": "redneck-evil",
+            "owner": "cpu",
+            "lane": 1,
+            "power": 5,
+            "basePower": 5,
+            "powerModifier": 0,
+            "moved": false,
+            "statuses": {
+              "frozen": false,
+              "silenced": false,
+              "protected": false,
+              "blocked": false,
+              "uncounterable": false,
+              "weakened": false,
+              "locked": false,
+              "boosted": false,
+              "burnStacks": 0
+            },
+            "lastEffectNote": "Chain Reaction: resolved."
+          }
+        },
+        "targets": []
+      }
+    },
+    "ganger-red": {
+      "caseIndex": 8,
+      "round": 5,
+      "proof": {
+        "owner": "cpu",
+        "cardId": "ganger-red",
+        "type": "ability",
+        "kind": "fire",
+        "note": "Red Side Retaliation resolved.",
+        "source": {
+          "cardInstanceId": "cpu:focused-red-set:9:ganger-red",
+          "cardId": "ganger-red",
+          "owner": "cpu",
+          "before": {
+            "cardInstanceId": "cpu:focused-red-set:9:ganger-red",
+            "cardId": "ganger-red",
+            "owner": "cpu",
+            "lane": 2,
+            "power": 3,
+            "basePower": 3,
+            "powerModifier": 0,
+            "moved": false,
+            "statuses": {
+              "frozen": false,
+              "silenced": false,
+              "protected": false,
+              "blocked": false,
+              "uncounterable": false,
+              "weakened": false,
+              "locked": false,
+              "boosted": false,
+              "burnStacks": 0
+            },
+            "lastEffectNote": "Played for 2 Motion."
+          },
+          "after": {
+            "cardInstanceId": "cpu:focused-red-set:9:ganger-red",
+            "cardId": "ganger-red",
+            "owner": "cpu",
+            "lane": 2,
+            "power": 4,
+            "basePower": 3,
+            "powerModifier": 1,
+            "moved": false,
+            "statuses": {
+              "frozen": false,
+              "silenced": false,
+              "protected": false,
+              "blocked": false,
+              "uncounterable": false,
+              "weakened": false,
+              "locked": false,
+              "boosted": false,
+              "burnStacks": 0
+            },
+            "lastEffectNote": "Red Side Retaliation: damage landed, +1 Hand."
+          }
+        },
+        "targets": [
+          {
+            "cardInstanceId": "player:element-fire:0:kyle",
+            "cardId": "kyle",
+            "owner": "player",
+            "before": {
+              "cardInstanceId": "player:element-fire:0:kyle",
+              "cardId": "kyle",
+              "owner": "player",
+              "lane": 2,
+              "power": 7,
+              "basePower": 3,
+              "powerModifier": 4,
+              "moved": false,
+              "statuses": {
+                "frozen": false,
+                "silenced": false,
+                "protected": false,
+                "blocked": false,
+                "uncounterable": false,
+                "weakened": false,
+                "locked": false,
+                "boosted": false,
+                "burnStacks": 0
+              },
+              "lastEffectNote": "Whole Block Hot: Fire ally +1 Hand."
+            },
+            "after": {
+              "cardInstanceId": "player:element-fire:0:kyle",
+              "cardId": "kyle",
+              "owner": "player",
+              "lane": 2,
+              "power": 5,
+              "basePower": 3,
+              "powerModifier": 2,
+              "moved": false,
+              "statuses": {
+                "frozen": false,
+                "silenced": false,
+                "protected": false,
+                "blocked": false,
+                "uncounterable": false,
+                "weakened": false,
+                "locked": false,
+                "boosted": false,
+                "burnStacks": 0
+              },
+              "lastEffectNote": "Red Side Retaliation: -2 Hands."
+            }
+          }
+        ]
+      }
+    },
+    "triple-og-red": {
+      "caseIndex": 8,
+      "round": 6,
+      "proof": {
+        "owner": "cpu",
+        "cardId": "triple-og-red",
+        "type": "ability",
+        "kind": "fire",
+        "note": "Roll Call: 3 cards lost 4 Hands total and RED PUNCH gained +4 (maximum 6).",
+        "source": {
+          "cardInstanceId": "cpu:focused-red-set:7:triple-og-red",
+          "cardId": "triple-og-red",
+          "owner": "cpu",
+          "before": {
+            "cardInstanceId": "cpu:focused-red-set:7:triple-og-red",
+            "cardId": "triple-og-red",
+            "owner": "cpu",
+            "lane": 2,
+            "power": 4,
+            "basePower": 4,
+            "powerModifier": 0,
+            "moved": false,
+            "statuses": {
+              "frozen": false,
+              "silenced": false,
+              "protected": false,
+              "blocked": false,
+              "uncounterable": false,
+              "weakened": false,
+              "locked": false,
+              "boosted": false,
+              "burnStacks": 0
+            },
+            "lastEffectNote": "Played for 4 Motion."
+          },
+          "after": {
+            "cardInstanceId": "cpu:focused-red-set:7:triple-og-red",
+            "cardId": "triple-og-red",
+            "owner": "cpu",
+            "lane": 2,
+            "power": 8,
+            "basePower": 4,
+            "powerModifier": 4,
+            "moved": false,
+            "statuses": {
+              "frozen": false,
+              "silenced": false,
+              "protected": false,
+              "blocked": false,
+              "uncounterable": false,
+              "weakened": false,
+              "locked": false,
+              "boosted": false,
+              "burnStacks": 0
+            },
+            "lastEffectNote": "Roll Call: took 4 Hands off the district."
+          }
+        },
+        "targets": [
+          {
+            "cardInstanceId": "cpu:focused-red-set:1:redside1",
+            "cardId": "redside1",
+            "owner": "cpu",
+            "before": {
+              "cardInstanceId": "cpu:focused-red-set:1:redside1",
+              "cardId": "redside1",
+              "owner": "cpu",
+              "lane": 2,
+              "power": 7,
+              "basePower": 2,
+              "powerModifier": 5,
+              "moved": true,
+              "statuses": {
+                "frozen": false,
+                "silenced": false,
+                "protected": false,
+                "blocked": false,
+                "uncounterable": false,
+                "weakened": false,
+                "locked": false,
+                "boosted": false,
+                "burnStacks": 0
+              },
+              "lastEffectNote": "BURN: −3 Hands at round end."
+            },
+            "after": {
+              "cardInstanceId": "cpu:focused-red-set:1:redside1",
+              "cardId": "redside1",
+              "owner": "cpu",
+              "lane": 2,
+              "power": 6,
+              "basePower": 2,
+              "powerModifier": 4,
+              "moved": true,
+              "statuses": {
+                "frozen": false,
+                "silenced": false,
+                "protected": false,
+                "blocked": false,
+                "uncounterable": false,
+                "weakened": false,
+                "locked": false,
+                "boosted": false,
+                "burnStacks": 0
+              },
+              "lastEffectNote": "Roll Call: -1 Hand."
+            }
+          },
+          {
+            "cardInstanceId": "cpu:focused-red-set:9:ganger-red",
+            "cardId": "ganger-red",
+            "owner": "cpu",
+            "before": {
+              "cardInstanceId": "cpu:focused-red-set:9:ganger-red",
+              "cardId": "ganger-red",
+              "owner": "cpu",
+              "lane": 2,
+              "power": 4,
+              "basePower": 3,
+              "powerModifier": 1,
+              "moved": false,
+              "statuses": {
+                "frozen": false,
+                "silenced": false,
+                "protected": false,
+                "blocked": false,
+                "uncounterable": false,
+                "weakened": false,
+                "locked": false,
+                "boosted": false,
+                "burnStacks": 0
+              },
+              "lastEffectNote": "Red Side Retaliation: damage landed, +1 Hand."
+            },
+            "after": {
+              "cardInstanceId": "cpu:focused-red-set:9:ganger-red",
+              "cardId": "ganger-red",
+              "owner": "cpu",
+              "lane": 2,
+              "power": 3,
+              "basePower": 3,
+              "powerModifier": 0,
+              "moved": false,
+              "statuses": {
+                "frozen": false,
+                "silenced": false,
+                "protected": false,
+                "blocked": false,
+                "uncounterable": false,
+                "weakened": false,
+                "locked": false,
+                "boosted": false,
+                "burnStacks": 0
+              },
+              "lastEffectNote": "Roll Call: -1 Hand."
+            }
+          },
+          {
+            "cardInstanceId": "player:element-fire:0:kyle",
+            "cardId": "kyle",
+            "owner": "player",
+            "before": {
+              "cardInstanceId": "player:element-fire:0:kyle",
+              "cardId": "kyle",
+              "owner": "player",
+              "lane": 2,
+              "power": 6,
+              "basePower": 3,
+              "powerModifier": 3,
+              "moved": false,
+              "statuses": {
+                "frozen": false,
+                "silenced": false,
+                "protected": false,
+                "blocked": false,
+                "uncounterable": false,
+                "weakened": false,
+                "locked": false,
+                "boosted": false,
+                "burnStacks": 0
+              },
+              "lastEffectNote": "GUAP: Fire bond +1 Hands."
+            },
+            "after": {
+              "cardInstanceId": "player:element-fire:0:kyle",
+              "cardId": "kyle",
+              "owner": "player",
+              "lane": 2,
+              "power": 4,
+              "basePower": 3,
+              "powerModifier": 1,
+              "moved": false,
+              "statuses": {
+                "frozen": false,
+                "silenced": false,
+                "protected": false,
+                "blocked": false,
+                "uncounterable": false,
+                "weakened": false,
+                "locked": false,
+                "boosted": false,
+                "burnStacks": 0
+              },
+              "lastEffectNote": "Roll Call: -2 Hands."
+            }
+          }
+        ]
+      }
+    },
+    "guap": {
+      "caseIndex": 14,
+      "round": 6,
+      "proof": {
+        "owner": "player",
+        "cardId": "guap",
+        "type": "ability",
+        "kind": "ability",
+        "note": "Cane Corso (Red) intercepted the complete hostile package; RED PUNCH was protected.",
+        "source": {
+          "cardInstanceId": "player:element-fire:5:guap",
+          "cardId": "guap",
+          "owner": "player",
+          "before": {
+            "cardInstanceId": "player:element-fire:5:guap",
+            "cardId": "guap",
+            "owner": "player",
+            "lane": 0,
+            "power": 9,
+            "basePower": 6,
+            "powerModifier": 3,
+            "moved": false,
+            "statuses": {
+              "frozen": false,
+              "silenced": false,
+              "protected": false,
+              "blocked": false,
+              "uncounterable": false,
+              "weakened": false,
+              "locked": false,
+              "boosted": false,
+              "burnStacks": 0
+            },
+            "lastEffectNote": "FINNAM!: +3 Hands across the board."
+          },
+          "after": {
+            "cardInstanceId": "player:element-fire:5:guap",
+            "cardId": "guap",
+            "owner": "player",
+            "lane": 0,
+            "power": 9,
+            "basePower": 6,
+            "powerModifier": 3,
+            "moved": false,
+            "statuses": {
+              "frozen": false,
+              "silenced": false,
+              "protected": false,
+              "blocked": false,
+              "uncounterable": false,
+              "weakened": false,
+              "locked": false,
+              "boosted": false,
+              "burnStacks": 0
+            },
+            "lastEffectNote": "FINNAM!: +3 Hands across the board."
+          }
+        },
+        "targets": [
+          {
+            "cardInstanceId": "cpu:focused-red-set:7:cane-corso-red",
+            "cardId": "cane-corso-red",
+            "owner": "cpu",
+            "before": {
+              "cardInstanceId": "cpu:focused-red-set:7:cane-corso-red",
+              "cardId": "cane-corso-red",
+              "owner": "cpu",
+              "lane": 2,
+              "power": 4,
+              "basePower": 3,
+              "powerModifier": 1,
+              "moved": true,
+              "statuses": {
+                "frozen": false,
+                "silenced": false,
+                "protected": false,
+                "blocked": false,
+                "uncounterable": false,
+                "weakened": false,
+                "locked": false,
+                "boosted": false,
+                "burnStacks": 0
+              },
+              "lastEffectNote": "Guarding RED PUNCH: intercepted one hostile package this round."
+            },
+            "after": {
+              "cardInstanceId": "cpu:focused-red-set:7:cane-corso-red",
+              "cardId": "cane-corso-red",
+              "owner": "cpu",
+              "lane": 2,
+              "power": 3,
+              "basePower": 3,
+              "powerModifier": 0,
+              "moved": true,
+              "statuses": {
+                "frozen": false,
+                "silenced": false,
+                "protected": false,
+                "blocked": false,
+                "uncounterable": false,
+                "weakened": false,
+                "locked": false,
+                "boosted": false,
+                "burnStacks": 0
+              },
+              "lastEffectNote": "FINNAM!: -1 Hands across the board."
+            }
+          },
+          {
+            "cardInstanceId": "cpu:focused-red-set:0:triple-og-red",
+            "cardId": "triple-og-red",
+            "owner": "cpu",
+            "before": {
+              "cardInstanceId": "cpu:focused-red-set:0:triple-og-red",
+              "cardId": "triple-og-red",
+              "owner": "cpu",
+              "lane": 2,
+              "power": 5,
+              "basePower": 4,
+              "powerModifier": 1,
+              "moved": false,
+              "statuses": {
+                "frozen": false,
+                "silenced": false,
+                "protected": false,
+                "blocked": false,
+                "uncounterable": false,
+                "weakened": false,
+                "locked": false,
+                "boosted": false,
+                "burnStacks": 0
+              },
+              "lastEffectNote": "Roll Call: took 1 Hand off the district."
+            },
+            "after": {
+              "cardInstanceId": "cpu:focused-red-set:0:triple-og-red",
+              "cardId": "triple-og-red",
+              "owner": "cpu",
+              "lane": 2,
+              "power": 5,
+              "basePower": 4,
+              "powerModifier": 1,
+              "moved": false,
+              "statuses": {
+                "frozen": false,
+                "silenced": false,
+                "protected": false,
+                "blocked": false,
+                "uncounterable": false,
+                "weakened": false,
+                "locked": false,
+                "boosted": false,
+                "burnStacks": 0
+              },
+              "lastEffectNote": "Roll Call: took 1 Hand off the district."
+            }
+          }
+        ]
+      }
+    },
+    "alchy": {
+      "caseIndex": 16,
+      "round": 1,
+      "proof": {
+        "owner": "cpu",
+        "cardId": "alchy",
+        "type": "ability",
+        "kind": "water",
+        "note": "Last Round: condition not met or effect blocked.",
+        "source": {
+          "cardInstanceId": "cpu:focused-blue-set:0:alchy",
+          "cardId": "alchy",
+          "owner": "cpu",
+          "before": {
+            "cardInstanceId": "cpu:focused-blue-set:0:alchy",
+            "cardId": "alchy",
+            "owner": "cpu",
+            "lane": 0,
+            "power": 4,
+            "basePower": 2,
+            "powerModifier": 2,
+            "moved": false,
+            "statuses": {
+              "frozen": false,
+              "silenced": false,
+              "protected": true,
+              "blocked": false,
+              "uncounterable": false,
+              "weakened": false,
+              "locked": false,
+              "boosted": false,
+              "burnStacks": 0
+            },
+            "lastEffectNote": "NAIL SALON: this arrival blocks its next targeted enemy ability."
+          },
+          "after": {
+            "cardInstanceId": "cpu:focused-blue-set:0:alchy",
+            "cardId": "alchy",
+            "owner": "cpu",
+            "lane": 0,
+            "power": 4,
+            "basePower": 2,
+            "powerModifier": 2,
+            "moved": false,
+            "statuses": {
+              "frozen": false,
+              "silenced": false,
+              "protected": true,
+              "blocked": false,
+              "uncounterable": false,
+              "weakened": false,
+              "locked": false,
+              "boosted": false,
+              "burnStacks": 0
+            },
+            "lastEffectNote": "NAIL SALON: this arrival blocks its next targeted enemy ability."
+          }
+        },
+        "targets": []
+      }
+    },
+    "look-out": {
+      "caseIndex": 16,
+      "round": 2,
+      "proof": {
+        "owner": "cpu",
+        "cardId": "look-out",
+        "type": "ability",
+        "kind": "ability",
+        "note": "On Point: the next district your opponent plays into is called out; your next card there costs 1 less Motion.",
+        "source": {
+          "cardInstanceId": "cpu:focused-blue-set:5:look-out",
+          "cardId": "look-out",
+          "owner": "cpu",
+          "before": {
+            "cardInstanceId": "cpu:focused-blue-set:5:look-out",
+            "cardId": "look-out",
+            "owner": "cpu",
+            "lane": 1,
+            "power": 1,
+            "basePower": 1,
+            "powerModifier": 0,
+            "moved": false,
+            "statuses": {
+              "frozen": false,
+              "silenced": false,
+              "protected": false,
+              "blocked": false,
+              "uncounterable": false,
+              "weakened": false,
+              "locked": false,
+              "boosted": false,
+              "burnStacks": 0
+            },
+            "lastEffectNote": "Played for 1 Motion."
+          },
+          "after": {
+            "cardInstanceId": "cpu:focused-blue-set:5:look-out",
+            "cardId": "look-out",
+            "owner": "cpu",
+            "lane": 1,
+            "power": 1,
+            "basePower": 1,
+            "powerModifier": 0,
+            "moved": false,
+            "statuses": {
+              "frozen": false,
+              "silenced": false,
+              "protected": false,
+              "blocked": false,
+              "uncounterable": false,
+              "weakened": false,
+              "locked": false,
+              "boosted": false,
+              "burnStacks": 0
+            },
+            "lastEffectNote": "On Point: watching the block."
+          }
+        },
+        "targets": []
+      }
+    },
+    "waterboy": {
+      "caseIndex": 16,
+      "round": 3,
+      "proof": {
+        "owner": "cpu",
+        "cardId": "waterboy",
+        "type": "ability",
+        "kind": "water",
+        "note": "Cold Water restored 1 Motion.",
+        "source": {
+          "cardInstanceId": "cpu:focused-blue-set:3:waterboy",
+          "cardId": "waterboy",
+          "owner": "cpu",
+          "before": {
+            "cardInstanceId": "cpu:focused-blue-set:3:waterboy",
+            "cardId": "waterboy",
+            "owner": "cpu",
+            "lane": 0,
+            "power": 2,
+            "basePower": 2,
+            "powerModifier": 0,
+            "moved": false,
+            "statuses": {
+              "frozen": false,
+              "silenced": false,
+              "protected": true,
+              "blocked": false,
+              "uncounterable": false,
+              "weakened": false,
+              "locked": false,
+              "boosted": false,
+              "burnStacks": 0
+            },
+            "lastEffectNote": "NAIL SALON: this arrival blocks its next targeted enemy ability."
+          },
+          "after": {
+            "cardInstanceId": "cpu:focused-blue-set:3:waterboy",
+            "cardId": "waterboy",
+            "owner": "cpu",
+            "lane": 0,
+            "power": 2,
+            "basePower": 2,
+            "powerModifier": 0,
+            "moved": false,
+            "statuses": {
+              "frozen": false,
+              "silenced": false,
+              "protected": true,
+              "blocked": false,
+              "uncounterable": false,
+              "weakened": false,
+              "locked": false,
+              "boosted": false,
+              "burnStacks": 0
+            },
+            "lastEffectNote": "NAIL SALON: this arrival blocks its next targeted enemy ability."
+          }
+        },
+        "targets": []
+      }
+    },
+    "ganger-blue": {
+      "caseIndex": 16,
+      "round": 3,
+      "proof": {
+        "owner": "cpu",
+        "cardId": "ganger-blue",
+        "type": "ability",
+        "kind": "water",
+        "note": "Blue Side Cover resolved.",
+        "source": {
+          "cardInstanceId": "cpu:focused-blue-set:6:ganger-blue",
+          "cardId": "ganger-blue",
+          "owner": "cpu",
+          "before": {
+            "cardInstanceId": "cpu:focused-blue-set:6:ganger-blue",
+            "cardId": "ganger-blue",
+            "owner": "cpu",
+            "lane": 1,
+            "power": 2,
+            "basePower": 2,
+            "powerModifier": 0,
+            "moved": false,
+            "statuses": {
+              "frozen": false,
+              "silenced": false,
+              "protected": false,
+              "blocked": false,
+              "uncounterable": false,
+              "weakened": false,
+              "locked": false,
+              "boosted": false,
+              "burnStacks": 0
+            },
+            "lastEffectNote": "Played for 1 Motion."
+          },
+          "after": {
+            "cardInstanceId": "cpu:focused-blue-set:6:ganger-blue",
+            "cardId": "ganger-blue",
+            "owner": "cpu",
+            "lane": 1,
+            "power": 2,
+            "basePower": 2,
+            "powerModifier": 0,
+            "moved": false,
+            "statuses": {
+              "frozen": false,
+              "silenced": false,
+              "protected": false,
+              "blocked": false,
+              "uncounterable": false,
+              "weakened": false,
+              "locked": false,
+              "boosted": false,
+              "burnStacks": 0
+            },
+            "lastEffectNote": "Played for 1 Motion."
+          }
+        },
+        "targets": [
+          {
+            "cardInstanceId": "cpu:focused-blue-set:3:waterboy",
+            "cardId": "waterboy",
+            "owner": "cpu",
+            "before": {
+              "cardInstanceId": "cpu:focused-blue-set:3:waterboy",
+              "cardId": "waterboy",
+              "owner": "cpu",
+              "lane": 0,
+              "power": 2,
+              "basePower": 2,
+              "powerModifier": 0,
+              "moved": false,
+              "statuses": {
+                "frozen": false,
+                "silenced": false,
+                "protected": true,
+                "blocked": false,
+                "uncounterable": false,
+                "weakened": false,
+                "locked": false,
+                "boosted": false,
+                "burnStacks": 0
+              },
+              "lastEffectNote": "NAIL SALON: this arrival blocks its next targeted enemy ability."
+            },
+            "after": {
+              "cardInstanceId": "cpu:focused-blue-set:3:waterboy",
+              "cardId": "waterboy",
+              "owner": "cpu",
+              "lane": 0,
+              "power": 5,
+              "basePower": 2,
+              "powerModifier": 3,
+              "moved": false,
+              "statuses": {
+                "frozen": false,
+                "silenced": false,
+                "protected": true,
+                "blocked": false,
+                "uncounterable": false,
+                "weakened": false,
+                "locked": false,
+                "boosted": false,
+                "burnStacks": 0
+              },
+              "lastEffectNote": "Blue Side Cover: +3 Hands and Protected."
+            }
+          }
+        ]
+      }
+    },
+    "blueside1": {
+      "caseIndex": 16,
+      "round": 3,
+      "proof": {
+        "owner": "cpu",
+        "cardId": "blueside1",
+        "type": "ability",
+        "kind": "ability",
+        "note": "Crossfire found no unprotected target and gained +1 Hands.",
+        "source": {
+          "cardInstanceId": "cpu:focused-blue-set:2:blueside1",
+          "cardId": "blueside1",
+          "owner": "cpu",
+          "before": {
+            "cardInstanceId": "cpu:focused-blue-set:2:blueside1",
+            "cardId": "blueside1",
+            "owner": "cpu",
+            "lane": 1,
+            "power": 2,
+            "basePower": 2,
+            "powerModifier": 0,
+            "moved": false,
+            "statuses": {
+              "frozen": false,
+              "silenced": false,
+              "protected": false,
+              "blocked": false,
+              "uncounterable": false,
+              "weakened": false,
+              "locked": false,
+              "boosted": false,
+              "burnStacks": 0
+            },
+            "lastEffectNote": "Played for 2 Motion."
+          },
+          "after": {
+            "cardInstanceId": "cpu:focused-blue-set:2:blueside1",
+            "cardId": "blueside1",
+            "owner": "cpu",
+            "lane": 1,
+            "power": 3,
+            "basePower": 2,
+            "powerModifier": 1,
+            "moved": false,
+            "statuses": {
+              "frozen": false,
+              "silenced": false,
+              "protected": false,
+              "blocked": false,
+              "uncounterable": false,
+              "weakened": false,
+              "locked": false,
+              "boosted": false,
+              "burnStacks": 0
+            },
+            "lastEffectNote": "Crossfire: +1 from Blue Side allies and +0 from other Blue Set districts."
+          }
+        },
+        "targets": []
+      }
+    },
+    "blue-nose-pit": {
+      "caseIndex": 16,
+      "round": 4,
+      "proof": {
+        "owner": "cpu",
+        "cardId": "blue-nose-pit",
+        "type": "ability",
+        "kind": "water",
+        "note": "Blue-Nose Backup: Blue-Nose Pit waits for a support opportunity in its matching OG’s district.",
+        "source": {
+          "cardInstanceId": "cpu:focused-blue-set:8:blue-nose-pit",
+          "cardId": "blue-nose-pit",
+          "owner": "cpu",
+          "before": {
+            "cardInstanceId": "cpu:focused-blue-set:8:blue-nose-pit",
+            "cardId": "blue-nose-pit",
+            "owner": "cpu",
+            "lane": 0,
+            "power": 3,
+            "basePower": 3,
+            "powerModifier": 0,
+            "moved": false,
+            "statuses": {
+              "frozen": false,
+              "silenced": false,
+              "protected": false,
+              "blocked": false,
+              "uncounterable": false,
+              "weakened": false,
+              "locked": false,
+              "boosted": false,
+              "burnStacks": 0
+            },
+            "lastEffectNote": "Played for 2 Motion."
+          },
+          "after": {
+            "cardInstanceId": "cpu:focused-blue-set:8:blue-nose-pit",
+            "cardId": "blue-nose-pit",
+            "owner": "cpu",
+            "lane": 0,
+            "power": 3,
+            "basePower": 3,
+            "powerModifier": 0,
+            "moved": false,
+            "statuses": {
+              "frozen": false,
+              "silenced": false,
+              "protected": false,
+              "blocked": false,
+              "uncounterable": false,
+              "weakened": false,
+              "locked": false,
+              "boosted": false,
+              "burnStacks": 0
+            },
+            "lastEffectNote": "Played for 2 Motion."
+          }
+        },
+        "targets": []
+      }
+    },
+    "triple-og-blue": {
+      "caseIndex": 16,
+      "round": 5,
+      "proof": {
+        "owner": "cpu",
+        "cardId": "triple-og-blue",
+        "type": "ability",
+        "kind": "water",
+        "note": "Homage: this district was not losing, so no homage was owed. Reinforced the weakest Blue Set ally in 1 other district for +1 Hand and Protection each. FOLKS: NAIL SALON blocked a targeted hostile ability.",
+        "source": {
+          "cardInstanceId": "cpu:focused-blue-set:1:triple-og-blue",
+          "cardId": "triple-og-blue",
+          "owner": "cpu",
+          "before": {
+            "cardInstanceId": "cpu:focused-blue-set:1:triple-og-blue",
+            "cardId": "triple-og-blue",
+            "owner": "cpu",
+            "lane": 0,
+            "power": 10,
+            "basePower": 8,
+            "powerModifier": 2,
+            "moved": false,
+            "statuses": {
+              "frozen": false,
+              "silenced": false,
+              "protected": true,
+              "blocked": false,
+              "uncounterable": false,
+              "weakened": false,
+              "locked": false,
+              "boosted": false,
+              "burnStacks": 0
+            },
+            "lastEffectNote": "NAIL SALON: this arrival blocks its next targeted enemy ability."
+          },
+          "after": {
+            "cardInstanceId": "cpu:focused-blue-set:1:triple-og-blue",
+            "cardId": "triple-og-blue",
+            "owner": "cpu",
+            "lane": 0,
+            "power": 10,
+            "basePower": 8,
+            "powerModifier": 2,
+            "moved": false,
+            "statuses": {
+              "frozen": false,
+              "silenced": false,
+              "protected": true,
+              "blocked": false,
+              "uncounterable": false,
+              "weakened": false,
+              "locked": false,
+              "boosted": false,
+              "burnStacks": 0
+            },
+            "lastEffectNote": "NAIL SALON: this arrival blocks its next targeted enemy ability."
+          }
+        },
+        "targets": [
+          {
+            "cardInstanceId": "player:element-fire:7:folks",
+            "cardId": "folks",
+            "owner": "player",
+            "before": {
+              "cardInstanceId": "player:element-fire:7:folks",
+              "cardId": "folks",
+              "owner": "player",
+              "lane": 0,
+              "power": 2,
+              "basePower": 2,
+              "powerModifier": 0,
+              "moved": false,
+              "statuses": {
+                "frozen": false,
+                "silenced": false,
+                "protected": true,
+                "blocked": false,
+                "uncounterable": false,
+                "weakened": false,
+                "locked": false,
+                "boosted": false,
+                "burnStacks": 0
+              },
+              "lastEffectNote": "NAIL SALON: this arrival blocks its next targeted enemy ability."
+            },
+            "after": {
+              "cardInstanceId": "player:element-fire:7:folks",
+              "cardId": "folks",
+              "owner": "player",
+              "lane": 0,
+              "power": 2,
+              "basePower": 2,
+              "powerModifier": 0,
+              "moved": false,
+              "statuses": {
+                "frozen": false,
+                "silenced": false,
+                "protected": false,
+                "blocked": false,
+                "uncounterable": false,
+                "weakened": false,
+                "locked": false,
+                "boosted": false,
+                "burnStacks": 0
+              },
+              "lastEffectNote": "NAIL SALON blocked a targeted hostile ability."
+            }
+          },
+          {
+            "cardInstanceId": "cpu:focused-blue-set:5:look-out",
+            "cardId": "look-out",
+            "owner": "cpu",
+            "before": {
+              "cardInstanceId": "cpu:focused-blue-set:5:look-out",
+              "cardId": "look-out",
+              "owner": "cpu",
+              "lane": 1,
+              "power": 1,
+              "basePower": 1,
+              "powerModifier": 0,
+              "moved": false,
+              "statuses": {
+                "frozen": false,
+                "silenced": false,
+                "protected": false,
+                "blocked": false,
+                "uncounterable": false,
+                "weakened": false,
+                "locked": false,
+                "boosted": false,
+                "burnStacks": 3
+              },
+              "lastEffectNote": "Whole Block Hot: 3 Burn."
+            },
+            "after": {
+              "cardInstanceId": "cpu:focused-blue-set:5:look-out",
+              "cardId": "look-out",
+              "owner": "cpu",
+              "lane": 1,
+              "power": 2,
+              "basePower": 1,
+              "powerModifier": 1,
+              "moved": false,
+              "statuses": {
+                "frozen": false,
+                "silenced": false,
+                "protected": true,
+                "blocked": false,
+                "uncounterable": false,
+                "weakened": false,
+                "locked": false,
+                "boosted": false,
+                "burnStacks": 3
+              },
+              "lastEffectNote": "Homage: Protection."
+            }
+          }
+        ]
+      }
+    },
+    "squabblehouse-cashier": {
+      "caseIndex": 24,
+      "round": 1,
+      "proof": {
+        "owner": "cpu",
+        "cardId": "squabblehouse-cashier",
+        "type": "ability",
+        "kind": "ability",
+        "note": "Pay Your Tab resolved. Open Tab covers enemy departures through R2.",
+        "source": {
+          "cardInstanceId": "cpu:starter-squabblehouse-shift:3:squabblehouse-cashier",
+          "cardId": "squabblehouse-cashier",
+          "owner": "cpu",
+          "before": {
+            "cardInstanceId": "cpu:starter-squabblehouse-shift:3:squabblehouse-cashier",
+            "cardId": "squabblehouse-cashier",
+            "owner": "cpu",
+            "lane": 2,
+            "power": 1,
+            "basePower": 1,
+            "powerModifier": 0,
+            "moved": false,
+            "statuses": {
+              "frozen": false,
+              "silenced": false,
+              "protected": false,
+              "blocked": false,
+              "uncounterable": false,
+              "weakened": false,
+              "locked": false,
+              "boosted": false,
+              "burnStacks": 0
+            },
+            "lastEffectNote": "Played for 2 Motion."
+          },
+          "after": {
+            "cardInstanceId": "cpu:starter-squabblehouse-shift:3:squabblehouse-cashier",
+            "cardId": "squabblehouse-cashier",
+            "owner": "cpu",
+            "lane": 2,
+            "power": 1,
+            "basePower": 1,
+            "powerModifier": 0,
+            "moved": false,
+            "statuses": {
+              "frozen": false,
+              "silenced": false,
+              "protected": false,
+              "blocked": false,
+              "uncounterable": false,
+              "weakened": false,
+              "locked": false,
+              "boosted": false,
+              "burnStacks": 0
+            },
+            "lastEffectNote": "Played for 2 Motion."
+          }
+        },
+        "targets": []
+      }
+    },
+    "sideofhands": {
+      "caseIndex": 24,
+      "round": 2,
+      "proof": {
+        "owner": "cpu",
+        "cardId": "sideofhands",
+        "type": "ability",
+        "kind": "ability",
+        "note": "A Side of Hands: no friendly character was here. Young Bull lost 2 Hands.",
+        "source": {
+          "cardInstanceId": "cpu:starter-squabblehouse-shift:0:sideofhands",
+          "cardId": "sideofhands",
+          "owner": "cpu",
+          "before": {
+            "cardInstanceId": "cpu:starter-squabblehouse-shift:0:sideofhands",
+            "cardId": "sideofhands",
+            "owner": "cpu",
+            "lane": 1,
+            "power": 0,
+            "basePower": 0,
+            "powerModifier": 0,
+            "moved": false,
+            "statuses": {
+              "frozen": false,
+              "silenced": false,
+              "protected": false,
+              "blocked": false,
+              "uncounterable": false,
+              "weakened": false,
+              "locked": false,
+              "boosted": false,
+              "burnStacks": 0
+            },
+            "lastEffectNote": "Played for 2 Motion."
+          },
+          "after": {
+            "cardInstanceId": "cpu:starter-squabblehouse-shift:0:sideofhands",
+            "cardId": "sideofhands",
+            "owner": "cpu",
+            "lane": 1,
+            "power": 0,
+            "basePower": 0,
+            "powerModifier": 0,
+            "moved": false,
+            "statuses": {
+              "frozen": false,
+              "silenced": false,
+              "protected": false,
+              "blocked": false,
+              "uncounterable": false,
+              "weakened": false,
+              "locked": false,
+              "boosted": false,
+              "burnStacks": 0
+            },
+            "lastEffectNote": "Played for 2 Motion."
+          }
+        },
+        "targets": [
+          {
+            "cardInstanceId": "player:element-fire:4:youngbull",
+            "cardId": "youngbull",
+            "owner": "player",
+            "before": {
+              "cardInstanceId": "player:element-fire:4:youngbull",
+              "cardId": "youngbull",
+              "owner": "player",
+              "lane": 1,
+              "power": 5,
+              "basePower": 4,
+              "powerModifier": 1,
+              "moved": false,
+              "statuses": {
+                "frozen": false,
+                "silenced": false,
+                "protected": false,
+                "blocked": false,
+                "uncounterable": false,
+                "weakened": false,
+                "locked": false,
+                "boosted": false,
+                "burnStacks": 0
+              },
+              "lastEffectNote": "Step Up: +1 Hands."
+            },
+            "after": {
+              "cardInstanceId": "player:element-fire:4:youngbull",
+              "cardId": "youngbull",
+              "owner": "player",
+              "lane": 1,
+              "power": 3,
+              "basePower": 4,
+              "powerModifier": -1,
+              "moved": false,
+              "statuses": {
+                "frozen": false,
+                "silenced": false,
+                "protected": false,
+                "blocked": false,
+                "uncounterable": false,
+                "weakened": false,
+                "locked": false,
+                "boosted": false,
+                "burnStacks": 0
+              },
+              "lastEffectNote": "Side Order: -2 Hands."
+            }
+          }
+        ]
+      }
+    },
+    "janitor": {
+      "caseIndex": 24,
+      "round": 3,
+      "proof": {
+        "owner": "cpu",
+        "cardId": "janitor",
+        "type": "ability",
+        "kind": "water",
+        "note": "Turn It Around found no legal target, open district, or removable status.",
+        "source": {
+          "cardInstanceId": "cpu:starter-squabblehouse-shift:5:janitor",
+          "cardId": "janitor",
+          "owner": "cpu",
+          "before": {
+            "cardInstanceId": "cpu:starter-squabblehouse-shift:5:janitor",
+            "cardId": "janitor",
+            "owner": "cpu",
+            "lane": 1,
+            "power": 6,
+            "basePower": 3,
+            "powerModifier": 3,
+            "moved": false,
+            "statuses": {
+              "frozen": false,
+              "silenced": false,
+              "protected": false,
+              "blocked": false,
+              "uncounterable": false,
+              "weakened": false,
+              "locked": false,
+              "boosted": false,
+              "burnStacks": 0
+            },
+            "lastEffectNote": "SQUABBLE doubled base Hands."
+          },
+          "after": {
+            "cardInstanceId": "cpu:starter-squabblehouse-shift:5:janitor",
+            "cardId": "janitor",
+            "owner": "cpu",
+            "lane": 1,
+            "power": 6,
+            "basePower": 3,
+            "powerModifier": 3,
+            "moved": false,
+            "statuses": {
+              "frozen": false,
+              "silenced": false,
+              "protected": false,
+              "blocked": false,
+              "uncounterable": false,
+              "weakened": false,
+              "locked": false,
+              "boosted": false,
+              "burnStacks": 0
+            },
+            "lastEffectNote": "SQUABBLE doubled base Hands."
+          }
+        },
+        "targets": []
+      }
+    },
+    "inmate-reformed": {
+      "caseIndex": 24,
+      "round": 4,
+      "proof": {
+        "owner": "cpu",
+        "cardId": "inmate-reformed",
+        "type": "ability",
+        "kind": "ability",
+        "note": "Second Chance resolved. Second Chance found staff here and gained +2 Hands; it checked the strongest enemy for -1 Hand.",
+        "source": {
+          "cardInstanceId": "cpu:starter-squabblehouse-shift:1:inmate-reformed",
+          "cardId": "inmate-reformed",
+          "owner": "cpu",
+          "before": {
+            "cardInstanceId": "cpu:starter-squabblehouse-shift:1:inmate-reformed",
+            "cardId": "inmate-reformed",
+            "owner": "cpu",
+            "lane": 1,
+            "power": 3,
+            "basePower": 3,
+            "powerModifier": 0,
+            "moved": false,
+            "statuses": {
+              "frozen": false,
+              "silenced": false,
+              "protected": false,
+              "blocked": false,
+              "uncounterable": false,
+              "weakened": false,
+              "locked": false,
+              "boosted": false,
+              "burnStacks": 0
+            },
+            "lastEffectNote": "Played for 3 Motion."
+          },
+          "after": {
+            "cardInstanceId": "cpu:starter-squabblehouse-shift:1:inmate-reformed",
+            "cardId": "inmate-reformed",
+            "owner": "cpu",
+            "lane": 1,
+            "power": 5,
+            "basePower": 3,
+            "powerModifier": 2,
+            "moved": false,
+            "statuses": {
+              "frozen": false,
+              "silenced": false,
+              "protected": false,
+              "blocked": false,
+              "uncounterable": false,
+              "weakened": false,
+              "locked": false,
+              "boosted": false,
+              "burnStacks": 0
+            },
+            "lastEffectNote": "Second Chance: friendly house staff here, +2 Hands."
+          }
+        },
+        "targets": [
+          {
+            "cardInstanceId": "player:element-fire:0:kyle",
+            "cardId": "kyle",
+            "owner": "player",
+            "before": {
+              "cardInstanceId": "player:element-fire:0:kyle",
+              "cardId": "kyle",
+              "owner": "player",
+              "lane": 1,
+              "power": 6,
+              "basePower": 3,
+              "powerModifier": 3,
+              "moved": false,
+              "statuses": {
+                "frozen": false,
+                "silenced": false,
+                "protected": false,
+                "blocked": false,
+                "uncounterable": false,
+                "weakened": false,
+                "locked": false,
+                "boosted": false,
+                "burnStacks": 0
+              },
+              "lastEffectNote": "Smile Bomb knockout: +2 Hands."
+            },
+            "after": {
+              "cardInstanceId": "player:element-fire:0:kyle",
+              "cardId": "kyle",
+              "owner": "player",
+              "lane": 1,
+              "power": 5,
+              "basePower": 3,
+              "powerModifier": 2,
+              "moved": false,
+              "statuses": {
+                "frozen": false,
+                "silenced": false,
+                "protected": false,
+                "blocked": false,
+                "uncounterable": false,
+                "weakened": false,
+                "locked": false,
+                "boosted": false,
+                "burnStacks": 0
+              },
+              "lastEffectNote": "Second Chance: strongest enemy -1 Hand."
+            }
+          }
+        ]
+      }
+    },
+    "squabblehouse-bus-boy": {
+      "caseIndex": 24,
+      "round": 4,
+      "proof": {
+        "owner": "cpu",
+        "cardId": "squabblehouse-bus-boy",
+        "type": "ability",
+        "kind": "ability",
+        "note": "Clear the Table: after arrival effects, the moved staff member gained +1 Hand.",
+        "source": {
+          "cardInstanceId": "cpu:starter-squabblehouse-shift:7:squabblehouse-bus-boy",
+          "cardId": "squabblehouse-bus-boy",
+          "owner": "cpu",
+          "before": {
+            "cardInstanceId": "cpu:starter-squabblehouse-shift:7:squabblehouse-bus-boy",
+            "cardId": "squabblehouse-bus-boy",
+            "owner": "cpu",
+            "lane": 1,
+            "power": 1,
+            "basePower": 1,
+            "powerModifier": 0,
+            "moved": false,
+            "statuses": {
+              "frozen": false,
+              "silenced": false,
+              "protected": false,
+              "blocked": false,
+              "uncounterable": false,
+              "weakened": false,
+              "locked": false,
+              "boosted": false,
+              "burnStacks": 0
+            },
+            "lastEffectNote": "Played for 1 Motion."
+          },
+          "after": {
+            "cardInstanceId": "cpu:starter-squabblehouse-shift:7:squabblehouse-bus-boy",
+            "cardId": "squabblehouse-bus-boy",
+            "owner": "cpu",
+            "lane": 1,
+            "power": 1,
+            "basePower": 1,
+            "powerModifier": 0,
+            "moved": false,
+            "statuses": {
+              "frozen": false,
+              "silenced": false,
+              "protected": false,
+              "blocked": false,
+              "uncounterable": false,
+              "weakened": false,
+              "locked": false,
+              "boosted": false,
+              "burnStacks": 0
+            },
+            "lastEffectNote": "Played for 1 Motion."
+          }
+        },
+        "targets": [
+          {
+            "cardInstanceId": "cpu:starter-squabblehouse-shift:1:inmate-reformed",
+            "cardId": "inmate-reformed",
+            "owner": "cpu",
+            "before": {
+              "cardInstanceId": "cpu:starter-squabblehouse-shift:1:inmate-reformed",
+              "cardId": "inmate-reformed",
+              "owner": "cpu",
+              "lane": 0,
+              "power": 5,
+              "basePower": 3,
+              "powerModifier": 2,
+              "moved": true,
+              "statuses": {
+                "frozen": false,
+                "silenced": false,
+                "protected": false,
+                "blocked": false,
+                "uncounterable": false,
+                "weakened": false,
+                "locked": false,
+                "boosted": false,
+                "burnStacks": 0
+              },
+              "lastEffectNote": "Clear the Table moved this staff member."
+            },
+            "after": {
+              "cardInstanceId": "cpu:starter-squabblehouse-shift:1:inmate-reformed",
+              "cardId": "inmate-reformed",
+              "owner": "cpu",
+              "lane": 0,
+              "power": 6,
+              "basePower": 3,
+              "powerModifier": 3,
+              "moved": true,
+              "statuses": {
+                "frozen": false,
+                "silenced": false,
+                "protected": false,
+                "blocked": false,
+                "uncounterable": false,
+                "weakened": false,
+                "locked": false,
+                "boosted": false,
+                "burnStacks": 0
+              },
+              "lastEffectNote": "Clear the Table: successful move, +1 Hand."
+            }
+          }
+        ]
+      }
+    },
+    "griddle-master": {
+      "caseIndex": 24,
+      "round": 5,
+      "proof": {
+        "owner": "cpu",
+        "cardId": "griddle-master",
+        "type": "ability",
+        "kind": "fire",
+        "note": "Hot Off the Griddle resolved. KYLE took 3 damage and 1 Burn.",
+        "source": {
+          "cardInstanceId": "cpu:starter-squabblehouse-shift:6:griddle-master",
+          "cardId": "griddle-master",
+          "owner": "cpu",
+          "before": {
+            "cardInstanceId": "cpu:starter-squabblehouse-shift:6:griddle-master",
+            "cardId": "griddle-master",
+            "owner": "cpu",
+            "lane": 1,
+            "power": 2,
+            "basePower": 2,
+            "powerModifier": 0,
+            "moved": false,
+            "statuses": {
+              "frozen": false,
+              "silenced": false,
+              "protected": false,
+              "blocked": false,
+              "uncounterable": false,
+              "weakened": false,
+              "locked": false,
+              "boosted": false,
+              "burnStacks": 0
+            },
+            "lastEffectNote": "Played for 3 Motion."
+          },
+          "after": {
+            "cardInstanceId": "cpu:starter-squabblehouse-shift:6:griddle-master",
+            "cardId": "griddle-master",
+            "owner": "cpu",
+            "lane": 1,
+            "power": 2,
+            "basePower": 2,
+            "powerModifier": 0,
+            "moved": false,
+            "statuses": {
+              "frozen": false,
+              "silenced": false,
+              "protected": false,
+              "blocked": false,
+              "uncounterable": false,
+              "weakened": false,
+              "locked": false,
+              "boosted": false,
+              "burnStacks": 0
+            },
+            "lastEffectNote": "Played for 3 Motion."
+          }
+        },
+        "targets": [
+          {
+            "cardInstanceId": "player:element-fire:0:kyle",
+            "cardId": "kyle",
+            "owner": "player",
+            "before": {
+              "cardInstanceId": "player:element-fire:0:kyle",
+              "cardId": "kyle",
+              "owner": "player",
+              "lane": 1,
+              "power": 6,
+              "basePower": 3,
+              "powerModifier": 3,
+              "moved": false,
+              "statuses": {
+                "frozen": false,
+                "silenced": false,
+                "protected": false,
+                "blocked": false,
+                "uncounterable": false,
+                "weakened": false,
+                "locked": false,
+                "boosted": false,
+                "burnStacks": 0
+              },
+              "lastEffectNote": "GUAP: Fire bond +1 Hands."
+            },
+            "after": {
+              "cardInstanceId": "player:element-fire:0:kyle",
+              "cardId": "kyle",
+              "owner": "player",
+              "lane": 1,
+              "power": 3,
+              "basePower": 3,
+              "powerModifier": 0,
+              "moved": false,
+              "statuses": {
+                "frozen": false,
+                "silenced": false,
+                "protected": false,
+                "blocked": false,
+                "uncounterable": false,
+                "weakened": false,
+                "locked": false,
+                "boosted": false,
+                "burnStacks": 1
+              },
+              "lastEffectNote": "Hot Off the Griddle: 3 damage and 1 Burn."
+            }
+          }
+        ]
+      }
+    },
+    "squabble-house-manager": {
+      "caseIndex": 24,
+      "round": 5,
+      "proof": {
+        "owner": "cpu",
+        "cardId": "squabble-house-manager",
+        "type": "ability",
+        "kind": "ability",
+        "note": "Home Advantage resolved.",
+        "source": {
+          "cardInstanceId": "cpu:starter-squabblehouse-shift:9:squabble-house-manager",
+          "cardId": "squabble-house-manager",
+          "owner": "cpu",
+          "before": {
+            "cardInstanceId": "cpu:starter-squabblehouse-shift:9:squabble-house-manager",
+            "cardId": "squabble-house-manager",
+            "owner": "cpu",
+            "lane": 2,
+            "power": 5,
+            "basePower": 1,
+            "powerModifier": 0,
+            "continuousPower": 4,
+            "moved": false,
+            "statuses": {
+              "frozen": false,
+              "silenced": false,
+              "protected": false,
+              "blocked": false,
+              "uncounterable": false,
+              "weakened": false,
+              "locked": false,
+              "boosted": false,
+              "burnStacks": 0
+            },
+            "lastEffectNote": "Played for 1 Motion."
+          },
+          "after": {
+            "cardInstanceId": "cpu:starter-squabblehouse-shift:9:squabble-house-manager",
+            "cardId": "squabble-house-manager",
+            "owner": "cpu",
+            "lane": 2,
+            "power": 6,
+            "basePower": 1,
+            "powerModifier": 1,
+            "continuousPower": 4,
+            "moved": false,
+            "statuses": {
+              "frozen": false,
+              "silenced": false,
+              "protected": false,
+              "blocked": false,
+              "uncounterable": false,
+              "weakened": false,
+              "locked": false,
+              "boosted": false,
+              "burnStacks": 0
+            },
+            "lastEffectNote": "Home Advantage: enemy here, +1 Hand."
+          }
+        },
+        "targets": []
+      }
+    },
+    "waffle-warlord": {
+      "caseIndex": 24,
+      "round": 6,
+      "proof": {
+        "owner": "cpu",
+        "cardId": "waffle-warlord",
+        "type": "ability",
+        "kind": "fire",
+        "note": "All-Star Hands resolved. All-Star Hands gave the weakest other staff member in each eligible district +2 Hands.",
+        "source": {
+          "cardInstanceId": "cpu:starter-squabblehouse-shift:2:waffle-warlord",
+          "cardId": "waffle-warlord",
+          "owner": "cpu",
+          "before": {
+            "cardInstanceId": "cpu:starter-squabblehouse-shift:2:waffle-warlord",
+            "cardId": "waffle-warlord",
+            "owner": "cpu",
+            "lane": 2,
+            "power": 5,
+            "basePower": 5,
+            "powerModifier": 0,
+            "moved": false,
+            "statuses": {
+              "frozen": false,
+              "silenced": false,
+              "protected": false,
+              "blocked": false,
+              "uncounterable": false,
+              "weakened": false,
+              "locked": false,
+              "boosted": false,
+              "burnStacks": 0
+            },
+            "lastEffectNote": "Played for 5 Motion."
+          },
+          "after": {
+            "cardInstanceId": "cpu:starter-squabblehouse-shift:2:waffle-warlord",
+            "cardId": "waffle-warlord",
+            "owner": "cpu",
+            "lane": 2,
+            "power": 5,
+            "basePower": 5,
+            "powerModifier": 0,
+            "moved": false,
+            "statuses": {
+              "frozen": false,
+              "silenced": false,
+              "protected": false,
+              "blocked": false,
+              "uncounterable": false,
+              "weakened": false,
+              "locked": false,
+              "boosted": false,
+              "burnStacks": 0
+            },
+            "lastEffectNote": "Played for 5 Motion."
+          }
+        },
+        "targets": [
+          {
+            "cardInstanceId": "cpu:starter-squabblehouse-shift:1:inmate-reformed",
+            "cardId": "inmate-reformed",
+            "owner": "cpu",
+            "before": {
+              "cardInstanceId": "cpu:starter-squabblehouse-shift:1:inmate-reformed",
+              "cardId": "inmate-reformed",
+              "owner": "cpu",
+              "lane": 0,
+              "power": 4,
+              "basePower": 3,
+              "powerModifier": 1,
+              "moved": true,
+              "statuses": {
+                "frozen": false,
+                "silenced": false,
+                "protected": false,
+                "blocked": false,
+                "uncounterable": false,
+                "weakened": false,
+                "locked": false,
+                "boosted": false,
+                "burnStacks": 0
+              },
+              "lastEffectNote": "Chest Pop: -2 Hands."
+            },
+            "after": {
+              "cardInstanceId": "cpu:starter-squabblehouse-shift:1:inmate-reformed",
+              "cardId": "inmate-reformed",
+              "owner": "cpu",
+              "lane": 0,
+              "power": 6,
+              "basePower": 3,
+              "powerModifier": 3,
+              "moved": true,
+              "statuses": {
+                "frozen": false,
+                "silenced": false,
+                "protected": false,
+                "blocked": false,
+                "uncounterable": false,
+                "weakened": false,
+                "locked": false,
+                "boosted": false,
+                "burnStacks": 0
+              },
+              "lastEffectNote": "All-Star Hands: +2 Hands."
+            }
+          },
+          {
+            "cardInstanceId": "cpu:starter-squabblehouse-shift:7:squabblehouse-bus-boy",
+            "cardId": "squabblehouse-bus-boy",
+            "owner": "cpu",
+            "before": {
+              "cardInstanceId": "cpu:starter-squabblehouse-shift:7:squabblehouse-bus-boy",
+              "cardId": "squabblehouse-bus-boy",
+              "owner": "cpu",
+              "lane": 1,
+              "power": 1,
+              "basePower": 1,
+              "powerModifier": 0,
+              "moved": true,
+              "statuses": {
+                "frozen": false,
+                "silenced": false,
+                "protected": false,
+                "blocked": false,
+                "uncounterable": false,
+                "weakened": false,
+                "locked": false,
+                "boosted": false,
+                "burnStacks": 0
+              },
+              "lastEffectNote": "Clear the Table patrol moved one adjacent district."
+            },
+            "after": {
+              "cardInstanceId": "cpu:starter-squabblehouse-shift:7:squabblehouse-bus-boy",
+              "cardId": "squabblehouse-bus-boy",
+              "owner": "cpu",
+              "lane": 1,
+              "power": 3,
+              "basePower": 1,
+              "powerModifier": 2,
+              "moved": true,
+              "statuses": {
+                "frozen": false,
+                "silenced": false,
+                "protected": false,
+                "blocked": false,
+                "uncounterable": false,
+                "weakened": false,
+                "locked": false,
+                "boosted": false,
+                "burnStacks": 0
+              },
+              "lastEffectNote": "All-Star Hands: +2 Hands."
+            }
+          },
+          {
+            "cardInstanceId": "cpu:starter-squabblehouse-shift:9:squabble-house-manager",
+            "cardId": "squabble-house-manager",
+            "owner": "cpu",
+            "before": {
+              "cardInstanceId": "cpu:starter-squabblehouse-shift:9:squabble-house-manager",
+              "cardId": "squabble-house-manager",
+              "owner": "cpu",
+              "lane": 2,
+              "power": 7,
+              "basePower": 1,
+              "powerModifier": 1,
+              "continuousPower": 5,
+              "moved": false,
+              "statuses": {
+                "frozen": false,
+                "silenced": false,
+                "protected": false,
+                "blocked": false,
+                "uncounterable": false,
+                "weakened": false,
+                "locked": false,
+                "boosted": false,
+                "burnStacks": 0
+              },
+              "lastEffectNote": "Home Advantage: enemy here, +1 Hand."
+            },
+            "after": {
+              "cardInstanceId": "cpu:starter-squabblehouse-shift:9:squabble-house-manager",
+              "cardId": "squabble-house-manager",
+              "owner": "cpu",
+              "lane": 2,
+              "power": 9,
+              "basePower": 1,
+              "powerModifier": 3,
+              "continuousPower": 5,
+              "moved": false,
+              "statuses": {
+                "frozen": false,
+                "silenced": false,
+                "protected": false,
+                "blocked": false,
+                "uncounterable": false,
+                "weakened": false,
+                "locked": false,
+                "boosted": false,
+                "burnStacks": 0
+              },
+              "lastEffectNote": "All-Star Hands: +2 Hands."
+            }
+          }
+        ]
+      }
+    },
+    "squabblehouse-security": {
+      "caseIndex": 25,
+      "round": 4,
+      "proof": {
+        "owner": "player",
+        "cardId": "squabblehouse-security",
+        "type": "ability",
+        "kind": "ability",
+        "note": "Keep the Peace: Keep the Peace found no enemy in this district.",
+        "source": {
+          "cardInstanceId": "player:starter-squabblehouse-shift:8:squabblehouse-security",
+          "cardId": "squabblehouse-security",
+          "owner": "player",
+          "before": {
+            "cardInstanceId": "player:starter-squabblehouse-shift:8:squabblehouse-security",
+            "cardId": "squabblehouse-security",
+            "owner": "player",
+            "lane": 0,
+            "power": 8,
+            "basePower": 4,
+            "powerModifier": 4,
+            "moved": false,
+            "statuses": {
+              "frozen": false,
+              "silenced": false,
+              "protected": true,
+              "blocked": false,
+              "uncounterable": false,
+              "weakened": false,
+              "locked": false,
+              "boosted": false,
+              "burnStacks": 0
+            },
+            "lastEffectNote": "NAIL SALON: this arrival blocks its next targeted enemy ability."
+          },
+          "after": {
+            "cardInstanceId": "player:starter-squabblehouse-shift:8:squabblehouse-security",
+            "cardId": "squabblehouse-security",
+            "owner": "player",
+            "lane": 0,
+            "power": 8,
+            "basePower": 4,
+            "powerModifier": 4,
+            "moved": false,
+            "statuses": {
+              "frozen": false,
+              "silenced": false,
+              "protected": true,
+              "blocked": false,
+              "uncounterable": false,
+              "weakened": false,
+              "locked": false,
+              "boosted": false,
+              "burnStacks": 0
+            },
+            "lastEffectNote": "NAIL SALON: this arrival blocks its next targeted enemy ability."
+          }
+        },
+        "targets": []
+      }
+    },
+    "squabblehouse-teknician": {
+      "caseIndex": 25,
+      "round": 5,
+      "proof": {
+        "owner": "player",
+        "cardId": "squabblehouse-teknician",
+        "type": "ability",
+        "kind": "move",
+        "note": "SquabbleHouse Teknician moved from district 2 to district 3.",
+        "source": {
+          "cardInstanceId": "player:starter-squabblehouse-shift:4:squabblehouse-teknician",
+          "cardId": "squabblehouse-teknician",
+          "owner": "player",
+          "before": {
+            "cardInstanceId": "player:starter-squabblehouse-shift:4:squabblehouse-teknician",
+            "cardId": "squabblehouse-teknician",
+            "owner": "player",
+            "lane": 1,
+            "power": 5,
+            "basePower": 5,
+            "powerModifier": 0,
+            "moved": false,
+            "statuses": {
+              "frozen": false,
+              "silenced": false,
+              "protected": false,
+              "blocked": false,
+              "uncounterable": false,
+              "weakened": false,
+              "locked": false,
+              "boosted": false,
+              "burnStacks": 0
+            },
+            "lastEffectNote": "Run It Back: repeated SquabbleHouse Bus Boy's On Reveal once this round."
+          },
+          "after": {
+            "cardInstanceId": "player:starter-squabblehouse-shift:4:squabblehouse-teknician",
+            "cardId": "squabblehouse-teknician",
+            "owner": "player",
+            "lane": 2,
+            "power": 5,
+            "basePower": 5,
+            "powerModifier": 0,
+            "moved": true,
+            "statuses": {
+              "frozen": false,
+              "silenced": false,
+              "protected": false,
+              "blocked": false,
+              "uncounterable": false,
+              "weakened": false,
+              "locked": false,
+              "boosted": false,
+              "burnStacks": 0
+            },
+            "lastEffectNote": "Clear the Table moved this staff member."
+          }
+        },
+        "targets": []
+      }
+    }
+  },
+  "rawSha256": "e4b0e83381f0863c1316e212265d5bf0d3a6fc9d7963664adcb3e74130b075c9"
+}

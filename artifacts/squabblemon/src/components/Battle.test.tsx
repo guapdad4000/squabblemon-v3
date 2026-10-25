@@ -8,6 +8,7 @@ import test from 'node:test';
 import { readFileSync } from 'node:fs';
 import React from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
+import { act, create, type ReactTestRendererJSON } from 'react-test-renderer';
 import { ROOKIE_DECK_ID, ROOKIE_MENTOR_CORE_IDS, cards, catalogCardById, catalogIdsToEngineIds, decks, districts, getCardImage } from '../data';
 import characterRevisions from '../characterRevisions.json';
 import { createStoryMatch, type StoryEncounterSnapshot } from '@workspace/squabblemon-engine/gameEngine';
@@ -33,7 +34,31 @@ import { MECHANIC_LESSONS, MECHANIC_LESSON_IDS, getTutorialGuidance } from './tu
 
 const noop = () => {};
 const source = readFileSync(new URL('./Battle.tsx', import.meta.url), 'utf8');
-const renderBattle = (match: Match, props: Record<string, unknown> = {}) => renderToStaticMarkup(<Battle match={match} deck={decks.find(d => d.id === match.playerDeck)} rivalDeck={decks.find(d => d.id === match.cpuDeck)} selectedInstanceId={null} setSelectedInstanceId={noop} selectedLane={null} setSelectedLane={noop} commit={noop} skipSequence={noop} presentationPhase="player-ready" phaseMessage="Your move" timerSeconds={20} timerEnabled={false} impactLane={null} stagedRival={null} stagedPlayer={null} activeEffectId={null} activeEffectLane={null} activeEffect={null} presentationScores={null} squabble={false} setSquabble={noop} setInspect={noop} archiveMatch={noop} onShowRules={noop} {...props} />);
+const battleElement = (match: Match, props: Record<string, unknown> = {}) => <Battle match={match} deck={decks.find(d => d.id === match.playerDeck)} rivalDeck={decks.find(d => d.id === match.cpuDeck)} selectedInstanceId={null} setSelectedInstanceId={noop} selectedLane={null} setSelectedLane={noop} commit={noop} skipSequence={noop} presentationPhase="player-ready" phaseMessage="Your move" timerSeconds={20} timerEnabled={false} impactLane={null} stagedRival={null} stagedPlayer={null} activeEffectId={null} activeEffectLane={null} activeEffect={null} presentationScores={null} squabble={false} setSquabble={noop} setInspect={noop} archiveMatch={noop} onShowRules={noop} {...props} />;
+const renderBattle = (match: Match, props: Record<string, unknown> = {}) => renderToStaticMarkup(battleElement(match, props));
+/** Mount the real Battle and preview effects. Static SSR cannot produce an asynchronous forecast.
+ * Host refs remain null: these assertions cover game UI output, not browser geometry or worker timing. */
+async function renderBattleWithPreview(match: Match, props: Record<string, unknown> = {}) {
+  const names = ['window', 'document', 'IS_REACT_ACT_ENVIRONMENT'];
+  const previous = new Map(names.map(name => [name, Object.getOwnPropertyDescriptor(globalThis, name)]));
+  const query = Object.assign(new EventTarget(), { matches: true });
+  const window = Object.assign(new EventTarget(), { matchMedia: () => query, setTimeout, clearTimeout });
+  const document = Object.assign(new EventTarget(), { hidden: true, visibilityState: 'hidden', documentElement: { dataset: { reduceMotion: 'true' } } });
+  for (const [name, value] of Object.entries({ window, document, IS_REACT_ACT_ENVIRONMENT: true })) Object.defineProperty(globalThis, name, { configurable: true, value });
+  let renderer: ReturnType<typeof create> | undefined;
+  const nativeElement = (node: ReactTestRendererJSON | string, key: number): React.ReactNode => typeof node === 'string' ? node
+    : React.createElement(node.type, { ...node.props, key }, ...(node.children ?? []).map(nativeElement));
+  try {
+    await act(async () => { renderer = create(battleElement(match, props)); });
+    await act(async () => { await Promise.resolve(); });
+    const output = renderer!.toJSON();
+    return renderToStaticMarkup(<>{(Array.isArray(output) ? output : output ? [output] : []).map(nativeElement)}</>);
+  } finally {
+    try { if (renderer) await act(async () => { renderer!.unmount(); }); } finally {
+      for (const name of names) { const descriptor = previous.get(name); if (descriptor) Object.defineProperty(globalThis, name, descriptor); else Reflect.deleteProperty(globalThis, name); }
+    }
+  }
+}
 const districtSnapshotFor = (ids: string[]): DistrictSnapshot => ({
   version: 1,
   locations: ids.map(id => DISTRICT_CATALOG.find(district => district.id === id)!) as DistrictSnapshot['locations'],
@@ -863,7 +888,7 @@ test('unavailable cards explain the exact Motion shortfall', () => {
   assert.match(html, new RegExp(`${unavailable.cost - match.playerMotion} short`));
 });
 
-test('mythical Triple OGs preview and target only their own side', () => {
+test('mythical Triple OGs preview and target only their own side', async () => {
   for (const cardId of ['triple-og-blue', 'triple-og-red'] as const) {
     const { match, blue, red } = createTripleOgUiMatch();
     const card = cardId === 'triple-og-blue' ? blue : red;
@@ -871,7 +896,7 @@ test('mythical Triple OGs preview and target only their own side', () => {
     const wrongLanes = ([0, 1, 2] as const).filter(lane => lane !== homeLane);
     const district = homeLane === 0 ? 'left district' : 'right district';
 
-    const noLaneHtml = renderBattle(match, { selectedInstanceId: card.instanceId });
+    const noLaneHtml = await renderBattleWithPreview(match, { selectedInstanceId: card.instanceId });
     assert.match(noLaneHtml, new RegExp(`Choose only the ${district}`));
     assert.match(noLaneHtml, new RegExp(`data-testid="preview-lane-${homeLane}"`));
     assert.match(getRenderedLaneButton(noLaneHtml, homeLane), /aria-disabled="false"/);
@@ -882,7 +907,7 @@ test('mythical Triple OGs preview and target only their own side', () => {
     }
     assert.match(noLaneHtml, /<button[^>]*data-testid="button-pick-district"[^>]*disabled=""/);
 
-    const legalHtml = renderBattle(match, { selectedInstanceId: card.instanceId, selectedLane: homeLane });
+    const legalHtml = await renderBattleWithPreview(match, { selectedInstanceId: card.instanceId, selectedLane: homeLane });
     assert.match(legalHtml, new RegExp(`data-testid="preview-lane-${homeLane}"`));
     assert.match(getRenderedLaneButton(legalHtml, homeLane), /aria-disabled="false"/);
     assert.match(legalHtml, new RegExp(`data-testid="lane-container-${homeLane}"[^>]*is-legal`));
@@ -890,7 +915,7 @@ test('mythical Triple OGs preview and target only their own side', () => {
     assert.doesNotMatch(legalHtml, /<button[^>]*data-testid="button-lock"[^>]*disabled=""/);
 
     for (const lane of wrongLanes) {
-      const wrongLaneHtml = renderBattle(match, { selectedInstanceId: card.instanceId, selectedLane: lane });
+      const wrongLaneHtml = await renderBattleWithPreview(match, { selectedInstanceId: card.instanceId, selectedLane: lane });
       assert.doesNotMatch(wrongLaneHtml, new RegExp(`data-testid="preview-lane-${lane}"`));
       assert.match(getRenderedLaneButton(wrongLaneHtml, lane), /aria-disabled="true"/);
       assert.match(wrongLaneHtml, /data-testid="button-lock"/);
@@ -899,7 +924,7 @@ test('mythical Triple OGs preview and target only their own side', () => {
   }
 });
 
-test('mythical Triple OGs bypass locks only in their home district; ordinary cards remain blocked', () => {
+test('mythical Triple OGs bypass locks only in their home district; ordinary cards remain blocked', async () => {
   for (const cardId of ['triple-og-blue', 'triple-og-red'] as const) {
     const match = createTripleOgUiMatch().match;
     match.storyEncounter = getStoryBattle('receipts-on-camera')!.encounter;
@@ -914,7 +939,7 @@ test('mythical Triple OGs bypass locks only in their home district; ordinary car
       ...match.storyRuntime!,
       laneLocks: [{ owner: 'player', lanes: lockedLanes }],
     };
-    const html = renderBattle(match, { selectedInstanceId: card.instanceId });
+    const html = await renderBattleWithPreview(match, { selectedInstanceId: card.instanceId });
     assert.match(html, new RegExp(`Choose only the ${district}`));
     assert.match(html, new RegExp(`data-testid="preview-lane-${homeLane}"`));
     assert.match(html, new RegExp(`data-testid="lane-container-${homeLane}"[^>]*is-legal[^>]*is-locked`));
@@ -937,7 +962,7 @@ test('mythical Triple OGs bypass locks only in their home district; ordinary car
   assert.match(getRenderedLaneButton(html, 2), /aria-disabled="false"/);
 });
 
-test('a mythical Triple OG keeps its projected ability preview in a locked district', () => {
+test('a mythical Triple OG keeps its projected ability preview in a locked district', async () => {
   const match = createTripleOgUiMatch().match;
   match.storyEncounter = getStoryBattle('receipts-on-camera')!.encounter;
   match.round = 2;
@@ -950,7 +975,7 @@ test('a mythical Triple OG keeps its projected ability preview in a locked distr
     laneLocks: [{ owner: 'player', lanes: [homeLane] }],
   };
 
-  const html = renderBattle(match, {
+  const html = await renderBattleWithPreview(match, {
     deck: decks[0],
     rivalDeck: decks[1],
     selectedInstanceId: blue.instanceId,
@@ -962,7 +987,7 @@ test('a mythical Triple OG keeps its projected ability preview in a locked distr
   assert.match(html, /Play card · \d+ Motion/);
 });
 
-test('both mythical Triple OGs have no Corrupt Church home surcharge at their printed Motion', () => {
+test('both mythical Triple OGs have no Corrupt Church home surcharge at their printed Motion', async () => {
   for (const cardId of ['triple-og-blue', 'triple-og-red'] as const) {
     const homeLane = cardId === 'triple-og-blue' ? 0 : 2;
     const locations = ['time-square', 'county-jail', 'magic-city'];
@@ -971,7 +996,7 @@ test('both mythical Triple OGs have no Corrupt Church home surcharge at their pr
     const card = createCardInstance(cardId, 'player', 'triple-og-church-cost', homeLane);
     match.playerHand = [card];
     match.playerMotion = card.cost;
-    const html = renderBattle(match, { selectedInstanceId: card.instanceId, selectedLane: homeLane });
+    const html = await renderBattleWithPreview(match, { selectedInstanceId: card.instanceId, selectedLane: homeLane });
 
     assert.match(html, new RegExp(`data-testid="preview-lane-${homeLane}"`));
     assert.match(html, new RegExp(`Play card · ${card.cost} Motion`));
@@ -1616,12 +1641,12 @@ test('selected card has a readable move peek; committed plays and replay suppres
   assert.doesNotMatch(renderBattle(match, { selectedInstanceId: card.instanceId, presentationPhase: 'effects' }), /data-testid="battle-hand-peek"/);
 });
 
-test('selected Pirate Radio play forecasts all lane effects without replacing actual scores', () => {
+test('selected Pirate Radio play forecasts all lane effects without replacing actual scores', async () => {
   const match = createMatch('block', 'combo', undefined, undefined, districtSnapshotFor(['bodega', 'pirate-radio', 'construction-site']));
   const first = { ...createCardInstance('cornball', 'player', 'radio-board', 0), lane: 1 as Lane };
   const next = createCardInstance('plug', 'player', 'radio-hand', 0);
   match.boards = [[], [first], []]; match.playerHand = [next]; match.playerMotion = 10;
-  const html = renderBattle(match, { selectedInstanceId: next.instanceId, selectedLane: 1 });
+  const html = await renderBattleWithPreview(match, { selectedInstanceId: next.instanceId, selectedLane: 1 });
   assert.equal((html.match(/class="preview-player">3<b/g) ?? []).length, 2, 'both adjacent lanes project broadcast bonus');
   assert.equal((html.match(/data-testid="preview-lane-/g) ?? []).length, 3);
   assert.match(html, /data-testid="score-player-0"[^>]*>[\s\S]*?>0<\/span>/);

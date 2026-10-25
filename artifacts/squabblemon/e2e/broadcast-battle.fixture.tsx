@@ -14,6 +14,7 @@ const query = new QueryClient({ defaultOptions: { queries: { retry: false }, mut
 const params = new URLSearchParams(location.search);
 const mode = params.get('mode') === 'story' ? 'story' : 'practice';
 const trainingCircuit = params.get('training') === 'true';
+const challengeRunId = params.get('challenge') === 'true' ? 'rules-update-run' : undefined;
 const playerDeck = decks.find(deck => deck.id === 'block')!;
 const rivalDeck = decks.find(deck => deck.id === 'combo')!;
 const storyEncounter = getStoryBattle('welcome-to-the-block')!.encounter;
@@ -48,7 +49,7 @@ function Fixture() {
     },
   };
   return <div style={{ height: '100dvh', minHeight: 640 }}>
-    <PlayLoop mode={mode} trainingCircuit={trainingCircuit} storyNodeId={mode === 'story' ? 'welcome-to-the-block' : undefined}
+    <PlayLoop mode={mode} challengeRunId={challengeRunId} trainingCircuit={trainingCircuit} storyNodeId={mode === 'story' ? 'welcome-to-the-block' : undefined}
       initialDeckId="block" initialRivalId="combo" hideLobby turnTimerEnabled={false}
       onVerifiedComplete={() => { document.documentElement.dataset.completionVerified = 'true'; }}
       onExit={() => { document.documentElement.dataset.exit = 'true'; }} />

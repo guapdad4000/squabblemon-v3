@@ -228,6 +228,9 @@ export default defineConfig({
     strictPort: true,
     host: '0.0.0.0',
     allowedHosts: true,
+    // Generated builds/captures are not source inputs. Multiple retained audit
+    // builds can otherwise exhaust Linux watchers before a test reaches the UI.
+    watch: { ignored: ['**/dist/**', '**/screenshots/**', '**/test-results/**', '**/playwright-report/**', '**/.cache/**', '**/output/**'] },
     fs: {
       strict: true,
     },

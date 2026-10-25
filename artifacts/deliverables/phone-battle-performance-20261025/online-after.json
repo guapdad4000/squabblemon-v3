@@ -1,0 +1,287 @@
+{
+  "baseline": false,
+  "kind": "actual online hook/battle/card fixture, mocked local GETs; not production/device performance",
+  "checks": [
+    {
+      "name": "clock-only-heartbeats",
+      "renders": [],
+      "commits": [],
+      "snapshot": {
+        "reads": 6,
+        "writes": 0,
+        "revision": 3,
+        "status": "active",
+        "boardId": "player:projection-fixture:0:hooper",
+        "handId": "player:block:0:cornball",
+        "deadline": 1792963920167
+      },
+      "timer": "61"
+    },
+    {
+      "name": "deadline-correction",
+      "renders": [],
+      "commits": [],
+      "snapshot": {
+        "reads": 7,
+        "writes": 0,
+        "revision": 3,
+        "status": "active",
+        "boardId": "player:projection-fixture:0:hooper",
+        "handId": "player:block:0:cornball",
+        "deadline": 1792963904536
+      },
+      "timer": "45"
+    },
+    {
+      "name": "same-revision-card-form-and-status",
+      "renders": [
+        {
+          "id": "player:projection-fixture:0:hooper",
+          "zone": "board"
+        }
+      ],
+      "commits": [
+        {
+          "id": "player:projection-fixture:0:hooper",
+          "zone": "board"
+        }
+      ],
+      "snapshot": {
+        "reads": 8,
+        "writes": 0,
+        "revision": 3,
+        "status": "active",
+        "boardId": "player:projection-fixture:0:hooper",
+        "handId": "player:block:0:cornball",
+        "deadline": 1792963904536
+      },
+      "timer": "45"
+    },
+    {
+      "name": "same-revision-private-cost",
+      "renders": [
+        {
+          "id": "player:block:0:cornball",
+          "zone": "hand",
+          "cost": 0
+        }
+      ],
+      "commits": [
+        {
+          "id": "player:block:0:cornball",
+          "zone": "hand",
+          "cost": 0
+        }
+      ],
+      "snapshot": {
+        "reads": 9,
+        "writes": 0,
+        "revision": 3,
+        "status": "active",
+        "boardId": "player:projection-fixture:0:hooper",
+        "handId": "player:block:0:cornball",
+        "deadline": 1792963904536
+      },
+      "timer": "45"
+    },
+    {
+      "name": "authoritative-complete-status",
+      "renders": [
+        {
+          "id": "cpu:projection-fixture:1:hooper",
+          "zone": "board"
+        },
+        {
+          "id": "cpu:projection-fixture:7:hooper",
+          "zone": "board"
+        },
+        {
+          "id": "player:projection-fixture:0:hooper",
+          "zone": "board"
+        },
+        {
+          "id": "player:projection-fixture:6:hooper",
+          "zone": "board"
+        },
+        {
+          "id": "cpu:projection-fixture:3:hooper",
+          "zone": "board"
+        },
+        {
+          "id": "cpu:projection-fixture:9:hooper",
+          "zone": "board"
+        },
+        {
+          "id": "player:projection-fixture:2:hooper",
+          "zone": "board"
+        },
+        {
+          "id": "player:projection-fixture:8:hooper",
+          "zone": "board"
+        },
+        {
+          "id": "cpu:projection-fixture:5:hooper",
+          "zone": "board"
+        },
+        {
+          "id": "player:projection-fixture:4:hooper",
+          "zone": "board"
+        },
+        {
+          "id": "player:block:0:cornball",
+          "zone": "hand",
+          "cost": 0
+        },
+        {
+          "id": "player:block:1:snow",
+          "zone": "hand",
+          "cost": 2
+        },
+        {
+          "id": "player:block:2:roaster",
+          "zone": "hand",
+          "cost": 2
+        },
+        {
+          "id": "player:block:3:rastamon",
+          "zone": "hand",
+          "cost": 1
+        },
+        {
+          "id": "player:block:4:wifey",
+          "zone": "hand",
+          "cost": 2
+        },
+        {
+          "id": "player:block:0:cornball",
+          "zone": "hand",
+          "cost": 1
+        },
+        {
+          "id": "player:block:1:snow",
+          "zone": "hand",
+          "cost": 3
+        },
+        {
+          "id": "player:block:2:roaster",
+          "zone": "hand",
+          "cost": 3
+        },
+        {
+          "id": "player:block:3:rastamon",
+          "zone": "hand",
+          "cost": 2
+        },
+        {
+          "id": "player:block:4:wifey",
+          "zone": "hand",
+          "cost": 3
+        }
+      ],
+      "commits": [
+        {
+          "id": "cpu:projection-fixture:1:hooper",
+          "zone": "board"
+        },
+        {
+          "id": "cpu:projection-fixture:7:hooper",
+          "zone": "board"
+        },
+        {
+          "id": "player:projection-fixture:0:hooper",
+          "zone": "board"
+        },
+        {
+          "id": "player:projection-fixture:6:hooper",
+          "zone": "board"
+        },
+        {
+          "id": "cpu:projection-fixture:3:hooper",
+          "zone": "board"
+        },
+        {
+          "id": "cpu:projection-fixture:9:hooper",
+          "zone": "board"
+        },
+        {
+          "id": "player:projection-fixture:2:hooper",
+          "zone": "board"
+        },
+        {
+          "id": "player:projection-fixture:8:hooper",
+          "zone": "board"
+        },
+        {
+          "id": "cpu:projection-fixture:5:hooper",
+          "zone": "board"
+        },
+        {
+          "id": "player:projection-fixture:4:hooper",
+          "zone": "board"
+        },
+        {
+          "id": "player:block:0:cornball",
+          "zone": "hand",
+          "cost": 0
+        },
+        {
+          "id": "player:block:1:snow",
+          "zone": "hand",
+          "cost": 2
+        },
+        {
+          "id": "player:block:2:roaster",
+          "zone": "hand",
+          "cost": 2
+        },
+        {
+          "id": "player:block:3:rastamon",
+          "zone": "hand",
+          "cost": 1
+        },
+        {
+          "id": "player:block:4:wifey",
+          "zone": "hand",
+          "cost": 2
+        },
+        {
+          "id": "player:block:0:cornball",
+          "zone": "hand",
+          "cost": 1
+        },
+        {
+          "id": "player:block:1:snow",
+          "zone": "hand",
+          "cost": 3
+        },
+        {
+          "id": "player:block:2:roaster",
+          "zone": "hand",
+          "cost": 3
+        },
+        {
+          "id": "player:block:3:rastamon",
+          "zone": "hand",
+          "cost": 2
+        },
+        {
+          "id": "player:block:4:wifey",
+          "zone": "hand",
+          "cost": 3
+        }
+      ],
+      "snapshot": {
+        "reads": 10,
+        "writes": 0,
+        "revision": 3,
+        "status": "complete",
+        "boardId": "player:projection-fixture:0:hooper",
+        "handId": "player:block:0:cornball",
+        "deadline": null
+      }
+    }
+  ],
+  "errors": [],
+  "status": "passed",
+  "projectionSourceHash": "c9842ee225704ebad8a7c1346115d45c3f9bdc7d05d4bbf87d7bc5c6ec2ebfbc"
+}

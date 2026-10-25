@@ -8,6 +8,7 @@ import {
 import {
   rankedLobby, cancelRankedSearch, accessRoomReactions,
   accessFriendRoom,
+  pollFriendRoom,
   createFriendRoom,
   listFriendRooms,
 } from "../lib/onlineMatches";
@@ -131,7 +132,7 @@ router.post('/multiplayer/ranked/cancel', endpoint((req, userId) => {
 }));
 router.get(
   "/multiplayer/:code",
-  endpoint((req, userId) => accessFriendRoom(codeOf(req), userId)),
+  endpoint((req, userId) => pollFriendRoom(codeOf(req), userId, typeof req.query.since === "string" ? req.query.since : undefined)),
 );
 router.post(
   "/multiplayer/:code/join",

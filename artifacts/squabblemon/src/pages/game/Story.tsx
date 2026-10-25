@@ -29,6 +29,9 @@ import {
   useSavePlayerStoryDialogue,
 } from '@workspace/api-client-react';
 import {
+  loadStoryChapter,
+  loadStoryChapterForNode,
+  storyIndex,
   storyDialogueToken,
   STORY_CHARACTERS,
   getStoryChapter,
@@ -40,7 +43,7 @@ import {
   type StoryDialogueLine,
   type StoryNode,
   type StoryReward,
-} from '@workspace/squabblemon-engine/story';
+} from '../../lib/story/catalog';
 import { STORY_DUPLICATE_STYLE_SHARDS } from '@workspace/squabblemon-engine/economy';
 import { cards, catalogCardByEngineId, getAssetUrl, getCardImage, CARD_RARITY_DEFINITIONS } from '../../data';
 import { getMatchRoundLimit, getStoryModifierSummaries } from '../../gameEngine';
@@ -215,6 +218,22 @@ export function Story({ bootstrap }: { bootstrap: PlayerBootstrap }) {
       campaign.chapters[0]
     : undefined) as StoryCampaign['chapters'][number] | undefined;
 
+  const [chapterLoad, setChapterLoad] = useState<{ id: string; error?: string } | null>(null);
+  const [chapterAttempt, retryChapter] = useState(0);
+  const needsChapter = !!(activeSeasonId || selectedNodeId);
+  const chapterToLoad = needsChapter ? currentChapter?.id : undefined;
+  useEffect(() => {
+    if (!chapterToLoad) return;
+    let cancelled = false;
+    setChapterLoad(null);
+    void loadStoryChapter(chapterToLoad).then(() => {
+      if (!cancelled) setChapterLoad({ id: chapterToLoad });
+    }, error => {
+      if (!cancelled) setChapterLoad({ id: chapterToLoad, error: String(error?.message ?? error) });
+    });
+    return () => { cancelled = true; };
+  }, [chapterToLoad, chapterAttempt]);
+
   useEffect(() => {
     const viewport = mapViewport.current;
     if (!viewport || !Array.isArray(campaign?.nodes)) return;
@@ -289,6 +308,13 @@ export function Story({ bootstrap }: { bootstrap: PlayerBootstrap }) {
         onContinue={(nodeId) => setLocation(`/game/story?node=${encodeURIComponent(nodeId)}`)}
       />
     );
+  }
+
+  if (chapterToLoad && (chapterLoad?.id !== chapterToLoad || chapterLoad.error)) {
+    return <div className="h-full grid place-content-center bg-zinc-950 text-center px-6 gap-3" role="status">
+      <p>{chapterLoad?.error ?? 'Loading chapter...'}</p>
+      {chapterLoad?.error && <><button type="button" onClick={() => retryChapter(value => value + 1)}>Retry chapter</button><button type="button" onClick={() => window.location.reload()}>Reload current story</button></>}
+    </div>;
   }
 
   const nodes = campaign.nodes.filter((node) => node.chapterId === currentChapter!.id);
@@ -534,6 +560,15 @@ export function NodeOverlay({
   const completeNode = useCompletePlayerStoryNode();
   const saveDialogue = useSavePlayerStoryDialogue();
   const nodeProgress = campaign.nodes.find((node) => node.nodeId === nodeId);
+  // NodeOverlay is also mounted directly by tutorial/scene fixtures. Hydrate its
+  // chapter independently, sharing the same authoring cache as the route.
+  const chapterQuery = useQuery({
+    queryKey: ['story-chapter-content', storyIndex.revision, nodeProgress?.chapterId],
+    queryFn: () => loadStoryChapterForNode(nodeId),
+    enabled: !!nodeProgress,
+    staleTime: Infinity,
+    retry: 1,
+  });
   const storyNode = getStoryNode(nodeId);
   const actionLock = useRef(false);
   const [screen, setScreen] = useState<'dialogue' | 'briefing' | 'puzzle' | 'completed'>('dialogue');
@@ -572,13 +607,17 @@ export function NodeOverlay({
     else setScreen(isBattle ? 'briefing' : hasPuzzle && !isCleared ? 'puzzle' : 'completed');
   }, [isBattle, hasPuzzle, isCleared, nodeId, pendingEntries.length]);
 
+  if (!storyNode && nodeProgress && chapterQuery.isPending) {
+    return <div className="fixed inset-0 z-50 grid place-items-center bg-black/95 p-6 text-center" role="status">Loading chapter...</div>;
+  }
   if (!storyNode || !nodeProgress) {
     return (
       <div className="fixed inset-0 z-50 grid place-items-center bg-black/95 p-6 text-center">
         <div className="max-w-sm border border-white/15 bg-zinc-950 p-7">
           <div className="font-mono text-[10px] uppercase tracking-[.25em] text-accent">Street file missing</div>
           <h2 className="mt-2 font-display text-3xl font-black italic uppercase">Fight could not be opened</h2>
-          <p className="mt-3 text-sm text-white/55">Return to the map and choose another available stop.</p>
+          <p className="mt-3 text-sm text-white/55">{chapterQuery.error?.message ?? 'Return to the map and choose another available stop.'}</p>
+          {chapterQuery.error && <><button type="button" onClick={() => void chapterQuery.refetch()}>Retry chapter</button><button type="button" onClick={() => window.location.reload()}>Reload current story</button></>}
           <button
             type="button"
             onClick={onClose}

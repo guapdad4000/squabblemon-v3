@@ -863,3 +863,75 @@ for (const owner of ['player', 'cpu'] as const) test(`Natural Cure fallback is l
       assert.equal(helped!.statuses.burnStacks, mode === 'frozen' ? 0 : 2); }
   }
 });
+
+function cpuPolicyFixture(ids: string[], round = 2): Match {
+  return { ...createMatch('vibes', 'vibes'), phase: 'cpu-reveal', round, cpuMotion: 9, playerMotion: 9,
+    cpuHand: ids.map((id, index) => createCardInstance(id, 'cpu', 'policy-evidence', index)),
+    squabbleByOwner: { player: false, cpu: false } };
+}
+const policyBoardCard = (id: string, owner: 'player' | 'cpu', lane: 0 | 1 | 2, index: number) =>
+  ({ ...createCardInstance(id, owner, 'policy-board', index), lane });
+
+test('CPU current legal choices include all affordable paid modes and Squabble combinations', async () => {
+  const { listLegalPlayIntents, playTurnCard, blockbusterExtraCost } = await import('./gameEngine');
+  for (const owner of ['player', 'cpu'] as const) {
+    const hand = ['homelessguy', 'the-dice-game', 'the-concert', 'sideofhands'].map((id, i) => createCardInstance(id, owner, 'legal-policy', i));
+    const match: Match = { ...cpuPolicyFixture([]), phase: owner === 'player' ? 'player' : 'cpu-reveal', [owner === 'player' ? 'playerHand' : 'cpuHand']: hand };
+    const before = structuredClone(match);
+    const legal = listLegalPlayIntents(match, owner);
+    assert.equal(new Set(legal.map(x => [x.instanceId, x.lane, x.investment, x.squabble].join('|'))).size, legal.length);
+    for (const intent of legal) {
+      const card = hand.find(item => item.instanceId === intent.instanceId)!;
+      assert.equal(intent.cost, getLegalCardCost(match, owner, card, intent.lane) + blockbusterExtraCost(card.cardId, intent.investment));
+      assert.doesNotThrow(() => playTurnCard(match, owner, intent.instanceId, intent.lane, intent.squabble, intent.investment));
+    }
+    for (const squabble of [false, true]) for (const investment of [0, 1, 2, 3, 4])
+      assert.ok(legal.some(x => x.cardId === 'homelessguy' && x.lane === 0 && x.squabble === squabble && x.investment === investment));
+    assert.deepEqual(legal.filter(x => x.cardId === 'the-dice-game' && x.lane === 0).map(x => x.investment), [0, 2, 3]);
+    assert.deepEqual(legal.filter(x => x.cardId === 'the-concert' && x.lane === 0).map(x => x.investment), [0, 1]);
+    assert.ok(legal.filter(x => x.cardId !== 'homelessguy').every(x => !x.squabble));
+    assert.deepEqual(match, before, 'enumerating and resolving previews cannot mutate the real match');
+    const poorOpponent = { ...match, [owner === 'player' ? 'cpuMotion' : 'playerMotion']: 1 };
+    assert.ok(listLegalPlayIntents(poorOpponent, owner).filter(x => x.cardId === 'the-dice-game').every(x => x.investment === 0));
+    const exhausted = { ...match, squabbleByOwner: { player: true, cpu: true } };
+    assert.ok(listLegalPlayIntents(exhausted, owner).every(x => !x.squabble));
+  }
+});
+
+test('CPU uses Concert damage mode instead of passing and commits exactly one selected play', async () => {
+  const { playTurnCard } = await import('./gameEngine');
+  const match = { ...cpuPolicyFixture(['the-concert']), boards: ([0, 1, 2] as const).map(lane => [policyBoardCard('cornball', 'player', lane, lane)]) as Match['boards'] };
+  const before = structuredClone(match);
+  const choice = chooseCpuPlay(match, false)!;
+  assert.ok(choice); assert.equal(choice.investment, 1); assert.equal(choice.squabble, false);
+  const played = playTurnCard(match, 'cpu', choice.instanceId, choice.lane, choice.squabble, choice.investment);
+  assert.equal(played.boards[choice.lane].filter(card => card.owner === 'player').length, 0);
+  assert.equal(played.effectLog.filter(event => event.type === 'play').length, 1);
+  assert.deepEqual(match, before, 'choice search must not commit hypothetical plays');
+  const revealed = revealCpu(match);
+  assert.equal(revealed.effectLog.filter(event => event.type === 'play').length, 1);
+  assert.equal(revealed.cpuHand.length, 0);
+});
+
+test('CPU does not reward obsolete Gamer cheap-play setup over the immediate current effect', () => {
+  const match: Match = { ...cpuPolicyFixture(['gamer', 'redside1', 'energydrink', 'sideofhands']),
+    squabbleByOwner: { player: true, cpu: true },
+    boards: [[policyBoardCard('homelessguy', 'player', 0, 0), policyBoardCard('cornball', 'cpu', 0, 1)], [], []] };
+  const choice = chooseCpuPlay(match, false)!;
+  assert.equal(match.cpuHand.find(card => card.instanceId === choice.instanceId)?.cardId, 'sideofhands');
+  assert.equal(choice.lane, 0);
+});
+
+test('CPU honors its chosen Squabble and cannot peek at hidden hands or future draw orders', () => {
+  const match: Match = { ...cpuPolicyFixture(['cornball'], 6),
+    boards: [[policyBoardCard('homelessguy', 'player', 0, 0), policyBoardCard('cornball', 'cpu', 0, 1)], [], []] };
+  const choice = chooseCpuPlay(match)!;
+  assert.equal(choice.squabble, true);
+  const revealed = revealCpu(match);
+  assert.equal(revealed.squabbleByOwner?.cpu, true);
+  assert.equal(revealed.effectLog.filter(event => event.type === 'play').length, 1);
+  const searching = cpuPolicyFixture(['gamer', 'cornball', 'the-concert']);
+  const hidden = { ...searching, playerHand: [custom('kyle', 'player', 92)],
+    playerCardIds: ['kyle', 'ashlee'], playerDrawIndex: 0, cpuCardIds: ['homelessguy', 'kyle'], cpuDrawIndex: 0 };
+  assert.deepEqual(chooseCpuPlay(searching), chooseCpuPlay(hidden));
+});

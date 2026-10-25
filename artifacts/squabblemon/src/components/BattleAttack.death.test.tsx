@@ -3,6 +3,7 @@ import test from 'node:test';
 import React from 'react';
 import { act, create } from 'react-test-renderer';
 import { BattleAttack } from './BattleAttack';
+import { BattleFxImage } from './BattleFxImage';
 import { isDefeatMediaReady, warmDefeatMedia } from '../lib/battleDefeatMedia';
 import { completeDefeatBeat } from '../lib/battleMediaEvents';
 import { cards } from '../data';
@@ -59,4 +60,24 @@ test('defeat media loads outside background work, retries errors, and never repl
   assert.equal(renderer!.root.findAllByProps({ className: 'defeat-tombstone' }).length, 1);
   assert.equal(completeDefeatBeat(effect, 650), 5760, 'media availability never changes the authored queue duration');
   assert.equal(completeDefeatBeat({ ...effect, source: { ...effect.source!, departureCause: 'transformation' } }, 650), 650, 'neutral departures keep their ordinary beat');
+});
+
+
+test('movement keeps both authored dust placements and retires each at its parent fade endpoint', async t => {
+  const previous = Object.getOwnPropertyDescriptor(globalThis, 'IS_REACT_ACT_ENVIRONMENT');
+  Object.defineProperty(globalThis, 'IS_REACT_ACT_ENVIRONMENT', { configurable: true, writable: true, value: true });
+  let renderer: ReturnType<typeof create> | undefined;
+  t.after(async () => {
+    if (renderer) await act(async () => renderer!.unmount());
+    if (previous) Object.defineProperty(globalThis, 'IS_REACT_ACT_ENVIRONMENT', previous);
+    else Reflect.deleteProperty(globalThis, 'IS_REACT_ACT_ENVIRONMENT');
+  });
+  const before = { lane: 0, basePower: 4, powerModifier: 0, statuses: { burnStacks: 0 } };
+  const participant = { cardId: 'cornball', cardInstanceId: 'moving', owner: 'player', before, after: { ...before, lane: 1 } };
+  const effect = { sequence: 2, type: 'expiration', kind: 'move', owner: 'player', cardId: 'cornball', cardInstanceId: 'moving', note: '', scores: { before: [], after: [] }, source: participant, targets: [] } as unknown as PresentationEffect;
+  await act(async () => { renderer = create(<BattleAttack card={cards.cornball} effect={effect} impact speed={1.5} />); });
+  const dust = renderer!.root.findAllByType(BattleFxImage).filter(node => node.props.kind === 'movement-dust');
+  assert.equal(dust.length, 2, 'both departure and arrival retain the supplied artwork');
+  assert.deepEqual(dust.map(node => node.parent!.props['data-geo-role']), ['departure', 'box']);
+  assert.ok(dust.every(node => node.props.retireOnParentAnimationEnd === 'supplied-dust-fade'), 'both follow the CSS endpoint, including presentation-speed changes');
 });

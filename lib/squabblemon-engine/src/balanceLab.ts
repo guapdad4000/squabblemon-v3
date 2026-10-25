@@ -1,7 +1,6 @@
 import { completeEngineCrew, cards, decks, type Deck } from './data';
 import { createDistrictSnapshot } from './districts';
 import {
-  canAffordSelection,
   createAbilityUpgradeSnapshot,
   createCardInstance,
   createMatchFromEngineCards,
@@ -9,6 +8,9 @@ import {
   getEffectiveCardPower,
   getLegalCardCost,
   getMatchWinner,
+  getMatchRoundLimit,
+  listLegalPlayIntents,
+  previewPendingSmileBombs,
   nextRound,
   pass,
   playTurnCard,
@@ -22,8 +24,8 @@ import {
 export const BALANCE_LAB_SCHEMA_VERSION = 2 as const;
 export const BALANCE_TELEMETRY_SEMANTICS = {
   squabbles: 'Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.',
-  legacyAbilityCounters: 'abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.',
-  abilityEvidence: 'Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.',
+  legacyAbilityCounters: 'abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades and the historical JSON-text delta heuristic; object insertion-order churn can count as a legacy effect. Never base-ability reliability.',
+  abilityEvidence: 'Source-attributed emitted events only. Mechanical JSON comparisons ignore object key order and preserve array order. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.',
   abilitySuccessRate: 'Unavailable: emitted events do not prove base-ability attempts or eligible opportunities.',
 } as const;
 export type BalanceTier = 0 | 1 | 2 | 3;
@@ -44,6 +46,7 @@ export type BalancePlayOption = {
   readonly lane: Lane;
   readonly cost: number;
   readonly squabble: boolean;
+  readonly investment: number;
   readonly preview: Match;
 };
 
@@ -307,7 +310,6 @@ export type BalancePolicySensitivity = {
   readonly playerSeatScoreRate: number;
 };
 
-const LANES: readonly Lane[] = [0, 1, 2];
 const PREVENTED_CARD_OUTCOME_NOTE = /\b(?:blocked (?:a |the )?(?:targeted effect|targeted hostile ability|movement)|cannot be moved|no effect)\b/i;
 const NON_MUTATING_ABILITY_SUCCESS_NOTE = /\b(?:Network Boost watches|Follower Frenzy armed|Guest List revealed)\b/i;
 const SWAP_REVIEW_DELTA = 0.05;
@@ -325,6 +327,22 @@ function comparableAbilityCard(card: CardInstance | undefined): Omit<CardInstanc
  * Use classifyBalanceAbilityEvent with the transcript for new audit evidence.
  */
 export function isSuccessfulBalanceAbilityEvent(event: EffectLogEntry): boolean {
+  return observedBalanceAbilityEffect(event, (left, right) => JSON.stringify(left) === JSON.stringify(right));
+}
+
+/** Replay objects can share equivalent subtrees whose property insertion order
+ * differs. Current event evidence compares JSON values; arrays retain order. */
+function equalMechanicalJson(left: unknown, right: unknown): boolean {
+  if (left === right) return true;
+  if (!left || !right || typeof left !== 'object' || typeof right !== 'object') return false;
+  if (Array.isArray(left) || Array.isArray(right)) return Array.isArray(left) && Array.isArray(right)
+    && left.length === right.length && left.every((value, index) => equalMechanicalJson(value, right[index]));
+  const a = left as Record<string, unknown>, b = right as Record<string, unknown>;
+  const keys = Object.keys(a);
+  return keys.length === Object.keys(b).length && keys.every(key => Object.hasOwn(b, key) && equalMechanicalJson(a[key], b[key]));
+}
+
+function observedBalanceAbilityEffect(event: EffectLogEntry, equalValues = equalMechanicalJson): boolean {
   if (event.type !== 'ability') return false;
   if (event.abilityMetadata?.result === 'applied') return true;
 
@@ -335,12 +353,12 @@ export function isSuccessfulBalanceAbilityEvent(event: EffectLogEntry): boolean 
     const before = beforeCards.get(cardId);
     const after = afterCards.get(cardId);
     if (after && PREVENTED_CARD_OUTCOME_NOTE.test(after.lastEffectNote)) continue;
-    if (JSON.stringify(comparableAbilityCard(before)) !== JSON.stringify(comparableAbilityCard(after))) return true;
+    if (!equalValues(comparableAbilityCard(before), comparableAbilityCard(after))) return true;
   }
 
   if (event.resources.before.playerMotion !== event.resources.after.playerMotion
       || event.resources.before.cpuMotion !== event.resources.after.cpuMotion) return true;
-  if (JSON.stringify(event.replay.before.cheapBuffsUsed) !== JSON.stringify(event.replay.after.cheapBuffsUsed)) return true;
+  if (!equalValues(event.replay.before.cheapBuffsUsed, event.replay.after.cheapBuffsUsed)) return true;
 
   const beforeDiscounts = new Set(event.replay.before.discountTokens.map((token) => token.id));
   if (event.replay.after.discountTokens.some((token) => !beforeDiscounts.has(token.id))) return true;
@@ -397,13 +415,13 @@ export function classifyBalanceAbilityEvent(
       const nested = earlier.filter(entry => entry.sequence > play.sequence && entry.type === 'ability'
         && !entry.abilityMetadata && entry.owner === event.owner && staffIds.has(entry.cardInstanceId));
       if (nested.length) return result(
-        nested.some(entry => isSuccessfulBalanceAbilityEvent(entry)) ? 'nested-effect' : 'nested-no-observed-effect',
+        nested.some(entry => observedBalanceAbilityEffect(entry)) ? 'nested-effect' : 'nested-no-observed-effect',
         'staff-echo-round-mark-and-target-events', nested.map(entry => entry.sequence),
       );
       return result('unknown', 'settled-wrapper-without-causal-metadata');
     }
   }
-  if (isSuccessfulBalanceAbilityEvent(event)) return result('direct-effect', 'event-delta-or-known-non-mutating-effect');
+  if (observedBalanceAbilityEffect(event)) return result('direct-effect', 'event-delta-or-known-non-mutating-effect');
   const source = event.replay.before.boards.flat().find(card => card.instanceId === event.cardInstanceId);
   if (event.cardId === 'squabblehouse-teknician'
       && source?.squabblehouseTeknicianRevealRound === event.round && event.targets.length) {
@@ -411,7 +429,7 @@ export function classifyBalanceAbilityEvent(
   }
   const previous = earlier.at(-1);
   if (previous && previous.type !== 'play' && previous.type !== 'pass'
-      && JSON.stringify(previous.replay.after) === JSON.stringify(event.replay.before)) {
+      && equalMechanicalJson(previous.replay.after, event.replay.before)) {
     return result('unknown', 'settled-wrapper-without-causal-metadata');
   }
   return result('no-observed-effect', 'no-event-delta');
@@ -481,7 +499,7 @@ function ownerSquabbleAvailable(match: Match, owner: Owner): boolean {
   return owner === 'player' && !match.squabbleUsed;
 }
 
-/** A side-neutral state evaluator. It reads only public board state and applies identical weights to either owner. */
+/** Uses public state plus the evaluating owner's current hand, with identical weights for either owner. */
 export function evaluateBalanceState(match: Match, owner: Owner): number {
   const opponent = opponentOf(owner);
   const results = getDistrictResults(match);
@@ -504,7 +522,7 @@ export function evaluateBalanceState(match: Match, owner: Owner): number {
   }, 0);
   const setupValue = (side: Owner) => {
     const active = cardsInPlay.filter((card) => card.owner === side && !card.statuses.frozen && !card.statuses.silenced);
-    const hand = ownerHand(match, side);
+    const hand = side === owner ? ownerHand(match, side) : [];
     const cheapCards = hand.filter((card) => card.cost <= 2).length;
     return active.reduce((sum, card) => sum
       + (card.cardId === 'streamer' ? Math.max(0, 2 - match.cheapBuffsUsed[side]) * Math.min(2, cheapCards) * 0.25 : 0)
@@ -512,38 +530,28 @@ export function evaluateBalanceState(match: Match, owner: Owner): number {
       + (card.elementalBond ? 0.2 : 0), 0)
       + match.discountTokens.filter((token) => token.owner === side).length * 0.45;
   };
-  const motionValue = match.round < 6 ? (ownerMotion(match, owner) - ownerMotion(match, opponent)) * 0.12 : 0;
-  const squabbleValue = match.round < 6
+  const hasFutureRound = match.phase !== 'complete' && match.round < getMatchRoundLimit(match);
+  const motionValue = hasFutureRound ? (ownerMotion(match, owner) - ownerMotion(match, opponent)) * 0.12 : 0;
+  const squabbleValue = hasFutureRound
     ? (ownerSquabbleAvailable(match, owner) ? 1.25 : 0) - (ownerSquabbleAvailable(match, opponent) ? 1.25 : 0)
     : 0;
-  return control * 15 + margins + statusValue + setupValue(owner) - setupValue(opponent) + motionValue + squabbleValue;
+  const projected = previewPendingSmileBombs(match);
+  // Existing fuses have value even before an immediate board change. Forecast only
+  // public occupants and retain a 65% uncertainty discount; never invent targets.
+  const delayedValue = projected === match ? 0 : 0.35 * (publicBoardValue(projected, owner) - (control * 15 + margins));
+  return control * 15 + margins + statusValue + setupValue(owner) - setupValue(opponent) + motionValue + squabbleValue + delayedValue;
+}
+
+function publicBoardValue(match: Match, owner: Owner): number {
+  return getDistrictResults(match).reduce((sum, result) => {
+    const lead = owner === 'player' ? result.player - result.cpu : result.cpu - result.player;
+    return sum + (lead > 0 ? 15 : lead < 0 ? -15 : 0) + 12 * lead / (4 + Math.abs(lead));
+  }, 0);
 }
 
 export function listLegalBalancePlays(match: Match, owner: Owner, allowSquabble = true): BalancePlayOption[] {
-  const result: BalancePlayOption[] = [];
-  for (const card of ownerHand(match, owner)) {
-    for (const targetLane of LANES) {
-      if (!canAffordSelection(match, owner, card.instanceId, targetLane)) continue;
-      const cost = getLegalCardCost(match, owner, card, targetLane);
-      result.push({
-        instanceId: card.instanceId,
-        cardId: card.cardId,
-        lane: targetLane,
-        cost,
-        squabble: false,
-        preview: playTurnCard(match, owner, card.instanceId, targetLane, false),
-      });
-      if (allowSquabble && card.kind !== 'support' && card.kind !== 'blockbuster' && ownerSquabbleAvailable(match, owner)) result.push({
-        instanceId: card.instanceId,
-        cardId: card.cardId,
-        lane: targetLane,
-        cost,
-        squabble: true,
-        preview: playTurnCard(match, owner, card.instanceId, targetLane, true),
-      });
-    }
-  }
-  return result;
+  return listLegalPlayIntents(match, owner, allowSquabble).map(option => ({ ...option,
+    preview: playTurnCard(match, owner, option.instanceId, option.lane, option.squabble, option.investment) }));
 }
 
 /** Greedy and deliberately transparent: one public-state play ahead with stable tie-breaking. */
@@ -675,7 +683,7 @@ export function simulateBalanceMatch(input: BalanceMatchInput): BalanceMatchResu
       continue;
     }
     const canonical = legalPlays.find((option) => option.instanceId === chosen.instanceId
-      && option.lane === chosen.lane && option.squabble === chosen.squabble);
+      && option.lane === chosen.lane && option.squabble === chosen.squabble && option.investment === chosen.investment);
     if (!canonical) throw new Error(`Balance policy returned an illegal ${owner} play`);
     match = canonical.preview;
     playCount += 1;

@@ -1,0 +1,40 @@
+{
+  "status": "planned-not-simulated",
+  "purpose": "Exact-case semantic equivalence after runtime/replay optimization; original seeds intentionally retained",
+  "oldSourceHash": "dfbfacef31b2fe22c0cfb012f0b0013b8b32fb66c4df325c138f320b25956a5b",
+  "sourceHash": "db4e1aae087bbbee4ba1b76abe013eed25625c8a120ac7557fa540a83f8afe19",
+  "runtime": {
+    "node": "v22.23.3",
+    "platform": "linux",
+    "arch": "x64",
+    "engineSources": {
+      "data": "lib/squabblemon-engine/src/data.ts",
+      "gameEngine": "lib/squabblemon-engine/src/gameEngine.ts",
+      "multiplayer": "lib/squabblemon-engine/src/multiplayer.ts",
+      "balanceLab": "lib/squabblemon-engine/src/balanceLab.ts"
+    }
+  },
+  "datasets": {
+    "matrix": {
+      "cases": 17296,
+      "priorPlanHash": "3b290d9a29a329d6fe5601e4c2580403a8b82ec964e04dabce41b3055ba4db21",
+      "planHash": "b56412ed69b0f0a14389de413039f082fc40bbd45d1369cd12feb513a145d870",
+      "exactCasesSha256": "2853d9f8510dc44fff644a0c42d33bc73578984920561bca6331cea9e8ab1cb0",
+      "seedNamespace": "base-pvp-b64-r64-beta-v64-corrected"
+    },
+    "stress": {
+      "cases": 2816,
+      "priorPlanHash": "281128916f080884136ffcbbd66eca91898506df826b432a404d986ba6d918e8",
+      "planHash": "6d4414e5ff524b7c8d81d19f97c64205b4d4c4c78554243f7d86945c7ff43b15",
+      "exactCasesSha256": "b797cbf4778cd8d5ce8d2ede5ac641e75f23b94d8b8ad668df639eb4258908dd",
+      "seedNamespace": "base-pvp-b64-r64-beta-v64-corrected"
+    },
+    "confirmation": {
+      "cases": 256,
+      "priorPlanHash": "62f08186f60e055ce87d14f27e743aa3363047c35e448c98656d9e2bf193d1ce",
+      "planHash": "dc79a633c494f1e864c2bbd376669c9a2938189e7383318abbea2543c165bb4d",
+      "exactCasesSha256": "d82f9ecf6d9a01bbfa41ebe70062ccc57ab4d2049195f0bbfafaed457610fe04",
+      "seedNamespace": "base-pvp-b64-r64-beta-v64-confirmed"
+    }
+  }
+}

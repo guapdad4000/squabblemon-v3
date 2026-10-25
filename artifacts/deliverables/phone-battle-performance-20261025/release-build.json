@@ -1,0 +1,211 @@
+{
+  "schemaVersion": 1,
+  "status": "passed",
+  "tier": "required-build",
+  "startedAt": "2026-10-25T21:26:58.968Z",
+  "node": "v22.23.3",
+  "results": [
+    {
+      "id": "purchase-recovery",
+      "status": "passed",
+      "elapsedMs": 771,
+      "counts": {
+        "tests": 35,
+        "failed": 0,
+        "passed": 35,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0,
+        "topLevel": 35,
+        "suites": 0
+      }
+    },
+    {
+      "id": "gacha-lifecycle",
+      "status": "passed",
+      "elapsedMs": 1131,
+      "counts": {
+        "tests": 38,
+        "failed": 0,
+        "passed": 38,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0,
+        "topLevel": 38,
+        "suites": 0
+      }
+    },
+    {
+      "id": "reward-presentation",
+      "status": "passed",
+      "elapsedMs": 1150,
+      "counts": {
+        "tests": 35,
+        "failed": 0,
+        "passed": 35,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0,
+        "topLevel": 35,
+        "suites": 0
+      }
+    },
+    {
+      "id": "battle-render-lifecycle",
+      "status": "passed",
+      "elapsedMs": 1344,
+      "counts": {
+        "tests": 29,
+        "failed": 0,
+        "passed": 29,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0,
+        "topLevel": 29,
+        "suites": 0
+      }
+    },
+    {
+      "id": "rookie-guidance",
+      "status": "passed",
+      "elapsedMs": 5271,
+      "counts": {
+        "tests": 22,
+        "failed": 0,
+        "passed": 22,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0,
+        "topLevel": 22,
+        "suites": 0
+      }
+    },
+    {
+      "id": "payment-boundaries",
+      "status": "passed",
+      "elapsedMs": 363,
+      "counts": {
+        "tests": 16,
+        "failed": 0,
+        "passed": 16,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0,
+        "topLevel": 16,
+        "suites": 0
+      }
+    },
+    {
+      "id": "release-guard-regressions",
+      "status": "passed",
+      "elapsedMs": 3890,
+      "counts": {
+        "tests": 63,
+        "failed": 0,
+        "passed": 63,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0,
+        "topLevel": 63,
+        "suites": 0
+      }
+    },
+    {
+      "id": "story-music",
+      "status": "passed",
+      "elapsedMs": 166
+    },
+    {
+      "id": "frontend-bundle",
+      "status": "passed",
+      "elapsedMs": 9884
+    },
+    {
+      "id": "entry-budget",
+      "status": "passed",
+      "elapsedMs": 36
+    },
+    {
+      "id": "emitted-css-and-panels",
+      "status": "passed",
+      "elapsedMs": 329
+    }
+  ],
+  "limitations": [
+    "Local source/build evidence only; no hosted deployment, native database, browser, device or live transaction is implied.",
+    "baseCommit is the Git base; trackedDiffSha256, untrackedSourceHashes and criticalInputHashes record this working candidate."
+  ],
+  "additionalTiers": "scripts/release-check-inventory.json",
+  "baseCommit": "61e9a86c1bd1ba49e350bd4a488671ab37d26ad2",
+  "workingTreeStatus": " M AGENTS.md\n M artifacts/api-server/src/lib/kumite.ts\n M artifacts/api-server/src/lib/kumiteEngine.test.ts\n M artifacts/api-server/src/lib/kumiteEngine.ts\n M artifacts/api-server/src/lib/onlineMatches.ts\n M artifacts/api-server/src/lib/storyMoveSolver.test.ts\n M artifacts/api-server/src/lib/storyMoveSolver.ts\n M artifacts/api-server/src/lib/styleShardTransactions.test.ts\n M artifacts/api-server/src/routes/challenge.ts\n M artifacts/api-server/src/routes/player.ts\n M artifacts/squabblemon/e2e/broadcast-battle.fixture.tsx\n M artifacts/squabblemon/e2e/deck-journey.spec.ts\n M artifacts/squabblemon/e2e/pvp-exit.fixture.tsx\n M artifacts/squabblemon/e2e/rookie-review-scroll.fixture.tsx\n M artifacts/squabblemon/e2e/verify-player-journey.ts\n M artifacts/squabblemon/index.html\n M artifacts/squabblemon/package.json\n M artifacts/squabblemon/reference/CURRENT_ROSTER.md\n M artifacts/squabblemon/src/battlePreview.test.ts\n M artifacts/squabblemon/src/battlePreview.ts\n M artifacts/squabblemon/src/cardBalance.test.ts\n M artifacts/squabblemon/src/components/BattleAttack.death.test.tsx\n M artifacts/squabblemon/src/components/BattleAttack.tsx\n M artifacts/squabblemon/src/components/BattleFxImage.lifecycle.test.tsx\n M artifacts/squabblemon/src/components/BattleFxImage.tsx\n M artifacts/squabblemon/src/components/BattlePerfHarness.tsx\n M artifacts/squabblemon/src/components/CardView.tsx\n M artifacts/squabblemon/src/components/DrFadeWelcome.tsx\n M artifacts/squabblemon/src/components/MultiplayerBattle.tsx\n M artifacts/squabblemon/src/components/PlayLoop.tsx\n M artifacts/squabblemon/src/crewParityBalance.test.ts\n M artifacts/squabblemon/src/fourCrewAuthority.test.ts\n M artifacts/squabblemon/src/fullRosterBuffs.test.ts\n M artifacts/squabblemon/src/gameEngine.test.ts\n M artifacts/squabblemon/src/gameplayUpgrade.test.ts\n M artifacts/squabblemon/src/index.css\n M artifacts/squabblemon/src/lib/deckWorkshop.test.ts\n M artifacts/squabblemon/src/lib/deckWorkshop.ts\n M artifacts/squabblemon/src/lib/kumite.ts\n M artifacts/squabblemon/src/lib/tutorialVoice.test.ts\n M artifacts/squabblemon/src/lib/tutorialVoice.ts\n M artifacts/squabblemon/src/maryMack.test.ts\n M artifacts/squabblemon/src/multiplayer.test.ts\n M artifacts/squabblemon/src/pages/game/FirstDeckWorkshop.tsx\n M artifacts/squabblemon/src/pages/game/Kumite.tsx\n M artifacts/squabblemon/src/pages/game/Multiplayer.tsx\n M artifacts/squabblemon/src/rosterBalance.test.ts\n M artifacts/squabblemon/src/styles/friendly-fades.css\n M artifacts/squabblemon/src/styles/pull-banners.css\n M artifacts/squabblemon/src/training.test.ts\n M artifacts/squabblemon/vite.config.ts\n M docs/benchmark-archives.md\n M docs/four-crew-guide.md\n M lib/squabblemon-engine/src/balanceLab.ts\n M lib/squabblemon-engine/src/gameEngine.ts\n M lib/squabblemon-engine/src/insights.ts\n M lib/squabblemon-engine/src/multiplayer.ts\n M lib/squabblemon-engine/src/training.ts\n M package.json\n M scripts/BALANCE_BASELINE.md\n M scripts/BALANCE_PLAYTEST.md\n M scripts/build-netlify.mjs\n M scripts/package.json\n M scripts/require-db-tests.mjs\n M scripts/src/balanceLab.test.ts\n M scripts/src/combo-base-audit.ts\n M scripts/src/fullBalanceSweep.ts\n M scripts/src/fullBalanceSweepCore.ts\n M scripts/src/rivalry-audit-policies.ts\n M scripts/src/rivalry-online-audit.ts\n M scripts/src/rivalry-online-model.test.ts\n M scripts/src/rivalry-online-model.ts\n M scripts/test-payments-database.mjs\n?? artifacts/api-server/src/lib/onlineRetirement.native.test.ts\n?? artifacts/api-server/src/lib/rewardMatchCompatibility.ts\n?? artifacts/deliverables/beta-hardening-20261025/\n?? artifacts/deliverables/current-deck-audit-20261025-v63/\n?? artifacts/deliverables/current-deck-audit-20261025-v64/\n?? artifacts/squabblemon/e2e/online-projection.fixture.html\n?? artifacts/squabblemon/e2e/online-projection.fixture.tsx\n?? artifacts/squabblemon/e2e/verify-battle-idle-lifecycle.mjs\n?? artifacts/squabblemon/e2e/verify-battle-thermal.mjs\n?? artifacts/squabblemon/e2e/verify-online-projection.mjs\n?? artifacts/squabblemon/e2e/verify-online-rules-recovery.mjs\n?? artifacts/squabblemon/e2e/verify-rules-recovery.ts\n?? artifacts/squabblemon/src/components/BattleIdleMotion.performance.test.tsx\n?? artifacts/squabblemon/src/components/BattleRulesUpdated.tsx\n?? artifacts/squabblemon/src/components/BattleThermalHarness.tsx\n?? artifacts/squabblemon/src/components/DrFadeWelcome.test.tsx\n?? artifacts/squabblemon/src/components/MultiplayerBattle.projection.test.tsx\n?? artifacts/squabblemon/src/lib/matchRecovery.test.ts\n?? artifacts/squabblemon/src/lib/matchRecovery.ts\n?? design/engineering-standards.md\n?? docs/audits/architecture-beta-2026-10-24.md\n?? docs/audits/beta-hardening-2026-10-25.md\n?? docs/balance/README.md\n?? docs/release-verification.md\n?? scripts/boot-assets.test.mjs\n?? scripts/database-test-tiers.mjs\n?? scripts/database-test-tiers.test.mjs\n?? scripts/release-check-inventory.json\n?? scripts/release-checks.mjs\n?? scripts/release-checks.test.mjs\n?? scripts/release-test-reporter.mjs\n?? scripts/src/current-deck-report.py\n?? scripts/src/current-deck-report.test.py\n?? scripts/src/fullBalanceSweep.test.ts\n",
+  "untrackedSourceHashes": {
+    "artifacts/api-server/src/lib/onlineRetirement.native.test.ts": "e19d2cccb3a84536f34f0cd8924a275ce944d269b31ed21cca7fe623bcb86359",
+    "artifacts/api-server/src/lib/rewardMatchCompatibility.ts": "7d7749c86ec9453b077b7a2eb46a1783390cbd82a8ed2c45950ebb92a8887db0",
+    "artifacts/squabblemon/src/components/BattleIdleMotion.performance.test.tsx": "4371fdf5a6e3ecc25916c6ffd28ed64e94ebce64ec5fec60d1a067a2b433f2c0",
+    "artifacts/squabblemon/src/components/BattleRulesUpdated.tsx": "ae1607b230d424c22ea42321bd6991491b34c050782dfe689e9514e6ea431d31",
+    "artifacts/squabblemon/src/components/BattleThermalHarness.tsx": "87c8c7a4cfb2c1aa6efc15155e37357b197f79c33a3413dfdac8cb19d06b271a",
+    "artifacts/squabblemon/src/components/DrFadeWelcome.test.tsx": "f16aaa0b98481b209d7a30c1eaa770b9eebb0f64346537f89cbb0f0b6a8c491d",
+    "artifacts/squabblemon/src/components/MultiplayerBattle.projection.test.tsx": "1b431e2862bbef1c0d36d4fc41bb06731fdcf21ff8c8797a7a8e715128e3a280",
+    "artifacts/squabblemon/src/lib/matchRecovery.test.ts": "060e2143ea8de1209d6efe69b5c53eba908bc3fccce330289f3b3662a62fd1bd",
+    "artifacts/squabblemon/src/lib/matchRecovery.ts": "c5eb22971ddbc74641db59187ba0db4ede6af3fca468f384311d3924dce513c7",
+    "scripts/boot-assets.test.mjs": "298eec102393b117cdfd0b7a03494bf0e7c705a3621fc1da7d76effc52159552",
+    "scripts/database-test-tiers.mjs": "d00300a62f870ad4c67a1e04d2b00436b19d6e209bf8afa6610f86f520d2276a",
+    "scripts/database-test-tiers.test.mjs": "62f19da59a67e71a3c2f7d6191f06b3aa8adda8409cba2ee3bf89f3441e62c1d",
+    "scripts/release-check-inventory.json": "36f7ed2de0d29c404e8569f6923c2038037c92a9b33e8eaa3779b10944a7b817",
+    "scripts/release-checks.mjs": "b019c9812550e696ccc5df3ce91291179ee739aaf02d49bddb0778cc848d435c",
+    "scripts/release-checks.test.mjs": "84ea05ae4d8af412a16ad93d7e28bf74029fcf7f39757e0813828cbce0e1b2f5",
+    "scripts/release-test-reporter.mjs": "cd9b950b91b08847e23661d1ef0b6a71d134604a71b7582d012addc9e8d4d3da",
+    "scripts/src/current-deck-report.py": "a1a56d848390025f6f5f70ca0a2bd3d4c631d283146e437d591c7623f018a500",
+    "scripts/src/current-deck-report.test.py": "85323b97cb31dcc642db14b3fb7c4af2c756e48efa6195e099cc84ff3ae2c052",
+    "scripts/src/fullBalanceSweep.test.ts": "58a8ecd7a3a587615bc1938609e4b63eb28bd83b513ffb1283551f3f5c0694c6"
+  },
+  "trackedDiffSha256": "23a394f6494277bd931038cf2b551528e27805f1ff0aa05653b28ccf8ef47d9b",
+  "criticalInputHashes": {
+    "artifacts/squabblemon/src/lib/pullPayment.test.ts": "5de1f2f8bcbbd008885423b93c687f6b68a456bc68bc00dd2489b3285337d3c8",
+    "artifacts/squabblemon/src/lib/packJournal.test.ts": "f367231c7f9d0ebb98c1b277a7662b6830ef73d9e3d72e286419e74c78def1d2",
+    "artifacts/squabblemon/src/lib/shopJournal.test.ts": "d3dbe94c23c126f394d1fd169ef73ab9e8bb4f337ac06c92063753216fe43370",
+    "artifacts/squabblemon/src/lib/shopDestination.test.ts": "b58adf3d3dff2a3d57b600448d8b5a2b8d82a1ce8a1a4b64567101ab03ca12d0",
+    "artifacts/squabblemon/src/lib/finishCounter.test.ts": "5a2e24443976d0f0213430c8d85eea037ce0bacbf404a5bed7fc11b1e134a162",
+    "artifacts/squabblemon/src/lib/matchRecovery.test.ts": "060e2143ea8de1209d6efe69b5c53eba908bc3fccce330289f3b3662a62fd1bd",
+    "artifacts/squabblemon/src/lib/packGymFinale.test.ts": "f9f82430e7a3024636fc5ed1342efd37969fe1c2af50fa387c22c6801c64e5a5",
+    "artifacts/squabblemon/src/lib/packGymFilm.test.ts": "8683a0b0b2a20771f335cb7523c82094e11ba27148e5877e486a2b9accb2483a",
+    "artifacts/squabblemon/src/lib/packRewardRarity.test.ts": "f059841b42a6cbd549341cd3bd87ade83e2aebb18326068080ae87ecbe921b0a",
+    "artifacts/squabblemon/src/lib/packRewardArtwork.test.tsx": "847c7c6e7a2e17c658374b9ec0ffba1100b5c50f49adb0e569f5497fb477fdc7",
+    "artifacts/squabblemon/src/components/GachaRevealSequence.test.tsx": "a13379b50a715766e3558c3244d62a120bab7d4ed0875cf143a019aa9473eec5",
+    "artifacts/squabblemon/src/lib/rewardReceipts.test.ts": "4c1253ef26964b7ee4c6803ddcb3adb31695cc81f6121f4b72c958bfc8f37747",
+    "artifacts/squabblemon/src/lib/rewardBroadcast.test.ts": "246bae16c58ceaadeea945885bf8b63f7871a18c58e3e299d8d643bc1dced996",
+    "artifacts/squabblemon/src/lib/resultBroadcastEligibility.test.ts": "f913bc12e645648598d8125ba9aef0326a8344fa08068b5b6d3d34761891f660",
+    "artifacts/squabblemon/src/lib/notificationCatalog.test.ts": "e379f39ad4363a762b204e80d59d3a6a67bfb3d99a523c4e29d64b0b3ded5975",
+    "artifacts/squabblemon/src/lib/loadingScenes.test.ts": "55e9b5d48c3ad31aa4a99bea69c1304c583648e5341fcbf751eaa7be885da4f0",
+    "artifacts/squabblemon/src/components/AccountCheckInCalendar.test.tsx": "af23566dd198902bdeafad7c7c194166aa4999f8443ad584f0c6a7243293faca",
+    "artifacts/squabblemon/src/components/MonthlyLoginTrack.test.tsx": "8f6d69a7711b69d5371d64c34e3698efc1b9c44821b453c463e64c770092d65f",
+    "artifacts/squabblemon/src/components/fadecade/bossRaidPresentation.test.ts": "c9c89c4e5d38a7cd3b9f696bc4939885ae31b41b381da022008c85a98004d3aa",
+    "artifacts/squabblemon/src/battlePreview.test.ts": "b3c95a299f62cc426ce0acaebe13fb48a0e7d9ecad9b3158e715bcf3b97d6cbe",
+    "artifacts/squabblemon/src/components/MultiplayerBattle.projection.test.tsx": "1b431e2862bbef1c0d36d4fc41bb06731fdcf21ff8c8797a7a8e715128e3a280",
+    "artifacts/squabblemon/src/components/BattleIdleMotion.performance.test.tsx": "4371fdf5a6e3ecc25916c6ffd28ed64e94ebce64ec5fec60d1a067a2b433f2c0",
+    "artifacts/squabblemon/src/components/BattleFxImage.lifecycle.test.tsx": "27a55bbd5ee623dc1cd8622536160a69c79e62bb7cb5be2539999a07c570afb0",
+    "artifacts/squabblemon/src/components/BattleAttack.death.test.tsx": "30e1c3ede0f3a75b6aa8424712933fea57e04887a85f41a44d2f3dfe1b0b7a63",
+    "artifacts/squabblemon/src/lib/tutorialVoice.test.ts": "4dc10b23f1f156191b16888c098b15b6ac7e28ec9f9f8a83f9d6614cde56cb9f",
+    "artifacts/squabblemon/src/components/DrFadeWelcome.test.tsx": "f16aaa0b98481b209d7a30c1eaa770b9eebb0f64346537f89cbb0f0b6a8c491d",
+    "artifacts/squabblemon/src/components/tutorialGuidance.test.ts": "8b515e981063a7f5efc0f79ce68d4c9ed1526a1ed946df26409ebcafcfb4cd95",
+    "artifacts/api-server/src/lib/payments/provider.test.ts": "b492b1617c1f130517a149c9f0301a788c693460f10de361d2cb975dcda54600",
+    "artifacts/api-server/src/lib/payments/geography.test.ts": "04faf0012c8b5926e9911cffbe42ab3c1593acbf4914b74f70ccdcd23217af33",
+    "artifacts/api-server/src/lib/payments/storeSmokeCheck.test.ts": "0d9a8ab05fa24a0fccfb2d932ee257f1dcfc501c95d1636f9ee3864aaf09edbb",
+    "scripts/build-netlify.test.mjs": "a08c069b4d109206cfcf425479bc551dba61b516dedb3b393f72ffe15ec8cbad",
+    "scripts/release-checks.test.mjs": "84ea05ae4d8af412a16ad93d7e28bf74029fcf7f39757e0813828cbce0e1b2f5",
+    "scripts/boot-assets.test.mjs": "298eec102393b117cdfd0b7a03494bf0e7c705a3621fc1da7d76effc52159552",
+    "scripts/check-netlify-migrations.test.mjs": "aa2af65634274e4544cab68fa26ef0581360f86d859fe1f4a3a3cbf3763d255f",
+    "scripts/database-test-tiers.test.mjs": "62f19da59a67e71a3c2f7d6191f06b3aa8adda8409cba2ee3bf89f3441e62c1d",
+    "artifacts/squabblemon/scripts/check-entry-bundle.test.mjs": "933aebf4518e79041d45f9e05f4ade602b2a55de01a521a0939a6e66c6d57fe3",
+    "artifacts/squabblemon/scripts/check-style-invalidation.test.mjs": "b067bebadb3a53b40f0e4ee4edb87e138eb4956460fe0827b2070a22e436b359",
+    "scripts/release-checks.mjs": "b019c9812550e696ccc5df3ce91291179ee739aaf02d49bddb0778cc848d435c",
+    "scripts/release-test-reporter.mjs": "cd9b950b91b08847e23661d1ef0b6a71d134604a71b7582d012addc9e8d4d3da",
+    "scripts/release-check-inventory.json": "36f7ed2de0d29c404e8569f6923c2038037c92a9b33e8eaa3779b10944a7b817",
+    "scripts/build-netlify.mjs": "fe862d53a5474a58598be08ff3fc53cd215cf62329f1d50985fee2062423cbf8",
+    "package.json": "724242b787ebc7f3a656fa7abbe44e8724aab8a642738b8a3c443c56c39c0dc7",
+    "artifacts/squabblemon/package.json": "bc31a12c1e7f11d959412fd8889c129d5e6d1872fe46592e3f8762c31e8b2e8a",
+    "artifacts/squabblemon/scripts/generate-story-music-routes.ts": "9d7e63db9c4fc998ae564cc24acc70ce20c53f17c6f3a7d96a2f04c302a1d656",
+    "artifacts/squabblemon/src/storyMusicRoutes.json": "ca487edd6a07f63deb6ae9db725e461e22cd42036b8aeb42afd4b96b5c20a578"
+  },
+  "verifiedAt": "2026-10-25T21:27:23.468Z"
+}

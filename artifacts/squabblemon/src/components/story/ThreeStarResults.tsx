@@ -11,7 +11,7 @@ import {
   TICKETS_PER_PERFECT_BATTLE,
   ticketsForStars,
   type StoryStarObjective,
-} from '@workspace/squabblemon-engine/story';
+} from '../../lib/story/catalog';
 import { getCardImage } from '../../data';
 
 export interface ThreeStarResultsProps {

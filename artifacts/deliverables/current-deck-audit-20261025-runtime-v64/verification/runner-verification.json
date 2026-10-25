@@ -1,0 +1,1958 @@
+{
+  "sourceHash": "b16e3a70425d6fd308d216f198ea279b478d44e48a0f45bfcac8e845570442c3",
+  "policyVersion": "online-base-shared-legal-delayed-horizon-v3",
+  "runtime": {
+    "node": "v22.23.3",
+    "platform": "linux",
+    "arch": "x64",
+    "engineSources": {
+      "data": "lib/squabblemon-engine/src/data.ts",
+      "gameEngine": "lib/squabblemon-engine/src/gameEngine.ts",
+      "multiplayer": "lib/squabblemon-engine/src/multiplayer.ts",
+      "balanceLab": "lib/squabblemon-engine/src/balanceLab.ts"
+    }
+  },
+  "seedNamespace": "base-pvp-b64-r64-beta-v64-runtime",
+  "balanceVersion": 64,
+  "rulesVersion": 64,
+  "comparisons": [
+    {
+      "deck": "starter-block",
+      "policy": "greedy",
+      "seat": "a-player",
+      "winner": "cpu",
+      "plays": 20
+    },
+    {
+      "deck": "starter-block",
+      "policy": "greedy",
+      "seat": "b-player",
+      "winner": "player",
+      "plays": 20
+    },
+    {
+      "deck": "starter-block",
+      "policy": "seeded-legal",
+      "seat": "a-player",
+      "winner": "cpu",
+      "plays": 20
+    },
+    {
+      "deck": "starter-block",
+      "policy": "seeded-legal",
+      "seat": "b-player",
+      "winner": "draw",
+      "plays": 19
+    },
+    {
+      "deck": "starter-block",
+      "policy": "chain-two",
+      "seat": "a-player",
+      "winner": "player",
+      "plays": 20
+    },
+    {
+      "deck": "starter-block",
+      "policy": "chain-two",
+      "seat": "b-player",
+      "winner": "player",
+      "plays": 19
+    },
+    {
+      "deck": "starter-slide",
+      "policy": "greedy",
+      "seat": "a-player",
+      "winner": "cpu",
+      "plays": 17
+    },
+    {
+      "deck": "starter-slide",
+      "policy": "greedy",
+      "seat": "b-player",
+      "winner": "player",
+      "plays": 16
+    },
+    {
+      "deck": "starter-slide",
+      "policy": "seeded-legal",
+      "seat": "a-player",
+      "winner": "cpu",
+      "plays": 18
+    },
+    {
+      "deck": "starter-slide",
+      "policy": "seeded-legal",
+      "seat": "b-player",
+      "winner": "player",
+      "plays": 18
+    },
+    {
+      "deck": "starter-slide",
+      "policy": "chain-two",
+      "seat": "a-player",
+      "winner": "cpu",
+      "plays": 18
+    },
+    {
+      "deck": "starter-slide",
+      "policy": "chain-two",
+      "seat": "b-player",
+      "winner": "player",
+      "plays": 16
+    },
+    {
+      "deck": "starter-combo",
+      "policy": "greedy",
+      "seat": "a-player",
+      "winner": "player",
+      "plays": 20
+    },
+    {
+      "deck": "starter-combo",
+      "policy": "greedy",
+      "seat": "b-player",
+      "winner": "cpu",
+      "plays": 20
+    },
+    {
+      "deck": "starter-combo",
+      "policy": "seeded-legal",
+      "seat": "a-player",
+      "winner": "player",
+      "plays": 20
+    },
+    {
+      "deck": "starter-combo",
+      "policy": "seeded-legal",
+      "seat": "b-player",
+      "winner": "player",
+      "plays": 19
+    },
+    {
+      "deck": "starter-combo",
+      "policy": "chain-two",
+      "seat": "a-player",
+      "winner": "player",
+      "plays": 20
+    },
+    {
+      "deck": "starter-combo",
+      "policy": "chain-two",
+      "seat": "b-player",
+      "winner": "player",
+      "plays": 20
+    },
+    {
+      "deck": "starter-receipts",
+      "policy": "greedy",
+      "seat": "a-player",
+      "winner": "player",
+      "plays": 20
+    },
+    {
+      "deck": "starter-receipts",
+      "policy": "greedy",
+      "seat": "b-player",
+      "winner": "cpu",
+      "plays": 20
+    },
+    {
+      "deck": "starter-receipts",
+      "policy": "seeded-legal",
+      "seat": "a-player",
+      "winner": "cpu",
+      "plays": 20
+    },
+    {
+      "deck": "starter-receipts",
+      "policy": "seeded-legal",
+      "seat": "b-player",
+      "winner": "draw",
+      "plays": 20
+    },
+    {
+      "deck": "starter-receipts",
+      "policy": "chain-two",
+      "seat": "a-player",
+      "winner": "player",
+      "plays": 20
+    },
+    {
+      "deck": "starter-receipts",
+      "policy": "chain-two",
+      "seat": "b-player",
+      "winner": "cpu",
+      "plays": 20
+    },
+    {
+      "deck": "starter-crashout",
+      "policy": "greedy",
+      "seat": "a-player",
+      "winner": "cpu",
+      "plays": 17
+    },
+    {
+      "deck": "starter-crashout",
+      "policy": "greedy",
+      "seat": "b-player",
+      "winner": "player",
+      "plays": 17
+    },
+    {
+      "deck": "starter-crashout",
+      "policy": "seeded-legal",
+      "seat": "a-player",
+      "winner": "draw",
+      "plays": 18
+    },
+    {
+      "deck": "starter-crashout",
+      "policy": "seeded-legal",
+      "seat": "b-player",
+      "winner": "player",
+      "plays": 17
+    },
+    {
+      "deck": "starter-crashout",
+      "policy": "chain-two",
+      "seat": "a-player",
+      "winner": "player",
+      "plays": 17
+    },
+    {
+      "deck": "starter-crashout",
+      "policy": "chain-two",
+      "seat": "b-player",
+      "winner": "player",
+      "plays": 17
+    },
+    {
+      "deck": "starter-vibes",
+      "policy": "greedy",
+      "seat": "a-player",
+      "winner": "draw",
+      "plays": 20
+    },
+    {
+      "deck": "starter-vibes",
+      "policy": "greedy",
+      "seat": "b-player",
+      "winner": "player",
+      "plays": 20
+    },
+    {
+      "deck": "starter-vibes",
+      "policy": "seeded-legal",
+      "seat": "a-player",
+      "winner": "cpu",
+      "plays": 20
+    },
+    {
+      "deck": "starter-vibes",
+      "policy": "seeded-legal",
+      "seat": "b-player",
+      "winner": "cpu",
+      "plays": 20
+    },
+    {
+      "deck": "starter-vibes",
+      "policy": "chain-two",
+      "seat": "a-player",
+      "winner": "player",
+      "plays": 20
+    },
+    {
+      "deck": "starter-vibes",
+      "policy": "chain-two",
+      "seat": "b-player",
+      "winner": "player",
+      "plays": 20
+    },
+    {
+      "deck": "starter-compound",
+      "policy": "greedy",
+      "seat": "a-player",
+      "winner": "player",
+      "plays": 20
+    },
+    {
+      "deck": "starter-compound",
+      "policy": "greedy",
+      "seat": "b-player",
+      "winner": "draw",
+      "plays": 20
+    },
+    {
+      "deck": "starter-compound",
+      "policy": "seeded-legal",
+      "seat": "a-player",
+      "winner": "cpu",
+      "plays": 20
+    },
+    {
+      "deck": "starter-compound",
+      "policy": "seeded-legal",
+      "seat": "b-player",
+      "winner": "draw",
+      "plays": 20
+    },
+    {
+      "deck": "starter-compound",
+      "policy": "chain-two",
+      "seat": "a-player",
+      "winner": "cpu",
+      "plays": 20
+    },
+    {
+      "deck": "starter-compound",
+      "policy": "chain-two",
+      "seat": "b-player",
+      "winner": "player",
+      "plays": 20
+    },
+    {
+      "deck": "starter-voltage",
+      "policy": "greedy",
+      "seat": "a-player",
+      "winner": "cpu",
+      "plays": 20
+    },
+    {
+      "deck": "starter-voltage",
+      "policy": "greedy",
+      "seat": "b-player",
+      "winner": "cpu",
+      "plays": 20
+    },
+    {
+      "deck": "starter-voltage",
+      "policy": "seeded-legal",
+      "seat": "a-player",
+      "winner": "cpu",
+      "plays": 20
+    },
+    {
+      "deck": "starter-voltage",
+      "policy": "seeded-legal",
+      "seat": "b-player",
+      "winner": "cpu",
+      "plays": 20
+    },
+    {
+      "deck": "starter-voltage",
+      "policy": "chain-two",
+      "seat": "a-player",
+      "winner": "player",
+      "plays": 20
+    },
+    {
+      "deck": "starter-voltage",
+      "policy": "chain-two",
+      "seat": "b-player",
+      "winner": "player",
+      "plays": 19
+    },
+    {
+      "deck": "starter-sunday-dinner",
+      "policy": "greedy",
+      "seat": "a-player",
+      "winner": "player",
+      "plays": 20
+    },
+    {
+      "deck": "starter-sunday-dinner",
+      "policy": "greedy",
+      "seat": "b-player",
+      "winner": "cpu",
+      "plays": 20
+    },
+    {
+      "deck": "starter-sunday-dinner",
+      "policy": "seeded-legal",
+      "seat": "a-player",
+      "winner": "player",
+      "plays": 20
+    },
+    {
+      "deck": "starter-sunday-dinner",
+      "policy": "seeded-legal",
+      "seat": "b-player",
+      "winner": "cpu",
+      "plays": 20
+    },
+    {
+      "deck": "starter-sunday-dinner",
+      "policy": "chain-two",
+      "seat": "a-player",
+      "winner": "player",
+      "plays": 20
+    },
+    {
+      "deck": "starter-sunday-dinner",
+      "policy": "chain-two",
+      "seat": "b-player",
+      "winner": "cpu",
+      "plays": 20
+    },
+    {
+      "deck": "starter-fitness-routes",
+      "policy": "greedy",
+      "seat": "a-player",
+      "winner": "cpu",
+      "plays": 16
+    },
+    {
+      "deck": "starter-fitness-routes",
+      "policy": "greedy",
+      "seat": "b-player",
+      "winner": "player",
+      "plays": 16
+    },
+    {
+      "deck": "starter-fitness-routes",
+      "policy": "seeded-legal",
+      "seat": "a-player",
+      "winner": "cpu",
+      "plays": 17
+    },
+    {
+      "deck": "starter-fitness-routes",
+      "policy": "seeded-legal",
+      "seat": "b-player",
+      "winner": "player",
+      "plays": 17
+    },
+    {
+      "deck": "starter-fitness-routes",
+      "policy": "chain-two",
+      "seat": "a-player",
+      "winner": "player",
+      "plays": 16
+    },
+    {
+      "deck": "starter-fitness-routes",
+      "policy": "chain-two",
+      "seat": "b-player",
+      "winner": "player",
+      "plays": 16
+    },
+    {
+      "deck": "starter-music-tour",
+      "policy": "greedy",
+      "seat": "a-player",
+      "winner": "player",
+      "plays": 18
+    },
+    {
+      "deck": "starter-music-tour",
+      "policy": "greedy",
+      "seat": "b-player",
+      "winner": "player",
+      "plays": 18
+    },
+    {
+      "deck": "starter-music-tour",
+      "policy": "seeded-legal",
+      "seat": "a-player",
+      "winner": "player",
+      "plays": 18
+    },
+    {
+      "deck": "starter-music-tour",
+      "policy": "seeded-legal",
+      "seat": "b-player",
+      "winner": "player",
+      "plays": 19
+    },
+    {
+      "deck": "starter-music-tour",
+      "policy": "chain-two",
+      "seat": "a-player",
+      "winner": "player",
+      "plays": 18
+    },
+    {
+      "deck": "starter-music-tour",
+      "policy": "chain-two",
+      "seat": "b-player",
+      "winner": "player",
+      "plays": 18
+    },
+    {
+      "deck": "starter-community-table",
+      "policy": "greedy",
+      "seat": "a-player",
+      "winner": "player",
+      "plays": 16
+    },
+    {
+      "deck": "starter-community-table",
+      "policy": "greedy",
+      "seat": "b-player",
+      "winner": "player",
+      "plays": 16
+    },
+    {
+      "deck": "starter-community-table",
+      "policy": "seeded-legal",
+      "seat": "a-player",
+      "winner": "draw",
+      "plays": 18
+    },
+    {
+      "deck": "starter-community-table",
+      "policy": "seeded-legal",
+      "seat": "b-player",
+      "winner": "draw",
+      "plays": 17
+    },
+    {
+      "deck": "starter-community-table",
+      "policy": "chain-two",
+      "seat": "a-player",
+      "winner": "player",
+      "plays": 17
+    },
+    {
+      "deck": "starter-community-table",
+      "policy": "chain-two",
+      "seat": "b-player",
+      "winner": "player",
+      "plays": 17
+    },
+    {
+      "deck": "starter-music-industry",
+      "policy": "greedy",
+      "seat": "a-player",
+      "winner": "draw",
+      "plays": 17
+    },
+    {
+      "deck": "starter-music-industry",
+      "policy": "greedy",
+      "seat": "b-player",
+      "winner": "player",
+      "plays": 16
+    },
+    {
+      "deck": "starter-music-industry",
+      "policy": "seeded-legal",
+      "seat": "a-player",
+      "winner": "cpu",
+      "plays": 17
+    },
+    {
+      "deck": "starter-music-industry",
+      "policy": "seeded-legal",
+      "seat": "b-player",
+      "winner": "player",
+      "plays": 17
+    },
+    {
+      "deck": "starter-music-industry",
+      "policy": "chain-two",
+      "seat": "a-player",
+      "winner": "player",
+      "plays": 18
+    },
+    {
+      "deck": "starter-music-industry",
+      "policy": "chain-two",
+      "seat": "b-player",
+      "winner": "player",
+      "plays": 17
+    },
+    {
+      "deck": "starter-fitness-circuit",
+      "policy": "greedy",
+      "seat": "a-player",
+      "winner": "player",
+      "plays": 18
+    },
+    {
+      "deck": "starter-fitness-circuit",
+      "policy": "greedy",
+      "seat": "b-player",
+      "winner": "player",
+      "plays": 18
+    },
+    {
+      "deck": "starter-fitness-circuit",
+      "policy": "seeded-legal",
+      "seat": "a-player",
+      "winner": "player",
+      "plays": 18
+    },
+    {
+      "deck": "starter-fitness-circuit",
+      "policy": "seeded-legal",
+      "seat": "b-player",
+      "winner": "player",
+      "plays": 17
+    },
+    {
+      "deck": "starter-fitness-circuit",
+      "policy": "chain-two",
+      "seat": "a-player",
+      "winner": "player",
+      "plays": 18
+    },
+    {
+      "deck": "starter-fitness-circuit",
+      "policy": "chain-two",
+      "seat": "b-player",
+      "winner": "player",
+      "plays": 18
+    },
+    {
+      "deck": "starter-squabblehouse-shift",
+      "policy": "greedy",
+      "seat": "a-player",
+      "winner": "player",
+      "plays": 18
+    },
+    {
+      "deck": "starter-squabblehouse-shift",
+      "policy": "greedy",
+      "seat": "b-player",
+      "winner": "cpu",
+      "plays": 18
+    },
+    {
+      "deck": "starter-squabblehouse-shift",
+      "policy": "seeded-legal",
+      "seat": "a-player",
+      "winner": "cpu",
+      "plays": 18
+    },
+    {
+      "deck": "starter-squabblehouse-shift",
+      "policy": "seeded-legal",
+      "seat": "b-player",
+      "winner": "cpu",
+      "plays": 18
+    },
+    {
+      "deck": "starter-squabblehouse-shift",
+      "policy": "chain-two",
+      "seat": "a-player",
+      "winner": "player",
+      "plays": 18
+    },
+    {
+      "deck": "starter-squabblehouse-shift",
+      "policy": "chain-two",
+      "seat": "b-player",
+      "winner": "player",
+      "plays": 18
+    },
+    {
+      "deck": "focus-wave7-legends",
+      "policy": "greedy",
+      "seat": "a-player",
+      "winner": "player",
+      "plays": 20
+    },
+    {
+      "deck": "focus-wave7-legends",
+      "policy": "greedy",
+      "seat": "b-player",
+      "winner": "cpu",
+      "plays": 20
+    },
+    {
+      "deck": "focus-wave7-legends",
+      "policy": "seeded-legal",
+      "seat": "a-player",
+      "winner": "player",
+      "plays": 20
+    },
+    {
+      "deck": "focus-wave7-legends",
+      "policy": "seeded-legal",
+      "seat": "b-player",
+      "winner": "player",
+      "plays": 20
+    },
+    {
+      "deck": "focus-wave7-legends",
+      "policy": "chain-two",
+      "seat": "a-player",
+      "winner": "player",
+      "plays": 20
+    },
+    {
+      "deck": "focus-wave7-legends",
+      "policy": "chain-two",
+      "seat": "b-player",
+      "winner": "cpu",
+      "plays": 20
+    },
+    {
+      "deck": "focus-wave7-tempo",
+      "policy": "greedy",
+      "seat": "a-player",
+      "winner": "cpu",
+      "plays": 20
+    },
+    {
+      "deck": "focus-wave7-tempo",
+      "policy": "greedy",
+      "seat": "b-player",
+      "winner": "player",
+      "plays": 20
+    },
+    {
+      "deck": "focus-wave7-tempo",
+      "policy": "seeded-legal",
+      "seat": "a-player",
+      "winner": "cpu",
+      "plays": 20
+    },
+    {
+      "deck": "focus-wave7-tempo",
+      "policy": "seeded-legal",
+      "seat": "b-player",
+      "winner": "cpu",
+      "plays": 20
+    },
+    {
+      "deck": "focus-wave7-tempo",
+      "policy": "chain-two",
+      "seat": "a-player",
+      "winner": "draw",
+      "plays": 20
+    },
+    {
+      "deck": "focus-wave7-tempo",
+      "policy": "chain-two",
+      "seat": "b-player",
+      "winner": "player",
+      "plays": 20
+    },
+    {
+      "deck": "focus-air-bond",
+      "policy": "greedy",
+      "seat": "a-player",
+      "winner": "player",
+      "plays": 17
+    },
+    {
+      "deck": "focus-air-bond",
+      "policy": "greedy",
+      "seat": "b-player",
+      "winner": "draw",
+      "plays": 17
+    },
+    {
+      "deck": "focus-air-bond",
+      "policy": "seeded-legal",
+      "seat": "a-player",
+      "winner": "cpu",
+      "plays": 17
+    },
+    {
+      "deck": "focus-air-bond",
+      "policy": "seeded-legal",
+      "seat": "b-player",
+      "winner": "draw",
+      "plays": 17
+    },
+    {
+      "deck": "focus-air-bond",
+      "policy": "chain-two",
+      "seat": "a-player",
+      "winner": "player",
+      "plays": 17
+    },
+    {
+      "deck": "focus-air-bond",
+      "policy": "chain-two",
+      "seat": "b-player",
+      "winner": "player",
+      "plays": 17
+    },
+    {
+      "deck": "focus-late-scaling",
+      "policy": "greedy",
+      "seat": "a-player",
+      "winner": "cpu",
+      "plays": 18
+    },
+    {
+      "deck": "focus-late-scaling",
+      "policy": "greedy",
+      "seat": "b-player",
+      "winner": "player",
+      "plays": 19
+    },
+    {
+      "deck": "focus-late-scaling",
+      "policy": "seeded-legal",
+      "seat": "a-player",
+      "winner": "cpu",
+      "plays": 19
+    },
+    {
+      "deck": "focus-late-scaling",
+      "policy": "seeded-legal",
+      "seat": "b-player",
+      "winner": "player",
+      "plays": 18
+    },
+    {
+      "deck": "focus-late-scaling",
+      "policy": "chain-two",
+      "seat": "a-player",
+      "winner": "cpu",
+      "plays": 19
+    },
+    {
+      "deck": "focus-late-scaling",
+      "policy": "chain-two",
+      "seat": "b-player",
+      "winner": "player",
+      "plays": 18
+    },
+    {
+      "deck": "focus-counterplay",
+      "policy": "greedy",
+      "seat": "a-player",
+      "winner": "draw",
+      "plays": 15
+    },
+    {
+      "deck": "focus-counterplay",
+      "policy": "greedy",
+      "seat": "b-player",
+      "winner": "player",
+      "plays": 15
+    },
+    {
+      "deck": "focus-counterplay",
+      "policy": "seeded-legal",
+      "seat": "a-player",
+      "winner": "cpu",
+      "plays": 16
+    },
+    {
+      "deck": "focus-counterplay",
+      "policy": "seeded-legal",
+      "seat": "b-player",
+      "winner": "draw",
+      "plays": 15
+    },
+    {
+      "deck": "focus-counterplay",
+      "policy": "chain-two",
+      "seat": "a-player",
+      "winner": "draw",
+      "plays": 15
+    },
+    {
+      "deck": "focus-counterplay",
+      "policy": "chain-two",
+      "seat": "b-player",
+      "winner": "player",
+      "plays": 15
+    },
+    {
+      "deck": "focus-earth-tax",
+      "policy": "greedy",
+      "seat": "a-player",
+      "winner": "player",
+      "plays": 14
+    },
+    {
+      "deck": "focus-earth-tax",
+      "policy": "greedy",
+      "seat": "b-player",
+      "winner": "cpu",
+      "plays": 14
+    },
+    {
+      "deck": "focus-earth-tax",
+      "policy": "seeded-legal",
+      "seat": "a-player",
+      "winner": "cpu",
+      "plays": 16
+    },
+    {
+      "deck": "focus-earth-tax",
+      "policy": "seeded-legal",
+      "seat": "b-player",
+      "winner": "player",
+      "plays": 16
+    },
+    {
+      "deck": "focus-earth-tax",
+      "policy": "chain-two",
+      "seat": "a-player",
+      "winner": "draw",
+      "plays": 16
+    },
+    {
+      "deck": "focus-earth-tax",
+      "policy": "chain-two",
+      "seat": "b-player",
+      "winner": "cpu",
+      "plays": 16
+    },
+    {
+      "deck": "focus-detective",
+      "policy": "greedy",
+      "seat": "a-player",
+      "winner": "player",
+      "plays": 19
+    },
+    {
+      "deck": "focus-detective",
+      "policy": "greedy",
+      "seat": "b-player",
+      "winner": "cpu",
+      "plays": 19
+    },
+    {
+      "deck": "focus-detective",
+      "policy": "seeded-legal",
+      "seat": "a-player",
+      "winner": "cpu",
+      "plays": 19
+    },
+    {
+      "deck": "focus-detective",
+      "policy": "seeded-legal",
+      "seat": "b-player",
+      "winner": "cpu",
+      "plays": 18
+    },
+    {
+      "deck": "focus-detective",
+      "policy": "chain-two",
+      "seat": "a-player",
+      "winner": "player",
+      "plays": 19
+    },
+    {
+      "deck": "focus-detective",
+      "policy": "chain-two",
+      "seat": "b-player",
+      "winner": "player",
+      "plays": 19
+    },
+    {
+      "deck": "focus-wiz",
+      "policy": "greedy",
+      "seat": "a-player",
+      "winner": "player",
+      "plays": 18
+    },
+    {
+      "deck": "focus-wiz",
+      "policy": "greedy",
+      "seat": "b-player",
+      "winner": "cpu",
+      "plays": 17
+    },
+    {
+      "deck": "focus-wiz",
+      "policy": "seeded-legal",
+      "seat": "a-player",
+      "winner": "draw",
+      "plays": 18
+    },
+    {
+      "deck": "focus-wiz",
+      "policy": "seeded-legal",
+      "seat": "b-player",
+      "winner": "player",
+      "plays": 17
+    },
+    {
+      "deck": "focus-wiz",
+      "policy": "chain-two",
+      "seat": "a-player",
+      "winner": "cpu",
+      "plays": 19
+    },
+    {
+      "deck": "focus-wiz",
+      "policy": "chain-two",
+      "seat": "b-player",
+      "winner": "draw",
+      "plays": 18
+    },
+    {
+      "deck": "focus-wonderland",
+      "policy": "greedy",
+      "seat": "a-player",
+      "winner": "cpu",
+      "plays": 18
+    },
+    {
+      "deck": "focus-wonderland",
+      "policy": "greedy",
+      "seat": "b-player",
+      "winner": "player",
+      "plays": 18
+    },
+    {
+      "deck": "focus-wonderland",
+      "policy": "seeded-legal",
+      "seat": "a-player",
+      "winner": "player",
+      "plays": 18
+    },
+    {
+      "deck": "focus-wonderland",
+      "policy": "seeded-legal",
+      "seat": "b-player",
+      "winner": "player",
+      "plays": 20
+    },
+    {
+      "deck": "focus-wonderland",
+      "policy": "chain-two",
+      "seat": "a-player",
+      "winner": "cpu",
+      "plays": 18
+    },
+    {
+      "deck": "focus-wonderland",
+      "policy": "chain-two",
+      "seat": "b-player",
+      "winner": "player",
+      "plays": 19
+    },
+    {
+      "deck": "focus-fire-guap",
+      "policy": "greedy",
+      "seat": "a-player",
+      "winner": "cpu",
+      "plays": 14
+    },
+    {
+      "deck": "focus-fire-guap",
+      "policy": "greedy",
+      "seat": "b-player",
+      "winner": "draw",
+      "plays": 14
+    },
+    {
+      "deck": "focus-fire-guap",
+      "policy": "seeded-legal",
+      "seat": "a-player",
+      "winner": "cpu",
+      "plays": 14
+    },
+    {
+      "deck": "focus-fire-guap",
+      "policy": "seeded-legal",
+      "seat": "b-player",
+      "winner": "cpu",
+      "plays": 14
+    },
+    {
+      "deck": "focus-fire-guap",
+      "policy": "chain-two",
+      "seat": "a-player",
+      "winner": "cpu",
+      "plays": 14
+    },
+    {
+      "deck": "focus-fire-guap",
+      "policy": "chain-two",
+      "seat": "b-player",
+      "winner": "player",
+      "plays": 15
+    },
+    {
+      "deck": "focus-poison-entry",
+      "policy": "greedy",
+      "seat": "a-player",
+      "winner": "cpu",
+      "plays": 18
+    },
+    {
+      "deck": "focus-poison-entry",
+      "policy": "greedy",
+      "seat": "b-player",
+      "winner": "player",
+      "plays": 18
+    },
+    {
+      "deck": "focus-poison-entry",
+      "policy": "seeded-legal",
+      "seat": "a-player",
+      "winner": "player",
+      "plays": 19
+    },
+    {
+      "deck": "focus-poison-entry",
+      "policy": "seeded-legal",
+      "seat": "b-player",
+      "winner": "player",
+      "plays": 19
+    },
+    {
+      "deck": "focus-poison-entry",
+      "policy": "chain-two",
+      "seat": "a-player",
+      "winner": "cpu",
+      "plays": 20
+    },
+    {
+      "deck": "focus-poison-entry",
+      "policy": "chain-two",
+      "seat": "b-player",
+      "winner": "player",
+      "plays": 18
+    },
+    {
+      "deck": "focus-cellblock",
+      "policy": "greedy",
+      "seat": "a-player",
+      "winner": "player",
+      "plays": 20
+    },
+    {
+      "deck": "focus-cellblock",
+      "policy": "greedy",
+      "seat": "b-player",
+      "winner": "player",
+      "plays": 20
+    },
+    {
+      "deck": "focus-cellblock",
+      "policy": "seeded-legal",
+      "seat": "a-player",
+      "winner": "cpu",
+      "plays": 20
+    },
+    {
+      "deck": "focus-cellblock",
+      "policy": "seeded-legal",
+      "seat": "b-player",
+      "winner": "cpu",
+      "plays": 20
+    },
+    {
+      "deck": "focus-cellblock",
+      "policy": "chain-two",
+      "seat": "a-player",
+      "winner": "cpu",
+      "plays": 20
+    },
+    {
+      "deck": "focus-cellblock",
+      "policy": "chain-two",
+      "seat": "b-player",
+      "winner": "player",
+      "plays": 20
+    },
+    {
+      "deck": "focus-cellblock-classic",
+      "policy": "greedy",
+      "seat": "a-player",
+      "winner": "cpu",
+      "plays": 15
+    },
+    {
+      "deck": "focus-cellblock-classic",
+      "policy": "greedy",
+      "seat": "b-player",
+      "winner": "player",
+      "plays": 15
+    },
+    {
+      "deck": "focus-cellblock-classic",
+      "policy": "seeded-legal",
+      "seat": "a-player",
+      "winner": "player",
+      "plays": 16
+    },
+    {
+      "deck": "focus-cellblock-classic",
+      "policy": "seeded-legal",
+      "seat": "b-player",
+      "winner": "cpu",
+      "plays": 16
+    },
+    {
+      "deck": "focus-cellblock-classic",
+      "policy": "chain-two",
+      "seat": "a-player",
+      "winner": "cpu",
+      "plays": 16
+    },
+    {
+      "deck": "focus-cellblock-classic",
+      "policy": "chain-two",
+      "seat": "b-player",
+      "winner": "player",
+      "plays": 15
+    },
+    {
+      "deck": "focus-demario-luigion",
+      "policy": "greedy",
+      "seat": "a-player",
+      "winner": "player",
+      "plays": 20
+    },
+    {
+      "deck": "focus-demario-luigion",
+      "policy": "greedy",
+      "seat": "b-player",
+      "winner": "draw",
+      "plays": 20
+    },
+    {
+      "deck": "focus-demario-luigion",
+      "policy": "seeded-legal",
+      "seat": "a-player",
+      "winner": "player",
+      "plays": 20
+    },
+    {
+      "deck": "focus-demario-luigion",
+      "policy": "seeded-legal",
+      "seat": "b-player",
+      "winner": "player",
+      "plays": 20
+    },
+    {
+      "deck": "focus-demario-luigion",
+      "policy": "chain-two",
+      "seat": "a-player",
+      "winner": "player",
+      "plays": 20
+    },
+    {
+      "deck": "focus-demario-luigion",
+      "policy": "chain-two",
+      "seat": "b-player",
+      "winner": "cpu",
+      "plays": 20
+    },
+    {
+      "deck": "focus-counterplay-coherent",
+      "policy": "greedy",
+      "seat": "a-player",
+      "winner": "cpu",
+      "plays": 19
+    },
+    {
+      "deck": "focus-counterplay-coherent",
+      "policy": "greedy",
+      "seat": "b-player",
+      "winner": "player",
+      "plays": 19
+    },
+    {
+      "deck": "focus-counterplay-coherent",
+      "policy": "seeded-legal",
+      "seat": "a-player",
+      "winner": "player",
+      "plays": 19
+    },
+    {
+      "deck": "focus-counterplay-coherent",
+      "policy": "seeded-legal",
+      "seat": "b-player",
+      "winner": "cpu",
+      "plays": 19
+    },
+    {
+      "deck": "focus-counterplay-coherent",
+      "policy": "chain-two",
+      "seat": "a-player",
+      "winner": "player",
+      "plays": 19
+    },
+    {
+      "deck": "focus-counterplay-coherent",
+      "policy": "chain-two",
+      "seat": "b-player",
+      "winner": "draw",
+      "plays": 19
+    },
+    {
+      "deck": "element-light",
+      "policy": "greedy",
+      "seat": "a-player",
+      "winner": "player",
+      "plays": 17
+    },
+    {
+      "deck": "element-light",
+      "policy": "greedy",
+      "seat": "b-player",
+      "winner": "cpu",
+      "plays": 18
+    },
+    {
+      "deck": "element-light",
+      "policy": "seeded-legal",
+      "seat": "a-player",
+      "winner": "player",
+      "plays": 17
+    },
+    {
+      "deck": "element-light",
+      "policy": "seeded-legal",
+      "seat": "b-player",
+      "winner": "cpu",
+      "plays": 17
+    },
+    {
+      "deck": "element-light",
+      "policy": "chain-two",
+      "seat": "a-player",
+      "winner": "player",
+      "plays": 18
+    },
+    {
+      "deck": "element-light",
+      "policy": "chain-two",
+      "seat": "b-player",
+      "winner": "cpu",
+      "plays": 18
+    },
+    {
+      "deck": "element-water",
+      "policy": "greedy",
+      "seat": "a-player",
+      "winner": "player",
+      "plays": 20
+    },
+    {
+      "deck": "element-water",
+      "policy": "greedy",
+      "seat": "b-player",
+      "winner": "draw",
+      "plays": 20
+    },
+    {
+      "deck": "element-water",
+      "policy": "seeded-legal",
+      "seat": "a-player",
+      "winner": "draw",
+      "plays": 20
+    },
+    {
+      "deck": "element-water",
+      "policy": "seeded-legal",
+      "seat": "b-player",
+      "winner": "cpu",
+      "plays": 20
+    },
+    {
+      "deck": "element-water",
+      "policy": "chain-two",
+      "seat": "a-player",
+      "winner": "cpu",
+      "plays": 20
+    },
+    {
+      "deck": "element-water",
+      "policy": "chain-two",
+      "seat": "b-player",
+      "winner": "cpu",
+      "plays": 20
+    },
+    {
+      "deck": "element-plant",
+      "policy": "greedy",
+      "seat": "a-player",
+      "winner": "player",
+      "plays": 17
+    },
+    {
+      "deck": "element-plant",
+      "policy": "greedy",
+      "seat": "b-player",
+      "winner": "cpu",
+      "plays": 17
+    },
+    {
+      "deck": "element-plant",
+      "policy": "seeded-legal",
+      "seat": "a-player",
+      "winner": "player",
+      "plays": 17
+    },
+    {
+      "deck": "element-plant",
+      "policy": "seeded-legal",
+      "seat": "b-player",
+      "winner": "cpu",
+      "plays": 17
+    },
+    {
+      "deck": "element-plant",
+      "policy": "chain-two",
+      "seat": "a-player",
+      "winner": "player",
+      "plays": 17
+    },
+    {
+      "deck": "element-plant",
+      "policy": "chain-two",
+      "seat": "b-player",
+      "winner": "cpu",
+      "plays": 17
+    },
+    {
+      "deck": "element-electric",
+      "policy": "greedy",
+      "seat": "a-player",
+      "winner": "cpu",
+      "plays": 17
+    },
+    {
+      "deck": "element-electric",
+      "policy": "greedy",
+      "seat": "b-player",
+      "winner": "player",
+      "plays": 18
+    },
+    {
+      "deck": "element-electric",
+      "policy": "seeded-legal",
+      "seat": "a-player",
+      "winner": "player",
+      "plays": 19
+    },
+    {
+      "deck": "element-electric",
+      "policy": "seeded-legal",
+      "seat": "b-player",
+      "winner": "cpu",
+      "plays": 19
+    },
+    {
+      "deck": "element-electric",
+      "policy": "chain-two",
+      "seat": "a-player",
+      "winner": "cpu",
+      "plays": 17
+    },
+    {
+      "deck": "element-electric",
+      "policy": "chain-two",
+      "seat": "b-player",
+      "winner": "player",
+      "plays": 18
+    },
+    {
+      "deck": "element-dark",
+      "policy": "greedy",
+      "seat": "a-player",
+      "winner": "cpu",
+      "plays": 13
+    },
+    {
+      "deck": "element-dark",
+      "policy": "greedy",
+      "seat": "b-player",
+      "winner": "cpu",
+      "plays": 13
+    },
+    {
+      "deck": "element-dark",
+      "policy": "seeded-legal",
+      "seat": "a-player",
+      "winner": "cpu",
+      "plays": 15
+    },
+    {
+      "deck": "element-dark",
+      "policy": "seeded-legal",
+      "seat": "b-player",
+      "winner": "player",
+      "plays": 14
+    },
+    {
+      "deck": "element-dark",
+      "policy": "chain-two",
+      "seat": "a-player",
+      "winner": "cpu",
+      "plays": 13
+    },
+    {
+      "deck": "element-dark",
+      "policy": "chain-two",
+      "seat": "b-player",
+      "winner": "cpu",
+      "plays": 14
+    },
+    {
+      "deck": "element-earth",
+      "policy": "greedy",
+      "seat": "a-player",
+      "winner": "player",
+      "plays": 17
+    },
+    {
+      "deck": "element-earth",
+      "policy": "greedy",
+      "seat": "b-player",
+      "winner": "player",
+      "plays": 16
+    },
+    {
+      "deck": "element-earth",
+      "policy": "seeded-legal",
+      "seat": "a-player",
+      "winner": "draw",
+      "plays": 17
+    },
+    {
+      "deck": "element-earth",
+      "policy": "seeded-legal",
+      "seat": "b-player",
+      "winner": "player",
+      "plays": 17
+    },
+    {
+      "deck": "element-earth",
+      "policy": "chain-two",
+      "seat": "a-player",
+      "winner": "player",
+      "plays": 17
+    },
+    {
+      "deck": "element-earth",
+      "policy": "chain-two",
+      "seat": "b-player",
+      "winner": "player",
+      "plays": 16
+    },
+    {
+      "deck": "element-fire",
+      "policy": "greedy",
+      "seat": "a-player",
+      "winner": "player",
+      "plays": 14
+    },
+    {
+      "deck": "element-fire",
+      "policy": "greedy",
+      "seat": "b-player",
+      "winner": "cpu",
+      "plays": 14
+    },
+    {
+      "deck": "element-fire",
+      "policy": "seeded-legal",
+      "seat": "a-player",
+      "winner": "player",
+      "plays": 15
+    },
+    {
+      "deck": "element-fire",
+      "policy": "seeded-legal",
+      "seat": "b-player",
+      "winner": "draw",
+      "plays": 14
+    },
+    {
+      "deck": "element-fire",
+      "policy": "chain-two",
+      "seat": "a-player",
+      "winner": "player",
+      "plays": 14
+    },
+    {
+      "deck": "element-fire",
+      "policy": "chain-two",
+      "seat": "b-player",
+      "winner": "cpu",
+      "plays": 14
+    },
+    {
+      "deck": "element-air",
+      "policy": "greedy",
+      "seat": "a-player",
+      "winner": "player",
+      "plays": 18
+    },
+    {
+      "deck": "element-air",
+      "policy": "greedy",
+      "seat": "b-player",
+      "winner": "cpu",
+      "plays": 18
+    },
+    {
+      "deck": "element-air",
+      "policy": "seeded-legal",
+      "seat": "a-player",
+      "winner": "cpu",
+      "plays": 18
+    },
+    {
+      "deck": "element-air",
+      "policy": "seeded-legal",
+      "seat": "b-player",
+      "winner": "cpu",
+      "plays": 18
+    },
+    {
+      "deck": "element-air",
+      "policy": "chain-two",
+      "seat": "a-player",
+      "winner": "player",
+      "plays": 19
+    },
+    {
+      "deck": "element-air",
+      "policy": "chain-two",
+      "seat": "b-player",
+      "winner": "cpu",
+      "plays": 18
+    },
+    {
+      "deck": "element-poison",
+      "policy": "greedy",
+      "seat": "a-player",
+      "winner": "draw",
+      "plays": 20
+    },
+    {
+      "deck": "element-poison",
+      "policy": "greedy",
+      "seat": "b-player",
+      "winner": "player",
+      "plays": 20
+    },
+    {
+      "deck": "element-poison",
+      "policy": "seeded-legal",
+      "seat": "a-player",
+      "winner": "player",
+      "plays": 20
+    },
+    {
+      "deck": "element-poison",
+      "policy": "seeded-legal",
+      "seat": "b-player",
+      "winner": "cpu",
+      "plays": 20
+    },
+    {
+      "deck": "element-poison",
+      "policy": "chain-two",
+      "seat": "a-player",
+      "winner": "cpu",
+      "plays": 20
+    },
+    {
+      "deck": "element-poison",
+      "policy": "chain-two",
+      "seat": "b-player",
+      "winner": "player",
+      "plays": 20
+    },
+    {
+      "deck": "focused-red-set",
+      "policy": "greedy",
+      "seat": "a-player",
+      "winner": "cpu",
+      "plays": 20
+    },
+    {
+      "deck": "focused-red-set",
+      "policy": "greedy",
+      "seat": "b-player",
+      "winner": "cpu",
+      "plays": 20
+    },
+    {
+      "deck": "focused-red-set",
+      "policy": "seeded-legal",
+      "seat": "a-player",
+      "winner": "cpu",
+      "plays": 20
+    },
+    {
+      "deck": "focused-red-set",
+      "policy": "seeded-legal",
+      "seat": "b-player",
+      "winner": "draw",
+      "plays": 20
+    },
+    {
+      "deck": "focused-red-set",
+      "policy": "chain-two",
+      "seat": "a-player",
+      "winner": "draw",
+      "plays": 20
+    },
+    {
+      "deck": "focused-red-set",
+      "policy": "chain-two",
+      "seat": "b-player",
+      "winner": "player",
+      "plays": 20
+    },
+    {
+      "deck": "focused-blue-set",
+      "policy": "greedy",
+      "seat": "a-player",
+      "winner": "player",
+      "plays": 19
+    },
+    {
+      "deck": "focused-blue-set",
+      "policy": "greedy",
+      "seat": "b-player",
+      "winner": "player",
+      "plays": 19
+    },
+    {
+      "deck": "focused-blue-set",
+      "policy": "seeded-legal",
+      "seat": "a-player",
+      "winner": "draw",
+      "plays": 19
+    },
+    {
+      "deck": "focused-blue-set",
+      "policy": "seeded-legal",
+      "seat": "b-player",
+      "winner": "player",
+      "plays": 19
+    },
+    {
+      "deck": "focused-blue-set",
+      "policy": "chain-two",
+      "seat": "a-player",
+      "winner": "cpu",
+      "plays": 19
+    },
+    {
+      "deck": "focused-blue-set",
+      "policy": "chain-two",
+      "seat": "b-player",
+      "winner": "player",
+      "plays": 19
+    },
+    {
+      "deck": "cellblock-pressure",
+      "policy": "greedy",
+      "seat": "a-player",
+      "winner": "cpu",
+      "plays": 17
+    },
+    {
+      "deck": "cellblock-pressure",
+      "policy": "greedy",
+      "seat": "b-player",
+      "winner": "player",
+      "plays": 16
+    },
+    {
+      "deck": "cellblock-pressure",
+      "policy": "seeded-legal",
+      "seat": "a-player",
+      "winner": "player",
+      "plays": 16
+    },
+    {
+      "deck": "cellblock-pressure",
+      "policy": "seeded-legal",
+      "seat": "b-player",
+      "winner": "player",
+      "plays": 17
+    },
+    {
+      "deck": "cellblock-pressure",
+      "policy": "chain-two",
+      "seat": "a-player",
+      "winner": "cpu",
+      "plays": 17
+    },
+    {
+      "deck": "cellblock-pressure",
+      "policy": "chain-two",
+      "seat": "b-player",
+      "winner": "player",
+      "plays": 17
+    },
+    {
+      "deck": "mushroom-plant",
+      "policy": "greedy",
+      "seat": "a-player",
+      "winner": "player",
+      "plays": 20
+    },
+    {
+      "deck": "mushroom-plant",
+      "policy": "greedy",
+      "seat": "b-player",
+      "winner": "cpu",
+      "plays": 20
+    },
+    {
+      "deck": "mushroom-plant",
+      "policy": "seeded-legal",
+      "seat": "a-player",
+      "winner": "cpu",
+      "plays": 20
+    },
+    {
+      "deck": "mushroom-plant",
+      "policy": "seeded-legal",
+      "seat": "b-player",
+      "winner": "cpu",
+      "plays": 20
+    },
+    {
+      "deck": "mushroom-plant",
+      "policy": "chain-two",
+      "seat": "a-player",
+      "winner": "player",
+      "plays": 20
+    },
+    {
+      "deck": "mushroom-plant",
+      "policy": "chain-two",
+      "seat": "b-player",
+      "winner": "cpu",
+      "plays": 20
+    },
+    {
+      "deck": "street-legends-investigations",
+      "policy": "greedy",
+      "seat": "a-player",
+      "winner": "player",
+      "plays": 15
+    },
+    {
+      "deck": "street-legends-investigations",
+      "policy": "greedy",
+      "seat": "b-player",
+      "winner": "player",
+      "plays": 15
+    },
+    {
+      "deck": "street-legends-investigations",
+      "policy": "seeded-legal",
+      "seat": "a-player",
+      "winner": "draw",
+      "plays": 16
+    },
+    {
+      "deck": "street-legends-investigations",
+      "policy": "seeded-legal",
+      "seat": "b-player",
+      "winner": "draw",
+      "plays": 16
+    },
+    {
+      "deck": "street-legends-investigations",
+      "policy": "chain-two",
+      "seat": "a-player",
+      "winner": "player",
+      "plays": 15
+    },
+    {
+      "deck": "street-legends-investigations",
+      "policy": "chain-two",
+      "seat": "b-player",
+      "winner": "player",
+      "plays": 15
+    },
+    {
+      "deck": "street-legends-relationships",
+      "policy": "greedy",
+      "seat": "a-player",
+      "winner": "player",
+      "plays": 18
+    },
+    {
+      "deck": "street-legends-relationships",
+      "policy": "greedy",
+      "seat": "b-player",
+      "winner": "cpu",
+      "plays": 17
+    },
+    {
+      "deck": "street-legends-relationships",
+      "policy": "seeded-legal",
+      "seat": "a-player",
+      "winner": "player",
+      "plays": 18
+    },
+    {
+      "deck": "street-legends-relationships",
+      "policy": "seeded-legal",
+      "seat": "b-player",
+      "winner": "player",
+      "plays": 17
+    },
+    {
+      "deck": "street-legends-relationships",
+      "policy": "chain-two",
+      "seat": "a-player",
+      "winner": "player",
+      "plays": 18
+    },
+    {
+      "deck": "street-legends-relationships",
+      "policy": "chain-two",
+      "seat": "b-player",
+      "winner": "cpu",
+      "plays": 18
+    },
+    {
+      "deck": "street-legends-growth",
+      "policy": "greedy",
+      "seat": "a-player",
+      "winner": "draw",
+      "plays": 19
+    },
+    {
+      "deck": "street-legends-growth",
+      "policy": "greedy",
+      "seat": "b-player",
+      "winner": "player",
+      "plays": 19
+    },
+    {
+      "deck": "street-legends-growth",
+      "policy": "seeded-legal",
+      "seat": "a-player",
+      "winner": "cpu",
+      "plays": 19
+    },
+    {
+      "deck": "street-legends-growth",
+      "policy": "seeded-legal",
+      "seat": "b-player",
+      "winner": "player",
+      "plays": 19
+    },
+    {
+      "deck": "street-legends-growth",
+      "policy": "chain-two",
+      "seat": "a-player",
+      "winner": "player",
+      "plays": 19
+    },
+    {
+      "deck": "street-legends-growth",
+      "policy": "chain-two",
+      "seat": "b-player",
+      "winner": "draw",
+      "plays": 19
+    }
+  ],
+  "checks": [
+    "276 exact full-event versus compact-preview complete PvP match comparisons",
+    "Every move and end-turn routed through actual online authority",
+    "Base cards only; both seats; correct two-district victory rule; alternating round initiative",
+    "46 legal ten-card decks; all paid choices supported; opponent hand masked for evaluation"
+  ]
+}

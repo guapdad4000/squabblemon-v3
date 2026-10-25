@@ -14,6 +14,8 @@ import { Lobby } from './Lobby';
 import { Battle, tryLockInteraction } from './Battle';
 import { BattleStartSmoke } from './BattleStartSmoke';
 import { ResultScreen } from './ResultScreen';
+import { BattleRulesUpdated } from './BattleRulesUpdated';
+import { isMatchRulesUpdated } from '../lib/matchRecovery';
 import { CardInspector } from './CardInspector';
 import { RulesModal } from './RulesModal';
 import { StoryCinematic } from './StoryCinematic';
@@ -34,6 +36,7 @@ import { selectTrainingRival } from '@workspace/squabblemon-engine/training';
 import { isActivityId } from '@workspace/squabblemon-engine/activities';
 import { createLocalPracticeMatch } from '../lib/localPracticeMatch';
 import { playTurnCard, revealCpuTurn } from '../gameEngine';
+import { computeRival, useBattleWorker } from '../lib/useBattleComputation';
 import { getAssetUrl } from '../lib/assets';
 import { playTutorialSequence, rookieRoadCues } from '../lib/tutorialVoice';
 import { warmMatchArtwork } from '../lib/battleAssetWarmup';
@@ -127,9 +130,11 @@ const resultBroadcastHoldMs = (speed: 1 | 1.5, fast = false) => scaleBattleBeat(
 
 export function PlayLoop({ mode = 'practice', onExit, onTutorialComplete, onVerifiedComplete, initialDeckId = 'block', initialRivalId = 'combo', hideLobby = false, turnTimerEnabled = true, customPlayerDeck, availableDeckIds, storyNodeId, challengeRunId, equippedVariants, cardProgression = {}, activity, trainingCircuit = false, draftWeek, draftPicks, loanerPractice = false }: { loanerPractice?: boolean; activity?: string; trainingCircuit?: boolean; draftWeek?: string; draftPicks?: string[]; mode?: 'guest' | 'practice' | 'tutorial' | 'story'; onExit: () => void; onTutorialComplete?: () => void; onVerifiedComplete?: (match: Match, serverMatchId?: string) => void; initialDeckId?: string; initialRivalId?: string; hideLobby?: boolean; turnTimerEnabled?: boolean; customPlayerDeck?: Deck; availableDeckIds?: string[]; storyNodeId?: string; challengeRunId?: string; equippedVariants?: EquippedVariantMap; cardProgression?: CardProgressionMap }) {
   useEffect(installGameSurfacePolicy, []);
+  const computation = useBattleWorker();
   const effectiveTurnTimerEnabled = shouldRunTurnTimer(mode, turnTimerEnabled);
   const [screen, setScreen] = useState<'lobby' | 'battle' | 'result'>(hideLobby ? 'battle' : 'lobby');
   const [reviewBoard, setReviewBoard] = useState(false);
+  const [computationFailure, setComputationFailure] = useState<{ match: Match; id: number } | null>(null);
   const screenRef = useRef(screen), reviewBoardRef = useRef(reviewBoard);
   screenRef.current = screen;
   reviewBoardRef.current = reviewBoard;
@@ -139,7 +144,7 @@ export function PlayLoop({ mode = 'practice', onExit, onTutorialComplete, onVeri
   const districts = getMatchDistricts(match);
   const visualMatchRef = useRef<Match | null>(null);
   const [presentationScores, setPresentationScores] = useState<ScoreState[] | null>(null);
-  const [serverMatchId, setServerMatchId] = useState<string | null>(null), [serverReward, setServerReward] = useState<MatchReward | null>(null), [serverRewardError, setServerRewardError] = useState(false);
+  const [serverMatchId, setServerMatchId] = useState<string | null>(null), [serverReward, setServerReward] = useState<MatchReward | null>(null), [serverRewardError, setServerRewardError] = useState<boolean | 'rules-updated'>(false);
   const [isUnsavedTraining, setIsUnsavedTraining] = useState(mode === 'guest');
   const [battleStartEffectVisible, setBattleStartEffectVisible] = useState(false);
   const [storyMetadata, setStoryMetadata] = useState<StoryMatchMetadata | null>(null), [startError, setStartError] = useState<string | null>(null);
@@ -243,6 +248,8 @@ export function PlayLoop({ mode = 'practice', onExit, onTutorialComplete, onVeri
     }
   }, []);
   const cancelTimers = useCallback(() => {
+    computation.current?.cancel();
+    setComputationFailure(null);
     cancelPendingResultBroadcast();
     feedback.current.reset();
     timeline.current.cancelAll();
@@ -389,15 +396,18 @@ export function PlayLoop({ mode = 'practice', onExit, onTutorialComplete, onVeri
           onVerifiedComplete?.(finalMatch, serverMatchId);
         });
         return generation === matchGeneration.current;
-      } catch {
-        if (generation === matchGeneration.current) setServerRewardError(true);
+      } catch (error) {
+        if (generation === matchGeneration.current) {
+          setServerRewardError(isMatchRulesUpdated(error) ? 'rules-updated' : true);
+          if (isMatchRulesUpdated(error)) cancelTimers();
+        }
         return false;
       }
     } else if (mode === 'guest' && !loanerPractice) localStorage.setItem('squabblemon_guest_tutorial_complete', 'true');
     // Saving/retrying a receipt must never dismiss a card, final-board review,
     // or results. Presentation navigation belongs to the player's controls.
     return false;
-  }, [completePlayerMatch, mode, loanerPractice, queryClient, serverMatchId, onVerifiedComplete]);
+  }, [cancelTimers, completePlayerMatch, mode, loanerPractice, queryClient, serverMatchId, onVerifiedComplete]);
   const showResults = useCallback(() => {
     cancelPendingResultBroadcast();
     resultStingerRef.current = null;
@@ -662,8 +672,23 @@ export function PlayLoop({ mode = 'practice', onExit, onTutorialComplete, onVeri
   }, [advanceRoundBoundary, mode, pauseForGuidedReading, waitForBeat]);
   const runRival = useCallback(async (afterPlayer: Match, id: number) => {
     setPresentationPhase('rival-thinking'); setPhaseMessage('THE OPPS THINKING');
-    if (!await waitForBeat(1100, 90, id)) return;
-    const resolved = revealCpuTurn(afterPlayer);
+    const worker = computation.current;
+    if (!worker) { setComputationFailure({ match: afterPlayer, id }); return; }
+    let resolved: Match;
+    try {
+      const [continueTurn, computed] = await Promise.all([
+        waitForBeat(1100, 90, id),
+        computeRival(worker, afterPlayer),
+      ]);
+      if (!continueTurn) return;
+      resolved = computed;
+    } catch (error) {
+      if (id !== timeline.current.id || (error instanceof Error && error.name === 'AbortError')) return;
+      setComputationFailure({ match: afterPlayer, id });
+      setPhaseMessage('RIVAL MOVE INTERRUPTED');
+      return;
+    }
+    if (id !== timeline.current.id) return;
     setMatch(resolved);
     if (await presentEvents(resolved, afterPlayer.nextEventSequence, id, fastForwardRef.current)) await finishRound(resolved, id);
   }, [finishRound, presentEvents, waitForBeat]);
@@ -701,8 +726,9 @@ export function PlayLoop({ mode = 'practice', onExit, onTutorialComplete, onVeri
           setPresentationPhase('lock-in'); setPhaseMessage('SAVING YOUR MOVE');
           await saveChallengeCheckpoint(challengeRunId, { moves: candidateMoves }, { signal: AbortSignal.timeout(15000) });
           if (id !== timeline.current.id) return;
-        } catch {
+        } catch (error) {
           if (id !== timeline.current.id) return;
+          if (isMatchRulesUpdated(error)) { cancelTimers(); setServerRewardError('rules-updated'); setScreen('result'); return; }
           setTimerSeconds(TURN_SECONDS);
           setMatch(previousMatch); setVisualFrame(previousMatch);
           setPhaseMessage('CONNECTION LOST · RETRY YOUR MOVE');
@@ -736,8 +762,9 @@ export function PlayLoop({ mode = 'practice', onExit, onTutorialComplete, onVeri
             setPresentationPhase('lock-in'); setPhaseMessage('SAVING YOUR MOVE');
             await saveChallengeCheckpoint(challengeRunId, { moves: candidateMoves }, { signal: AbortSignal.timeout(15000) });
             if (id !== timeline.current.id) return;
-          } catch {
+          } catch (error) {
             if (id !== timeline.current.id) return;
+            if (isMatchRulesUpdated(error)) { cancelTimers(); setServerRewardError('rules-updated'); setScreen('result'); return; }
             // The card was already saved. Only the end-turn save failed.
             setMatch(afterPlay); setVisualFrame(afterPlay);
             setSelectedInstanceId(null); setSelectedLane(null); setSquabble(false); setTimerSeconds(TURN_SECONDS);
@@ -828,7 +855,8 @@ export function PlayLoop({ mode = 'practice', onExit, onTutorialComplete, onVeri
       skipTransitionRef.current = false;
     }
   };
-  const handleRestart = () => { cancelTimers(); matchGeneration.current++; resultStingerRef.current = null; setResultStinger(null); autoStartRef.current = false; setStartError(null); setIsUnsavedTraining(mode === 'guest'); setMatch(null); setVisualFrame(null); setScreen(hideLobby ? 'battle' : 'lobby'); };
+  const handleRestart = () => { setServerRewardError(false); cancelTimers(); matchGeneration.current++; resultStingerRef.current = null; setResultStinger(null); autoStartRef.current = false; setStartError(null); setIsUnsavedTraining(mode === 'guest'); setMatch(null); setVisualFrame(null); setScreen(hideLobby ? 'battle' : 'lobby'); };
+  if (serverRewardError === 'rules-updated') return <BattleRulesUpdated challenge={Boolean(challengeRunId)} onExit={onExit} />;
   return <div className="h-[100dvh] bg-black text-white font-sans flex flex-col relative overflow-hidden game-bg"><div className="noise-overlay" />
     {e2eAuthEnabled && mode === 'tutorial' && match && (
       <button
@@ -860,7 +888,11 @@ export function PlayLoop({ mode = 'practice', onExit, onTutorialComplete, onVeri
     {battleStartEffectVisible && screen === 'battle' && visualMatch && !encounterCinematic && (
       <BattleStartSmoke onComplete={() => setBattleStartEffectVisible(false)} speed={battleSpeed} />
     )}
-    {(screen === 'battle' || (screen === 'result' && reviewBoard)) && visualMatch && <LayoutGroup><Battle tutorialCoach={mode === 'tutorial'} tutorialGuidance={tutorialGuidance} guidedReadingCue={guidedReadingCue} onContinueGuidedReading={continueGuidedReading} reviewingFinalBoard={screen === 'result' && reviewBoard} helpOpen={Boolean(showRules || inspect)} mechanicLesson={mechanicLesson} onDismissMechanicLesson={dismissMechanicLesson} match={visualMatch} deck={deck} rivalDeck={rivalDeck} playedSpecialMoves={playedSpecialMovesRef.current} selectedInstanceId={selectedInstanceId} setSelectedInstanceId={setSelectedInstanceId} selectedLane={selectedLane} setSelectedLane={setSelectedLane} commit={() => void commit()} onPlayCard={(instanceId: string, lane: Lane, squabble: boolean, investment = 0) => void commit(false, false, { instanceId, lane, squabble, investment })} endTurn={() => void commit(true)} skipSequence={skipSequence} presentationPhase={presentationPhase} phaseMessage={phaseMessage} timerSeconds={timerSeconds} timerEnabled={effectiveTurnTimerEnabled} impactLane={impactLane} presentationScores={presentationScores} stagedRival={stagedRival} stagedPlayer={stagedPlayer} activeEffectId={activeEffectId} activeEffectLane={activeEffectLane} activeEffect={activeEffect} squabbleCinematicLane={squabbleCinematicLane} squabble={squabble} setSquabble={setSquabble} setInspect={setInspect} archiveMatch={archiveLiveMatch} onShowRules={() => setShowRules(true)} onExit={onExit} feedbackPreferences={feedbackPreferences} setFeedbackPreferences={setFeedbackPreferences} decisionStartedAt={decisionStartedAtRef.current} onFeedback={(cue: 'select' | 'lock') => feedback.current.cue(cue, isReducedMotionRequested(window.matchMedia('(prefers-reduced-motion: reduce)').matches, document.documentElement.dataset.reduceMotion === 'true'))} equippedVariants={equippedVariants} authoritativeHistory={match?.effectLog} replay={replay} onReplayStep={showReplayFrame} onExitReplay={exitReplay} battleSpeed={battleSpeed} onToggleBattleSpeed={toggleBattleSpeed} /></LayoutGroup>}
+    {(screen === 'battle' || (screen === 'result' && reviewBoard)) && visualMatch && <LayoutGroup><Battle computationWorker={computation} tutorialCoach={mode === 'tutorial'} tutorialGuidance={tutorialGuidance} guidedReadingCue={guidedReadingCue} onContinueGuidedReading={continueGuidedReading} reviewingFinalBoard={screen === 'result' && reviewBoard} helpOpen={Boolean(showRules || inspect)} mechanicLesson={mechanicLesson} onDismissMechanicLesson={dismissMechanicLesson} match={visualMatch} deck={deck} rivalDeck={rivalDeck} playedSpecialMoves={playedSpecialMovesRef.current} selectedInstanceId={selectedInstanceId} setSelectedInstanceId={setSelectedInstanceId} selectedLane={selectedLane} setSelectedLane={setSelectedLane} commit={() => void commit()} onPlayCard={(instanceId: string, lane: Lane, squabble: boolean, investment = 0) => void commit(false, false, { instanceId, lane, squabble, investment })} endTurn={() => void commit(true)} skipSequence={skipSequence} presentationPhase={presentationPhase} phaseMessage={phaseMessage} timerSeconds={timerSeconds} timerEnabled={effectiveTurnTimerEnabled} impactLane={impactLane} presentationScores={presentationScores} stagedRival={stagedRival} stagedPlayer={stagedPlayer} activeEffectId={activeEffectId} activeEffectLane={activeEffectLane} activeEffect={activeEffect} squabbleCinematicLane={squabbleCinematicLane} squabble={squabble} setSquabble={setSquabble} setInspect={setInspect} archiveMatch={archiveLiveMatch} onShowRules={() => setShowRules(true)} onExit={onExit} feedbackPreferences={feedbackPreferences} setFeedbackPreferences={setFeedbackPreferences} decisionStartedAt={decisionStartedAtRef.current} onFeedback={(cue: 'select' | 'lock') => feedback.current.cue(cue, isReducedMotionRequested(window.matchMedia('(prefers-reduced-motion: reduce)').matches, document.documentElement.dataset.reduceMotion === 'true'))} equippedVariants={equippedVariants} authoritativeHistory={match?.effectLog} replay={replay} onReplayStep={showReplayFrame} onExitReplay={exitReplay} battleSpeed={battleSpeed} onToggleBattleSpeed={toggleBattleSpeed} /></LayoutGroup>}
+    {computationFailure && <div role="alert" className="absolute inset-x-4 top-24 z-[90] mx-auto max-w-md border border-white/25 bg-zinc-950 p-5 text-center shadow-xl">
+      <p className="text-sm text-white">The rival’s turn could not finish. Retry this turn to continue.</p>
+      <div className="mt-4 flex gap-3"><button type="button" className="min-h-11 flex-1 bg-primary px-4 py-3 text-black" onClick={() => { const failure = computationFailure; setComputationFailure(null); void runRival(failure.match, failure.id); }}>Retry turn</button><button type="button" className="min-h-11 flex-1 border border-white/25 px-4 py-3" onClick={onExit}>Leave battle</button></div>
+    </div>}
     {screen === 'result' && reviewBoard && (typeof document === 'undefined' ? null : createPortal(<button className="result-stage__return" onClick={() => setReviewBoard(false)}>View result</button>, document.body))}
      <AnimatePresence>{inspect && <CardInspector card={inspect} variantId={getEquippedVariant(equippedVariants, inspect.id)} onClose={() => setInspect(null)} match={visualMatch ?? match} />}{showRules && <RulesModal onClose={() => setShowRules(false)} />}{screen === 'result' && !reviewBoard && match && <ResultScreen challenge={Boolean(challengeRunId)} tutorial={mode === 'tutorial'} onRestart={handleRestart} onChangeDeck={() => hideLobby ? onExit() : setScreen('lobby')} onGoHome={onExit} onTutorialComplete={mode === 'tutorial' ? onTutorialComplete : undefined} onInspectBoard={() => setReviewBoard(true)} match={match} districts={districts} deckId={deckId} rivalDeck={rivalDeck} reward={serverReward} rewardError={serverRewardError} rewardPending={completePlayerMatch.isPending} onRetryReward={() => void finishMatchSession(match)} isGuest={isUnsavedTraining} customPlayerDeck={customPlayerDeck} storyMetadata={storyMetadata} equippedVariants={equippedVariants} />}</AnimatePresence>
      {resultStinger && !tabHidden && typeof document !== 'undefined' && createPortal(
@@ -885,7 +917,7 @@ export function PlayLoop({ mode = 'practice', onExit, initialDeckId = 'block', i
   const [match, setMatch] = useState<Match | null>(null), [visualMatch, setVisualMatch] = useState<Match | null>(null);
   const visualMatchRef = useRef<Match | null>(null);
   const [presentationScores, setPresentationScores] = useState<ScoreState[] | null>(null);
-  const [serverMatchId, setServerMatchId] = useState<string | null>(null), [serverReward, setServerReward] = useState<MatchReward | null>(null), [serverRewardError, setServerRewardError] = useState(false);
+  const [serverMatchId, setServerMatchId] = useState<string | null>(null), [serverReward, setServerReward] = useState<MatchReward | null>(null), [serverRewardError, setServerRewardError] = useState<boolean | 'rules-updated'>(false);
   const [storyMetadata, setStoryMetadata] = useState<StoryMatchMetadata | null>(null), [startError, setStartError] = useState<string | null>(null);
   const startPlayerMatch = useStartPlayerMatch(), completePlayerMatch = useCompletePlayerMatch(), queryClient = useQueryClient();
   const [selectedInstanceId, setSelectedInstanceId] = useState<string | null>(null), [selectedLane, setSelectedLane] = useState<number | null>(null), [squabble, setSquabble] = useState(false);
@@ -977,7 +1009,7 @@ export function PlayLoop({ mode = 'practice', onExit, initialDeckId = 'block', i
       if (res.campaign) queryClient.setQueryData(getGetPlayerStoryQueryKey(), res.campaign);
       else if (mode === 'story') void queryClient.invalidateQueries({ queryKey: getGetPlayerStoryQueryKey() });
       setServerReward(res.reward); setStoryMetadata(res.story); setServerRewardError(false);
-    } catch { setServerRewardError(true); }
+    } catch (error) { setServerRewardError(isMatchRulesUpdated(error) ? 'rules-updated' : true); }
     else if (mode === 'guest') localStorage.setItem('squabblemon_guest_tutorial_complete', 'true');
     setScreen('result');
   }, [completePlayerMatch, mode, queryClient, serverMatchId]);
@@ -1074,7 +1106,8 @@ export function PlayLoop({ mode = 'practice', onExit, initialDeckId = 'block', i
       timeline.current.completeAll();
     }
   };
-  const handleRestart = () => { autoStartRef.current = false; setStartError(null); setMatch(null); setVisualFrame(null); setScreen(hideLobby ? 'battle' : 'lobby'); };
+  const handleRestart = () => { setServerRewardError(false); autoStartRef.current = false; setStartError(null); setMatch(null); setVisualFrame(null); setScreen(hideLobby ? 'battle' : 'lobby'); };
+  if (serverRewardError === 'rules-updated') return <BattleRulesUpdated onExit={onExit} />;
   return <div className="h-[100dvh] bg-black text-white font-sans flex flex-col relative overflow-hidden game-bg"><div className="noise-overlay" />
     {startError && !match && <div className="relative z-20 grid h-full place-items-center p-6 text-center"><div className="max-w-sm border border-accent/40 bg-zinc-950 p-6"><div className="font-mono text-[9px] uppercase tracking-[.22em] text-accent">Encounter unavailable</div><h1 className="mt-2 font-display text-3xl font-black italic uppercase">Could not start the story battle</h1><p role="alert" className="mt-3 text-sm text-white/55">{startError}</p><div className="mt-6 flex gap-2"><button type="button" onClick={onExit} className="flex-1 border border-white/20 px-4 py-3 hover:bg-white/5">Back</button><button type="button" onClick={() => void start()} disabled={startPlayerMatch.isPending} className="flex-1 bg-primary px-4 py-3 text-black hover:bg-yellow-400">{startPlayerMatch.isPending ? 'Retrying' : 'Retry'}</button></div></div></div>}
     {screen === 'lobby' && !hideLobby && <Lobby onStart={start} deckId={deckId} setDeckId={setDeckId} rival={rival} setRival={setRival} availableDeckIds={availableDeckIds} onShowRules={() => setShowRules(true)} onInspect={setInspect} isLoading={startPlayerMatch.isPending} onExit={onExit} equippedVariants={equippedVariants} />}
@@ -1101,7 +1134,7 @@ export function PlayLoop({ mode = 'practice', onExit, initialDeckId = 'block', i
   const [match, setMatch] = useState<Match | null>(null), [visualMatch, setVisualMatch] = useState<Match | null>(null);
   const visualMatchRef = useRef<Match | null>(null);
   const [presentationScores, setPresentationScores] = useState<ScoreState[] | null>(null);
-  const [serverMatchId, setServerMatchId] = useState<string | null>(null), [serverReward, setServerReward] = useState<MatchReward | null>(null), [serverRewardError, setServerRewardError] = useState(false);
+  const [serverMatchId, setServerMatchId] = useState<string | null>(null), [serverReward, setServerReward] = useState<MatchReward | null>(null), [serverRewardError, setServerRewardError] = useState<boolean | 'rules-updated'>(false);
   const [storyMetadata, setStoryMetadata] = useState<StoryMatchMetadata | null>(null), [startError, setStartError] = useState<string | null>(null);
   const startPlayerMatch = useStartPlayerMatch(), completePlayerMatch = useCompletePlayerMatch(), queryClient = useQueryClient();
   const [selectedInstanceId, setSelectedInstanceId] = useState<string | null>(null), [selectedLane, setSelectedLane] = useState<number | null>(null), [squabble, setSquabble] = useState(false);
@@ -1193,7 +1226,7 @@ export function PlayLoop({ mode = 'practice', onExit, initialDeckId = 'block', i
       if (res.campaign) queryClient.setQueryData(getGetPlayerStoryQueryKey(), res.campaign);
       else if (mode === 'story') void queryClient.invalidateQueries({ queryKey: getGetPlayerStoryQueryKey() });
       setServerReward(res.reward); setStoryMetadata(res.story); setServerRewardError(false);
-    } catch { setServerRewardError(true); }
+    } catch (error) { setServerRewardError(isMatchRulesUpdated(error) ? 'rules-updated' : true); }
     else if (mode === 'guest') localStorage.setItem('squabblemon_guest_tutorial_complete', 'true');
     setScreen('result');
   }, [completePlayerMatch, mode, queryClient, serverMatchId]);
@@ -1286,7 +1319,8 @@ export function PlayLoop({ mode = 'practice', onExit, initialDeckId = 'block', i
       timeline.current.completeAll();
     }
   };
-  const handleRestart = () => { autoStartRef.current = false; setStartError(null); setMatch(null); setVisualFrame(null); setScreen(hideLobby ? 'battle' : 'lobby'); };
+  const handleRestart = () => { setServerRewardError(false); autoStartRef.current = false; setStartError(null); setMatch(null); setVisualFrame(null); setScreen(hideLobby ? 'battle' : 'lobby'); };
+  if (serverRewardError === 'rules-updated') return <BattleRulesUpdated onExit={onExit} />;
   return <div className="h-[100dvh] bg-black text-white font-sans flex flex-col relative overflow-hidden game-bg"><div className="noise-overlay" />
     {startError && !match && <div className="relative z-20 grid h-full place-items-center p-6 text-center"><div className="max-w-sm border border-accent/40 bg-zinc-950 p-6"><div className="font-mono text-[9px] uppercase tracking-[.22em] text-accent">Encounter unavailable</div><h1 className="mt-2 font-display text-3xl font-black italic uppercase">Could not start the story battle</h1><p role="alert" className="mt-3 text-sm text-white/55">{startError}</p><div className="mt-6 flex gap-2"><button type="button" onClick={onExit} className="flex-1 border border-white/20 px-4 py-3 hover:bg-white/5">Back</button><button type="button" onClick={() => void start()} disabled={startPlayerMatch.isPending} className="flex-1 bg-primary px-4 py-3 text-black hover:bg-yellow-400">{startPlayerMatch.isPending ? 'Retrying' : 'Retry'}</button></div></div></div>}
     {screen === 'lobby' && !hideLobby && <Lobby onStart={start} deckId={deckId} setDeckId={setDeckId} rival={rival} setRival={setRival} availableDeckIds={availableDeckIds} onShowRules={() => setShowRules(true)} onInspect={setInspect} isLoading={startPlayerMatch.isPending} onExit={onExit} equippedVariants={equippedVariants} />}

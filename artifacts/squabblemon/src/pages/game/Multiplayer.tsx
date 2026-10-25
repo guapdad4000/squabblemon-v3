@@ -1,7 +1,7 @@
 import { PersonalFadeRecord } from '../../components/social/PersonalFadeRecord';
 import { FadePark, FightTabs } from './FadePark';
 import { usePersistentDeckSelection } from '../../lib/deckSelection';
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useLocation, useSearch } from "wouter";
 import { ApiError, type PlayerBootstrap } from "@workspace/api-client-react";
 import { Check, Copy } from "lucide-react";
@@ -21,6 +21,7 @@ import { FadeSeriesBoard } from "../../components/social/FadeSeriesBoard";
 import { CompactDeckPicker } from '../../components/CompactDeckPicker';
 import { useSocial } from "../../lib/social";
 import type { OnlineCommand } from "@workspace/squabblemon-engine/multiplayer";
+import "../../styles/homies.css";
 import "../../styles/multiplayer.css";
 import "../../styles/friendly-fades.css";
 import { useEventVoice } from "../../lib/useEventVoice";
@@ -50,11 +51,19 @@ export function Multiplayer({ bootstrap, code }: { bootstrap: PlayerBootstrap; c
   const createKey = useRef<{ deckId: string; id: string } | null>(null);
   const { query, mutation, accept, connected } = useFriendMatch(profile.id, code);
   const room = query.data;
+  const closedRoomHeading = useRef<HTMLHeadingElement>(null);
+  useEffect(() => {
+    if (room?.status === "closed") closedRoomHeading.current?.focus();
+  }, [room?.code, room?.status]);
   const joinable = !!code && query.error instanceof ApiError && query.error.status === 404;
   // Targeted rooms are matched to the shared social snapshot by room code.
   const targeted = code ? social.query.data?.invitations.find(item => item.roomCode === code) : undefined;
   function leave() {
-    navigate(room?.kumite ? "/game/kumite?view=arena" : room?.ranked ? "/game/online" : "/game/online?tab=friends");
+    const destination = room?.kumite ? "/game/kumite?view=arena" : room?.ranked ? "/game/online" : "/game/online?tab=friends";
+    if (room?.reason === 'rules-updated') {
+      // Fresh rooms may contain rules and cards absent from the loaded bundle.
+      window.location.assign(`${basePath}${destination}`);
+    } else navigate(destination);
   }
   async function openRoom(join = false) {
     if (operationLock.current || !chosen) return;
@@ -143,13 +152,15 @@ export function Multiplayer({ bootstrap, code }: { bootstrap: PlayerBootstrap; c
       <button className="sq-btn" onClick={leave}>Back to Friendly Fades</button>
     </div>;
   } else if (room?.status === "closed") {
+    const rulesUpdated = room.reason === 'rules-updated';
+    const returnLabel = room.kumite ? 'Back to Kumite' : room.ranked ? 'Back to Fade Park' : 'Back to Friendly Fades';
     const rivalLeft = room.reason === 'left' && room.closedBy && room.closedBy !== room.seat;
     const youLeft = room.reason === 'left' && room.closedBy === room.seat;
     screen = <div className="sq-state">
-      <h2>{rivalLeft ? `${room.members[room.seat === 'player' ? 'cpu' : 'player']?.name ?? 'The Opps'} left the room.` : youLeft ? 'You left this room.' : 'This room has closed.'}</h2>
-      <p>{rivalLeft ? 'The series in this room is over. Open a fresh challenge to play again.'
+      <h2 ref={closedRoomHeading} tabIndex={-1}>{rulesUpdated ? 'The rules have updated.' : rivalLeft ? `${room.members[room.seat === 'player' ? 'cpu' : 'player']?.name ?? 'The Opps'} left the room.` : youLeft ? 'You left this room.' : 'This room has closed.'}</h2>
+      <p>{rulesUpdated ? 'Your saved results, rank, and rewards are unchanged.' : rivalLeft ? 'The series in this room is over. Open a fresh challenge to play again.'
         : targeted ? `The invite with ${targeted.player.displayName} is ${targeted.status}.` : 'Open a fresh challenge to play again.'}</p>
-      <button className="sq-btn sq-btn--primary" onClick={leave}>Back to Friendly Fades</button>
+      <button className="sq-btn sq-btn--primary" onClick={leave}>{returnLabel}</button>
     </div>;
   } else if (room) {
     const opponentSeat = room.seat === 'player' ? 'cpu' : 'player';
@@ -213,7 +224,7 @@ export function Multiplayer({ bootstrap, code }: { bootstrap: PlayerBootstrap; c
   }
 
   return (
-    <main className="ff-stage ff-stage--alley" aria-label="Friendly Fades" tabIndex={-1}>
+    <main className={`ff-stage ff-stage--alley${room?.status === "closed" ? " ff-stage--closed" : ""}`} aria-label="Friendly Fades" tabIndex={-1}>
       <div className="ff-stage__alley">
       <header className="ff-stage__nav">
         <FightTabs friends />

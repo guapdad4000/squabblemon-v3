@@ -69,3 +69,55 @@ test('preview highlights a creative buff even when its event has no explicit tar
   assert.ok(previewBattlePlay(match, barber.instanceId, 0)!.targets.includes(ally.instanceId));
   assert.equal(JSON.stringify(match), before);
 });
+
+
+function freezeOwnedSnapshot<T>(value: T): T {
+  if (value && typeof value === 'object' && !Object.isFrozen(value)) {
+    for (const child of Object.values(value)) freezeOwnedSnapshot(child);
+    Object.freeze(value);
+  }
+  return value;
+}
+
+for (const [cardId, squabble, investment] of [
+  ['snow', false, 0], ['barber', true, 0], ['redside3', false, 0],
+  ['homelessguy', true, 3], ['the-concert', false, 0], ['the-concert', false, 1],
+] as const) {
+  test(`preview keeps immutable history and seeded/paid semantics: ${cardId}/${squabble}/${investment}`, () => {
+    let history = createMatch('block', 'combo');
+    for (let index = 0; index < 6; index++) {
+      const owner = index % 2 ? 'cpu' : 'player';
+      const card = createCardInstance('hooper', owner, 'preview-history', index);
+      history = playTurnCard({ ...history, phase: owner === 'player' ? 'player' : 'cpu-reveal',
+        [owner === 'player' ? 'playerHand' : 'cpuHand']: [card],
+        [owner === 'player' ? 'playerMotion' : 'cpuMotion']: 20 }, owner, card.instanceId, (Math.floor(index / 2) % 3) as Lane);
+    }
+    const actor = createCardInstance(cardId, 'player', 'preview-choice', 0);
+    // Own all fixture objects before freezing; catalog definitions stay mutable
+    // for unrelated test fixtures. A non-default sequence exercises seeded plays.
+    const match: Match = JSON.parse(JSON.stringify({ ...history, phase: 'player', round: 4,
+      playerMotion: 20, playerHand: [actor], nextEventSequence: 571 }));
+    const originalBoards = JSON.parse(JSON.stringify(match.boards));
+    const historicalEntry = JSON.parse(JSON.stringify(match.effectLog[0]));
+    const expected = ([0, 1, 2] as Lane[]).map(lane => getDistrictResults(playTurnCard(
+      JSON.parse(JSON.stringify({ ...match, cpuHand: [], cpuCardIds: [], cpuDrawIndex: 0 })),
+      'player', actor.instanceId, lane, squabble, investment,
+    )));
+    const count = match.effectLog.length;
+    Object.defineProperty(match.effectLog, 'toJSON', { value: () => {
+      throw new Error('A lane preview must not serialize historical replay boards');
+    } });
+    freezeOwnedSnapshot(match);
+    for (const lane of [0, 1, 2] as Lane[]) {
+      const preview = previewBattlePlay(match, actor.instanceId, lane, squabble, investment)!;
+      assert(preview);
+      assert.deepEqual(preview.before, getDistrictResults(match));
+      assert.deepEqual(preview.after, expected[lane]);
+      assert(preview.targets.every(id => originalBoards.flat().some((card: { instanceId: string }) => card.instanceId === id)));
+    }
+    assert.equal(match.nextEventSequence, 571);
+    assert.equal(match.effectLog.length, count);
+    assert.deepEqual(match.effectLog[0], historicalEntry);
+    assert.deepEqual(match.boards, originalBoards);
+  });
+}

@@ -1,0 +1,118 @@
+{
+  "schemaVersion": 1,
+  "status": "semantic-differences",
+  "comparison": "Fresh complete simulations of identical case schedules; compares all per-case gameplay and card telemetry fields, excludes separate worker elapsed/source/plan bookkeeping",
+  "priorDirectory": "/home/falcon/.codex/worktrees/v2-performance-parity/New project 9/artifacts/deliverables/current-deck-audit-20261025-v64",
+  "directory": "/home/falcon/.codex/worktrees/v2-performance-parity/New project 9/artifacts/deliverables/current-deck-audit-20261025-runtime-v64",
+  "datasets": {
+    "matrix": {
+      "cases": 17296,
+      "matchingSemanticCases": 17296,
+      "semanticMismatches": 0,
+      "mismatchDetails": [],
+      "priorSourceHash": "dfbfacef31b2fe22c0cfb012f0b0013b8b32fb66c4df325c138f320b25956a5b",
+      "sourceHash": "b16e3a70425d6fd308d216f198ea279b478d44e48a0f45bfcac8e845570442c3",
+      "priorWorkers": [
+        {
+          "file": "worker-0.jsonl",
+          "sha256": "b00c62c1825a993436dae78098c4dae66407cdaa08827ec27006b7a4b7ff2432"
+        },
+        {
+          "file": "worker-1.jsonl",
+          "sha256": "a3e721e91d26aea7cbb7ae0903d138049cf6dd34073fb7019a756f69a7253f1a"
+        },
+        {
+          "file": "worker-2.jsonl",
+          "sha256": "ccfdbd9d91ef70b0783b77efc8771feb44eee2992276594cba883f47e4735594"
+        },
+        {
+          "file": "worker-3.jsonl",
+          "sha256": "7df5a0f4323c118e6b4e2fecea539e0cd3e4c14c55a033fd36a28fbf82ed5a30"
+        }
+      ],
+      "freshWorkers": [
+        {
+          "file": "worker-0.jsonl",
+          "sha256": "b00c62c1825a993436dae78098c4dae66407cdaa08827ec27006b7a4b7ff2432"
+        },
+        {
+          "file": "worker-1.jsonl",
+          "sha256": "a3e721e91d26aea7cbb7ae0903d138049cf6dd34073fb7019a756f69a7253f1a"
+        },
+        {
+          "file": "worker-2.jsonl",
+          "sha256": "ccfdbd9d91ef70b0783b77efc8771feb44eee2992276594cba883f47e4735594"
+        },
+        {
+          "file": "worker-3.jsonl",
+          "sha256": "7df5a0f4323c118e6b4e2fecea539e0cd3e4c14c55a033fd36a28fbf82ed5a30"
+        }
+      ]
+    },
+    "stress": {
+      "cases": 2816,
+      "matchingSemanticCases": 2814,
+      "semanticMismatches": 2,
+      "mismatchDetails": [
+        {
+          "caseIndex": 85,
+          "key": "catalog-probe|probe-delivery|focused-blue-set|seeded-legal|base-pvp-b64-r64-beta-v64-corrected-base-probe-0|0|0|0|b-player|delivery",
+          "fields": [
+            "cardsA"
+          ]
+        },
+        {
+          "caseIndex": 117,
+          "key": "catalog-probe|probe-transplant|focused-blue-set|seeded-legal|base-pvp-b64-r64-beta-v64-corrected-base-probe-0|0|0|0|b-player|transplant",
+          "fields": [
+            "cardsA"
+          ]
+        }
+      ],
+      "priorSourceHash": "dfbfacef31b2fe22c0cfb012f0b0013b8b32fb66c4df325c138f320b25956a5b",
+      "sourceHash": "b16e3a70425d6fd308d216f198ea279b478d44e48a0f45bfcac8e845570442c3",
+      "priorWorkers": [
+        {
+          "file": "worker-0.jsonl",
+          "sha256": "5c0c9d18ddd213e77d72ab117adc3d1b78650295e6633720f6efcc5c1db580d5"
+        },
+        {
+          "file": "worker-1.jsonl",
+          "sha256": "0e5527aa051eb2e66f106d8ac42ae9d325ebf3ed9bfc2514ea28b2c4a6e4b184"
+        }
+      ],
+      "freshWorkers": [
+        {
+          "file": "worker-0.jsonl",
+          "sha256": "5c0c9d18ddd213e77d72ab117adc3d1b78650295e6633720f6efcc5c1db580d5"
+        },
+        {
+          "file": "worker-1.jsonl",
+          "sha256": "c1c278f62097aa567bbfb5805937e5ee3602c2ba476f48a077acfc718b8c8093"
+        }
+      ]
+    },
+    "confirmation": {
+      "cases": 256,
+      "matchingSemanticCases": 256,
+      "semanticMismatches": 0,
+      "mismatchDetails": [],
+      "priorSourceHash": "dfbfacef31b2fe22c0cfb012f0b0013b8b32fb66c4df325c138f320b25956a5b",
+      "sourceHash": "b16e3a70425d6fd308d216f198ea279b478d44e48a0f45bfcac8e845570442c3",
+      "priorWorkers": [
+        {
+          "file": "worker-0.jsonl",
+          "sha256": "54679d0b688415ab844f4ad5669a7e73900bfe83c65683a8544fb81006584424"
+        }
+      ],
+      "freshWorkers": [
+        {
+          "file": "worker-0.jsonl",
+          "sha256": "54679d0b688415ab844f4ad5669a7e73900bfe83c65683a8544fb81006584424"
+        }
+      ]
+    }
+  },
+  "totalCases": 20368,
+  "semanticMismatches": 2
+}

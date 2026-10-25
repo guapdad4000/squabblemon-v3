@@ -242,3 +242,15 @@
   .ff-stage--alley .fa-avatar--you { height: calc(57% - 55px); }
   .ff-stage--alley .fa-rivalzone { height: calc(55% - 53px); }
 }
+
+/* Recovery uses the established phone palette without requiring its device shell. */
+.ff-stage--closed {
+  --sq-cream: #eadfbf;
+  --sq-cream-dim: #b9b395;
+  --sq-mustard: #d9a23b;
+}
+/* Keep a retired room's recovery controls above the phone fold. The alley art
+   remains behind the compact scene; open-room staging keeps its full height. */
+.ff-stage--alley.ff-stage--closed .fa-scene {
+  height: clamp(180px, 40dvh, 340px); min-height: 180px; overflow-x: clip;
+}

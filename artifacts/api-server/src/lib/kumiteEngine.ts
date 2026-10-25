@@ -1,4 +1,4 @@
-import type { OnlineMember, OnlineRoom } from '@workspace/squabblemon-engine/multiplayer';
+import { ONLINE_RULES_VERSION, type OnlineMember, type OnlineRoom } from '@workspace/squabblemon-engine/multiplayer';
 import type { CardRarity } from '@workspace/squabblemon-engine/data';
 
 export const KUMITE_CAPACITY = 8;
@@ -28,6 +28,7 @@ export type KumiteState = {
   id: string; weekLabel: string; registrationOpensAt: number; startsAt: number; endsAt: number;
   status: 'registration' | 'active' | 'complete' | 'cancelled';
   entrants: KumiteEntrant[]; rounds: KumiteMatchState[][]; championId: string | null;
+  cancellationReason?: 'rules-updated';
 };
 export type KumitePublicEntrant = {
   id: string; name: string; avatarKey?: string; hero: string; seed: number | null; pool: null;
@@ -42,6 +43,7 @@ export type KumitePublicMatch = {
 export type KumiteCurrentView = {
   tournament: {
     id: string; weekLabel: string; status: KumiteState['status'];
+    cancellationReason?: 'rules-updated';
     registrationOpensAt: number; startsAt: number; endsAt: number;
     capacity: 8; poolCount: 1; poolSize: 8; entrants: KumitePublicEntrant[];
     pools: []; finals: KumitePublicMatch[][]; champion: KumitePublicEntrant | null;
@@ -141,8 +143,19 @@ export function advanceKumite(input: KumiteState, now: number): KumiteState {
   return state;
 }
 
+/** A deployment cannot decide a bracket by timeout, bye or a new champion. */
+export function retireIncompatibleKumite(state: KumiteState, room: OnlineRoom): KumiteState {
+  if (state.status !== 'active' || (room.rulesVersion === ONLINE_RULES_VERSION && room.reason !== 'rules-updated')) return state;
+  const match = state.rounds.flat().find(item => item.id === room.kumite?.matchId);
+  if (room.kumite?.tournamentId !== state.id || !match || match.status === 'complete') return state;
+  return { ...state, status: 'cancelled', cancellationReason: 'rules-updated', championId: null };
+}
+
 /** Only a server-issued room with the exact locked members may settle this match. */
 export function settleKumiteRoom(state: KumiteState, matchId: string, code: string, room: OnlineRoom): KumiteState {
+  if (state.status !== 'active') return state;
+  const retired = retireIncompatibleKumite(state, room);
+  if (retired !== state) return retired;
   const match = state.rounds.flat().find(item => item.id === matchId);
   if (!match || match.status === 'complete' || match.roomCode !== code || room.status !== 'complete') return state;
   const entries = match.entrantIds.map(id => state.entrants.find(entry => entry.id === id));
@@ -181,9 +194,10 @@ export function kumiteView(state: KumiteState, userId: string | null, now: numbe
     checkedIn: match.checkedIn, roomCode: own && match.entrantIds.includes(own.id) ? match.roomCode : null,
     startedAt: match.startedAt ?? null, completedAt: match.completedAt ?? null, durationMs: match.durationMs ?? null,
   });
-  const currentMatch = own ? state.rounds.flat().find(match => match.status !== 'complete' && match.entrantIds.includes(own.id)) : null;
+  const currentMatch = own && state.status === 'active' ? state.rounds.flat().find(match => match.status !== 'complete' && match.entrantIds.includes(own.id)) : null;
   return {
     tournament: { id: state.id, weekLabel: state.weekLabel, status: state.status,
+      ...(state.cancellationReason ? { cancellationReason: state.cancellationReason } : {}),
       registrationOpensAt: state.registrationOpensAt, startsAt: state.startsAt, endsAt: state.endsAt,
       capacity: 8, poolCount: 1, poolSize: 8, entrants: state.entrants.map(entry => publicEntry(entry.id)!),
       pools: [], finals: state.rounds.map(round => round.map(publicMatch)), champion: publicEntry(state.championId) },

@@ -1,0 +1,349 @@
+dataset,stage,policy,trainingTier,deckId,deck,games,wins,losses,draws,scorePercent,winPercent,playerSeatGames,playerSeatScorePercent,cpuSeatGames,cpuSeatScorePercent
+matrix,matrix,all,all,cellblock-pressure,Cellblock Pressure,752,374,292,86,55.452128,49.734043,376,69.946809,376,40.957447
+matrix,matrix,all,all,element-air,Air,752,512,182,58,71.941489,68.085106,376,81.515957,376,62.367021
+matrix,matrix,all,all,element-dark,Dark,752,476,217,59,67.220745,63.297872,376,78.324468,376,56.117021
+matrix,matrix,all,all,element-earth,Earth,752,394,280,78,57.579787,52.393617,376,68.484043,376,46.675532
+matrix,matrix,all,all,element-electric,Electric,752,360,328,64,52.12766,47.87234,376,63.430851,376,40.824468
+matrix,matrix,all,all,element-fire,Fire,752,485,209,58,68.351064,64.494681,376,76.994681,376,59.707447
+matrix,matrix,all,all,element-light,Light,752,558,131,63,78.390957,74.202128,376,85.505319,376,71.276596
+matrix,matrix,all,all,element-plant,Plant,752,438,258,56,61.968085,58.244681,376,68.75,376,55.18617
+matrix,matrix,all,all,element-poison,Poison,752,310,358,84,46.808511,41.223404,376,58.909574,376,34.707447
+matrix,matrix,all,all,element-water,Water,752,319,354,79,47.672872,42.420213,376,55.319149,376,40.026596
+matrix,matrix,all,all,focus-air-bond,Air Bond,752,389,279,84,57.31383,51.728723,376,67.553191,376,47.074468
+matrix,matrix,all,all,focus-cellblock,Cellblock Lane Sequence,752,245,439,68,37.101064,32.579787,376,47.074468,376,27.12766
+matrix,matrix,all,all,focus-cellblock-classic,Cellblock — No Kingpin,752,266,402,84,40.957447,35.37234,376,51.196809,376,30.718085
+matrix,matrix,all,all,focus-counterplay,Counterplay — Legacy Comparison,752,109,589,54,18.085106,14.494681,376,21.941489,376,14.228723
+matrix,matrix,all,all,focus-counterplay-coherent,Counterplay — Dark Control,752,236,462,54,34.973404,31.382979,376,47.207447,376,22.739362
+matrix,matrix,all,all,focus-demario-luigion,Demario and Luigion,752,136,545,71,22.805851,18.085106,376,24.468085,376,21.143617
+matrix,matrix,all,all,focus-detective,Sherlock and Watson,752,145,542,65,23.603723,19.281915,376,32.31383,376,14.893617
+matrix,matrix,all,all,focus-earth-tax,Earth Tax and Finishers,752,387,283,82,56.914894,51.462766,376,69.81383,376,44.015957
+matrix,matrix,all,all,focus-fire-guap,Fire and GUAP,752,464,231,57,65.492021,61.702128,376,75.132979,376,55.851064
+matrix,matrix,all,all,focus-late-scaling,Late Scaling,752,225,454,73,34.773936,29.920213,376,38.829787,376,30.718085
+matrix,matrix,all,all,focus-poison-entry,Poison Entry Punishment,752,222,442,88,35.37234,29.521277,376,43.351064,376,27.393617
+matrix,matrix,all,all,focus-wave7-legends,Wave 7 Legends,752,412,272,68,59.308511,54.787234,376,71.409574,376,47.207447
+matrix,matrix,all,all,focus-wave7-tempo,Wave 7 Tempo,752,233,410,109,38.231383,30.984043,376,42.154255,376,34.308511
+matrix,matrix,all,all,focus-wiz,The Wiz,752,498,206,48,69.414894,66.223404,376,85.106383,376,53.723404
+matrix,matrix,all,all,focus-wonderland,Wonderland Return,752,456,246,50,63.962766,60.638298,376,76.595745,376,51.329787
+matrix,matrix,all,all,focused-blue-set,Crip / Blue Set,752,260,413,79,39.827128,34.574468,376,42.287234,376,37.367021
+matrix,matrix,all,all,focused-red-set,Blood / Red Set,752,253,418,81,39.029255,33.643617,376,46.542553,376,31.515957
+matrix,matrix,all,all,mushroom-plant,Mushroom Garden,752,411,286,55,58.31117,54.654255,376,66.888298,376,49.734043
+matrix,matrix,all,all,starter-block,THE BLOCK IS HOT,752,255,418,79,39.162234,33.909574,376,49.335106,376,28.989362
+matrix,matrix,all,all,starter-combo,WHO YOU KNOW,752,272,407,73,41.023936,36.170213,376,51.728723,376,30.319149
+matrix,matrix,all,all,starter-community-table,EVERYBODY EATS,752,480,212,60,67.819149,63.829787,376,80.053191,376,55.585106
+matrix,matrix,all,all,starter-compound,COMPOUND INTEREST,752,232,430,90,36.835106,30.851064,376,44.148936,376,29.521277
+matrix,matrix,all,all,starter-crashout,CRASHOUT SEASON,752,296,379,77,44.481383,39.361702,376,52.393617,376,36.569149
+matrix,matrix,all,all,starter-fitness-circuit,ONE MORE REP,752,397,266,89,58.710106,52.792553,376,73.005319,376,44.414894
+matrix,matrix,all,all,starter-fitness-routes,NO EQUIPMENT NEEDED,752,446,237,69,63.896277,59.308511,376,75.265957,376,52.526596
+matrix,matrix,all,all,starter-music-industry,WHO GOT THE AUX,752,376,303,73,54.853723,50.0,376,67.287234,376,42.420213
+matrix,matrix,all,all,starter-music-tour,TOUR MONEY,752,497,209,46,69.148936,66.090426,376,79.521277,376,58.776596
+matrix,matrix,all,all,starter-receipts,RECEIPTS,752,305,375,72,45.345745,40.558511,376,53.723404,376,36.968085
+matrix,matrix,all,all,starter-slide,SLIDE THRU,752,250,417,85,38.896277,33.244681,376,44.414894,376,33.37766
+matrix,matrix,all,all,starter-squabblehouse-shift,SQUABBLEHOUSE SHIFT,752,424,251,77,61.50266,56.382979,376,74.601064,376,48.404255
+matrix,matrix,all,all,starter-sunday-dinner,FIX YOU A PLATE,752,405,284,63,58.045213,53.856383,376,67.021277,376,49.069149
+matrix,matrix,all,all,starter-vibes,GOOD VIBES ONLY,752,249,416,87,38.896277,33.111702,376,47.606383,376,30.18617
+matrix,matrix,all,all,starter-voltage,VOLTAGE IN MOTION,752,282,398,72,42.287234,37.5,376,53.457447,376,31.117021
+matrix,matrix,all,all,street-legends-growth,Street Legends — Growth and Routes,752,356,333,63,51.529255,47.340426,376,65.425532,376,37.632979
+matrix,matrix,all,all,street-legends-investigations,Street Legends — Investigations,752,253,424,75,38.630319,33.643617,376,51.196809,376,26.06383
+matrix,matrix,all,all,street-legends-relationships,Street Legends — Relationship Pressure,752,306,367,79,45.944149,40.691489,376,62.234043,376,29.654255
+matrix,matrix,chain-two,0,cellblock-pressure,Cellblock Pressure,376,179,151,46,53.723404,47.606383,188,70.744681,188,36.702128
+matrix,matrix,chain-two,0,element-air,Air,376,249,98,29,70.079787,66.223404,188,82.446809,188,57.712766
+matrix,matrix,chain-two,0,element-dark,Dark,376,231,114,31,65.558511,61.43617,188,78.457447,188,52.659574
+matrix,matrix,chain-two,0,element-earth,Earth,376,196,141,39,57.31383,52.12766,188,72.87234,188,41.755319
+matrix,matrix,chain-two,0,element-electric,Electric,376,189,162,25,53.590426,50.265957,188,65.425532,188,41.755319
+matrix,matrix,chain-two,0,element-fire,Fire,376,250,104,22,69.414894,66.489362,188,79.255319,188,59.574468
+matrix,matrix,chain-two,0,element-light,Light,376,280,68,28,78.191489,74.468085,188,86.43617,188,69.946809
+matrix,matrix,chain-two,0,element-plant,Plant,376,221,123,32,63.031915,58.776596,188,69.680851,188,56.382979
+matrix,matrix,chain-two,0,element-poison,Poison,376,150,183,43,45.611702,39.893617,188,57.712766,188,33.510638
+matrix,matrix,chain-two,0,element-water,Water,376,170,174,32,49.468085,45.212766,188,59.574468,188,39.361702
+matrix,matrix,chain-two,0,focus-air-bond,Air Bond,376,190,146,40,55.851064,50.531915,188,67.287234,188,44.414894
+matrix,matrix,chain-two,0,focus-cellblock,Cellblock Lane Sequence,376,127,211,38,38.829787,33.776596,188,51.329787,188,26.329787
+matrix,matrix,chain-two,0,focus-cellblock-classic,Cellblock — No Kingpin,376,129,197,50,40.957447,34.308511,188,53.457447,188,28.457447
+matrix,matrix,chain-two,0,focus-counterplay,Counterplay — Legacy Comparison,376,51,298,27,17.154255,13.56383,188,20.212766,188,14.095745
+matrix,matrix,chain-two,0,focus-counterplay-coherent,Counterplay — Dark Control,376,125,228,23,36.303191,33.244681,188,50.797872,188,21.808511
+matrix,matrix,chain-two,0,focus-demario-luigion,Demario and Luigion,376,64,272,40,22.340426,17.021277,188,23.670213,188,21.010638
+matrix,matrix,chain-two,0,focus-detective,Sherlock and Watson,376,75,271,30,23.93617,19.946809,188,33.510638,188,14.361702
+matrix,matrix,chain-two,0,focus-earth-tax,Earth Tax and Finishers,376,197,133,46,58.510638,52.393617,188,72.87234,188,44.148936
+matrix,matrix,chain-two,0,focus-fire-guap,Fire and GUAP,376,233,112,31,66.090426,61.968085,188,76.329787,188,55.851064
+matrix,matrix,chain-two,0,focus-late-scaling,Late Scaling,376,108,229,39,33.909574,28.723404,188,38.56383,188,29.255319
+matrix,matrix,chain-two,0,focus-poison-entry,Poison Entry Punishment,376,106,223,47,34.441489,28.191489,188,43.351064,188,25.531915
+matrix,matrix,chain-two,0,focus-wave7-legends,Wave 7 Legends,376,206,132,38,59.840426,54.787234,188,73.670213,188,46.010638
+matrix,matrix,chain-two,0,focus-wave7-tempo,Wave 7 Tempo,376,112,200,64,38.297872,29.787234,188,43.351064,188,33.244681
+matrix,matrix,chain-two,0,focus-wiz,The Wiz,376,249,104,23,69.281915,66.223404,188,88.297872,188,50.265957
+matrix,matrix,chain-two,0,focus-wonderland,Wonderland Return,376,223,124,29,63.164894,59.308511,188,77.393617,188,48.93617
+matrix,matrix,chain-two,0,focused-blue-set,Crip / Blue Set,376,143,196,37,42.952128,38.031915,188,45.744681,188,40.159574
+matrix,matrix,chain-two,0,focused-red-set,Blood / Red Set,376,124,208,44,38.829787,32.978723,188,48.138298,188,29.521277
+matrix,matrix,chain-two,0,mushroom-plant,Mushroom Garden,376,203,147,26,57.446809,53.989362,188,67.553191,188,47.340426
+matrix,matrix,chain-two,0,starter-block,THE BLOCK IS HOT,376,122,217,37,37.367021,32.446809,188,48.404255,188,26.329787
+matrix,matrix,chain-two,0,starter-combo,WHO YOU KNOW,376,139,204,33,41.356383,36.968085,188,54.521277,188,28.191489
+matrix,matrix,chain-two,0,starter-community-table,EVERYBODY EATS,376,234,110,32,66.489362,62.234043,188,80.585106,188,52.393617
+matrix,matrix,chain-two,0,starter-compound,COMPOUND INTEREST,376,116,220,40,36.170213,30.851064,188,44.946809,188,27.393617
+matrix,matrix,chain-two,0,starter-crashout,CRASHOUT SEASON,376,152,187,37,45.345745,40.425532,188,53.457447,188,37.234043
+matrix,matrix,chain-two,0,starter-fitness-circuit,ONE MORE REP,376,202,134,40,59.042553,53.723404,188,77.12766,188,40.957447
+matrix,matrix,chain-two,0,starter-fitness-routes,NO EQUIPMENT NEEDED,376,221,118,37,63.696809,58.776596,188,75.531915,188,51.861702
+matrix,matrix,chain-two,0,starter-music-industry,WHO GOT THE AUX,376,200,138,38,58.244681,53.191489,188,73.670213,188,42.819149
+matrix,matrix,chain-two,0,starter-music-tour,TOUR MONEY,376,259,92,25,72.207447,68.882979,188,83.510638,188,60.904255
+matrix,matrix,chain-two,0,starter-receipts,RECEIPTS,376,143,197,36,42.819149,38.031915,188,50.531915,188,35.106383
+matrix,matrix,chain-two,0,starter-slide,SLIDE THRU,376,115,221,40,35.904255,30.585106,188,42.819149,188,28.989362
+matrix,matrix,chain-two,0,starter-squabblehouse-shift,SQUABBLEHOUSE SHIFT,376,213,123,40,61.968085,56.648936,188,78.191489,188,45.744681
+matrix,matrix,chain-two,0,starter-sunday-dinner,FIX YOU A PLATE,376,204,135,37,59.175532,54.255319,188,70.744681,188,47.606383
+matrix,matrix,chain-two,0,starter-vibes,GOOD VIBES ONLY,376,114,217,45,36.303191,30.319149,188,45.744681,188,26.861702
+matrix,matrix,chain-two,0,starter-voltage,VOLTAGE IN MOTION,376,142,196,38,42.819149,37.765957,188,56.648936,188,28.989362
+matrix,matrix,chain-two,0,street-legends-growth,Street Legends — Growth and Routes,376,169,176,31,49.069149,44.946809,188,67.287234,188,30.851064
+matrix,matrix,chain-two,0,street-legends-investigations,Street Legends — Investigations,376,131,209,36,39.62766,34.840426,188,54.787234,188,24.468085
+matrix,matrix,chain-two,0,street-legends-relationships,Street Legends — Relationship Pressure,376,161,174,41,48.271277,42.819149,188,67.553191,188,28.989362
+matrix,matrix,greedy,0,cellblock-pressure,Cellblock Pressure,376,195,141,40,57.180851,51.861702,188,69.148936,188,45.212766
+matrix,matrix,greedy,0,element-air,Air,376,263,84,29,73.803191,69.946809,188,80.585106,188,67.021277
+matrix,matrix,greedy,0,element-dark,Dark,376,245,103,28,68.882979,65.159574,188,78.191489,188,59.574468
+matrix,matrix,greedy,0,element-earth,Earth,376,198,139,39,57.845745,52.659574,188,64.095745,188,51.595745
+matrix,matrix,greedy,0,element-electric,Electric,376,171,166,39,50.664894,45.478723,188,61.43617,188,39.893617
+matrix,matrix,greedy,0,element-fire,Fire,376,235,105,36,67.287234,62.5,188,74.734043,188,59.840426
+matrix,matrix,greedy,0,element-light,Light,376,278,63,35,78.590426,73.93617,188,84.574468,188,72.606383
+matrix,matrix,greedy,0,element-plant,Plant,376,217,135,24,60.904255,57.712766,188,67.819149,188,53.989362
+matrix,matrix,greedy,0,element-poison,Poison,376,160,175,41,48.005319,42.553191,188,60.106383,188,35.904255
+matrix,matrix,greedy,0,element-water,Water,376,149,180,47,45.87766,39.62766,188,51.06383,188,40.691489
+matrix,matrix,greedy,0,focus-air-bond,Air Bond,376,199,133,44,58.776596,52.925532,188,67.819149,188,49.734043
+matrix,matrix,greedy,0,focus-cellblock,Cellblock Lane Sequence,376,118,228,30,35.37234,31.382979,188,42.819149,188,27.925532
+matrix,matrix,greedy,0,focus-cellblock-classic,Cellblock — No Kingpin,376,137,205,34,40.957447,36.43617,188,48.93617,188,32.978723
+matrix,matrix,greedy,0,focus-counterplay,Counterplay — Legacy Comparison,376,58,291,27,19.015957,15.425532,188,23.670213,188,14.361702
+matrix,matrix,greedy,0,focus-counterplay-coherent,Counterplay — Dark Control,376,111,234,31,33.643617,29.521277,188,43.617021,188,23.670213
+matrix,matrix,greedy,0,focus-demario-luigion,Demario and Luigion,376,72,273,31,23.271277,19.148936,188,25.265957,188,21.276596
+matrix,matrix,greedy,0,focus-detective,Sherlock and Watson,376,70,271,35,23.271277,18.617021,188,31.117021,188,15.425532
+matrix,matrix,greedy,0,focus-earth-tax,Earth Tax and Finishers,376,190,150,36,55.319149,50.531915,188,66.755319,188,43.882979
+matrix,matrix,greedy,0,focus-fire-guap,Fire and GUAP,376,231,119,26,64.893617,61.43617,188,73.93617,188,55.851064
+matrix,matrix,greedy,0,focus-late-scaling,Late Scaling,376,117,225,34,35.638298,31.117021,188,39.095745,188,32.180851
+matrix,matrix,greedy,0,focus-poison-entry,Poison Entry Punishment,376,116,219,41,36.303191,30.851064,188,43.351064,188,29.255319
+matrix,matrix,greedy,0,focus-wave7-legends,Wave 7 Legends,376,206,140,30,58.776596,54.787234,188,69.148936,188,48.404255
+matrix,matrix,greedy,0,focus-wave7-tempo,Wave 7 Tempo,376,121,210,45,38.164894,32.180851,188,40.957447,188,35.37234
+matrix,matrix,greedy,0,focus-wiz,The Wiz,376,249,102,25,69.547872,66.223404,188,81.914894,188,57.180851
+matrix,matrix,greedy,0,focus-wonderland,Wonderland Return,376,233,122,21,64.760638,61.968085,188,75.797872,188,53.723404
+matrix,matrix,greedy,0,focused-blue-set,Crip / Blue Set,376,117,217,42,36.702128,31.117021,188,38.829787,188,34.574468
+matrix,matrix,greedy,0,focused-red-set,Blood / Red Set,376,129,210,37,39.228723,34.308511,188,44.946809,188,33.510638
+matrix,matrix,greedy,0,mushroom-plant,Mushroom Garden,376,208,139,29,59.175532,55.319149,188,66.223404,188,52.12766
+matrix,matrix,greedy,0,starter-block,THE BLOCK IS HOT,376,133,201,42,40.957447,35.37234,188,50.265957,188,31.648936
+matrix,matrix,greedy,0,starter-combo,WHO YOU KNOW,376,133,203,40,40.691489,35.37234,188,48.93617,188,32.446809
+matrix,matrix,greedy,0,starter-community-table,EVERYBODY EATS,376,246,102,28,69.148936,65.425532,188,79.521277,188,58.776596
+matrix,matrix,greedy,0,starter-compound,COMPOUND INTEREST,376,116,210,50,37.5,30.851064,188,43.351064,188,31.648936
+matrix,matrix,greedy,0,starter-crashout,CRASHOUT SEASON,376,144,192,40,43.617021,38.297872,188,51.329787,188,35.904255
+matrix,matrix,greedy,0,starter-fitness-circuit,ONE MORE REP,376,195,132,49,58.37766,51.861702,188,68.882979,188,47.87234
+matrix,matrix,greedy,0,starter-fitness-routes,NO EQUIPMENT NEEDED,376,225,119,32,64.095745,59.840426,188,75.0,188,53.191489
+matrix,matrix,greedy,0,starter-music-industry,WHO GOT THE AUX,376,176,165,35,51.462766,46.808511,188,60.904255,188,42.021277
+matrix,matrix,greedy,0,starter-music-tour,TOUR MONEY,376,238,117,21,66.090426,63.297872,188,75.531915,188,56.648936
+matrix,matrix,greedy,0,starter-receipts,RECEIPTS,376,162,178,36,47.87234,43.085106,188,56.914894,188,38.829787
+matrix,matrix,greedy,0,starter-slide,SLIDE THRU,376,135,196,45,41.888298,35.904255,188,46.010638,188,37.765957
+matrix,matrix,greedy,0,starter-squabblehouse-shift,SQUABBLEHOUSE SHIFT,376,211,128,37,61.037234,56.117021,188,71.010638,188,51.06383
+matrix,matrix,greedy,0,starter-sunday-dinner,FIX YOU A PLATE,376,201,149,26,56.914894,53.457447,188,63.297872,188,50.531915
+matrix,matrix,greedy,0,starter-vibes,GOOD VIBES ONLY,376,135,199,42,41.489362,35.904255,188,49.468085,188,33.510638
+matrix,matrix,greedy,0,starter-voltage,VOLTAGE IN MOTION,376,140,202,34,41.755319,37.234043,188,50.265957,188,33.244681
+matrix,matrix,greedy,0,street-legends-growth,Street Legends — Growth and Routes,376,187,157,32,53.989362,49.734043,188,63.56383,188,44.414894
+matrix,matrix,greedy,0,street-legends-investigations,Street Legends — Investigations,376,122,215,39,37.632979,32.446809,188,47.606383,188,27.659574
+matrix,matrix,greedy,0,street-legends-relationships,Street Legends — Relationship Pressure,376,145,193,38,43.617021,38.56383,188,56.914894,188,30.319149
+stress,catalog-probe,forced-deployment,0,focused-blue-set,Crip / Blue Set,328,148,156,24,48.780488,45.121951,164,42.682927,164,54.878049
+stress,catalog-probe,forced-deployment,0,focused-red-set,Blood / Red Set,328,157,140,31,52.591463,47.865854,164,56.097561,164,49.085366
+stress,catalog-probe,forced-deployment,0,probe-ahki,Ahki in Light,16,11,2,3,78.125,68.75,8,75.0,8,81.25
+stress,catalog-probe,forced-deployment,0,probe-atl-scammer,ATL Scammer in Dark,16,5,10,1,34.375,31.25,8,31.25,8,37.5
+stress,catalog-probe,forced-deployment,0,probe-barbershop-heckler,Barbershop Heckler in Air,16,8,7,1,53.125,50.0,8,43.75,8,62.5
+stress,catalog-probe,forced-deployment,0,probe-blueside2,lil Blue in Earth,16,7,7,2,50.0,43.75,8,50.0,8,50.0
+stress,catalog-probe,forced-deployment,0,probe-blueside3,Blue Scarf crashout in Air,16,8,5,3,59.375,50.0,8,56.25,8,62.5
+stress,catalog-probe,forced-deployment,0,probe-blueside4,Blue loco in Water,16,9,6,1,59.375,56.25,8,56.25,8,62.5
+stress,catalog-probe,forced-deployment,0,probe-blueside5,Blue Big Trippin in Electric,16,12,4,0,75.0,75.0,8,87.5,8,62.5
+stress,catalog-probe,forced-deployment,0,probe-bodegacat,Bodega Cat in Cellblock Lane Sequence,16,4,12,0,25.0,25.0,8,37.5,8,12.5
+stress,catalog-probe,forced-deployment,0,probe-bonnetgirl,Bonnet Girl in Cellblock Lane Sequence,16,4,12,0,25.0,25.0,8,37.5,8,12.5
+stress,catalog-probe,forced-deployment,0,probe-boombox,Boombox in Air,16,7,8,1,46.875,43.75,8,37.5,8,56.25
+stress,catalog-probe,forced-deployment,0,probe-bushedo-brown,Bushedo Brown in Air,16,10,5,1,65.625,62.5,8,68.75,8,62.5
+stress,catalog-probe,forced-deployment,0,probe-busker,Corner Busker in Air,16,9,7,0,56.25,56.25,8,50.0,8,62.5
+stress,catalog-probe,forced-deployment,0,probe-carmeet,Car Meet Kid in Electric,16,9,4,3,65.625,56.25,8,75.0,8,56.25
+stress,catalog-probe,forced-deployment,0,probe-charger,Phone Charger in Electric,16,9,7,0,56.25,56.25,8,50.0,8,62.5
+stress,catalog-probe,forced-deployment,0,probe-chonk-lee,Chonk Lee in Earth,16,11,4,1,71.875,68.75,8,87.5,8,56.25
+stress,catalog-probe,forced-deployment,0,probe-corruptpastor,Corrupt Pastor in Dark,16,6,9,1,40.625,37.5,8,37.5,8,43.75
+stress,catalog-probe,forced-deployment,0,probe-delivery,Delivery Demon in Air,16,7,9,0,43.75,43.75,8,25.0,8,62.5
+stress,catalog-probe,forced-deployment,0,probe-divorceddad,Divorced Dad in Cellblock Lane Sequence,16,1,10,5,21.875,6.25,8,37.5,8,6.25
+stress,catalog-probe,forced-deployment,0,probe-dmvworker,DMV Worker in Earth,16,6,6,4,50.0,37.5,8,50.0,8,50.0
+stress,catalog-probe,forced-deployment,0,probe-dogwalker,Dog Walker in Cellblock Lane Sequence,16,3,12,1,21.875,18.75,8,31.25,8,12.5
+stress,catalog-probe,forced-deployment,0,probe-dr-umah,Dr. Umah in Light,16,10,3,3,71.875,62.5,8,75.0,8,68.75
+stress,catalog-probe,forced-deployment,0,probe-dragonflyjones,Dragonfly Jones in Air,16,9,6,1,59.375,56.25,8,50.0,8,68.75
+stress,catalog-probe,forced-deployment,0,probe-earthy,Earthy Sugar Foot in Plant,16,9,5,2,62.5,56.25,8,56.25,8,68.75
+stress,catalog-probe,forced-deployment,0,probe-edgar,Edgar in Cellblock Lane Sequence,16,3,12,1,21.875,18.75,8,31.25,8,12.5
+stress,catalog-probe,forced-deployment,0,probe-energydrink,Energy Drink in Fire,16,12,2,2,81.25,75.0,8,100.0,8,62.5
+stress,catalog-probe,forced-deployment,0,probe-failedrapper,Failed Rapper in Air,16,8,7,1,53.125,50.0,8,50.0,8,56.25
+stress,catalog-probe,forced-deployment,0,probe-fangirl,Fangirl in Light,16,12,2,2,81.25,75.0,8,81.25,8,81.25
+stress,catalog-probe,forced-deployment,0,probe-firstaid,First Aid Kit in Light,16,12,1,3,84.375,75.0,8,87.5,8,81.25
+stress,catalog-probe,forced-deployment,0,probe-franklin-duke,Franklin Duke in Light,16,12,3,1,78.125,75.0,8,81.25,8,75.0
+stress,catalog-probe,forced-deployment,0,probe-grownfanboy,Grown-Man Fanboy in Cellblock Lane Sequence,16,2,9,5,28.125,12.5,8,50.0,8,6.25
+stress,catalog-probe,forced-deployment,0,probe-hater,Hater in Dark,16,7,8,1,46.875,43.75,8,25.0,8,68.75
+stress,catalog-probe,forced-deployment,0,probe-incel,Incel in Dark,16,6,9,1,40.625,37.5,8,50.0,8,31.25
+stress,catalog-probe,forced-deployment,0,probe-indian-scammer,Indian Scammer in Dark,16,6,9,1,40.625,37.5,8,37.5,8,43.75
+stress,catalog-probe,forced-deployment,0,probe-juneteenth-chair-guy,Juneteenth Chair Guy in Fire,16,7,6,3,53.125,43.75,8,50.0,8,56.25
+stress,catalog-probe,forced-deployment,0,probe-lawlessyn,Lawless YN in Dark,16,3,13,0,18.75,18.75,8,12.5,8,25.0
+stress,catalog-probe,forced-deployment,0,probe-lawyer,Lawyer in Light,16,10,3,3,71.875,62.5,8,75.0,8,68.75
+stress,catalog-probe,forced-deployment,0,probe-live-streamer-male,Live Streamer — Male in Electric,16,11,5,0,68.75,68.75,8,75.0,8,62.5
+stress,catalog-probe,forced-deployment,0,probe-mailman,The Mailman in Electric,16,13,3,0,81.25,81.25,8,100.0,8,62.5
+stress,catalog-probe,forced-deployment,0,probe-miami-surgeon,Miami Surgeon in Water,16,6,8,2,43.75,37.5,8,43.75,8,43.75
+stress,catalog-probe,forced-deployment,0,probe-midnightmayor,Midnight Mayor in Dark,16,5,10,1,34.375,31.25,8,37.5,8,31.25
+stress,catalog-probe,forced-deployment,0,probe-mr-trick,Mr. Trick in Dark,16,5,9,2,37.5,31.25,8,37.5,8,37.5
+stress,catalog-probe,forced-deployment,0,probe-naija-scammer,Naija Scammer in Dark,16,6,9,1,40.625,37.5,8,37.5,8,43.75
+stress,catalog-probe,forced-deployment,0,probe-nguyen,Nguyen in Electric,16,11,5,0,68.75,68.75,8,75.0,8,62.5
+stress,catalog-probe,forced-deployment,0,probe-nigerian-father,Nigerian Father in Earth,16,6,7,3,46.875,37.5,8,50.0,8,43.75
+stress,catalog-probe,forced-deployment,0,probe-nightcashier,Night Cashier in Electric,16,11,5,0,68.75,68.75,8,75.0,8,62.5
+stress,catalog-probe,forced-deployment,0,probe-og-skater,OG Skater in Air,16,7,7,2,50.0,43.75,8,43.75,8,56.25
+stress,catalog-probe,forced-deployment,0,probe-powerhouse,Powerhouse in Electric,16,4,10,2,31.25,25.0,8,37.5,8,25.0
+stress,catalog-probe,forced-deployment,0,probe-rainmaker,Energy Drink Freak in Water,16,3,11,2,25.0,18.75,8,25.0,8,25.0
+stress,catalog-probe,forced-deployment,0,probe-redneck,Redneck in Earth,16,7,5,4,56.25,43.75,8,62.5,8,50.0
+stress,catalog-probe,forced-deployment,0,probe-redside2,OG Red Night in Fire,16,11,4,1,71.875,68.75,8,56.25,8,87.5
+stress,catalog-probe,forced-deployment,0,probe-redside3,Red Robber in Earth,16,8,7,1,53.125,50.0,8,62.5,8,43.75
+stress,catalog-probe,forced-deployment,0,probe-redside4,Red Hexer in Dark,16,6,9,1,40.625,37.5,8,37.5,8,43.75
+stress,catalog-probe,forced-deployment,0,probe-rent-a-cop,Rent-a-Cop in Cellblock Lane Sequence,16,3,12,1,21.875,18.75,8,31.25,8,12.5
+stress,catalog-probe,forced-deployment,0,probe-ronald,Revolutionary Ronald in Earth,16,7,7,2,50.0,43.75,8,56.25,8,43.75
+stress,catalog-probe,forced-deployment,0,probe-roommate,Roommate in Cellblock Lane Sequence,16,4,12,0,25.0,25.0,8,37.5,8,12.5
+stress,catalog-probe,forced-deployment,0,probe-scammer,Scammer in Dark,16,6,9,1,40.625,37.5,8,37.5,8,43.75
+stress,catalog-probe,forced-deployment,0,probe-shiesty,Shiesty YN in Dark,16,6,10,0,37.5,37.5,8,25.0,8,50.0
+stress,catalog-probe,forced-deployment,0,probe-snitch,Snitch in Dark,16,5,9,2,37.5,31.25,8,37.5,8,37.5
+stress,catalog-probe,forced-deployment,0,probe-squabblecook,SquabbleHouse Cook in Fire,16,8,5,3,59.375,50.0,8,50.0,8,68.75
+stress,catalog-probe,forced-deployment,0,probe-squabbleserver,SquabbleHouse Server in Water,16,3,12,1,21.875,18.75,8,31.25,8,12.5
+stress,catalog-probe,forced-deployment,0,probe-stonerjr,Stoner Jr. in Plant,16,9,5,2,62.5,56.25,8,56.25,8,68.75
+stress,catalog-probe,forced-deployment,0,probe-subwaymagician,Subway Magician in Dark,16,6,8,2,43.75,37.5,8,37.5,8,50.0
+stress,catalog-probe,forced-deployment,0,probe-subwaymap,Subway Map in Air,16,5,9,2,37.5,31.25,8,37.5,8,37.5
+stress,catalog-probe,forced-deployment,0,probe-sugarfoot,Sugarfoot in Dark,16,5,9,2,37.5,31.25,8,37.5,8,37.5
+stress,catalog-probe,forced-deployment,0,probe-tattoo-artist,Tattoo Artist in Fire,16,7,5,4,56.25,43.75,8,50.0,8,62.5
+stress,catalog-probe,forced-deployment,0,probe-teacher,Teacher Who Never Believed in Rappers in Earth,16,8,6,2,56.25,50.0,8,56.25,8,56.25
+stress,catalog-probe,forced-deployment,0,probe-the-after-party,The After Party in Electric,16,8,8,0,50.0,50.0,8,50.0,8,50.0
+stress,catalog-probe,forced-deployment,0,probe-the-babyshower,The Baby Shower in Light,16,11,3,2,75.0,68.75,8,68.75,8,81.25
+stress,catalog-probe,forced-deployment,0,probe-the-block-spin,The Block Spin in Dark,16,5,9,2,37.5,31.25,8,43.75,8,31.25
+stress,catalog-probe,forced-deployment,0,probe-the-concert,The Concert in Electric,16,11,4,1,71.875,68.75,8,87.5,8,56.25
+stress,catalog-probe,forced-deployment,0,probe-the-cookout,The Cookout in Fire,16,7,7,2,50.0,43.75,8,43.75,8,56.25
+stress,catalog-probe,forced-deployment,0,probe-the-dice-game,The Dice Game in Cellblock Lane Sequence,16,3,10,3,28.125,18.75,8,31.25,8,25.0
+stress,catalog-probe,forced-deployment,0,probe-the-kickback,The Kickback in Air,16,5,10,1,34.375,31.25,8,37.5,8,31.25
+stress,catalog-probe,forced-deployment,0,probe-the-setup,The Setup in Dark,16,6,10,0,37.5,37.5,8,37.5,8,37.5
+stress,catalog-probe,forced-deployment,0,probe-the-shootout,The Shootout in Fire,16,7,7,2,50.0,43.75,8,43.75,8,56.25
+stress,catalog-probe,forced-deployment,0,probe-the-sideshow,The Sideshow in Air,16,6,7,3,46.875,37.5,8,37.5,8,56.25
+stress,catalog-probe,forced-deployment,0,probe-transplant,Racially Ambiguous Transplant in Air,16,9,7,0,56.25,56.25,8,50.0,8,62.5
+stress,catalog-probe,forced-deployment,0,probe-trapvamp,Trap Vamp in Dark,16,6,9,1,40.625,37.5,8,37.5,8,43.75
+stress,catalog-probe,forced-deployment,0,probe-undercova,Undercova Brotha in Dark,16,5,10,1,34.375,31.25,8,37.5,8,31.25
+stress,catalog-probe,forced-deployment,0,probe-workboots,Buttahs in Earth,16,8,7,1,53.125,50.0,8,50.0,8,56.25
+stress,catalog-probe,forced-deployment,0,probe-yn-gokarter,YN Gokarter in Electric,16,9,5,2,62.5,56.25,8,68.75,8,56.25
+stress,catalog-probe,forced-deployment,0,probe-yunghustle,Yung Hustle in Electric,16,9,4,3,65.625,56.25,8,68.75,8,62.5
+stress,catalog-probe,forced-deployment,0,starter-block,THE BLOCK IS HOT,328,113,184,31,39.176829,34.45122,164,49.085366,164,29.268293
+stress,catalog-probe,forced-deployment,0,starter-squabblehouse-shift,SQUABBLEHOUSE SHIFT,328,175,111,42,59.756098,53.353659,164,56.097561,164,63.414634
+stress,catalog-probe,seeded-legal,0,focused-blue-set,Crip / Blue Set,328,142,140,46,50.304878,43.292683,164,45.121951,164,55.487805
+stress,catalog-probe,seeded-legal,0,focused-red-set,Blood / Red Set,328,185,110,33,61.432927,56.402439,164,59.756098,164,63.109756
+stress,catalog-probe,seeded-legal,0,probe-ahki,Ahki in Light,16,11,2,3,78.125,68.75,8,68.75,8,87.5
+stress,catalog-probe,seeded-legal,0,probe-atl-scammer,ATL Scammer in Dark,16,2,11,3,21.875,12.5,8,18.75,8,25.0
+stress,catalog-probe,seeded-legal,0,probe-barbershop-heckler,Barbershop Heckler in Air,16,6,8,2,43.75,37.5,8,43.75,8,43.75
+stress,catalog-probe,seeded-legal,0,probe-blueside2,lil Blue in Earth,16,7,5,4,56.25,43.75,8,62.5,8,50.0
+stress,catalog-probe,seeded-legal,0,probe-blueside3,Blue Scarf crashout in Air,16,9,6,1,59.375,56.25,8,62.5,8,56.25
+stress,catalog-probe,seeded-legal,0,probe-blueside4,Blue loco in Water,16,6,9,1,40.625,37.5,8,50.0,8,31.25
+stress,catalog-probe,seeded-legal,0,probe-blueside5,Blue Big Trippin in Electric,16,10,6,0,62.5,62.5,8,62.5,8,62.5
+stress,catalog-probe,seeded-legal,0,probe-bodegacat,Bodega Cat in Cellblock Lane Sequence,16,3,9,4,31.25,18.75,8,50.0,8,12.5
+stress,catalog-probe,seeded-legal,0,probe-bonnetgirl,Bonnet Girl in Cellblock Lane Sequence,16,3,9,4,31.25,18.75,8,50.0,8,12.5
+stress,catalog-probe,seeded-legal,0,probe-boombox,Boombox in Air,16,7,8,1,46.875,43.75,8,37.5,8,56.25
+stress,catalog-probe,seeded-legal,0,probe-bushedo-brown,Bushedo Brown in Air,16,5,10,1,34.375,31.25,8,37.5,8,31.25
+stress,catalog-probe,seeded-legal,0,probe-busker,Corner Busker in Air,16,5,10,1,34.375,31.25,8,25.0,8,43.75
+stress,catalog-probe,seeded-legal,0,probe-carmeet,Car Meet Kid in Electric,16,13,3,0,81.25,81.25,8,87.5,8,75.0
+stress,catalog-probe,seeded-legal,0,probe-charger,Phone Charger in Electric,16,8,7,1,53.125,50.0,8,37.5,8,68.75
+stress,catalog-probe,seeded-legal,0,probe-chonk-lee,Chonk Lee in Earth,16,10,5,1,65.625,62.5,8,75.0,8,56.25
+stress,catalog-probe,seeded-legal,0,probe-corruptpastor,Corrupt Pastor in Dark,16,6,9,1,40.625,37.5,8,25.0,8,56.25
+stress,catalog-probe,seeded-legal,0,probe-delivery,Delivery Demon in Air,16,6,9,1,40.625,37.5,8,50.0,8,31.25
+stress,catalog-probe,seeded-legal,0,probe-divorceddad,Divorced Dad in Cellblock Lane Sequence,16,4,5,7,46.875,25.0,8,62.5,8,31.25
+stress,catalog-probe,seeded-legal,0,probe-dmvworker,DMV Worker in Earth,16,6,7,3,46.875,37.5,8,43.75,8,50.0
+stress,catalog-probe,seeded-legal,0,probe-dogwalker,Dog Walker in Cellblock Lane Sequence,16,3,10,3,28.125,18.75,8,37.5,8,18.75
+stress,catalog-probe,seeded-legal,0,probe-dr-umah,Dr. Umah in Light,16,10,5,1,65.625,62.5,8,56.25,8,75.0
+stress,catalog-probe,seeded-legal,0,probe-dragonflyjones,Dragonfly Jones in Air,16,6,9,1,40.625,37.5,8,37.5,8,43.75
+stress,catalog-probe,seeded-legal,0,probe-earthy,Earthy Sugar Foot in Plant,16,8,7,1,53.125,50.0,8,43.75,8,62.5
+stress,catalog-probe,seeded-legal,0,probe-edgar,Edgar in Cellblock Lane Sequence,16,4,10,2,31.25,25.0,8,43.75,8,18.75
+stress,catalog-probe,seeded-legal,0,probe-energydrink,Energy Drink in Fire,16,11,3,2,75.0,68.75,8,87.5,8,62.5
+stress,catalog-probe,seeded-legal,0,probe-failedrapper,Failed Rapper in Air,16,5,10,1,34.375,31.25,8,25.0,8,43.75
+stress,catalog-probe,seeded-legal,0,probe-fangirl,Fangirl in Light,16,10,3,3,71.875,62.5,8,68.75,8,75.0
+stress,catalog-probe,seeded-legal,0,probe-firstaid,First Aid Kit in Light,16,13,1,2,87.5,81.25,8,75.0,8,100.0
+stress,catalog-probe,seeded-legal,0,probe-franklin-duke,Franklin Duke in Light,16,9,4,3,65.625,56.25,8,68.75,8,62.5
+stress,catalog-probe,seeded-legal,0,probe-grownfanboy,Grown-Man Fanboy in Cellblock Lane Sequence,16,4,8,4,37.5,25.0,8,56.25,8,18.75
+stress,catalog-probe,seeded-legal,0,probe-hater,Hater in Dark,16,3,11,2,25.0,18.75,8,25.0,8,25.0
+stress,catalog-probe,seeded-legal,0,probe-incel,Incel in Dark,16,4,10,2,31.25,25.0,8,31.25,8,31.25
+stress,catalog-probe,seeded-legal,0,probe-indian-scammer,Indian Scammer in Dark,16,7,8,1,46.875,43.75,8,37.5,8,56.25
+stress,catalog-probe,seeded-legal,0,probe-juneteenth-chair-guy,Juneteenth Chair Guy in Fire,16,7,7,2,50.0,43.75,8,50.0,8,50.0
+stress,catalog-probe,seeded-legal,0,probe-lawlessyn,Lawless YN in Dark,16,2,10,4,25.0,12.5,8,25.0,8,25.0
+stress,catalog-probe,seeded-legal,0,probe-lawyer,Lawyer in Light,16,10,5,1,65.625,62.5,8,56.25,8,75.0
+stress,catalog-probe,seeded-legal,0,probe-live-streamer-male,Live Streamer — Male in Electric,16,10,6,0,62.5,62.5,8,62.5,8,62.5
+stress,catalog-probe,seeded-legal,0,probe-mailman,The Mailman in Electric,16,10,5,1,65.625,62.5,8,81.25,8,50.0
+stress,catalog-probe,seeded-legal,0,probe-miami-surgeon,Miami Surgeon in Water,16,6,9,1,40.625,37.5,8,50.0,8,31.25
+stress,catalog-probe,seeded-legal,0,probe-midnightmayor,Midnight Mayor in Dark,16,4,10,2,31.25,25.0,8,25.0,8,37.5
+stress,catalog-probe,seeded-legal,0,probe-mr-trick,Mr. Trick in Dark,16,6,9,1,40.625,37.5,8,25.0,8,56.25
+stress,catalog-probe,seeded-legal,0,probe-naija-scammer,Naija Scammer in Dark,16,7,8,1,46.875,43.75,8,37.5,8,56.25
+stress,catalog-probe,seeded-legal,0,probe-nguyen,Nguyen in Electric,16,10,6,0,62.5,62.5,8,62.5,8,62.5
+stress,catalog-probe,seeded-legal,0,probe-nigerian-father,Nigerian Father in Earth,16,9,6,1,59.375,56.25,8,62.5,8,56.25
+stress,catalog-probe,seeded-legal,0,probe-nightcashier,Night Cashier in Electric,16,10,6,0,62.5,62.5,8,62.5,8,62.5
+stress,catalog-probe,seeded-legal,0,probe-og-skater,OG Skater in Air,16,6,9,1,40.625,37.5,8,31.25,8,50.0
+stress,catalog-probe,seeded-legal,0,probe-powerhouse,Powerhouse in Electric,16,7,9,0,43.75,43.75,8,25.0,8,62.5
+stress,catalog-probe,seeded-legal,0,probe-rainmaker,Energy Drink Freak in Water,16,4,10,2,31.25,25.0,8,25.0,8,37.5
+stress,catalog-probe,seeded-legal,0,probe-redneck,Redneck in Earth,16,6,7,3,46.875,37.5,8,43.75,8,50.0
+stress,catalog-probe,seeded-legal,0,probe-redside2,OG Red Night in Fire,16,8,5,3,59.375,50.0,8,68.75,8,50.0
+stress,catalog-probe,seeded-legal,0,probe-redside3,Red Robber in Earth,16,6,7,3,46.875,37.5,8,43.75,8,50.0
+stress,catalog-probe,seeded-legal,0,probe-redside4,Red Hexer in Dark,16,6,9,1,40.625,37.5,8,25.0,8,56.25
+stress,catalog-probe,seeded-legal,0,probe-rent-a-cop,Rent-a-Cop in Cellblock Lane Sequence,16,4,10,2,31.25,25.0,8,43.75,8,18.75
+stress,catalog-probe,seeded-legal,0,probe-ronald,Revolutionary Ronald in Earth,16,7,6,3,53.125,43.75,8,37.5,8,68.75
+stress,catalog-probe,seeded-legal,0,probe-roommate,Roommate in Cellblock Lane Sequence,16,3,9,4,31.25,18.75,8,50.0,8,12.5
+stress,catalog-probe,seeded-legal,0,probe-scammer,Scammer in Dark,16,6,9,1,40.625,37.5,8,25.0,8,56.25
+stress,catalog-probe,seeded-legal,0,probe-shiesty,Shiesty YN in Dark,16,3,11,2,25.0,18.75,8,25.0,8,25.0
+stress,catalog-probe,seeded-legal,0,probe-snitch,Snitch in Dark,16,6,9,1,40.625,37.5,8,25.0,8,56.25
+stress,catalog-probe,seeded-legal,0,probe-squabblecook,SquabbleHouse Cook in Fire,16,8,5,3,59.375,50.0,8,68.75,8,50.0
+stress,catalog-probe,seeded-legal,0,probe-squabbleserver,SquabbleHouse Server in Water,16,4,11,1,28.125,25.0,8,50.0,8,6.25
+stress,catalog-probe,seeded-legal,0,probe-stonerjr,Stoner Jr. in Plant,16,8,7,1,53.125,50.0,8,43.75,8,62.5
+stress,catalog-probe,seeded-legal,0,probe-subwaymagician,Subway Magician in Dark,16,4,10,2,31.25,25.0,8,25.0,8,37.5
+stress,catalog-probe,seeded-legal,0,probe-subwaymap,Subway Map in Air,16,7,8,1,46.875,43.75,8,62.5,8,31.25
+stress,catalog-probe,seeded-legal,0,probe-sugarfoot,Sugarfoot in Dark,16,4,9,3,34.375,25.0,8,43.75,8,25.0
+stress,catalog-probe,seeded-legal,0,probe-tattoo-artist,Tattoo Artist in Fire,16,8,7,1,53.125,50.0,8,43.75,8,62.5
+stress,catalog-probe,seeded-legal,0,probe-teacher,Teacher Who Never Believed in Rappers in Earth,16,7,6,3,53.125,43.75,8,37.5,8,68.75
+stress,catalog-probe,seeded-legal,0,probe-the-after-party,The After Party in Electric,16,10,5,1,65.625,62.5,8,75.0,8,56.25
+stress,catalog-probe,seeded-legal,0,probe-the-babyshower,The Baby Shower in Light,16,11,3,2,75.0,68.75,8,56.25,8,93.75
+stress,catalog-probe,seeded-legal,0,probe-the-block-spin,The Block Spin in Dark,16,3,11,2,25.0,18.75,8,6.25,8,43.75
+stress,catalog-probe,seeded-legal,0,probe-the-concert,The Concert in Electric,16,13,2,1,84.375,81.25,8,100.0,8,68.75
+stress,catalog-probe,seeded-legal,0,probe-the-cookout,The Cookout in Fire,16,9,5,2,62.5,56.25,8,43.75,8,81.25
+stress,catalog-probe,seeded-legal,0,probe-the-dice-game,The Dice Game in Cellblock Lane Sequence,16,2,11,3,21.875,12.5,8,31.25,8,12.5
+stress,catalog-probe,seeded-legal,0,probe-the-kickback,The Kickback in Air,16,9,6,1,59.375,56.25,8,62.5,8,56.25
+stress,catalog-probe,seeded-legal,0,probe-the-setup,The Setup in Dark,16,6,9,1,40.625,37.5,8,37.5,8,43.75
+stress,catalog-probe,seeded-legal,0,probe-the-shootout,The Shootout in Fire,16,7,8,1,46.875,43.75,8,37.5,8,56.25
+stress,catalog-probe,seeded-legal,0,probe-the-sideshow,The Sideshow in Air,16,4,10,2,31.25,25.0,8,25.0,8,37.5
+stress,catalog-probe,seeded-legal,0,probe-transplant,Racially Ambiguous Transplant in Air,16,5,9,2,37.5,31.25,8,43.75,8,31.25
+stress,catalog-probe,seeded-legal,0,probe-trapvamp,Trap Vamp in Dark,16,6,9,1,40.625,37.5,8,25.0,8,56.25
+stress,catalog-probe,seeded-legal,0,probe-undercova,Undercova Brotha in Dark,16,5,8,3,40.625,31.25,8,50.0,8,31.25
+stress,catalog-probe,seeded-legal,0,probe-workboots,Buttahs in Earth,16,7,5,4,56.25,43.75,8,62.5,8,50.0
+stress,catalog-probe,seeded-legal,0,probe-yn-gokarter,YN Gokarter in Electric,16,13,3,0,81.25,81.25,8,87.5,8,75.0
+stress,catalog-probe,seeded-legal,0,probe-yunghustle,Yung Hustle in Electric,16,9,4,3,65.625,56.25,8,50.0,8,81.25
+stress,catalog-probe,seeded-legal,0,starter-block,THE BLOCK IS HOT,328,108,187,33,37.957317,32.926829,164,43.902439,164,32.012195
+stress,catalog-probe,seeded-legal,0,starter-squabblehouse-shift,SQUABBLEHOUSE SHIFT,328,170,119,39,57.77439,51.829268,164,55.487805,164,60.060976
+stress,paid-choices,forced-deployment,0,focused-blue-set,Crip / Blue Set,24,11,13,0,45.833333,45.833333,12,33.333333,12,58.333333
+stress,paid-choices,forced-deployment,0,focused-red-set,Blood / Red Set,24,18,5,1,77.083333,75.0,12,66.666667,12,87.5
+stress,paid-choices,forced-deployment,0,probe-the-concert,The Concert in Electric,32,17,14,1,54.6875,53.125,16,40.625,16,68.75
+stress,paid-choices,forced-deployment,0,probe-the-dice-game,The Dice Game in Cellblock Lane Sequence,32,9,21,2,31.25,28.125,16,21.875,16,40.625
+stress,paid-choices,forced-deployment,0,starter-block,THE BLOCK IS HOT,24,5,17,2,25.0,20.833333,12,29.166667,12,20.833333
+stress,paid-choices,forced-deployment,0,starter-community-table,EVERYBODY EATS,32,18,13,1,57.8125,56.25,16,62.5,16,53.125
+stress,paid-choices,forced-deployment,0,starter-squabblehouse-shift,SQUABBLEHOUSE SHIFT,24,14,9,1,60.416667,58.333333,12,54.166667,12,66.666667
+stress,paid-choices,greedy-paid,0,focused-blue-set,Crip / Blue Set,24,7,14,3,35.416667,29.166667,12,37.5,12,33.333333
+stress,paid-choices,greedy-paid,0,focused-red-set,Blood / Red Set,24,12,10,2,54.166667,50.0,12,66.666667,12,41.666667
+stress,paid-choices,greedy-paid,0,probe-the-concert,The Concert in Electric,32,19,11,2,62.5,59.375,16,84.375,16,40.625
+stress,paid-choices,greedy-paid,0,probe-the-dice-game,The Dice Game in Cellblock Lane Sequence,32,11,16,5,42.1875,34.375,16,53.125,16,31.25
+stress,paid-choices,greedy-paid,0,starter-block,THE BLOCK IS HOT,24,11,11,2,50.0,45.833333,12,58.333333,12,41.666667
+stress,paid-choices,greedy-paid,0,starter-community-table,EVERYBODY EATS,32,17,12,3,57.8125,53.125,16,53.125,16,62.5
+stress,paid-choices,greedy-paid,0,starter-squabblehouse-shift,SQUABBLEHOUSE SHIFT,24,9,12,3,43.75,37.5,12,58.333333,12,29.166667
+confirmation,independent-confirmation,chain-two,0,element-air,Air,16,13,3,0,81.25,81.25,8,75.0,8,87.5
+confirmation,independent-confirmation,chain-two,0,element-light,Light,16,14,1,1,90.625,87.5,8,93.75,8,87.5
+confirmation,independent-confirmation,chain-two,0,focus-counterplay,Counterplay — Legacy Comparison,16,4,11,1,28.125,25.0,8,37.5,8,18.75
+confirmation,independent-confirmation,chain-two,0,focus-demario-luigion,Demario and Luigion,16,0,15,1,3.125,0.0,8,6.25,8,0.0
+confirmation,independent-confirmation,chain-two,0,focus-detective,Sherlock and Watson,16,6,9,1,40.625,37.5,8,50.0,8,31.25
+confirmation,independent-confirmation,chain-two,0,focus-late-scaling,Late Scaling,16,10,5,1,65.625,62.5,8,62.5,8,68.75
+confirmation,independent-confirmation,chain-two,0,focus-wiz,The Wiz,16,13,2,1,84.375,81.25,8,100.0,8,68.75
+confirmation,independent-confirmation,chain-two,0,focused-blue-set,Crip / Blue Set,32,14,17,1,45.3125,43.75,16,43.75,16,46.875
+confirmation,independent-confirmation,chain-two,0,focused-red-set,Blood / Red Set,32,7,22,3,26.5625,21.875,16,31.25,16,21.875
+confirmation,independent-confirmation,chain-two,0,starter-block,THE BLOCK IS HOT,32,10,21,1,32.8125,31.25,16,31.25,16,34.375
+confirmation,independent-confirmation,chain-two,0,starter-music-tour,TOUR MONEY,16,11,4,1,71.875,68.75,8,93.75,8,50.0
+confirmation,independent-confirmation,chain-two,0,starter-squabblehouse-shift,SQUABBLEHOUSE SHIFT,32,19,11,2,62.5,59.375,16,87.5,16,37.5
+confirmation,independent-confirmation,greedy,0,element-air,Air,16,13,3,0,81.25,81.25,8,100.0,8,62.5
+confirmation,independent-confirmation,greedy,0,element-light,Light,16,14,2,0,87.5,87.5,8,87.5,8,87.5
+confirmation,independent-confirmation,greedy,0,focus-counterplay,Counterplay — Legacy Comparison,16,2,13,1,15.625,12.5,8,31.25,8,0.0
+confirmation,independent-confirmation,greedy,0,focus-demario-luigion,Demario and Luigion,16,6,8,2,43.75,37.5,8,62.5,8,25.0
+confirmation,independent-confirmation,greedy,0,focus-detective,Sherlock and Watson,16,3,10,3,28.125,18.75,8,37.5,8,18.75
+confirmation,independent-confirmation,greedy,0,focus-late-scaling,Late Scaling,16,10,5,1,65.625,62.5,8,68.75,8,62.5
+confirmation,independent-confirmation,greedy,0,focus-wiz,The Wiz,16,12,4,0,75.0,75.0,8,87.5,8,62.5
+confirmation,independent-confirmation,greedy,0,focused-blue-set,Crip / Blue Set,32,9,20,3,32.8125,28.125,16,50.0,16,15.625
+confirmation,independent-confirmation,greedy,0,focused-red-set,Blood / Red Set,32,12,19,1,39.0625,37.5,16,46.875,16,31.25
+confirmation,independent-confirmation,greedy,0,starter-block,THE BLOCK IS HOT,32,12,18,2,40.625,37.5,16,37.5,16,43.75
+confirmation,independent-confirmation,greedy,0,starter-music-tour,TOUR MONEY,16,10,6,0,62.5,62.5,8,62.5,8,62.5
+confirmation,independent-confirmation,greedy,0,starter-squabblehouse-shift,SQUABBLEHOUSE SHIFT,32,18,13,1,57.8125,56.25,16,75.0,16,40.625

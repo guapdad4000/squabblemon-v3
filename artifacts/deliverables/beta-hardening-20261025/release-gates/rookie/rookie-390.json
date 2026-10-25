@@ -1,0 +1,14 @@
+{
+  "width": 390,
+  "height": 844,
+  "lateReceiptRecovery": true,
+  "homeSteps": 15,
+  "rivalReadingPauses": 5,
+  "roundRecaps": 3,
+  "plannedRecruit": "landlord",
+  "verified": true,
+  "started": 1,
+  "claims": 1,
+  "errors": [],
+  "unexpectedRequests": []
+}

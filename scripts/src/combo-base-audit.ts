@@ -41,7 +41,7 @@ for (const rival of rivals) for (const policyName of ['greedy','chain','paired-s
    const match=room.match!, owner=room.activeSeat;
    const legalPlays=listLegalBalancePlays(match,owner,true);
    const chosen=policy({match,owner,legalPlays,actionIndex:actions.length,seed,evaluate:evaluateBalanceState});
-   const next=applyRivalryCommand(room,chosen ? {kind:'play',owner,id:chosen.instanceId,lane:chosen.lane,squabble:chosen.squabble}:{kind:'pass',owner});
+   const next=applyRivalryCommand(room,chosen ? {kind:'play',owner,id:chosen.instanceId,lane:chosen.lane,squabble:chosen.squabble,investment:chosen.investment}:{kind:'pass',owner});
    if(chosen) assert.deepEqual(next.match,chosen.preview);
    actions.push({round:match.round,combo:owner===(first==='blue'?'player':'cpu'),card:chosen?.cardId??null,hand:(owner==='player'?match.playerHand:match.cpuHand).map(c=>c.cardId)});
    room=next; assert(actions.length<100);

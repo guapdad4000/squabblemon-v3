@@ -93,6 +93,35 @@ test('gang guidance uses actual opening order and explains conditional support',
   assert.equal(advice.curve.reduce((a,b)=>a+b),10);
   assert.equal(crewInsights(completeEngineCrew(['techbro','landlord','hooper','baby','og','cornball','earthy'])).opening,1);
 });
+test('Gamer and Ice Cream Truck guidance describes their current abilities', () => {
+  for (const ids of [['gamer'], ['gamer', 'cornball', 'nguyen', 'edgar']]) {
+    const tip = crewInsights(ids).tips.find(value => value.includes('Gamer'))!;
+    assert.match(tip, /each other district \+2 Hands/);
+    assert.match(tip, /newly Silence or Weaken/);
+    assert.match(tip, /Dark ally \+2, once per round/);
+    assert.doesNotMatch(tip, /cheap|each arrival/);
+  }
+  const iceCream = crewInsights(['icecream']).tips.find(value => value.includes('Ice Cream Truck'))!;
+  assert.match(iceCream, /weakest legal unvisited district/);
+  assert.match(iceCream, /Treat waits for an ally/);
+  assert.doesNotMatch(iceCream, /gathering allies/);
+});
+
+test('crew guidance recognizes current Freeze answers without mistaking enemy Freeze or partial cleanses', () => {
+  const cleansers = ['foodz', 'community-cook', 'concrete', 'conductor', 'stonerjr', 'stonersr',
+    'passportbro', 'lola', 'hair-stylist', 'lebron-james', 'squabbleserver', 'stillwatermedic',
+    'rootnurse', 'blueside4', 'miami-surgeon', 'redneck', 'lawyer', 'the-cookout', 'suga-mama',
+    'apartment-maintenance-sage'];
+  for (const id of cleansers) {
+    for (const identity of [id, catalogCardByEngineId[id].catalogId]) {
+      assert(!crewInsights([identity]).tips.some(tip => tip.includes('no Freeze cleanser')), identity);
+    }
+  }
+  for (const id of ['snow', 'canopykeeper', 'bluetooth-unc', 'squabblehouse-bus-boy']) {
+    assert(crewInsights([id]).tips.some(tip => tip.includes('no Freeze cleanser')), id);
+  }
+});
+
 test('career goals require actual cleanse, a changed roster, and wins for mastery', () => {
   const nurse = createCardInstance('pinaynurse','player','test',0);
   const ally = {...createCardInstance('edgar','player','test',1),lane:0 as Lane}; ally.statuses.frozen = true;

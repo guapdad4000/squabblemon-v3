@@ -11,7 +11,7 @@ import {
   TICKETS_PER_PERFECT_BATTLE,
   type StoryChapter,
   type StoryNode,
-} from "@workspace/squabblemon-engine/story";
+} from "./catalog";
 
 export type ChapterBattleSummary = {
   readonly nodeId: string;

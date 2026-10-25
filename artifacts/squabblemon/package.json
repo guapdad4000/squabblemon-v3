@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite --config vite.config.ts --host 0.0.0.0",
-    "build": "pnpm run validate:story-music && vite build --config vite.config.ts && pnpm run validate:bundle && pnpm run validate:style-invalidation",
+    "build": "node ../../scripts/release-checks.mjs --build",
     "serve": "vite preview --config vite.config.ts --host 0.0.0.0",
     "test": "node --import ../../scripts/battle-test-css.mjs --import tsx --test ../../lib/squabblemon-engine/parkChess.test.ts ../../lib/squabblemon-engine/parkChessLessons.test.ts ../../lib/squabblemon-engine/parkChessRating.test.ts src/bossRaid.test.ts src/comboBase.test.ts src/dogApproach.test.ts src/rivalryStress.test.ts src/bloodBalance.test.ts src/cripBuffs.test.ts src/crewParityBalance.test.ts src/lib/imageWarmup.test.ts src/lib/deferredModule.test.ts src/lib/deferredComponent.test.ts src/lib/collectionCardViewport.test.ts src/lib/preparedPatches.test.ts src/lib/cornerStore.test.ts src/blockbusters.test.ts src/squabblehouseCatalog.test.ts src/squabblehouseWave.test.ts src/dinerOnShift.test.ts src/dinerOnShiftAuthority.test.ts src/dinerOnShiftPresentation.test.tsx src/fairytaleWave.test.ts src/homelessRework.test.ts src/creativeReworks.test.ts src/maryMack.test.ts src/streetLegendsAuthority.test.ts src/streetLegendsPresentation.test.ts src/kingpinRunTheYard.test.ts src/buff25.test.ts src/rosterBalance.test.ts src/fullRosterBuffs.test.ts src/selectedWave.test.ts src/reliabilityPatch.test.ts src/payoffBuffs.test.ts src/elementalPayoffs.test.ts src/deckFieldTuning.test.ts src/effectBalanceFollowup.test.ts src/networkCloserTuning.test.ts src/networkElectricTuning.test.ts src/redRetaliationSurvival.test.ts src/supportBodyBudgets.test.ts src/homecomingWave.test.ts src/characterWave.test.ts src/routeFighterFixes.test.ts src/homelessCommunitySupport.test.ts src/relationshipCounters.test.ts src/ownershipPresentation.test.ts src/energyDrinkFreakRework.test.ts src/kumiteCombatOverhaul.test.ts src/bonusHandsPunishment.test.ts src/sideOzWave.test.ts src/neighborhoodWave.test.ts src/cellblockWave.test.ts src/fourCrewAuthority.test.ts src/elementDecks.test.ts src/elementalRedesign.test.ts src/elementalHandBonuses.test.ts src/lightLeaders.test.ts src/buddyFolks.test.ts src/cosmeticAssets.test.ts src/characterSignatures.test.ts src/drFade.test.ts src/kyle.test.ts src/stockz.test.ts src/movementTempoEngine.test.ts src/lib/rewardReceipts.test.ts src/lib/eventVoice.test.ts src/lib/battleAnnouncer.test.ts src/cardBalance.test.ts src/mythicLegends.test.ts src/characterAssets.test.ts src/components/summonArtwork.test.tsx src/streetWave.test.ts src/supportCards.test.ts src/blockExpansion.test.ts src/neighborhoodCommons.test.ts src/rosterRefresh.test.ts src/specialMoves.test.ts src/superCommonCards.test.ts src/gameEngine.test.ts src/dinerCounters.test.ts src/districts.test.ts src/subwayArrival.test.ts src/multiCardTurns.test.ts src/botBalance.test.ts src/gameplayUpgrade.test.ts src/training.test.ts src/playerNotes.test.ts src/lib/challengeRunResponse.test.ts src/lib/communityCrew.test.ts src/lib/deckWorkshop.test.ts src/matchTranscript.test.ts src/officerOinkEncounter.test.ts src/storyReinforcementFairness.test.ts src/storyReinforcementPresentation.test.ts src/storyExpansions.test.ts src/storySquabbleHouse.test.ts src/storySquabbleHousePuzzles.test.ts src/lib/preparedPatches.test.ts src/lib/rankPromotion.test.ts src/presentationTimeline.test.ts src/battleFeedback.test.ts src/musicPlayer.test.ts src/musicModes.test.ts src/battleVenues.test.ts src/battleVisibility.test.ts src/lib/analytics.test.ts src/components/tutorialGuidance.test.ts src/components/rookieJourney.test.ts src/components/story/StoryStage.test.tsx src/components/story/StoryStage.render.test.tsx src/components/fadecade/arcadeClock.test.tsx src/components/fadecade/waffleAudio.test.ts src/components/venue/GameNav.test.tsx src/lib/story/ticketLedger.test.tsx src/components/Battle.test.tsx src/districtBattleCue.test.ts && node scripts/service-worker.test.mjs && node --test scripts/check-entry-bundle.test.mjs && pnpm run test:balance-patch",
     "test:service-worker": "node scripts/service-worker.test.mjs",
@@ -112,7 +112,7 @@
     "test:battle-media-optimizer": "node --test scripts/optimize-battle-moves.test.mjs",
     "validate:battle-moves": "node scripts/optimize-battle-moves.mjs --check --all",
     "optimize:battle-moves": "node scripts/optimize-battle-moves.mjs --all",
-    "test:battle-runtime": "node --import ../../scripts/battle-test-css.mjs --import tsx --test src/components/BattleGeometry.performance.test.tsx src/components/battleCommitPerf.test.tsx src/components/BattleArtEffects.performance.test.tsx",
+    "test:battle-runtime": "node --import ../../scripts/battle-test-css.mjs --import tsx --test src/replayCodec.test.ts src/lib/battleComputation.test.ts src/lib/battleComputation.hooks.test.ts src/lib/menuRefresh.test.ts src/lib/notificationBackground.test.ts",
     "test:typography-cascade": "node e2e/verify-typography-cascade.mjs",
     "test:battle-responsive-parity": "node e2e/verify-battle-responsive-parity.mjs",
     "test:keyed-video-lifecycle": "node e2e/verify-keyed-video-lifecycle.mjs",
@@ -143,7 +143,14 @@
     "test:ranked-clout": "node e2e/verify-ranked-clout.mjs",
     "test:flex-pulls": "node e2e/verify-flex-pulls.mjs",
     "test:shared-receipts": "node e2e/verify-shared-receipts.mjs",
-    "test:surrender-popup": "node e2e/verify-surrender-popup.mjs"
+    "test:surrender-popup": "node e2e/verify-surrender-popup.mjs",
+    "test:release-critical": "node ../../scripts/release-checks.mjs",
+    "test:battle-thermal": "node e2e/verify-battle-thermal.mjs",
+    "test:battle-idle-lifecycle": "node e2e/verify-battle-idle-lifecycle.mjs",
+    "test:online-projection-browser": "node e2e/verify-online-projection.mjs",
+    "test:battle-worker-browser": "node e2e/verify-battle-worker.mjs",
+    "test:story-delivery": "node --import ../../scripts/battle-test-css.mjs --import tsx --test src/lib/story/chapterCatalog.test.ts scripts/check-story-delivery.test.mjs && node --import tsx scripts/generate-story-delivery.ts --check",
+    "test:story-delivery-browser": "node --import tsx e2e/verify-story-delivery.ts"
   },
   "devDependencies": {
     "@clerk/react": "^6.15.1",

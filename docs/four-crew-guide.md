@@ -1,5 +1,7 @@
 # Four revised practice crews
 
+> **Historical Task 126 guide.** These named recipes and card descriptions document the original workshop recommendations. They have not been revalidated as current-rule advice. Consult the [current deck evidence index](balance/README.md) and the assembled shared-engine catalog before reusing their numbers or rules. The original text remains below for provenance.
+
 These are optional workshop recommendations. They do not replace starter decks or edit saved crews.
 
 ## Cellblock lane sequence

@@ -1,0 +1,44 @@
+{
+  "status": "passed",
+  "sourceHash": "dfbfacef31b2fe22c0cfb012f0b0013b8b32fb66c4df325c138f320b25956a5b",
+  "scheduledMatches": 20368,
+  "failedCases": 0,
+  "observedPlayableCards": 301,
+  "namedDecks": 46,
+  "namedSlots": 460,
+  "fullCompactComparisons": 276,
+  "sourceArchiveSha256": "3275de5b1ea62d5f3185262eab929c1483ee97db8ab05daa3e71549e2be1bc60",
+  "freshnessGates": {
+    "matrix": "current",
+    "stress": "current",
+    "confirmation": "current"
+  },
+  "independentRendererValidation": [
+    "All 3 summaries complete with zero failures",
+    "Compatible engine/source/runtime/version/catalog snapshots",
+    "Identical ordered league rosters across datasets",
+    "Raw worker checksums and exact case partitions independently verified",
+    "Seat-normalized outcomes, deck/matchup/card aggregates independently recomputed",
+    "Full unordered league pairs including mirrors; equal league appearance counts; confirmation seeds disjoint from league"
+  ],
+  "retainedLogs": {
+    "beta-v64-confirm-plan.log": "b025b94d8ef469bac4b18a8984c76c12abe96dfea94192c437e6c6f063271928",
+    "beta-v64-confirm-report.log": "f8066ceb8becec96f71bdf3e57c2b3f2a41f3755a8633f4423f77701f894dd08",
+    "beta-v64-confirmation.log": "532c8a59257d92dcba95f5e2c9b961465d70de7ed6d0ce18177edc28821650ae",
+    "beta-v64-matrix-0.log": "f24800f97533a48344c260c8be1a82eaceb2171dec0f0b9fe7f46f993e2dbcb6",
+    "beta-v64-matrix-1.log": "142700c6f19917d4f8e2030fcbd3d477a42ca948e458a02c698ac3ee85bc48f0",
+    "beta-v64-matrix-2.log": "8ceb9944fcf526a4cd3b5cf38951157387da6e21259673be45a6335bb62ba34a",
+    "beta-v64-matrix-3.log": "f2fc242d99bc0028a0d20f3667f023a091d74f6bda559eba1e12a039ee896b7a",
+    "beta-v64-matrix-report.log": "97398bc2c6267fe3648b32e4949b8ff3d9230022701a9c3f49328248f59bd854",
+    "beta-v64-parity.log": "348bba196bb91727c69477588bea6e6f03994a13d903777af5ff9d0629f77aa7",
+    "beta-v64-stress-0.log": "5b397b30883b1267942f77b112abf09b3c708440a1019d15572c058a29459347",
+    "beta-v64-stress-1.log": "cc37bdb9cf9a621cda9c6975da2eb2088851b45cd6e39d4c37c2423e9e85fa88",
+    "beta-v64-stress-report.log": "fb4daeea26b4258b731a7e3b116d6e0c6f09af95662f1bd89fd8b81f9ae7149c"
+  },
+  "limits": [
+    "Local source and automated base-card PvP simulations only",
+    "Changed policy and seed namespaces preclude causal v63 versus v64 attribution",
+    "No human, physical-device or deployment validation",
+    "No numerical card balance changes; no push performed"
+  ]
+}

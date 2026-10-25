@@ -36,3 +36,15 @@ for (const forbidden of ['guap', 'folks']) test('custom audit recipes reject ' +
   recipes.red[7] = forbidden;
   assert.throws(() => createRivalryRoom({ first: 'blue', tier: 0, seed: 'excluded', recipes }), /excluded/);
 });
+
+test('audit adapter preserves the exact paid and Squabble intent in one authoritative command', async () => {
+  const { createCardInstance, playTurnCard } = await import('@workspace/squabblemon-engine/gameEngine');
+  let room = createRivalryRoom({ first: 'blue', tier: 0, seed: 'paid-adapter' });
+  const card = createCardInstance('homelessguy', 'player', 'paid-adapter', 0);
+  room = { ...room, match: { ...room.match!, playerMotion: 9, playerHand: [card] } };
+  const expected = playTurnCard(room.match!, 'player', card.instanceId, 0, true, 3);
+  const actual = applyRivalryCommand(room, { kind: 'play', owner: 'player', id: card.instanceId, lane: 0, squabble: true, investment: 3 });
+  assert.deepEqual(actual.match, expected);
+  assert.equal(actual.match!.effectLog.filter(event => event.type === 'play').length, 1);
+  assert.equal(actual.match!.boards.flat().find(item => item.instanceId === card.instanceId)?.wildInvestment, 3);
+});

@@ -1,0 +1,38 @@
+{
+  "status": "complete",
+  "sourceHash": "db4e1aae087bbbee4ba1b76abe013eed25625c8a120ac7557fa540a83f8afe19",
+  "scheduledSuccessful": 20368,
+  "failedScheduledCases": 0,
+  "sourceRuntimePlanFreshnessDatasets": 3,
+  "fullEventCompactComparisons": 276,
+  "currentTelemetryTests": {
+    "passed": 18,
+    "failed": 0
+  },
+  "rendererFormatTests": {
+    "passed": 17,
+    "failed": 0
+  },
+  "combinedHistoricalTests": {
+    "passed": 20,
+    "failed": 1,
+    "reason": "preexisting unavailable Git LFS staff-report object, assertion unchanged"
+  },
+  "namedDecks": 46,
+  "namedCardSlots": 460,
+  "playableCardsObserved": 301,
+  "comparison": {
+    "gameplayMismatchedCases": 0,
+    "nonclassificationTelemetryMismatchedCases": 0,
+    "currentClassificationMismatchedCases": 0
+  },
+  "rendererSha256": "2522b54cdd20e38949245e53884f5dba38fa61d5b3aebf47864d27043ce0ed37",
+  "sourceArchiveSha256": "b02aa83a9b0f1488930388a4c121d2e402dfa1976c2e1e80af4f25ec9dba7c63",
+  "checks": [
+    "All fresh raw worker hashes and exact case partitions verified",
+    "All derived output hashes match provenance",
+    "Source archive contains all103manifest source files",
+    "Current source attribution and legacy heuristic labelled separately",
+    "Interrupted files excluded; matrix freshly rerun"
+  ]
+}

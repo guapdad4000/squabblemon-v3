@@ -2,22 +2,34 @@
 
 **Gate status: PENDING.** No human findings are recorded until real sessions are completed. The deterministic lab identifies candidates for observation; it does not replace players.
 
-The current redacted automated aggregate is recorded in [BALANCE_BASELINE.md](./BALANCE_BASELINE.md). Raw JSON and human row-level notes remain in ignored or access-controlled storage. Task 118 adds Earth, detective, Wiz, Wonderland, Fire/GUAP, Poison, Cellblock, and Demario/Luigion shells; these are recommended comparison crews, not new starters or replacements for saved crews.
+The historical Task 118/126 redacted automated aggregate is recorded in [BALANCE_BASELINE.md](./BALANCE_BASELINE.md). Raw JSON and human row-level notes remain in ignored or access-controlled storage. Task 118 adds Earth, detective, Wiz, Wonderland, Fire/GUAP, Poison, Cellblock, and Demario/Luigion shells; these are recommended comparison crews, not new starters or replacements for saved crews.
 
 Task 126's anonymous deterministic aggregates and reproducible comparison commands are
 in [the four-crew evidence record](../docs/balance-four-crews.md). Those aggregate
 JSON files contain no human rows or account data. The human gate below is unchanged.
 
-### Focused four-crew observations (still pending)
+For the latest automated evidence status, use the [current deck evidence index](../docs/balance/README.md). Pin each new human session to its actual build, rules and ordered rosters; do not substitute archived stats for that build.
 
-Use [the four complete recommendations](../docs/four-crew-guide.md), not edited
-player-saved decks. Counterplay composition must be compared separately from any
+## Current v64 targets — still pending human play
+
+Use the [October 25 named rosters](../artifacts/deliverables/current-deck-audit-20261025-v64/deck-rosters.csv) and [mechanism review](../artifacts/deliverables/current-deck-audit-20261025-v64/BALANCE-REVIEW.md) as the starting recipes. Record the actual loaded build and server rules, both ordered ten-card lineups, card levels/move tiers and player/seat assignment. Freeze each recipe within its paired comparison. If the environment cannot reproduce district/draw seeds, label the games unpaired instead of claiming a controlled card-change effect.
+
+1. Light against Dark, Air, Fire, TOUR MONEY and EVERYBODY EATS: record shields, cleansing, Abuela hold time and whether the rival can interrupt the setup.
+2. TOUR MONEY and EVERYBODY EATS in both seats: record successful entrances, spent trigger caps, Cook servings and Foodz's prepared-board payoff.
+3. KYLE: compare planting in occupied/empty districts, movement and Protection, and the final round with/without After Party.
+4. Demario/Luigion versus Mushroom Garden, and Sherlock/Watson versus Investigations: deliberately test holding Demario and baiting/denying a valuable rival entrance before concluding the shared cards are weak.
+
+Start with a crossed-player, crossed-seat pilot to identify understandable decisions and failure patterns; use a preregistered larger follow-up for a numerical balance decision. The v64 bundle's 20,368 scheduled games and all-card coverage do not close this human gate. Its seeds and policies differ from v63, so raw percentage changes are not controlled estimates of the fixes.
+
+### Historical four-crew protocol (still pending)
+
+The [four complete recommendations](../docs/four-crew-guide.md) preserve the original protocol. Before reusing it, verify or replace those recipes and prompts against the current catalog; keep the chosen roster frozen within each paired session. Do not edit player-saved decks. Counterplay composition must be compared separately from any
 Nerd cost experiment. Keep the opponent, draw order, training tier and first seat
 fixed within a paired session; reverse first seat in the next pair.
 
 - **Cellblock:** Can the player identify a support-kind item rather than a
   Support-role character, play it before Crafty, and predict Boyfriend's other-lane
-  inmate reward? Record whether the four-slot district forces an interesting choice.
+  inmate reward? Record whether competing for multiple districts creates a clear choice as card populations grow; districts have no fixed four-card limit.
 - **Detectives:** Can the opponent see and avoid the trap? Does an actual
   cancellation's self/ally reward make sense in the effect log and replay?
   Ask which ally Watson can heal and distinguish healing from fallback Protection.
@@ -89,11 +101,11 @@ After the campaign:
 | Retry pressure | Median retries on required encounters | At most 1; no required encounter above 3 for more than one player |
 | Variety | Repetition rating, where 1 is repetitive and 5 is distinct | Median at least 4 after Chapter 2 |
 | Reactions | Player can name the consequence or reward after a major fight | At least 80% |
-| Balance | A card-swap delta after the full automated run | Review above 5 percentage points; block above 8 |
+| Historical paired-swap balance flag | A controlled card-swap delta, not a difference between unpaired league ranks | Review above 5 percentage points; block above 8 until explained and corroborated; neither threshold prescribes a stat change |
 
 ## Interpreting automated flags
 
-The deterministic lab uses a transparent one-ply greedy policy. Treat its flags as candidates for investigation, not direct release decisions.
+The historical BalanceLab protocol below uses one-ply greedy flags. The current base-PvP league separately reports greedy and bounded two-play policies with shared legal paid/Squabble options, KYLE fuse value and extended-round resources. The latter still does not solve rival responses or most held-card future value. Treat either model’s flags as candidates for investigation, not direct release decisions.
 
 - A paired card swap measures one replacement in one authored shell against controlled opponents. It does not estimate a card's universal win rate.
 - The player/CPU seat split includes turn-order and reveal behavior. Use the mirrored logical-deck result for card comparisons, and investigate the seat flag separately.
@@ -115,7 +127,11 @@ The deterministic lab uses a transparent one-ply greedy policy. Treat its flags 
 ```text
 Session ID:
 Participant ID:
-Session type: Chapters 1–2 / Full campaign
+Session type: Chapters 1–2 / Full campaign / Targeted balance
+Ordered player/opponent rosters and card levels:
+Player and seat assignments:
+Rules/card balance versions:
+Paired seed control available: yes / no
 Build commit:
 Database environment:
 Start/end time:
@@ -161,7 +177,7 @@ Decision and owner:
 1. Keep row-level notes in an access-controlled sheet with one row per participant and encounter. Use anonymized IDs and the metric names above.
 2. Export the sheet as CSV into `tmp/balance-lab/`; this directory is ignored by Git.
 3. Copy only aggregate counts, rates, medians, and severity totals into the aggregate template. Omit names, email addresses, free-form personal information, and raw quotes.
-4. Run `pnpm balance:full` and record the generated fingerprint from `tmp/balance-lab/full.json` beside the human aggregate.
+4. Record the exact automated evidence scope beside the human aggregate. `pnpm balance:full` remains an optional historical/PvE-style BalanceLab diagnostic; its `tmp/balance-lab/full.json` fingerprint does **not** establish current base-card PvP rankings or freshness. For current PvP, follow the [deck evidence index](../docs/balance/README.md), run `pnpm --filter @workspace/scripts balance:current check <dataset-directory>` for each completed matrix/stress/confirmation dataset, and record the accepted bundle’s source hash, policy version and provenance. Neither command replaces human sessions.
 5. Save the completed aggregate as `tmp/balance-lab/playtest-summary-YYYY-MM-DD.md` for review. Commit a redacted aggregate only when the team wants a durable benchmark.
 
 Do not mark the human gate passed from automated matches, internal QA alone, or an incomplete sample.

@@ -1,13 +1,14 @@
+import { restoreOnlineRoom, storeOnlineRoom } from './onlineRoomPersistence';
 import { randomBytes, randomInt, randomUUID } from 'node:crypto';
 import { and, asc, desc, eq, inArray, ne, sql } from 'drizzle-orm';
 import { db, kumiteTournamentsTable, kumiteWinnersTable, onlineRoomsTable, playerProfilesTable } from '@workspace/db';
 import {
-  createOnlineRoom, expireOnlineRoom, joinOnlineRoom, OnlineError, onlineRoomView,
+  createOnlineRoom, expireOnlineRoom, joinOnlineRoom, OnlineError, onlineRoomView, retireOnlineRoomForRulesUpdate,
   type OnlineRoom,
 } from '@workspace/squabblemon-engine/multiplayer';
 import { loadMember } from './onlineMatches';
 import { advanceKumite, createKumite, KUMITE_CAPACITY, kumiteView, kumiteWeek,
-  settleKumiteRoom, startKumite, type KumiteState } from './kumiteEngine';
+  retireIncompatibleKumite, settleKumiteRoom, startKumite, type KumiteState } from './kumiteEngine';
 import { kumiteProgression, reconcileKumiteRewards, recordKumiteChampion, recordKumitePlayedRoom } from './kumiteRewards';
 import { buildKumiteRecords, createKumiteRecordCache, type KumiteRecordRoom } from './kumiteRecords';
 
@@ -44,6 +45,28 @@ async function refreshTournament(tx: Tx, row: TournamentRow, now: number): Promi
     state = startKumite(state, seeds, now);
   }
   if (state.status === 'active') {
+    // Compatibility is a preflight across the bracket, before any result or
+    // reward is settled. All these rooms are already locked by currentTransaction.
+    const codes = state.rounds.flat().flatMap(match => match.roomCode && match.status !== 'complete' ? [match.roomCode] : []);
+    const rooms = codes.length ? await tx.select().from(onlineRoomsTable)
+      .where(inArray(onlineRoomsTable.code, codes)).orderBy(asc(onlineRoomsTable.code)).for('update') : [];
+    for (const row of rooms) {
+      const room = restoreOnlineRoom(row.state);
+      const match = state.rounds.flat().find(item => item.roomCode === row.code);
+      if (!match || room.kumite?.tournamentId !== state.id || room.kumite?.matchId !== match.id)
+        throw new Error('Kumite room receipt mismatch.');
+      state = retireIncompatibleKumite(state, room);
+    }
+    if (state.status === 'cancelled') {
+      for (const row of rooms) {
+        const previous = restoreOnlineRoom(row.state);
+        const retired = retireOnlineRoomForRulesUpdate(previous, now);
+        if (retired !== previous) await tx.update(onlineRoomsTable).set({ state: storeOnlineRoom(retired),
+          updatedAt: new Date(now), expiresAt: new Date(now) }).where(eq(onlineRoomsTable.id, row.id));
+      }
+    }
+  }
+  if (state.status === 'active') {
     // Room and bracket writes share this transaction. Rooms are exclusively server-issued.
     // Settle completed/expired active turns before applying the tournament round cutoff.
     for (const matchId of state.rounds.flat().map(match => match.id)) {
@@ -54,7 +77,7 @@ async function refreshTournament(tx: Tx, row: TournamentRow, now: number): Promi
       const [roomRow] = await tx.select().from(onlineRoomsTable)
         .where(eq(onlineRoomsTable.code, match.roomCode)).for('update');
       if (!roomRow) continue;
-      const oldRoom = roomRow.state as unknown as OnlineRoom;
+      const oldRoom = restoreOnlineRoom(roomRow.state);
       if (oldRoom.kumite?.tournamentId !== state.id || oldRoom.kumite?.matchId !== match.id)
         throw new Error('Kumite room receipt mismatch.');
       // A participant who reconnects directly to the assigned online room and
@@ -66,7 +89,7 @@ async function refreshTournament(tx: Tx, row: TournamentRow, now: number): Promi
       match.completedAt = room.completedAt ?? null;
       match.durationMs = room.startedAt != null && room.completedAt != null ? Math.max(0, room.completedAt - room.startedAt) : null;
       if (room.revision !== oldRoom.revision) await tx.update(onlineRoomsTable).set({
-        state: room as unknown as Record<string, unknown>, updatedAt: new Date(now),
+        state: storeOnlineRoom(room), updatedAt: new Date(now),
         expiresAt: new Date(room.expiresAt),
       }).where(eq(onlineRoomsTable.id, roomRow.id));
       state = settleKumiteRoom(state, match.id, match.roomCode, room);
@@ -173,6 +196,7 @@ export function enterKumiteMatch(userId: string) {
   return currentTransaction(async (tx, state, now) => {
     const own = state.entrants.find(entry => entry.member.userId === userId);
     if (!own) throw new OnlineError('Sign up for this week before entering a bracket match.', 403);
+    if (state.cancellationReason === 'rules-updated') return { room: null, current: await currentView(tx, state, userId, now) };
     if (state.status !== 'active') throw new OnlineError('Your weekly bracket is not active yet.');
     const match = state.rounds.flat().find(item => item.status !== 'complete' && item.entrantIds.includes(own.id));
     if (!match || match.status === 'pending') return { room: null, current: await currentView(tx, state, userId, now) };
@@ -181,7 +205,7 @@ export function enterKumiteMatch(userId: string) {
     if (match.roomCode) {
       const [row] = await tx.select().from(onlineRoomsTable).where(eq(onlineRoomsTable.code, match.roomCode)).for('update');
       if (!row) throw new OnlineError('Could not reconnect to your bracket match. Please retry.', 503);
-      room = row.state as unknown as OnlineRoom;
+      room = restoreOnlineRoom(row.state);
     } else {
       const entries = match.entrantIds.map(id => state.entrants.find(entry => entry.id === id)!);
       room = joinOnlineRoom(createOnlineRoom(entries[0].member, randomInt(2) ? 'player' : 'cpu', now), entries[1].member, now);
@@ -193,7 +217,7 @@ export function enterKumiteMatch(userId: string) {
       match.startedAt = null; match.completedAt = null; match.durationMs = null;
       await tx.insert(onlineRoomsTable).values({ code: match.roomCode, hostUserId: entries[0].member.userId,
         guestUserId: entries[1].member.userId, createRequestId: randomUUID(),
-        state: room as unknown as Record<string, unknown>, expiresAt: new Date(room.expiresAt),
+        state: storeOnlineRoom(room), expiresAt: new Date(room.expiresAt),
       });
     }
     match.status = 'playing';

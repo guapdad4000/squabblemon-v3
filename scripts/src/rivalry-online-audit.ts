@@ -50,7 +50,7 @@ for (const seed of seeds) {
         }
         const legalPlays = listLegalBalancePlays(match, owner, true);
         const choice = policy({ match, owner, legalPlays, actionIndex: commands.length, seed: `${seed}:${tier}`, evaluate: evaluateBalanceState });
-        const command: RivalryCommand = choice ? { kind: 'play', owner, id: choice.instanceId, lane: choice.lane, squabble: choice.squabble } : { kind: 'pass', owner };
+        const command: RivalryCommand = choice ? { kind: 'play', owner, id: choice.instanceId, lane: choice.lane, squabble: choice.squabble, investment: choice.investment } : { kind: 'pass', owner };
         const next = applyRivalryCommand(room, command);
         if (choice) assert.deepEqual(next.match, choice.preview, 'multiplayer play must match canonical preview');
         if (flow === 'fixed-opener' && next.status !== 'complete' && next.match!.round !== match.round) {

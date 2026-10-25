@@ -4,7 +4,11 @@
 
 This opening record is the preserved Task 118 baseline, not the latest live rule
 description. See the [Task 126 appendix](#task-126-four-crew-follow-up) below and
-the [controlled four-crew evidence](../docs/balance-four-crews.md) for the current patch.
+the [controlled four-crew evidence](../docs/balance-four-crews.md) for that historical patch.
+
+For the current refresh status and source-pinned reports, use the
+[current deck evidence index](../docs/balance/README.md). The original numbers and
+fingerprints below are preserved; they are not current-rule results.
 
 This file preserves the redacted aggregate from the full deterministic run. It contains no
 participant data or raw match transcripts. The generated machine-readable report remains under

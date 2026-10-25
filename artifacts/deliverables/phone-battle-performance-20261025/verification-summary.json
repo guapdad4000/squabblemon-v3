@@ -1,0 +1,35 @@
+{
+  "status": "passed-local-not-published",
+  "baseCommit": "61e9a86c1bd1ba49e350bd4a488671ab37d26ad2",
+  "releaseTrackedDiffSha256": "23a394f6494277bd931038cf2b551528e27805f1ff0aa05653b28ccf8ef47d9b",
+  "releaseTests": 238,
+  "typecheckExit": 0,
+  "sourceUnchangedAfterReleaseBuild": true,
+  "performanceGate": {
+    "standard": {
+      "commits": 93,
+      "renderDurationMs": 647.1000003814697,
+      "longTasks": 10,
+      "longTaskMs": 673,
+      "p95FrameMs": 16.799999999999272,
+      "boardCards": 12,
+      "occupiedDistricts": 3
+    },
+    "reduced": {
+      "commits": 86,
+      "renderDurationMs": 552.0999994277954,
+      "longTasks": 7,
+      "longTaskMs": 399,
+      "p95FrameMs": 33.30000000000018,
+      "boardCards": 12,
+      "occupiedDistricts": 3
+    }
+  },
+  "limitations": [
+    "No physical phone temperature or power measurement",
+    "No deployment performed; live stylesheet GET only",
+    "Online responses are mocked; no two-client/network or transaction claim",
+    "Passive ten-card CPU/tap times do not establish a speed improvement"
+  ],
+  "focusedRuntimeTests": 53
+}

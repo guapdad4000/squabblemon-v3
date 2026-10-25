@@ -1,0 +1,50 @@
+{
+  "node": "v22.23.3",
+  "workload": "72 populated-board cards + 24 same-round cornball plays, no rendering/network, unlimited board",
+  "events": 72,
+  "finalCards": 96,
+  "parity": "deep JSON equality of complete match and every replay frame; object key ordering is not a gameplay contract",
+  "snapshotNodes": {
+    "baseline": 137196,
+    "current": 2424
+  },
+  "bytes": {
+    "full": 17816304,
+    "archive": 740313
+  },
+  "medianMs": {
+    "baseline": 100.37966700000015,
+    "current": 75.83070499999985
+  },
+  "samplesMs": {
+    "baseline": [
+      107.67051000000015,
+      102.23304299999995,
+      111.98241200000007,
+      101.88271899999995,
+      96.3352769999999,
+      98.60889300000008,
+      95.75645699999995,
+      100.37966700000015,
+      97.48379699999987
+    ],
+    "current": [
+      103.542056,
+      80.28586600000017,
+      77.45894199999998,
+      74.50408700000003,
+      76.59206099999983,
+      74.3014119999998,
+      75.08869800000002,
+      75.50079099999994,
+      75.83070499999985
+    ]
+  },
+  "baseline": "current source with replayState alone reverted to JSON.parse(JSON.stringify); same rules and workloads",
+  "sourceHashes": {
+    "lib/squabblemon-engine/src/gameEngine.ts": "21356ea4db698ce116a12b6260295af7ee5ff119b24c32d598bcc8250c60af37",
+    "lib/squabblemon-engine/src/replayCodec.ts": "1c00119dea0fc7c0c533d5844c579f183efa9eeaf4f2385e633a0f2884542ccb",
+    "scripts/benchmark-replay-state.mjs": "be02f9c94bbd7ab9ceca8286f4a1bad3a125ff91161cd3b40eb4c6e9a2e008b9",
+    "scripts/benchmarks/replay-state.mts": "f9560271019cca89adf56fa05aef7ad775340814fe3e01302cbbe38bd87e4da3"
+  }
+}

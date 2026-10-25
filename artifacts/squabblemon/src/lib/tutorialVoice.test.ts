@@ -4,7 +4,7 @@ import { createHash } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import { existsSync, readFileSync } from 'node:fs';
 import { execFileSync, spawnSync } from 'node:child_process';
-import { playTutorialSequence, rookieRoadCues, tutorialClipsForText, tutorialScript } from './tutorialVoice';
+import { isTutorialClipCurrent, playTutorialSequence, rookieRoadCues, tutorialClipsForText, tutorialScript } from './tutorialVoice';
 import clips from './tutorialVoiceClips.json';
 import manifest from '../../reference/dr-fade-tutorial-audio.json';
 import { MECHANIC_LESSONS } from '../components/tutorialGuidance';
@@ -45,7 +45,7 @@ function environment(t: Parameters<Parameters<typeof test>[1]>[0], ogg = true) {
 
 test('all supplied lines have audio assets and alternate cards/costs cannot announce the wrong recording', () => {
   for (const clip of clips) {
-    assert.ok(tutorialClipsForText(clip.text).length, clip.id);
+    assert.equal(tutorialClipsForText(clip.text).length > 0, isTutorialClipCurrent(clip.id), clip.id);
     for (const extension of ['ogg', 'm4a']) assert.ok(existsSync(new URL(`../../public/audio/voice/dr-fade/tutorial/${clip.id}.${extension}`, import.meta.url)), clip.id);
   }
   assert.deepEqual(tutorialClipsForText('Tap Tin Man. It costs 4 Motion in our target district. Hands is the strength it adds to your side.'), ['generic-card']);
@@ -203,4 +203,24 @@ test('every first-sighting mechanic still maps its displayed explanation to a de
   for (const lesson of Object.values(MECHANIC_LESSONS)) {
     assert.deepEqual(tutorialClipsForText(`${lesson.summary} ${lesson.tacticalTip}`), [`mechanic-${lesson.id}`]);
   }
+});
+
+
+test('obsolete Dr. Fade stat recordings are excluded even when directly requested', async t => {
+  const retired = ['legendary-explanation', 'legendary-squabble', 'r4_choose_card', 'r4_arm_squabble', 'r4_play_squabble'];
+  for (const id of retired) {
+    const take = clips.find(clip => clip.id === id)!;
+    assert.ok(take.text.match(/(?:4 Motion|6 Hands|12 base Hands|6 to 12)/), id);
+    assert.equal(isTutorialClipCurrent(id), false);
+    assert.deepEqual(tutorialClipsForText(take.text), []);
+    assert.equal(tutorialScript(id), '');
+  }
+  const e = environment(t);
+  const stop = playTutorialSequence([...retired, 'legendary-catchphrase']);
+  await settle();
+  assert.equal(e.instances.length, 1, 'old explicit cue IDs must not request audio');
+  assert.match(e.instances[0].src, /legendary-catchphrase\.ogg/);
+  stop();
+  assert.deepEqual(rookieRoadCues('r4_choose_card', { fadeHighlighted: true }), ['expanded-fade-card']);
+  assert.deepEqual(rookieRoadCues('r4_play_squabble', { fadeHighlighted: true }), ['expanded-fade-play', 'expanded-fade-kept']);
 });

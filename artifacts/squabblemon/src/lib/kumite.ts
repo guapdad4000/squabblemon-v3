@@ -29,6 +29,7 @@ export interface KumiteTournament {
   id: string;
   weekLabel: string;
   status: 'registration' | 'active' | 'complete' | 'cancelled';
+  cancellationReason?: 'rules-updated';
   registrationOpensAt: number;
   startsAt: number;
   endsAt: number;

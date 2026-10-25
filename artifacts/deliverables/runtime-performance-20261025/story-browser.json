@@ -1,0 +1,44 @@
+[
+  {
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "initialChapterRequests": 0,
+    "visitedChapters": [
+      "block-party",
+      "red-side-tapes"
+    ],
+    "errors": []
+  },
+  {
+    "viewport": {
+      "width": 1280,
+      "height": 900
+    },
+    "initialChapterRequests": 0,
+    "visitedChapters": [
+      "block-party",
+      "red-side-tapes"
+    ],
+    "errors": []
+  },
+  {
+    "coldNode": "s2-the-morning-after-evidence",
+    "chapters": [
+      "s2-the-morning-after"
+    ]
+  },
+  {
+    "networkFailureRequests": 1,
+    "retryRecovered": true,
+    "reloadRecovery": false
+  },
+  {
+    "staleArtifactRejected": true,
+    "reloadRecovery": true
+  },
+  {
+    "navigationCancellationPreserved": true
+  }
+]

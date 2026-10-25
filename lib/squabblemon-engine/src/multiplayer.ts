@@ -30,13 +30,14 @@ import {
 } from "./gameEngine";
 
 /** Bumped whenever a persisted online room can no longer be replayed safely. */
-export const ONLINE_RULES_VERSION = 63;
+export const ONLINE_RULES_VERSION = 64;
 /**
  * Card values and trigger semantics are part of a reward match's issued
  * snapshot.  Keep this separate from the transport rules version so a
  * cosmetic/network change does not invalidate an in-progress reward fade.
+ * CPU decisions are replayed from the transcript, so policy changes also bump it.
  */
-export const CARD_BALANCE_VERSION = 63;
+export const CARD_BALANCE_VERSION = 64;
 export const TURN_SECONDS = 75;
 export const ROOM_LIFETIME_MS = 30 * 60 * 1000;
 export type Seat = Owner;
@@ -93,7 +94,7 @@ export type OnlineRoom = {
   /** Last gameplay activity, not lobby votes/reads. Absent on older stored rooms. */
   lastPlayedAt?: number;
   winner: Seat | "draw" | null;
-  reason: "districts" | "surrender" | "timeout" | "expired" | "left" | null;
+  reason: "districts" | "surrender" | "timeout" | "expired" | "left" | "rules-updated" | null;
   rematch: Record<Seat, boolean>;
 };
 
@@ -155,6 +156,7 @@ export function joinOnlineRoom(
   member: OnlineMember,
   now: number,
 ): OnlineRoom {
+  room = retireIncompatibleOnlineRoom(room, now);
   if (
     room.members.player.userId === member.userId ||
     room.members.cpu?.userId === member.userId
@@ -168,8 +170,24 @@ export function joinOnlineRoom(
     members: { ...room.members, cpu: { ...member, ready: false } },
   };
 }
+/** Neutral closure preserves the stored snapshot and issued receipts for audit.
+ * It never records a game, settles a rank, or evaluates an old match. */
+export function retireOnlineRoomForRulesUpdate(room: OnlineRoom, now: number): OnlineRoom {
+  if (room.status === 'closed' || (room.status === 'complete' && room.ranked?.settlement)) return room;
+  return { ...room, revision: room.revision + 1, status: 'closed', reason: 'rules-updated',
+    winner: null, closedBy: null, deadline: null, completedAt: null, expiresAt: now,
+    rematch: { player: false, cpu: false },
+    members: { player: { ...room.members.player, ready: false },
+      cpu: room.members.cpu ? { ...room.members.cpu, ready: false } : null } };
+}
+export function retireIncompatibleOnlineRoom(room: OnlineRoom, now: number): OnlineRoom {
+  return room.rulesVersion === ONLINE_RULES_VERSION ? room : retireOnlineRoomForRulesUpdate(room, now);
+}
+
 /** Called under the room lock on every read/write. No browser clock decides a timeout. */
 export function expireOnlineRoom(room: OnlineRoom, now: number): OnlineRoom {
+  // Compatibility must win over both the turn clock and tournament cutoff.
+  if (room.rulesVersion !== ONLINE_RULES_VERSION) return retireIncompatibleOnlineRoom(room, now);
   if (
     room.status === "active" &&
     room.deadline !== null &&
@@ -242,12 +260,10 @@ export function applyOnlineCommand(
   command: OnlineCommand,
   now: number,
 ): OnlineRoom {
-  if (room.rulesVersion !== ONLINE_RULES_VERSION)
-    throw new OnlineError(
-      "This fade uses an older rules version. Create a new room.",
-    );
   if (!room.members[seat])
     throw new OnlineError("Participant is missing.", 403);
+  if (room.rulesVersion !== ONLINE_RULES_VERSION || room.reason === 'rules-updated')
+    return retireIncompatibleOnlineRoom(room, now);
   if (room.kumite && now >= room.kumite.roundDeadline && (room.status === 'active' || room.status === 'waiting'))
     throw new OnlineError('The Kumite round deadline has passed. Return to the bracket.');
   let next = { ...room, revision: room.revision + 1 };
@@ -494,6 +510,8 @@ const publicParticipantState = (state: { owner?: Seat; lane: Lane | null; power:
     ...(state.maryElephant ? { maryElephant: true } : {}),
     moved: state.moved, statuses: state.statuses } : null;
 export type OnlineRoomView = {
+  /** Opaque content token; independent of gameplay revision. */
+  syncToken?: string;
   kumite?: { tournamentId: string; matchId: string; roundDeadline: number; finishedAt?: number };
   ranked?: { opponent: "player" | "bot" | "searching"; queuedAt: number; botAfter: number; rating: number; result: RankedResult | null };
   lockedLanes?: Lane[];
@@ -548,7 +566,9 @@ export function onlineRoomView(
   now: number,
 ): OnlineRoomView {
   const seat = memberSeat(room, userId),
-    match = room.match;
+    // Never run current rules over an incompatible persisted snapshot, even
+    // when returning an already-issued historical ranked receipt.
+    match = room.rulesVersion === ONLINE_RULES_VERSION && room.reason !== 'rules-updated' ? room.match : null;
   const squabbledIds = new Set((match?.effectLog ?? []).filter(event => event.type === 'play' && event.note.includes('SQUABBLE')).map(event => event.cardInstanceId));
   const showCard = (card: CardInstance): PublicCard => ({
     ...(squabbledIds.has(card.instanceId) ? { squabbled: true } : {}),

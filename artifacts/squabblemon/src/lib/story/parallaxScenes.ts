@@ -18,7 +18,7 @@
  * from this file so the director (or a future content tool) can hand off
  * assets against a stable id.
  */
-import { VENUE_BY_ID, type StoryVenueEntry } from "@workspace/squabblemon-engine/story";
+import { VENUE_BY_ID, type StoryVenueEntry } from "./catalog";
 
 export type ParallaxMood = "block" | "rooftop" | "alley" | "studio" | "court" | "dusk" | "night";
 

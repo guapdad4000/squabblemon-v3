@@ -1,0 +1,56 @@
+[
+  {
+    "scenario": "ticket-lost-response",
+    "passed": true,
+    "requests": 2,
+    "commits": 1
+  },
+  {
+    "scenario": "ticket-unmount",
+    "passed": true,
+    "requests": 1,
+    "commits": 1
+  },
+  {
+    "scenario": "ticket-account-change",
+    "passed": true,
+    "requests": 1,
+    "commits": 1
+  },
+  {
+    "scenario": "ticket-newer-success",
+    "passed": true,
+    "requests": 1,
+    "commits": 1
+  },
+  {
+    "scenario": "ticket-newer-terminal",
+    "passed": true,
+    "requests": 1,
+    "commits": 0
+  },
+  {
+    "scenario": "pack-account-change",
+    "passed": true,
+    "requests": 1,
+    "commits": 0
+  },
+  {
+    "scenario": "pack-unmount",
+    "passed": true,
+    "requests": 1,
+    "commits": 0
+  },
+  {
+    "scenario": "pack-newer-request",
+    "passed": true,
+    "requests": 1,
+    "commits": 0
+  },
+  {
+    "scenario": "pack-newer-opening",
+    "passed": true,
+    "requests": 1,
+    "commits": 0
+  }
+]

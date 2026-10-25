@@ -1,0 +1,180 @@
+{
+  "schemaVersion": 1,
+  "policy": "Every frontend local/Netlify build runs the required source and emitted-output gates in release-checks.mjs. The additional tiers below are required when their change triggers apply; a fast build does not satisfy them. Record command, candidate SHA/working-source identity, environment, result and artifact path. Missing prerequisites, failures and unexpected skips are blockers, not passes.",
+  "nativeDatabase": [
+    {
+      "id": "payments",
+      "when": "Money, shared wallet, checkout, refund, provider or transaction changes",
+      "cwd": ".",
+      "command": "node scripts/test-payments-database.mjs",
+      "evidence": "Fresh native PostgreSQL; independent-connection lock, retry and rollback tests; no live payments"
+    },
+    {
+      "id": "flexible-pulls",
+      "when": "Wallet, pack purchase, banner, journal or collection changes",
+      "cwd": ".",
+      "command": "node scripts/test-payments-database.mjs --flex-pulls",
+      "evidence": "Native wallet/collection concurrency, exact retry intent and rollback"
+    },
+    {
+      "id": "monthly-login",
+      "when": "Wallet, daily/monthly reward or account eligibility changes",
+      "cwd": ".",
+      "command": "node scripts/test-payments-database.mjs --monthly-login",
+      "evidence": "Native account reward persistence, idempotency and calendar boundaries"
+    },
+    {
+      "id": "ranked-clout",
+      "when": "Wallet, ranked settlement, room lifecycle or reward cap changes",
+      "cwd": ".",
+      "command": "node scripts/test-payments-database.mjs --ranked-clout",
+      "evidence": "Native settlement/cap concurrency and same-claim retry"
+    },
+    {
+      "id": "online-retirement",
+      "when": "Online synchronization, persisted replay, room rules compatibility, retirement, settlement or Kumite cancellation changes",
+      "cwd": ".",
+      "command": "node scripts/test-payments-database.mjs --online-retirement",
+      "evidence": "Fresh native conditional polling, compact and legacy replay, authorization, retirement, settlement exclusion and concurrent recovery; distinct from real-network browser proof"
+    },
+    {
+      "id": "migration-replay",
+      "when": "Any SQL, schema, native migration, or deployment migration changes",
+      "cwd": ".",
+      "command": "node scripts/test-events-feedback-database.mjs --migrations-only",
+      "evidence": "Fresh native development and Netlify migration histories, transaction/replay verification"
+    },
+    {
+      "id": "social",
+      "when": "Friendships, blocking, invitations, online lobby access or social row-lock changes",
+      "cwd": ".",
+      "command": "node scripts/test-payments-database.mjs --social",
+      "evidence": "Fresh native independent-connection social mutation and authorization checks"
+    },
+    {
+      "id": "mail",
+      "when": "Inbox grants, broadcast delivery, mailbox ownership or receipt concurrency changes",
+      "cwd": ".",
+      "command": "node scripts/test-payments-database.mjs --mail",
+      "evidence": "Fresh native broadcast claim/retry/ownership coverage; generic embedded mail cases are additional evidence"
+    },
+    {
+      "id": "event-feedback",
+      "when": "Events, feedback, patch delivery, outbox or API startup changes",
+      "cwd": ".",
+      "command": "node scripts/test-events-feedback-database.mjs",
+      "evidence": "Full fresh native event/feedback and outbox suite, separate from migration-only replay"
+    }
+  ],
+  "nativePrerequisites": [
+    "Run unprivileged with PostgreSQL initdb, pg_ctl and postgres installed",
+    "Unset DATABASE_URL so each command owns a fresh loopback cluster",
+    "Never substitute PGlite for native concurrency/transaction evidence"
+  ],
+  "browser": [
+    {
+      "id": "payment-store",
+      "when": "Store, checkout, wallet or account changes",
+      "cwd": "artifacts/squabblemon",
+      "command": "node e2e/run-payment-store.mjs",
+      "server": "Starts its isolated payment fixture on PAYMENT_E2E_PORT (default 4319)",
+      "evidence": "Real component/provider UI with deterministic mocked HTTP; no live checkout"
+    },
+    {
+      "id": "shared-wallet-recovery",
+      "when": "Any economy, account, journal, counter or navigation changes",
+      "cwd": "artifacts/squabblemon",
+      "commands": [
+        "node --import tsx e2e/verify-purchase-recovery.ts",
+        "node --import tsx e2e/verify-market-lifetime.ts",
+        "node e2e/verify-corner-recovery.mjs",
+        "node --import tsx e2e/verify-finish-counter.ts"
+      ],
+      "server": "TRAINING_REVIEW_URL for purchase/market (default localhost:4319); REVIEW_BASE_URL for Corner (4319); UI_ORIGIN for FinishCounter (4245). Use a full local Vite fixture server.",
+      "evidence": "Exact intent/key, account isolation, late response and foreign-pending journal recovery; mocked HTTP is not transaction proof"
+    },
+    {
+      "id": "reward-arrival",
+      "when": "Wallet, notifications, daily/monthly rewards or popup blockers change",
+      "cwd": "artifacts/squabblemon",
+      "commands": [
+        "node e2e/verify-bag-arrival.mjs",
+        "node --import tsx e2e/verify-monthly-daily-arrival.mjs",
+        "node e2e/verify-shared-receipts.mjs"
+      ],
+      "server": "UI_ORIGIN (default localhost:4245); local fixture server with complete assets",
+      "evidence": "Responsive, reduced-motion, receipt/dismissal and shared notification semantics"
+    },
+    {
+      "id": "gacha-cinema",
+      "when": "Pack/reveal, film, media, sound or scene lifecycle changes",
+      "cwd": "artifacts/squabblemon",
+      "commands": [
+        "node e2e/verify-pack-finale-video.mjs",
+        "node e2e/verify-gacha-reveal.mjs",
+        "GACHA_EXPECT_PREPARED=1 GACHA_CASE=desktop node e2e/verify-gacha-handoff.mjs",
+        "GACHA_EXPECT_PREPARED=1 GACHA_CASE=phone node e2e/verify-gacha-handoff.mjs"
+      ],
+      "server": "UI_ORIGIN and runner-specific URL overrides; full Vite fixtures/assets",
+      "evidence": "Actual media/print rendering, hidden/error/reduced lifecycle, desktop/phone recorded handoff; run one GPU/browser workload at a time"
+    },
+    {
+      "id": "battle-budget",
+      "when": "Shared CSS, battle layout, rendering or animation changes",
+      "cwd": "artifacts/squabblemon",
+      "command": "node scripts/battle-performance.mjs",
+      "server": "Use harness production-build instructions and unchanged thresholds",
+      "evidence": "Same workload, viewport, cache and renderer; preserve baseline and trace; not physical-device proof"
+    },
+    {
+      "id": "rules-retirement",
+      "when": "Online/PvE rules compatibility, checkpoint/completion recovery or challenge restart changes",
+      "cwd": "artifacts/squabblemon",
+      "server": "PvE: UI_ORIGIN with full local Vite fixtures. Online: ONLINE_RULES_ORIGIN (default localhost:4337), standard Vite BASE_PATH=/squabblemon/ and VITE_E2E_AUTH=true; ONLINE_RULES_BASE_PATH must match.",
+      "evidence": "Real PlayLoop checkpoint/completion409 with preserved challengeRunId and responsive restart; actual Multiplayer retirement focus, 44px reachable recovery and full document navigation across friend/ranked/Kumite. Intercepted local HTTP/destination documents are not real two-client network or authenticated destination proof.",
+      "commands": [
+        "node --import tsx e2e/verify-rules-recovery.ts",
+        "node e2e/verify-online-rules-recovery.mjs"
+      ]
+    },
+    {
+      "id": "rookie-and-deck-journeys",
+      "when": "Onboarding, tutorial, saved decks, coach targeting or shared navigation changes",
+      "cwd": "artifacts/squabblemon",
+      "commands": [
+        "pnpm exec playwright test --config e2e/playwright.config.ts e2e/deck-journey.spec.ts --project=chromium-desktop --project=chromium-phone",
+        "node --import tsx e2e/verify-player-journey.ts"
+      ],
+      "server": "Deck suite owns STORY_TEST_PORT; rookie runner owns ROOKIE_PORT (default4197), with CHROMIUM_EXECUTABLE override. Both require full local assets.",
+      "evidence": "Actual responsive app, saved-deck state/history and one guided battle replayed through the shared verifier; mocked HTTP is not native reward transaction proof"
+    },
+    {
+      "id": "battle-worker",
+      "when": "Worker computation, local battle orchestration or snapshot message changes",
+      "cwd": "artifacts/squabblemon",
+      "command": "node e2e/verify-battle-worker.mjs",
+      "server": "Owns an isolated Vite server and Chromium; run sequentially with other performance browser work",
+      "evidence": "Actual module worker and same-input full engine parity, responsive event loop, bounded worker input; no physical-device or production thermal proof"
+    },
+    {
+      "id": "story-chapter-delivery",
+      "when": "Story content, chapter index, delivery, cache or retry changes",
+      "cwd": "artifacts/squabblemon",
+      "command": "node --import tsx e2e/verify-story-delivery.ts",
+      "server": "Owns isolated port4193; phone and desktop real Story components with mocked account API",
+      "evidence": "Chapter network isolation, cached revisit, deep links, retry, stale revision and cancellation; exact generated content checked separately"
+    }
+  ],
+  "browserPrerequisites": [
+    "Installed compatible Playwright browsers; configure CHROMIUM_EXECUTABLE or runner-specific executable variable when required",
+    "Use isolated fixture/local endpoints; no production accounts or purchases",
+    "Preserve screenshots/JSON/video and actual viewport/cache/renderer details",
+    "A fixture pass does not satisfy real two-client staging, physical phone, screen-reader or interrupted-network release journeys"
+  ],
+  "manualAndHosted": [
+    "Authenticated staging sign-in -> play -> reward -> revisit with exact wallet values",
+    "Two real clients: reconnect, update/version mismatch and interrupted network",
+    "Physical phone/tablet touch, keyboard-only, text enlargement, screen-reader and reduced-motion journeys",
+    "Only call a revision deployed after hosting reports matching ready commit; this inventory never deploys"
+  ]
+}

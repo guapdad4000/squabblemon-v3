@@ -1,0 +1,519 @@
+{
+  "scope": "Synthetic production thermal harness; CSS lifecycle, retained formations, artwork and interactions. Not a performance or physical-device measurement. Finite effect checks explicitly exercise the production CSS cascade; thermal commit is a noop.",
+  "origin": "http://127.0.0.1:4357",
+  "results": [
+    {
+      "case": "390x844",
+      "result": "pass",
+      "count": 72,
+      "bounds": {
+        "pageWidth": 390,
+        "viewportWidth": 390,
+        "viewportHeight": 844,
+        "action": {
+          "top": 779,
+          "bottom": 831,
+          "left": 90,
+          "right": 314,
+          "width": 224,
+          "height": 52,
+          "disabled": false
+        }
+      },
+      "visibility": {
+        "visible": 24,
+        "clipped": 48
+      },
+      "cascade": [
+        {
+          "name": "leading",
+          "animation": "lean-into-lead",
+          "state": "running",
+          "iterations": "1",
+          "idleState": "paused"
+        },
+        {
+          "name": "trailing",
+          "animation": "lean-out-of-lead",
+          "state": "running",
+          "iterations": "1",
+          "idleState": "paused"
+        },
+        {
+          "name": "source-impact",
+          "animation": "source-settle",
+          "state": "running",
+          "iterations": "1",
+          "idleState": "paused"
+        },
+        {
+          "name": "target-impact",
+          "animation": "target-recoil",
+          "state": "running",
+          "iterations": "1",
+          "idleState": "paused"
+        },
+        {
+          "name": "reveal",
+          "animation": "reveal-front",
+          "state": "running",
+          "iterations": "1",
+          "idleState": "paused"
+        }
+      ],
+      "scrolling": [
+        {
+          "lane": 0,
+          "owner": "cpu",
+          "endScrollTop": 318,
+          "initialRowResumed": true
+        },
+        {
+          "lane": 1,
+          "owner": "cpu",
+          "endScrollTop": 318,
+          "initialRowResumed": true
+        },
+        {
+          "lane": 2,
+          "owner": "cpu",
+          "endScrollTop": 318,
+          "initialRowResumed": true
+        },
+        {
+          "lane": 0,
+          "owner": "player",
+          "endScrollTop": 318,
+          "initialRowResumed": true
+        },
+        {
+          "lane": 1,
+          "owner": "player",
+          "endScrollTop": 318,
+          "initialRowResumed": true
+        },
+        {
+          "lane": 2,
+          "owner": "player",
+          "endScrollTop": 318,
+          "initialRowResumed": true
+        }
+      ],
+      "interaction": {
+        "districtCards": 24,
+        "finalFighterInspected": true,
+        "focusReturned": true,
+        "selectedActionEnabled": true,
+        "commitNotExercised": "thermal harness commit is noop"
+      },
+      "errors": []
+    },
+    {
+      "case": "390x844-ten-card-art-and-preferences",
+      "result": "pass",
+      "count": 10,
+      "art": [
+        {
+          "id": "cpu:thermal-0:1:hooper",
+          "portrait": "/assets/battle-portraits/hooper-1ae15c130f88-384.webp",
+          "foil": true,
+          "grain": true,
+          "glare": true,
+          "frameClip": "polygon(min(10px, 8%) 0px, 100% 0px, 100% calc(100% - min(10px, 8%)), calc(100% - min(10px, 8%)) 100%, 0px 100%, 0px min(10px, 8%))"
+        },
+        {
+          "id": "cpu:thermal-0:3:cornball",
+          "portrait": "/assets/battle-portraits/cornball-a1c860abadd1-384.webp",
+          "foil": true,
+          "grain": true,
+          "glare": true,
+          "frameClip": "polygon(min(10px, 8%) 0px, 100% 0px, 100% calc(100% - min(10px, 8%)), calc(100% - min(10px, 8%)) 100%, 0px 100%, 0px min(10px, 8%))"
+        },
+        {
+          "id": "player:thermal-0:0:hooper",
+          "portrait": "/assets/battle-portraits/hooper-1ae15c130f88-384.webp",
+          "foil": true,
+          "grain": true,
+          "glare": true,
+          "frameClip": "polygon(min(10px, 8%) 0px, 100% 0px, 100% calc(100% - min(10px, 8%)), calc(100% - min(10px, 8%)) 100%, 0px 100%, 0px min(10px, 8%))"
+        },
+        {
+          "id": "player:thermal-0:2:cornball",
+          "portrait": "/assets/battle-portraits/cornball-a1c860abadd1-384.webp",
+          "foil": true,
+          "grain": true,
+          "glare": true,
+          "frameClip": "polygon(min(10px, 8%) 0px, 100% 0px, 100% calc(100% - min(10px, 8%)), calc(100% - min(10px, 8%)) 100%, 0px 100%, 0px min(10px, 8%))"
+        },
+        {
+          "id": "cpu:thermal-1:1:hooper",
+          "portrait": "/assets/battle-portraits/hooper-1ae15c130f88-384.webp",
+          "foil": true,
+          "grain": true,
+          "glare": true,
+          "frameClip": "polygon(min(10px, 8%) 0px, 100% 0px, 100% calc(100% - min(10px, 8%)), calc(100% - min(10px, 8%)) 100%, 0px 100%, 0px min(10px, 8%))"
+        },
+        {
+          "id": "player:thermal-1:0:hooper",
+          "portrait": "/assets/battle-portraits/hooper-1ae15c130f88-384.webp",
+          "foil": true,
+          "grain": true,
+          "glare": true,
+          "frameClip": "polygon(min(10px, 8%) 0px, 100% 0px, 100% calc(100% - min(10px, 8%)), calc(100% - min(10px, 8%)) 100%, 0px 100%, 0px min(10px, 8%))"
+        },
+        {
+          "id": "player:thermal-1:2:cornball",
+          "portrait": "/assets/battle-portraits/cornball-a1c860abadd1-384.webp",
+          "foil": true,
+          "grain": true,
+          "glare": true,
+          "frameClip": "polygon(min(10px, 8%) 0px, 100% 0px, 100% calc(100% - min(10px, 8%)), calc(100% - min(10px, 8%)) 100%, 0px 100%, 0px min(10px, 8%))"
+        },
+        {
+          "id": "cpu:thermal-2:1:hooper",
+          "portrait": "/assets/battle-portraits/hooper-1ae15c130f88-384.webp",
+          "foil": true,
+          "grain": true,
+          "glare": true,
+          "frameClip": "polygon(min(10px, 8%) 0px, 100% 0px, 100% calc(100% - min(10px, 8%)), calc(100% - min(10px, 8%)) 100%, 0px 100%, 0px min(10px, 8%))"
+        },
+        {
+          "id": "player:thermal-2:0:hooper",
+          "portrait": "/assets/battle-portraits/hooper-1ae15c130f88-384.webp",
+          "foil": true,
+          "grain": true,
+          "glare": true,
+          "frameClip": "polygon(min(10px, 8%) 0px, 100% 0px, 100% calc(100% - min(10px, 8%)), calc(100% - min(10px, 8%)) 100%, 0px 100%, 0px min(10px, 8%))"
+        },
+        {
+          "id": "player:thermal-2:2:cornball",
+          "portrait": "/assets/battle-portraits/cornball-a1c860abadd1-384.webp",
+          "foil": true,
+          "grain": true,
+          "glare": true,
+          "frameClip": "polygon(min(10px, 8%) 0px, 100% 0px, 100% calc(100% - min(10px, 8%)), calc(100% - min(10px, 8%)) 100%, 0px 100%, 0px min(10px, 8%))"
+        }
+      ],
+      "osReducedAndRestored": true,
+      "appReducedAndRestored": true
+    },
+    {
+      "case": "320x568",
+      "result": "pass",
+      "count": 72,
+      "bounds": {
+        "pageWidth": 320,
+        "viewportWidth": 320,
+        "viewportHeight": 568,
+        "action": {
+          "top": 503,
+          "bottom": 555,
+          "left": 90,
+          "right": 244,
+          "width": 154,
+          "height": 52,
+          "disabled": false
+        }
+      },
+      "visibility": {
+        "visible": 12,
+        "clipped": 60
+      },
+      "cascade": [
+        {
+          "name": "leading",
+          "animation": "lean-into-lead",
+          "state": "running",
+          "iterations": "1",
+          "idleState": "paused"
+        },
+        {
+          "name": "trailing",
+          "animation": "lean-out-of-lead",
+          "state": "running",
+          "iterations": "1",
+          "idleState": "paused"
+        },
+        {
+          "name": "source-impact",
+          "animation": "source-settle",
+          "state": "running",
+          "iterations": "1",
+          "idleState": "paused"
+        },
+        {
+          "name": "target-impact",
+          "animation": "target-recoil",
+          "state": "running",
+          "iterations": "1",
+          "idleState": "paused"
+        },
+        {
+          "name": "reveal",
+          "animation": "reveal-front",
+          "state": "running",
+          "iterations": "1",
+          "idleState": "paused"
+        }
+      ],
+      "scrolling": [
+        {
+          "lane": 0,
+          "owner": "cpu",
+          "endScrollTop": 281,
+          "initialRowResumed": true
+        },
+        {
+          "lane": 1,
+          "owner": "cpu",
+          "endScrollTop": 281,
+          "initialRowResumed": true
+        },
+        {
+          "lane": 2,
+          "owner": "cpu",
+          "endScrollTop": 281,
+          "initialRowResumed": true
+        },
+        {
+          "lane": 0,
+          "owner": "player",
+          "endScrollTop": 281,
+          "initialRowResumed": true
+        },
+        {
+          "lane": 1,
+          "owner": "player",
+          "endScrollTop": 281,
+          "initialRowResumed": true
+        },
+        {
+          "lane": 2,
+          "owner": "player",
+          "endScrollTop": 281,
+          "initialRowResumed": true
+        }
+      ],
+      "interaction": {
+        "districtCards": 24,
+        "finalFighterInspected": true,
+        "focusReturned": true,
+        "selectedActionEnabled": true,
+        "commitNotExercised": "thermal harness commit is noop"
+      },
+      "errors": []
+    },
+    {
+      "case": "844x390",
+      "result": "pass",
+      "count": 72,
+      "bounds": {
+        "pageWidth": 844,
+        "viewportWidth": 844,
+        "viewportHeight": 390,
+        "action": {
+          "top": 336,
+          "bottom": 382,
+          "left": 686,
+          "right": 836,
+          "width": 150,
+          "height": 46,
+          "disabled": false
+        }
+      },
+      "visibility": {
+        "visible": 12,
+        "clipped": 60
+      },
+      "cascade": [
+        {
+          "name": "leading",
+          "animation": "lean-into-lead",
+          "state": "running",
+          "iterations": "1",
+          "idleState": "paused"
+        },
+        {
+          "name": "trailing",
+          "animation": "lean-out-of-lead",
+          "state": "running",
+          "iterations": "1",
+          "idleState": "paused"
+        },
+        {
+          "name": "source-impact",
+          "animation": "source-settle",
+          "state": "running",
+          "iterations": "1",
+          "idleState": "paused"
+        },
+        {
+          "name": "target-impact",
+          "animation": "target-recoil",
+          "state": "running",
+          "iterations": "1",
+          "idleState": "paused"
+        },
+        {
+          "name": "reveal",
+          "animation": "reveal-front",
+          "state": "running",
+          "iterations": "1",
+          "idleState": "paused"
+        }
+      ],
+      "scrolling": [
+        {
+          "lane": 0,
+          "owner": "cpu",
+          "endScrollTop": 573,
+          "initialRowResumed": true
+        },
+        {
+          "lane": 1,
+          "owner": "cpu",
+          "endScrollTop": 573,
+          "initialRowResumed": true
+        },
+        {
+          "lane": 2,
+          "owner": "cpu",
+          "endScrollTop": 573,
+          "initialRowResumed": true
+        },
+        {
+          "lane": 0,
+          "owner": "player",
+          "endScrollTop": 573,
+          "initialRowResumed": true
+        },
+        {
+          "lane": 1,
+          "owner": "player",
+          "endScrollTop": 573,
+          "initialRowResumed": true
+        },
+        {
+          "lane": 2,
+          "owner": "player",
+          "endScrollTop": 573,
+          "initialRowResumed": true
+        }
+      ],
+      "interaction": {
+        "districtCards": 24,
+        "finalFighterInspected": true,
+        "focusReturned": true,
+        "selectedActionEnabled": true,
+        "commitNotExercised": "thermal harness commit is noop"
+      },
+      "errors": []
+    },
+    {
+      "case": "1440x1000",
+      "result": "pass",
+      "count": 72,
+      "bounds": {
+        "pageWidth": 1440,
+        "viewportWidth": 1440,
+        "viewportHeight": 1000,
+        "action": {
+          "top": 931,
+          "bottom": 983,
+          "left": 594,
+          "right": 854,
+          "width": 260,
+          "height": 52,
+          "disabled": false
+        }
+      },
+      "visibility": {
+        "visible": 48,
+        "clipped": 24
+      },
+      "cascade": [
+        {
+          "name": "leading",
+          "animation": "lean-into-lead",
+          "state": "running",
+          "iterations": "1",
+          "idleState": "paused"
+        },
+        {
+          "name": "trailing",
+          "animation": "lean-out-of-lead",
+          "state": "running",
+          "iterations": "1",
+          "idleState": "paused"
+        },
+        {
+          "name": "source-impact",
+          "animation": "source-settle",
+          "state": "running",
+          "iterations": "1",
+          "idleState": "paused"
+        },
+        {
+          "name": "target-impact",
+          "animation": "target-recoil",
+          "state": "running",
+          "iterations": "1",
+          "idleState": "paused"
+        },
+        {
+          "name": "reveal",
+          "animation": "reveal-front",
+          "state": "running",
+          "iterations": "1",
+          "idleState": "paused"
+        }
+      ],
+      "scrolling": [
+        {
+          "lane": 0,
+          "owner": "cpu",
+          "endScrollTop": 154,
+          "initialRowResumed": true
+        },
+        {
+          "lane": 1,
+          "owner": "cpu",
+          "endScrollTop": 154,
+          "initialRowResumed": true
+        },
+        {
+          "lane": 2,
+          "owner": "cpu",
+          "endScrollTop": 154,
+          "initialRowResumed": true
+        },
+        {
+          "lane": 0,
+          "owner": "player",
+          "endScrollTop": 154,
+          "initialRowResumed": true
+        },
+        {
+          "lane": 1,
+          "owner": "player",
+          "endScrollTop": 154,
+          "initialRowResumed": true
+        },
+        {
+          "lane": 2,
+          "owner": "player",
+          "endScrollTop": 154,
+          "initialRowResumed": true
+        }
+      ],
+      "interaction": {
+        "districtCards": 24,
+        "finalFighterInspected": true,
+        "focusReturned": true,
+        "selectedActionEnabled": true,
+        "commitNotExercised": "thermal harness commit is noop"
+      },
+      "errors": []
+    }
+  ]
+}

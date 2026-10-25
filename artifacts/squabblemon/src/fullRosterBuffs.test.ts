@@ -25,7 +25,7 @@ const budgets: Record<string, { cost: number; power: number }> = {
 };
 
 test('all 301 collectible cards retain the approved printed budgets in either authoritative seat', () => {
-  assert.equal(CARD_BALANCE_VERSION, 63);
+  assert.equal(CARD_BALANCE_VERSION, 64);
   assert.equal(cardCatalog.length, 301);
   assert.deepEqual(Object.keys(budgets).sort(), cardCatalog.map(c => c.engineId).sort());
   for (const entry of cardCatalog) {

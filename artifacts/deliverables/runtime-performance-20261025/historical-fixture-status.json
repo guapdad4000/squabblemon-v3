@@ -1,0 +1,11 @@
+{
+  "status": "unavailable-preexisting-fixture",
+  "test": "scripts/src/balanceSweepTelemetry.test.ts:65",
+  "fixture": "scripts/results/squabblehouse-staff-balance/squabblehouse-staff-balance-current-rules.json",
+  "expectedBytes": 57634051,
+  "expectedSha256": "4f55c3f79827da57a777c4d1defb8f073ef796ff77eea67316d7a612ac426574",
+  "localState": "133-byte Git LFS pointer; full historical schema-1 predecessor remains present",
+  "remoteCheck": "Authenticated official repository Git LFS batch download returned object error404 for exact oid",
+  "action": "Kept original archive assertion unchanged. Current classifier tests pass separately; no replacement data fabricated.",
+  "limitations": "The archived saved-report assertion could not pass without its original payload; it is not included among successful current-source checks."
+}

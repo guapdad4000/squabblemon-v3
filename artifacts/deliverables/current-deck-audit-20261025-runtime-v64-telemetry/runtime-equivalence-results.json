@@ -1,0 +1,215 @@
+{
+  "schemaVersion": 2,
+  "status": "complete",
+  "scope": "All exact fresh raw outcome/card/choice/current-classification values compared; no fields silently discarded. Separate worker elapsed/source/plan bookkeeping is excluded.",
+  "legacyRawCounterPolicy": "Exported abilitySuccesses retains its historical JSON-text heuristic and is not a current ability-success rate. Scheduled packed arrays publish current source-attributed evidence instead.",
+  "datasets": {
+    "matrix": {
+      "cases": 17296,
+      "identicalCompleteRows": 17296,
+      "completeRowDifferences": 0,
+      "gameplayMismatchedCases": [],
+      "nonclassificationTelemetryMismatchedCases": [],
+      "currentClassificationMismatchedCases": 0,
+      "currentClassificationDelta": {
+        "baseDirectEffectEvents": 0,
+        "baseNoObservedEffectEvents": 0,
+        "baseNestedEffectEvents": 0,
+        "baseNestedNoObservedEffectEvents": 0,
+        "baseUnknownEvents": 0
+      },
+      "currentClassificationChanges": [],
+      "priorSourceHash": "dfbfacef31b2fe22c0cfb012f0b0013b8b32fb66c4df325c138f320b25956a5b",
+      "sourceHash": "db4e1aae087bbbee4ba1b76abe013eed25625c8a120ac7557fa540a83f8afe19",
+      "priorWorkers": [
+        {
+          "file": "worker-0.jsonl",
+          "sha256": "b00c62c1825a993436dae78098c4dae66407cdaa08827ec27006b7a4b7ff2432"
+        },
+        {
+          "file": "worker-1.jsonl",
+          "sha256": "a3e721e91d26aea7cbb7ae0903d138049cf6dd34073fb7019a756f69a7253f1a"
+        },
+        {
+          "file": "worker-2.jsonl",
+          "sha256": "ccfdbd9d91ef70b0783b77efc8771feb44eee2992276594cba883f47e4735594"
+        },
+        {
+          "file": "worker-3.jsonl",
+          "sha256": "7df5a0f4323c118e6b4e2fecea539e0cd3e4c14c55a033fd36a28fbf82ed5a30"
+        }
+      ],
+      "freshWorkers": [
+        {
+          "file": "worker-0.jsonl",
+          "sha256": "b00c62c1825a993436dae78098c4dae66407cdaa08827ec27006b7a4b7ff2432"
+        },
+        {
+          "file": "worker-1.jsonl",
+          "sha256": "a3e721e91d26aea7cbb7ae0903d138049cf6dd34073fb7019a756f69a7253f1a"
+        },
+        {
+          "file": "worker-2.jsonl",
+          "sha256": "ccfdbd9d91ef70b0783b77efc8771feb44eee2992276594cba883f47e4735594"
+        },
+        {
+          "file": "worker-3.jsonl",
+          "sha256": "7df5a0f4323c118e6b4e2fecea539e0cd3e4c14c55a033fd36a28fbf82ed5a30"
+        }
+      ],
+      "comparedWithRuntimeCandidate": {
+        "cases": 17296,
+        "identicalCompleteRows": 17296,
+        "completeRowDifferences": 0,
+        "gameplayMismatchedCases": [],
+        "nonclassificationTelemetryMismatchedCases": [],
+        "currentClassificationMismatchedCases": 0,
+        "currentClassificationDelta": {
+          "baseDirectEffectEvents": 0,
+          "baseNoObservedEffectEvents": 0,
+          "baseNestedEffectEvents": 0,
+          "baseNestedNoObservedEffectEvents": 0,
+          "baseUnknownEvents": 0
+        },
+        "currentClassificationChanges": []
+      }
+    },
+    "stress": {
+      "cases": 2816,
+      "identicalCompleteRows": 2816,
+      "completeRowDifferences": 0,
+      "gameplayMismatchedCases": [],
+      "nonclassificationTelemetryMismatchedCases": [],
+      "currentClassificationMismatchedCases": 0,
+      "currentClassificationDelta": {
+        "baseDirectEffectEvents": 0,
+        "baseNoObservedEffectEvents": 0,
+        "baseNestedEffectEvents": 0,
+        "baseNestedNoObservedEffectEvents": 0,
+        "baseUnknownEvents": 0
+      },
+      "currentClassificationChanges": [],
+      "priorSourceHash": "dfbfacef31b2fe22c0cfb012f0b0013b8b32fb66c4df325c138f320b25956a5b",
+      "sourceHash": "db4e1aae087bbbee4ba1b76abe013eed25625c8a120ac7557fa540a83f8afe19",
+      "priorWorkers": [
+        {
+          "file": "worker-0.jsonl",
+          "sha256": "5c0c9d18ddd213e77d72ab117adc3d1b78650295e6633720f6efcc5c1db580d5"
+        },
+        {
+          "file": "worker-1.jsonl",
+          "sha256": "0e5527aa051eb2e66f106d8ac42ae9d325ebf3ed9bfc2514ea28b2c4a6e4b184"
+        }
+      ],
+      "freshWorkers": [
+        {
+          "file": "worker-0.jsonl",
+          "sha256": "5c0c9d18ddd213e77d72ab117adc3d1b78650295e6633720f6efcc5c1db580d5"
+        },
+        {
+          "file": "worker-1.jsonl",
+          "sha256": "0e5527aa051eb2e66f106d8ac42ae9d325ebf3ed9bfc2514ea28b2c4a6e4b184"
+        }
+      ],
+      "comparedWithRuntimeCandidate": {
+        "cases": 2816,
+        "identicalCompleteRows": 2814,
+        "completeRowDifferences": 2,
+        "gameplayMismatchedCases": [],
+        "nonclassificationTelemetryMismatchedCases": [],
+        "currentClassificationMismatchedCases": 2,
+        "currentClassificationDelta": {
+          "baseDirectEffectEvents": -2,
+          "baseNoObservedEffectEvents": 2,
+          "baseNestedEffectEvents": 0,
+          "baseNestedNoObservedEffectEvents": 0,
+          "baseUnknownEvents": 0
+        },
+        "currentClassificationChanges": [
+          {
+            "caseIndex": 85,
+            "caseKey": "catalog-probe|probe-delivery|focused-blue-set|seeded-legal|base-pvp-b64-r64-beta-v64-corrected-base-probe-0|0|0|0|b-player|delivery",
+            "side": "cardsA",
+            "cardId": "ptang",
+            "fields": {
+              "baseDirectEffectEvents": {
+                "before": 1,
+                "after": 0
+              },
+              "baseNoObservedEffectEvents": {
+                "before": 1,
+                "after": 2
+              }
+            }
+          },
+          {
+            "caseIndex": 117,
+            "caseKey": "catalog-probe|probe-transplant|focused-blue-set|seeded-legal|base-pvp-b64-r64-beta-v64-corrected-base-probe-0|0|0|0|b-player|transplant",
+            "side": "cardsA",
+            "cardId": "ptang",
+            "fields": {
+              "baseDirectEffectEvents": {
+                "before": 1,
+                "after": 0
+              },
+              "baseNoObservedEffectEvents": {
+                "before": 1,
+                "after": 2
+              }
+            }
+          }
+        ]
+      }
+    },
+    "confirmation": {
+      "cases": 256,
+      "identicalCompleteRows": 256,
+      "completeRowDifferences": 0,
+      "gameplayMismatchedCases": [],
+      "nonclassificationTelemetryMismatchedCases": [],
+      "currentClassificationMismatchedCases": 0,
+      "currentClassificationDelta": {
+        "baseDirectEffectEvents": 0,
+        "baseNoObservedEffectEvents": 0,
+        "baseNestedEffectEvents": 0,
+        "baseNestedNoObservedEffectEvents": 0,
+        "baseUnknownEvents": 0
+      },
+      "currentClassificationChanges": [],
+      "priorSourceHash": "dfbfacef31b2fe22c0cfb012f0b0013b8b32fb66c4df325c138f320b25956a5b",
+      "sourceHash": "db4e1aae087bbbee4ba1b76abe013eed25625c8a120ac7557fa540a83f8afe19",
+      "priorWorkers": [
+        {
+          "file": "worker-0.jsonl",
+          "sha256": "54679d0b688415ab844f4ad5669a7e73900bfe83c65683a8544fb81006584424"
+        }
+      ],
+      "freshWorkers": [
+        {
+          "file": "worker-0.jsonl",
+          "sha256": "54679d0b688415ab844f4ad5669a7e73900bfe83c65683a8544fb81006584424"
+        }
+      ],
+      "comparedWithRuntimeCandidate": {
+        "cases": 256,
+        "identicalCompleteRows": 256,
+        "completeRowDifferences": 0,
+        "gameplayMismatchedCases": [],
+        "nonclassificationTelemetryMismatchedCases": [],
+        "currentClassificationMismatchedCases": 0,
+        "currentClassificationDelta": {
+          "baseDirectEffectEvents": 0,
+          "baseNoObservedEffectEvents": 0,
+          "baseNestedEffectEvents": 0,
+          "baseNestedNoObservedEffectEvents": 0,
+          "baseUnknownEvents": 0
+        },
+        "currentClassificationChanges": []
+      }
+    }
+  },
+  "totalCases": 20368,
+  "gameplayMismatchedCases": 0,
+  "nonclassificationTelemetryMismatchedCases": 0,
+  "currentClassificationMismatchedCases": 0
+}

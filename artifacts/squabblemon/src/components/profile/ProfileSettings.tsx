@@ -11,7 +11,7 @@ import {
   useResetPlayerStoryDevelopment,
   useUpdatePlayerProfile,
 } from '@workspace/api-client-react';
-import { storyContent } from '@workspace/squabblemon-engine/story';
+import { storyIndex as storyContent } from '../../lib/story/catalog';
 import { catalogCardById } from '@workspace/squabblemon-engine/data';
 import { e2eAuthEnabled, useAppClerk } from '../../lib/auth';
 import { basePath } from '../../lib/routing';

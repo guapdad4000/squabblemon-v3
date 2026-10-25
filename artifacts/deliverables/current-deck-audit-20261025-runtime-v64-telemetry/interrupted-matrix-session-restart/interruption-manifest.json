@@ -1,0 +1,55 @@
+{
+  "sourceHash": "db4e1aae087bbbee4ba1b76abe013eed25625c8a120ac7557fa540a83f8afe19",
+  "status": "interrupted-no-worker-receipts",
+  "acceptedCasesFromTheseFiles": 0,
+  "files": [
+    {
+      "file": "progress-0.json",
+      "bytes": 241,
+      "sha256": "4fa64be3776c414f2bbf5ce8e73fa327d4f97c2400b4fbad1e5b6559958f71dd"
+    },
+    {
+      "file": "progress-1.json",
+      "bytes": 241,
+      "sha256": "7e0355ca317b577bd67be3c7e8245db6c8db2dd6f797e92036913bb01c17b957"
+    },
+    {
+      "file": "progress-2.json",
+      "bytes": 241,
+      "sha256": "5658c52ee265bfcde37333efd81970d512cf7f80827e1d4f6dc8d81a8ae5dd46"
+    },
+    {
+      "file": "progress-3.json",
+      "bytes": 241,
+      "sha256": "5491deb7a6cd956bec427bc0144cf21b0c078dcea0e271a42a9b2e7c71783fa7"
+    },
+    {
+      "file": "worker-0.jsonl",
+      "bytes": 4976640,
+      "sha256": "984c78612f67486cfb0ddecfaafb0536d0ce8c00c8d00f9c004874057dba5a8a",
+      "validCompleteJsonLines": 3596,
+      "invalidOrTruncatedLines": 1
+    },
+    {
+      "file": "worker-1.jsonl",
+      "bytes": 4997120,
+      "sha256": "ac71ecd7a7bdde5c92a891154e721ddb21fe28d61689535ae45a06cd2f772aec",
+      "validCompleteJsonLines": 3609,
+      "invalidOrTruncatedLines": 1
+    },
+    {
+      "file": "worker-2.jsonl",
+      "bytes": 3796992,
+      "sha256": "a57d0a4a0374969e1faa64153ac34a9b3e4279b9ab4cf1c3492b54eb785bb3a8",
+      "validCompleteJsonLines": 2739,
+      "invalidOrTruncatedLines": 1
+    },
+    {
+      "file": "worker-3.jsonl",
+      "bytes": 3796992,
+      "sha256": "10d43eff38c7c0bf0e382cecd92a5ed0a340ebee977e6b6358e30f36c340ed92",
+      "validCompleteJsonLines": 2737,
+      "invalidOrTruncatedLines": 1
+    }
+  ]
+}

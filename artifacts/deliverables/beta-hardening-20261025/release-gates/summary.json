@@ -1,0 +1,61 @@
+{
+  "schemaVersion": 1,
+  "status": "passed",
+  "evidenceScope": "local frozen-source verification; isolated mocked HTTP browser, not live account/deployment/device proof",
+  "sourceIdentity": {
+    "baseCommit": "61e9a86c1bd1ba49e350bd4a488671ab37d26ad2",
+    "trackedDiffSha256": "4169d75cf3bd084c0641f45d822ac9330e7f4549205e5b2ea81f103d18226544",
+    "node": "v22.23.3",
+    "verifiedAt": "2026-10-25T08:35:14.176Z"
+  },
+  "frontendTypecheck": {
+    "status": "passed",
+    "exitCode": 0,
+    "command": "/usr/bin/node node_modules/typescript/bin/tsc -p artifacts/squabblemon/tsconfig.json --noEmit",
+    "log": "frontend-typecheck.log"
+  },
+  "requiredTests": 209,
+  "sharedProductionBuild": "shared-production-build.json",
+  "deckBrowser": {
+    "passed": 10,
+    "failed": 0,
+    "log": "deck-journey-current.log"
+  },
+  "rookieBrowser": [
+    {
+      "width": 390,
+      "height": 844,
+      "lateReceiptRecovery": true,
+      "homeSteps": 15,
+      "rivalReadingPauses": 5,
+      "roundRecaps": 3,
+      "plannedRecruit": "landlord",
+      "verified": true,
+      "started": 1,
+      "claims": 1,
+      "errors": [],
+      "unexpectedRequests": []
+    },
+    {
+      "width": 1280,
+      "height": 900,
+      "lateReceiptRecovery": true,
+      "homeSteps": 15,
+      "rivalReadingPauses": 5,
+      "roundRecaps": 3,
+      "plannedRecruit": "landlord",
+      "verified": true,
+      "started": 1,
+      "claims": 1,
+      "errors": [],
+      "unexpectedRequests": []
+    }
+  ],
+  "warnings": [
+    "Vite generic advisory: Story minified chunk575.14kB exceeds500kB; project route budgets passed unchanged."
+  ],
+  "limits": [
+    "No physical-device, screen-reader, two-client hosted or production deployment claim.",
+    "Full Netlify API/function packaging wrapper was not executed by this agent."
+  ]
+}

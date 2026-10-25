@@ -165,9 +165,10 @@
 @media(max-width:700px) {
  .fight-bill .pull-feature__composition { padding:10px 10px 8px; }
  .fight-bill .pull-feature__title { font-size:28px; }
- .fight-bill .pull-feature__previous { left:-25px; }
- .fight-bill .pull-feature__next { right:-25px; }
- .fight-bill .pull-feature__arrows button { width:25px; }
+ /* Keep rotated arrows inside the viewport while preserving a full touch target. */
+ .fight-bill .pull-feature__previous { left:max(-22px,calc((100% - 100vw)/2 + 6px)); }
+ .fight-bill .pull-feature__next { right:max(-22px,calc((100% - 100vw)/2 + 6px)); }
+ .fight-bill .pull-feature__arrows button { width:44px; }
 }
 .fight-bill .pull-feature__cast { flex:1 1 85px; height:85px; }
 .fight-bill .pull-feature__cast figure { height:100%; }

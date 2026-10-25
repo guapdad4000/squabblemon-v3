@@ -40,7 +40,7 @@ export const workshopSuggestions = [
   { cardId: 'sherlock', title: 'Predict, cancel, protect', detail: `An actual Sherlock cancellation gives him +2 Hands and your weakest other character +2. Watson is a ${printed('watson')} who repairs up to 3 actual damage, Protects that ally or a fallback ally, and Protects Sherlock anywhere.`, testCrew: catalogCrew(recommendedWorkshopCrews.detectives) },
   { cardId: 'guap', title: 'Finish with Fire', detail: 'Build friendly characters across the map before GUAP: FINNAM! charges from the whole board and pressures every opposing district.', testCrew: catalogCrew(['guap', 'folks', 'hooper', 'baby']) },
   { cardId: 'bottle-girl', title: 'Chain Poison entries', detail: 'Bottle Girl rewards a later play and discounts your next Poison character. Follow with entry punishment from Cologne Criminal or Nail Tech.', testCrew: catalogCrew(['bottle', 'colognecriminal', 'nail', 'sneaker']) },
-  { cardId: 'inmate-crafty', title: 'Inmates together, pressure wide', detail: `Play another inmate or a real support card first, then follow with ${printed('inmate-crafty')} Crafty for +3 Hands. Spread inmates so Boyfriend can give +3 locally and +3 across districts. Shotta and Roaster add pressure.`, testCrew: catalogCrew(recommendedWorkshopCrews.cellblock) },
+  { cardId: 'inmate-crafty', title: 'Inmates together, pressure wide', detail: `Play another inmate or a real support card first, then follow with ${printed('inmate-crafty')} Crafty for +3 Hands. Spread inmates so Boyfriend can give +3 locally and +2 across districts. Shotta and Roaster add pressure.`, testCrew: catalogCrew(recommendedWorkshopCrews.cellblock) },
   { cardId: 'demario', title: 'Set up the Luigion jump', detail: `Keep the ${printed('demario')} Demario in hand to grow one 2-Hand Mushroom each round in a random open district. Deploy him for two more Mushrooms; full districts are skipped. Keep Rooftop Gardener or Performative Male in hand to grow your other Plant characters. Normal or Powered Luigion consumes it once for +2; SQUABBLE is optional for the powered jump.`, testCrew: catalogCrew(recommendedWorkshopCrews.mushroom) },
   { cardId: 'the-opening-act', title: 'WHO GOT THE AUX', detail: 'Build a complete Music Industry crew: open the show cheaply, spread artists across districts, then turn your managers, DJ and crowd into a finale. Every performer has a different job.', testCrew: catalogCrew(recommendedWorkshopCrews.music) },
   { cardId: 'community-cook', title: 'EVERYBODY EATS', detail: 'Spread your Homeless crew, including Cracked Head. Cook heals up to 4 lost Hands or gives a healthy ally +3, then adds a cleanse, +2 Hands and Protection for a Homeless meal recipient, once per recipient. Foodz keeps his full-board cleanse and serves your weakest Homeless ally in each district +2 Hands and Protection once per side per match. Bus and Cyclist open routes for Cracked Head to finish a crowded district.', testCrew: catalogCrew(recommendedWorkshopCrews.community) },
@@ -52,11 +52,12 @@ export const workshopSuggestions = [
 ] as const;
 
 export function summarizeDeckTest(match: Match, cardId: string): string {
-  const card = catalogCardById[cardId];
+  const card = catalogCardById[cardId] ?? catalogCardByEngineId[cardId];
   if (!card) return 'Your practice fade is saved. Keep experimenting with your gang.';
-  // Instance identity is available even on events whose source snapshot is absent.
-  const instance = [...match.boards.flat(), ...match.playerHand].find(item => item.id === cardId && item.owner === 'player');
-  const play = match.effectLog.find(event => event.type === 'play' && event.owner === 'player' && event.cardInstanceId === instance?.instanceId);
+  // The play receipt survives defeat, transformation and missing source frames.
+  // A surviving board/hand instance is not evidence that a card was played.
+  const play = match.effectLog.find(event => event.type === 'play' && event.owner === 'player'
+    && (event.cardId === card.engineId || event.cardId === card.catalogId));
   if (!play) return `${card.name} was not played in this fade. Try it next time, or swap it for a card you could use earlier.`;
   const ability = match.effectLog.find(event => event.type === 'ability' && event.owner === 'player' && event.cardInstanceId === play.cardInstanceId);
   return ability ? `${card.name}: ${ability.note}` : `${card.name} was played in round ${play.round}. Review its ability condition and compare it with the card you replaced.`;

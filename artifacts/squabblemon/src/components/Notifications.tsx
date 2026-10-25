@@ -7,7 +7,8 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { customFetch, getGetPlayerBootstrapQueryKey, type PlayerBootstrap } from '@workspace/api-client-react';
 import { useLocation } from 'wouter';
 import { ArrowUpRight, Bell, Check, X } from 'lucide-react';
-import { useSafehouseMail } from '../lib/safehouseMail';
+import { useDailyClout, useNotificationBackground, type Daily } from '../lib/notificationBackground';
+export { useDailyClout } from '../lib/notificationBackground';
 import { getAssetUrl } from '../lib/assets';
 import { useCollectionNotices } from '../lib/useCollectionNotices';
 import { CORNER_OFFERS } from '../lib/cornerStore';
@@ -18,7 +19,6 @@ import { GamePopupTitle, GamePopupCopy, GamePopupClose, GamePopupSecondary } fro
 type Section = 'cards' | 'style' | 'bag' | 'mail' | 'missions' | 'challenges' | 'shop' | 'growth' | 'story' | 'profile' | 'friends' | 'friendly fade';
 export type BagResource = 'clout' | 'tickets' | 'shards';
 type Notice = { id: string; section: Section; title: string; href: string; sticky?: boolean; dismissalKey?: string; bagReward?: { kind: BagResource; amount: number } };
-type Daily = { date: string; available: boolean; amount: number; attemptsRemaining: number; resetsAt: string };
 type ReceiptResponse = { ids: string[] };
 type NoticeIds = string | readonly string[];
 const Context = createContext({ notices: [] as Notice[], seen: (_ids: NoticeIds) => {}, dismiss: (_ids: NoticeIds) => {}, has: (_section: string): boolean => false });
@@ -30,9 +30,6 @@ function receiptIds(value: unknown): string[] {
   return value.ids.filter((id): id is string => typeof id === 'string');
 }
 export const useNotifications = () => useContext(Context);
-export function useDailyClout(playerId: string) {
-  return useQuery({ queryKey: ['daily-clout', playerId], queryFn: () => customFetch<Daily>('/api/player/shop/daily-clout'), refetchInterval: 60000, refetchOnWindowFocus: true, retry: 1 });
-}
 export function NotificationProvider({ bootstrap, children }: { bootstrap: PlayerBootstrap; children: ReactNode }) {
   return <PlayerNotifications key={bootstrap.profile.id} bootstrap={bootstrap}>{children}</PlayerNotifications>;
 }
@@ -56,17 +53,14 @@ function PlayerNotifications({ bootstrap, children }: { bootstrap: PlayerBootstr
   }, [p.softCurrency, p.packTickets, p.styleShards]);
   const [read, setRead] = useState(() => readReceipts(key));
   const receipts = useRef(read);
-  const mail = useSafehouseMail(p.id), daily = useDailyClout(p.id), client = useQueryClient();
+  const { mail, daily, account, johnHenry, mythic } = useNotificationBackground(p.id);
+  const client = useQueryClient();
   const remoteReceipts = useQuery({
     queryKey: ['notification-receipts', p.id],
     queryFn: async () => ({ ids: receiptIds(await customFetch<unknown>('/api/player/notifications/receipts')) }),
     staleTime: 30000,
     retry: 2,
   });
-  const account = useQuery({ queryKey: ['account-rewards', p.id], queryFn: () => customFetch<{ date: string; pending: { key: string; title: string }[]; growth: { ready: boolean } }>('/api/player/rewards/account'), refetchInterval: 30000, retry: 1 });
-  const johnHenry = useQuery({ queryKey: ['john-henry-mythic', p.id], queryFn: () => customFetch<{ state: string }>('/api/player/rewards/john-henry'), refetchInterval: 60000, retry: 1 });
-  const mythic = useQuery({ queryKey: ['starter-mythic', p.id], queryFn: () => customFetch<{ state: string }>('/api/player/rewards/starter-mythic'), refetchInterval: 60000, retry: 1 });
-  useEffect(() => { const timer = setInterval(() => { if (document.visibilityState === 'visible') void client.invalidateQueries({ queryKey: getGetPlayerBootstrapQueryKey() }); }, 60000); return () => clearInterval(timer); }, [client]);
   const applyReceipts = useCallback((ids: NoticeIds) => {
     const stored = readReceipts(key);
     const next = [...new Set([...stored, ...receipts.current, ...(typeof ids === 'string' ? [ids] : ids)])];

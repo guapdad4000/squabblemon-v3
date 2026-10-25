@@ -4,9 +4,14 @@ import clips from './tutorialVoiceClips.json';
 
 const PUBLIC_BASE = (import.meta.env?.BASE_URL ?? '/').replace(/\/?$/, '/');
 const normalize = (text: string) => text.replace(/[“”]/g, '"').replace(/[‘’]/g, "'").replace(/\s+/g, ' ').trim().toLowerCase();
-const byId = new Map(clips.map(clip => [clip.id, clip]));
+// Keep the original files/transcripts as provenance. These takes describe the
+// former 4-Motion/6-Hands Dr. Fade; never select or play them for the current card.
+// Neutral expanded battle cues still cover the same guided actions.
+const retiredStatTakes = new Set(['legendary-explanation', 'legendary-squabble', 'r4_choose_card', 'r4_arm_squabble', 'r4_play_squabble']);
+const byId = new Map(clips.filter(clip => !retiredStatTakes.has(clip.id)).map(clip => [clip.id, clip]));
+export const isTutorialClipCurrent = (id: string) => byId.has(id);
 const byText = new Map<string, string>();
-for (const clip of clips) if (!byText.has(normalize(clip.text))) byText.set(normalize(clip.text), clip.id);
+for (const clip of byId.values()) if (!byText.has(normalize(clip.text))) byText.set(normalize(clip.text), clip.id);
 // The UI renamed the opponent; this existing take still describes the same protection rule.
 const protectionTake = byId.get('mechanic-protect');
 if (protectionTake) byText.set(normalize(protectionTake.text.replace('the rival targets', 'The Opps target')), protectionTake.id);

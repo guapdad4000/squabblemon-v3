@@ -1,5 +1,7 @@
 # Archived benchmark data
 
+For the current refresh status and dated report registry, see the [deck evidence index](balance/README.md). Names such as `current-rules` inside an archive mean current when that evidence was generated; they are not moving latest-result pointers. New runs use a new versioned directory and never overwrite these payloads.
+
 The game and its release build do not require the large historical benchmark
 payloads tracked with Git LFS under `scripts/results/`.
 

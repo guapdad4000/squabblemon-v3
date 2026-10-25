@@ -1,0 +1,122 @@
+[
+  {
+    "kind": "friend",
+    "viewport": {
+      "width": 320,
+      "height": 568
+    },
+    "passed": true,
+    "retired": {
+      "status": "closed",
+      "reason": "rules-updated",
+      "revision": 4
+    },
+    "actionColors": {
+      "color": "rgb(27, 26, 16)",
+      "background": "rgb(217, 162, 59)"
+    },
+    "contrast": 7.63962868697424,
+    "headingFocused": true,
+    "repeatedStatusKeepsButtonFocus": true,
+    "destination": "http://127.0.0.1:4337/squabblemon/game/online?tab=friends",
+    "documentRequests": [
+      "http://127.0.0.1:4337/squabblemon/game/online?tab=friends"
+    ],
+    "documentState": {
+      "oldMarker": false,
+      "oldFixture": false,
+      "navigation": "navigate"
+    },
+    "evidence": "Actual Multiplayer with app/auth/query/social providers and authoritative in-memory retirement; intercepted destination document, no live API or authenticated destination claim."
+  },
+  {
+    "kind": "friend",
+    "viewport": {
+      "width": 844,
+      "height": 390
+    },
+    "passed": true,
+    "retired": {
+      "status": "closed",
+      "reason": "rules-updated",
+      "revision": 4
+    },
+    "actionColors": {
+      "color": "rgb(27, 26, 16)",
+      "background": "rgb(217, 162, 59)"
+    },
+    "contrast": 7.63962868697424,
+    "headingFocused": true,
+    "repeatedStatusKeepsButtonFocus": true,
+    "destination": "http://127.0.0.1:4337/squabblemon/game/online?tab=friends",
+    "documentRequests": [
+      "http://127.0.0.1:4337/squabblemon/game/online?tab=friends"
+    ],
+    "documentState": {
+      "oldMarker": false,
+      "oldFixture": false,
+      "navigation": "navigate"
+    },
+    "evidence": "Actual Multiplayer with app/auth/query/social providers and authoritative in-memory retirement; intercepted destination document, no live API or authenticated destination claim."
+  },
+  {
+    "kind": "ranked",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "passed": true,
+    "retired": {
+      "status": "closed",
+      "reason": "rules-updated",
+      "revision": 4
+    },
+    "actionColors": {
+      "color": "rgb(27, 26, 16)",
+      "background": "rgb(217, 162, 59)"
+    },
+    "contrast": 7.63962868697424,
+    "headingFocused": true,
+    "repeatedStatusKeepsButtonFocus": true,
+    "destination": "http://127.0.0.1:4337/squabblemon/game/online",
+    "documentRequests": [
+      "http://127.0.0.1:4337/squabblemon/game/online"
+    ],
+    "documentState": {
+      "oldMarker": false,
+      "oldFixture": false,
+      "navigation": "navigate"
+    },
+    "evidence": "Actual Multiplayer with app/auth/query/social providers and authoritative in-memory retirement; intercepted destination document, no live API or authenticated destination claim."
+  },
+  {
+    "kind": "kumite",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "passed": true,
+    "retired": {
+      "status": "closed",
+      "reason": "rules-updated",
+      "revision": 4
+    },
+    "actionColors": {
+      "color": "rgb(27, 26, 16)",
+      "background": "rgb(217, 162, 59)"
+    },
+    "contrast": 7.63962868697424,
+    "headingFocused": true,
+    "repeatedStatusKeepsButtonFocus": true,
+    "destination": "http://127.0.0.1:4337/squabblemon/game/kumite?view=arena",
+    "documentRequests": [
+      "http://127.0.0.1:4337/squabblemon/game/kumite?view=arena"
+    ],
+    "documentState": {
+      "oldMarker": false,
+      "oldFixture": false,
+      "navigation": "navigate"
+    },
+    "evidence": "Actual Multiplayer with app/auth/query/social providers and authoritative in-memory retirement; intercepted destination document, no live API or authenticated destination claim."
+  }
+]
