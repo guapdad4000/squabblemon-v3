@@ -1,18 +1,21 @@
 /* The Last Waffle: chrome, red vinyl, warm receipt paper, and late-night amber. */
 .house-movie { position:fixed; inset:0; z-index:1100; display:flex; flex-direction:column; background:#000; color:#fff3cf; padding:0; overflow:hidden; }
-.house-movie header,.house-movie footer { position:relative; z-index:4; display:flex; align-items:center; justify-content:space-between; gap:12px; width:100%; padding:max(14px,env(safe-area-inset-top)) max(18px,env(safe-area-inset-right)) 14px max(18px,env(safe-area-inset-left)); flex-shrink:0; background:linear-gradient(180deg,rgba(4,4,6,0.88),transparent); }
-.house-movie footer { margin-top:auto; padding:14px max(18px,env(safe-area-inset-right)) max(16px,env(safe-area-inset-bottom)) max(18px,env(safe-area-inset-left)); background:linear-gradient(0deg,rgba(4,4,6,0.92),transparent); }
+.house-movie header,.house-movie footer { position:relative; z-index:4; display:flex; align-items:center; justify-content:space-between; gap:12px; width:100%; padding:max(14px,env(safe-area-inset-top)) max(18px,env(safe-area-inset-right)) 14px max(18px,env(safe-area-inset-left)); flex-shrink:0; background:linear-gradient(180deg,rgba(4,4,6,0.78),transparent); pointer-events:none; }
+.house-movie header > *,.house-movie footer > * { pointer-events:auto; }
+.house-movie footer { margin-top:auto; justify-content:flex-end; padding:14px max(18px,env(safe-area-inset-right)) max(18px,env(safe-area-inset-bottom)) max(18px,env(safe-area-inset-left)); background:linear-gradient(0deg,rgba(4,4,6,0.82),transparent); }
+.house-movie__title-slash { padding-left:10px; border-left:3px solid #ffd45e; text-shadow:0 2px 10px #000; }
 .house-movie__hud-actions { display:flex; gap:8px; align-items:center; }
-.house-movie header span { color:#e6b452; font:700 10px var(--font-mono); letter-spacing:.16em; text-transform:uppercase; }
-.house-movie h2 { font:900 italic clamp(20px,3vw,34px) var(--font-display); margin:2px 0 0; text-shadow:0 2px 8px #000; }
-.house-movie button { min-height:42px; border:1px solid #967a48; padding:8px 14px; color:#ffdc81; font-weight:700; cursor:pointer; background:rgba(20,16,10,0.82); backdrop-filter:blur(6px); }
+.house-movie header span { color:#ffd45e; font:800 9px var(--font-mono); letter-spacing:.18em; text-transform:uppercase; }
+.house-movie h2 { font:900 italic clamp(20px,3vw,34px)/1 'Hemi Head Italic',var(--font-display); margin:3px 0 0; text-shadow:2px 3px 0 #000; text-transform:uppercase; }
+.house-movie button { min-height:40px; border:2px solid #ffd45e; padding:8px 14px; color:#181107; font:900 italic 13px/1 'Hemi Head Italic',var(--font-display); letter-spacing:.06em; text-transform:uppercase; cursor:pointer; background:linear-gradient(180deg,#ffe07d,#d1931b); clip-path:polygon(8px 0,100% 0,calc(100% - 8px) 100%,0 100%); box-shadow:0 4px 16px #000b; }
+.house-movie__hud-actions button { background:rgba(14,11,8,0.85); color:#ffd45e; border:1px solid rgba(255,212,94,0.65); padding:8px 12px; }
 .house-movie button:focus-visible { outline:3px solid #fff; outline-offset:3px; }
 .house-movie__screen { position:absolute; inset:0; z-index:1; display:grid; place-items:center; width:100vw; height:100dvh; overflow:hidden; background:#000; }
 .house-movie video { width:100vw; height:100dvh; max-height:none; object-fit:cover; }
-.house-movie__start { position:absolute; inset:0; display:flex; flex-direction:column; justify-content:center; align-items:center; gap:18px; padding:24px; text-align:center; background:linear-gradient(0deg,#000b,#0002,#0005); }
+.house-movie__start { position:absolute; inset:0; display:flex; flex-direction:column; justify-content:center; align-items:center; gap:14px; padding:24px; text-align:center; background:radial-gradient(circle at center,rgba(0,0,0,0.25),rgba(0,0,0,0.72)); }
 .house-movie__start p { max-width:440px; font-size:13px; color:#fff2dc; text-shadow:0 2px 4px #000; }
-.house-movie__reel { font:700 10px var(--font-mono); letter-spacing:.3em; text-shadow:0 2px 4px #000; }
-.house-movie button.house-movie__play { background:#f1c052; color:#22170a; padding:17px 28px; border:2px solid #fff0bb; font:900 italic 24px var(--font-display); box-shadow:0 6px 38px #0009; }
+.house-movie__reel { padding:4px 12px; background:rgba(14,10,7,0.85); border:1px solid rgba(255,212,94,0.5); color:#ffd45e; font:800 9px var(--font-mono); letter-spacing:.26em; transform:skewX(-10deg); }
+.house-movie button.house-movie__play { background:linear-gradient(180deg,#ffe484,#d69016); color:#181006; padding:16px 32px; border:2px solid #fff5cb; font:900 italic 22px/1 'Hemi Head Italic',var(--font-display); letter-spacing:.06em; clip-path:polygon(14px 0,100% 0,calc(100% - 14px) 100%,0 100%); box-shadow:0 10px 36px #000d,0 0 24px rgba(255,212,94,0.45); }
 .house-movie footer { padding-top:14px; }
 .house-movie footer p { color:#a89d87; font:600 11px var(--font-mono); }
 .house-atlas .story-atlas__ornament { opacity:.25; }

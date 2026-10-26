@@ -714,82 +714,109 @@ html[data-reduce-motion='true'] .kumite-shortcut { transition: none; }
 }
 .kumite-hub__hero {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: space-between;
   flex-wrap: wrap;
-  gap: 12px 20px;
-  padding: 10px 18px;
-  border-radius: 8px;
-  border: 1px solid rgba(217, 180, 108, 0.38);
-  background: linear-gradient(125deg, rgba(20, 14, 10, 0.92), rgba(11, 8, 6, 0.84));
-  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.62), inset 0 1px 0 rgba(255, 232, 178, 0.16);
+  gap: 10px 18px;
+  padding: 2px 4px 8px;
+  background: none;
+  border: 0;
+  box-shadow: none;
 }
 .kumite-hub__kicker {
   display: inline-flex;
   align-items: center;
   gap: 8px;
   font: 800 10px/1 var(--font-mono, monospace);
-  letter-spacing: 0.18em;
-  color: #e6c483;
+  letter-spacing: 0.2em;
+  color: #ffd45e;
+  text-shadow: 0 2px 6px #000;
 }
 .kumite-hub__kicker > i {
   width: 6px;
   height: 6px;
-  border-radius: 50%;
-  background: #f5b942;
-  box-shadow: 0 0 10px #f5b942;
+  background: #ffd45e;
+  transform: rotate(45deg);
+  box-shadow: 0 0 10px #ffd45e;
 }
 .kumite-hub__title-block h1 {
   display: flex;
   align-items: baseline;
   gap: 10px;
-  margin: 6px 0 0;
-  font: 400 clamp(34px, 4.4vw, 58px)/0.96 var(--font-sign, 'Blzee', sans-serif);
+  margin: 4px 0 0;
+  font: 400 clamp(38px, 4.8vw, 62px)/0.92 var(--font-sign, 'Blzee', sans-serif);
   letter-spacing: 0.02em;
 }
 .kumite-hub__title-lead {
   display: inline-block;
   padding: 4px 10px 3px;
-  font: 700 0.46em/1 'Hemi Head Italic', var(--font-action-sign, sans-serif);
+  font: 700 0.44em/1 'Hemi Head Italic', var(--font-action-sign, sans-serif);
   letter-spacing: 0.12em;
   color: #f6e7c5;
-  background: linear-gradient(180deg, #8f1d16, #490d0a);
-  border: 1px solid #f0c377;
-  transform: translateY(-0.18em) skewX(-8deg);
-  box-shadow: 0 3px 0 #140806;
+  background: linear-gradient(180deg, #a81c14, #520d09);
+  border: 2px solid #ffd45e;
+  transform: translateY(-0.18em) skewX(-10deg);
+  box-shadow: 3px 4px 0 #140806;
 }
 .kumite-hub__title-main {
   font: 400 1.05em/1 var(--font-sign, 'Blzee', sans-serif);
   color: #ffe28a;
-  text-shadow: 0 3px 0 #6b3b0d, 0 6px 0 #170f08, 0 0 22px rgba(245, 189, 78, 0.35);
+  text-shadow: 0 3px 0 #6b3b0d, 0 6px 0 #170f08, 0 0 24px rgba(245, 189, 78, 0.45);
 }
 .kumite-hub__title-dot {
   color: #e43b2f;
   font-family: 'Hemi Head Italic', var(--font-display, sans-serif);
 }
-.kumite-hub__stats {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(84px, auto));
-  gap: 10px;
+.kumite-hub__telemetry {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
 }
-.kumite-hub__stats > div {
-  padding: 8px 14px;
-  border-radius: 5px;
-  border: 1px solid rgba(217, 180, 108, 0.28);
-  background: rgba(10, 7, 5, 0.78);
-  text-align: center;
+.kumite-hub__clock {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 14px;
+  background: linear-gradient(90deg, #3c100d, #160a08);
+  border: 1px solid #ffd45e;
+  border-left: 4px solid #ff5647;
+  clip-path: polygon(8px 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.75);
 }
-.kumite-hub__stats small {
-  display: block;
-  font: 700 8px/1.2 var(--font-mono, monospace);
+.kumite-hub__clock-dot {
+  width: 7px;
+  height: 7px;
+  background: #ff5647;
+  transform: rotate(45deg);
+  box-shadow: 0 0 8px #ff5647;
+}
+.kumite-hub__clock small {
+  font: 800 9px/1 var(--font-mono);
   letter-spacing: 0.12em;
-  color: #bfa57a;
+  color: #f3c878;
 }
-.kumite-hub__stats strong {
-  display: block;
-  margin-top: 4px;
-  font: 700 20px/1 'Hemi Head Italic', var(--font-card-number, sans-serif);
-  color: #ffe59e;
+.kumite-hub__clock strong {
+  font: 700 15px/1 'Hemi Head Italic', var(--font-display);
+  letter-spacing: 0.06em;
+  color: #fff6d1;
+}
+.kumite-hub__record-strip {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 7px 14px;
+  background: rgba(12, 9, 7, 0.86);
+  border: 1px solid rgba(255, 212, 94, 0.42);
+  clip-path: polygon(8px 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
+  font: 800 9px/1 var(--font-mono);
+  letter-spacing: 0.08em;
+  color: #c9b082;
+}
+.kumite-hub__record-strip b {
+  font: 700 14px/1 'Hemi Head Italic', var(--font-display);
+  color: #ffd45e;
+  margin-right: 3px;
 }
 .kumite-mode-grid {
   display: grid;
@@ -798,50 +825,58 @@ html[data-reduce-motion='true'] .kumite-shortcut { transition: none; }
 }
 .kumite-mode-card {
   position: relative;
+  isolation: isolate;
   display: flex;
   flex-direction: column;
+  justify-content: flex-end;
+  min-height: 184px;
   overflow: hidden;
-  border-radius: 8px;
-  border: 1px solid rgba(217, 180, 108, 0.46);
-  background: linear-gradient(165deg, rgba(25, 18, 13, 0.95), rgba(12, 9, 7, 0.96));
-  box-shadow: 0 16px 34px rgba(0, 0, 0, 0.68), inset 0 0 0 1px rgba(255, 232, 180, 0.08);
-  transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+  border: 2px solid rgba(242, 198, 102, 0.65);
+  clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 18px 100%, 0 calc(100% - 18px));
+  background: #0d0907;
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.82);
+  transition: transform 0.16s ease, border-color 0.16s ease, box-shadow 0.16s ease;
 }
 .kumite-mode-card:hover {
-  transform: translateY(-2px);
-  border-color: #f3ce7e;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.78), 0 0 22px rgba(217, 180, 108, 0.18);
+  transform: translateY(-3px) scale(1.005);
+  border-color: #ffe28a;
+  box-shadow: 0 20px 38px rgba(0, 0, 0, 0.9), 0 0 24px rgba(255, 212, 94, 0.28);
 }
 .kumite-mode-card--raid {
-  border-color: rgba(245, 194, 91, 0.68);
+  border-color: #ffd45e;
+}
+.kumite-mode-card--arc {
+  border-color: #ff6b57;
 }
 .kumite-mode-card__media {
-  position: relative;
-  height: 104px;
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  z-index: -1;
   overflow: hidden;
-  border-bottom: 1px solid rgba(217, 180, 108, 0.32);
+  border: 0;
   background: #0d0907;
 }
 .kumite-mode-card__media > img:first-child {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center 24%;
-  filter: contrast(1.06) saturate(1.08);
+  object-position: center 22%;
+  filter: contrast(1.08) saturate(1.12);
 }
 .kumite-mode-card__media::after {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(10, 7, 5, 0.18) 0%, rgba(10, 7, 5, 0.12) 45%, rgba(14, 10, 8, 0.94) 100%);
+  background: linear-gradient(95deg, rgba(8, 6, 5, 0.92) 0%, rgba(10, 7, 5, 0.68) 52%, rgba(10, 7, 5, 0.25) 100%), linear-gradient(180deg, rgba(8, 6, 5, 0.15) 0%, rgba(8, 6, 5, 0.92) 100%);
   pointer-events: none;
 }
 .kumite-mode-card__chibi {
   position: absolute;
-  right: 12px;
-  bottom: 6px;
+  right: 10px;
+  top: 8px;
   z-index: 2;
-  width: 118px;
+  width: 112px;
   height: auto;
   filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.85));
   pointer-events: none;
@@ -854,20 +889,20 @@ html[data-reduce-motion='true'] .kumite-shortcut { transition: none; }
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 5px 10px;
-  border-radius: 3px;
-  border: 1px solid rgba(242, 202, 122, 0.55);
-  background: rgba(14, 10, 8, 0.88);
-  color: #f7dfb0;
+  padding: 4px 10px;
+  border: 1px solid rgba(255, 212, 94, 0.65);
+  background: rgba(12, 8, 6, 0.9);
+  clip-path: polygon(6px 0, 100% 0, calc(100% - 6px) 100%, 0 100%);
+  color: #ffe59e;
   font: 800 9px/1 var(--font-mono, monospace);
-  letter-spacing: 0.1em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 .kumite-mode-card__badge > i {
   width: 6px;
   height: 6px;
-  border-radius: 50%;
   background: #f5b942;
+  transform: rotate(45deg);
   box-shadow: 0 0 8px #f5b942;
 }
 .kumite-mode-card__badge[data-live="true"] > i,
@@ -876,38 +911,42 @@ html[data-reduce-motion='true'] .kumite-shortcut { transition: none; }
   box-shadow: 0 0 9px #ff5647;
 }
 .kumite-mode-card__badge--gold {
-  border-color: #f7ce68;
-  background: linear-gradient(90deg, rgba(64, 41, 10, 0.92), rgba(24, 16, 8, 0.92));
-  color: #ffe89e;
+  border-color: #ffd45e;
+  background: linear-gradient(90deg, rgba(78, 48, 8, 0.95), rgba(24, 16, 8, 0.92));
+  color: #fff0b8;
 }
 .kumite-mode-card__number {
   position: absolute;
-  top: 8px;
+  top: 6px;
   right: 14px;
   z-index: 2;
-  font: 700 26px/1 'Hemi Head Italic', var(--font-card-number, sans-serif);
-  color: rgba(255, 232, 182, 0.34);
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
+  font: 700 34px/1 'Hemi Head Italic', var(--font-card-number, sans-serif);
+  color: rgba(255, 224, 140, 0.28);
+  text-shadow: 0 3px 10px rgba(0, 0, 0, 0.9);
 }
 .kumite-mode-card__body {
+  position: relative;
+  z-index: 2;
   display: flex;
-  flex: 1;
   flex-direction: column;
+  justify-content: flex-end;
   gap: 6px;
-  padding: 11px 16px 13px;
+  padding: 42px 16px 14px;
 }
 .kumite-mode-card__eyebrow {
-  font: 800 9px/1.2 var(--font-mono, monospace);
-  letter-spacing: 0.14em;
-  color: #d7b272;
+  font: 800 9px/1.1 var(--font-mono, monospace);
+  letter-spacing: 0.16em;
+  color: #f0c878;
   text-transform: uppercase;
+  text-shadow: 0 2px 4px #000;
 }
 .kumite-mode-card__body h2 {
   margin: 0;
-  font: 700 clamp(22px, 2.3vw, 30px)/1.04 'Hemi Head Italic', var(--font-action-sign, sans-serif);
+  font: 700 clamp(24px, 2.6vw, 34px)/0.98 'Hemi Head Italic', var(--font-action-sign, sans-serif);
   letter-spacing: 0.02em;
-  color: #fff4dc;
+  color: #fff6e0;
   text-transform: uppercase;
+  text-shadow: 2px 3px 0 #120905, 0 0 18px rgba(0, 0, 0, 0.85);
 }
 .kumite-mode-card__body h2 em {
   font-family: var(--font-sign, 'Blzee', sans-serif);
@@ -915,55 +954,38 @@ html[data-reduce-motion='true'] .kumite-shortcut { transition: none; }
   font-weight: 400;
   color: #ffd978;
 }
-.kumite-mode-card__body > p {
-  margin: 0;
-  font-size: 11.5px;
-  line-height: 1.38;
-  color: #d5c7af;
-}
-.kumite-mode-card__pills,
-.kumite-mode-card__episodes {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 2px;
-}
-.kumite-mode-card__pills > span,
-.kumite-mode-card__episodes > span {
-  padding: 4px 8px;
-  border-radius: 3px;
-  border: 1px solid rgba(215, 180, 108, 0.28);
-  background: rgba(255, 232, 180, 0.06);
-  font: 700 9px/1.1 var(--font-mono, monospace);
-  letter-spacing: 0.06em;
-  color: #ebd3a0;
-}
 .kumite-mode-card__boss-strip {
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin-top: 2px;
+  gap: 6px;
+  margin: 2px 0;
 }
 .kumite-mode-card__boss {
   position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 3px;
 }
 .kumite-mode-card__boss > .kumite-portrait {
-  width: 42px;
-  height: 46px;
-  border-radius: 4px;
-  border-color: rgba(245, 198, 98, 0.65);
+  width: 38px;
+  height: 40px;
+  border: 1.5px solid #ffd45e;
+  transform: skewX(-6deg);
+  box-shadow: 2px 3px 0 #000;
 }
 .kumite-mode-card__boss > small {
-  font: 800 8px/1 var(--font-mono, monospace);
-  color: #f3ce7e;
+  position: absolute;
+  right: -2px;
+  bottom: -2px;
+  padding: 1px 4px;
+  background: #140d08;
+  border: 1px solid #ffd45e;
+  font: 800 7px/1 var(--font-mono, monospace);
+  color: #ffd45e;
 }
 .kumite-mode-card .kumite-entry__actions {
-  margin-top: auto;
-  padding-top: 8px;
+  margin-top: 4px;
+  padding-top: 0;
   width: 100%;
   align-items: stretch;
 }
@@ -975,147 +997,53 @@ html[data-reduce-motion='true'] .kumite-shortcut { transition: none; }
 }
 .kumite-mode-card .kumite-button {
   max-width: none;
-  min-height: 48px;
-  padding: 11px 18px;
+  min-height: 44px;
+  padding: 10px 16px;
+  clip-path: polygon(10px 0, 100% 0, calc(100% - 10px) 100%, 0 100%);
   font: 700 14px/1.1 'Hemi Head Italic', var(--font-action-sign, sans-serif);
-  letter-spacing: 0.05em;
+  letter-spacing: 0.06em;
 }
 .kumite-button--gold {
-  background: linear-gradient(180deg, #df9e28, #b06d10 58%, #784406);
-  border-color: #ffe39a;
+  background: linear-gradient(180deg, #f2b438, #b87110 58%, #784406);
+  border-color: #ffe9a6;
   color: #fff9ea;
 }
-.kumite-button--gold:hover:not(:disabled) {
-  background: linear-gradient(180deg, #f2b238, #c77d16 58%, #8c5109);
+.kumite-button--arc {
+  background: linear-gradient(180deg, #d83a2b, #8f1b12 60%, #520c08);
+  border-color: #ffb89e;
+  color: #fff6ee;
 }
 .kumite-mode-card__cta {
-  flex: 1 1 150px;
+  flex: 1 1 130px;
   justify-content: center;
-  padding: 10px 12px;
-  border: 1px solid rgba(217, 180, 108, 0.42);
-  border-radius: 4px;
-  background: rgba(20, 15, 11, 0.88);
-  font: 700 11px/1.1 'Hemi Head Italic', var(--font-action-sign, sans-serif);
-  letter-spacing: 0.04em;
+  min-height: 42px;
+  padding: 9px 12px;
+  border: 1.5px solid #ffd45e;
+  clip-path: polygon(8px 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
+  background: rgba(16, 11, 8, 0.92);
+  font: 700 12px/1.1 'Hemi Head Italic', var(--font-action-sign, sans-serif);
+  letter-spacing: 0.05em;
   text-transform: uppercase;
 }
 @media (max-width: 860px) {
   .kumite-mode-grid {
     grid-template-columns: 1fr;
-  }
-  .kumite-hub__stats {
-    width: 100%;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 10px;
   }
 }
 @media (max-width: 480px) {
   .kumite-hub__hero {
-    padding: 12px 14px;
+    padding: 0 2px 6px;
   }
-  .kumite-hub__stats > div {
-    padding: 6px 6px;
+  .kumite-mode-card {
+    min-height: 158px;
   }
-  .kumite-hub__stats strong {
-    font-size: 16px;
-  }
-  .kumite-mode-card__media {
-    height: 128px;
+  .kumite-mode-card__body {
+    padding: 34px 14px 12px;
   }
 }
 
-/* Minimal Tournament Countdown Clock + Interactive Layered Mission Roadmap */
-.kumite-hub__clock {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 14px;
-  background: rgba(12, 9, 7, 0.88);
-  border: 1px solid rgba(255, 212, 94, 0.48);
-  border-radius: 999px;
-  box-shadow: 0 0 18px rgba(255, 196, 56, 0.18), inset 0 1px 0 rgba(255, 240, 180, 0.2);
-}
-.kumite-hub__clock-dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: #ffd45e;
-  box-shadow: 0 0 8px #ffd45e;
-}
-.kumite-hub__clock small {
-  font: 700 9px/1 var(--font-mono);
-  letter-spacing: 0.12em;
-  color: #e6c67c;
-}
-.kumite-hub__clock strong {
-  font: 900 14px/1 var(--font-mono);
-  letter-spacing: 0.06em;
-  color: #fff6d1;
-}
-
-.kumite-mission-hud {
-  display: grid;
-  grid-template-columns: minmax(180px, 1.2fr) minmax(160px, 1fr) auto;
-  align-items: center;
-  gap: 14px;
-  margin: 0 14px 14px;
-  padding: 12px 16px;
-  background: linear-gradient(110deg, #1b140c 0%, #0d0a07 60%, #24190a 100%);
-  border: 1px solid #f2c144;
-  border-left: 4px solid #ffd45e;
-  border-radius: 6px;
-  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(255, 232, 150, 0.22);
-}
-.kumite-mission-hud__badge {
-  display: inline-block;
-  padding: 2px 6px;
-  margin-bottom: 4px;
-  background: #ffd45e;
-  color: #171109;
-  font: 900 8px/1.2 var(--font-mono);
-  letter-spacing: 0.12em;
-  border-radius: 2px;
-}
-.kumite-mission-hud__target strong {
-  display: block;
-  font: 900 italic 18px/1.1 var(--font-display);
-  color: #fff4cf;
-  text-transform: uppercase;
-}
-.kumite-mission-hud__target small {
-  display: block;
-  margin-top: 2px;
-  font: 600 11px/1.3 var(--font-sans);
-  color: #d8c295;
-}
-.kumite-mission-hud__progress > div:first-child {
-  display: flex;
-  justify-content: space-between;
-  font: 800 9px/1.2 var(--font-mono);
-  color: #f3d27a;
-  margin-bottom: 5px;
-}
-.kumite-mission-hud__filters {
-  display: flex;
-  gap: 6px;
-}
-.kumite-mission-hud__filters button {
-  min-height: 34px;
-  padding: 6px 10px;
-  background: #17120c;
-  border: 1px solid rgba(242, 193, 68, 0.38);
-  border-radius: 4px;
-  color: #dfc999;
-  font: 800 9px/1 var(--font-mono);
-  letter-spacing: 0.08em;
-  cursor: pointer;
-}
-.kumite-mission-hud__filters button[aria-pressed='true'] {
-  background: #ffd45e;
-  border-color: #fff2b8;
-  color: #181108;
-  box-shadow: 0 0 14px rgba(255, 212, 94, 0.35);
-}
-
+/* Layered Fighting-Game Unlock Road & 3-Form Stance Cut-In */
 .kumite-roadmap__svg-spine {
   position: absolute;
   inset: 0;
@@ -1125,81 +1053,103 @@ html[data-reduce-motion='true'] .kumite-shortcut { transition: none; }
   z-index: 1;
 }
 .kumite-roadmap__svg-spine line {
-  stroke: rgba(255, 212, 94, 0.28);
-  stroke-width: 0.55;
-  stroke-dasharray: 1.4 1.2;
+  stroke: rgba(255, 212, 94, 0.35);
+  stroke-width: 0.65;
+  stroke-dasharray: 1.4 1.1;
 }
 .kumite-roadmap__svg-spine line[data-lit='true'] {
   stroke: #ffd45e;
-  stroke-width: 0.85;
+  stroke-width: 0.95;
   stroke-dasharray: none;
-  filter: drop-shadow(0 0 4px rgba(255, 212, 94, 0.8));
+  filter: drop-shadow(0 0 5px rgba(255, 212, 94, 0.9));
 }
 .kumite-roadmap__node {
   z-index: 2;
-  transition: transform 0.18s ease, box-shadow 0.18s ease, opacity 0.18s ease;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
 }
 .kumite-roadmap__node[data-next='true'] {
   border-color: #ffd45e !important;
-  box-shadow: 0 0 0 2px #ffd45e, 0 0 26px rgba(255, 212, 94, 0.45), 0 14px 28px rgba(0, 0, 0, 0.8) !important;
+  box-shadow: 0 0 0 2px #ffd45e, 0 0 28px rgba(255, 212, 94, 0.55), 0 14px 28px rgba(0, 0, 0, 0.85) !important;
 }
-.kumite-roadmap__node[data-dimmed='true'] {
-  opacity: 0.35;
-  filter: grayscale(0.5);
+.kumite-roadmap__target-flag {
+  position: absolute;
+  top: -11px;
+  left: 8px;
+  z-index: 4;
+  padding: 3px 8px;
+  background: linear-gradient(90deg, #ff4b3a, #b81d13);
+  border: 1.5px solid #ffd45e;
+  color: #fff7df;
+  font: 700 8px/1 'Hemi Head Italic', var(--font-display);
+  letter-spacing: 0.1em;
+  transform: skewX(-10deg);
+  box-shadow: 2px 3px 0 #000;
 }
-
+.kumite-dossier-preview {
+  display: grid !important;
+  grid-template-columns: 96px minmax(0, 1fr) !important;
+  align-items: center;
+  gap: 12px !important;
+  margin: 0 10px 10px !important;
+  padding: 10px 12px !important;
+  background: linear-gradient(115deg, #24120d 0%, #110b08 55%, #2b1d0b 100%) !important;
+  border: 2px solid #ffd45e !important;
+  clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px));
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.85) !important;
+}
 .kumite-dossier-preview__art-wrap {
   position: relative;
+  width: 96px;
+  height: 112px;
   display: grid;
   place-items: center;
-  border-radius: 6px;
   overflow: hidden;
+  border: 1.5px solid rgba(255, 212, 94, 0.65);
+  background: #0b0806;
+}
+.kumite-dossier-preview__art {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover;
 }
 .kumite-dossier-preview__art-wrap[data-stance='squabble'] .kumite-dossier-preview__art {
-  filter: drop-shadow(0 0 14px rgba(255, 196, 56, 0.75)) contrast(1.08);
+  filter: drop-shadow(0 0 14px rgba(255, 196, 56, 0.75)) contrast(1.1);
 }
 .kumite-dossier-preview__art-wrap[data-stance='awakened'] .kumite-dossier-preview__art {
-  filter: drop-shadow(0 0 22px rgba(255, 215, 70, 0.95)) drop-shadow(0 0 8px rgba(255, 90, 54, 0.75)) brightness(1.08) saturate(1.18);
+  filter: drop-shadow(0 0 22px rgba(255, 215, 70, 0.95)) drop-shadow(0 0 8px rgba(255, 90, 54, 0.75)) brightness(1.1) saturate(1.22);
 }
 .kumite-dossier-preview__aura-tag {
   position: absolute;
-  bottom: 6px;
-  left: 6px;
-  right: 6px;
-  padding: 3px 6px;
-  background: rgba(14, 10, 7, 0.88);
-  border: 1px solid rgba(255, 212, 94, 0.55);
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 3px 4px;
+  background: rgba(14, 10, 7, 0.92);
+  border-top: 1px solid #ffd45e;
   color: #ffd45e;
-  font: 800 8px/1.2 var(--font-mono);
+  font: 800 7px/1.1 var(--font-mono);
   text-align: center;
   letter-spacing: 0.08em;
 }
 .kumite-stance-tabs {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
-  margin: 8px 0 10px;
+  gap: 5px;
+  margin: 6px 0;
 }
 .kumite-stance-tabs button {
-  min-height: 32px;
-  padding: 5px 10px;
-  background: #17120d;
-  border: 1px solid rgba(242, 193, 68, 0.4);
-  border-radius: 4px;
+  min-height: 30px;
+  padding: 4px 8px;
+  background: #17110c;
+  border: 1px solid rgba(242, 193, 68, 0.45);
+  clip-path: polygon(6px 0, 100% 0, calc(100% - 6px) 100%, 0 100%);
   color: #e5cf9f;
-  font: 800 9px/1 var(--font-mono);
+  font: 700 9px/1 'Hemi Head Italic', var(--font-display);
+  letter-spacing: 0.04em;
   cursor: pointer;
 }
 .kumite-stance-tabs button[aria-pressed='true'] {
-  background: linear-gradient(180deg, #ffd45e, #c88a1c);
+  background: linear-gradient(180deg, #ffe27a, #c88a1c);
   border-color: #fff3c4;
   color: #191107;
-}
-@media (max-width: 720px) {
-  .kumite-mission-hud {
-    grid-template-columns: 1fr;
-    gap: 10px;
-    margin: 0 10px 12px;
-    padding: 10px 12px;
-  }
 }

@@ -147,33 +147,34 @@ export function Kumite({ bootstrap }: { bootstrap: PlayerBootstrap }) {
       {!inside ? <section className="kumite-entry kumite-hub" aria-label="Kumite mode select">
         <header className="kumite-hub__hero">
           <div className="kumite-hub__title-block">
-            <span className="kumite-hub__kicker"><i /> SELECT YOUR ARENA MODE</span>
+            <span className="kumite-hub__kicker"><i /> UNDERGROUND DOJO ARENA</span>
             <h1><span className="kumite-hub__title-lead">THE</span><span className="kumite-hub__title-main">KUMITE<span className="kumite-hub__title-dot">.</span></span></h1>
           </div>
-          <div className="kumite-hub__clock" aria-label="Next Kumite tournament countdown">
-            <span className="kumite-hub__clock-dot" />
-            <small>{tournament?.status === 'active' ? 'BRACKET LIVE' : 'NEXT BRACKET LOCK'}</small>
-            <strong>{(() => {
-              const safeNow = Number.isFinite(now) ? now : Date.now();
-              const parsedStart = tournament?.startsAt ? (typeof tournament.startsAt === 'number' ? tournament.startsAt : Date.parse(String(tournament.startsAt))) : NaN;
-              const target = Number.isFinite(parsedStart) ? parsedStart : (() => {
-                const d = new Date(safeNow);
-                const days = (6 - d.getUTCDay() + 7) % 7 || 7;
-                return Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate() + days, 2, 0, 0);
-              })();
-              const diff = Math.max(0, target - safeNow);
-              const d = Math.floor(diff / 86_400_000);
-              const h = Math.floor((diff % 86_400_000) / 3_600_000);
-              const m = Math.floor((diff % 3_600_000) / 60_000);
-              const s = Math.floor((diff % 60_000) / 1000);
-              return d > 0 ? `${d}D ${String(h).padStart(2, '0')}H ${String(m).padStart(2, '0')}M` : `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
-            })()}</strong>
-          </div>
-          <div className="kumite-hub__stats" aria-label="Your Kumite record">
-            <div><small>FULL FIGHTS</small><strong>{current?.progression?.completedMatches ?? 0}</strong></div>
-            <div><small>KUMITE WINS</small><strong>{current?.progression?.matchWins ?? 0}</strong></div>
-            <div><small>TITLES</small><strong>{current?.progression?.championships ?? 0}</strong></div>
-            <div><small>UNLOCKED</small><strong>{current?.progression?.rewards.filter(r => r.claimed || r.owned).length ?? 0} / 9</strong></div>
+          <div className="kumite-hub__telemetry">
+            <div className="kumite-hub__clock" aria-label="Next Kumite tournament countdown">
+              <span className="kumite-hub__clock-dot" />
+              <small>{tournament?.status === 'active' ? 'LIVE NOW' : 'BRACKET LOCK'}</small>
+              <strong>{(() => {
+                const safeNow = Number.isFinite(now) ? now : Date.now();
+                const parsedStart = tournament?.startsAt ? (typeof tournament.startsAt === 'number' ? tournament.startsAt : Date.parse(String(tournament.startsAt))) : NaN;
+                const target = Number.isFinite(parsedStart) ? parsedStart : (() => {
+                  const d = new Date(safeNow);
+                  const days = (6 - d.getUTCDay() + 7) % 7 || 7;
+                  return Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate() + days, 2, 0, 0);
+                })();
+                const diff = Math.max(0, target - safeNow);
+                const d = Math.floor(diff / 86_400_000);
+                const h = Math.floor((diff % 86_400_000) / 3_600_000);
+                const m = Math.floor((diff % 3_600_000) / 60_000);
+                const s = Math.floor((diff % 60_000) / 1000);
+                return d > 0 ? `${d}D ${String(h).padStart(2, '0')}H ${String(m).padStart(2, '0')}M` : `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+              })()}</strong>
+            </div>
+            <div className="kumite-hub__record-strip" aria-label="Your Kumite record">
+              <span><b>{current?.progression?.matchWins ?? 0}</b> WINS</span>
+              <span><b>{current?.progression?.championships ?? 0}</b> TITLES</span>
+              <span><b>{current?.progression?.rewards.filter(r => r.claimed || r.owned).length ?? 0}/9</b> FIGHTERS</span>
+            </div>
           </div>
         </header>
 
@@ -183,22 +184,16 @@ export function Kumite({ bootstrap }: { bootstrap: PlayerBootstrap }) {
               <img src={getAssetUrl('assets/kumite/layers/backdrop.webp')} alt="" draggable={false} />
               <img className="kumite-mode-card__chibi" src={getAssetUrl('assets/kumite/dragonfly-vs-chonk-chibi-v1.webp')} alt="" draggable={false} />
               <span className="kumite-mode-card__badge" data-live={tournament?.status === 'active'}>
-                <i /> {tournament?.status === 'active' ? 'FIGHTS LIVE NOW' : tournament ? `${tournament.entrants.length} / ${tournament.capacity} ENTRANTS` : 'WEEKLY PVP BRACKET'}
+                <i /> {tournament?.status === 'active' ? 'FIGHTS LIVE NOW' : tournament ? `${tournament.entrants.length}/${tournament.capacity} LOCKED` : '8-PLAYER PVP'}
               </span>
               <span className="kumite-mode-card__number">01</span>
             </div>
             <div className="kumite-mode-card__body">
-              <span className="kumite-mode-card__eyebrow">TOURNAMENT NIGHT · LIVE PVP</span>
+              <span className="kumite-mode-card__eyebrow">LIVE PVP TOURNAMENT</span>
               <h2>WEEKLY <em>BRACKET</em></h2>
-              <p>Lock your 10-card gang and battle through Quarterfinals, Semifinals, and the Grand Final to claim permanent Kumite fighters.</p>
-              <div className="kumite-mode-card__pills">
-                <span>8 PLAYERS</span>
-                <span>3 ROUNDS</span>
-                <span>{tournament?.weekLabel ?? 'WEEKLY DRAW'}</span>
-              </div>
               <div className="kumite-entry__actions">
                 <button type="button" className="kumite-button" onClick={enterArena}>
-                  <HandFist size={22} aria-hidden="true" />Enter Kumite<ArrowRight size={20} aria-hidden="true" />
+                  <HandFist size={20} aria-hidden="true" />Enter Kumite<ArrowRight size={18} aria-hidden="true" />
                 </button>
               </div>
             </div>
@@ -208,14 +203,13 @@ export function Kumite({ bootstrap }: { bootstrap: PlayerBootstrap }) {
             <div className="kumite-mode-card__media">
               <img src={getAssetUrl('assets/kumite/films/v1/unlock-shonuff-landscape.webp')} alt="" draggable={false} />
               <span className="kumite-mode-card__badge kumite-mode-card__badge--gold">
-                <i /> 5 GRANDMASTERS · 6 ROUNDS
+                <i /> 5 GRANDMASTERS
               </span>
               <span className="kumite-mode-card__number">02</span>
             </div>
             <div className="kumite-mode-card__body">
-              <span className="kumite-mode-card__eyebrow">PUNCH ON PATROL · DOJO FLIP</span>
+              <span className="kumite-mode-card__eyebrow">GAUNTLET · HANDS OVERDRIVE</span>
               <h2>DOJO <em>BOSS RAID</em></h2>
-              <p>Run the 5-tier Grandmaster gauntlet with 3-tier Hands Overdrive, Elemental Perks, and 10+ Hands Awakened card auras. Advances your Kumite unlock road.</p>
               <div className="kumite-mode-card__boss-strip" aria-label="Dojo Boss Lineup">
                 {DOJO_RAID_BOSSES.map(boss => (
                   <div key={boss.id} className="kumite-mode-card__boss" title={boss.name}>
@@ -226,7 +220,7 @@ export function Kumite({ bootstrap }: { bootstrap: PlayerBootstrap }) {
               </div>
               <div className="kumite-entry__actions">
                 <Link href="/game/challenges?game=punch-on-patrol&raid=kumite" className="kumite-button kumite-button--gold">
-                  <HandFist size={22} aria-hidden="true" />Play Dojo Boss Raid<ArrowRight size={20} aria-hidden="true" />
+                  <HandFist size={20} aria-hidden="true" />Play Dojo Boss Raid<ArrowRight size={18} aria-hidden="true" />
                 </Link>
               </div>
             </div>
@@ -236,25 +230,17 @@ export function Kumite({ bootstrap }: { bootstrap: PlayerBootstrap }) {
             <div className="kumite-mode-card__media">
               <img src={getAssetUrl('assets/kumite/films/v1/unlock-glo-landscape.webp')} alt="" draggable={false} />
               <span className="kumite-mode-card__badge kumite-mode-card__badge--crimson">
-                <i /> 8-EPISODE SPECIAL ARC
+                <i /> 8 ANIME EPISODES
               </span>
               <span className="kumite-mode-card__number">03</span>
             </div>
             <div className="kumite-mode-card__body">
-              <span className="kumite-mode-card__eyebrow">FEATURED STORY EXPANSION</span>
+              <span className="kumite-mode-card__eyebrow">STORY SPECIAL · FIND THE GLO</span>
               <h2>BREAK THE <em>BRACKET</em></h2>
-              <p>When Sho'Nuff and two-on-one ambushes shatter the bracket order, find the Glo across 8 authored anime episodes and signature impact cels.</p>
-              <div className="kumite-mode-card__episodes">
-                {BREAK_BRACKET_EPISODES.slice(0, 4).map(ep => <span key={ep}>{ep}</span>)}
-                <span>+4 FINALE EPISODES</span>
-              </div>
               <div className="kumite-entry__actions kumite-entry__actions--row">
-                <Link href="/game/story?season=special-kumite-break-the-bracket" className="kumite-text-button kumite-mode-card__cta">
-                  <span>Play Break the Bracket</span><ArrowRight size={15} aria-hidden="true" />
+                <Link href="/game/story?season=special-kumite-break-the-bracket" className="kumite-button kumite-button--arc">
+                  <HandFist size={18} aria-hidden="true" /><span>Play Break the Bracket</span><ArrowRight size={16} aria-hidden="true" />
                 </Link>
-                <button type="button" className="kumite-text-button kumite-mode-card__cta" onClick={() => { enterArena(); window.setTimeout(() => document.querySelector('.kumite-roadmap')?.scrollIntoView({ behavior: 'smooth' }), 80); }}>
-                  <span>Fighter Film Vault</span><ArrowRight size={15} aria-hidden="true" />
-                </button>
               </div>
             </div>
           </article>
@@ -263,25 +249,19 @@ export function Kumite({ bootstrap }: { bootstrap: PlayerBootstrap }) {
             <div className="kumite-mode-card__media">
               <img src={getAssetUrl('assets/kumite/films/v1/unlock-ptang-landscape.webp')} alt="" draggable={false} />
               <span className="kumite-mode-card__badge">
-                <i /> 9 FIGHTERS · 18 FILM CUTS
+                <i /> 9 FIGHTERS · 18 FILMS
               </span>
               <span className="kumite-mode-card__number">04</span>
             </div>
             <div className="kumite-mode-card__body">
-              <span className="kumite-mode-card__eyebrow">DOJO CAMP · REWARDS & ARCHIVE</span>
+              <span className="kumite-mode-card__eyebrow">UNLOCK ROAD & HALL OF FAME</span>
               <h2>FIGHTER <em>ROAD & FILMS</em></h2>
-              <p>Inspect all 9 Kumite unlock milestones (Bushedo Brown, P. Tang, Chonk Lee, Leroy & more), replay 16:9 / 9:16 fighter films, and review the 52-week Hall of Champions.</p>
-              <div className="kumite-mode-card__pills">
-                <span>9 UNLOCK DOSSIERS</span>
-                <span>HALL OF CHAMPIONS</span>
-                <span>FASTEST FIGHTS</span>
-              </div>
               <div className="kumite-entry__actions kumite-entry__actions--row">
-                <button type="button" className="kumite-text-button kumite-mode-card__cta" onClick={() => { enterArena(); switchTab('history'); }}>
-                  <span>Hall of Champions</span><ArrowRight size={15} aria-hidden="true" />
-                </button>
                 <button type="button" className="kumite-text-button kumite-mode-card__cta" onClick={() => { enterArena(); window.setTimeout(() => document.querySelector('.kumite-roadmap')?.scrollIntoView({ behavior: 'smooth' }), 80); }}>
                   <span>Open Unlock Road</span><ArrowRight size={15} aria-hidden="true" />
+                </button>
+                <button type="button" className="kumite-text-button kumite-mode-card__cta" onClick={() => { enterArena(); switchTab('history'); }}>
+                  <span>Hall of Champions</span><ArrowRight size={15} aria-hidden="true" />
                 </button>
               </div>
             </div>
