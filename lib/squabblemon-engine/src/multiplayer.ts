@@ -86,6 +86,8 @@ export type OnlineRoom = {
   startedAt?: number | null;
   completedAt?: number | null;
   match: Match | null;
+  /** Set when retention removed a finished room's replay archive; metadata remains. */
+  replayPrunedAt?: number;
   openingSeat: Seat;
   activeSeat: Seat;
   turnsEnded: number;

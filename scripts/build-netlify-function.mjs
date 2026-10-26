@@ -15,6 +15,7 @@ await build({
     'artifacts/api-server/src/netlify/functions/deploy-succeeded.mts',
     'artifacts/api-server/src/netlify/functions/patch-delivery.mts',
     'artifacts/api-server/src/netlify/functions/kumite-tick.mts',
+    'artifacts/api-server/src/netlify/functions/room-retention.mts',
   ],
   outdir: 'artifacts/api-server/dist/netlify-functions',
   outExtension: { '.js': '.mjs' },

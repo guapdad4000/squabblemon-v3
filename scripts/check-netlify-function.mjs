@@ -20,6 +20,10 @@ assert.deepEqual(config.path, ['/api', '/api/*']);
 const { default: patchDelivery, config: patchDeliveryConfig } = await import('../artifacts/api-server/dist/netlify-functions/patch-delivery.mjs');
 assert.equal(typeof patchDelivery, 'function');
 assert.equal(patchDeliveryConfig.schedule, '* * * * *');
+const { default: roomRetention, config: roomRetentionConfig } = await import('../artifacts/api-server/dist/netlify-functions/room-retention.mjs');
+assert.equal(typeof roomRetention, 'function');
+assert.equal(roomRetentionConfig.schedule, '23 * * * *');
+assert.equal(roomRetentionConfig.path, undefined, 'Replay retention exposes no player-callable URL.');
 for (const [path, status] of [
   ['/api/healthz', 200],
   ['/api/player/bootstrap', 401],

@@ -136,7 +136,7 @@ try {
   if (onlineRetirementOnly) {
     environment.ONLINE_RETIREMENT_TEST_OWNED = '1';
     await run(process.execPath, ['--import', 'tsx', '--test', '--test-concurrency=1',
-      'src/lib/onlineRetirement.native.test.ts', 'src/lib/onlinePolling.native.test.ts', 'src/lib/playerRewardRoutes.test.ts'], 'Native online synchronization, retirement and replay-compatibility database tests', true, join(root, 'artifacts/api-server'));
+      'src/lib/onlineRetirement.native.test.ts', 'src/lib/onlinePolling.native.test.ts', 'src/lib/onlineRoomRetention.native.test.ts', 'src/lib/playerRewardRoutes.test.ts'], 'Native online synchronization, retirement and replay-compatibility database tests', true, join(root, 'artifacts/api-server'));
   } else if (flexPullsOnly) {
     await run(process.execPath, ['--import', 'tsx', '--test', '--test-concurrency=1', '--experimental-test-isolation=none',
       'src/lib/flexPulls.test.ts', 'src/lib/collectionEconomy.test.ts', 'src/lib/collectionTransactions.test.ts',

@@ -9,6 +9,7 @@ export const nativeDatabaseTestCommands = Object.freeze({
   "flexPulls.test.ts": "node scripts/test-payments-database.mjs --flex-pulls",
   "onlineRetirement.native.test.ts": "node scripts/test-payments-database.mjs --online-retirement",
   "onlinePolling.native.test.ts": "node scripts/test-payments-database.mjs --online-retirement",
+  "onlineRoomRetention.native.test.ts": "node scripts/test-payments-database.mjs --online-retirement",
 });
 
 export function partitionDatabaseTests(names) {
