@@ -1,15 +1,29 @@
-import type { OnlineMember, OnlineRoom } from '@workspace/squabblemon-engine/multiplayer';
-import { emptyKumiteRecords, type KumitePublicFighter, type KumitePublicRecords, type KumiteState } from './kumiteEngine';
+import type { OnlineMember } from '@workspace/squabblemon-engine/multiplayer';
+import { emptyKumiteRecords, type KumitePublicFighter, type KumitePublicRecords, type KumiteRecordProof, type KumiteState } from './kumiteEngine';
 
 const fighter = (member: OnlineMember): KumitePublicFighter => ({ name: member.name,
   hero: member.deck.hero, ...(member.avatarKey ? { avatarKey: member.avatarKey } : {}) });
 
 /** Historical polling needs a completion receipt, not hands, boards or effect logs. */
-export type KumiteRecordRoom = Pick<OnlineRoom, 'status' | 'reason' | 'ranked' | 'gameNumber' |
-  'winner' | 'startedAt' | 'completedAt' | 'kumite'> & {
-    members: { player: Pick<OnlineMember, 'userId'>; cpu: Pick<OnlineMember, 'userId'> | null };
-    match: Pick<NonNullable<OnlineRoom['match']>, 'phase'> | null;
+export type KumiteRecordRoom = KumiteRecordProof;
+
+export function toKumiteRecordProof(room: KumiteRecordRoom): KumiteRecordProof {
+  return {
+    status: room.status,
+    reason: room.reason,
+    ranked: room.ranked,
+    gameNumber: room.gameNumber,
+    winner: room.winner,
+    startedAt: room.startedAt,
+    completedAt: room.completedAt,
+    kumite: room.kumite ? { ...room.kumite } : undefined,
+    members: {
+      player: { userId: room.members.player.userId },
+      cpu: room.members.cpu ? { userId: room.members.cpu.userId } : null,
+    },
+    match: room.match ? { phase: room.match.phase } : null,
   };
+}
 
 /** One public snapshot per warm worker. New settlements and changed frozen presentation miss immediately. */
 export function createKumiteRecordCache(ttlMs = 15_000) {
@@ -39,7 +53,7 @@ export function buildKumiteRecords(states: readonly KumiteState[], rooms: Readon
   const seen = new Set<string>();
   for (const state of states.slice(0, 52)) for (const match of state.rounds.flat()) {
     if (match.status !== 'complete' || match.reason !== 'played' || !match.roomCode || !match.winnerId) continue;
-    const room = rooms.get(match.roomCode);
+    const room = rooms.has(match.roomCode) ? rooms.get(match.roomCode) : (match.recordProof ?? undefined);
     const [host, guest] = match.entrantIds.map(id => state.entrants.find(entry => entry.id === id));
     if (!room || !host || !guest || room.status !== 'complete' || room.reason !== 'districts' ||
       room.match?.phase !== 'complete' || room.ranked || room.gameNumber !== 1 ||

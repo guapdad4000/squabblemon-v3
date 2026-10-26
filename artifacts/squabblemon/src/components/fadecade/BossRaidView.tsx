@@ -432,8 +432,8 @@ export function BossRaidView({
                   data-lethal={isLethalProjection}
                 >
                   {isLethalProjection
-                    ? `★ TIER BREAK READY · −${preview.total} HP`
-                    : `PROJECTED STRIKE · −${preview.total} HP (×${form.multiplier})`}
+                    ? `★ TIER BREAK · −${preview.total} HP`
+                    : `STRIKE −${preview.total} HP (×${form.multiplier})`}
                 </span>
               )}
             </div>

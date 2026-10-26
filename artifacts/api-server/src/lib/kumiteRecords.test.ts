@@ -4,7 +4,7 @@ import { ROOKIE_CORE_IDS, catalogIdsToEngineIds } from '@workspace/squabblemon-e
 import { DISTRICT_CATALOG, getLegalCardCost, validateDistrictSnapshot, type Lane } from '@workspace/squabblemon-engine/gameEngine';
 import { applyOnlineCommand, createOnlineRoom, joinOnlineRoom, type OnlineMember, type OnlineRoom } from '@workspace/squabblemon-engine/multiplayer';
 import { advanceKumite, createKumite, settleKumiteRoom, startKumite, type KumiteState } from './kumiteEngine';
-import { buildKumiteRecords, createKumiteRecordCache } from './kumiteRecords';
+import { buildKumiteRecords, createKumiteRecordCache, toKumiteRecordProof } from './kumiteRecords';
 
 function playedFinal(week: number, durationStep: number, winnerUser = 'private-winner') {
   const monday = Date.UTC(2026, 9, 12 + week * 7);
@@ -109,4 +109,13 @@ test('record cache reuses unchanged polls, immediately refreshes settlements and
   await cache.read(states, 30_001, () => load(states));
   await cache.read(renamed, 30_002, () => load(renamed));
   assert.equal(reads, 6, 'only one snapshot is retained; prior keys are not accumulated');
+});
+
+test('settled matches with embedded compact recordProof survive online_rooms archive pruning', () => {
+  const older = playedFinal(0, 2_000), faster = playedFinal(1, 1_000);
+  older.state.rounds[2][0].recordProof = toKumiteRecordProof(older.room);
+  faster.state.rounds[2][0].recordProof = toKumiteRecordProof(faster.room);
+  const fromRooms = buildKumiteRecords([faster.state, older.state], new Map([[older.code, older.room], [faster.code, faster.room]]));
+  const afterPruning = buildKumiteRecords([faster.state, older.state], new Map());
+  assert.deepEqual(afterPruning, fromRooms, '52-week records survive when expired online_rooms rows are deleted');
 });

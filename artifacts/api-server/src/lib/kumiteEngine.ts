@@ -13,6 +13,11 @@ export const KUMITE_RULES = {
 export type KumiteEntrant = {
   id: string; member: OnlineMember; registeredAt: number; seed: number | null;
 };
+export type KumiteRecordProof = Pick<OnlineRoom, 'status' | 'reason' | 'ranked' | 'gameNumber' |
+  'winner' | 'startedAt' | 'completedAt' | 'kumite'> & {
+    members: { player: Pick<OnlineMember, 'userId'>; cpu: Pick<OnlineMember, 'userId'> | null };
+    match: Pick<NonNullable<OnlineRoom['match']>, 'phase'> | null;
+  };
 export type KumiteMatchState = {
   id: string; round: number; slot: number;
   entrantIds: [string | null, string | null];
@@ -23,6 +28,8 @@ export type KumiteMatchState = {
   /** All issued rooms remain auditable; a drawn game gets a new room. */
   roomCodes: string[];
   startedAt: number | null; completedAt: number | null; durationMs: number | null;
+  /** Compact settled room proof so 52-week records survive online_rooms archive pruning. */
+  recordProof?: KumiteRecordProof | null;
 };
 export type KumiteState = {
   id: string; weekLabel: string; registrationOpensAt: number; startsAt: number; endsAt: number;

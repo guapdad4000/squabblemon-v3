@@ -46,19 +46,24 @@ export async function kumiteProgression(reader: Reader, userId: string): Promise
     progress: progress[reward.metric], claimed: keys.has(reward.id), owned: owned.has(reward.cardId) })) };
 }
 
-/** Newly added roadmap steps honor genuine prior weeks without re-crediting battles. */
-export async function reconcileKumiteRewards(tx: Tx, userId: string, now: number) {
-  await recordEvents(tx, userId, [], now);
+/** Newly added roadmap steps honor genuine prior weeks without re-crediting battles.
+ * Avoids locking player_profiles on read-only polls when no unclaimed milestone is due. */
+export async function reconcileKumiteRewards(tx: Tx, userId: string, now: number): Promise<KumiteProgression> {
+  const progress = await kumiteProgression(tx, userId);
+  if (progress.rewards.every(reward => reward.claimed || reward.progress < reward.required)) {
+    return progress;
+  }
+  return recordEvents(tx, userId, [], now);
 }
 
-async function recordEvents(tx: Tx, userId: string, events: { key: string; reward: CollectionRoadRewardRecord }[], now: number) {
+async function recordEvents(tx: Tx, userId: string, events: { key: string; reward: CollectionRoadRewardRecord }[], now: number): Promise<KumiteProgression> {
   const [profile] = await tx.select().from(playerProfilesTable).where(eq(playerProfilesTable.clerkUserId, userId)).for('update');
-  if (!profile) return;
+  if (!profile) return kumiteProgression(tx, userId);
   for (const event of events) await tx.insert(playerCollectionClaimsTable).values({ clerkUserId: userId,
     milestoneKey: event.key, reward: event.reward, createdAt: new Date(now) }).onConflictDoNothing();
   const progress = await kumiteProgression(tx, userId);
   const newlyEarned = progress.rewards.filter(reward => !reward.claimed && reward.progress >= reward.required);
-  if (!newlyEarned.length) return;
+  if (!newlyEarned.length) return progress;
   for (const reward of newlyEarned) await tx.insert(playerCollectionClaimsTable).values({ clerkUserId: userId,
     milestoneKey: reward.id, reward: { cardId: reward.cardId, kumiteUnlock: { newlyOwned: !profile.ownedCardIds.includes(reward.cardId) } }, createdAt: new Date(now) }).onConflictDoNothing();
   const cardIds = newlyEarned.map(reward => reward.cardId);
@@ -69,6 +74,16 @@ async function recordEvents(tx: Tx, userId: string, events: { key: string; rewar
     cardProgression: { ...Object.fromEntries(cardIds.map(id => [id, { xp: 0, level: 1 }])), ...profile.cardProgression },
     collectionProgress: ownedCardIds.length, updatedAt: new Date(now),
   }).where(eq(playerProfilesTable.clerkUserId, userId));
+  const earnedIds = new Set(newlyEarned.map(reward => reward.id));
+  const ownedSet = new Set(ownedCardIds);
+  return {
+    ...progress,
+    rewards: progress.rewards.map(reward => ({
+      ...reward,
+      claimed: reward.claimed || earnedIds.has(reward.id),
+      owned: reward.owned || ownedSet.has(reward.cardId),
+    })),
+  };
 }
 
 /** Called only after the service validates the server-issued room receipt. */

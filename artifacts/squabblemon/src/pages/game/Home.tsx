@@ -282,7 +282,7 @@ export function Home({ bootstrap, onGuideComplete }: { bootstrap: PlayerBootstra
         onMessage={receive} onReady={() => { setSceneFallback('none'); resetRoomMarkers(markers.current); setMarkersPlaced(false); setSceneReady(true); syncRoom(); sendScene(frame, { type: 'view', view }); }} />
       <div className="safehouse__shade" />
       <header className="safehouse-room-header">
-        <div className="safehouse-room-title"><span><i /> OAKLAND / HOME COURT</span><h1>The <span className="safehouse-room-title__hand">Safe</span>house<span className="safehouse-room-title__period">.</span></h1><p>The city can wait a minute.</p></div>
+        <div className="safehouse-room-title"><h1><span className="safehouse-room-title__lead">THE</span><span className="safehouse-room-title__hand">SAFEHOUSE<span className="safehouse-room-title__period">.</span></span></h1></div>
         <div className="safehouse-room-tools">
           <button type="button" className="room-tool" onClick={() => setNight(value => !value)}
             aria-label={night ? 'Switch to daylight' : 'Switch to late night'} aria-pressed={night}>
@@ -307,9 +307,9 @@ export function Home({ bootstrap, onGuideComplete }: { bootstrap: PlayerBootstra
             </div>
           </div>
         </section> : null}
-        <div className="safehouse-room-hint"><span><Move size={11} /> Drag to look <i /> Pinch or scroll to zoom</span>
-          {claimed > 0 ? <Link href="/game/missions">{claimed} {claimed === 1 ? 'bounty' : 'bounties'} ready <ArrowRight size={11} /></Link> : <span><MousePointer2 size={11} /> Tap an object to explore</span>}
-        </div>
+        {claimed > 0 && <div className="safehouse-room-hint">
+          <Link href="/game/missions">{claimed} {claimed === 1 ? 'bounty' : 'bounties'} ready <ArrowRight size={11} /></Link>
+        </div>}
       </div>
     </div>
   );

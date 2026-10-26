@@ -180,6 +180,20 @@ const AudioEngine = createPackGymAudio({
       animateLoop();
     }
 
+    function installGymRim(material, rimHex, strength = 0.28) {
+      const rimVec = new THREE.Color(rimHex);
+      material.onBeforeCompile = shader => {
+        shader.fragmentShader = shader.fragmentShader.replace(
+          'vec3 outgoingLight = totalDiffuse + totalSpecular + totalEmissiveRadiance;',
+          `float gymFresnel = pow(1.0 - clamp(dot(geometryNormal, geometryViewDir), 0.0, 1.0), 2.85);
+           totalSpecular += vec3(${rimVec.r.toFixed(3)}, ${rimVec.g.toFixed(3)}, ${rimVec.b.toFixed(3)}) * gymFresnel * ${strength.toFixed(3)};
+           vec3 outgoingLight = totalDiffuse + totalSpecular + totalEmissiveRadiance;`
+        );
+      };
+      material.customProgramCacheKey = () => `gym-rim-${rimHex}-${strength}`;
+      return material;
+    }
+
     function buildGymEnvironment() {
       gymGroup = new THREE.Group();
       scene.add(gymGroup);
@@ -189,6 +203,83 @@ const AudioEngine = createPackGymAudio({
       const mount = new THREE.Mesh(mountGeo, mountMat);
       mount.position.set(0, 4.3, 0);
       gymGroup.add(mount);
+
+      const collarRing = new THREE.Mesh(
+        new THREE.TorusGeometry(0.46, 0.032, 10, 28),
+        new THREE.MeshStandardMaterial({ color: 0xf4c45e, metalness: 0.88, roughness: 0.22, emissive: 0x5c3c08, emissiveIntensity: 0.35 })
+      );
+      collarRing.rotation.x = Math.PI / 2;
+      collarRing.position.set(0, 4.12, 0);
+      gymGroup.add(collarRing);
+
+      // Feathered volumetric arena spotlight beams and championship ring halo (0 extra WebGL lights).
+      const beamCanvas = document.createElement("canvas");
+      beamCanvas.width = 256;
+      beamCanvas.height = 256;
+      const bctx = beamCanvas.getContext("2d");
+      const bgrad = bctx.createLinearGradient(0, 0, 0, 256);
+      bgrad.addColorStop(0, "rgba(255, 234, 182, 0)");
+      bgrad.addColorStop(0.14, "rgba(255, 234, 182, 0.34)");
+      bgrad.addColorStop(0.42, "rgba(255, 214, 138, 0.16)");
+      bgrad.addColorStop(0.78, "rgba(255, 194, 108, 0.04)");
+      bgrad.addColorStop(1, "rgba(255, 190, 102, 0)");
+      bctx.fillStyle = bgrad;
+      bctx.fillRect(0, 0, 256, 256);
+      bctx.globalCompositeOperation = "destination-in";
+      const hgrad = bctx.createLinearGradient(0, 0, 256, 0);
+      hgrad.addColorStop(0, "rgba(0,0,0,0)");
+      hgrad.addColorStop(0.28, "rgba(0,0,0,0.82)");
+      hgrad.addColorStop(0.5, "rgba(0,0,0,1)");
+      hgrad.addColorStop(0.72, "rgba(0,0,0,0.82)");
+      hgrad.addColorStop(1, "rgba(0,0,0,0)");
+      bctx.fillStyle = hgrad;
+      bctx.fillRect(0, 0, 256, 256);
+      bctx.globalCompositeOperation = "source-over";
+      const beamTex = new THREE.CanvasTexture(beamCanvas);
+      beamTex.colorSpace = THREE.SRGBColorSpace;
+      const beamMat = new THREE.MeshBasicMaterial({
+        map: beamTex,
+        transparent: true,
+        opacity: 0.62,
+        depthWrite: false,
+        side: THREE.DoubleSide,
+        blending: THREE.AdditiveBlending
+      });
+      for (const [x, y, z, w, h, rotZ] of [
+        [0, 0.85, -1.2, 4.4, 8.2, 0],
+        [-1.35, 0.95, -1.45, 3.2, 8.0, -0.24],
+        [1.35, 0.95, -1.45, 3.2, 8.0, 0.24]
+      ]) {
+        const plane = new THREE.Mesh(new THREE.PlaneGeometry(w, h), beamMat);
+        plane.position.set(x, y, z);
+        plane.rotation.z = rotZ;
+        plane.renderOrder = -1;
+        gymGroup.add(plane);
+      }
+
+      const haloCanvas = document.createElement("canvas");
+      haloCanvas.width = haloCanvas.height = 256;
+      const hctx = haloCanvas.getContext("2d");
+      const rgrad = hctx.createRadialGradient(128, 128, 18, 128, 128, 124);
+      rgrad.addColorStop(0, "rgba(255, 210, 120, 0.18)");
+      rgrad.addColorStop(0.62, "rgba(244, 172, 68, 0.08)");
+      rgrad.addColorStop(1, "rgba(0, 0, 0, 0)");
+      hctx.fillStyle = rgrad;
+      hctx.fillRect(0, 0, 256, 256);
+      hctx.strokeStyle = "rgba(255, 214, 124, 0.28)";
+      hctx.lineWidth = 3;
+      hctx.beginPath();
+      hctx.arc(128, 128, 96, 0, Math.PI * 2);
+      hctx.stroke();
+      const haloTex = new THREE.CanvasTexture(haloCanvas);
+      haloTex.colorSpace = THREE.SRGBColorSpace;
+      const haloMesh = new THREE.Mesh(
+        new THREE.PlaneGeometry(5.6, 5.6),
+        new THREE.MeshBasicMaterial({ map: haloTex, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending })
+      );
+      haloMesh.position.set(0, 0.55, -2.1);
+      haloMesh.renderOrder = -2;
+      gymGroup.add(haloMesh);
     }
 
     function buildHeavyBag() {
@@ -216,13 +307,13 @@ const AudioEngine = createPackGymAudio({
       activeBagDents.clear();
 
       const bagTex = createPunchingBagTexture();
-      heavyBagMaterial = new THREE.MeshStandardMaterial({
+      heavyBagMaterial = installGymRim(new THREE.MeshStandardMaterial({
         map: bagTex,
-        roughness: 0.56,
-        metalness: 0.08,
+        roughness: 0.48,
+        metalness: 0.14,
         emissive: 0x090200,
-        emissiveIntensity: 0.1
-      });
+        emissiveIntensity: 0.12
+      }), 0xffe2a8, 0.34);
 
       heavyBagMesh = new THREE.Mesh(bagGeo, heavyBagMaterial);
       heavyBagMesh.position.set(0, -3.2, 0);
@@ -275,7 +366,7 @@ const AudioEngine = createPackGymAudio({
     }
     function buildGloves() {
       const patchTex = createGlovePatchTexture();
-      const leather = new THREE.MeshStandardMaterial({color:0xa92319,roughness:.48,metalness:.03});
+      const leather = installGymRim(new THREE.MeshStandardMaterial({color:0xb82419,roughness:.42,metalness:.06}), 0xffdfad, 0.28);
       const palm = new THREE.MeshStandardMaterial({color:0x541410,roughness:.7});
       const cuffMat = new THREE.MeshStandardMaterial({color:0x181a1c,roughness:.72});
       const seamMat = new THREE.MeshStandardMaterial({color:0xe9c4a1,roughness:.85});

@@ -10,7 +10,7 @@ import { loadMember } from './onlineMatches';
 import { advanceKumite, createKumite, KUMITE_CAPACITY, kumiteView, kumiteWeek,
   retireIncompatibleKumite, settleKumiteRoom, startKumite, type KumiteState } from './kumiteEngine';
 import { kumiteProgression, reconcileKumiteRewards, recordKumiteChampion, recordKumitePlayedRoom } from './kumiteRewards';
-import { buildKumiteRecords, createKumiteRecordCache, type KumiteRecordRoom } from './kumiteRecords';
+import { buildKumiteRecords, createKumiteRecordCache, toKumiteRecordProof, type KumiteRecordRoom } from './kumiteRecords';
 
 type Tx = Parameters<Parameters<typeof db.transaction>[0]>[0];
 type TournamentRow = typeof kumiteTournamentsTable.$inferSelect;
@@ -18,21 +18,25 @@ const stored = (state: KumiteState) => state as unknown as Record<string, unknow
 const restore = (state: Record<string, unknown>) => state as unknown as KumiteState;
 const recordCache = createKumiteRecordCache();
 
-/** Bound historical polling to compact proofs; full completed battle logs stay in their rooms. */
+/** Bound historical polling to compact proofs; prefer live_state so PostgreSQL avoids detoasting 2.5 MB replay archives. */
+const liveRoomDoc = sql`coalesce(${onlineRoomsTable.liveState}, ${onlineRoomsTable.state})`;
 export const kumiteRecordRoomProof = sql<KumiteRecordRoom>`jsonb_build_object(
-  'status', ${onlineRoomsTable.state}->'status',
-  'reason', ${onlineRoomsTable.state}->'reason',
-  'ranked', ${onlineRoomsTable.state}->'ranked',
-  'gameNumber', ${onlineRoomsTable.state}->'gameNumber',
-  'winner', ${onlineRoomsTable.state}->'winner',
-  'startedAt', ${onlineRoomsTable.state}->'startedAt',
-  'completedAt', ${onlineRoomsTable.state}->'completedAt',
-  'kumite', ${onlineRoomsTable.state}->'kumite',
+  'status', (${liveRoomDoc})->'status',
+  'reason', (${liveRoomDoc})->'reason',
+  'ranked', (${liveRoomDoc})->'ranked',
+  'gameNumber', (${liveRoomDoc})->'gameNumber',
+  'winner', (${liveRoomDoc})->'winner',
+  'startedAt', (${liveRoomDoc})->'startedAt',
+  'completedAt', (${liveRoomDoc})->'completedAt',
+  'kumite', (${liveRoomDoc})->'kumite',
   'members', jsonb_build_object(
-    'player', jsonb_build_object('userId', ${onlineRoomsTable.state}#>'{members,player,userId}'),
-    'cpu', jsonb_build_object('userId', ${onlineRoomsTable.state}#>'{members,cpu,userId}')
+    'player', jsonb_build_object('userId', (${liveRoomDoc})#>'{members,player,userId}'),
+    'cpu', jsonb_build_object('userId', (${liveRoomDoc})#>'{members,cpu,userId}')
   ),
-  'match', jsonb_build_object('phase', ${onlineRoomsTable.state}#>'{match,phase}')
+  'match', jsonb_build_object('phase', coalesce(
+    case when (${liveRoomDoc})->>'status' = 'complete' and (${liveRoomDoc})->>'reason' = 'districts' then '"complete"'::jsonb else null end,
+    ${onlineRoomsTable.state}#>'{match,phase}'
+  ))
 )`;
 
 async function refreshTournament(tx: Tx, row: TournamentRow, now: number): Promise<KumiteState> {
@@ -44,25 +48,28 @@ async function refreshTournament(tx: Tx, row: TournamentRow, now: number): Promi
     }
     state = startKumite(state, seeds, now);
   }
+  const codes = state.status === 'active'
+    ? [...new Set(state.rounds.flat().flatMap(match => match.roomCode && match.status !== 'complete' ? [match.roomCode] : []))]
+    : [];
+  const rooms = codes.length ? await tx.select().from(onlineRoomsTable)
+    .where(inArray(onlineRoomsTable.code, codes)).orderBy(asc(onlineRoomsTable.code)).for('update') : [];
+  const roomsByCode = new Map(rooms.map(roomRow => [roomRow.code, roomRow]));
   if (state.status === 'active') {
     // Compatibility is a preflight across the bracket, before any result or
     // reward is settled. All these rooms are already locked by currentTransaction.
-    const codes = state.rounds.flat().flatMap(match => match.roomCode && match.status !== 'complete' ? [match.roomCode] : []);
-    const rooms = codes.length ? await tx.select().from(onlineRoomsTable)
-      .where(inArray(onlineRoomsTable.code, codes)).orderBy(asc(onlineRoomsTable.code)).for('update') : [];
-    for (const row of rooms) {
-      const room = restoreOnlineRoom(row.state);
-      const match = state.rounds.flat().find(item => item.roomCode === row.code);
+    for (const roomRow of rooms) {
+      const room = restoreOnlineRoom(roomRow.state);
+      const match = state.rounds.flat().find(item => item.roomCode === roomRow.code);
       if (!match || room.kumite?.tournamentId !== state.id || room.kumite?.matchId !== match.id)
         throw new Error('Kumite room receipt mismatch.');
       state = retireIncompatibleKumite(state, room);
     }
     if (state.status === 'cancelled') {
-      for (const row of rooms) {
-        const previous = restoreOnlineRoom(row.state);
+      for (const roomRow of rooms) {
+        const previous = restoreOnlineRoom(roomRow.state);
         const retired = retireOnlineRoomForRulesUpdate(previous, now);
         if (retired !== previous) await tx.update(onlineRoomsTable).set({ state: storeOnlineRoom(retired),
-          updatedAt: new Date(now), expiresAt: new Date(now) }).where(eq(onlineRoomsTable.id, row.id));
+          updatedAt: new Date(now), expiresAt: new Date(now) }).where(eq(onlineRoomsTable.id, roomRow.id));
       }
     }
   }
@@ -74,8 +81,7 @@ async function refreshTournament(tx: Tx, row: TournamentRow, now: number): Promi
       // from that latest state before marking subsequent rooms' check-ins.
       const match = state.rounds.flat().find(item => item.id === matchId)!;
       if (!match.roomCode || match.status === 'complete') continue;
-      const [roomRow] = await tx.select().from(onlineRoomsTable)
-        .where(eq(onlineRoomsTable.code, match.roomCode)).for('update');
+      const roomRow = roomsByCode.get(match.roomCode);
       if (!roomRow) continue;
       const oldRoom = restoreOnlineRoom(roomRow.state);
       if (oldRoom.kumite?.tournamentId !== state.id || oldRoom.kumite?.matchId !== match.id)
@@ -93,6 +99,10 @@ async function refreshTournament(tx: Tx, row: TournamentRow, now: number): Promi
         expiresAt: new Date(room.expiresAt),
       }).where(eq(onlineRoomsTable.id, roomRow.id));
       state = settleKumiteRoom(state, match.id, match.roomCode, room);
+      const settledMatch = state.rounds.flat().find(item => item.id === matchId);
+      if (settledMatch && settledMatch.status === 'complete' && settledMatch.reason === 'played') {
+        settledMatch.recordProof = toKumiteRecordProof(room);
+      }
       await recordKumitePlayedRoom(tx, state, match, match.roomCode, room, now);
     }
     state = advanceKumite(state, now);
@@ -148,18 +158,23 @@ async function currentTransaction<T>(action: (tx: Tx, state: KumiteState, now: n
 export function currentKumite(userId: string | null) {
   return currentTransaction(async (tx, state, now) => currentView(tx, state, userId, now));
 }
+/** Reconcile tournament deadlines and champion archives without running the 52-week records scan. */
+export function reconcileKumite() {
+  return currentTransaction(async (_tx, state) => ({
+    tournament: { id: state.id, status: state.status },
+  }));
+}
 async function currentView(tx: Tx, state: KumiteState, userId: string | null, now: number) {
   const view = kumiteView(state, userId, now);
   if (userId) {
-    await reconcileKumiteRewards(tx, userId, now);
-    view.progression = await kumiteProgression(tx, userId);
+    view.progression = await reconcileKumiteRewards(tx, userId, now);
   }
   const rows = await tx.select({ state: kumiteTournamentsTable.state }).from(kumiteTournamentsTable)
     .orderBy(desc(kumiteTournamentsTable.startsAt)).limit(52);
   const states = rows.map(row => restore(row.state));
   view.records = await recordCache.read(states, now, async () => {
     const codes = [...new Set(states.flatMap(item => item.rounds.flat().flatMap(match =>
-      match.status === 'complete' && match.reason === 'played' && match.roomCode ? [match.roomCode] : [])))];
+      match.status === 'complete' && match.reason === 'played' && match.roomCode && !match.recordProof ? [match.roomCode] : [])))];
     const roomRows = codes.length ? await tx.select({ code: onlineRoomsTable.code, proof: kumiteRecordRoomProof })
       .from(onlineRoomsTable).where(inArray(onlineRoomsTable.code, codes)) : [];
     return buildKumiteRecords(states, new Map(roomRows.map(row => [row.code, row.proof])));
@@ -227,8 +242,9 @@ export function enterKumiteMatch(userId: string) {
   });
 }
 export async function kumiteWinners() {
-  // Reconcile a previously finished week before showing its immutable archive.
-  await currentKumite(null);
+  // Reconcile a previously finished week before showing its immutable archive,
+  // without running the 52-week records aggregation.
+  await reconcileKumite();
   const rows = await db.select().from(kumiteWinnersTable).orderBy(desc(kumiteWinnersTable.wonAt)).limit(52);
   return { winners: rows.map(row => ({ tournamentId: row.tournamentId, weekLabel: row.weekLabel,
     ...row.champion, wonAt: row.wonAt.getTime() })), serverTime: Date.now() };

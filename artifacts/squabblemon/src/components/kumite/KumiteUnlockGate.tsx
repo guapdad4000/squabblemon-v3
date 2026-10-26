@@ -40,7 +40,7 @@ export function KumiteUnlockGate({ bootstrap }: { bootstrap: PlayerBootstrap }) 
     setPending(null);
   }, [pending, enabled, reward, query.dataUpdatedAt, bootstrap.profile.id]);
   useEffect(() => {
-    const next = query.data?.receipts[0];
+    const next = query.data?.receipts?.[0];
     if (!enabled || reward || pending || !next || claiming || document.querySelector('dialog[open], [role="dialog"][aria-modal="true"]')) return;
     const attempt = `${next.id}:${query.dataUpdatedAt}`;
     if (attempted.current === attempt) return;
@@ -52,7 +52,7 @@ export function KumiteUnlockGate({ bootstrap }: { bootstrap: PlayerBootstrap }) 
         setPending(receipt);
         void client.invalidateQueries({ queryKey: getGetPlayerBootstrapQueryKey() });
       }
-      client.setQueryData<{ receipts: KumiteFilmReceipt[] }>(key, previous => previous
+      client.setQueryData<{ receipts: KumiteFilmReceipt[] }>(key, previous => previous?.receipts
         ? { receipts: previous.receipts.filter(item => item.id !== next.id) } : previous);
     }).catch(() => { /* No receipt was confirmed; retry on the next server refresh. */ })
       .finally(() => { if (mounted.current) setClaiming(false); });

@@ -31,6 +31,12 @@ export function installFightingGameStyle({renderer,scene,camera,screenMaterials=
           // Retain metallic reflections with firmer highlight transitions.
           float sqSpec=dot(totalSpecular,vec3(0.2126,0.7152,0.0722));
           totalSpecular *= mix(0.76,1.18,smoothstep(0.16,0.28,sqSpec));
+          // Grazing-angle Fresnel rim light separates dark leather, wood and cabinet silhouettes on all GPU tiers.
+          float sqNdotV = clamp(dot(geometryNormal, geometryViewDir), 0.0, 1.0);
+          float sqFresnel = pow(1.0 - sqNdotV, 3.1);
+          float sqRimMask = smoothstep(-0.15, 0.45, geometryNormal.y);
+          vec3 sqRimTint = mix(vec3(0.46, 0.74, 0.96), vec3(1.0, 0.83, 0.52), smoothstep(0.28, 0.92, sqLight));
+          totalSpecular += sqRimTint * sqFresnel * sqRimMask * (0.16 + 0.20 * (1.0 - roughnessFactor));
           vec3 outgoingLight = totalDiffuse + totalSpecular + totalEmissiveRadiance;
         `);
       };
@@ -69,8 +75,9 @@ export function installFightingGameStyle({renderer,scene,camera,screenMaterials=
         vec3 color=texture2D(colorMap,vUv).rgb;
         vec3 n=texture2D(normalMap,vUv).rgb*2.0-1.0;
         float center=viewDepth(vUv);
-        // A constant pixel width keeps cards and the bag legible at every camera distance.
-        vec2 stepUV=vec2(0.85*pixelRatio)/resolution;
+        // Depth-scaled ink keeps foreground props bold while distant shelf spines stay clean.
+        float depthScale=clamp(5.0/max(center,2.4),0.70,1.24);
+        vec2 stepUV=vec2(0.85*pixelRatio*depthScale)/resolution;
         float depthEdge=0.0,normalEdge=0.0;
         for(int x=-1;x<=1;x++){
           for(int y=-1;y<=1;y++){
@@ -83,16 +90,21 @@ export function installFightingGameStyle({renderer,scene,camera,screenMaterials=
             normalEdge=max(normalEdge,length(n-other));
           }
         }
-        float ink=max(smoothstep(0.012,0.03,depthEdge),smoothstep(0.43,0.75,normalEdge));
-        color=mix(color,vec3(0.005,0.003,0.009),ink*0.60);
-        // A restrained glow around practical lights, without another fullscreen pass.
+        // A restrained glow around practical lights, applied before ink so outlines stay crisp.
         vec3 glow=vec3(0.0);
         for(int i=0;i<8;i++){
           float a=float(i)*0.785398;
           vec2 offset=vec2(cos(a),sin(a))*8.0*pixelRatio/resolution;
-          glow+=max(texture2D(colorMap,clamp(vUv+offset,vec2(0.0),vec2(1.0))).rgb-vec3(1.1),vec3(0.0));
+          glow+=max(texture2D(colorMap,clamp(vUv+offset,vec2(0.0),vec2(1.0))).rgb-vec3(1.15),vec3(0.0));
         }
         color+=glow*0.055;
+        float ink=max(smoothstep(0.012,0.03,depthEdge),smoothstep(0.43,0.75,normalEdge));
+        color=mix(color,vec3(0.005,0.003,0.009),ink*0.66);
+        // Subtle depth haze and oval vignette frame the room without extra texture fetches.
+        float roomDepth=smoothstep(6.0,17.0,center);
+        color=mix(color,color*vec3(0.93,0.97,1.04)+vec3(0.006,0.012,0.020),roomDepth*0.20);
+        vec2 vigUv=(vUv-0.5)*vec2(1.12,1.0);
+        color*=1.0-smoothstep(0.48,0.88,length(vigUv))*0.18;
         // The final pass owns tone mapping and display color conversion exactly once.
         gl_FragColor=vec4(color,1.0);
         #include <tonemapping_fragment>

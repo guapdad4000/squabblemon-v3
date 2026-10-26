@@ -4,8 +4,8 @@ import type { Config } from '@netlify/functions';
 export default async function kumiteTick() {
   // Load the deployment-selected database only after Netlify establishes its
   // function context. The same service/locks reconcile browser and cron requests.
-  const { currentKumite } = await import('../../lib/kumite');
-  const { tournament } = await currentKumite(null);
+  const { reconcileKumite } = await import('../../lib/kumite');
+  const { tournament } = await reconcileKumite();
   return Response.json({ tournamentId: tournament.id, status: tournament.status });
 }
 

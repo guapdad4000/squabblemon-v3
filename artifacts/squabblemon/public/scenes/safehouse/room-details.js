@@ -18,12 +18,33 @@ export function dressSafehouse({ scene, couch, brass, wood, black, ivory, plaste
     draw(canvas.getContext('2d'), width, height);
     const texture = new T.CanvasTexture(canvas); texture.colorSpace = T.SRGBColorSpace; texture.anisotropy = 4; return texture;
   }
-  function placard(text, subtitle, color = '#d9ad65') {
-    return canvasTexture(1024, 384, (g, w, h) => {
-      g.fillStyle = '#14231f'; g.fillRect(0, 0, w, h); g.strokeStyle = color; g.lineWidth = 5; g.strokeRect(18, 18, w - 36, h - 36);
-      g.fillStyle = color; g.textAlign = 'center'; g.font = '900 112px sans-serif'; g.fillText(text, w / 2, 196, w - 80);
-      g.font = '24px monospace'; g.fillText(subtitle, w / 2, 278, w - 90);
-    });
+  let fontDirty = false;
+  function placard(text, color = '#e8c468') {
+    const paint = (g, w, h, family = "'Blzee', sans-serif") => {
+      const bg = g.createLinearGradient(0, 0, 0, h);
+      bg.addColorStop(0, '#162924'); bg.addColorStop(1, '#0b1513');
+      g.fillStyle = bg; g.fillRect(0, 0, w, h);
+      g.strokeStyle = color; g.lineWidth = 6; g.strokeRect(18, 18, w - 36, h - 36);
+      g.strokeStyle = '#d9ad6555'; g.lineWidth = 2; g.strokeRect(30, 30, w - 60, h - 60);
+      for (const [cx, cy] of [[42, 42], [w - 42, 42], [42, h - 42], [w - 42, h - 42]]) {
+        g.fillStyle = color; g.beginPath(); g.arc(cx, cy, 5, 0, Math.PI * 2); g.fill();
+      }
+      g.textAlign = 'center'; g.textBaseline = 'middle';
+      g.font = `400 148px ${family}`;
+      g.fillStyle = '#070c0b'; g.fillText(text, w / 2 + 5, h / 2 + 12, w - 96);
+      g.fillStyle = '#ffe28a'; g.fillText(text, w / 2, h / 2 + 6, w - 96);
+    };
+    const tex = canvasTexture(1024, 384, (g, w, h) => paint(g, w, h));
+    if (typeof FontFace !== 'undefined' && typeof document !== 'undefined' && document.fonts) {
+      const face = new FontFace('Blzee', `url(${new URL('../../fonts/blzee.woff2', import.meta.url).href}) format('woff2')`);
+      face.load().then(loaded => {
+        if (disposed) return;
+        document.fonts.add(loaded);
+        paint(tex.image.getContext('2d'), 1024, 384, "'Blzee', sans-serif");
+        tex.needsUpdate = true; fontDirty = true;
+      }).catch(() => {});
+    }
+    return tex;
   }
   // Deep green joinery grounds the warm plaster and gives the walls real relief.
   box([8.9, .87, .07], green, [0, .43, -4.85]);
@@ -38,7 +59,7 @@ export function dressSafehouse({ scene, couch, brass, wood, black, ivory, plaste
   box([9, .25, 12], wood, [0, -.16, 11]);
   // The sign belongs to the room, rather than floating over the game.
   box([2.65, .85, .08], walnut, [-.35, 3.95, -4.8]);
-  const sign = add(new T.PlaneGeometry(2.5, .72), new T.MeshStandardMaterial({ map: placard('HOME COURT', 'OAKLAND / EST. AFTER HOURS'), emissive: '#e5ae61', emissiveIntensity: .12, roughness: .7 }), [-.35, 3.95, -4.74]);
+  const sign = add(new T.PlaneGeometry(2.5, .72), new T.MeshStandardMaterial({ map: placard('HOME COURT'), emissive: '#e5ae61', emissiveIntensity: .15, roughness: .65 }), [-.35, 3.95, -4.74]);
   sign.castShadow = false;
   // Low neutral practical lights keep the rear wall readable without a gold cast.
   const bulb = new T.MeshStandardMaterial({ color: '#dce6e6', emissive: '#b9d0d3', emissiveIntensity: 1.25 });
@@ -52,20 +73,37 @@ export function dressSafehouse({ scene, couch, brass, wood, black, ivory, plaste
 
   // City lights sit behind the window bars, with rain on the glass in front.
   const cityTextures = [false, true].map(night => canvasTexture(1024, 512, (g, w, h) => {
-    const sky = g.createLinearGradient(0, 0, 0, h); sky.addColorStop(0, night ? '#091d31' : '#a97663'); sky.addColorStop(1, night ? '#426278' : '#e5b377'); g.fillStyle = sky; g.fillRect(0, 0, w, h);
-    g.fillStyle = night ? '#bdd7d4' : '#ffdfad'; g.beginPath(); g.arc(786, 105, night ? 29 : 57, 0, Math.PI * 2); g.fill();
+    const sky = g.createLinearGradient(0, 0, 0, h);
+    sky.addColorStop(0, night ? '#071628' : '#8e5a50');
+    sky.addColorStop(.52, night ? '#1b354d' : '#c98862');
+    sky.addColorStop(1, night ? '#486c82' : '#f2be7a');
+    g.fillStyle = sky; g.fillRect(0, 0, w, h);
+    const moonGlow = g.createRadialGradient(786, 105, 8, 786, 105, night ? 98 : 138);
+    moonGlow.addColorStop(0, night ? '#e4f4ffdd' : '#fff0c4ee');
+    moonGlow.addColorStop(.45, night ? '#7cb4d844' : '#ffbe7044');
+    moonGlow.addColorStop(1, '#0000');
+    g.fillStyle = moonGlow; g.fillRect(620, 0, 330, 260);
+    g.fillStyle = night ? '#d9eef2' : '#ffe6b8'; g.beginPath(); g.arc(786, 105, night ? 29 : 54, 0, Math.PI * 2); g.fill();
     for (let layer = 0; layer < 3; layer++) {
       for (let i = 0; i < 16; i++) {
         const x = i * 79 - layer * 25, height = 70 + ((i * 31 + layer * 57) % 190), top = h - height + layer * 18;
-        g.fillStyle = ['#364b59', '#263948', '#15252b'][layer]; g.fillRect(x, top, 67, height);
+        g.fillStyle = ['#364b59', '#233645', '#122027'][layer]; g.fillRect(x, top, 67, height);
         for (let row = 0; row < 10; row++) for (let col = 0; col < 4; col++) {
           if ((row * 7 + col * 3 + i + layer) % 4 === 0 || top + 16 + row * 19 > h) continue;
-          g.fillStyle = night ? ((i + row) % 3 ? '#d3a66a' : '#7199aa') : '#6d7675'; g.fillRect(x + 9 + col * 13, top + 14 + row * 19, 5, 8);
+          g.fillStyle = night ? ((i + row) % 3 ? '#f0b86c' : '#79b4cc') : ((i + col) % 4 === 0 ? '#d8aa78' : '#6d7675');
+          g.fillRect(x + 9 + col * 13, top + 14 + row * 19, 5, 8);
         }
         g.fillStyle = '#15252b'; g.fillRect(x + 12, top - 10, 2, 15);
+        if (layer === 2 && i % 4 === 1) {
+          g.fillStyle = night ? '#ff7c5c' : '#e89b60';
+          g.fillRect(x + 11, top - 13, 4, 4);
+        }
       }
     }
-    g.fillStyle = '#a7d1cf18'; g.fillRect(0, h - 90, w, 90);
+    const horizon = g.createLinearGradient(0, h - 125, 0, h);
+    horizon.addColorStop(0, '#0000');
+    horizon.addColorStop(1, night ? '#74b6d836' : '#ffd29642');
+    g.fillStyle = horizon; g.fillRect(0, h - 125, w, 125);
   }));
   const cityMaterial = new T.MeshBasicMaterial({ map: cityTextures[1], toneMapped: false });
   const city = add(new T.PlaneGeometry(4.22, 2.17), cityMaterial, [4.48, 2.65, -.2]); city.rotation.y = -Math.PI / 2; city.castShadow = false;
@@ -96,6 +134,43 @@ export function dressSafehouse({ scene, couch, brass, wood, black, ivory, plaste
   });
   const poolMaterial = new T.MeshBasicMaterial({ map: poolTexture, transparent: true, opacity: .5, depthWrite: false, blending: T.AdditiveBlending });
   const pool = add(new T.PlaneGeometry(5.7, 6.6), poolMaterial, [1.25, .036, .3]); pool.rotation.x = -Math.PI / 2; pool.rotation.z = -.1; pool.castShadow = false;
+  // Single-draw-call volumetric window god-rays stream from the barred window into the upper room air.
+  const shaftTexture = canvasTexture(256, 256, g => {
+    const beam = g.createLinearGradient(0, 0, 256, 0);
+    beam.addColorStop(0, '#ffffff00');
+    beam.addColorStop(.12, '#ffffffc8');
+    beam.addColorStop(.42, '#ffffff68');
+    beam.addColorStop(.78, '#ffffff1c');
+    beam.addColorStop(1, '#ffffff00');
+    g.fillStyle = beam; g.fillRect(0, 0, 256, 256);
+    g.globalCompositeOperation = 'destination-in';
+    const edge = g.createLinearGradient(0, 0, 0, 256);
+    edge.addColorStop(0, '#0000'); edge.addColorStop(.22, '#000b'); edge.addColorStop(.5, '#000f'); edge.addColorStop(.78, '#000b'); edge.addColorStop(1, '#0000');
+    g.fillStyle = edge; g.fillRect(0, 0, 256, 256);
+    g.globalCompositeOperation = 'source-over';
+  });
+  const shaftMaterial = new T.MeshBasicMaterial({ map: shaftTexture, color: '#ffd394', transparent: true, opacity: .24, depthWrite: false, side: T.DoubleSide, blending: T.AdditiveBlending });
+  const shaftPlanes = [[-1.45, 3.28, .85], [-.45, 3.36, .95], [.55, 3.32, .92], [1.45, 3.22, .82]];
+  const shaftPos = [], shaftUv = [], shaftIdx = [];
+  shaftPlanes.forEach(([z, topY, spread], idx) => {
+    const base = idx * 4;
+    const x0 = 4.34, y0 = topY, x1 = 2.15, y1 = 1.48;
+    const half0 = .38 * spread, half1 = .66 * spread;
+    shaftPos.push(
+      x0, y0 + .22, z - half0,
+      x0, y0 - .22, z + half0,
+      x1, y1 + .18, z - half1 + .16,
+      x1, y1 - .18, z + half1 + .16
+    );
+    shaftUv.push(0, 0, 0, 1, 1, 0, 1, 1);
+    shaftIdx.push(base, base + 1, base + 2, base + 2, base + 1, base + 3);
+  });
+  const shaftGeo = new T.BufferGeometry();
+  shaftGeo.setAttribute('position', new T.Float32BufferAttribute(shaftPos, 3));
+  shaftGeo.setAttribute('uv', new T.Float32BufferAttribute(shaftUv, 2));
+  shaftGeo.setIndex(shaftIdx);
+  shaftGeo.computeVertexNormals();
+  const godRays = add(shaftGeo, shaftMaterial, [0, 0, 0]); godRays.castShadow = false; godRays.receiveShadow = false;
 
   // A compact metal shelf under the back-wall panel holds the player's corner.
   const steel = standard('#59646a', .42, .72);
@@ -152,18 +227,24 @@ export function dressSafehouse({ scene, couch, brass, wood, black, ivory, plaste
   const record = new T.Group(); record.position.set(-.16, 1.18, 0); vinyl.add(record);
   cylinder(.29, .026, black, [0, 0, 0], record);
   const recordTexture = canvasTexture(512, 512, g => {
-    g.fillStyle = '#0d1010'; g.fillRect(0, 0, 512, 512); g.strokeStyle = '#353c3a'; g.lineWidth = 1;
+    g.fillStyle = '#0d1010'; g.fillRect(0, 0, 512, 512);
+    // Anisotropic vinyl sheen wedges give the spinning platter realistic light play.
+    for (const [start, end, tint] of [[.18, .62, '#ffffff18'], [1.75, 2.15, '#ffd79616'], [3.32, 3.76, '#ffffff18'], [4.89, 5.29, '#88c8df14']]) {
+      g.fillStyle = tint; g.beginPath(); g.moveTo(256, 256); g.arc(256, 256, 248, start, end); g.closePath(); g.fill();
+    }
+    g.strokeStyle = '#353c3a'; g.lineWidth = 1;
     for (let i = 82; i < 247; i += 5) { g.beginPath(); g.arc(256, 256, i, 0, Math.PI * 2); g.stroke(); }
     g.fillStyle = '#d5aa5e'; g.beginPath(); g.arc(256, 256, 78, 0, Math.PI * 2); g.fill();
+    g.strokeStyle = '#6f4c1e'; g.lineWidth = 3; g.beginPath(); g.arc(256, 256, 70, 0, Math.PI * 2); g.stroke();
     g.fillStyle = '#252a25'; g.textAlign = 'center'; g.font = '900 24px sans-serif'; g.fillText('FADE TUNES', 256, 241); g.font = '12px monospace'; g.fillText('SQUABBLE CITY', 256, 269); g.fillText('AFTER HOURS', 256, 288);
   });
-  const disc = add(new T.CircleGeometry(.285, 48), new T.MeshStandardMaterial({ map: recordTexture, metalness: .28, roughness: .5 }), [0, .015, 0], record); disc.rotation.x = -Math.PI / 2;
+  const disc = add(new T.CircleGeometry(.285, 48), new T.MeshStandardMaterial({ map: recordTexture, metalness: .36, roughness: .38 }), [0, .015, 0], record); disc.rotation.x = -Math.PI / 2;
   cylinder(.008, .045, brass, [0, .025, 0], record);
   cylinder(.066,.072,black,[.43,1.174,-.21],vinyl);cylinder(.044,.065,brushed,[.43,1.23,-.21],vinyl);
   tube([[.43,1.26,-.29],[.43,1.26,-.16],[.39,1.245,.04],[.25,1.23,.15]],.012,brushed,vinyl);
   const counterweight=cylinder(.039,.07,brushed,[.43,1.26,-.29],vinyl);counterweight.rotation.x=Math.PI/2;
   box([.06,.035,.085],black,[.235,1.212,.175],vinyl);box([.025,.015,.038],paper,[.235,1.189,.185],vinyl);
-  const led=standard('#d3a05f');led.emissive=new T.Color('#ffb653');led.emissiveIntensity=.3;
+  const led=standard('#ffd084');led.emissive=new T.Color('#ffad42');led.emissiveIntensity=1.2;
   box([.04,.008,.015],led,[.49,1.135,.24],vinyl);
   cylinder(.036,.012,black,[-.54,1.14,.25],vinyl);cylinder(.022,.014,brushed,[.43,1.14,.24],vinyl);
   box([.035,.005,.2],black,[.55,1.135,.025],vinyl);box([.052,.017,.027],brushed,[.55,1.145,.035],vinyl);
@@ -199,16 +280,17 @@ export function dressSafehouse({ scene, couch, brass, wood, black, ivory, plaste
     status: () => ({ playing, recordAngle: record.rotation.y, fanAngle: rotor.rotation.y, ceilingVisible: ceiling.visible }),
     vinyl, profileShelf, dynamicObjects: [record, rotor, ceiling, profileShelf],
     resize() { ceiling.visible = innerWidth / innerHeight >= .95; },
-    setMusic(value) { playing = Boolean(value); led.emissiveIntensity = playing ? 2 : .3; },
+    setMusic(value) { playing = Boolean(value); led.emissiveIntensity = playing ? 2.4 : 1.1; },
     setProfile,
-    setNight(night) { cityMaterial.map = cityTextures[night ? 1 : 0]; windowLight.color.set(night ? '#7eabc9' : '#e7c095'); windowLight.intensity = night ? 10 : 8; backLight.color.set(night ? '#e6b37c' : '#d9b78e'); backLight.intensity = night ? 4.5 : 4; fanLight.color.set(night ? '#ffd19a' : '#ffdcaf'); fanLight.intensity = night ? 15 : 25; bulb.emissive.set(night ? '#ffd5a1' : '#c8d6d3'); bulb.emissiveIntensity = night ? 1.7 : 1.25; fanGlow.emissiveIntensity = night ? 1.9 : 1.6; poolMaterial.opacity = night ? .66 : .1; rainMaterial.uniforms.strength.value = night ? 1 : .35; },
+    setNight(night) { cityMaterial.map = cityTextures[night ? 1 : 0]; windowLight.color.set(night ? '#7eabc9' : '#e7c095'); windowLight.intensity = night ? 10 : 8; backLight.color.set(night ? '#e6b37c' : '#d9b78e'); backLight.intensity = night ? 4.5 : 4; fanLight.color.set(night ? '#ffd19a' : '#ffdcaf'); fanLight.intensity = night ? 15 : 25; bulb.emissive.set(night ? '#ffd5a1' : '#c8d6d3'); bulb.emissiveIntensity = night ? 1.7 : 1.25; fanGlow.emissiveIntensity = night ? 1.9 : 1.6; poolMaterial.opacity = night ? .66 : .14; shaftMaterial.color.set(night ? '#7eb9ec' : '#ffd28c'); shaftMaterial.opacity = night ? .21 : .26; rainMaterial.uniforms.strength.value = night ? 1 : .35; },
     update(time, dt, reduced) {
-      if (reduced) return false;
+      const dirty = fontDirty; fontDirty = false;
+      if (reduced) return dirty;
       rainMaterial.uniforms.time.value = time;
       rotor.rotation.y += dt * .45;
       if (playing) record.rotation.y -= dt * 3.49;
-      return false;
+      return dirty;
     },
-    dispose() { disposed = true; if (profileImage) profileImage.onload = null; cityTextures.forEach(texture => texture.dispose()); }
+    dispose() { disposed = true; if (profileImage) profileImage.onload = null; cityTextures.forEach(texture => texture.dispose()); shaftTexture.dispose(); }
   };
 }

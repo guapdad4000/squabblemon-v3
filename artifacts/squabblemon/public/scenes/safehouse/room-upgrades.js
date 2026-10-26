@@ -49,15 +49,26 @@ export function addGardenDecor(scene){
 export function createArcadeDisplay(root){
   const canvas=document.createElement('canvas');canvas.width=768;canvas.height=576;const g=canvas.getContext('2d');const texture=new T.CanvasTexture(canvas);texture.colorSpace=T.SRGBColorSpace;texture.anisotropy=8;
   const screen=add(root,new T.PlaneGeometry(.76,.58),new T.MeshBasicMaterial({map:texture}),0,2.05,.151);screen.castShadow=false;
-  const light=new T.PointLight('#82cbb2',1.6,2.5,2);light.position.set(0,2.03,.43);root.add(light);
+  const light=new T.PointLight('#6ee2be',2.3,2.9,2);light.position.set(0,2.03,.43);root.add(light);
   let state={status:'loading',wins:0};
   const update=value=>{
     state={status:['continue','new','unavailable'].includes(value.status)?value.status:'loading',wins:Math.max(0,Number(value.wins)||0)};
-    const grad=g.createLinearGradient(0,0,0,576);grad.addColorStop(0,'#113a35');grad.addColorStop(1,'#071815');g.fillStyle=grad;g.fillRect(0,0,768,576);
-    g.strokeStyle='#387569';g.lineWidth=3;g.strokeRect(22,22,724,532);g.textAlign='center';g.fillStyle='#e5cb87';g.font='900 48px sans-serif';g.fillText('STRAIGHT',384,122);g.fillText('TO THE BACK',384,179);
-    g.strokeStyle='#699c80';g.lineWidth=3;g.beginPath();g.moveTo(170,345);g.lineTo(325,220);g.lineTo(443,220);g.lineTo(598,345);g.stroke();g.setLineDash([12,15]);g.beginPath();g.moveTo(384,338);g.lineTo(384,226);g.stroke();g.setLineDash([]);
-    g.fillStyle='#e5c36f';g.fillRect(66,363,636,84);g.fillStyle='#152c25';g.font='900 43px sans-serif';g.fillText(state.status==='continue'?'CONTINUE':state.status==='new'?'PLAY NEW GAME':state.status==='unavailable'?'OPEN FADECADE':'LOADING SAVE…',384,418);
-    g.fillStyle='#a0c2a7';g.font='23px monospace';g.fillText(state.status==='continue'?`${state.wins} WINS · YOUR ROAD IS WAITING`:state.status==='new'?'ONE LOSS. BACK TO THE START.':state.status==='unavailable'?'CONNECT TO CHECK YOUR ROAD':'CHECKING YOUR ROAD',384,503);
-    for(let y=0;y<576;y+=4){g.fillStyle='#00000015';g.fillRect(0,y,768,1);}texture.needsUpdate=true;
+    const grad=g.createLinearGradient(0,0,0,576);grad.addColorStop(0,'#12423c');grad.addColorStop(.58,'#0a2622');grad.addColorStop(1,'#051311');g.fillStyle=grad;g.fillRect(0,0,768,576);
+    g.strokeStyle='#489988';g.lineWidth=4;g.strokeRect(20,20,728,536);
+    g.strokeStyle='#e5c36f55';g.lineWidth=2;g.strokeRect(30,30,708,516);
+    g.fillStyle='#72cbb7';g.font='bold 18px monospace';g.textAlign='left';g.fillText('1P READY',46,56);g.textAlign='right';g.fillStyle='#f0cd76';g.fillText('CREDITS 02',722,56);
+    g.textAlign='center';g.fillStyle='#f6de99';g.font='900 50px sans-serif';g.fillText('STRAIGHT',384,120);g.fillText('TO THE BACK',384,176);
+    // Perspective arcade road grid + horizon glow
+    const roadGlow=g.createRadialGradient(384,228,8,384,256,190);roadGlow.addColorStop(0,'#5fd4b644');roadGlow.addColorStop(1,'#0000');g.fillStyle=roadGlow;g.fillRect(120,190,528,170);
+    g.strokeStyle='#7adbbd';g.lineWidth=3;g.beginPath();g.moveTo(154,348);g.lineTo(322,218);g.lineTo(446,218);g.lineTo(614,348);g.stroke();
+    g.strokeStyle='#4fa48b66';g.lineWidth=1.5;
+    for(const y of [244,274,308,342]){const t=(y-218)/130;g.beginPath();g.moveTo(322-t*168,y);g.lineTo(446+t*168,y);g.stroke();}
+    g.strokeStyle='#f2d27c';g.lineWidth=3;g.setLineDash([12,14]);g.beginPath();g.moveTo(384,342);g.lineTo(384,224);g.stroke();g.setLineDash([]);
+    g.fillStyle='#edd078';g.fillRect(66,363,636,84);g.strokeStyle='#fff3c4';g.lineWidth=2;g.strokeRect(70,367,628,76);
+    g.fillStyle='#132922';g.font='900 43px sans-serif';g.fillText(state.status==='continue'?'CONTINUE':state.status==='new'?'PLAY NEW GAME':state.status==='unavailable'?'OPEN FADECADE':'LOADING SAVE…',384,418);
+    g.fillStyle='#b3d9c0';g.font='23px monospace';g.fillText(state.status==='continue'?`${state.wins} WINS · YOUR ROAD IS WAITING`:state.status==='new'?'ONE LOSS. BACK TO THE START.':state.status==='unavailable'?'CONNECT TO CHECK YOUR ROAD':'CHECKING YOUR ROAD',384,503);
+    // Curved CRT glass diagonal specular glint + vignette
+    const glint=g.createLinearGradient(0,0,420,340);glint.addColorStop(0,'#ffffff22');glint.addColorStop(.32,'#ffffff0c');glint.addColorStop(.45,'#ffffff00');g.fillStyle=glint;g.fillRect(20,20,728,536);
+    for(let y=0;y<576;y+=4){g.fillStyle='#00000018';g.fillRect(0,y,768,1);}texture.needsUpdate=true;
   };update(state);return{update,status:()=>({...state})};
 }

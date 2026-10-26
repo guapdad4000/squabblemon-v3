@@ -40,7 +40,8 @@ export function createArcadeCabinet(root){
   for(const x of [-.34,.34])for(let i=0;i<5;i++)box(.09,.009,.012,black,x,2.39+i*.014,.215);
   // Backlit marquee with the existing Fadecade identity under a raised frame.
   box(1,.32,.67,black,0,2.605,-.02);
-  box(.95,.014,.018,yellow,0,2.756,.325);box(.95,.014,.018,yellow,0,2.454,.325);
+  const marqueeTrim=new T.MeshStandardMaterial({color:'#f2cb63',metalness:.35,roughness:.38,emissive:'#e5a93c',emissiveIntensity:.38});
+  box(.95,.014,.018,marqueeTrim,0,2.756,.325);box(.95,.014,.018,marqueeTrim,0,2.454,.325);
   const logo=new T.TextureLoader().load('../../assets/fadecade/logo.webp');logo.colorSpace=T.SRGBColorSpace;
   const marquee=add(new T.PlaneGeometry(.91,.286),new T.MeshBasicMaterial({map:logo,transparent:true,toneMapped:false}),0,2.605,.322);marquee.castShadow=false;
   // Sloped control deck, joystick dust washer, six concave yellow buttons.
