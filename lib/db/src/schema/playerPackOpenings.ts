@@ -56,7 +56,7 @@ export const playerPackOpeningsTable = pgTable(
   ],
 );
 
-export const insertPlayerPackOpeningSchema = createInsertSchema(
+export const insertPlayerPackOpeningSchema = /* @__PURE__ */ createInsertSchema(
   playerPackOpeningsTable,
 ).omit({ id: true, createdAt: true });
 

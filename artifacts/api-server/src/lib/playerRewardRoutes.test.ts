@@ -6,6 +6,8 @@ import { and, eq } from "drizzle-orm";
 import type { RequestHandler } from "express";
 import {
   db,
+  pool,
+  playerPackOpeningsTable,
   challengeRunsTable,
   playerMatchesTable,
   playerMissionsTable,
@@ -636,4 +638,67 @@ test("completed legacy story fades return saved rewards without revalidating mis
   const profile = await profileFor(clerkUserId);
   assert.equal(profile.xp, 0, "recovery must not issue the rewards again");
  });
+});
+
+test("native settled bootstrap reads through a held profile lock; drifted bootstrap waits and recovers", { skip: process.env.ONLINE_RETIREMENT_TEST_OWNED !== "1" }, async (t) => {
+  const clerkUserId = `bootstrap-lock-free-${randomUUID()}`;
+  t.after(() => db.delete(playerProfilesTable).where(eq(playerProfilesTable.clerkUserId, clerkUserId)));
+  assert.ok((pool.options.max ?? 0) >= 2, "the test requires independent connections");
+  await withPlayerApi(clerkUserId, async (baseUrl) => {
+    const bootstrap = async () => {
+      const response = await fetch(`${baseUrl}/player/bootstrap`, { signal: AbortSignal.timeout(10_000) });
+      const json = (await response.json()) as Record<string, any>;
+      assert.equal(response.status, 200, JSON.stringify(json));
+      return json;
+    };
+    await bootstrap();
+    await bootstrap();
+    const blocker = await pool.connect();
+    let pending: Promise<Record<string, any>> | undefined;
+    try {
+      const version = await blocker.query<{ version: string }>("select version()");
+      assert.match(version.rows[0].version, /^PostgreSQL /);
+      await blocker.query("begin");
+      await blocker.query("select clerk_user_id from player_profiles where clerk_user_id = $1 for update", [clerkUserId]);
+      const started = performance.now();
+      const settled = await Promise.race([
+        bootstrap(),
+        new Promise<never>((_, reject) => setTimeout(() => reject(new Error("settled bootstrap blocked on the profile lock")), 3_000)),
+      ]);
+      const elapsedMs = performance.now() - started;
+      assert.equal(settled.profile.id, clerkUserId);
+      t.diagnostic(JSON.stringify({ workload: "settled-bootstrap-under-held-lock", elapsedMs: Math.round(elapsedMs) }));
+      await blocker.query("commit");
+
+      // A new immutable card receipt requires recovery, which must still take the lock.
+      await db.insert(playerPackOpeningsTable).values({
+        clerkUserId, idempotencyKey: randomUUID(), oddsVersion: "street-pack-v5", paymentMethod: "ticket",
+        cost: 1, pityBefore: 0, pityAfter: 1,
+        rewards: [{ kind: "card", cardId: "closet-nerd", variantId: null, name: "closet-nerd", rarity: "Rare", isNew: true, amount: 1 }],
+      });
+      await blocker.query("begin");
+      await blocker.query("select clerk_user_id from player_profiles where clerk_user_id = $1 for update", [clerkUserId]);
+      pending = bootstrap();
+      let waiting = 0;
+      const deadline = performance.now() + 5_000;
+      while (!waiting && performance.now() < deadline) {
+        await blocker.query("select pg_stat_clear_snapshot()");
+        const result = await blocker.query(`select pid from pg_stat_activity
+          where datname = current_database() and pid <> pg_backend_pid()
+            and wait_event_type = 'Lock' and query like '%player_profiles%for update%'`);
+        waiting = result.rowCount ?? 0;
+        if (!waiting) await new Promise((resolve) => setTimeout(resolve, 10));
+      }
+      assert.equal(waiting, 1, "receipt recovery waits for the held profile lock");
+      await blocker.query("commit");
+      const recovered = await pending;
+      assert.ok(recovered.profile.ownedCardIds.includes("closet-nerd"), "receipt card recovered under the lock");
+      const [stored] = await db.select().from(playerProfilesTable).where(eq(playerProfilesTable.clerkUserId, clerkUserId));
+      assert.ok(stored.ownedCardIds.includes("closet-nerd"), "recovery persisted");
+    } finally {
+      await blocker.query("rollback").catch(() => undefined);
+      blocker.release();
+      await pending?.catch(() => undefined);
+    }
+  });
 });

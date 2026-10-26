@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { ApiError } from "@workspace/api-client-react";
 import { friendMatchPollInterval, isOnlineConnectionFresh, isOnlineSnapshotSynchronized, isTransientOnlineError, ONLINE_READ_TIMEOUT_MS,
-  ONLINE_WRITE_TIMEOUT_MS, request, searchRanked, readFriendMatch } from "./multiplayer";
+  ONLINE_WRITE_TIMEOUT_MS, reactionPollInterval, request, searchRanked, readFriendMatch } from "./multiplayer";
 
 const json = (value: unknown, status = 200) => new Response(JSON.stringify(value), {
   status, headers: { "Content-Type": "application/json" },
@@ -199,6 +199,13 @@ test("visible active turns keep their original cadence and terminal rooms stop",
   for (const status of [400, 401, 403, 404])
     assert.equal(friendMatchPollInterval("active", apiError(status)), false);
   assert.equal(friendMatchPollInterval("active", apiError(503)), 800);
+});
+
+test("reactions follow the match sync token and keep a <=2s standalone poll without one", () => {
+  assert.equal(reactionPollInterval(false, "a".repeat(32)), false);
+  assert.equal(reactionPollInterval(false, undefined), false);
+  assert.equal(reactionPollInterval(true, undefined), 2000);
+  assert.equal(reactionPollInterval(true, "a".repeat(32)), 10_000);
 });
 
 

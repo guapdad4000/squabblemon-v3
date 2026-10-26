@@ -45,7 +45,7 @@ export const playerMissionsTable = pgTable(
   ],
 );
 
-export const insertPlayerMissionSchema = createInsertSchema(
+export const insertPlayerMissionSchema = /* @__PURE__ */ createInsertSchema(
   playerMissionsTable,
 ).omit({ id: true, createdAt: true, updatedAt: true });
 

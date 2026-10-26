@@ -56,6 +56,17 @@ export function friendMatchPollInterval(status: OnlineRoomView["status"] | undef
   return status === "active" ? 800 : 2000;
 }
 
+/** The 800 ms match poll's sync token hashes the whole persisted room, reactions
+ * included, so a changed token triggers an immediate reaction read. Rooms without
+ * a token (pre-migration rows/old APIs) keep a standalone poll within 2 s. */
+export const REACTION_FALLBACK_POLL_MS = 2000;
+/** With a token, a slow safety-net read covers anything the token cannot signal. */
+export const REACTION_TOKEN_SAFETY_POLL_MS = 10_000;
+export function reactionPollInterval(enabled: boolean, syncToken: string | undefined): number | false {
+  if (!enabled) return false;
+  return syncToken ? REACTION_TOKEN_SAFETY_POLL_MS : REACTION_FALLBACK_POLL_MS;
+}
+
 // A stalled mobile request must release the poll/mutation so reconnection can recover.
 export const request = async <T>(
   path: string,

@@ -1,6 +1,6 @@
 /* Squabblemon offline shell: instant revisits for code and art; the API is never cached. */
 // A new namespace retires potentially damaged caches from the previous worker.
-const VERSION = 'sq-v3';
+const VERSION = 'sq-v4';
 const CODE = `${VERSION}-code`;
 const ART = `${VERSION}-art`;
 const SHELL = `${VERSION}-shell`;
@@ -9,6 +9,10 @@ const ART_LIMIT = 240;
 // Large media and range requests belong to the browser's HTTP cache.
 const ART_EXT = /\.(?:png|jpe?g|webp|avif|gif|svg|woff2?)$/i;
 const MEDIA_EXT = /\.(?:mp4|webm|mov|mp3|ogg|wav|m4a)$/i;
+// Entries are capped by count; this caps each one by size so a few animated
+// GIFs cannot fill origin storage. Unknown-size animations are skipped too.
+const ART_MAX_BYTES = 2 * 1024 * 1024;
+const UNSIZED_SKIP_EXT = /\.(?:gif|mp4)$/i;
 const revalidated = new Set();
 const failedReads = new Set();
 const failedWrites = new Set();
@@ -59,9 +63,16 @@ function serve(event, handler) {
   })());
 }
 
+function cacheableArt(request, response) {
+  const length = Number.parseInt(response.headers.get('content-length') || '', 10);
+  if (Number.isFinite(length)) return length <= ART_MAX_BYTES;
+  return !UNSIZED_SKIP_EXT.test(new URL(request.url).pathname);
+}
+
 async function fetchAndCache(request, name, key, keepAlive) {
   const response = await fetch(request);
-  if (response.status === 200) keepAlive(writeCache(name, key, response.clone()));
+  if (response.status === 200 && (name !== ART || cacheableArt(request, response)))
+    keepAlive(writeCache(name, key, response.clone()));
   return response;
 }
 

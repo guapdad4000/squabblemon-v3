@@ -209,7 +209,7 @@ export async function sendFadeInvitation(userId: string, input: { friendCode: st
     if (active?.status === "pending") throw new OnlineError("An invitation is already pending between you.", 409);
     if (active && Date.now() - active.createdAt.getTime() < 60_000) throw new OnlineError("Wait a minute before inviting this homie again.", 429);
     const member = await loadMember(tx, userId, input.deckId);
-    const open = await tx.select({ status: sql<string>`${rooms.state}->>'status'` }).from(rooms).where(and(eq(rooms.hostUserId, userId), sql`${rooms.expiresAt} > now()`));
+    const open = await tx.select({ status: sql<string>`coalesce(${rooms.liveState}, ${rooms.state})->>'status'` }).from(rooms).where(and(eq(rooms.hostUserId, userId), sql`${rooms.expiresAt} > now()`));
     if (open.filter(r => ["waiting", "active"].includes(r.status)).length >= 5) throw new OnlineError("Close an existing room first.", 429);
     const current = createOnlineRoom(member, randomInt(2) ? "player" : "cpu", Date.now());
     // Invitations expire quickly; an accepted room keeps the ordinary lifecycle.

@@ -20,8 +20,7 @@ const SignUpPage = lazy(() =>
 );
 const GameApp = lazy(() => import('./pages/game/GameApp'));
 const GameSoundtrack = lazy(() => import('./components/GameSoundtrack'));
-const MoveStudio = lazy(() => import('./pages/MoveStudio'));
-const StoryStudio = lazy(() => import('./pages/StoryStudio'));
+const StudioAccess = lazy(() => import('./pages/StudioAccess'));
 const HowToPlay = lazy(() => import('./pages/HowToPlay'));
 const NotFound = lazy(() => import('./pages/not-found'));
 const SupportPage = lazy(() =>
@@ -170,8 +169,8 @@ function ClerkProviderWithRoutes() {
               <Route path="/how-to-play" component={HowToPlay} />
               <Route path="/support" component={SupportPage} />
               <Route path="/refund-policy" component={RefundPolicyPage} />
-              <Route path="/moves" component={MoveStudio} />
-              <Route path="/story-studio" component={StoryStudio} />
+              <Route path="/moves"><StudioAccess kind="moves" /></Route>
+              <Route path="/story-studio"><StudioAccess kind="story" /></Route>
               <Route path="/game/*?" component={GameApp} />
               <Route component={NotFound} />
             </Switch>

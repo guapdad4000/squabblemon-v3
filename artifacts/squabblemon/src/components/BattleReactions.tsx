@@ -5,12 +5,12 @@ import { MessageCircle, X } from 'lucide-react';
 import { useReducedMotion } from 'framer-motion';
 import { REACTIONS, REACTION_TRAY_SIZE, REACTION_COOLDOWN_MS, REACTION_DURATION_MS, type ReactionId, type ReactionView } from '@workspace/squabblemon-engine/reactions';
 import { otherSeat, type OnlineRoomView } from '@workspace/squabblemon-engine/multiplayer';
-import { request, onlineErrorMessage } from '../lib/multiplayer';
+import { request, onlineErrorMessage, reactionPollInterval } from '../lib/multiplayer';
 import { ReactionArt } from './ReactionArt';
 import '../styles/battle-reactions.css';
 import '../styles/pvp-reactions-v2.css';
 
-export function BattleReactions({ room, connected, reducedMotion }: { room: Pick<OnlineRoomView, 'code' | 'seat' | 'gameNumber' | 'status' | 'serverTime' | 'members'>; connected: boolean; reducedMotion: boolean }) {
+export function BattleReactions({ room, connected, reducedMotion }: { room: Pick<OnlineRoomView, 'code' | 'seat' | 'gameNumber' | 'status' | 'serverTime' | 'members' | 'syncToken'>; connected: boolean; reducedMotion: boolean }) {
   const [collection, setCollection] = useState(false);
   const [open, setOpen] = useState(false);
   const [muted, setMuted] = useState(() => { try { return localStorage.getItem('squabblemon:mute-reactions') === 'true'; } catch { return false; } });
@@ -25,7 +25,15 @@ export function BattleReactions({ room, connected, reducedMotion }: { room: Pick
     const current = client.getQueryData<ReactionView>(queryKey);
     return current && (current.revision > incoming.revision || (current.revision === incoming.revision && current.serverTime > incoming.serverTime)) ? current : incoming;
   };
-  const query = useQuery({ queryKey: key, enabled, queryFn: async ({ signal }) => newer(await request<ReactionView>(`/${room.code}/reactions`, undefined, signal)), refetchInterval: enabled ? 1000 : false, retry: false });
+  const query = useQuery({ queryKey: key, enabled, queryFn: async ({ signal }) => newer(await request<ReactionView>(`/${room.code}/reactions`, undefined, signal)), refetchInterval: reactionPollInterval(enabled, room.syncToken), staleTime: 0, retry: false });
+  // staleTime 0: reconnecting after a hidden tab re-enables the query and reads at once.
+  // A rival reaction changes the room's sync token on the next match poll.
+  const seenToken = useRef(room.syncToken);
+  useEffect(() => {
+    if (!enabled || !room.syncToken || seenToken.current === room.syncToken) return;
+    seenToken.current = room.syncToken;
+    void client.invalidateQueries({ queryKey: key, exact: true }, { cancelRefetch: false });
+  }, [enabled, room.syncToken]);
   const mutation = useMutation({
     mutationFn: (input: { reactionId: ReactionId; code: string; seat: typeof room.seat; gameNumber: number }) =>
       request<ReactionView>(`/${input.code}/reactions`, { requestId: crypto.randomUUID(), reactionId: input.reactionId, gameNumber: input.gameNumber }),

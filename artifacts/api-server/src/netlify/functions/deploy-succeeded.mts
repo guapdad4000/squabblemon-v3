@@ -11,9 +11,8 @@ export async function checkDeployedProfileSchema(
 ): Promise<void> {
   let missing: { tables: string[]; columns: string[] };
   try {
-    const { checkPlayerBootstrapSchema, pool } = await import("@workspace/db");
-    missing = await checkPlayerBootstrapSchema(query ?? ((statement, values) =>
-      pool.query<{ table_name: string; table_exists: boolean; attname: string | null }>(statement, values)));
+    const { inspectDeployedProfileSchema } = await import("../../lib/deployedProfileSchema");
+    missing = await inspectDeployedProfileSchema(query);
   } catch {
     // pg errors can contain connection details. Never forward them to logs or alerts.
     throw new Error("Post-deploy profile schema check could not inspect the API database branch.");

@@ -1,4 +1,4 @@
-import { useMenuRefreshAllowed } from './menuRefresh';
+import { MENU_POLL_MS, useMenuRefreshAllowed } from './menuRefresh';
 import { useQuery } from '@tanstack/react-query';
 import { customFetch } from '@workspace/api-client-react';
 
@@ -9,5 +9,5 @@ export function useSafehouseMail(playerId: string) {
     const result = await customFetch<{ messages: Letter[] }>('/api/player/mail', { signal });
     if (!result || !Array.isArray(result.messages)) throw new Error('Mail is unavailable');
     return result;
-  }, refetchInterval: 30000, refetchOnWindowFocus: true, retry: 1 });
+  }, refetchInterval: MENU_POLL_MS, refetchOnWindowFocus: true, retry: 1 });
 }

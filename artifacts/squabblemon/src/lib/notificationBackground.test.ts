@@ -48,7 +48,11 @@ test('real notification queries stop automatic work in battle/hidden, refresh on
     await act(async () => { t.mock.timers.tick(30000); await flush(); });
     await act(async () => { t.mock.timers.tick(30000); await flush(); });
     const menuPollsPerMinute = reads.length - initial;
-    assert.equal(menuPollsPerMinute, 8, 'retain prior 30s/60s menu cadence');
+    assert.equal(menuPollsPerMinute, 5, 'five narrow notification reads per minute; bootstrap uses its five-minute window');
+    assert.equal(reads.filter(path => path.endsWith('/player/bootstrap')).length, 1, 'no bootstrap poll in the first minute');
+    const beforeBootstrapWindow = reads.filter(path => path.endsWith('/player/bootstrap')).length;
+    await act(async () => { for (let i = 0; i < 8; i++) { t.mock.timers.tick(30000); await flush(); } });
+    assert.equal(reads.filter(path => path.endsWith('/player/bootstrap')).length - beforeBootstrapWindow, 1, 'visible menu refreshes bootstrap once per 5 minutes');
     await act(async () => { setBattleActive(true); inBattle = true; await flush(); });
     const beforeBattle = reads.length;
     await act(async () => { t.mock.timers.tick(120000); await flush(); });
@@ -78,7 +82,7 @@ test('real notification queries stop automatic work in battle/hidden, refresh on
     const beforeUnmount = reads.length;
     await act(async () => { t.mock.timers.tick(120000); await flush(); });
     assert.equal(reads.length, beforeUnmount);
-    t.diagnostic(JSON.stringify({ baselineScheduledPerMinute: menuPollsPerMinute, battleScheduledIn120Seconds: 0, hiddenScheduledIn120Seconds: 0, resumeReads: 6, receiptWritesInBattle: writes.length }));
+    t.diagnostic(JSON.stringify({ baselineScheduledPerMinute: menuPollsPerMinute, bootstrapRefreshMs: 300000, battleScheduledIn120Seconds: 0, hiddenScheduledIn120Seconds: 0, resumeReads: 6, receiptWritesInBattle: writes.length }));
   } finally {
     if (inBattle) setBattleActive(false);
     client.clear();

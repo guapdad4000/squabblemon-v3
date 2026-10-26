@@ -67,7 +67,7 @@ try {
     assert.equal(await worker.evaluate(() => self.maxWrites), 1);
     assert.equal(await worker.evaluate(() => self.completedWrites), 0, 'response is not delayed by cache writes');
     await worker.evaluate(() => self.releaseWrites());
-    await page.waitForFunction(async () => (await (await caches.open('sq-v3-art')).keys()).length === 3);
+    await page.waitForFunction(async () => (await (await caches.open('sq-v4-art')).keys()).length === 3);
     assert.deepEqual(await worker.evaluate(() => self.unhandled), []);
     await context.close();
     console.log('PASS browser: concurrent requests return before serialized writes complete');
@@ -75,7 +75,7 @@ try {
   {
     const { context, page, worker } = await setup();
     await page.evaluate(() => fetch('/assets/offline.webp'));
-    await page.waitForFunction(async () => Boolean(await (await caches.open('sq-v3-art')).match('/assets/offline.webp')));
+    await page.waitForFunction(async () => Boolean(await (await caches.open('sq-v4-art')).match('/assets/offline.webp')));
     await context.setOffline(true);
     await page.goto(`${origin}/offline-battle`);
     assert.equal(await page.locator('main').innerText(), 'Shell ready');

@@ -19,5 +19,5 @@ export const eventFeedbackTable = pgTable("event_feedback", {
   index("event_feedback_feed_order").on(table.createdAt.desc(), table.id.desc()),
   index("event_feedback_author_time").on(table.clerkUserId, table.createdAt.desc()),
 ]);
-export const insertEventFeedbackSchema = createInsertSchema(eventFeedbackTable);
+export const insertEventFeedbackSchema = /* @__PURE__ */ createInsertSchema(eventFeedbackTable);
 export type EventFeedbackRecord = typeof eventFeedbackTable.$inferSelect;

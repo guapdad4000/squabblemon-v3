@@ -1,7 +1,6 @@
 import { drizzle } from "drizzle-orm/node-postgres";
 import pg from "pg";
 import { getConnectionString as getNetlifyConnectionString } from "@netlify/database";
-import * as schema from "./schema";
 
 const { Pool } = pg;
 
@@ -27,8 +26,14 @@ export const pool = new Pool({
   max: databasePoolMaximum(process.env.DATABASE_POOL_MAX),
   idleTimeoutMillis: 10_000,
   connectionTimeoutMillis: 10_000,
+  // Idle pooled sockets never hold a process open (CLI tools, tests, a
+  // drained function runtime); in-flight queries and checked-out clients do.
+  allowExitOnIdle: true,
 });
-export const db = drizzle(pool, { schema });
+// No caller uses Drizzle's relational `db.query` API. Passing the schema
+// namespace here would retain every schema export (including the drizzle-zod
+// insert validators) in each bundled function.
+export const db = drizzle(pool);
 
 export * from "./schema";
 export * from "./profileCompatibility";

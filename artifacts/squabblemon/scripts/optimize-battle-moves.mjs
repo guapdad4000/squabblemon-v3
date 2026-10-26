@@ -5,14 +5,15 @@ import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 
 // Masters, source frame cadence, clip duration, and encoded audio are retained.
+// v4 (2026-10-25): masters are now <=540px CRF 21 deliveries; CRF 22 keeps sampled battle-size SSIM >= 0.97 vs the original renders.
 // A new encoding recipe gets a new URL even when the source has not changed.
-export const encoding = Object.freeze({ version: 3, aspect: 'exact-even-ratio', width: 320, scale: 'lanczos', codec: 'libx264', preset: 'slow', crf: 20, pixelFormat: 'yuv420p', frameSync: 'passthrough', audio: 'copy' });
+export const encoding = Object.freeze({ version: 4, aspect: 'exact-even-ratio', width: 320, scale: 'lanczos', codec: 'libx264', preset: 'slow', crf: 22, pixelFormat: 'yuv420p', frameSync: 'passthrough', audio: 'copy' });
 const hash = bytes => createHash('sha256').update(bytes).digest('hex');
 const run = (command, args) => execFileSync(command, args, { encoding: 'utf8', maxBuffer: 16 * 1024 * 1024 });
 const fileHash = async file => hash(await fs.readFile(file));
 
 export function parseOptions(args) {
-  const options = { all: false, check: false, threads: 2, width: 320, crf: 20, offset: 0, limit: Infinity, report: null, files: [] };
+  const options = { all: false, check: false, threads: 2, width: 320, crf: 22, offset: 0, limit: Infinity, report: null, files: [] };
   for (let index = 0; index < args.length; index++) {
     const arg = args[index];
     if (arg === '--all') options.all = true;

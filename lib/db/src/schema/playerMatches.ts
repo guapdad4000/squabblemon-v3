@@ -70,7 +70,7 @@ export const playerMatchesTable = pgTable("player_matches", {
   completedAt: timestamp("completed_at", { withTimezone: true }),
 });
 
-export const insertPlayerMatchSchema = createInsertSchema(
+export const insertPlayerMatchSchema = /* @__PURE__ */ createInsertSchema(
   playerMatchesTable,
 ).omit({ id: true, createdAt: true });
 

@@ -85,7 +85,7 @@ export const playerCollectionClaimsTable = pgTable(
   ],
 );
 
-export const insertPlayerCollectionClaimSchema = createInsertSchema(
+export const insertPlayerCollectionClaimSchema = /* @__PURE__ */ createInsertSchema(
   playerCollectionClaimsTable,
 ).omit({ id: true, createdAt: true });
 

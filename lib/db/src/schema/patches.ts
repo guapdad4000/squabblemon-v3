@@ -64,6 +64,6 @@ export const patchDeliveryTargetsTable = pgTable("patch_delivery_targets", {
   index("patch_delivery_work_queue").on(table.patchId, table.status, table.clerkUserId),
 ]);
 
-export const insertPatchDraftSchema = createInsertSchema(patchDraftsTable);
+export const insertPatchDraftSchema = /* @__PURE__ */ createInsertSchema(patchDraftsTable);
 export type PatchDraftRecord = typeof patchDraftsTable.$inferSelect;
 export type PatchDeliveryTargetRecord = typeof patchDeliveryTargetsTable.$inferSelect;

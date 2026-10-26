@@ -50,7 +50,7 @@ export const paymentOrdersTable = pgTable('payment_orders', {
   uniqueIndex('payment_order_intent_unique').on(table.paymentIntentId),
   index('payment_order_owner_created').on(table.clerkUserId, table.createdAt),
 ]);
-export const insertPaymentOrderSchema = createInsertSchema(paymentOrdersTable);
+export const insertPaymentOrderSchema = /* @__PURE__ */ createInsertSchema(paymentOrdersTable);
 export type PaymentOrder = typeof paymentOrdersTable.$inferSelect;
 export type InsertPaymentOrder = typeof paymentOrdersTable.$inferInsert;
 
@@ -60,7 +60,7 @@ export const paymentEventsTable = pgTable('payment_events', {
   type: text('type').notNull(),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
 });
-export const insertPaymentEventSchema = createInsertSchema(paymentEventsTable);
+export const insertPaymentEventSchema = /* @__PURE__ */ createInsertSchema(paymentEventsTable);
 export type PaymentEvent = typeof paymentEventsTable.$inferSelect;
 
 export const paymentFulfillmentsTable = pgTable('payment_fulfillments', {
@@ -68,5 +68,5 @@ export const paymentFulfillmentsTable = pgTable('payment_fulfillments', {
   clout: integer('clout').notNull(),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
 });
-export const insertPaymentFulfillmentSchema = createInsertSchema(paymentFulfillmentsTable);
+export const insertPaymentFulfillmentSchema = /* @__PURE__ */ createInsertSchema(paymentFulfillmentsTable);
 export type PaymentFulfillment = typeof paymentFulfillmentsTable.$inferSelect;

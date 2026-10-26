@@ -10,6 +10,11 @@ export function rankedRecoveryResolved(recovery: RankedRecovery, room: OnlineRoo
     : room?.status !== 'waiting';
 }
 
+/** Each queue read refreshes the server heartbeat. The server closes a search
+ * after RANKED_QUEUE_IDLE_MS (30 s) without one and pairs/bots on elapsed time,
+ * so 2 s keeps a wide margin without polling every second. */
+export const RANKED_QUEUE_POLL_MS = 2000;
+
 export function rankedLobbyPollInterval(
   room: OnlineRoomView | null | undefined,
   error: unknown,
@@ -17,7 +22,7 @@ export function rankedLobbyPollInterval(
   now = Date.now(),
 ): number | false {
   if (error && !isTransientOnlineError(error)) return false;
-  if (room?.status === 'waiting' || (recovery && now < recovery.until)) return 1000;
+  if (room?.status === 'waiting' || (recovery && now < recovery.until)) return RANKED_QUEUE_POLL_MS;
   // Initial failures also recover: there may be no cached queue to enable polling yet.
   return error ? 3000 : false;
 }

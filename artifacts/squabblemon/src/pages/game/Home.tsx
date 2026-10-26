@@ -1,12 +1,12 @@
 import { JohnHenryMythic } from '../../components/JohnHenryMythic';
 import { useSearch, useLocation } from 'wouter';
 import { LobbyDepth } from '../../components/LobbyDepth';
-import { avatarSticker } from '@workspace/squabblemon-engine/cosmetics';
 import { Attention } from '../../components/Notifications';
 import { StarterMythic } from '../../components/StarterMythic';
 import { KumiteShortcut } from '../../components/kumite/KumiteShortcut';
 import { GameBackButton } from '../../components/venue/GameBackButton';
 import { playInteractionSound } from '../../lib/interactionAudio';
+import { MENU_POLL_MS } from '../../lib/menuRefresh';
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'wouter';
 import { getGetPlayerStoryQueryKey, useGetPlayerStory, useListChallengeRuns, getListChallengeRunsQueryKey, type PlayerBootstrap } from '@workspace/api-client-react';
@@ -17,14 +17,11 @@ import { MusicControls } from '../../components/MusicControls';
 import { SafehouseMail, useSafehouseMail } from '../../components/SafehouseMail';
 import { hasUnreadPatchBoard, usePublishedPatches } from '../../hooks/use-patches';
 import { useMusic, musicActions } from '../../musicStore';
-import { catalogCardById, getCardImage } from '../../data';
-import { soundtrack } from '../../musicPlayer';
 import { SceneFrame, sendScene, type SceneMessage } from '../../components/venue/SceneFrame';
 import { storySeasons } from '@workspace/squabblemon-engine/storySeasons';
 import '../../styles/studio.css';
 import '../../styles/safehouse-stage.css';
 import { loadFeedbackPreferences } from '../../battleFeedback';
-import { playVoiceLine, stopSoundEffect } from '../../lib/sfx';
 
 const stations = [
   { id: 'mail', label: 'The mail door', short: 'Mail', icon: Briefcase, title: 'Special delivery.', detail: 'Letters, updates, and gifts from your people.', action: 'Open your mail', href: '' },
@@ -118,7 +115,7 @@ export function Home({ bootstrap, onGuideComplete }: { bootstrap: PlayerBootstra
     try { return localStorage.getItem('squabblemon_safehouse_lighting') === 'night'; } catch { return false; }
   });
   const music = useMusic();
-  const arcadeRuns = useListChallengeRuns({ query: { queryKey: getListChallengeRunsQueryKey(), refetchOnMount: 'always', refetchInterval: 30_000 } });
+  const arcadeRuns = useListChallengeRuns({ query: { queryKey: getListChallengeRunsQueryKey(), refetchOnMount: 'always', refetchInterval: MENU_POLL_MS, refetchOnWindowFocus: true } });
   const arcadeProgress = { status: arcadeRuns.isError ? 'unavailable' : !Array.isArray(arcadeRuns.data) ? 'loading' : arcadeRuns.data.some(run => run.status === 'active') ? 'continue' : 'new', wins: Array.isArray(arcadeRuns.data) ? arcadeRuns.data.find(run => run.status === 'active')?.wins ?? 0 : 0 };
   useEffect(() => { sendScene(frame, { type: 'arcade', ...arcadeProgress }); }, [arcadeProgress.status, arcadeProgress.wins]);
   const markers = useRef(new Map<string, HTMLButtonElement>());
@@ -146,8 +143,14 @@ export function Home({ bootstrap, onGuideComplete }: { bootstrap: PlayerBootstra
     if (onGuideComplete) return;
     if (welcomedPlayers.has(bootstrap.profile.id)) return;
     welcomedPlayers.add(bootstrap.profile.id);
-    welcomeVoice.current = playVoiceLine('home-fade', loadFeedbackPreferences().audioEnabled);
-    return () => stopSoundEffect(welcomeVoice.current);
+    let cancelled = false;
+    let stop: ((audio: HTMLAudioElement | null) => void) | undefined;
+    void import('../../lib/sfx').then(({ playVoiceLine, stopSoundEffect }) => {
+      if (cancelled) return;
+      stop = stopSoundEffect;
+      welcomeVoice.current = playVoiceLine('home-fade', loadFeedbackPreferences().audioEnabled);
+    });
+    return () => { cancelled = true; stop?.(welcomeVoice.current); };
   }, [bootstrap.profile.id, onGuideComplete]);
   const station = stations.find(item => item.id === view);
   useEffect(() => {
@@ -158,12 +161,24 @@ export function Home({ bootstrap, onGuideComplete }: { bootstrap: PlayerBootstra
   useEffect(() => { sendScene(frame, { type: 'mail', unread: unreadMail }); }, [unreadMail]);
   useEffect(() => { sendScene(frame, { type: 'mail-overlay', open: mailOpen }); }, [mailOpen]);
   useEffect(() => { sendScene(frame, { type: 'bulletin', unread: bulletinUnread }); }, [bulletinUnread]);
-  const crew = [...new Set([...(bootstrap.profile.savedDecks[0]?.cardIds ?? []), ...bootstrap.profile.ownedCardIds])]
-    .map(id => catalogCardById[id]).filter(Boolean).slice(0, 3);
-  const profileCard = catalogCardById[bootstrap.profile.avatarKey]
-    ?? bootstrap.profile.ownedCardIds.map(id => catalogCardById[id]).find(Boolean)
-    ?? catalogCardById.cornball;
-  const profileSticker = avatarSticker(bootstrap.profile.avatarKey);
+  // Catalog/portrait work belongs to the ready 3D scene, not Home's first paint.
+  useEffect(() => {
+    if (!sceneReady) return;
+    let cancelled = false;
+    void Promise.all([import('../../data'), import('@workspace/squabblemon-engine/cosmetics')]).then(([{ catalogCardById, getCardImage }, { avatarSticker }]) => {
+      if (cancelled) return;
+      const profile = bootstrap.profile;
+      const crew = [...new Set([...(profile.savedDecks[0]?.cardIds ?? []), ...profile.ownedCardIds])]
+        .map(id => catalogCardById[id]).filter(Boolean).slice(0, 3);
+      const card = catalogCardById[profile.avatarKey] ?? profile.ownedCardIds.map(id => catalogCardById[id]).find(Boolean) ?? catalogCardById.cornball;
+      const sticker = avatarSticker(profile.avatarKey);
+      sendScene(frame, { type: 'crew', cards: crew.map(item => ({ name: item.name, image: getCardImage(item.artworkId) })) });
+      sendScene(frame, { type: 'profile', name: profile.displayName,
+        image: sticker ? getAssetUrl(sticker.sticker.image ?? sticker.set.stickerAtlas!) : getCardImage(card.artworkId),
+        cell: sticker?.sticker.image ? undefined : sticker?.sticker.cell });
+    });
+    return () => { cancelled = true; };
+  }, [sceneReady, bootstrap.profile.savedDecks, bootstrap.profile.ownedCardIds, bootstrap.profile.avatarKey, bootstrap.profile.displayName]);
   function explore(next: Station | 'room') {
     if (next === 'events') { navigate('/game/events'); return; }
     setView(next); sendScene(frame, { type: 'view', view: next });
@@ -226,10 +241,6 @@ export function Home({ bootstrap, onGuideComplete }: { bootstrap: PlayerBootstra
     sendScene(frame, { type: 'bulletin', unread: bulletinUnread });
     sendScene(frame, { type: 'light', night });
     sendScene(frame, { type: 'music', playing: music.playing });
-    sendScene(frame, { type: 'crew', cards: crew.map(card => ({ name: card.name, image: getCardImage(card.artworkId) })) });
-    sendScene(frame, { type: 'profile', name: bootstrap.profile.displayName,
-      image: profileSticker ? getAssetUrl(profileSticker.sticker.image ?? profileSticker.set.stickerAtlas!) : getCardImage(profileCard.artworkId),
-      cell: profileSticker?.sticker.image ? undefined : profileSticker?.sticker.cell });
     sendScene(frame, {
       type: 'settings',
       reducedMotion: bootstrap.profile.settings.reducedMotion,
@@ -300,7 +311,7 @@ export function Home({ bootstrap, onGuideComplete }: { bootstrap: PlayerBootstra
         {station && station.id !== 'mail' ? <section className="safehouse-room-detail" aria-live="polite" aria-label={station.label}>
           <GameBackButton className="room-back" buttonRef={backButton} onClick={() => explore('room')} label="Back to the room" />
           <div className="safehouse-room-detail__body"><div><span className="room-eyebrow">{station.label}</span><h2>{station.id === 'growth' ? <>Buddy’s <em className="buddy-growth-word">Growth</em> Lab</> : station.title}</h2>
-            <p>{station.id === 'music' ? `${music.playing ? 'Now playing' : 'On the turntable'}: ${music.track?.title ?? soundtrack[music.trackIndex].title}` : station.id === 'story' && chapter ? chapter.title : station.detail}</p></div>
+            <p>{station.id === 'music' ? `${music.playing ? 'Now playing' : 'On the turntable'}: ${music.track?.title ?? 'Fade Tunes'}` : station.id === 'story' && chapter ? chapter.title : station.detail}</p></div>
             <div className="safehouse-room-actions">
               {station.id === 'growth' ? <div className="room-growth"><img className="room-growth__buddy" src={getAssetUrl('assets/buddy-growth/buddy-welcome.webp')} alt="Buddy welcomes you to his Growth Lab" width="720" height="960" /><button type="button" className="room-action" onPointerEnter={preloadGrowthLab} onFocus={preloadGrowthLab} onPointerDown={preloadGrowthLab} onClick={() => setGrowthOpen(true)}>Enter Growth Lab<ArrowRight size={15} /></button></div> : station.id === 'music' ? <MusicControls variant="dj" wrapperClassName="room-dj" /> : onGuideComplete && station.id === 'cards' ? <button className="room-action" onClick={onGuideComplete}>Build your gang<ArrowRight size={15} /></button> : <Link href={station.href} className="room-action">{station.action}<ArrowRight size={15} /></Link>}
               {station.id === 'training' && sceneReady && <button type="button" className="room-punch" onClick={() => { sendScene(frame, { type: 'punch' }); }}>Hit the bag</button>}

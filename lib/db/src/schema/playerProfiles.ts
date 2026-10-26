@@ -117,7 +117,7 @@ export const playerProfilesTable = pgTable("player_profiles", {
     .defaultNow(),
 });
 
-export const insertPlayerProfileSchema = createInsertSchema(
+export const insertPlayerProfileSchema = /* @__PURE__ */ createInsertSchema(
   playerProfilesTable,
 ).omit({ createdAt: true, updatedAt: true, lastActiveAt: true });
 

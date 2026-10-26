@@ -6,6 +6,7 @@ import {
   asc,
   desc,
   eq,
+  getTableColumns,
   inArray,
   isNotNull,
   sql,
@@ -66,7 +67,189 @@ function resetForCadence(cadence: string): Date | null {
   return null;
 }
 
+/** Profile columns read by initialization's normalization and recovery pass. */
+const normalizationColumns = {
+  ownedCardIds: playerProfilesTable.ownedCardIds,
+  starterDeckId: playerProfilesTable.starterDeckId,
+  tutorialCompleted: playerProfilesTable.tutorialCompleted,
+  starterRewardClaimed: playerProfilesTable.starterRewardClaimed,
+  discoveredCardIds: playerProfilesTable.discoveredCardIds,
+  collectionProgress: playerProfilesTable.collectionProgress,
+  savedDecks: playerProfilesTable.savedDecks,
+  equippedVariants: playerProfilesTable.equippedVariants,
+  ownedVariants: playerProfilesTable.ownedVariants,
+  cardProgression: playerProfilesTable.cardProgression,
+  lastActiveAt: playerProfilesTable.lastActiveAt,
+};
+type NormalizationProfile = Pick<PlayerProfileRecord, keyof typeof normalizationColumns>;
+type Executor = Pick<typeof db, "execute">;
+
+/**
+ * Card IDs from immutable, server-issued card reward receipts. Profile reads must
+ * not delete newer cards during a rolling deploy or rollback, so ownership is
+ * recovered only from these receipts.
+ */
+async function earnedReceiptCardIds(executor: Executor, clerkUserId: string): Promise<string[]> {
+  const earnedCards = await executor.execute<{ cardId: string }>(sql`
+      select distinct reward->>'cardId' as "cardId"
+      from ${playerPackOpeningsTable},
+        lateral jsonb_array_elements(${playerPackOpeningsTable.rewards}) as reward
+      where ${playerPackOpeningsTable.clerkUserId} = ${clerkUserId}
+        and reward->>'kind' = 'card'
+        and reward->>'cardId' is not null
+    `);
+  return earnedCards.rows.map(reward => reward.cardId);
+}
+
+/**
+ * JSON text with object keys sorted. PostgreSQL jsonb does not preserve object key
+ * order (it stores keys by length, then bytes), so a plain JSON.stringify of a
+ * value read back from jsonb never matches freshly built objects and made every
+ * read rewrite unchanged decks/progression. Array order stays significant;
+ * undefined-valued keys are dropped exactly as JSON.stringify (and jsonb) do.
+ */
+function canonicalJson(value: unknown): string {
+  return JSON.stringify(value, (_key, item: unknown) =>
+    item && typeof item === "object" && !Array.isArray(item)
+      ? Object.fromEntries(Object.entries(item as Record<string, unknown>).sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0)))
+      : item);
+}
+
+function lastActiveIsStale(current: Pick<NormalizationProfile, "lastActiveAt">, now: Date): boolean {
+  return !current.lastActiveAt || now.getTime() - current.lastActiveAt.getTime() > 5 * 60_000;
+}
+
+/**
+ * Pure ownership/deck/variant/progression normalization. Shared by the unlocked
+ * pre-check and the locked repair so both decide "changed" identically.
+ */
+function normalizeProfileState(current: NormalizationProfile, earnedCardIds: string[], now: Date) {
+  const normalizeCardId = (cardId: string) =>
+    catalogCardById[cardId]?.catalogId ??
+    catalogCardByEngineId[cardId]?.catalogId ??
+    cardId;
+  const normalizedOwned = [
+    ...new Set(
+      [...current.ownedCardIds, ...earnedCardIds,
+        ...(current.starterDeckId || current.tutorialCompleted || current.starterRewardClaimed ? [ROOKIE_MENTOR_ID] : [])]
+        .map(normalizeCardId)
+        .filter((id): id is string => Boolean(id)),
+    ),
+  ];
+  const recipeId = current.starterDeckId ?? null;
+  const discovered = new Set(
+    current.discoveredCardIds
+      .map(normalizeCardId)
+      .filter((id): id is string => Boolean(id)),
+  );
+  for (const id of normalizedOwned) discovered.add(id);
+  if (recipeId) {
+    for (const starter of starterRecipes) {
+      discovered.add(starter.hero);
+    }
+  }
+  const normalizedDecks = current.savedDecks.map((deck) => {
+    const inferredRecipeId =
+      deck.recipeId ??
+      (deck.id.startsWith("starter-")
+        ? deck.id.replace(/^starter-/, "")
+        : null);
+    const inferredRecipe = starterRecipes.find(
+      (item) => item.id === inferredRecipeId,
+    );
+    const normalizedCards = deck.cardIds
+      .map(normalizeCardId)
+      .filter((id): id is string => Boolean(id))
+      .slice(0, DECK_SIZE);
+    const cardIds = deck.deckSize === undefined ? upgradeLegacySavedDeck(normalizedCards, normalizedOwned) : normalizedCards;
+    return {
+      deckSize: DECK_SIZE,
+      id: deck.id,
+      name: deck.name,
+      cardIds,
+      heroCardId:
+        (deck.heroCardId ? normalizeCardId(deck.heroCardId) : null) ??
+        (inferredRecipe
+          ? inferredRecipe.hero
+          : cardIds[0] ?? ""),
+      recipeId: inferredRecipeId,
+    };
+  });
+  const equippedVariants = Object.fromEntries(
+    Object.entries(current.equippedVariants ?? {}).filter(([cardId, variantId]) => {
+      return Boolean(
+        normalizedOwned.includes(cardId) &&
+        current.ownedVariants.includes(variantId),
+      );
+    }),
+  );
+  const cardProgression: CardProgressionMap = Object.fromEntries(
+    normalizedOwned.map((cardId) => [
+      cardId,
+      !catalogCardById[cardId] && current.cardProgression?.[cardId]
+        ? current.cardProgression[cardId]
+        : normalizeCardProgress(current.cardProgression?.[cardId]),
+    ]),
+  );
+
+  const discoveredList = [...discovered];
+  const normalizedChanged =
+    normalizedOwned.length !== current.ownedCardIds.length ||
+    normalizedOwned.some((id, idx) => id !== current.ownedCardIds[idx]) ||
+    discoveredList.length !== current.discoveredCardIds.length ||
+    discoveredList.some((id, idx) => id !== current.discoveredCardIds[idx]) ||
+    current.collectionProgress !== normalizedOwned.length ||
+    canonicalJson(normalizedDecks) !== canonicalJson(current.savedDecks) ||
+    canonicalJson(equippedVariants) !== canonicalJson(current.equippedVariants ?? {}) ||
+    canonicalJson(cardProgression) !== canonicalJson(current.cardProgression ?? {});
+  const lastActiveStale = lastActiveIsStale(current, now);
+  return {
+    needsWrite: normalizedChanged || lastActiveStale,
+    update: {
+      lastActiveAt: now,
+      ownedCardIds: normalizedOwned,
+      cardProgression,
+      discoveredCardIds: discoveredList,
+      collectionProgress: normalizedOwned.length,
+      savedDecks: normalizedDecks,
+      equippedVariants,
+    },
+  };
+}
+
+/**
+ * Lock-free pre-check: true only when initialization would change nothing — the
+ * profile exists, every mission template is provisioned, no mission cadence has
+ * expired, ownership/decks/variants/progression are already normalized and
+ * lastActiveAt is fresh. Any doubt falls through to the locked path, which
+ * re-reads and re-decides under the row lock.
+ */
+async function playerIsSettled(clerkUserId: string, now: Date): Promise<boolean> {
+  const [profiles, missions] = await Promise.all([
+    db
+      .select(normalizationColumns)
+      .from(playerProfilesTable)
+      .where(eq(playerProfilesTable.clerkUserId, clerkUserId)),
+    db
+      .select({ missionKey: playerMissionsTable.missionKey, resetAt: playerMissionsTable.resetAt })
+      .from(playerMissionsTable)
+      .where(eq(playerMissionsTable.clerkUserId, clerkUserId)),
+  ]);
+  const [current] = profiles;
+  if (!current || lastActiveIsStale(current, now)) return false;
+  const provisioned = new Set(missions.map(mission => mission.missionKey));
+  if (MISSION_TEMPLATES.some(template => !provisioned.has(template.missionKey))) return false;
+  if (missions.some(mission => mission.resetAt && mission.resetAt.getTime() <= now.getTime())) return false;
+  // Only scan receipts once the cheap checks pass, so a stale or new player
+  // pays for the receipt scan once (under the lock), not twice.
+  return !normalizeProfileState(current, await earnedReceiptCardIds(db, clerkUserId), now).needsWrite;
+}
+
 export async function ensurePlayer(clerkUserId: string): Promise<void> {
+  // Settled players (the common repeat-bootstrap case) take no row lock, open no
+  // transaction and issue no writes.
+  if (await playerIsSettled(clerkUserId, new Date())) return;
+
   await db
     .insert(playerProfilesTable)
     .values({ clerkUserId })
@@ -90,116 +273,18 @@ export async function ensurePlayer(clerkUserId: string): Promise<void> {
     // Mission cadence and ownership reconciliation share the reward writers' lock.
     // Read the locked row once, avoiding a second transaction and lock roundtrip.
     const [current] = await tx
-      .select()
+      .select(normalizationColumns)
       .from(playerProfilesTable)
       .where(eq(playerProfilesTable.clerkUserId, clerkUserId))
       .for("update");
     if (!current) return;
     await resetExpiredMissionsInTransaction(tx, clerkUserId, now);
 
-    const normalizeCardId = (cardId: string) =>
-      catalogCardById[cardId]?.catalogId ??
-      catalogCardByEngineId[cardId]?.catalogId ??
-      cardId;
-    // Profile reads must not delete newer cards during a rolling deploy or rollback.
-    // Recover ownership only from immutable, server-issued card reward receipts.
-    const earnedCards = await tx.execute<{ cardId: string }>(sql`
-      select distinct reward->>'cardId' as "cardId"
-      from ${playerPackOpeningsTable},
-        lateral jsonb_array_elements(${playerPackOpeningsTable.rewards}) as reward
-      where ${playerPackOpeningsTable.clerkUserId} = ${clerkUserId}
-        and reward->>'kind' = 'card'
-        and reward->>'cardId' is not null
-    `);
-    const normalizedOwned = [
-      ...new Set(
-        [...current.ownedCardIds, ...earnedCards.rows.map(reward => reward.cardId),
-          ...(current.starterDeckId || current.tutorialCompleted || current.starterRewardClaimed ? [ROOKIE_MENTOR_ID] : [])]
-          .map(normalizeCardId)
-          .filter((id): id is string => Boolean(id)),
-      ),
-    ];
-    const recipeId = current.starterDeckId ?? null;
-    const discovered = new Set(
-      current.discoveredCardIds
-        .map(normalizeCardId)
-        .filter((id): id is string => Boolean(id)),
-    );
-    for (const id of normalizedOwned) discovered.add(id);
-    if (recipeId) {
-      for (const starter of starterRecipes) {
-        discovered.add(starter.hero);
-      }
-    }
-    const normalizedDecks = current.savedDecks.map((deck) => {
-      const inferredRecipeId =
-        deck.recipeId ??
-        (deck.id.startsWith("starter-")
-          ? deck.id.replace(/^starter-/, "")
-          : null);
-      const inferredRecipe = starterRecipes.find(
-        (item) => item.id === inferredRecipeId,
-      );
-      const normalizedCards = deck.cardIds
-        .map(normalizeCardId)
-        .filter((id): id is string => Boolean(id))
-        .slice(0, DECK_SIZE);
-      const cardIds = deck.deckSize === undefined ? upgradeLegacySavedDeck(normalizedCards, normalizedOwned) : normalizedCards;
-      return {
-        deckSize: DECK_SIZE,
-        id: deck.id,
-        name: deck.name,
-        cardIds,
-        heroCardId:
-          (deck.heroCardId ? normalizeCardId(deck.heroCardId) : null) ??
-          (inferredRecipe
-            ? inferredRecipe.hero
-            : cardIds[0] ?? ""),
-        recipeId: inferredRecipeId,
-      };
-    });
-    const equippedVariants = Object.fromEntries(
-      Object.entries(current.equippedVariants ?? {}).filter(([cardId, variantId]) => {
-        return Boolean(
-          normalizedOwned.includes(cardId) &&
-          current.ownedVariants.includes(variantId),
-        );
-      }),
-    );
-    const cardProgression: CardProgressionMap = Object.fromEntries(
-      normalizedOwned.map((cardId) => [
-        cardId,
-        !catalogCardById[cardId] && current.cardProgression?.[cardId]
-          ? current.cardProgression[cardId]
-          : normalizeCardProgress(current.cardProgression?.[cardId]),
-      ]),
-    );
-
-    const discoveredList = [...discovered];
-    const normalizedChanged =
-      normalizedOwned.length !== current.ownedCardIds.length ||
-      normalizedOwned.some((id, idx) => id !== current.ownedCardIds[idx]) ||
-      discoveredList.length !== current.discoveredCardIds.length ||
-      discoveredList.some((id, idx) => id !== current.discoveredCardIds[idx]) ||
-      current.collectionProgress !== normalizedOwned.length ||
-      JSON.stringify(normalizedDecks) !== JSON.stringify(current.savedDecks) ||
-      JSON.stringify(equippedVariants) !== JSON.stringify(current.equippedVariants ?? {}) ||
-      JSON.stringify(cardProgression) !== JSON.stringify(current.cardProgression ?? {});
-    const lastActiveStale =
-      !current.lastActiveAt || now.getTime() - current.lastActiveAt.getTime() > 5 * 60_000;
-
-    if (normalizedChanged || lastActiveStale) {
+    const normalized = normalizeProfileState(current, await earnedReceiptCardIds(tx, clerkUserId), now);
+    if (normalized.needsWrite) {
       await tx
         .update(playerProfilesTable)
-        .set({
-          lastActiveAt: now,
-          ownedCardIds: normalizedOwned,
-          cardProgression,
-          discoveredCardIds: discoveredList,
-          collectionProgress: normalizedOwned.length,
-          savedDecks: normalizedDecks,
-          equippedVariants,
-        })
+        .set(normalized.update)
         .where(eq(playerProfilesTable.clerkUserId, clerkUserId));
     }
   });
@@ -222,7 +307,30 @@ export async function hasVerifiedTutorialMatch(
   return Boolean(match);
 }
 
-export function serializePackOpening(opening: PlayerPackOpeningRecord, seasonRewards?: PullSeasonReward[]) {
+/** Columns serialized for a receipt; idempotency keys and owners stay server-side. */
+type SerializedPackOpening = Omit<PlayerPackOpeningRecord, "clerkUserId" | "idempotencyKey">;
+type BootstrapProfile = Omit<PlayerProfileRecord, "packHistory" | "createdAt" | "updatedAt">;
+type BootstrapMission = Omit<PlayerMissionRecord, "id" | "clerkUserId" | "createdAt" | "updatedAt">;
+
+/**
+ * Bootstrap projections: every column the response reads, nothing else. The
+ * legacy profile pack_history JSON is never serialized (receipts come from the
+ * pack openings table), so it is not transferred.
+ */
+const {
+  packHistory: _legacyPackHistory, createdAt: _profileCreatedAt, updatedAt: _profileUpdatedAt,
+  ...bootstrapProfileColumns
+} = getTableColumns(playerProfilesTable);
+const {
+  id: _missionId, clerkUserId: _missionOwner, createdAt: _missionCreatedAt, updatedAt: _missionUpdatedAt,
+  ...bootstrapMissionColumns
+} = getTableColumns(playerMissionsTable);
+const {
+  clerkUserId: _openingOwner, idempotencyKey: _openingKey,
+  ...bootstrapPackOpeningColumns
+} = getTableColumns(playerPackOpeningsTable);
+
+export function serializePackOpening(opening: SerializedPackOpening, seasonRewards?: PullSeasonReward[]) {
   const pullCount = packReceiptPullCount(opening.oddsVersion);
   return {
     id: opening.id,
@@ -239,8 +347,8 @@ export function serializePackOpening(opening: PlayerPackOpeningRecord, seasonRew
 }
 
 function serializeProfile(
-  profile: PlayerProfileRecord,
-  packHistory: PlayerPackOpeningRecord[],
+  profile: BootstrapProfile,
+  packHistory: SerializedPackOpening[],
 ) {
   return {
     id: profile.clerkUserId,
@@ -297,7 +405,7 @@ function serializeProfile(
   };
 }
 
-function serializeMission(mission: PlayerMissionRecord) {
+function serializeMission(mission: BootstrapMission) {
   const status = mission.claimedAt
     ? "claimed"
     : mission.progress >= mission.goal
@@ -318,8 +426,8 @@ function serializeMission(mission: PlayerMissionRecord) {
 }
 
 function getNextAction(
-  profile: PlayerProfileRecord,
-  missions: PlayerMissionRecord[],
+  profile: BootstrapProfile,
+  missions: BootstrapMission[],
 ) {
   if (profile.onboardingStep !== "complete") {
     const messages: Record<string, [string, string]> = {
@@ -392,16 +500,16 @@ export async function getPlayerBootstrap(clerkUserId: string) {
 export async function getInitializedPlayerBootstrap(clerkUserId: string) {
   const [profileResult, missions, packHistory, roadClaims] = await Promise.all([
     db
-      .select()
+      .select(bootstrapProfileColumns)
       .from(playerProfilesTable)
       .where(eq(playerProfilesTable.clerkUserId, clerkUserId)),
     db
-      .select()
+      .select(bootstrapMissionColumns)
       .from(playerMissionsTable)
       .where(eq(playerMissionsTable.clerkUserId, clerkUserId))
       .orderBy(asc(playerMissionsTable.id)),
     db
-      .select()
+      .select(bootstrapPackOpeningColumns)
       .from(playerPackOpeningsTable)
       .where(eq(playerPackOpeningsTable.clerkUserId, clerkUserId))
       .orderBy(desc(playerPackOpeningsTable.createdAt))

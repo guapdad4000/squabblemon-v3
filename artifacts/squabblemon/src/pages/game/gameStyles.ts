@@ -1,5 +1,5 @@
-// Preserve the established global cascade independently of lazy route arrival.
-// CSS is loaded once; screen code and its data remain split by destination.
+// Shared cascade stays eager. Scoped inventory, chapter-ticket and Fadecade
+// chrome styles are owned by their lazy components.
 import '../../components/LoadingScreen.css';
 import '../../components/animated-logo.css';
 import '../../components/ui/street-select.css';
@@ -36,13 +36,11 @@ import '../../components/venue/game-back-button.css';
 import '../../components/venue/fan-navigation.css';
 import '../../components/venue/cinema-nav.css';
 import '../../components/venue/city-header.css';
-import '../../styles/inventory.css';
 import '../../styles/extras-studio.css';
 import '../../styles/reward-reveal.css';
 import '../../styles/level-up.css';
 import '../../styles/arsenal-tabs.css';
 import '../../styles/arsenal.css';
-import '../../styles/collection-discovery.css';
 import '../../styles/collection.css';
 import '../../styles/deck-workshop.css';
 import '../../styles/gang-backdrop.css';
@@ -60,14 +58,12 @@ import '../../styles/gacha-stage.css';
 import '../../styles/story-map.css';
 import '../../styles/cinema-atlas.css';
 import '../../styles/story-briefing.css';
-import '../../components/story/chapter-tickets.css';
 import '../../styles/theater.css';
 import '../../styles/puzzle.css';
 import '../../styles/pvp-art.css';
 import '../../styles/fade-finder.css';
 import '../../styles/fade-park.css';
 import '../../styles/multiplayer.css';
-import '../../styles/fadecade-chrome.css';
 import '../../styles/fadecade-dialog.css';
 import '../../styles/fadecade-road.css';
 import '../../styles/stockz.css';

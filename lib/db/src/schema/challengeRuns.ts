@@ -25,6 +25,6 @@ export const challengeRunsTable = pgTable("challenge_runs", {
 
 // Kept as a type-only import workaround for drizzle's callback scope.
 import { sql } from "drizzle-orm";
-export const insertChallengeRunSchema = createInsertSchema(challengeRunsTable).omit({ id: true, createdAt: true, updatedAt: true });
+export const insertChallengeRunSchema = /* @__PURE__ */ createInsertSchema(challengeRunsTable).omit({ id: true, createdAt: true, updatedAt: true });
 export type InsertChallengeRun = z.infer<typeof insertChallengeRunSchema>;
 export type ChallengeRunRecord = typeof challengeRunsTable.$inferSelect;

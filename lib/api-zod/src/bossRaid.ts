@@ -1,4 +1,4 @@
-import { z } from "zod/v4";
+import * as z from "zod/v4";
 export const bossRaidRunId = z.string().uuid();
 export const bossRaidStartInput = z
   .object({

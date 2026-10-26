@@ -9,7 +9,7 @@
       "startSeconds": 0.8,
       "durationMs": 3600,
       "playbackRate": 1,
-      "revision": "d4ba803f4475a4bf"
+      "revision": "0e23007def8ac602"
     },
     "char02": {
       "file": "char02_chroma.mp4",
@@ -20,7 +20,7 @@
       "startSeconds": 0.8,
       "durationMs": 3600,
       "playbackRate": 1,
-      "revision": "1a6c8ae294aac0a3"
+      "revision": "c1de4d1d8aa2f33e"
     },
     "char03": {
       "file": "char03_chroma.mp4",
@@ -31,7 +31,7 @@
       "startSeconds": 0.8,
       "durationMs": 3600,
       "playbackRate": 1,
-      "revision": "5886f27087cf25d3"
+      "revision": "fd3c56360e41607c"
     },
     "char04": {
       "file": "char04_chroma.mp4",
@@ -42,7 +42,7 @@
       "startSeconds": 0.8,
       "durationMs": 3600,
       "playbackRate": 1,
-      "revision": "b89e3d72833f59f7"
+      "revision": "11ff62e7ca6f2463"
     },
     "char05": {
       "file": "char05_chroma.mp4",
@@ -53,7 +53,7 @@
       "startSeconds": 0.8,
       "durationMs": 3600,
       "playbackRate": 1,
-      "revision": "3de2a783cd21fe68"
+      "revision": "32c07ca7c1245fbf"
     },
     "char06": {
       "file": "char06_chroma.mp4",
@@ -64,7 +64,7 @@
       "startSeconds": 0.8,
       "durationMs": 3600,
       "playbackRate": 1,
-      "revision": "6e8ff4029c0a0918"
+      "revision": "c433d30c9cce389e"
     },
     "char07": {
       "file": "char07_chroma.mp4",
@@ -75,7 +75,7 @@
       "startSeconds": 0.8,
       "durationMs": 3600,
       "playbackRate": 1,
-      "revision": "2949f8a79ebe706a"
+      "revision": "2c0b441a9aad7b66"
     },
     "char08": {
       "file": "char08_chroma.mp4",
@@ -86,7 +86,7 @@
       "startSeconds": 0.8,
       "durationMs": 3600,
       "playbackRate": 1,
-      "revision": "6239d66a99bbbf43"
+      "revision": "5055a990b747e5fb"
     },
     "char09": {
       "file": "char09_chroma.mp4",
@@ -97,7 +97,7 @@
       "startSeconds": 0.8,
       "durationMs": 3600,
       "playbackRate": 1,
-      "revision": "900183e60020a8de"
+      "revision": "b40b972ff2b826f0"
     },
     "char10": {
       "file": "char10_chroma.mp4",
@@ -108,7 +108,7 @@
       "startSeconds": 0.8,
       "durationMs": 3600,
       "playbackRate": 1,
-      "revision": "091fa7276fe61209"
+      "revision": "b1ce23b78c61ca9f"
     },
     "char11": {
       "file": "char11_chroma.mp4",
@@ -119,7 +119,7 @@
       "startSeconds": 0.8,
       "durationMs": 3600,
       "playbackRate": 1,
-      "revision": "2199d936d0bc1f46"
+      "revision": "3c11770863629ece"
     },
     "char12": {
       "file": "char12_chroma.mp4",
@@ -130,7 +130,7 @@
       "startSeconds": 0.8,
       "durationMs": 3600,
       "playbackRate": 1,
-      "revision": "e85585618081ff48"
+      "revision": "3f79ccdac8e282d3"
     },
     "char13": {
       "file": "char13_chroma.mp4",
@@ -141,7 +141,7 @@
       "startSeconds": 0.8,
       "durationMs": 3600,
       "playbackRate": 1,
-      "revision": "a2fc050edd3e1cc7"
+      "revision": "00862572f85a4b9a"
     },
     "char14": {
       "file": "char14_chroma.mp4",
@@ -152,7 +152,7 @@
       "startSeconds": 0.8,
       "durationMs": 3600,
       "playbackRate": 1,
-      "revision": "41c95cad28194562"
+      "revision": "8b30159ee8bb0aa7"
     },
     "char15": {
       "file": "char15_chroma.mp4",
@@ -163,7 +163,7 @@
       "startSeconds": 0.8,
       "durationMs": 3600,
       "playbackRate": 1,
-      "revision": "1f3f0aae358c9d12"
+      "revision": "6373a5adf51d8476"
     },
     "char16": {
       "file": "char16_chroma.mp4",
@@ -174,7 +174,7 @@
       "startSeconds": 0.8,
       "durationMs": 3600,
       "playbackRate": 1,
-      "revision": "9fdb21fd00dbf475"
+      "revision": "c379439547b0e49a"
     },
     "char17": {
       "file": "char17_chroma.mp4",
@@ -185,7 +185,7 @@
       "startSeconds": 0.8,
       "durationMs": 3600,
       "playbackRate": 1,
-      "revision": "46e4c65d8416506b"
+      "revision": "b48b2a3897fa81c6"
     },
     "char18": {
       "file": "char18_chroma.mp4",
@@ -196,7 +196,7 @@
       "startSeconds": 0.8,
       "durationMs": 3600,
       "playbackRate": 1,
-      "revision": "bbf4985a0bc07b3e"
+      "revision": "ed011891cab6e6c6"
     },
     "char19": {
       "file": "char19_chroma.mp4",
@@ -207,7 +207,7 @@
       "startSeconds": 0.8,
       "durationMs": 3600,
       "playbackRate": 1,
-      "revision": "74870f8bf55d6a6a"
+      "revision": "83260e7a9bc5cfd6"
     },
     "char31": {
       "file": "char31_chroma.mp4",
@@ -218,7 +218,7 @@
       "startSeconds": 0.8,
       "durationMs": 3600,
       "playbackRate": 1,
-      "revision": "7daf3def86f27114"
+      "revision": "cb4fdb8ab4f90a1d"
     },
     "char20": {
       "file": "char20_chroma.mp4",
@@ -229,7 +229,7 @@
       "startSeconds": 0,
       "durationMs": 6500,
       "playbackRate": 1,
-      "revision": "3ec9b4a21e53e52b"
+      "revision": "ed4ad4f4945a6309"
     },
     "char21": {
       "file": "char21_chroma.mp4",
@@ -240,7 +240,7 @@
       "startSeconds": 0.8,
       "durationMs": 3600,
       "playbackRate": 1,
-      "revision": "47c0955cc1710483"
+      "revision": "7f5683f02927b8ce"
     },
     "char22": {
       "file": "char22_chroma.mp4",
@@ -251,7 +251,7 @@
       "startSeconds": 0.8,
       "durationMs": 3600,
       "playbackRate": 1,
-      "revision": "3745f2de9486f249"
+      "revision": "9889c65af90097d0"
     },
     "char23": {
       "file": "char23_chroma.mp4",
@@ -262,7 +262,7 @@
       "startSeconds": 0.8,
       "durationMs": 3600,
       "playbackRate": 1,
-      "revision": "e27ce58af95c7db7"
+      "revision": "3c682b221f7bdb74"
     },
     "char24": {
       "file": "char24_chroma.mp4",
@@ -273,7 +273,7 @@
       "startSeconds": 0.8,
       "durationMs": 3600,
       "playbackRate": 1,
-      "revision": "7fab126b99aa2a8c"
+      "revision": "b89c7de33dcc16ed"
     },
     "char25": {
       "file": "char25_chroma.mp4",
@@ -284,7 +284,7 @@
       "startSeconds": 0.8,
       "durationMs": 3600,
       "playbackRate": 1,
-      "revision": "5b682cda138c0d4e"
+      "revision": "ac51ab84a30b5cfc"
     },
     "char26": {
       "file": "char26_chroma.mp4",
@@ -295,7 +295,7 @@
       "startSeconds": 0.8,
       "durationMs": 3600,
       "playbackRate": 1,
-      "revision": "9e0d26583f3bda17"
+      "revision": "270d06fefa16827a"
     },
     "char27": {
       "file": "char27_chroma.mp4",
@@ -306,7 +306,7 @@
       "startSeconds": 0.8,
       "durationMs": 3600,
       "playbackRate": 1,
-      "revision": "862f7cb01fe5cdac"
+      "revision": "96d3ad646d3bf6d1"
     },
     "char28": {
       "file": "char28_chroma.mp4",
@@ -317,7 +317,7 @@
       "startSeconds": 0.8,
       "durationMs": 3600,
       "playbackRate": 1,
-      "revision": "5d2037b33a35d70a"
+      "revision": "925fae2ec978094c"
     },
     "char29": {
       "file": "char29_chroma.mp4",
@@ -328,7 +328,7 @@
       "startSeconds": 0.8,
       "durationMs": 3600,
       "playbackRate": 1,
-      "revision": "dcb4888fdaa6b85b"
+      "revision": "ea0d3c92d96b1580"
     },
     "char32": {
       "file": "char32_chroma.mp4",
@@ -339,7 +339,7 @@
       "startSeconds": 0.8,
       "durationMs": 3600,
       "playbackRate": 1,
-      "revision": "ecf128f234aa2e61"
+      "revision": "47814d1d33e1b809"
     },
     "char30": {
       "file": "char30_chroma.mp4",
@@ -350,7 +350,7 @@
       "startSeconds": 0.8,
       "durationMs": 3600,
       "playbackRate": 1,
-      "revision": "6a0cb710730b89f2"
+      "revision": "cf994727789735ea"
     },
     "char35": {
       "file": "char35_chroma.mp4",
@@ -361,7 +361,7 @@
       "startSeconds": 0.8,
       "durationMs": 3600,
       "playbackRate": 1,
-      "revision": "9ba4bcb38e6e1934"
+      "revision": "fa8e1261afac8080"
     },
     "char36": {
       "file": "char36_chroma.mp4",
@@ -372,7 +372,7 @@
       "startSeconds": 0.8,
       "durationMs": 3600,
       "playbackRate": 1,
-      "revision": "70fe37031f9e2be2"
+      "revision": "17b497a76d5d82a2"
     },
     "char37": {
       "file": "char37_chroma.mp4",
@@ -383,7 +383,7 @@
       "startSeconds": 0.8,
       "durationMs": 3600,
       "playbackRate": 1,
-      "revision": "ecc4de62a8b0126b"
+      "revision": "41623ebdda4262a2"
     },
     "char38": {
       "file": "char38_chroma.mp4",
@@ -394,7 +394,7 @@
       "startSeconds": 0.8,
       "durationMs": 3600,
       "playbackRate": 1,
-      "revision": "025023952d62c7c6"
+      "revision": "3af140db81e7043e"
     },
     "char39": {
       "file": "char39_chroma.mp4",
@@ -405,7 +405,7 @@
       "startSeconds": 0.8,
       "durationMs": 3600,
       "playbackRate": 1,
-      "revision": "b840726f25e38d11"
+      "revision": "14f08f0b9aa2ab68"
     },
     "char33": {
       "file": "char33_chroma.mp4",
@@ -416,7 +416,7 @@
       "startSeconds": 0.8,
       "durationMs": 3600,
       "playbackRate": 1,
-      "revision": "b5a77a203df3ce26"
+      "revision": "5491a9cc4b716ce7"
     },
     "char40": {
       "file": "char40_chroma.mp4",
@@ -427,7 +427,7 @@
       "startSeconds": 0.8,
       "durationMs": 3600,
       "playbackRate": 1,
-      "revision": "fd31292f7b1330ec"
+      "revision": "df3c2d073014b6b0"
     },
     "char41": {
       "file": "char41_chroma.mp4",
@@ -438,7 +438,7 @@
       "startSeconds": 0.8,
       "durationMs": 3600,
       "playbackRate": 1,
-      "revision": "3f907f9cb56ea04c"
+      "revision": "145981424c735794"
     },
     "char42": {
       "file": "char42_chroma.mp4",
@@ -449,7 +449,7 @@
       "startSeconds": 0.8,
       "durationMs": 3600,
       "playbackRate": 1,
-      "revision": "c3a08d86e8f2a95d"
+      "revision": "02732fa17f55e71d"
     },
     "char43": {
       "file": "char43_chroma.mp4",
@@ -460,7 +460,7 @@
       "startSeconds": 0.8,
       "durationMs": 3600,
       "playbackRate": 1,
-      "revision": "556e4102d4a0e97f"
+      "revision": "c4fae39d5e455fb1"
     },
     "char44": {
       "file": "char44_chroma.mp4",
@@ -471,7 +471,7 @@
       "startSeconds": 0.8,
       "durationMs": 3600,
       "playbackRate": 1,
-      "revision": "b0111c85cdf5f5e5"
+      "revision": "6f96e5f3adb90247"
     },
     "char45": {
       "file": "char45_chroma.mp4",
@@ -482,7 +482,7 @@
       "startSeconds": 0,
       "durationMs": 6500,
       "playbackRate": 1,
-      "revision": "228b962459e6813a"
+      "revision": "5d9dc71ca09dac09"
     },
     "char46": {
       "file": "char46_chroma.mp4",
@@ -493,7 +493,7 @@
       "startSeconds": 0.8,
       "durationMs": 3600,
       "playbackRate": 1,
-      "revision": "8c9c452b5d53e576"
+      "revision": "1dc198ee7603b845"
     },
     "char34": {
       "file": "char34_chroma.mp4",
@@ -504,7 +504,7 @@
       "startSeconds": 0.8,
       "durationMs": 3600,
       "playbackRate": 1,
-      "revision": "003660413c35a3ec"
+      "revision": "78421d60832275e2"
     },
     "char47": {
       "file": "char47_chroma.mp4",
@@ -515,7 +515,7 @@
       "startSeconds": 0.8,
       "durationMs": 3600,
       "playbackRate": 1,
-      "revision": "767bfa9f9afd2334"
+      "revision": "b2284ab8310ceee3"
     },
     "char48": {
       "file": "char48_chroma.mp4",
@@ -526,7 +526,7 @@
       "startSeconds": 0.8,
       "durationMs": 3600,
       "playbackRate": 1,
-      "revision": "385b1f1456607041"
+      "revision": "7919ffe0029b02ea"
     },
     "char49": {
       "file": "char49_chroma.mp4",
@@ -537,7 +537,7 @@
       "startSeconds": 0.8,
       "durationMs": 3600,
       "playbackRate": 1,
-      "revision": "2735286b254d003c"
+      "revision": "cbb42c39f58cf0e7"
     },
     "char50": {
       "file": "char50_chroma.mp4",
@@ -548,7 +548,7 @@
       "startSeconds": 0.8,
       "durationMs": 3600,
       "playbackRate": 1,
-      "revision": "b04b9cdc1428e87c"
+      "revision": "bda805646770253b"
     },
     "char51": {
       "file": "char51_chroma.mp4",
@@ -559,7 +559,7 @@
       "startSeconds": 0.8,
       "durationMs": 3600,
       "playbackRate": 1,
-      "revision": "bd3c45b6e5efb5d0"
+      "revision": "a47e502d51b6312a"
     },
     "char52": {
       "file": "char52_chroma.mp4",
@@ -570,7 +570,7 @@
       "startSeconds": 0.8,
       "durationMs": 3600,
       "playbackRate": 1,
-      "revision": "66a923229027f353"
+      "revision": "7ee059baf64d22f2"
     },
     "char53": {
       "file": "char53_chroma.mp4",
@@ -581,7 +581,7 @@
       "startSeconds": 0.8,
       "durationMs": 3600,
       "playbackRate": 1,
-      "revision": "3424a0c0ceef094b"
+      "revision": "4647f935f1476524"
     },
     "char54": {
       "file": "char54_chroma.mp4",
@@ -592,7 +592,7 @@
       "startSeconds": 0.8,
       "durationMs": 3600,
       "playbackRate": 1,
-      "revision": "fa2176355c325be0"
+      "revision": "edb713c95225c14b"
     },
     "char55": {
       "file": "char55_chroma.mp4",
@@ -603,7 +603,7 @@
       "startSeconds": 0.8,
       "durationMs": 3600,
       "playbackRate": 1,
-      "revision": "405e343736cc49b3"
+      "revision": "0ce0ca3751078034"
     },
     "char56": {
       "file": "char56_chroma.mp4",
@@ -614,7 +614,7 @@
       "startSeconds": 0.8,
       "durationMs": 3600,
       "playbackRate": 1,
-      "revision": "b38df33fd68d3289"
+      "revision": "d6412156a1cf7520"
     },
     "char57": {
       "file": "char57_chroma.mp4",
@@ -625,7 +625,7 @@
       "startSeconds": 0.8,
       "durationMs": 3600,
       "playbackRate": 1,
-      "revision": "efaccb7be4f15954"
+      "revision": "2840eb6e72c33d7a"
     },
     "char58": {
       "file": "char58_chroma.mp4",
@@ -636,7 +636,7 @@
       "startSeconds": 0.8,
       "durationMs": 3600,
       "playbackRate": 1,
-      "revision": "ea3caf2214a5faf2"
+      "revision": "17c2aa1a8518d41a"
     },
     "char59": {
       "file": "char59_chroma.mp4",
@@ -647,7 +647,7 @@
       "startSeconds": 0.8,
       "durationMs": 3600,
       "playbackRate": 1,
-      "revision": "789aed151abb5bdd"
+      "revision": "e96974bc32cd37c5"
     },
     "char60": {
       "file": "char60_chroma.mp4",
@@ -658,7 +658,7 @@
       "startSeconds": 0.8,
       "durationMs": 3600,
       "playbackRate": 1,
-      "revision": "7d935e221afab283"
+      "revision": "b7863d68ab78539b"
     },
     "char61": {
       "file": "char61_chroma.mp4",
@@ -669,7 +669,7 @@
       "startSeconds": 0.8,
       "durationMs": 3600,
       "playbackRate": 1,
-      "revision": "cd41d8907fedae24"
+      "revision": "86bab57fd1050b61"
     },
     "char62": {
       "file": "char62_chroma.mp4",
@@ -680,7 +680,7 @@
       "startSeconds": 0.8,
       "durationMs": 3600,
       "playbackRate": 1,
-      "revision": "de4e9905aedb953e"
+      "revision": "4b7b71d0f61674d3"
     },
     "char63": {
       "file": "char63_chroma.mp4",
@@ -691,7 +691,7 @@
       "startSeconds": 0.8,
       "durationMs": 3600,
       "playbackRate": 1,
-      "revision": "ed5dc72f514e3b28"
+      "revision": "168ba5cb0de5eaa2"
     },
     "char64": {
       "file": "char64_chroma.mp4",
@@ -702,7 +702,7 @@
       "startSeconds": 0.8,
       "durationMs": 3600,
       "playbackRate": 1,
-      "revision": "29a54a551c415c91"
+      "revision": "6808607ee84f2e2f"
     },
     "char65": {
       "file": "char65_chroma.mp4",
@@ -713,7 +713,7 @@
       "startSeconds": 0.8,
       "durationMs": 3600,
       "playbackRate": 1,
-      "revision": "566bbc39137f6805"
+      "revision": "4953e3c002c605ec"
     },
     "char66": {
       "file": "char66_chroma.mp4",
@@ -724,7 +724,7 @@
       "startSeconds": 0.8,
       "durationMs": 3600,
       "playbackRate": 1,
-      "revision": "20f03171a38caebb"
+      "revision": "1f06af4669bd0431"
     },
     "char67": {
       "file": "char67_chroma.mp4",
@@ -735,7 +735,7 @@
       "startSeconds": 0.8,
       "durationMs": 3600,
       "playbackRate": 1,
-      "revision": "bd2b26c4b72a9078"
+      "revision": "414c4073208ccd4e"
     },
     "char68": {
       "file": "char68_chroma.mp4",
@@ -746,7 +746,7 @@
       "startSeconds": 0.8,
       "durationMs": 3600,
       "playbackRate": 1,
-      "revision": "3035adb5099f8320"
+      "revision": "435aba4636517d6f"
     },
     "char69": {
       "file": "char69_chroma.mp4",
@@ -757,7 +757,7 @@
       "startSeconds": 0.8,
       "durationMs": 3600,
       "playbackRate": 1,
-      "revision": "7793891f2abf22cc"
+      "revision": "0014163c6ac29895"
     },
     "char70": {
       "file": "char70_chroma.mp4",
@@ -768,7 +768,7 @@
       "startSeconds": 0.8,
       "durationMs": 3600,
       "playbackRate": 1,
-      "revision": "d51bb316770dc1b2"
+      "revision": "43c98be80d210c94"
     },
     "char71": {
       "file": "char71_chroma.mp4",
@@ -779,7 +779,7 @@
       "startSeconds": 0.8,
       "durationMs": 3600,
       "playbackRate": 1,
-      "revision": "f31aa9f05f93b630"
+      "revision": "e9bb770c88cc4fe3"
     },
     "char72": {
       "file": "char72_chroma.mp4",
@@ -790,7 +790,7 @@
       "startSeconds": 0.8,
       "durationMs": 3600,
       "playbackRate": 1,
-      "revision": "f4f93e7f4452d817"
+      "revision": "c4221eefbbd9f34c"
     },
     "char73": {
       "file": "char73_chroma.mp4",
@@ -801,7 +801,7 @@
       "startSeconds": 0.8,
       "durationMs": 3600,
       "playbackRate": 1,
-      "revision": "6b56db2aaacab24e"
+      "revision": "de9cc98d8e90b500"
     },
     "char74": {
       "file": "char74_chroma.mp4",
@@ -812,7 +812,7 @@
       "startSeconds": 0.8,
       "durationMs": 3600,
       "playbackRate": 1,
-      "revision": "19278f13196bbdf5"
+      "revision": "587db09e95d43b3d"
     },
     "char75": {
       "file": "char75_chroma.mp4",
@@ -823,7 +823,7 @@
       "startSeconds": 0.8,
       "durationMs": 3600,
       "playbackRate": 1,
-      "revision": "bc4005d195c580fa"
+      "revision": "eab4c75f4198fd34"
     },
     "char76": {
       "file": "char76_chroma.mp4",
@@ -834,7 +834,7 @@
       "startSeconds": 0.8,
       "durationMs": 3600,
       "playbackRate": 1,
-      "revision": "6a45ee30185bf8f9"
+      "revision": "493c2877e57a3748"
     },
     "char77": {
       "file": "char77_chroma.mp4",
@@ -845,7 +845,7 @@
       "startSeconds": 0.8,
       "durationMs": 3600,
       "playbackRate": 1,
-      "revision": "c75204352b538182"
+      "revision": "50e9c633c94b8bb3"
     },
     "char78": {
       "file": "char78_chroma.mp4",
@@ -856,7 +856,7 @@
       "startSeconds": 0.8,
       "durationMs": 3600,
       "playbackRate": 1,
-      "revision": "c3b7a0bf728394d9"
+      "revision": "030baa83ae4c8253"
     },
     "char79": {
       "file": "char79_chroma.mp4",
@@ -867,7 +867,7 @@
       "startSeconds": 0.8,
       "durationMs": 3600,
       "playbackRate": 1,
-      "revision": "66d404b07d7c99f1"
+      "revision": "4856e2c07c1dc9e6"
     },
     "char80": {
       "file": "char80_chroma.mp4",
@@ -878,7 +878,7 @@
       "startSeconds": 0.8,
       "durationMs": 3600,
       "playbackRate": 1,
-      "revision": "b2ec9a435e46ac7c"
+      "revision": "4d07305e544ad21e"
     },
     "char81": {
       "file": "char81_chroma.mp4",
@@ -889,7 +889,7 @@
       "startSeconds": 0.8,
       "durationMs": 3600,
       "playbackRate": 1,
-      "revision": "c3d4ab5dccfa4f03"
+      "revision": "bd102f6b53054a14"
     },
     "char82": {
       "file": "char82_chroma.mp4",
@@ -900,7 +900,7 @@
       "startSeconds": 0.8,
       "durationMs": 3600,
       "playbackRate": 1,
-      "revision": "97304b15d937382f"
+      "revision": "5fc648cc28ca1007"
     },
     "char83": {
       "file": "char83_chroma.mp4",
@@ -911,7 +911,7 @@
       "startSeconds": 0.8,
       "durationMs": 3600,
       "playbackRate": 1,
-      "revision": "27548db856709a75"
+      "revision": "233d887a8b0eac2e"
     },
     "char84": {
       "file": "char84_chroma.mp4",
@@ -922,7 +922,7 @@
       "startSeconds": 0.8,
       "durationMs": 3600,
       "playbackRate": 1,
-      "revision": "5f0f15e25aa54bf6"
+      "revision": "e7e70241c16c7128"
     },
     "char85": {
       "file": "char85_chroma.mp4",
@@ -933,7 +933,7 @@
       "startSeconds": 0.8,
       "durationMs": 3600,
       "playbackRate": 1,
-      "revision": "968c09fad3f689e5"
+      "revision": "b9c1defe4e978639"
     },
     "char86": {
       "file": "char86_chroma.mp4",
@@ -944,7 +944,7 @@
       "startSeconds": 0.8,
       "durationMs": 3600,
       "playbackRate": 1,
-      "revision": "bb99f2ada408f0dd"
+      "revision": "2b6cdc3637f402cd"
     },
     "char87": {
       "file": "char87_chroma.mp4",
@@ -955,7 +955,7 @@
       "startSeconds": 0.8,
       "durationMs": 3600,
       "playbackRate": 1,
-      "revision": "33f136ae95e41e83"
+      "revision": "6ab552e203892eef"
     },
     "char88": {
       "file": "char88_chroma.mp4",
@@ -966,7 +966,7 @@
       "startSeconds": 0.8,
       "durationMs": 3600,
       "playbackRate": 1,
-      "revision": "447aecbb3cd305d9"
+      "revision": "4736bd5a42f085c2"
     },
     "char89": {
       "file": "char89_chroma.mp4",
@@ -977,7 +977,7 @@
       "startSeconds": 0.8,
       "durationMs": 3600,
       "playbackRate": 1,
-      "revision": "3b796db598ea76c5"
+      "revision": "971b3d0a0c0b5f05"
     },
     "char90": {
       "file": "char90_chroma.mp4",
@@ -988,7 +988,7 @@
       "startSeconds": 0.8,
       "durationMs": 3600,
       "playbackRate": 1,
-      "revision": "c1b5caaaac1ce29e"
+      "revision": "e18536969f415dd7"
     },
     "char91": {
       "file": "char91_chroma.mp4",
@@ -999,7 +999,7 @@
       "startSeconds": 0,
       "durationMs": 6500,
       "playbackRate": 1,
-      "revision": "ac629e17c5d2728f"
+      "revision": "eb9b26511f748a1d"
     },
     "char92": {
       "file": "char92_chroma.mp4",
@@ -1010,7 +1010,7 @@
       "startSeconds": 0,
       "durationMs": 6500,
       "playbackRate": 1,
-      "revision": "fa9f947928b5a0cf"
+      "revision": "e340164178143737"
     },
     "char93": {
       "file": "char93_chroma.mp4",
@@ -1021,7 +1021,7 @@
       "startSeconds": 0,
       "durationMs": 6500,
       "playbackRate": 1,
-      "revision": "08a53931e7c4acab"
+      "revision": "f3e911098b4dbfff"
     },
     "char94": {
       "file": "char94_chroma.mp4",
@@ -1032,7 +1032,7 @@
       "startSeconds": 0,
       "durationMs": 6500,
       "playbackRate": 1,
-      "revision": "cccca0d048d18ded"
+      "revision": "b19969114f7005e1"
     },
     "char95": {
       "file": "char95_chroma.mp4",
@@ -1043,7 +1043,7 @@
       "startSeconds": 0,
       "durationMs": 6500,
       "playbackRate": 1,
-      "revision": "c03646972558fa6e"
+      "revision": "1a75d8164061b855"
     },
     "char96": {
       "file": "char96_chroma.mp4",
@@ -1054,7 +1054,7 @@
       "startSeconds": 0,
       "durationMs": 6500,
       "playbackRate": 1,
-      "revision": "251bf1ddaf35e6ff"
+      "revision": "bf3d88a47a6dc148"
     },
     "char97": {
       "file": "char97_chroma.mp4",
@@ -1065,7 +1065,7 @@
       "startSeconds": 0,
       "durationMs": 6500,
       "playbackRate": 1,
-      "revision": "3fac34b55f9cd02d"
+      "revision": "6c292d77d743199b"
     },
     "char98": {
       "file": "char98_chroma.mp4",
@@ -1076,7 +1076,7 @@
       "startSeconds": 0,
       "durationMs": 6500,
       "playbackRate": 1,
-      "revision": "c2b66cdedf8ec5de"
+      "revision": "beb110025dd46da8"
     },
     "char99": {
       "file": "char99_chroma.mp4",
@@ -1087,7 +1087,7 @@
       "startSeconds": 0,
       "durationMs": 6500,
       "playbackRate": 1,
-      "revision": "989cadecef4107c6"
+      "revision": "0cb2e4b567d88c55"
     },
     "char100": {
       "file": "char100_chroma.mp4",
@@ -1098,7 +1098,7 @@
       "startSeconds": 0,
       "durationMs": 6500,
       "playbackRate": 1,
-      "revision": "6ccc73e24836b0b4"
+      "revision": "181a2fc3d81d7637"
     },
     "char101": {
       "file": "char101_chroma.mp4",
@@ -1109,7 +1109,7 @@
       "startSeconds": 0,
       "durationMs": 6500,
       "playbackRate": 1,
-      "revision": "c4fcbebe4470d678"
+      "revision": "4e73bef8bcba787c"
     },
     "char102": {
       "file": "char102_chroma.mp4",
@@ -1120,7 +1120,7 @@
       "startSeconds": 0,
       "durationMs": 6500,
       "playbackRate": 1,
-      "revision": "863a9d1d6bc8e096"
+      "revision": "140d8a583c31e6a5"
     },
     "char103": {
       "file": "char103_chroma.mp4",
@@ -1131,7 +1131,7 @@
       "startSeconds": 0,
       "durationMs": 6500,
       "playbackRate": 1,
-      "revision": "8a19217adf1b1a2b"
+      "revision": "e81a990d4c61ba34"
     },
     "oa-dr-fade-v1": {
       "file": "oa-dr-fade-v1.mp4",
@@ -1142,7 +1142,7 @@
       "startSeconds": 0,
       "durationMs": 8000,
       "playbackRate": 1,
-      "revision": "3ad40819373aaa79"
+      "revision": "54a405adb6cd69a2"
     },
     "oa-folks-v1": {
       "file": "oa-folks-v1.mp4",
@@ -1153,7 +1153,7 @@
       "startSeconds": 0,
       "durationMs": 8000,
       "playbackRate": 1,
-      "revision": "de15c8612e4934c7"
+      "revision": "d1ca71fe0a04e06b"
     },
     "oa-buddy-v1": {
       "file": "oa-buddy-v1.mp4",
@@ -1164,7 +1164,7 @@
       "startSeconds": 0,
       "durationMs": 8000,
       "playbackRate": 1,
-      "revision": "7a8db4587771e483"
+      "revision": "c818b0149d0383ce"
     },
     "oa-concrete-v1": {
       "file": "oa-concrete-v1.mp4",
@@ -1175,7 +1175,7 @@
       "startSeconds": 0,
       "durationMs": 8000,
       "playbackRate": 1,
-      "revision": "3b26ca429a654e2c"
+      "revision": "d8d7edf9e48c6718"
     },
     "oa-counter-v1": {
       "file": "oa-counter-v1.mp4",
@@ -1186,7 +1186,7 @@
       "startSeconds": 0,
       "durationMs": 8000,
       "playbackRate": 1,
-      "revision": "d8416fd4d95a8b1b"
+      "revision": "66663fac00471420"
     },
     "oa-undercova-brotha-v1": {
       "file": "oa-undercova-brotha-v1.mp4",
@@ -1197,7 +1197,7 @@
       "startSeconds": 0,
       "durationMs": 8000,
       "playbackRate": 1,
-      "revision": "861a87e66f809830"
+      "revision": "405a5f867c5e0c65"
     },
     "oa-sugarfoot-v1": {
       "file": "oa-sugarfoot-v1.mp4",
@@ -1208,7 +1208,7 @@
       "startSeconds": 0,
       "durationMs": 8000,
       "playbackRate": 1,
-      "revision": "f1d692de2d9fb8b0"
+      "revision": "b194cc92e049ac75"
     },
     "oa-juneteenth-chair-guy-v1": {
       "file": "oa-juneteenth-chair-guy-v1.mp4",
@@ -1219,7 +1219,7 @@
       "startSeconds": 0,
       "durationMs": 8000,
       "playbackRate": 1,
-      "revision": "d30d5dc932bf08a6"
+      "revision": "39c5b0f260ef8015"
     },
     "oa-homeless-wiseman-v1": {
       "file": "oa-homeless-wiseman-v1.mp4",
@@ -1230,18 +1230,18 @@
       "startSeconds": 0,
       "durationMs": 8000,
       "playbackRate": 1,
-      "revision": "740b32aef27ec842"
+      "revision": "b9a4e4a893edaf36"
     },
     "oa-bonnet-girl-v1": {
       "file": "oa-bonnet-girl-v1.mp4",
       "label": "Bonnet Girl",
-      "move": "Now I\u2019m Up",
+      "move": "Now I’m Up",
       "enabled": true,
       "chroma": "cyan",
       "startSeconds": 0,
       "durationMs": 5167,
       "playbackRate": 1,
-      "revision": "8c44166141299488"
+      "revision": "61d13de5c1815f99"
     },
     "oa-tattoo-artist-v1": {
       "file": "oa-tattoo-artist-v1.mp4",
@@ -1252,7 +1252,7 @@
       "startSeconds": 0,
       "durationMs": 5167,
       "playbackRate": 1,
-      "revision": "ee786d3913e1045c"
+      "revision": "c0e43160da8c4ad6"
     },
     "oa-the-mailman-v1": {
       "file": "oa-the-mailman-v1.mp4",
@@ -1263,7 +1263,7 @@
       "startSeconds": 0,
       "durationMs": 8000,
       "playbackRate": 1,
-      "revision": "bb5614dacafa5609"
+      "revision": "a8958f123acb2b40"
     },
     "oa-garden-wall-v1": {
       "file": "oa-garden-wall-v1.mp4",
@@ -1274,7 +1274,7 @@
       "startSeconds": 0,
       "durationMs": 8000,
       "playbackRate": 1,
-      "revision": "c40af29f043c041d"
+      "revision": "5bc4c4b7576d2214"
     },
     "oa-ahki-v1": {
       "file": "oa-ahki-v1.mp4",
@@ -1285,7 +1285,7 @@
       "startSeconds": 0,
       "durationMs": 5167,
       "playbackRate": 1,
-      "revision": "024fda6837f7cad4"
+      "revision": "52605a50e5b4f029"
     },
     "oa-cloudbreak-v1": {
       "file": "oa-cloudbreak-v1.mp4",
@@ -1296,7 +1296,7 @@
       "startSeconds": 0,
       "durationMs": 8000,
       "playbackRate": 1,
-      "revision": "afd3c4a746c9f3f4"
+      "revision": "3ff116afb1e3abf1"
     },
     "oa-alchy-v1": {
       "file": "oa-alchy-v1.mp4",
@@ -1307,7 +1307,7 @@
       "startSeconds": 0,
       "durationMs": 5167,
       "playbackRate": 1,
-      "revision": "bc6746ad3eaea75a"
+      "revision": "86daf04724004df7"
     },
     "oa-atl-scammer-v1": {
       "file": "oa-atl-scammer-v1.mp4",
@@ -1318,7 +1318,7 @@
       "startSeconds": 0,
       "durationMs": 5167,
       "playbackRate": 1,
-      "revision": "8e9c2986bc5551e1"
+      "revision": "b5adc24f02e1e7a6"
     },
     "oa-crosswind-v1": {
       "file": "oa-crosswind-v1.mp4",
@@ -1329,7 +1329,7 @@
       "startSeconds": 0,
       "durationMs": 5167,
       "playbackRate": 1,
-      "revision": "f331aa5abe2cdd65"
+      "revision": "2738b5e786a3b972"
     },
     "oa-bbl-demon-v1": {
       "file": "oa-bbl-demon-v1.mp4",
@@ -1340,7 +1340,7 @@
       "startSeconds": 0,
       "durationMs": 8000,
       "playbackRate": 1,
-      "revision": "88d94a262fd28e51"
+      "revision": "cb9eac10df77d5f4"
     },
     "oa-bbl-nice-v1": {
       "file": "oa-bbl-nice-v1.mp4",
@@ -1351,7 +1351,7 @@
       "startSeconds": 0,
       "durationMs": 5167,
       "playbackRate": 1,
-      "revision": "89f2b463c31049c7"
+      "revision": "93383be6d0324c78"
     },
     "oa-bboy-v1": {
       "file": "oa-bboy-v1.mp4",
@@ -1362,7 +1362,7 @@
       "startSeconds": 0,
       "durationMs": 5167,
       "playbackRate": 1,
-      "revision": "e685a6be654d8e33"
+      "revision": "9c44ec02b26ca38e"
     },
     "oa-gust-v1": {
       "file": "oa-gust-v1.mp4",
@@ -1373,7 +1373,7 @@
       "startSeconds": 0,
       "durationMs": 5167,
       "playbackRate": 1,
-      "revision": "8754fd8b06b22a62"
+      "revision": "ea4389e8127bbe04"
     },
     "oa-black-cowboy-v1": {
       "file": "oa-black-cowboy-v1.mp4",
@@ -1384,7 +1384,7 @@
       "startSeconds": 0,
       "durationMs": 8000,
       "playbackRate": 1,
-      "revision": "1ce41d986ea2579a"
+      "revision": "c05e4e44b24a3f7c"
     },
     "oa-bouncer-v1": {
       "file": "oa-bouncer-v1.mp4",
@@ -1395,7 +1395,7 @@
       "startSeconds": 0,
       "durationMs": 5167,
       "playbackRate": 1,
-      "revision": "e4f1c8ed9d3a24b4"
+      "revision": "d36e840b46564f1f"
     },
     "oa-break-dancer-v1": {
       "file": "oa-break-dancer-v1.mp4",
@@ -1406,7 +1406,7 @@
       "startSeconds": 0,
       "durationMs": 5167,
       "playbackRate": 1,
-      "revision": "0b66a39695b05726"
+      "revision": "b4380f05c173d2a0"
     },
     "oa-cologne-criminal-v1": {
       "file": "oa-cologne-criminal-v1.mp4",
@@ -1417,7 +1417,7 @@
       "startSeconds": 0,
       "durationMs": 8000,
       "playbackRate": 1,
-      "revision": "5271ee589db767bc"
+      "revision": "3b81f32d08a8b8cd"
     },
     "oa-corrupt-pastor-v1": {
       "file": "oa-corrupt-pastor-v1.mp4",
@@ -1428,7 +1428,7 @@
       "startSeconds": 0,
       "durationMs": 8000,
       "playbackRate": 1,
-      "revision": "3a1151cff6b40ebc"
+      "revision": "a4c87bed1e9e5ad4"
     },
     "oa-demario-v1": {
       "file": "oa-demario-v1.mp4",
@@ -1439,7 +1439,7 @@
       "startSeconds": 0,
       "durationMs": 5167,
       "playbackRate": 1,
-      "revision": "c580e9360ecf521c"
+      "revision": "c7f1945e1924b091"
     },
     "oa-divorced-dad-v1": {
       "file": "oa-divorced-dad-v1.mp4",
@@ -1450,7 +1450,7 @@
       "startSeconds": 0,
       "durationMs": 5167,
       "playbackRate": 1,
-      "revision": "d0e8d7d0abe7b071"
+      "revision": "503fcb2df8b50c17"
     },
     "oa-dmv-worker-v1": {
       "file": "oa-dmv-worker-v1.mp4",
@@ -1461,7 +1461,7 @@
       "startSeconds": 0,
       "durationMs": 5167,
       "playbackRate": 1,
-      "revision": "ec0c768a2a1500f1"
+      "revision": "c8586abe0858120d"
     },
     "oa-livewire-v1": {
       "file": "oa-livewire-v1.mp4",
@@ -1472,7 +1472,7 @@
       "startSeconds": 0,
       "durationMs": 5167,
       "playbackRate": 1,
-      "revision": "d8a322d9c8f3ed49"
+      "revision": "21bf8ce41f038bae"
     },
     "oa-dr-umah-v1": {
       "file": "oa-dr-umah-v1.mp4",
@@ -1483,7 +1483,7 @@
       "startSeconds": 0,
       "durationMs": 8000,
       "playbackRate": 1,
-      "revision": "7171a5b8184c8e7e"
+      "revision": "b35451ea94fc2615"
     },
     "oa-wiretap-v1": {
       "file": "oa-wiretap-v1.mp4",
@@ -1494,7 +1494,7 @@
       "startSeconds": 0,
       "durationMs": 5167,
       "playbackRate": 1,
-      "revision": "e94b92a5daa8d5da"
+      "revision": "e2de9743f048bbd9"
     },
     "oa-circuit-captain-v1": {
       "file": "oa-circuit-captain-v1.mp4",
@@ -1505,7 +1505,7 @@
       "startSeconds": 0,
       "durationMs": 8000,
       "playbackRate": 1,
-      "revision": "2f106b66dc65d6b1"
+      "revision": "eccc2f6f1aab403b"
     },
     "oa-rainmaker-v1": {
       "file": "oa-rainmaker-v1.mp4",
@@ -1516,7 +1516,7 @@
       "startSeconds": 0,
       "durationMs": 8000,
       "playbackRate": 1,
-      "revision": "94d7a68c246f7d0e"
+      "revision": "6571f0bf30ef0bd3"
     },
     "oa-failed-athlete-v1": {
       "file": "oa-failed-athlete-v1.mp4",
@@ -1527,7 +1527,7 @@
       "startSeconds": 0,
       "durationMs": 5167,
       "playbackRate": 1,
-      "revision": "64f88a6277ad1ae3"
+      "revision": "d14a436ffbbfd228"
     },
     "oa-failed-rapper-v1": {
       "file": "oa-failed-rapper-v1.mp4",
@@ -1538,7 +1538,7 @@
       "startSeconds": 0,
       "durationMs": 5167,
       "playbackRate": 1,
-      "revision": "f120b6727dd95961"
+      "revision": "0ca82989cc486018"
     },
     "oa-fangirl-v1": {
       "file": "oa-fangirl-v1.mp4",
@@ -1549,7 +1549,7 @@
       "startSeconds": 0,
       "durationMs": 5167,
       "playbackRate": 1,
-      "revision": "c1cfa7a5b987fadb"
+      "revision": "fe9e3ef2a814e353"
     },
     "oa-fein-v1": {
       "file": "oa-fein-v1.mp4",
@@ -1560,7 +1560,7 @@
       "startSeconds": 0,
       "durationMs": 5167,
       "playbackRate": 1,
-      "revision": "959ac71d93581950"
+      "revision": "3958247819ff59f3"
     },
     "oa-battery-back-v1": {
       "file": "oa-battery-back-v1.mp4",
@@ -1571,7 +1571,7 @@
       "startSeconds": 0,
       "durationMs": 5167,
       "playbackRate": 1,
-      "revision": "ea339ba279b6d3dd"
+      "revision": "fa039140fbb0a786"
     },
     "oa-monsoon-anchor-v1": {
       "file": "oa-monsoon-anchor-v1.mp4",
@@ -1582,7 +1582,7 @@
       "startSeconds": 0,
       "durationMs": 5167,
       "playbackRate": 1,
-      "revision": "6facc2bf1d67b4a0"
+      "revision": "c0ac028c6efba23d"
     },
     "oa-riptide-bruiser-v1": {
       "file": "oa-riptide-bruiser-v1.mp4",
@@ -1593,7 +1593,7 @@
       "startSeconds": 0,
       "durationMs": 5167,
       "playbackRate": 1,
-      "revision": "5519a5c649cadaf5"
+      "revision": "88ae12035c41e490"
     },
     "oa-god-of-hookah-v1": {
       "file": "oa-god-of-hookah-v1.mp4",
@@ -1604,7 +1604,7 @@
       "startSeconds": 0,
       "durationMs": 8000,
       "playbackRate": 1,
-      "revision": "ea7fcd55f39eacd5"
+      "revision": "fba8aaa5f2369928"
     },
     "oa-goth-kid-v1": {
       "file": "oa-goth-kid-v1.mp4",
@@ -1615,18 +1615,18 @@
       "startSeconds": 0,
       "durationMs": 5167,
       "playbackRate": 1,
-      "revision": "7421da66f0f897d0"
+      "revision": "2f7afbcd7c177776"
     },
     "oa-grown-man-fanboy-v1": {
       "file": "oa-grown-man-fanboy-v1.mp4",
       "label": "Grown-Man Fanboy",
-      "move": "He Doesn\u2019t Know You",
+      "move": "He Doesn’t Know You",
       "enabled": true,
       "chroma": "cyan",
       "startSeconds": 0,
       "durationMs": 8000,
       "playbackRate": 1,
-      "revision": "03f7c91186930b87"
+      "revision": "8a91a7b205db07eb"
     },
     "oa-hair-stylist-v1": {
       "file": "oa-hair-stylist-v1.mp4",
@@ -1637,7 +1637,7 @@
       "startSeconds": 0,
       "durationMs": 5167,
       "playbackRate": 1,
-      "revision": "c4dfca503c7cbbd4"
+      "revision": "8607e683213bfd99"
     },
     "oa-hater-v1": {
       "file": "oa-hater-v1.mp4",
@@ -1648,7 +1648,7 @@
       "startSeconds": 0,
       "durationMs": 5167,
       "playbackRate": 1,
-      "revision": "5e0af0dd56e7f739"
+      "revision": "e575497182d4ac00"
     },
     "oa-homeless-guy-v1": {
       "file": "oa-homeless-guy-v1.mp4",
@@ -1659,7 +1659,7 @@
       "startSeconds": 0,
       "durationMs": 8000,
       "playbackRate": 1,
-      "revision": "72ef2c55fb45b8bd"
+      "revision": "cb0bd478e1313a7b"
     },
     "oa-homeless-legend-v1": {
       "file": "oa-homeless-legend-v1.mp4",
@@ -1670,7 +1670,7 @@
       "startSeconds": 0,
       "durationMs": 8000,
       "playbackRate": 1,
-      "revision": "ffb5c42895ee5cb7"
+      "revision": "ba2b85ae9e14ca9e"
     },
     "oa-homeless-yn-v1": {
       "file": "oa-homeless-yn-v1.mp4",
@@ -1681,7 +1681,7 @@
       "startSeconds": 0,
       "durationMs": 5167,
       "playbackRate": 1,
-      "revision": "1628d6bbbb34e999"
+      "revision": "7fcf20f7c7fe230a"
     },
     "oa-stillwater-medic-v1": {
       "file": "oa-stillwater-medic-v1.mp4",
@@ -1692,7 +1692,7 @@
       "startSeconds": 0,
       "durationMs": 5167,
       "playbackRate": 1,
-      "revision": "d26a6848c2cbf5e5"
+      "revision": "cda99ff150981402"
     },
     "oa-incel-v1": {
       "file": "oa-incel-v1.mp4",
@@ -1703,7 +1703,7 @@
       "startSeconds": 0,
       "durationMs": 5167,
       "playbackRate": 1,
-      "revision": "5b9f66dcdcbe4fd9"
+      "revision": "8648cf1baf35df5c"
     },
     "oa-inmate-boyfriend-v1": {
       "file": "oa-inmate-boyfriend-v1.mp4",
@@ -1714,7 +1714,7 @@
       "startSeconds": 0,
       "durationMs": 5167,
       "playbackRate": 1,
-      "revision": "1d609139f580a394"
+      "revision": "67d31e36c20c34a6"
     },
     "oa-inmate-contraband-v1": {
       "file": "oa-inmate-contraband-v1.mp4",
@@ -1725,7 +1725,7 @@
       "startSeconds": 0,
       "durationMs": 5167,
       "playbackRate": 1,
-      "revision": "308f4685a026cc27"
+      "revision": "b7eea6cc9f7dfe77"
     },
     "oa-inmate-crafty-v1": {
       "file": "oa-inmate-crafty-v1.mp4",
@@ -1736,7 +1736,7 @@
       "startSeconds": 0,
       "durationMs": 5167,
       "playbackRate": 1,
-      "revision": "9bfbe7f54f430603"
+      "revision": "2f2d537cf191a513"
     },
     "oa-inmate-informant-v1": {
       "file": "oa-inmate-informant-v1.mp4",
@@ -1747,7 +1747,7 @@
       "startSeconds": 0,
       "durationMs": 5167,
       "playbackRate": 1,
-      "revision": "1701af68d97934fc"
+      "revision": "589acfb7d7534fdb"
     },
     "oa-inmate-kingpin-v1": {
       "file": "oa-inmate-kingpin-v1.mp4",
@@ -1758,7 +1758,7 @@
       "startSeconds": 0,
       "durationMs": 8000,
       "playbackRate": 1,
-      "revision": "efcd070e0181f34c"
+      "revision": "037f5cdf97bfb189"
     },
     "oa-janitor-v1": {
       "file": "oa-janitor-v1.mp4",
@@ -1780,7 +1780,7 @@
       "startSeconds": 0,
       "durationMs": 5167,
       "playbackRate": 1,
-      "revision": "89eb386b386f4b98"
+      "revision": "2f12ae0d72cab66f"
     },
     "oa-lawless-yn-v1": {
       "file": "oa-lawless-yn-v1.mp4",
@@ -1791,7 +1791,7 @@
       "startSeconds": 0,
       "durationMs": 5167,
       "playbackRate": 1,
-      "revision": "29cb331f9c9cc349"
+      "revision": "2b39432498ff002f"
     },
     "oa-lawyer-v1": {
       "file": "oa-lawyer-v1.mp4",
@@ -1802,18 +1802,18 @@
       "startSeconds": 0,
       "durationMs": 5167,
       "playbackRate": 1,
-      "revision": "6ca848f623f22264"
+      "revision": "071ef72d5aba9386"
     },
     "oa-live-streamer-male-v1": {
       "file": "oa-live-streamer-male-v1.mp4",
-      "label": "Live Streamer \u2014 Male",
+      "label": "Live Streamer — Male",
       "move": "Raid the Chat",
       "enabled": true,
       "chroma": "cyan",
       "startSeconds": 0,
       "durationMs": 5167,
       "playbackRate": 1,
-      "revision": "2b4bf934e2edd469"
+      "revision": "84d773316024179b"
     },
     "oa-luigion-v1": {
       "file": "oa-luigion-v1.mp4",
@@ -1824,7 +1824,7 @@
       "startSeconds": 0,
       "durationMs": 5167,
       "playbackRate": 1,
-      "revision": "06971a31dd1b2c62"
+      "revision": "27cdad93778ff492"
     },
     "oa-root-nurse-v1": {
       "file": "oa-root-nurse-v1.mp4",
@@ -1835,7 +1835,7 @@
       "startSeconds": 0,
       "durationMs": 5167,
       "playbackRate": 1,
-      "revision": "cbef8464c4717d28"
+      "revision": "f399332aef6a77d4"
     },
     "oa-miami-surgeon-v1": {
       "file": "oa-miami-surgeon-v1.mp4",
@@ -1846,7 +1846,7 @@
       "startSeconds": 0,
       "durationMs": 5167,
       "playbackRate": 1,
-      "revision": "cf8faa25bf261140"
+      "revision": "5cb780bddfce226c"
     },
     "oa-mr-trick-v1": {
       "file": "oa-mr-trick-v1.mp4",
@@ -1857,7 +1857,7 @@
       "startSeconds": 0,
       "durationMs": 5167,
       "playbackRate": 1,
-      "revision": "cc7b4c1c2cb520f5"
+      "revision": "fcf078d7ed4a90ae"
     },
     "oa-nigerian-father-v1": {
       "file": "oa-nigerian-father-v1.mp4",
@@ -1868,7 +1868,7 @@
       "startSeconds": 0,
       "durationMs": 8000,
       "playbackRate": 1,
-      "revision": "e6cf0c079085cf32"
+      "revision": "d4600e94f58d990d"
     },
     "oa-og-skater-v1": {
       "file": "oa-og-skater-v1.mp4",
@@ -1879,7 +1879,7 @@
       "startSeconds": 0,
       "durationMs": 5167,
       "playbackRate": 1,
-      "revision": "8a964506ab1b7323"
+      "revision": "ddc0160dd2519c54"
     },
     "oa-sprout-v1": {
       "file": "oa-sprout-v1.mp4",
@@ -1890,7 +1890,7 @@
       "startSeconds": 0,
       "durationMs": 5167,
       "playbackRate": 1,
-      "revision": "6ae9bd15d5c3cbf3"
+      "revision": "07201e7ed85cf966"
     },
     "oa-p-tang-v1": {
       "file": "oa-p-tang-v1.mp4",
@@ -1901,7 +1901,7 @@
       "startSeconds": 0,
       "durationMs": 8000,
       "playbackRate": 1,
-      "revision": "54c21ae55b91b11b"
+      "revision": "c6fd3d2e4d3aaf07"
     },
     "oa-passport-bro-v1": {
       "file": "oa-passport-bro-v1.mp4",
@@ -1912,7 +1912,7 @@
       "startSeconds": 0,
       "durationMs": 8000,
       "playbackRate": 1,
-      "revision": "ab9e65a3bbd3a07c"
+      "revision": "bca9cd5eb9a7ecae"
     },
     "oa-canopy-keeper-v1": {
       "file": "oa-canopy-keeper-v1.mp4",
@@ -1923,7 +1923,7 @@
       "startSeconds": 0,
       "durationMs": 5167,
       "playbackRate": 1,
-      "revision": "d23c28aaef13f42b"
+      "revision": "7eddb9f3afa2b4e8"
     },
     "oa-powerhouse-v1": {
       "file": "oa-powerhouse-v1.mp4",
@@ -1934,7 +1934,7 @@
       "startSeconds": 0,
       "durationMs": 8000,
       "playbackRate": 1,
-      "revision": "4edb552cd7b3f5c7"
+      "revision": "ec679a85fdbaefd4"
     },
     "oa-red-pill-v1": {
       "file": "oa-red-pill-v1.mp4",
@@ -1945,7 +1945,7 @@
       "startSeconds": 0,
       "durationMs": 8000,
       "playbackRate": 1,
-      "revision": "d21910726f332622"
+      "revision": "d4d15b9929f045d0"
     },
     "oa-redneck-v1": {
       "file": "oa-redneck-v1.mp4",
@@ -1956,7 +1956,7 @@
       "startSeconds": 0,
       "durationMs": 5167,
       "playbackRate": 1,
-      "revision": "1c7af2a6ea2b80b2"
+      "revision": "394041cce22701aa"
     },
     "oa-redneck-evil-v1": {
       "file": "oa-redneck-evil-v1.mp4",
@@ -1967,7 +1967,7 @@
       "startSeconds": 0,
       "durationMs": 8000,
       "playbackRate": 1,
-      "revision": "1c74f7f7a0490311"
+      "revision": "458249e290cb7635"
     },
     "oa-lebron-james-v1": {
       "file": "oa-lebron-james-v1.mp4",
@@ -1978,7 +1978,7 @@
       "startSeconds": 0,
       "durationMs": 8000,
       "playbackRate": 1,
-      "revision": "5b9a41f8ce3d278b"
+      "revision": "b209835a1f41938e"
     },
     "oa-rent-a-cop-v1": {
       "file": "oa-rent-a-cop-v1.mp4",
@@ -1989,7 +1989,7 @@
       "startSeconds": 0,
       "durationMs": 5167,
       "playbackRate": 1,
-      "revision": "978d3341e34e5088"
+      "revision": "59bb6b370892fb8d"
     },
     "oa-revolutionary-ronald-v1": {
       "file": "oa-revolutionary-ronald-v1.mp4",
@@ -2000,7 +2000,7 @@
       "startSeconds": 0,
       "durationMs": 8000,
       "playbackRate": 1,
-      "revision": "26109fed2dffa798"
+      "revision": "155ab0bf88ba4c6f"
     },
     "oa-roommate-v1": {
       "file": "oa-roommate-v1.mp4",
@@ -2011,7 +2011,7 @@
       "startSeconds": 0,
       "durationMs": 5167,
       "playbackRate": 1,
-      "revision": "684ef907bc68b644"
+      "revision": "7788a4f0628547a5"
     },
     "oa-seafood-assassin-v1": {
       "file": "oa-seafood-assassin-v1.mp4",
@@ -2022,7 +2022,7 @@
       "startSeconds": 0,
       "durationMs": 8000,
       "playbackRate": 1,
-      "revision": "06403bd731d9e51c"
+      "revision": "15207041108281d7"
     },
     "oa-sherlock-v1": {
       "file": "oa-sherlock-v1.mp4",
@@ -2033,7 +2033,7 @@
       "startSeconds": 0,
       "durationMs": 8000,
       "playbackRate": 1,
-      "revision": "7b562fe3a0daa28a"
+      "revision": "b7606334b8db1047"
     },
     "oa-sports-prodigy-v1": {
       "file": "oa-sports-prodigy-v1.mp4",
@@ -2044,7 +2044,7 @@
       "startSeconds": 0,
       "durationMs": 8000,
       "playbackRate": 1,
-      "revision": "77ce7ff33ad88866"
+      "revision": "5cc4bce2ba4c0b74"
     },
     "oa-squabble-house-manager-v1": {
       "file": "oa-squabble-house-manager-v1.mp4",
@@ -2055,7 +2055,7 @@
       "startSeconds": 0,
       "durationMs": 5167,
       "playbackRate": 1,
-      "revision": "ca1a5a04d75f0c7c"
+      "revision": "6b6b6e9a84643eb9"
     },
     "oa-squabble-house-female-v1": {
       "file": "oa-squabble-house-female-v1.mp4",
@@ -2066,7 +2066,7 @@
       "startSeconds": 0,
       "durationMs": 5167,
       "playbackRate": 1,
-      "revision": "6ece1795d9650fd5"
+      "revision": "bdac44620fbb5a96"
     },
     "oa-squabble-house-male-v1": {
       "file": "oa-squabble-house-male-v1.mp4",
@@ -2077,7 +2077,7 @@
       "startSeconds": 0,
       "durationMs": 5167,
       "playbackRate": 1,
-      "revision": "a4348ff15df5495a"
+      "revision": "dbc35ffa71a956b0"
     },
     "oa-stoner-jr-v1": {
       "file": "oa-stoner-jr-v1.mp4",
@@ -2088,7 +2088,7 @@
       "startSeconds": 0,
       "durationMs": 5167,
       "playbackRate": 1,
-      "revision": "8e2754ccf1b3e4b0"
+      "revision": "87a301fc2e701b57"
     },
     "oa-stoner-sr-v1": {
       "file": "oa-stoner-sr-v1.mp4",
@@ -2099,7 +2099,7 @@
       "startSeconds": 0,
       "durationMs": 5167,
       "playbackRate": 1,
-      "revision": "b656d27e619c5f25"
+      "revision": "d22e551721a24f1f"
     },
     "oa-stud-v1": {
       "file": "oa-stud-v1.mp4",
@@ -2110,7 +2110,7 @@
       "startSeconds": 0,
       "durationMs": 5167,
       "playbackRate": 1,
-      "revision": "6d9011989bbb1acc"
+      "revision": "208b8301fc364127"
     },
     "oa-stylist-v1": {
       "file": "oa-stylist-v1.mp4",
@@ -2121,7 +2121,7 @@
       "startSeconds": 0,
       "durationMs": 5167,
       "playbackRate": 1,
-      "revision": "9c2f771f3fb8fb84"
+      "revision": "425daca936529036"
     },
     "oa-teacher-v1": {
       "file": "oa-teacher-v1.mp4",
@@ -2132,7 +2132,7 @@
       "startSeconds": 0,
       "durationMs": 5167,
       "playbackRate": 1,
-      "revision": "3fe4fb771f528175"
+      "revision": "fbb271f5fdc3dd69"
     },
     "oa-asphalt-apostle-v1": {
       "file": "oa-asphalt-apostle-v1.mp4",
@@ -2143,7 +2143,7 @@
       "startSeconds": 0,
       "durationMs": 8000,
       "playbackRate": 1,
-      "revision": "6f07907fca0bb646"
+      "revision": "58599a07ed984314"
     },
     "oa-the-feds-v1": {
       "file": "oa-the-feds-v1.mp4",
@@ -2154,7 +2154,7 @@
       "startSeconds": 0,
       "durationMs": 8000,
       "playbackRate": 1,
-      "revision": "fb39c29522034a44"
+      "revision": "cda853995d4db5b7"
     },
     "oa-slipstream-v1": {
       "file": "oa-slipstream-v1.mp4",
@@ -2165,7 +2165,7 @@
       "startSeconds": 0,
       "durationMs": 5167,
       "playbackRate": 1,
-      "revision": "c83c4be54c14e010"
+      "revision": "dfe13fe47a16aa2d"
     },
     "oa-street-apostle-v1": {
       "file": "oa-street-apostle-v1.mp4",
@@ -2176,7 +2176,7 @@
       "startSeconds": 0,
       "durationMs": 8000,
       "playbackRate": 1,
-      "revision": "70218fd3aec7251e"
+      "revision": "9732526eaf7afd04"
     },
     "oa-trap-vamp-v1": {
       "file": "oa-trap-vamp-v1.mp4",
@@ -2187,7 +2187,7 @@
       "startSeconds": 0,
       "durationMs": 8000,
       "playbackRate": 1,
-      "revision": "1a483c377f974527"
+      "revision": "adb4af6e5bdd32d8"
     },
     "oa-watson-v1": {
       "file": "oa-watson-v1.mp4",
@@ -2198,7 +2198,7 @@
       "startSeconds": 0,
       "durationMs": 5167,
       "playbackRate": 1,
-      "revision": "6e016b435d1a04c4"
+      "revision": "47c5fa385414bde8"
     },
     "oa-yn-atv-lord-v1": {
       "file": "oa-yn-atv-lord-v1.mp4",
@@ -2209,7 +2209,7 @@
       "startSeconds": 0,
       "durationMs": 8000,
       "playbackRate": 1,
-      "revision": "93e9da401104406b"
+      "revision": "e220a225abfa5243"
     },
     "oa-yn-gokarter-v1": {
       "file": "oa-yn-gokarter-v1.mp4",
@@ -2220,7 +2220,7 @@
       "startSeconds": 0,
       "durationMs": 5167,
       "playbackRate": 1,
-      "revision": "6ae7fb17b3848895"
+      "revision": "d7526c5b8e69c9ee"
     },
     "oa-yung-hustle-v1": {
       "file": "oa-yung-hustle-v1.mp4",
@@ -2231,7 +2231,7 @@
       "startSeconds": 0,
       "durationMs": 5167,
       "playbackRate": 1,
-      "revision": "12cfc7c7c59aa2f0"
+      "revision": "e2858e81cbf3c8d1"
     },
     "oa-blue-side-1-v1": {
       "file": "oa-blue-side-1-v1.mp4",
@@ -2242,7 +2242,7 @@
       "startSeconds": 0,
       "durationMs": 5167,
       "playbackRate": 1,
-      "revision": "74a9b03b9037a07b"
+      "revision": "8703f19ac94ed158"
     },
     "oa-blue-side-2-v1": {
       "file": "oa-blue-side-2-v1.mp4",
@@ -2253,7 +2253,7 @@
       "startSeconds": 0,
       "durationMs": 5167,
       "playbackRate": 1,
-      "revision": "0954669f02a6e37e"
+      "revision": "f68aeb89d2df3494"
     },
     "oa-blue-side-3-v1": {
       "file": "oa-blue-side-3-v1.mp4",
@@ -2264,7 +2264,7 @@
       "startSeconds": 0,
       "durationMs": 5167,
       "playbackRate": 1,
-      "revision": "b6179272dc687c36"
+      "revision": "daf82a3c8bdd7960"
     },
     "oa-blue-side-4-v1": {
       "file": "oa-blue-side-4-v1.mp4",
@@ -2275,7 +2275,7 @@
       "startSeconds": 0,
       "durationMs": 5167,
       "playbackRate": 1,
-      "revision": "7e97e4b64309131c"
+      "revision": "3f968f425402846d"
     },
     "oa-blue-side-5-v1": {
       "file": "oa-blue-side-5-v1.mp4",
@@ -2286,7 +2286,7 @@
       "startSeconds": 0,
       "durationMs": 5167,
       "playbackRate": 1,
-      "revision": "60435160c084bb14"
+      "revision": "44d4b55ed964b5db"
     },
     "oa-red-side-1-v1": {
       "file": "oa-red-side-1-v1.mp4",
@@ -2297,7 +2297,7 @@
       "startSeconds": 0,
       "durationMs": 5167,
       "playbackRate": 1,
-      "revision": "6e86868c738df3bd"
+      "revision": "504d0f370347604d"
     },
     "oa-red-side-2-v1": {
       "file": "oa-red-side-2-v1.mp4",
@@ -2308,7 +2308,7 @@
       "startSeconds": 0,
       "durationMs": 5167,
       "playbackRate": 1,
-      "revision": "291cd5ddaa8c216f"
+      "revision": "1ec4466ddac45300"
     },
     "oa-red-side-3-v1": {
       "file": "oa-red-side-3-v1.mp4",
@@ -2319,7 +2319,7 @@
       "startSeconds": 0,
       "durationMs": 5167,
       "playbackRate": 1,
-      "revision": "c8936cbe0f64a8a0"
+      "revision": "23a08acff2975b6c"
     },
     "oa-red-side-5-v1": {
       "file": "oa-red-side-5-v1.mp4",
@@ -2330,7 +2330,7 @@
       "startSeconds": 0,
       "durationMs": 5167,
       "playbackRate": 1,
-      "revision": "cdb294f88f494235"
+      "revision": "60ab636213901866"
     },
     "oa-wicked-witch-v1": {
       "file": "oa-wicked-witch-v1.mp4",
@@ -2341,7 +2341,7 @@
       "startSeconds": 0,
       "durationMs": 5167,
       "playbackRate": 1,
-      "revision": "bc4530d758cc17d4"
+      "revision": "28024134264dde70"
     },
     "oa-flying-monkeys-v1": {
       "file": "oa-flying-monkeys-v1.mp4",
@@ -2352,7 +2352,7 @@
       "startSeconds": 0,
       "durationMs": 5167,
       "playbackRate": 1,
-      "revision": "dbfbc59fd588b2ca"
+      "revision": "88217c6209ad389a"
     },
     "oa-ganger-blue-v1": {
       "file": "oa-ganger-blue-v1.mp4",
@@ -2363,7 +2363,7 @@
       "startSeconds": 0,
       "durationMs": 5167,
       "playbackRate": 1,
-      "revision": "f6c43baaf1df460c"
+      "revision": "56f813e419c3e4df"
     },
     "oa-ganger-red-v1": {
       "file": "oa-ganger-red-v1.mp4",
@@ -2374,7 +2374,7 @@
       "startSeconds": 0,
       "durationMs": 5167,
       "playbackRate": 1,
-      "revision": "fb2d5be9d654d9f9"
+      "revision": "fcef92de441abd19"
     },
     "oa-blue-nose-pit-v1": {
       "file": "oa-blue-nose-pit-v1.mp4",

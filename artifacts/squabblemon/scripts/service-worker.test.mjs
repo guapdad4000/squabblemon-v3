@@ -66,7 +66,7 @@ for (const failure of ['open', 'match', 'put', 'cache.keys', 'cache.delete']) {
   test(`art remains available when Cache.${failure} rejects`, async () => {
     const h = harness({ fail: method => method === failure });
     // Force trimming so its failure path runs too.
-    h.stores.set('sq-v3-art', new Map(Array.from({ length: 240 }, (_, i) => [keyOf(`/old-${i}.webp`), new Response('old')])));
+    h.stores.set('sq-v4-art', new Map(Array.from({ length: 240 }, (_, i) => [keyOf(`/old-${i}.webp`), new Response('old')])));
     const event = h.request('/new.webp');
     assert.equal(await (await event.response).text(), 'network');
     await event.done;
@@ -99,13 +99,13 @@ test('simultaneous cache writes are serialized and tracked through completion', 
   assert.equal(settled, false, 'worker stays alive until writes finish');
   gate.resolve(); await done;
   assert.equal(h.calls.maxWrites, 1);
-  assert.equal(h.stores.get('sq-v3-art').size, 3);
+  assert.equal(h.stores.get('sq-v4-art').size, 3);
 });
 
 test('cached art returns immediately while refresh and its later write stay alive', async () => {
   const networkGate = deferred(), putGate = deferred();
   const h = harness({ network: () => networkGate.promise, beforePut: () => putGate.promise });
-  h.stores.set('sq-v3-art', new Map([[keyOf('/buddy.webp'), new Response('cached')]]));
+  h.stores.set('sq-v4-art', new Map([[keyOf('/buddy.webp'), new Response('cached')]]));
   const event = h.request('/buddy.webp');
   assert.equal(await (await event.response).text(), 'cached');
   let settled = false;
@@ -121,16 +121,16 @@ test('cached art returns immediately while refresh and its later write stay aliv
 
 test('bounded artwork cache evicts the oldest entry', async () => {
   const h = harness();
-  h.stores.set('sq-v3-art', new Map(Array.from({ length: 240 }, (_, i) => [keyOf(`/old-${i}.webp`), new Response('old')])));
+  h.stores.set('sq-v4-art', new Map(Array.from({ length: 240 }, (_, i) => [keyOf(`/old-${i}.webp`), new Response('old')])));
   const event = h.request('/latest.webp'); await event.response; await event.done;
-  assert.equal(h.stores.get('sq-v3-art').size, 240);
-  assert.equal(h.stores.get('sq-v3-art').has(keyOf('/old-0.webp')), false);
-  assert.equal(h.stores.get('sq-v3-art').has(keyOf('/latest.webp')), true);
+  assert.equal(h.stores.get('sq-v4-art').size, 240);
+  assert.equal(h.stores.get('sq-v4-art').has(keyOf('/old-0.webp')), false);
+  assert.equal(h.stores.get('sq-v4-art').has(keyOf('/latest.webp')), true);
 });
 
 test('content-hashed assets remain cache-first', async () => {
   const h = harness();
-  h.stores.set('sq-v3-code', new Map([[keyOf('/assets/index-Abc12345.js'), new Response('cached-code')]]));
+  h.stores.set('sq-v4-code', new Map([[keyOf('/assets/index-Abc12345.js'), new Response('cached-code')]]));
   const event = h.request('/assets/index-Abc12345.js');
   assert.equal(await (await event.response).text(), 'cached-code'); await event.done;
   assert.equal(h.calls.fetch, 0);
@@ -139,7 +139,7 @@ test('content-hashed assets remain cache-first', async () => {
 test('offline navigation can still read shell after writes fail', async () => {
   let offline = false;
   const h = harness({ fail: method => method === 'put', network: async () => { if (offline) throw Error('offline'); return new Response('online'); } });
-  h.stores.set('sq-v3-shell', new Map([[keyOf('/'), new Response('offline-shell')]]));
+  h.stores.set('sq-v4-shell', new Map([[keyOf('/'), new Response('offline-shell')]]));
   const online = h.request('/battle', { mode: 'navigate' }); await online.response; await online.done;
   offline = true;
   const event = h.request('/battle', { mode: 'navigate' });
@@ -165,9 +165,9 @@ test('HTTP errors and partial responses are never saved', async () => {
 
 test('activation deletes only old owned caches and keeps current and unrelated caches', async () => {
   const h = harness();
-  for (const name of ['sq-v1-art', 'sq-v2-shell', 'sq-v3-art', 'other-app-cache', 'sq-v2-unrelated']) h.stores.set(name, new Map());
+  for (const name of ['sq-v1-art', 'sq-v2-shell', 'sq-v3-art', 'sq-v3-code', 'sq-v3-shell', 'sq-v4-art', 'other-app-cache', 'sq-v2-unrelated']) h.stores.set(name, new Map());
   await h.dispatch('activate').done;
-  assert.deepEqual([...h.stores.keys()], ['sq-v3-art', 'other-app-cache', 'sq-v2-unrelated']);
+  assert.deepEqual([...h.stores.keys()], ['sq-v4-art', 'other-app-cache', 'sq-v2-unrelated']);
   assert.equal(h.calls.claim, 1);
 });
 
@@ -198,4 +198,23 @@ test('API, cross-origin, non-GET and media/range requests bypass the worker', as
     const event = h.request(path, options); assert.equal(event.response, undefined); await event.done;
   }
   assert.equal(h.calls.fetch, 0); assert.equal(h.calls.put, 0);
+});
+
+test('oversized art and unsized animations are served but never stored', async () => {
+  const sized = bytes => new Response('art', { headers: { 'content-length': String(bytes) } });
+  const cases = [
+    ['/assets/results/win-w.gif', sized(7_400_000), false],
+    ['/huge.png', sized(2 * 1024 * 1024 + 1), false],
+    ['/limit.png', sized(2 * 1024 * 1024), true],
+    ['/small.gif', sized(500_000), true],
+    ['/unsized.gif', new Response('art'), false],
+    ['/unsized.webp', new Response('art'), true],
+  ];
+  for (const [path, response, stored] of cases) {
+    const h = harness({ network: async () => response });
+    const event = h.request(path);
+    assert.equal(await (await event.response).text(), 'art', `${path} still reaches the page`);
+    await event.done;
+    assert.equal(h.stores.get('sq-v4-art')?.has(keyOf(path)) ?? false, stored, path);
+  }
 });

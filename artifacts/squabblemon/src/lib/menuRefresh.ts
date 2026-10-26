@@ -1,5 +1,8 @@
 import { useSyncExternalStore } from 'react';
 import { isBattleActive, subscribeBattleActive } from './imageWarmup';
+/** Automatic menu reads (mail, account rewards, Home challenges). Hidden tabs and
+ * battles pause them; returning to the menu refreshes immediately. */
+export const MENU_POLL_MS = 60_000;
 export const menuRefreshAllowed = () => !isBattleActive() && (typeof document === 'undefined' || document.visibilityState !== 'hidden');
 const listeners = new Set<() => void>();
 let releaseBattle: (() => void) | undefined;

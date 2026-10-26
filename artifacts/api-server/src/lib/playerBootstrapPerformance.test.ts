@@ -106,15 +106,78 @@ test("settled HTTP bootstrap bounds database work and returns the latest wallet"
     const startupQueries = [...queries];
     const transactions = startupQueries.filter(query => /^begin$/i.test(query.text)).length;
     const locks = startupQueries.filter(query => /for update/i.test(query.text)).length;
-    assert.ok(startupQueries.length <= 12, `settled startup must stay within 12 SQL statements; received ${startupQueries.length}`);
-    assert.equal(transactions, 1, "cadence and reconciliation share one transaction");
-    assert.equal(locks, 1, "initialization acquires the profile row lock once");
-    t.diagnostic(JSON.stringify({ workload: "settled-bootstrap", statements: startupQueries.length, transactions, locks }));
+    const writes = startupQueries.filter(query => /^(insert|update|delete) /i.test(query.text)).length;
+    assert.ok(startupQueries.length <= 8, `settled startup must stay within 8 SQL statements; received ${startupQueries.length}`);
+    assert.equal(transactions, 0, "a settled player opens no initialization transaction");
+    assert.equal(locks, 0, "a settled player takes no profile row lock");
+    assert.equal(writes, 0, "a settled player issues no provisioning insert or profile update");
+    assert.equal(startupQueries.filter(query => query.text.includes("jsonb_array_elements")).length, 1,
+      "the lock-free check still verifies receipt ownership");
+    assert.doesNotMatch(selectsFrom(startupQueries, "player_profiles").map(query => query.text).join("\n"), /"pack_history"/,
+      "bootstrap does not transfer the unused legacy pack_history column");
+    t.diagnostic(JSON.stringify({ workload: "settled-bootstrap", statements: startupQueries.length, transactions, locks, writes }));
     await db.update(playerProfilesTable).set({ softCurrency: state.profile.softCurrency + 731 })
       .where(eq(playerProfilesTable.clerkUserId, userId));
     const next = await request(origin, "/player/bootstrap");
     assert.equal(next.profile.softCurrency, state.profile.softCurrency + 731, "bootstrap must not serve a cached wallet");
   });
+});
+
+test("lock-free bootstrap falls back to the locked repair for each kind of drift", async t => {
+  const userId = `bootstrap-drift-${randomUUID()}`;
+  cleanup(t, userId);
+  await ensurePlayer(userId);
+  // A realistic settled profile: owned cards, card progression and a saved deck
+  // round-tripped through jsonb (which reorders object keys).
+  const recipe = starterRecipes[0]!;
+  await db.update(playerProfilesTable).set({
+    onboardingStep: "complete", starterDeckId: recipe.id, ownedCardIds: recipe.catalogCardIds,
+    savedDecks: [{ deckSize: 10, id: "mine", name: "Mine", cardIds: recipe.catalogCardIds.slice(0, 10), heroCardId: recipe.hero, recipeId: null }],
+  }).where(eq(playerProfilesTable.clerkUserId, userId));
+  await ensurePlayer(userId);
+  const settledQueries = captureQueries(t);
+  await getPlayerBootstrap(userId);
+  assert.equal(settledQueries.filter(query => /for update/i.test(query.text)).length, 0, "settled baseline is lock-free");
+  t.mock.restoreAll();
+
+  const repairs: Array<[string, () => Promise<unknown>, (state: Awaited<ReturnType<typeof getPlayerBootstrap>>) => void]> = [
+    ["new receipt card", () => recordCardReceipt(userId, "closet-nerd"),
+      state => assert.ok(state.profile.ownedCardIds.includes("closet-nerd"))],
+    ["legacy engine id", () => db.update(playerProfilesTable).set({ ownedCardIds: sql`owned_card_ids || '["barber"]'::jsonb` })
+      .where(eq(playerProfilesTable.clerkUserId, userId)),
+    state => { assert.ok(!state.profile.ownedCardIds.includes("barber")); assert.ok(state.profile.ownedCardIds.length > 0); }],
+    ["stale collection progress", () => db.update(playerProfilesTable).set({ collectionProgress: 999 })
+      .where(eq(playerProfilesTable.clerkUserId, userId)),
+    state => assert.equal(state.profile.collectionProgress, state.profile.ownedCardIds.length)],
+    ["unowned equipped variant", () => db.update(playerProfilesTable).set({ equippedVariants: { "not-owned": "nope" } })
+      .where(eq(playerProfilesTable.clerkUserId, userId)),
+    state => assert.deepEqual(state.profile.equippedVariants, {})],
+    ["expired mission cadence", () => db.update(playerMissionsTable).set({ progress: 1, resetAt: new Date(Date.now() - 1_000) })
+      .where(and(eq(playerMissionsTable.clerkUserId, userId), eq(playerMissionsTable.missionKey, "daily-show-up"))),
+    state => {
+      const mission = state.missions.find(item => item.id === "daily-show-up")!;
+      assert.equal(mission.progress, 0);
+      assert.ok(Date.parse(mission.resetAt!) > Date.now());
+    }],
+    ["missing mission row", () => db.delete(playerMissionsTable)
+      .where(and(eq(playerMissionsTable.clerkUserId, userId), eq(playerMissionsTable.missionKey, "daily-show-up"))),
+    state => assert.ok(state.missions.some(item => item.id === "daily-show-up"))],
+    ["stale lastActiveAt", () => db.update(playerProfilesTable).set({ lastActiveAt: new Date(Date.now() - 10 * 60_000) })
+      .where(eq(playerProfilesTable.clerkUserId, userId)),
+    state => assert.ok(Date.now() - Date.parse(state.profile.lastActiveAt) < 60_000)],
+  ];
+  for (const [name, drift, verify] of repairs) {
+    await drift();
+    const queries = captureQueries(t);
+    const state = await getPlayerBootstrap(userId);
+    assert.equal(queries.filter(query => /for update/i.test(query.text)).length, 1, `${name}: repair runs under the profile lock`);
+    verify(state);
+    t.mock.restoreAll();
+    const repeat = captureQueries(t);
+    await getPlayerBootstrap(userId);
+    assert.equal(repeat.filter(query => /for update/i.test(query.text)).length, 0, `${name}: repaired player is settled again`);
+    t.mock.restoreAll();
+  }
 });
 
 test("collection pack request keeps one fresh response and idempotent payment", async t => {
