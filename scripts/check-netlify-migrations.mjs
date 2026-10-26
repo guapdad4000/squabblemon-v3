@@ -57,10 +57,11 @@ function normalizeConstraint(value) {
 
 function sqlCoverage(sql, file, strict = false) {
   const coverage = { tables: new Map(), indexes: new Map(), constraints: new Map(), foreignKeys: new Map(), droppedIndexes: new Set() };
-  const clean = sql.replace(/--[^\n]*/g, '');
+  const clean = sql.replace(/--[^\n]*/g, '')
+    .replace(/\$(\w*)\$[\s\S]*?\$\1\$/g, "''");
   if (strict) {
     for (const statement of clean.split(';').map(part => part.trim()).filter(Boolean)) {
-      if (normalizeStatement(statement) !== normalizeStatement(socialReservationBackfill) && !/^(?:BEGIN|COMMIT|CREATE\s+TABLE\b|ALTER\s+TABLE\b|CREATE\s+(?:UNIQUE\s+)?INDEX\b|DROP\s+INDEX\b)/i.test(statement)) {
+      if (normalizeStatement(statement) !== normalizeStatement(socialReservationBackfill) && !/^(?:BEGIN|COMMIT|CREATE\s+TABLE\b|ALTER\s+TABLE\b|CREATE\s+(?:UNIQUE\s+)?INDEX\b|DROP\s+INDEX\b|CREATE\s+(?:OR\s+REPLACE\s+)?(?:FUNCTION|TRIGGER)\b)/i.test(statement)) {
         throw new Error(`Unsupported development migration statement in ${file}: ${statement.slice(0, 80)}`);
       }
     }
@@ -254,6 +255,14 @@ export function checkNetlifyMigrationCoverage(root = process.cwd()) {
   const entries = readdirSync(nativeDir).sort();
   const nativeText = entries.map(entry => readFileSync(path.join(nativeDir, entry, 'migration.sql'), 'utf8')).join('\n');
   const developmentText = readdirSync(devDir).filter(file => file.endsWith('.sql')).map(file => readFileSync(path.join(devDir, file), 'utf8')).join('\n');
+  // The trigger is part of the schema contract, not just the two column names.
+  // Require identical rollout SQL so removing/changing the native trigger cannot
+  // silently leave old API writers with stale authorization/polling metadata.
+  const liveStateMigration = readFileSync(path.join(devDir, '20261025_online-room-live-state.sql'), 'utf8');
+  const nativeLiveState = readFileSync(path.join(nativeDir, '202610250001_online-room-live-state/migration.sql'), 'utf8');
+  if (normalizeStatement(liveStateMigration) !== normalizeStatement(nativeLiveState)) {
+    throw new Error('Native online-room live-state migration must match its development trigger contract.');
+  }
   if (!entries.length) throw new Error('No Netlify-native migrations found.');
   for (const entry of legacyNativeMigrations.keys()) {
     if (!entries.includes(entry)) throw new Error(`Missing immutable Netlify-native migration ${entry}`);

@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { randomUUID } from 'node:crypto';
+import { readFileSync } from 'node:fs';
 import { createOnlineRoom, joinOnlineRoom, applyOnlineCommand, ONLINE_RULES_VERSION, type OnlineRoom } from '@workspace/squabblemon-engine/multiplayer';
 import { cardCatalog, catalogIdsToEngineIds, ROOKIE_CORE_IDS } from '@workspace/squabblemon-engine/data';
 
@@ -12,6 +13,30 @@ test('native live polling: archive isolation, same-revision invalidation and com
   const { storeOnlineRoom, restoreOnlineRoom } = await import('./onlineRoomPersistence');
   const users: string[] = [];
   const originalGate = process.env.ONLINE_COMPACT_REPLAY;
+  await t.test('migration preserves heap and legacy archives without a backfill', async () => {
+    const client = await pool.connect();
+    try {
+      await client.query('begin');
+      await client.query('create schema migration_probe');
+      await client.query('set local search_path = migration_probe, public');
+      await client.query('create table online_rooms (id integer primary key, state jsonb not null)');
+      await client.query(`insert into online_rooms values (1, jsonb_build_object('revision', 1, 'match', repeat('archive', 150000)))`);
+      const before = (await client.query(`select pg_relation_filenode('online_rooms') as heap`)).rows[0].heap;
+      const migration = readFileSync(new URL('../../../../netlify/database/migrations/202610250001_online-room-live-state/migration.sql', import.meta.url), 'utf8');
+      await client.query(migration);
+      assert.equal((await client.query(`select pg_relation_filenode('online_rooms') as heap`)).rows[0].heap, before, 'no table rewrite');
+      const legacy = (await client.query('select sync_token, live_state, length(state->>\'match\') as archive from online_rooms')).rows[0];
+      assert.equal(legacy.sync_token, null);
+      assert.equal(legacy.live_state, null);
+      assert.equal(legacy.archive, 1_050_000);
+      await client.query(`update online_rooms set state = state || '{"revision":2}'::jsonb`);
+      const projected = (await client.query('select sync_token = md5(state::text) as valid, live_state from online_rooms')).rows[0];
+      assert.equal(projected.valid, true);
+      assert.deepEqual(projected.live_state, { revision: 2 });
+      await client.query(`update online_rooms set sync_token = 'forged', live_state = '{}'`);
+      assert.equal((await client.query('select sync_token = md5(state::text) as valid from online_rooms')).rows[0].valid, true);
+    } finally { await client.query('rollback'); client.release(); }
+  });
   t.after(async () => {
     if (originalGate === undefined) delete process.env.ONLINE_COMPACT_REPLAY; else process.env.ONLINE_COMPACT_REPLAY = originalGate;
     await db.delete(profiles).where(inArray(profiles.clerkUserId, users));
@@ -37,6 +62,23 @@ test('native live polling: archive isolation, same-revision invalidation and com
     assert.equal('replayArchive' in (row.state.match as object), gate === '1');
     assert.deepEqual(JSON.parse(JSON.stringify(restoreOnlineRoom(row.state))), JSON.parse(JSON.stringify(room)));
     assert.equal('match' in row.liveState!, false);
+    // A room that predates the metadata-only migration has no projections.
+    // It must still authorize/read correctly until its next state write.
+    const legacyClient = await pool.connect();
+    try {
+      await legacyClient.query('begin');
+      await legacyClient.query('alter table online_rooms disable trigger online_rooms_live_state');
+      await legacyClient.query('update online_rooms set sync_token = null, live_state = null where id = $1', [row.id]);
+      await legacyClient.query('alter table online_rooms enable trigger online_rooms_live_state');
+      await legacyClient.query('commit');
+    } catch (error) { await legacyClient.query('rollback'); throw error; }
+    finally { legacyClient.release(); }
+    const legacyView = await pollFriendRoom(code, a, '0'.repeat(32));
+    assert(!('unchanged' in legacyView));
+    assert.equal(legacyView.seat, 'player');
+    assert(Array.isArray((await accessRoomReactions(code, a)).owned));
+    await assert.rejects(pollFriendRoom(code, outsider, '0'.repeat(32)), /participant|not found/i);
+    await db.update(rooms).set({ state: storeOnlineRoom(room) }).where(eq(rooms.id, row.id));
     const view = await accessFriendRoom(code, a);
     assert.match(view.syncToken!, /^[a-f0-9]{32}$/);
     const owner = await pool.connect();

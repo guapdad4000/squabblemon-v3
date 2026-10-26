@@ -1,5 +1,30 @@
 # Battle replay and online live-state performance
 
+## Deployment correction (2026-10-26)
+
+The original stored-generated-column rollout below is superseded by nullable
+`live_state`/`sync_token` columns maintained by the `online_rooms_live_state`
+database trigger. Netlify migration dry-run requests for the original migration
+timed out; the production `online_rooms` relation measured 1,480 MB and an
+`AccessExclusiveLock` was observed during validation. Both columns were still
+absent and migration `202610250001` was unapplied when this correction was made.
+
+Adding nullable columns avoids rewriting existing replay archives. Existing rooms
+retain NULL projections and take the existing authoritative read/reaction path;
+their next state write fills both fields. The trigger covers older API/raw SQL
+writers, same-revision corrections, and direct projection writes. There is no
+bulk backfill during deployment. Keep the trigger when rolling back the API.
+Schema-push test databases must install the native migration as well as columns.
+
+The historical generated-column benchmark below does not measure this trigger
+implementation. The native rollout regression checks that the migration leaves
+the heap file unchanged, retains archive data, handles NULL projections, and
+preserves polling authorization and same-revision invalidation.
+
+Do not replace this migration on a branch where its original generated-column
+version has already been applied: that branch needs a separately reviewed forward
+conversion. The production branch inspected for this fix had not applied it.
+
 Evidence state: **source inspected**, **local checks passed**, **isolated native database checks passed**. No live migration, compact-write activation, deployment, physical-device or production-latency claim.
 
 ## Preserved contracts

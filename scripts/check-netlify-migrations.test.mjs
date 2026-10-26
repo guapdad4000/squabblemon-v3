@@ -19,6 +19,13 @@ test('current native history covers development SQL, schema, and consolidated on
   assert.equal(checkNetlifyMigrationCoverage().tables, 23);
 });
 
+test('native live-state columns without their writer trigger block release', t => {
+  const root = fixture(t);
+  const file = path.join(root, 'netlify/database/migrations/202610250001_online-room-live-state/migration.sql');
+  writeFileSync(file, readFileSync(file, 'utf8').replace(/CREATE OR REPLACE TRIGGER[\s\S]*$/, ''));
+  assert.throws(() => checkNetlifyMigrationCoverage(root), /development trigger contract/);
+});
+
 test('ranked daily reward counting requires its forward player/date index mirror', t => {
   const root = fixture(t);
   rmSync(path.join(root, 'netlify/database/migrations/202610240001_ranked-clout-daily-index'), { recursive: true });

@@ -1,5 +1,5 @@
 import { spawn, spawnSync } from "node:child_process";
-import { accessSync, constants, mkdtempSync, readdirSync, rmSync } from "node:fs";
+import { accessSync, constants, mkdtempSync, readdirSync, readFileSync, rmSync } from "node:fs";
 import { createServer } from "node:net";
 import { tmpdir } from "node:os";
 import { delimiter, dirname, join } from "node:path";
@@ -117,6 +117,13 @@ try {
       join(dirname(createRequire(new URL('../lib/db/package.json', import.meta.url)).resolve("drizzle-kit")), "bin.cjs"),
       "push", "--config", "artifacts/gameplay-test-db/drizzle.config.ts",
     ], "Fresh payment test schema creation");
+    // Schema push creates columns but does not install native SQL triggers.
+    const { Client } = createRequire(new URL('../lib/db/package.json', import.meta.url))('pg');
+    const migrationClient = new Client({ connectionString: environment.DATABASE_URL });
+    try {
+      await migrationClient.connect();
+      await migrationClient.query(readFileSync(join(root, 'netlify/database/migrations/202610250001_online-room-live-state/migration.sql'), 'utf8'));
+    } finally { await migrationClient.end(); }
     console.log("Using fresh owned native PostgreSQL with independent connections; no external database is modified.");
   }
   const args = socialLoad ? ["--filter", "@workspace/api-server", "exec", "tsx", "src/tools/homies-load.ts", ...process.argv.slice(2).filter(arg => arg !== "--social-load")] :

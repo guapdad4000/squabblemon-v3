@@ -2,6 +2,8 @@ import { randomUUID } from "node:crypto";
 import { spawn, spawnSync } from "node:child_process";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { readFileSync } from "node:fs";
+import { createRequire } from "node:module";
 import {
   assertCampaignDatabaseTarget,
   assertOwnedPgliteReady,
@@ -132,14 +134,7 @@ try {
     const drizzle = spawnSync(
       process.execPath,
       [
-        join(
-          process.cwd(),
-          "lib",
-          "db",
-          "node_modules",
-          "drizzle-kit",
-          "bin.cjs",
-        ),
+        join(dirname(createRequire(new URL('../lib/db/package.json', import.meta.url)).resolve('drizzle-kit')), 'bin.cjs'),
         "push",
         "--config",
         "artifacts/gameplay-test-db/drizzle.config.ts",
@@ -150,7 +145,13 @@ try {
       },
     );
     if (drizzle.error) throw drizzle.error;
-    if (drizzle.status !== 0) process.exit(drizzle.status ?? 1);
+    if (drizzle.status !== 0) throw new Error(`Owned test database schema push failed (exit ${drizzle.status}).`);
+    const { Client } = createRequire(new URL('../lib/db/package.json', import.meta.url))('pg');
+    const migrationClient = new Client({ connectionString: databaseUrl });
+    try {
+      await migrationClient.connect();
+      await migrationClient.query(readFileSync(join(workspaceRoot, 'netlify/database/migrations/202610250001_online-room-live-state/migration.sql'), 'utf8'));
+    } finally { await migrationClient.end(); }
     process.stdout.write(
       `Using owned in-memory PGlite database on 127.0.0.1:${identity.port}.\n`,
     );
