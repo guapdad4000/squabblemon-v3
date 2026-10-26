@@ -115,7 +115,7 @@ export async function createFriendRoom(
     }
     const now = Date.now();
     const open = await tx
-      .select({ state: onlineRoomsTable.state })
+      .select({ state: sql<Record<string, unknown>>`${onlineRoomsTable.state} - 'match'` })
       .from(onlineRoomsTable)
       .where(
         and(
@@ -154,7 +154,8 @@ export async function listFriendRooms(userId: string) {
   const now = Date.now();
   const rows = await db
     .select({
-      code: onlineRoomsTable.code, state: onlineRoomsTable.state,
+      // The lobby never reads the replay; skip detoasting/transferring it.
+      code: onlineRoomsTable.code, state: sql<Record<string, unknown>>`${onlineRoomsTable.state} - 'match'`,
       updatedAt: onlineRoomsTable.updatedAt, expiresAt: onlineRoomsTable.expiresAt,
     })
     .from(onlineRoomsTable)

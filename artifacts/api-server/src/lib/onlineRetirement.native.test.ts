@@ -40,7 +40,9 @@ test('native room retirement: locked neutral exit, recovery and no deployment-ca
       createRequestId: randomUUID(), state: room as unknown as Record<string, unknown>, expiresAt: new Date(room.expiresAt) }).returning();
     return row;
   }
-  const stored = async (id: string) => (await db.select().from(rooms).where(eq(rooms.id, id)))[0].state as unknown as OnlineRoom;
+  const { restoreOnlineRoom } = await import('./onlineRoomPersistence');
+  // Decode so assertions hold for both full and compact (ONLINE_COMPACT_REPLAY=1) storage.
+  const stored = async (id: string) => restoreOnlineRoom((await db.select().from(rooms).where(eq(rooms.id, id)))[0].state);
   const accounts = async (ids: string[]) => ({ profiles: await db.select().from(profiles).where(inArray(profiles.clerkUserId, ids)),
     claims: await db.select().from(claims).where(inArray(claims.clerkUserId, ids)) });
 
