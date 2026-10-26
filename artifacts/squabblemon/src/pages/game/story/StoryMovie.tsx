@@ -24,22 +24,35 @@ export function StoryMovie({ cinematic, title, onContinue, onClose }: {
     setStarted(true); setPlayBlocked(false);
     try { await video.current?.play(); } catch { setPlayBlocked(true); }
   };
+  const toggleFullscreen = () => {
+    const el = host.current;
+    if (!el) return;
+    if (document.fullscreenElement) void document.exitFullscreen?.().catch(() => undefined);
+    else void el.requestFullscreen?.().catch(() => undefined);
+  };
+  const isKumite = cinematic.videoAssetId.startsWith('assets/kumite/');
   return createPortal(
-    <div className="house-movie" ref={host} role="dialog" aria-modal="true" aria-labelledby="house-movie-title" data-testid="story-movie">
-      <header><div><span>Squabble House · The Last Waffle</span><h2 id="house-movie-title">{title}</h2></div><button onClick={onClose} type="button">Back to map</button></header>
+    <div className="house-movie house-movie--fullscreen" ref={host} role="dialog" aria-modal="true" aria-labelledby="house-movie-title" data-testid="story-movie">
       <div className="house-movie__screen">
         <video ref={video} src={getAssetUrl(cinematic.videoAssetId)} poster={getAssetUrl(cinematic.posterAssetId)}
           controls={started && !failed} playsInline preload="metadata" aria-label={`${title} cinematic`}
           onPlay={() => setMusicDucked(true)} onPause={() => setMusicDucked(false)} onEnded={onContinue}
           onError={() => { setFailed(true); setMusicDucked(false); }} />
         {(!started || playBlocked || failed) && <div className="house-movie__start">
-          <span className="house-movie__reel">A SQUABBLEMON SHORT</span>
+          <span className="house-movie__reel">{isKumite ? 'KUMITE ANIME EPISODE' : 'A SQUABBLEMON SHORT'}</span>
           {failed ? <p role="status">The movie couldn’t load. Continue into the illustrated scene, or reopen this chapter to retry.</p>
             : <button className="house-movie__play" type="button" onClick={() => void play()}>{playBlocked ? 'Resume chapter' : '▶ Play chapter'}</button>}
-          {!failed && <p>Sound on · 10 seconds · Player controls available</p>}
+          {!failed && <p>Sound on · {isKumite ? 'Fullscreen Cinema Cut' : '10 seconds'} · Player controls available</p>}
         </div>}
       </div>
-      <footer><p>Movie → Dialogue → Puzzle → Battle → Reward</p><button type="button" onClick={onContinue}>Continue to dialogue →</button></footer>
+      <header className="house-movie__hud-top">
+        <div><span>{isKumite ? 'Kumite · Break the Bracket' : 'Squabble House · The Last Waffle'}</span><h2 id="house-movie-title">{title}</h2></div>
+        <div className="house-movie__hud-actions">
+          <button onClick={toggleFullscreen} type="button" aria-label="Toggle fullscreen">⛶ Fullscreen</button>
+          <button onClick={onClose} type="button">Back to map</button>
+        </div>
+      </header>
+      <footer className="house-movie__hud-bottom"><p>{isKumite ? 'Episode Film → Dialogue → Battle → Next Episode' : 'Movie → Dialogue → Puzzle → Battle → Reward'}</p><button type="button" onClick={onContinue}>Continue to dialogue →</button></footer>
     </div>, document.body,
   );
 }

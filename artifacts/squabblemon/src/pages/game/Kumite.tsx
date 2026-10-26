@@ -73,7 +73,7 @@ export function Kumite({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   const rulesUpdated = tournament?.status === 'cancelled' && tournament.cancellationReason === 'rules-updated';
   const registration = current?.registration;
   const match = current?.currentMatch;
-  const now = clock + (current ? current.serverTime - query.dataUpdatedAt : 0);
+  const now = Number.isFinite(current?.serverTime) ? clock + (current!.serverTime - query.dataUpdatedAt) : clock;
   const earnedRewards = current?.progression?.rewards.filter(reward => reward.claimed).map(reward => reward.id).sort().join('|') ?? '';
   const decks = useMemo(() => {
     const saved = profile.savedDecks.filter(d => validateSavedDeck(d.cardIds, profile.ownedCardIds, d.heroCardId).valid);
@@ -149,6 +149,25 @@ export function Kumite({ bootstrap }: { bootstrap: PlayerBootstrap }) {
           <div className="kumite-hub__title-block">
             <span className="kumite-hub__kicker"><i /> SELECT YOUR ARENA MODE</span>
             <h1><span className="kumite-hub__title-lead">THE</span><span className="kumite-hub__title-main">KUMITE<span className="kumite-hub__title-dot">.</span></span></h1>
+          </div>
+          <div className="kumite-hub__clock" aria-label="Next Kumite tournament countdown">
+            <span className="kumite-hub__clock-dot" />
+            <small>{tournament?.status === 'active' ? 'BRACKET LIVE' : 'NEXT BRACKET LOCK'}</small>
+            <strong>{(() => {
+              const safeNow = Number.isFinite(now) ? now : Date.now();
+              const parsedStart = tournament?.startsAt ? (typeof tournament.startsAt === 'number' ? tournament.startsAt : Date.parse(String(tournament.startsAt))) : NaN;
+              const target = Number.isFinite(parsedStart) ? parsedStart : (() => {
+                const d = new Date(safeNow);
+                const days = (6 - d.getUTCDay() + 7) % 7 || 7;
+                return Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate() + days, 2, 0, 0);
+              })();
+              const diff = Math.max(0, target - safeNow);
+              const d = Math.floor(diff / 86_400_000);
+              const h = Math.floor((diff % 86_400_000) / 3_600_000);
+              const m = Math.floor((diff % 3_600_000) / 60_000);
+              const s = Math.floor((diff % 60_000) / 1000);
+              return d > 0 ? `${d}D ${String(h).padStart(2, '0')}H ${String(m).padStart(2, '0')}M` : `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+            })()}</strong>
           </div>
           <div className="kumite-hub__stats" aria-label="Your Kumite record">
             <div><small>FULL FIGHTS</small><strong>{current?.progression?.completedMatches ?? 0}</strong></div>
@@ -230,8 +249,8 @@ export function Kumite({ bootstrap }: { bootstrap: PlayerBootstrap }) {
                 <span>+4 FINALE EPISODES</span>
               </div>
               <div className="kumite-entry__actions kumite-entry__actions--row">
-                <Link href="/game/story" className="kumite-text-button kumite-mode-card__cta">
-                  <span>Open Story Theater</span><ArrowRight size={15} aria-hidden="true" />
+                <Link href="/game/story?season=special-kumite-break-the-bracket" className="kumite-text-button kumite-mode-card__cta">
+                  <span>Play Break the Bracket</span><ArrowRight size={15} aria-hidden="true" />
                 </Link>
                 <button type="button" className="kumite-text-button kumite-mode-card__cta" onClick={() => { enterArena(); window.setTimeout(() => document.querySelector('.kumite-roadmap')?.scrollIntoView({ behavior: 'smooth' }), 80); }}>
                   <span>Fighter Film Vault</span><ArrowRight size={15} aria-hidden="true" />

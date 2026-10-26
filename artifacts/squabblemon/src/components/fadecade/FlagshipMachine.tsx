@@ -172,7 +172,6 @@ export function FlagshipMachine({ bootstrap, legalCrews, runsQuery, onBattle, ro
         {!active && <label className="fadecade-crew-label">Choose your ten-card crew
           <CompactDeckPicker decks={legalCrews.map(crew => ({ id:crew.id, name:crew.name, heroCardId:crew.hero, cardIds:crew.cards }))} selectedId={selected?.id ?? ''} onSelect={setCrewId} disabled={busy || !entries} />
         </label>}
-        <p className="fadecade-road-rules">One loss ends the run. Boss every fifth stop. Each stop is a fresh, player-controlled battle. Your ten cards and upgrades stay locked for the run.</p>
         <div className="fadecade-road-actions">
           <button type="button" className="cabinet-btn" disabled={busy || runsQuery.isFetching || (!active && (!selected || !entries))} onClick={() => void launch()}>
             {busy ? 'Saving…' : active ? active.recovery ? 'Continue fight' : `Fight stop ${active.encounterIndex + 1}` : entries ? 'Start run · 1 entry' : 'Entries reset at 00:00 UTC'}
@@ -188,7 +187,6 @@ export function FlagshipMachine({ bootstrap, legalCrews, runsQuery, onBattle, ro
           </div>
         </section>}
         {error && <div role="alert" className="fadecade-error">{error}<button type="button" onClick={() => void runsQuery.refetch()}>Reload road</button></div>}
-        <small className="fadecade-road-policy">Verified battle rewards are saved after each fight. Draws do not advance or pay rewards. Leaving saves your run; ending it does not refund an entry.</small>
       </>}
     </FadecadeDialog>
   </section>;

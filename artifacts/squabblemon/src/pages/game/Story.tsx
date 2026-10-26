@@ -579,7 +579,7 @@ export function NodeOverlay({
   const [replayIndex, setReplayIndex] = useState<number | null>(null);
   const [movieDismissed, setMovieDismissed] = useState(false);
   const [movieReplay, setMovieReplay] = useState(false);
-  const hasMovie = nodeId.startsWith('squabble-house-') && nodeId.endsWith('-opening') && !!storyNode?.cinematic;
+  const hasMovie = ((nodeId.startsWith('squabble-house-') && nodeId.endsWith('-opening')) || nodeId.startsWith('kumite-break-the-bracket-')) && !!storyNode?.cinematic;
   useEffect(() => { setMovieDismissed(false); setMovieReplay(false); }, [nodeId]);
 
   const entries = useMemo(() => (storyNode ? sceneEntries(storyNode) : []), [storyNode]);

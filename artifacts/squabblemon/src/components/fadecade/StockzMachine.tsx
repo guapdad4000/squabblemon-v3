@@ -130,25 +130,10 @@ export function StockzMachine({ bootstrap }: { bootstrap: PlayerBootstrap }) {
         kind="stockz"
       >
         <div className="stockz-panel" id="stockz-setup" style={{backgroundImage:`linear-gradient(#071218b0,#071218ee),url("${getAssetUrl('assets/minigames/polish-v2/stockz-exchange.webp')}")`}}>
-          {query.data && <ArcadeObjective chapter="DAILY CLOUT EXCHANGE" title={active ? `${active.ticker} · Call locked` : "Call your shot"}
-            detail={active ? "Wait for the closing bell. Your bet survives leaving the cabinet." : "A correct call returns 2× the stake. Fictional stocks, 50/50 direction."}
-            value={query.data.roundsToday} max={STOCKZ_DAILY_LIMIT} /> }
           <header className="stockz-hero">
             <img src={banner} alt="Stockz at his neighborhood trading booth" />
-            <div><span>THE CLOUT EXCHANGE</span><h2>BUY<br />MONEY.</h2><p>CALL YOUR SHOT. OWN THE BELL.</p></div>
+            <div><span>THE CLOUT EXCHANGE</span><h2>BUY<br />MONEY.</h2></div>
           </header>
-          <div className="stockz-ticker-strip" aria-label="Fictional market opening prices">
-            {STOCKZ_TICKERS.map(stock => <span key={stock.id}><b>{stock.id}</b><strong>{stock.price}</strong></span>)}
-          </div>
-          <p className="stockz-rules">
-            Pick a fictional stock. Call up or down at the closing bell. A
-            correct call returns 2× your stake, including the stake; a miss
-            loses it.
-          </p>
-          <small>
-            In-game Clout only · no cash value · 50/50 direction ·{" "}
-            {STOCKZ_DAILY_LIMIT} trades a day
-          </small>
           {query.isPending && <p role="status">Opening the market…</p>}
           {query.isError && (
             <button
@@ -167,7 +152,7 @@ export function StockzMachine({ bootstrap }: { bootstrap: PlayerBootstrap }) {
               <div className="stockz-trading-floor">
               <div className="stockz-host" data-mood={mood}>
                 <AnimatedSprite animation={stockzSpriteAnimation(mood)} name={`stockz-${mood}`} className="stockz-host-sprite" animationKey={active?.id ?? latest?.id} fallback={getAssetUrl("assets/characters/stockz.webp")} />
-                <div><span>STOCKZ SAYS</span><strong>{active ? "LET IT CLOSE." : latest ? latest.payout ? "GOOD CALL." : "NEXT BELL. NEW CALL." : "CALL YOUR SHOT."}</strong><small>{active ? "Your call is locked in. Come back at the closing bell." : "Pick a company. Pick a direction. Ring the bell."}</small></div>
+                <div><span>STOCKZ SAYS</span><strong>{active ? "LET IT CLOSE." : latest ? latest.payout ? "GOOD CALL." : "NEXT BELL. NEW CALL." : "CALL YOUR SHOT."}</strong></div>
               </div>
               <div className="stockz-trade-controls">
               {active ? (

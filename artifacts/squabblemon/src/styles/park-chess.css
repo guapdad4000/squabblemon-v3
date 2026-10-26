@@ -39,3 +39,9 @@ body:has(.park-chess[data-reduced-motion=true]) .fadecade-dialog-overlay,body:ha
 
 .park-chess__guide{font-size:12px;line-height:1.6;color:#f4e7cd}.park-chess__guide>p{margin:0 0 16px}.park-chess__guide-pieces{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-bottom:18px}.park-chess__guide-pieces>div{display:flex;align-items:flex-start;gap:8px;min-width:0}.park-chess__guide-pieces strong{display:block;text-transform:capitalize;font-weight:900;color:#ffe196}.park-chess__guide-pieces p{font-size:11px;line-height:1.5;margin:4px 0 0}.park-chess__guide details{padding:11px 0;border-top:1px solid #e8d19455}.park-chess__guide summary{font-weight:900;color:#ffe196;cursor:pointer;min-height:44px}.park-chess__guide details p{margin:6px 0 0}.park-chess__guide-note{color:#cfddc2;font-size:11px!important;border-top:1px solid #e8d19455;padding-top:12px;margin:14px 0 0!important}
 @media(max-width:760px){.park-chess__guide-pieces{grid-template-columns:1fr;gap:12px}}
+#park-chess-tier-note{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.park-chess__panel{padding:14px 16px;background:linear-gradient(180deg,#081912f2,#06120df7);border:2px solid #7f6d42;box-shadow:0 10px 28px #000a,inset 0 1px 0 #ffe9a833}
+.park-chess__rating{padding-bottom:8px;margin-bottom:8px}
+.park-chess__captures{margin:8px 0;gap:8px;grid-template-columns:1fr 1fr}
+.park-chess__tier-picker{margin-top:8px}
+.park-chess__actions{margin-top:10px}

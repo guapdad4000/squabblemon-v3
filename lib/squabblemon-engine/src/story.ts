@@ -8,6 +8,7 @@ import { seasonTwoChapters } from "./seasonTwo";
 import { extendedStoryChapters } from "./storyExpansions";
 import { specialPresentationChapters } from "./storySpecials";
 import { squabbleHouseChapters } from "./storySquabbleHouse";
+import { kumiteBreakTheBracketChapter } from "./storyKumite";
 import { hasSeasonOneRewrite, rewriteSeasonOne, seasonOneRewriteRevision } from "./seasonOneRewrite";
 import { expandSeasonTwoDialogue } from "./seasonTwoDialogueExpansion";
 export { storySeasons, getStorySeason, getStorySeasonForChapter, type StorySeasonDefinition } from "./storySeasons";
@@ -324,7 +325,7 @@ export const storyContent = validateStoryContent({ version: 12, chapters: withSt
   return node.kind === 'battle'
     ? { ...node, preDialogue: dialogue.pre ?? node.preDialogue, postDialogue: dialogue.post ?? node.postDialogue }
     : { ...node, scenes: dialogue.main ?? node.scenes };
-}) }, ...sequelChapters]), ...expandSeasonTwoDialogue(seasonTwoChapters), ...specialPresentationChapters, ...extendedStoryChapters, ...squabbleHouseChapters])) });
+}) }, ...sequelChapters]), ...expandSeasonTwoDialogue(seasonTwoChapters), ...specialPresentationChapters, ...extendedStoryChapters, ...squabbleHouseChapters, kumiteBreakTheBracketChapter])) });
 export const getStoryChapter = (chapterId: string) => storyContent.chapters.find((chapter) => chapter.id === chapterId);
 export const getStoryNode = (nodeId: string) => storyContent.chapters.flatMap((chapter) => chapter.nodes).find((node) => node.id === nodeId);
 

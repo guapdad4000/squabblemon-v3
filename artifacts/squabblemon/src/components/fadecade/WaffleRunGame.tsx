@@ -301,12 +301,6 @@ export function WaffleRunGame({
           {sound ? "SFX ON" : "SFX OFF"}
         </button>
       </header>
-      {activeRun && run && <>
-        <ArcadeObjective chapter={`FLOOR ${run.floor} / NIGHT SHIFT`} title={run.phase === "battle" ? "Read the next attack" : run.phase === "learning" ? "Pick your new trick" : run.phase === "ended" ? "Your take is safe" : "Steal waffles · Dodge the watch"}
-          detail={run.phase === "battle" ? `Staff intent: ${run.enemyIntent.replace('-', ' ')}. Guard or dodge the heavy hit.` : "Watch the red plate before you hop. Battles unlock new moves."}
-          value={run.waffles} max={run.waffles<12?12:30} banked={status?.earned.softCurrency}/>
-        <ArcadeMilestones value={run.waffles} steps={[{at:12,label:"First ticket"},{at:30,label:"Second ticket"}]}/>
-      </>}
 
       <section className="wr-cabinet-screen" data-testid="waffle-run-screen">
         <img className="wr-diner" src={art("diner")} alt="" />
@@ -443,11 +437,6 @@ export function WaffleRunGame({
                 <div className="wr-bird-health">
                   <HP hp={run.hp} max={run.maxHp} label="INNERCITY PIGEON" />
                 </div>
-                <div className="wr-hop-tip">
-                  {busy
-                    ? "LANDING…"
-                    : "Tap a glowing plate. The red plate is being watched."}
-                </div>
               </div>
             ) : (
               <div className={`wr-battle ${effect ? "wr-battle--attack" : ""}`}>
@@ -497,7 +486,6 @@ export function WaffleRunGame({
                 {run.phase === "learning" ? (
                   <div className="wr-learning">
                     <PixelTitle text="NEW MOVE" />
-                    <p>One new trick. Every time they catch you.</p>
                     {run.moves.length >= 4 && (
                       <label>
                         FORGET{" "}

@@ -1022,3 +1022,184 @@ html[data-reduce-motion='true'] .kumite-shortcut { transition: none; }
     height: 128px;
   }
 }
+
+/* Minimal Tournament Countdown Clock + Interactive Layered Mission Roadmap */
+.kumite-hub__clock {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  background: rgba(12, 9, 7, 0.88);
+  border: 1px solid rgba(255, 212, 94, 0.48);
+  border-radius: 999px;
+  box-shadow: 0 0 18px rgba(255, 196, 56, 0.18), inset 0 1px 0 rgba(255, 240, 180, 0.2);
+}
+.kumite-hub__clock-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #ffd45e;
+  box-shadow: 0 0 8px #ffd45e;
+}
+.kumite-hub__clock small {
+  font: 700 9px/1 var(--font-mono);
+  letter-spacing: 0.12em;
+  color: #e6c67c;
+}
+.kumite-hub__clock strong {
+  font: 900 14px/1 var(--font-mono);
+  letter-spacing: 0.06em;
+  color: #fff6d1;
+}
+
+.kumite-mission-hud {
+  display: grid;
+  grid-template-columns: minmax(180px, 1.2fr) minmax(160px, 1fr) auto;
+  align-items: center;
+  gap: 14px;
+  margin: 0 14px 14px;
+  padding: 12px 16px;
+  background: linear-gradient(110deg, #1b140c 0%, #0d0a07 60%, #24190a 100%);
+  border: 1px solid #f2c144;
+  border-left: 4px solid #ffd45e;
+  border-radius: 6px;
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(255, 232, 150, 0.22);
+}
+.kumite-mission-hud__badge {
+  display: inline-block;
+  padding: 2px 6px;
+  margin-bottom: 4px;
+  background: #ffd45e;
+  color: #171109;
+  font: 900 8px/1.2 var(--font-mono);
+  letter-spacing: 0.12em;
+  border-radius: 2px;
+}
+.kumite-mission-hud__target strong {
+  display: block;
+  font: 900 italic 18px/1.1 var(--font-display);
+  color: #fff4cf;
+  text-transform: uppercase;
+}
+.kumite-mission-hud__target small {
+  display: block;
+  margin-top: 2px;
+  font: 600 11px/1.3 var(--font-sans);
+  color: #d8c295;
+}
+.kumite-mission-hud__progress > div:first-child {
+  display: flex;
+  justify-content: space-between;
+  font: 800 9px/1.2 var(--font-mono);
+  color: #f3d27a;
+  margin-bottom: 5px;
+}
+.kumite-mission-hud__filters {
+  display: flex;
+  gap: 6px;
+}
+.kumite-mission-hud__filters button {
+  min-height: 34px;
+  padding: 6px 10px;
+  background: #17120c;
+  border: 1px solid rgba(242, 193, 68, 0.38);
+  border-radius: 4px;
+  color: #dfc999;
+  font: 800 9px/1 var(--font-mono);
+  letter-spacing: 0.08em;
+  cursor: pointer;
+}
+.kumite-mission-hud__filters button[aria-pressed='true'] {
+  background: #ffd45e;
+  border-color: #fff2b8;
+  color: #181108;
+  box-shadow: 0 0 14px rgba(255, 212, 94, 0.35);
+}
+
+.kumite-roadmap__svg-spine {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+.kumite-roadmap__svg-spine line {
+  stroke: rgba(255, 212, 94, 0.28);
+  stroke-width: 0.55;
+  stroke-dasharray: 1.4 1.2;
+}
+.kumite-roadmap__svg-spine line[data-lit='true'] {
+  stroke: #ffd45e;
+  stroke-width: 0.85;
+  stroke-dasharray: none;
+  filter: drop-shadow(0 0 4px rgba(255, 212, 94, 0.8));
+}
+.kumite-roadmap__node {
+  z-index: 2;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, opacity 0.18s ease;
+}
+.kumite-roadmap__node[data-next='true'] {
+  border-color: #ffd45e !important;
+  box-shadow: 0 0 0 2px #ffd45e, 0 0 26px rgba(255, 212, 94, 0.45), 0 14px 28px rgba(0, 0, 0, 0.8) !important;
+}
+.kumite-roadmap__node[data-dimmed='true'] {
+  opacity: 0.35;
+  filter: grayscale(0.5);
+}
+
+.kumite-dossier-preview__art-wrap {
+  position: relative;
+  display: grid;
+  place-items: center;
+  border-radius: 6px;
+  overflow: hidden;
+}
+.kumite-dossier-preview__art-wrap[data-stance='squabble'] .kumite-dossier-preview__art {
+  filter: drop-shadow(0 0 14px rgba(255, 196, 56, 0.75)) contrast(1.08);
+}
+.kumite-dossier-preview__art-wrap[data-stance='awakened'] .kumite-dossier-preview__art {
+  filter: drop-shadow(0 0 22px rgba(255, 215, 70, 0.95)) drop-shadow(0 0 8px rgba(255, 90, 54, 0.75)) brightness(1.08) saturate(1.18);
+}
+.kumite-dossier-preview__aura-tag {
+  position: absolute;
+  bottom: 6px;
+  left: 6px;
+  right: 6px;
+  padding: 3px 6px;
+  background: rgba(14, 10, 7, 0.88);
+  border: 1px solid rgba(255, 212, 94, 0.55);
+  color: #ffd45e;
+  font: 800 8px/1.2 var(--font-mono);
+  text-align: center;
+  letter-spacing: 0.08em;
+}
+.kumite-stance-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 8px 0 10px;
+}
+.kumite-stance-tabs button {
+  min-height: 32px;
+  padding: 5px 10px;
+  background: #17120d;
+  border: 1px solid rgba(242, 193, 68, 0.4);
+  border-radius: 4px;
+  color: #e5cf9f;
+  font: 800 9px/1 var(--font-mono);
+  cursor: pointer;
+}
+.kumite-stance-tabs button[aria-pressed='true'] {
+  background: linear-gradient(180deg, #ffd45e, #c88a1c);
+  border-color: #fff3c4;
+  color: #191107;
+}
+@media (max-width: 720px) {
+  .kumite-mission-hud {
+    grid-template-columns: 1fr;
+    gap: 10px;
+    margin: 0 10px 12px;
+    padding: 10px 12px;
+  }
+}

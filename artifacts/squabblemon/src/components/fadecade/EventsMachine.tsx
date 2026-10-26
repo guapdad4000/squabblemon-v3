@@ -115,8 +115,8 @@ export function EventsMachine({ legalCrews, onBattle, playerId }: { playerId: st
               </div>
             )
           ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-              <span className="challenge-field-label">01 / Choose the event</span>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+              <span className="challenge-field-label">EVENT</span>
               <StreetSelect
                 className="cabinet-select"
                 value={eventMode}
@@ -126,11 +126,7 @@ export function EventsMachine({ legalCrews, onBattle, playerId }: { playerId: st
                 {activities.filter(activity => activity.id === 'neighborhood' || activity.id === 'boss').map(activity => <option key={activity.id} value={activity.id}>{activity.name}</option>)}
               </StreetSelect>
 
-              <p className="cabinet-notice" style={{ textTransform: 'none' }}>
-                {eventMode === 'neighborhood' ? `Week ${week}: ${eventRule}` : eventRule || 'Defeat the boss.'}
-              </p>
-
-              <span className="challenge-field-label">02 / Bring your crew</span>
+              <span className="challenge-field-label">CREW</span>
               <CompactDeckPicker decks={legalCrews.map(crew => ({ id:crew.id, name:crew.name, heroCardId:crew.hero, cardIds:crew.cards }))} selectedId={crewId ?? ""} onSelect={setCrewId} disabled={false} />
 
               <CrewPreview crew={legalCrews.find(crew => crew.id === crewId)} />

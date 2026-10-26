@@ -278,7 +278,7 @@ try {
       await play(page, step.expectedMove.from, step.expectedMove.to);
       await page.waitForFunction(() => document.querySelector('.park-chess-academy')?.getAttribute('data-lesson-status') === 'success');
       assert.equal(await square(page, step.expectedMove.to).getAttribute('aria-disabled'), 'true');
-      if (step.reply) assert.match(await page.locator('.park-chess__status').innerText(), /RIVAL REPLIED/);
+      if (step.reply) assert.match(await page.locator('.park-chess__status').innerText(), /RIVAL REPLIED|THE OPPS REPLIED/);
       if (i < lesson.steps.length - 1) await page.getByRole("button", { name: "Next step", exact: true }).click();
     }
     assert.equal(await page.locator('.park-chess-academy').getAttribute('data-lesson-phase'), 'complete');

@@ -132,6 +132,16 @@ export const storySeasons: readonly StorySeasonDefinition[] = [
     ],
     posterAssetId: "assets/story/posters/last-waffle.webp",
   },
+  {
+    id: "special-kumite-break-the-bracket",
+    kind: "special",
+    title: "Break the Bracket",
+    subtitle: "A Kumite Special",
+    description:
+      "Eight contenders enter the underground bracket. When Sho’Nuff’s ambush breaks the tournament order, Leroy has to find the Glo across eight anime episodes.",
+    chapterIds: ["kumite-break-the-bracket"],
+    posterAssetId: "assets/kumite/films/v1/unlock-glo-portrait.webp",
+  },
 ];
 
 export const getStorySeason = (id: string) =>

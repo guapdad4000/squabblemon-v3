@@ -22,6 +22,7 @@ const SEASON_POSTERS: Record<string, string> = {
   'special-cellblock': 'assets/story/posters/library-hour.webp',
   'special-leon': 'assets/story/posters/place-to-return.webp',
   'special-squabble-house': 'assets/story/posters/last-waffle.webp',
+  'special-kumite-break-the-bracket': 'assets/kumite/films/v1/unlock-glo-portrait.webp',
 };
 
 export const SeasonPoster = forwardRef<HTMLButtonElement, SeasonPosterProps>(({
@@ -32,7 +33,7 @@ export const SeasonPoster = forwardRef<HTMLButtonElement, SeasonPosterProps>(({
   onFocus,
   onKeyDown,
 }, ref) => {
-  const poster = SEASON_POSTERS[season.id] ?? 'assets/story/theater/season-one.webp';
+  const poster = SEASON_POSTERS[season.id] ?? season.posterAssetId ?? 'assets/story/theater/season-one.webp';
 
   return (
     <button

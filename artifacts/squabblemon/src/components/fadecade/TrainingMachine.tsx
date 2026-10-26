@@ -50,7 +50,7 @@ export function TrainingMachine({ legalCrews, onBattle, initiallyOpen = false, p
       >
         <div className="fadecade-panel" id="training-setup" data-testid="panel-training">
           {!legalCrews.length && <p role="status">Create a legal owned ten-card crew before starting practice.</p>}
-          <span className="challenge-field-label">01 / Choose your drill</span>
+          <span className="challenge-field-label">DRILL</span>
           <StreetSelect
             className="cabinet-select"
             value={mode}
@@ -60,11 +60,7 @@ export function TrainingMachine({ legalCrews, onBattle, initiallyOpen = false, p
             {availableActivities.map(m => <option key={m.id} value={m.id}>{m.name}</option>)}
           </StreetSelect>
 
-          <p className="cabinet-notice" style={{ textTransform: 'none', margin: '0.5rem 0' }}>
-            {selectedActivity.description}
-          </p>
-
-          <span className="challenge-field-label">02 / Bring your crew</span>
+          <span className="challenge-field-label">CREW</span>
           <CompactDeckPicker decks={legalCrews.map(crew => ({ id:crew.id, name:crew.name, heroCardId:crew.hero, cardIds:crew.cards }))} selectedId={crewId ?? ""} onSelect={setCrewId} disabled={false} />
 
           <CrewPreview crew={legalCrews.find(crew => crew.id === crewId)} />

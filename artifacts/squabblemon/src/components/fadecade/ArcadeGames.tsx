@@ -372,15 +372,6 @@ export default function ArcadeGame({
           </button>
         </nav>
       </header>
-      {playing && run && <>
-        <ArcadeObjective chapter={kind === "block-takeover" ? "WEEKLY CAMPAIGN" : "DAILY CHALLENGE"}
-          title={run.kind === "girl-fade" ? `Bout ${Math.min(6,run.box.wins+1)} · Read her hands` : run.kind === "fade-market" ? `Wave ${run.market.wave} · Hold the lanes` : `Turn ${run.block.turn} · Take headquarters`}
-          detail={run.kind === "girl-fade" ? "Counter with the opposite direction. A matching move takes a hit." : run.kind === "fade-market" ? "Restock for power-ups. Aim at the nearest threat." : "Hold six districts to unlock HQ. Fortify the incoming raid."}
-          value={run.kind === "girl-fade" ? run.box.wins : run.kind === "fade-market" ? Math.min(6,run.market.wave) : run.block.tiles.filter(tile=>tile.owner === "player").length}
-          max={run.kind === "block-takeover" ? 9 : 6} banked={status?.earned.softCurrency} />
-        <ArcadeMilestones value={run.kind === "girl-fade" ? run.box.wins : run.kind === "fade-market" ? run.market.wave : run.block.tiles.filter(tile=>tile.owner === "player").length}
-          steps={run.kind === "block-takeover" ? [{at:6,label:"HQ unlocked"},{at:9,label:"Own the block"}] : [{at:3,label:"First ticket"},{at:6,label:"Second ticket"}]} />
-      </>}
       <section className="arc-stage" data-testid={`game-${kind}`}>
         <img
           className="arc-backdrop"
@@ -453,7 +444,6 @@ export default function ArcadeGame({
               </div>
             ) : (
               <>
-                <p className="arc-intro-copy">{help[kind][0]}</p>
                 {kind === "girl-fade" || kind === "block-takeover" ? (
                   <div
                     className="arc-choices"
@@ -882,11 +872,6 @@ function GirlFight({
                 </span>
               ))}
             </div>
-            <p>
-              {watching
-                ? "Red direction = hit. Opposite direction = counter."
-                : "Remember the red arrows. Queue the opposite steps."}
-            </p>
             <div className="girl-direction-pad">
               {DIRECTIONS.map((d) => (
                 <button
@@ -1065,13 +1050,6 @@ function MarketDefense({
           <strong>WAVE {m.wave}</strong>
         </div>
       )}
-      <div className="market-threat-readout" aria-label="Lane threats">
-        {Array.from({length:5},(_,lane)=>{
-          const enemies=m.enemies.filter(enemy=>enemy.lane===lane);
-          const urgent=enemies.some(enemy=>enemy.position>=8);
-          return <span key={lane} data-urgent={urgent}>AISLE {lane+1}<b>{enemies.length ? `${enemies.length} INCOMING` : 'CLEAR'}</b></span>;
-        })}
-      </div>
       <div className="market-powerline">
         <span>{m.kills} YNs STOPPED</span>
         <b>
@@ -1106,7 +1084,6 @@ function MarketDefense({
               max={6}
               value={m.stock[i]}
             />
-            <small>{item.effect}</small>
           </button>
         ))}
       </div>
@@ -1189,7 +1166,6 @@ function BlockTakeover({
             {tile.owner === "player" ? "DEFENSE" : "RESISTANCE"}
           </span>
         </header>
-        <p className="block-tactical-readout">{tile.owner === "player" ? b.threat === selected ? "Raid incoming here. Fortify before their next move." : "Secure turf. Fortify it or gather supplies for the next push." : selected === 0 && owned < 6 ? `Headquarters locked: hold ${6-owned} more districts.` : !blockCanAttack(run,selected) ? "Reach this district by taking a neighboring block first." : b.supplies<1 ? "Get supplies before you attack." : `${b.power} attack against ${tile.defense} resistance. Your move advances The Opps.`}</p>
         <div>
           <button
             disabled={

@@ -13,7 +13,7 @@
 .fadecade-road-panel h2{font:900 italic clamp(22px,4vw,32px)/1.05 var(--font-display);text-transform:uppercase;margin:5px 0 0}
 .fadecade-eyebrow{font:700 10px var(--font-mono);letter-spacing:.18em;color:#f5c84c}
 .fadecade-close{color:#c7d1dc;border:1px solid #58626c;background:#111925;padding:10px 14px;min-height:44px;font:700 12px var(--font-mono)}
-.fadecade-road-view{position:relative;height:270px;overflow:hidden;isolation:isolate;background:#24272b;border:1px solid #69706b44}
+.fadecade-road-view{position:relative;height:200px;overflow:hidden;isolation:isolate;background:#24272b;border:1px solid #69706b44}
 .fadecade-road-view.is-compact{height:100%;border:0}
 .fadecade-road-asphalt{position:absolute;inset:-100px 24% -100px -12%;background-size:245px auto;background-repeat:repeat;filter:brightness(.68)}
 .fadecade-road-shoulder{position:absolute;inset:0 0 0 72%;background-size:145px auto;filter:brightness(.62);box-shadow:-8px 0 20px #0005}
@@ -35,14 +35,14 @@
 .fadecade-sprite-fallback{display:grid;place-items:center;width:52px;height:52px;border:2px solid #ffe467;border-radius:50%;background:#252834;color:#ffe467;font:800 13px var(--font-mono)}
 .fadecade-road-view[data-phase=walk] .fadecade-road-actor{animation:fadecade-walk-down 1s ease-in-out both}
 .fadecade-road-overlay{position:absolute;inset:12px 12px auto;display:flex;justify-content:space-between;color:#ffdd70;font:700 10px var(--font-mono);letter-spacing:.09em;text-shadow:1px 2px var(--sq-ink)}
-.fadecade-road-status{display:flex;flex-direction:column;gap:5px;padding:16px 0}
-.fadecade-road-status strong{font:800 18px var(--font-display);text-transform:uppercase;color:var(--sq-paper)}
-.fadecade-road-status span,.fadecade-road-status p{font-size:13px;color:#c2cbd4;line-height:1.5}
+.fadecade-road-status{display:flex;flex-direction:column;gap:3px;padding:10px 0}
+.fadecade-road-status strong{font:800 17px var(--font-display);text-transform:uppercase;color:var(--sq-paper)}
+.fadecade-road-status span,.fadecade-road-status p{font-size:12px;color:#c2cbd4;line-height:1.4}
 .fadecade-road-status p{margin:0;color:#ffe17b}
-.fadecade-crew-label{display:block;font:600 13px var(--font-mono);color:#e2e8ef;margin-bottom:12px}
-.fadecade-crew-label select{margin-top:7px}
+.fadecade-crew-label{display:block;font:600 12px var(--font-mono);color:#e2e8ef;margin-bottom:8px}
+.fadecade-crew-label select{margin-top:5px}
 .fadecade-road-rules{font-size:13px;color:#bfc4cd;line-height:1.6;margin:12px 0}
-.fadecade-road-actions{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0}
+.fadecade-road-actions{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 4px}
 .fadecade-road-actions .cabinet-btn{font-size:14px;min-height:46px;padding:12px 20px}
 .fadecade-road-policy{display:block;font-size:12px;color:#9ca9b9;line-height:1.5}
 .fadecade-error{padding:12px;margin:12px 0;color:#ffd1cc;border-left:3px solid #e2685a;background:#361d22;font-size:13px}

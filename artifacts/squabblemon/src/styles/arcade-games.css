@@ -257,13 +257,14 @@
 .girl-player-hp,
 .girl-opponent-hp {
   position: absolute;
-  top: 16px;
+  top: 10px;
   z-index: 5;
-  width: 35%;
-  padding: 12px 15px;
-  background: #171421ca;
-  border: 1px solid #cc8ec39c;
-  box-shadow: 3px 4px 0 #090810;
+  width: 44%;
+  padding: 8px 12px;
+  background: linear-gradient(180deg, rgba(16, 14, 24, 0.88), rgba(16, 14, 24, 0.45));
+  border: 0;
+  border-bottom: 2px solid rgba(241, 177, 223, 0.6);
+  box-shadow: none;
 }
 .girl-player-hp {
   left: 3%;
@@ -586,10 +587,10 @@
   z-index: 6;
 }
 .market-restock-controls button {
-  padding: 9px 6px;
-  min-height: 62px;
+  padding: 7px 6px;
+  min-height: 44px;
   min-width: 0;
-  background: #122726f2;
+  background: linear-gradient(180deg, #132c2af2, #0b1c1bf7);
   border: 1px solid #71a994;
   color: #e3eac9;
   text-align: left;
@@ -787,14 +788,14 @@
 }
 .block-command {
   position: absolute;
-  bottom: 3%;
-  left: 3%;
-  right: 3%;
-  padding: 15px 16px;
-  background: #f4e4c6;
-  border: 2px solid #614633;
-  box-shadow: 4px 4px 0 #17101b;
-  color: #3c2e24;
+  bottom: 2%;
+  left: 2.5%;
+  right: 2.5%;
+  padding: 10px 12px;
+  background: linear-gradient(180deg, rgba(20, 18, 28, 0.94), rgba(12, 11, 18, 0.98));
+  border: 2px solid #e49a66;
+  box-shadow: 0 8px 24px #000b;
+  color: #fff0cb;
   z-index: 5;
 }
 .block-command header {
@@ -802,33 +803,36 @@
   justify-content: space-between;
   gap: 8px;
   align-items: center;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
 }
 .block-command header strong {
-  font: 900 21px var(--font-display);
+  font: 900 18px var(--font-display);
+  color: #ffe2b3;
 }
 .block-command header span {
   font: 800 9px var(--font-mono);
+  color: #e49a66;
   text-align: right;
 }
 .block-command > div {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 10px;
+  gap: 8px;
 }
 .block-command button {
-  padding: 13px 8px;
-  background: #c8835f;
-  border: 1px solid #7a4c3b;
-  box-shadow: 2px 3px 0 #c3a582;
-  color: #2c211e;
-  font: 900 12px var(--font-display);
+  padding: 9px 6px;
+  background: linear-gradient(180deg, #3b271e, #221612);
+  border: 1px solid #e49a6699;
+  box-shadow: 0 3px 0 #0e0908;
+  color: #fff0cb;
+  font: 900 11px var(--font-display);
   cursor: pointer;
-  min-height: 56px;
+  min-height: 46px;
 }
 .block-command button small {
   display: block;
-  margin-top: 6px;
+  margin-top: 4px;
+  color: #e4b896;
   font: 800 7px var(--font-mono);
 }
 .arc-run-footer {
@@ -1262,23 +1266,24 @@
     top: 64%;
   }
   .market-powerline {
-    bottom: 15%;
+    bottom: 11.5%;
     left: 7px;
     right: 7px;
-    font-size: 6px;
+    font-size: 7px;
     gap: 4px;
     flex-wrap: wrap;
-    padding: 8px;
+    padding: 6px 8px;
   }
   .market-restock-controls {
     left: 7px;
     right: 7px;
-    bottom: 1%;
+    bottom: 1.5%;
     gap: 4px;
-    height: 12%;
+    height: auto;
   }
   .market-restock-controls button {
-    padding: 7px 4px;
+    padding: 6px 4px;
+    min-height: 42px;
   }
   .market-restock-controls button > span {
     font-size: 9px;
@@ -1300,13 +1305,13 @@
     top: 50px;
   }
   .arcade-game[data-kind="block-takeover"] .arc-stage {
-    min-height: 710px;
+    min-height: 650px;
   }
   .block-health {
     top: 9px;
     left: 8px;
     right: 8px;
-    padding: 10px;
+    padding: 8px 10px;
     gap: 10px;
   }
   .block-health > .arc-health {
@@ -1316,11 +1321,11 @@
     font-size: 8px;
     max-width: 45%;
     text-align: right;
-    line-height: 1.8;
+    line-height: 1.6;
   }
   .block-map {
-    top: 95px;
-    bottom: 220px;
+    top: 76px;
+    bottom: 152px;
     gap: 3px;
     padding: 0 5px;
   }

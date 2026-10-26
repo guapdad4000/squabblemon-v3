@@ -138,7 +138,7 @@ export default function ParkChessGame({ bootstrap }: { bootstrap: PlayerBootstra
           {finished && ratingChange && <p className="park-chess__rating-change" data-result={ratingChange.result}>{ratingChange.delta > 0 ? "+" : ""}{ratingChange.delta} PARK RATING <span>{ratingChange.before} → {ratingChange.after}</span></p>}
           {run && status.runRating?.rated === false && <p className="park-chess__unrated">Older saved match · unrated. Your tickets and tier progress still count.</p>}
           {run?.phase === "draw" && <p>{run.reason?.replaceAll("-", " ")}. No ticket awarded.</p>}
-          {!finished && <p>{selected ? `${pieceNames[board.get(selected)?.type ?? "p"]} ${selected.toUpperCase()} · ${legal.length ? "choose a marked square" : "no legal destinations"}` : run ? "Choose a Squabbler, then its destination." : "Checkmate The Opps. Every win earns one ticket."}</p>}
+          {!finished && selected && <p>{`${pieceNames[board.get(selected)?.type ?? "p"]} ${selected.toUpperCase()} · ${legal.length ? "choose a marked square" : "no legal destinations"}`}</p>}
         </div>
         <div className="park-chess__captures"><div aria-label="Pieces you captured"><small>YOU TOOK</small><div>{run?.captured.b.length ? run.captured.b.map((type, i) => <Piece key={i} type={type} color="b" compact />) : <span>—</span>}</div></div><div aria-label="Pieces The Opps captured"><small>THE OPPS TOOK</small><div>{run?.captured.w.length ? run.captured.w.map((type, i) => <Piece key={i} type={type} color="w" compact />) : <span>—</span>}</div></div></div>
         {(run?.lastPlayerMove || run?.lastBotMove) && <p className="park-chess__moves">LAST TURN <b>{run.lastPlayerMove?.san ?? "—"}</b> / <b>{run.lastBotMove?.san ?? "—"}</b></p>}
