@@ -58,7 +58,19 @@ conditional on visibility/motion preferences with metadata-only preload.
 - Polling/notification tests: 23 passed. Service worker: 20 passed.
 - Media/artwork tests: 32 passed; all 224 battle-media entries passed manifest,
   timing, frame/audio integrity checks (nine retain original geometry).
-- Complete release build and browser checks are recorded after final verification.
+- Full Node 24 release build passed at `df04fc67`, including required suites,
+  Vite, migration staging, CSS invalidation and bundle ceilings. Home static
+  closure is 710.9 KiB (baseline about 956 KiB); GameApp CSS is 494,990 bytes
+  (baseline 504,645). Shared CSS remains the large majority of that stylesheet.
+- Function output bytes: API 3,388,853; Kumite 504,186; patch delivery 222,910;
+  deploy check 219,305; replay retention 213,915. Previous output total was about
+  12.8 MB; current total about 4.55 MB. These are raw bundle measurements.
+- Chromium development-shell checks at 390×844 and 1440×960 loaded the lazy
+  Safehouse crew/portraits without runtime errors or horizontal overflow, using
+  disposable-auth fixtures and mocked API responses. Rejected Studio access
+  showed NotFound without requesting either editor module. A sampled optimized
+  battle clip decoded at 318×424 with duration 6.583333 s. This is not a live
+  signed-in journey or physical-device quality check.
 
 ## Remaining boundaries
 
