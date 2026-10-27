@@ -19,7 +19,7 @@ Status: implemented and verified locally; not pushed or deployed. The older prim
 
 The user authorized built-in image generation in place of unavailable Imagen. No OpenArt jobs or credits were used. Art follows the existing cel-shaded arcade/anime references: heavy ink, restrained gold/crimson, identifiable character outfits, fists and no crown emblems. Generated masters remain outside Git; optimized WebP derivatives ship in `public/assets`.
 
-71 art sets produce 131 WebP delivery files: 10 manual plates, 14 alpha lockups, 24 form plates, 8 alternate plates, and 15 sprite sets. Each sprite set includes its six-frame 960 ms idle loop plus a still and three attack poses. The generated review `media-manifest.json` records dimensions, alpha, frame count, bytes, delivery SHA-256 and source SHA-256. The local art ledger retains master provenance. Delivery totals approximately 20.7 MB, loaded by the relevant scene rather than eagerly at login.
+71 art sets produce 131 WebP delivery files: 10 manual plates, 14 alpha lockups, 24 form plates, 8 alternate plates, and 15 sprite sets. Each sprite set includes its six-frame 960 ms idle loop plus a still and three attack poses. The generated review `media-manifest.json` records dimensions, alpha, frame count, bytes, delivery SHA-256 and source SHA-256. The local art ledger retains master provenance. Delivery totals approximately 20.5 MB, loaded by the relevant scene rather than eagerly at login.
 
 The Glo plate deliberately has no baked node circles: seven HTML nodes and their current-order trace provide an exact seven-node instrument at every viewport. Three generated sprite atlases were corrected to remove unwanted sparring partners before acceptance. Tiny disconnected atlas bleed was cleaned during delivery extraction; character poses and weapons remain intact.
 
@@ -94,6 +94,10 @@ Re-run `pnpm test:kumite-expansion` for the focused source tests plus owned nati
 ## Fighter form art revision 2
 
 The 24 form plates were revised after review: 23 new dynamic-pose illustrations and the restored original Leroy Golden Glow. See [form art direction](kumite-form-art-direction.md). All 107 approved non-form delivery files are hash-identical. The form set is 18.2% smaller; 14 focused checks and six local phone/desktop form views passed. Runtime source remains unchanged in this artwork revision.
+
+## Fighter anatomy correction 3
+
+Bushedo Brown and Chonk Lee received anatomically clearer Squabble poses. Only those two illustrations and media metadata changed; the other 129 delivery assets match their prior hashes. The 14 focused checks passed again, and desktop/phone component views showed both updated plates loaded correctly.
 
 ## Release boundary
 

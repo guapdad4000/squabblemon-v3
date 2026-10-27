@@ -1,7 +1,7 @@
 {
   "artSets": 71,
   "deliveryFiles": 131,
-  "totalBytes": 20723070,
+  "totalBytes": 20534130,
   "animatedLoops": 15,
   "titleLockups": 14,
   "forms": 24,
@@ -878,11 +878,11 @@
       "height": 1024,
       "frames": 1,
       "alpha": true,
-      "bytes": 279704,
-      "sha256": "a4b19205c34a0a4d37ff15600eb0e533731705e0b0cb50b369704b5a4f57dbe5",
-      "sourceSHA256": "4815ea456e874619999e122b29cfa0201078a6b906cb4d578d502c4cc38baa9a",
+      "bytes": 158728,
+      "sha256": "ea66cd2753dce4532535fdda491d510a24a58f5db66ce4c54f1c85f68d7ce7eb",
+      "sourceSHA256": "c17cdccf599065162dc2cb97512057cdd58f7dae18d0bbd5b66a10bdc5d47fe8",
       "generator": "built-in imagegen, user-approved provider substitution",
-      "revision": "dynamic-poses-v2"
+      "revision": "anatomy-v3"
     },
     {
       "asset": "assets/characters/forms/chonk-lee-awakened.webp",
@@ -914,11 +914,11 @@
       "height": 1024,
       "frames": 1,
       "alpha": true,
-      "bytes": 252498,
-      "sha256": "d23fc9220f6a730db39a7bac9424c6317e6861991bce817c33347f687c6bb6a9",
-      "sourceSHA256": "438c7b29275c42e581635f4447a2edd2bea9a754f5e5da14f29b8df0df3da534",
+      "bytes": 184534,
+      "sha256": "da16f42061560d045971e7bb2cf96313c2f48b2b545aae8961342cb8a282f76f",
+      "sourceSHA256": "ce44bc9b7ece4675488c9d548c7edc9becacfd0ba30e2e27c23116b3fdcc573e",
       "generator": "built-in imagegen, user-approved provider substitution",
-      "revision": "dynamic-poses-v2"
+      "revision": "anatomy-v3"
     },
     {
       "asset": "assets/characters/forms/dragonfly-jones-awakened.webp",
