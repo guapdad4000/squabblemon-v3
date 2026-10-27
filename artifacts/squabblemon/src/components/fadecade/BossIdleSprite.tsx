@@ -1,3 +1,4 @@
+import { DojoMotionSprite, type DojoSpritePhase } from './DojoMotionSprite';
 import { useEffect, useId, useRef, type CSSProperties } from "react";
 import { getAssetUrl } from "../../lib/assets";
 import { observeMotionElement } from "./AnimatedSprite";
@@ -7,12 +8,14 @@ export function BossIdleSprite({
   className = "",
   paused = false,
   reduced = false,
+  phase = "idle",
 }: {
   asset: string;
   name: string;
   className?: string;
   paused?: boolean;
   reduced?: boolean;
+  phase?: DojoSpritePhase;
 }) {
   const ref = useRef<HTMLSpanElement>(null),
     clip = useId().replace(/:/g, "");
@@ -20,6 +23,7 @@ export function BossIdleSprite({
     () => (ref.current ? observeMotionElement(ref.current) : undefined),
     [],
   );
+  if (asset.startsWith('dojo:')) return <DojoMotionSprite asset={asset} name={name} className={className} paused={paused} reduced={reduced} phase={phase}/>;
   return (
     <span
       ref={ref}

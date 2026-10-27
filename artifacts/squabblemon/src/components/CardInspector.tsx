@@ -1,3 +1,4 @@
+import { BossArchiveInspector } from './BossArchiveInspector';
 import { presentCardForm } from '../lib/cardFormPresentation';
 import { SummonDetails } from './SummonDetails';
 import { BOSS_NPCS } from "@workspace/squabblemon-engine/bossNpcCards";
@@ -52,7 +53,7 @@ function scoutNote(card: any): string {
   return `${ability} — note for the next squad run.`;
 }
 
-export function CardInspector({ card, onClose, bootstrap, variantId, initialPreviewVariant, match, useCachedProfile = false, renderCard }: any) {
+function PlayableCardInspector({ card, onClose, bootstrap, variantId, initialPreviewVariant, match, useCachedProfile = false, renderCard }: any) {
   const reduceMotion = useReducedMotion() || (typeof window !== 'undefined' && cardMotionReduced());
   card = match?.boards?.flat().find((current: CardInstance) => current.instanceId === card.instanceId) ?? card;
   card = presentCardForm(card);
@@ -411,7 +412,7 @@ export function CardInspector({ card, onClose, bootstrap, variantId, initialPrev
               <div className="dossier-variants">
                 {variantSlots.map((slot: any) => {
                   const isOwned = bootstrap?.profile?.ownedVariants?.includes(slot.id);
-                  const canAfford = !!catalogCard && quoteStyleShards(bootstrap?.profile ?? { styleShards: 0 }, catalogCard.rarity, slot.shardCost).canAfford;
+                  const canAfford = !slot.progressionOnly && !!catalogCard && quoteStyleShards(bootstrap?.profile ?? { styleShards: 0 }, catalogCard.rarity, slot.shardCost).canAfford;
                   return (
                     <article key={slot.id} className="dossier-variant" data-finish={getVariantKind(slot.id)}>
                       <button type="button" className="dossier-variant__preview" aria-label={`Preview ${slot.name} finish`} aria-pressed={displayedVariant === slot.id} onClick={() => setPreview({cardId: sourceCard.id, variant: slot.id})}>
@@ -419,11 +420,11 @@ export function CardInspector({ card, onClose, bootstrap, variantId, initialPrev
                         <span>Preview finish</span>
                       </button>
                       <div className="dossier-variant__cost">
-                        {isOwned ? (equippedVariant === slot.id ? 'Equipped' : 'Unlocked') : `${slot.shardCost} Shards`}
+                        {isOwned ? (equippedVariant === slot.id ? 'Equipped' : 'Unlocked') : slot.progressionOnly ? "KUMITE MASTERY" : `${slot.shardCost} Shards`}
                       </div>
-                      {!isOwned && bootstrap && catalogCard && <StyleShardCost wallet={bootstrap.profile} rarity={catalogCard.rarity} cost={slot.shardCost}/>}
+                      {!isOwned && !slot.progressionOnly && bootstrap && catalogCard && <StyleShardCost wallet={bootstrap.profile} rarity={catalogCard.rarity} cost={slot.shardCost}/>}
                       <h5>{slot.name}</h5>
-                      <p>{VARIANT_FINISH[getVariantKind(slot.id) ?? 'tagged'].description}</p>
+                      <p>{slot.progressionOnly ? slot.description : VARIANT_FINISH[getVariantKind(slot.id) ?? 'tagged'].description}</p>
                       {bootstrap && catalogCard && (
                         isOwned ? (
                           <button
@@ -436,9 +437,9 @@ export function CardInspector({ card, onClose, bootstrap, variantId, initialPrev
                         ) : (
                           <button
                             onClick={() => handleCraft(slot.id)}
-                            disabled={!canAfford || craftVariant.isPending || !isCardOwned}
+                            disabled={slot.progressionOnly || !canAfford || craftVariant.isPending || !isCardOwned}
                           >
-                            {!isCardOwned ? 'Unlock card first' : craftVariant.isPending ? 'Crafting…' : canAfford ? 'Craft Variant' : 'Not enough shards'}
+                            {slot.progressionOnly ? 'Earn in Kumite' : !isCardOwned ? 'Unlock card first' : craftVariant.isPending ? 'Crafting…' : canAfford ? 'Craft Variant' : 'Not enough shards'}
                           </button>
                         )
                       )}
@@ -457,3 +458,5 @@ export function CardInspector({ card, onClose, bootstrap, variantId, initialPrev
   );
   return portalHost ? createPortal(inspector, portalHost) : inspector;
 }
+
+export function CardInspector(props:any) { return props.card?.archiveOnly ? <BossArchiveInspector card={props.card} onClose={props.onClose}/> : <PlayableCardInspector {...props}/>; }

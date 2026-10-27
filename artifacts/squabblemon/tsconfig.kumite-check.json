@@ -1,0 +1,7 @@
+{
+  "extends": "./tsconfig.supplied-fx.json",
+  "include": [
+    "src/**/*",
+    "e2e/kumite-expansion.fixture.tsx"
+  ]
+}

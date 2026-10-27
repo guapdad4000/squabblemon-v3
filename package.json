@@ -29,7 +29,8 @@
     "verify:release": "node scripts/release-checks.mjs",
     "verify:release:inventory": "node scripts/release-checks.mjs --inventory",
     "test:release-gates": "node --test scripts/release-checks.test.mjs scripts/build-netlify.test.mjs",
-    "build:release": "node scripts/build-netlify.mjs"
+    "build:release": "node scripts/build-netlify.mjs",
+    "test:kumite-expansion": "node --import ./artifacts/squabblemon/e2e/supplied-battle-fx.setup.mjs --test artifacts/squabblemon/src/kumiteExpansion.test.ts artifacts/api-server/src/lib/kumiteMastery.test.ts && node scripts/test-kumite-expansion-database.mjs"
   },
   "private": true,
   "dependencies": {

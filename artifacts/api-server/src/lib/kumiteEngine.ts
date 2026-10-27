@@ -61,6 +61,7 @@ export type KumiteCurrentView = {
   records: KumitePublicRecords;
 };
 export type KumiteProgression = {
+  mastery?: import('./kumiteMastery').KumiteMastery;
   completedMatches: number; matchWins: number; championships: number;
   rewards: { id: string; cardId: string; name: string; rarity: CardRarity; requirement: string;
     metric: 'completedMatches' | 'matchWins' | 'championships'; required: number; progress: number; claimed: boolean; owned: boolean }[];

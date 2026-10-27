@@ -1,3 +1,4 @@
+import { KUMITE_PUZZLES } from './storyKumitePuzzles';
 import { cards, completeEngineCrew } from "./data";
 import type { StoryEncounterSnapshot } from "./gameEngine";
 import type {
@@ -43,6 +44,9 @@ const film = (
 ): StoryCinematic => ({
   videoAssetId: `assets/kumite/films/v1/unlock-${slug}-landscape.mp4`,
   posterAssetId: `assets/kumite/films/v1/unlock-${slug}-landscape.webp`,
+  portraitVideoAssetId: `assets/kumite/films/v1/unlock-${slug}-portrait.mp4`,
+  portraitPosterAssetId: `assets/kumite/films/v1/unlock-${slug}-portrait.webp`,
+  titleAssetId: `assets/kumite/titles/${({chonk:"ep01-invitation",ptang:"ep02-belt-check",franklin:"ep03-find-the-glo",brown:"ep04-courtesy",undercova:"ep05-break-the-bracket",shonuff:"ep06-arena-is-ours",glo:"ep07-i-got-the-glo",leroy:"ep08-legends-remain"})[slug]}.webp`,
   environmentAssetId: `assets/kumite/${environment}.webp`,
 });
 
@@ -584,7 +588,7 @@ export const kumiteBreakTheBracketChapter: StoryChapter = {
     "When Sho’Nuff and a two-on-one ambush break the tournament order, Leroy, Bushedo Brown, and Undercova Brotha fight through eight anime episodes to take back the arena.",
   mapAssetId: "assets/kumite/dojo-arena-wide.webp",
   prerequisites: ["block-party"],
-  nodes: episodes.map((ep, index): StoryNode => {
+  nodes: episodes.flatMap((ep, index): StoryNode[] => {
     const cinematic = film(ep.filmSlug, ep.env ?? "dojo-arena-wide");
     const prerequisites = index ? [episodes[index - 1].id] : [];
     const teaching = {
@@ -592,6 +596,7 @@ export const kumiteBreakTheBracketChapter: StoryChapter = {
       focusMechanics: ["district control", "Motion timing", "counterplay"],
       focusCards: ep.focusCards,
     };
+    const buildNode = (): StoryNode => {
     if (!ep.battle) {
       return {
         id: ep.id,
@@ -643,5 +648,16 @@ export const kumiteBreakTheBracketChapter: StoryChapter = {
       starObjectives: b.stars,
       recommendedCollection: KUMITE_SUGGESTED_CREW,
     };
+    };
+    const node = buildNode();
+    const drills = KUMITE_PUZZLES.filter(p => p.afterEpisode === index);
+    return [node, ...drills.map((puzzle, drill): StoryNode => ({
+      id: puzzle.id, kind: 'dialogue', title: puzzle.title,
+      mapPosition: [[{x:19,y:90}],[{x:29,y:83}],[{x:39,y:75}],[{x:49,y:67},{x:58,y:76}],[{x:62,y:57}],[{x:71,y:47},{x:81,y:50}],[{x:88,y:35}],[{x:94,y:52}]][index][drill],
+      prerequisites: [drill ? drills[drill - 1].id : ep.id], optional: true,
+      rewards: [{kind: 'currency', id: 'street-xp', amount: 50}],
+      teaching: {tips: [puzzle.instruction], focusMechanics: ['Kumite training'], focusCards: ep.focusCards},
+      cinematic, scenes: [say('bushedo-brown', puzzle.instruction)], puzzle,
+    }))];
   }),
 };

@@ -1,3 +1,4 @@
+import { dojoReminderNotice } from '../lib/dojoReminder';
 import { lazy, Suspense } from 'react';
 const SocialRequestPopups = lazy(() => import('./SocialRequestPopups').then(module => ({ default: module.SocialRequestPopups })));
 const SOCIAL_POPUP_EVENT = 'squabblemon:open-social-request';
@@ -53,7 +54,7 @@ function PlayerNotifications({ bootstrap, children }: { bootstrap: PlayerBootstr
   }, [p.softCurrency, p.packTickets, p.styleShards]);
   const [read, setRead] = useState(() => readReceipts(key));
   const receipts = useRef(read);
-  const { mail, daily, account, johnHenry, mythic } = useNotificationBackground(p.id);
+  const { mail, daily, account, johnHenry, mythic, dojo } = useNotificationBackground(p.id);
   const client = useQueryClient();
   const remoteReceipts = useQuery({
     queryKey: ['notification-receipts', p.id],
@@ -113,6 +114,7 @@ function PlayerNotifications({ bootstrap, children }: { bootstrap: PlayerBootstr
   for (const request of social?.query.data?.incomingRequests ?? []) notices.push({ id: `friend:${request.id}`, section: 'friends', title: `${request.player.displayName} sent a friend request`, href: '/game/settings#homies', sticky: true });
   for (const invite of social?.query.data?.invitations ?? []) if (invite.direction === 'incoming' && invite.status === 'pending' && Date.parse(invite.expiresAt) > Date.now()) notices.push({ id: `fade:${invite.id}`, section: 'friendly fade', title: `${invite.player.displayName} wants a Friendly Fade`, href: `/game/online?tab=friends&invite=${encodeURIComponent(invite.id)}`, sticky: true });
   notices.push(...collection);
+  const dojoNotice=dojoReminderNotice(dojo.data); if(dojoNotice)notices.push(dojoNotice);
   for (const reward of account.data?.pending ?? []) notices.push({ id: `reward:${reward.key}`, section: 'growth', title: reward.title, href: '/game?notice=growth', sticky: true });
   if (account.data?.growth?.ready) notices.push({ id: 'growth:water', dismissalKey: `growth:water:${account.data.date}`, section: 'growth', title: 'Your garden is ready to grow', href: '/game?notice=growth', sticky: true });
   if (johnHenry.data?.state === 'ready') notices.push({id:'mythic:john-henry',section:'missions',title:'Steel Driver · claim John Henry',href:'/game/missions?mythic=john-henry',sticky:true});

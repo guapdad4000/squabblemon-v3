@@ -42,7 +42,7 @@ test('real tier clear includes its once-banked bonus in the attack receipt', () 
 });
 test('each operation names its actual boss without carrying over precinct labels', () => {
   assert.equal(raidIdentity('precinct', 5).title, 'OFFICER OINK');
-  assert.equal(raidIdentity('kumite', 1).title, 'BUSHEDO BROWN');
+  assert.equal(raidIdentity('kumite', 1).title, 'CHONK LEE');
   assert.equal(raidIdentity('kumite', 5).title, "SHO'NUFF");
   assert.equal(raidIdentity('kumite', 3).opposition, 'Opposition');
 });

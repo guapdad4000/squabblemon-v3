@@ -42,7 +42,10 @@
     "./parkChessRating": "./src/parkChessRating.ts",
     "./parkBots": "./src/parkBots.ts",
     "./ranked": "./src/ranked.ts",
-    "./battleArtwork": "./src/battleArtwork.ts"
+    "./battleArtwork": "./src/battleArtwork.ts",
+    "./kumiteForms": "./src/kumiteForms.ts",
+    "./bossArchive": "./src/bossArchive.ts",
+    "./storyKumitePuzzles": "./src/storyKumitePuzzles.ts"
   },
   "dependencies": {
     "chess.js": "1.4.0"

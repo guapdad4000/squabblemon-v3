@@ -1,0 +1,114 @@
+.boss-archive {
+  padding: 20px;
+  color: #ece3cc;
+}
+.boss-archive header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+.boss-archive h2,
+.boss-archive__plaque strong,
+.boss-archive__inspector h2 {
+  font-family: var(--font-sign, var(--font-display));
+}
+.boss-archive header span {
+  font: 10px ui-monospace;
+  color: #d1b77b;
+}
+.boss-archive header button {
+  min-height: 44px;
+  padding: 6px 18px;
+  color: #ddd0ae;
+  background: #19140f;
+}
+.boss-archive header button[aria-pressed="true"] {
+  background: #aa8741;
+  color: #100d09;
+}
+.boss-archive__wall {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 20px;
+  padding: 22px 0;
+}
+.boss-archive__plaque {
+  position: relative;
+  min-height: 250px;
+  padding: 10px 7px;
+  background: linear-gradient(#0b0a0855, #15100ee8);
+  border: 0;
+  clip-path: polygon(0 0, 100% 0, 100% 94%, 90% 100%, 0 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 7px;
+}
+.boss-archive__plaque img {
+  width: 100%;
+  height: 195px;
+  object-fit: contain;
+}
+.boss-archive__plaque small {
+  font: 9px ui-monospace;
+  color: #d7bb72;
+}
+.boss-archive__inspector {
+  width: min(850px, 94vw);
+  max-height: 94dvh;
+  overflow: auto;
+  background: #15120e;
+  color: #eadfc4;
+  border: 1px solid #8c7344;
+  padding: 30px;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+.boss-archive__inspector[open] {
+  display: grid;
+}
+.boss-archive__inspector::backdrop {
+  background: #000b;
+}
+.boss-archive__inspector > button {
+  position: absolute;
+  right: 0;
+  top: 0;
+  min-width: 44px;
+  min-height: 44px;
+  font-size: 25px;
+}
+.boss-archive__inspector img {
+  width: 100%;
+  height: 60vh;
+  object-fit: contain;
+}
+.boss-archive__inspector div {
+  align-self: center;
+  display: grid;
+  gap: 12px;
+}
+.boss-archive__inspector small,
+.boss-archive__inspector span {
+  font: 10px ui-monospace;
+  color: #c9a862;
+}
+@media (max-width: 600px) {
+  .boss-archive__wall {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+  .boss-archive__inspector[open] {
+    grid-template-columns: 1fr;
+  }
+  .boss-archive__inspector img {
+    height: 38dvh;
+  }
+  .boss-archive__inspector {
+    padding: 22px;
+  }
+}
+
+.boss-archive__inspector{position:fixed;inset:0;margin:auto;height:fit-content}

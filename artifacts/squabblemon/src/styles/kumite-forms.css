@@ -1,0 +1,72 @@
+.kumite-form-entering {
+  animation: kumite-form-in 320ms ease-out;
+}
+.kumite-form-leaving {
+  animation: kumite-form-out 320ms ease-out;
+  pointer-events: none;
+}
+.kumite-form-entering[data-kumite-form="awakened"] {
+  filter: drop-shadow(0 0 9px #d4a33b66);
+}
+@keyframes kumite-form-in {
+  from {
+    opacity: 0;
+    filter: brightness(1.6) drop-shadow(0 0 16px #e6bc48);
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes kumite-form-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .kumite-form-entering,
+  .kumite-form-leaving {
+    animation: none;
+  }
+  .kumite-form-leaving {
+    display: none;
+  }
+}
+html[data-reduce-motion="true"] .kumite-form-entering {
+  animation: none;
+}
+html[data-reduce-motion="true"] .kumite-form-leaving {
+  display: none;
+}
+
+.kumite-form-flash {
+  position: absolute;
+  inset: 10% 0;
+  z-index: 11;
+  pointer-events: none;
+  background: radial-gradient(ellipse, #edc66c70, transparent 65%);
+  animation: kumite-form-flash 320ms ease-out forwards;
+}
+.kumite-form-flash--red {
+  background: radial-gradient(ellipse, #d64c4670, transparent 65%);
+}
+@keyframes kumite-form-flash {
+  from {
+    opacity: 1;
+    transform: scale(0.7);
+  }
+  to {
+    opacity: 0;
+    transform: scale(1.15);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .kumite-form-flash {
+    display: none;
+  }
+}
+html[data-reduce-motion="true"] .kumite-form-flash {
+  display: none;
+}

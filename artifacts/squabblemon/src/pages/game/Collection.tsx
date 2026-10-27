@@ -1,3 +1,4 @@
+import { BossArchive } from '../../components/BossArchive';
 import { GangWall } from '../../components/GangWall';
 import { ItemDot, useNotifications } from '../../components/Notifications';
 import { useViewMemory } from '../../lib/navigationMemory';
@@ -92,7 +93,7 @@ export function Collection({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   const discoveryRootRef = useRef<HTMLElement>(null);
   const collectionScrollRef = useRef<HTMLDivElement>(null);
   const collectionGridRef = useRef<HTMLDivElement>(null);
-  const [tab, setTab] = useViewMemory<'cards' | 'road'>(`collection-tab:${bootstrap.profile.id}`, 'cards');
+  const [tab, setTab] = useViewMemory<'cards' | 'road' | 'archive'>(`collection-tab:${bootstrap.profile.id}`, 'cards');
   const search = useSearch();
   const requestedCard = new URLSearchParams(search).get('card');
   useEffect(() => { if (requestedCard) setTab('cards'); }, [search]);
@@ -156,6 +157,7 @@ export function Collection({ bootstrap }: { bootstrap: PlayerBootstrap }) {
           <nav className="collection-tabs" aria-label="Collection views">
             <button data-testid="button-view-catalog" type="button" aria-pressed={tab === 'cards'} onClick={() => setTab('cards')}>Catalog</button>
             <button data-testid="button-view-collection-road" type="button" aria-pressed={tab === 'road'} onClick={() => setTab('road')}>The Gang Wall</button>
+            <button type="button" aria-pressed={tab==='archive'} onClick={()=>setTab('archive')}>Boss & Dojo Archive</button>
             <Link data-testid="link-signature-collections" href="/game/style">Style</Link>
           </nav>
           <div className="collection-hero__stats">
@@ -189,6 +191,7 @@ export function Collection({ bootstrap }: { bootstrap: PlayerBootstrap }) {
           </div>
         )}
 
+        {tab === 'archive' && <BossArchive playerId={bootstrap.profile.id}/>}
         {tab === 'road' && (
           <GangWall bootstrap={bootstrap} onClaim={id => void handleClaim(id)} busy={claimMilestone.isPending} error={claimError} />
         )}

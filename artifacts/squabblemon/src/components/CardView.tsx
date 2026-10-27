@@ -1,3 +1,5 @@
+import { kumiteFighter, kumiteStance, kumiteFormAsset } from '@workspace/squabblemon-engine/kumiteForms';
+import { KumiteFormPortrait } from './kumite/KumiteFormPortrait';
 import { presentCardForm } from '../lib/cardFormPresentation';
 import { BattleStatus } from './BattleEffects';
 import { BattleFxImage } from './BattleFxImage';
@@ -153,6 +155,8 @@ function CardViewComponent({
     ? instance.statuses.frozen ? 0 : Math.max(0, instance.basePower + instance.powerModifier + ongoingHands)
     : card.power);
   const element = canonicalElement(card.type);
+  const fighter = kumiteFighter(instance?.cardId ?? card.id);
+  const stance = fighter ? kumiteStance({hands: displayPower, squabble: Boolean(squabblePlayed || squabble), goldenGlow: instance?.goldenGlow, signature: effectRole === 'source' && effectKind === 'ability'}) : null;
   const displayCost = cost ?? card.cost;
   const motionLabel = isBurntPlate ? 'This round' : isBuddyBud ? 'Matures' : card.hazard ? 'Explodes' : 'Motion';
   const motionValue = isBuddyBud && instance?.buddyBud
@@ -353,7 +357,9 @@ function CardViewComponent({
           <div className={`absolute inset-0 bg-gradient-to-t from-zinc-900 to-zinc-800/20 ${isEnemy ? 'hue-rotate-180 brightness-50' : ''} ${isFrozen ? 'brightness-150 saturate-50 hue-rotate-180 mix-blend-hard-light' : ''} z-0`} />
           {card.id === 'dr-fade' && (!isBoard || fillContainer || isInspector)
             ? <DrFadeArt className={'collector-portrait ' + (isSilenced ? 'grayscale' : '')} animated={!isSilenced && !isFrozen} />
-            : <img
+            : <KumiteFormPortrait
+                formAsset={fighter && stance && !(stance==='base' && variantId?.endsWith(':kumite-alt-v1')) ? getAssetUrl(kumiteFormAsset(fighter, stance)) : undefined}
+                stance={stance}
                 src={faceArtwork(instance?.cardId === 'leroy' && instance.goldenGlow ? getAssetUrl('assets/kumite/fighters/bruce-leroy-glow.webp') : isBurntPlate ? getCardImage('burnt-plate') : buddyRockForm ? getBuddySquabbleImage() : instance?.maryElephant ? getCardImage('ms-mary-mack-elephant') : getCardImage(getCardArtworkId(card), variantId))}
                 alt=""
                 decoding="async"

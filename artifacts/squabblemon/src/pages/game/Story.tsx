@@ -5,7 +5,7 @@ import { revealStoryRewards } from '../../lib/rewardReceipts';
 import { GameGlyph } from '../../components/venue/GameGlyph';
 import { PageDecor } from '../../components/venue/PageDecor';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { ArrowRight, Check, LockKeyhole, MessageCircle, Star, Ticket, X, Film, UtensilsCrossed } from 'lucide-react';
+import { ArrowRight, Check, LockKeyhole, MessageCircle, Star, Ticket, X, Film, UtensilsCrossed, BookOpen } from 'lucide-react';
 import '../../styles/studio.css';
 import '../../styles/story-map.css';
 import '../../styles/cinema-atlas.css';
@@ -416,7 +416,7 @@ export function Story({ bootstrap }: { bootstrap: PlayerBootstrap }) {
                       : node.nodeId.endsWith('-opening') ? <Film size={25} /> : <GameGlyph name="mastery" />}
                       {locked && <LockKeyhole className="house-node-lock" size={13} />}
                       {cleared && <Check className="house-node-lock" size={16} />}</>
-                  ) : boss && content?.kind === 'battle' ? (
+                  ) : content?.puzzle?.presentation?.theme==='kumite' ? (<BookOpen size={22}/>) : boss && content?.kind === 'battle' ? (
                     <img src={getAssetUrl(content.encounter.enemy.portraitAssetId)} alt="" />
                   ) : locked ? (
                     <LockKeyhole size={15} />

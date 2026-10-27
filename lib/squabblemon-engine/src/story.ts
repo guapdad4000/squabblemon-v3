@@ -19,7 +19,7 @@ export type StoryDialogueLine = { readonly speaker: string; readonly portraitAss
 export type StoryReward = { readonly kind: "currency" | "card" | "chapter-key" | "pack-ticket" | "cosmetic" | "character-unlock"; readonly id: string; readonly amount: number; /** Stable internal identity for rewards migrated between node types. */ readonly claimKey?: string };
 export type StoryStarObjective = EngineStoryStarObjective;
 export type StoryTeaching = { readonly tips: readonly string[]; readonly focusMechanics: readonly string[]; readonly focusCards: readonly string[] };
-export type StoryCinematic = { readonly videoAssetId: string; readonly posterAssetId: string; readonly environmentAssetId: string };
+export type StoryCinematic = { readonly videoAssetId: string; readonly posterAssetId: string; readonly environmentAssetId: string; readonly portraitVideoAssetId?: string; readonly portraitPosterAssetId?: string; readonly titleAssetId?: string };
 type StoryNodeBase = {
   readonly id: string; readonly title: string; readonly mapPosition: StoryMapPosition; readonly prerequisites: readonly string[];
   readonly optional: boolean; readonly rewards: readonly StoryReward[]; readonly teaching: StoryTeaching; readonly cinematic: StoryCinematic;

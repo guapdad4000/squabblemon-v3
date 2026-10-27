@@ -13,7 +13,7 @@ type Speaker = keyof typeof portraits;
 const say = (speaker: Speaker, text: string): StoryDialogueLine => ({ speaker, text, portraitAssetId: `${root}/cast/${portraits[speaker]}.webp` });
 const film = (chapter: number): StoryCinematic => {
   const name = `ch${String(chapter).padStart(2, "0")}`;
-  return { videoAssetId: `${root}/media/${name}.mp4`, posterAssetId: `${root}/keyframes/${name}.webp`, environmentAssetId: `${root}/environments/${name}.webp` };
+  return { titleAssetId: `assets/story/squabble-house/titles/${name}.webp`, videoAssetId: `${root}/media/${name}.mp4`, posterAssetId: `${root}/keyframes/${name}.webp`, environmentAssetId: `${root}/environments/${name}.webp` };
 };
 
 /** Encounter crews use existing playable cards. Red/Blue are cinematic cast, not invented collection cards. */

@@ -1,3 +1,4 @@
+import { kumiteFighter } from './kumiteForms';
 import { applyBasePvpBalance } from './basePvpBalance';
 import { applyCrewMatchupBalance } from './crewMatchupBalance';
 import { selectedCards, selectedRarities, selectedFactions, selectedUpgradeEffects } from './selectedWave';
@@ -219,6 +220,7 @@ export type CardVariantSlot = {
   name: string;
   description: string;
   shardCost: number;
+  progressionOnly?: boolean;
 };
 
 export type CatalogCard = Card & {
@@ -553,6 +555,7 @@ export const cardCatalog: CatalogCard[] = Object.entries(cards).map(
           : sideOzWaveFactions[engineId] === 'Blue Side' ? 'blue-side' : 'the-wiz'] : []),
     acquisitionSources: sourceByEngineId[engineId] ?? (["barber", "bottle", "sneaker", "church", "landlord", "carmeet", "promoter", "nail", "og", "delivery"].includes(engineId) ? ["City Never Sleeps"] : ["Street Packs"]),
     variantSlots: [
+      ...(kumiteFighter(card.id) ? [{id:`${card.id}:kumite-alt-v1`,name:'Kumite Grandmaster Art',description:'Clear the required Dojo tier and win a weekly bracket fight with this fighter in your crew.',shardCost:0,progressionOnly:true}] : []),
       ...(FAIRYTALE_ALTERNATE_ART.some(id => id === card.id) ? [{
         id: card.id + ':alternate', name: 'Alternate Art',
         description: 'A second original illustration of this character.', shardCost: 180,

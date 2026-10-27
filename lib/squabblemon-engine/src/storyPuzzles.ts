@@ -5,8 +5,8 @@ export type StoryPuzzleDefinition = {
   readonly imageAssetId: string;
   readonly pieces: readonly { readonly id: string; readonly label: string; readonly detail: string; readonly imageAssetId?: string }[];
   readonly presentation?: {
-    readonly theme: 'squabble-house';
-    readonly layout: 'tickets' | 'register' | 'booths' | 'pass' | 'route' | 'evidence';
+    readonly theme: 'squabble-house' | 'kumite';
+    readonly layout: 'tickets' | 'register' | 'booths' | 'pass' | 'route' | 'evidence' | 'manual';
     readonly slotLabels: readonly string[];
   };
   readonly solution: readonly string[];
@@ -26,8 +26,7 @@ export function validateStoryPuzzle(puzzle: StoryPuzzleDefinition): boolean {
   return !!puzzle.id && !!puzzle.title && !!puzzle.instruction && !!puzzle.imageAssetId
     && ids.length >= 3 && ids.length <= 8 && new Set(ids).size === ids.length
     && puzzle.pieces.every(piece => !!piece.id && !!piece.label && !!piece.detail)
-    && (!puzzle.presentation || (puzzle.presentation.theme === 'squabble-house'
-      && ['tickets', 'register', 'booths', 'pass', 'route', 'evidence'].includes(puzzle.presentation.layout)
+    && (!puzzle.presentation || ((puzzle.presentation.theme === 'kumite' ? puzzle.presentation.layout === 'manual' : puzzle.presentation.theme === 'squabble-house' && ['tickets', 'register', 'booths', 'pass', 'route', 'evidence'].includes(puzzle.presentation.layout))
       && puzzle.presentation.slotLabels.length === ids.length && puzzle.presentation.slotLabels.every(Boolean)))
     && puzzle.solution.length === ids.length && new Set(puzzle.solution).size === ids.length
     && puzzle.solution.every(id => ids.includes(id)) && puzzle.hints.length > 0

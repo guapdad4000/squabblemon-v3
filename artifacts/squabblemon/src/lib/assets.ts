@@ -24,6 +24,7 @@ const legacyPortraitIds: Record<string, string> = {
   sideofhands: 'a-side-of-hands',
 };
 export const getCardImage = (cardId: string, variantId?: string | null) => {
+  if (variantId === `${cardId}:kumite-alt-v1`) return getAssetUrl(`assets/cosmetics/${cardId}/kumite-alt-v1.webp`);
   const standin = elementalStandin(cardId);
   if (standin) return standin;
   const baseId = Object.hasOwn(legacyPortraitIds, cardId) ? legacyPortraitIds[cardId] : cardId;

@@ -56,3 +56,5 @@ export function collectionNotifications(p: Profile): CollectionNotice[] {
   }
   return notices;
 }
+
+export { dojoReminderNotice } from './dojoReminder';

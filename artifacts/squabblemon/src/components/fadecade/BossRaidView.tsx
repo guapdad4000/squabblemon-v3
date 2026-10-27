@@ -1,3 +1,5 @@
+import {squabbledCardIds} from '../../lib/battleMediaEvents';
+import { BOSS_ARCHIVE,DOJO_NPC_NAMES } from '@workspace/squabblemon-engine/bossArchive';
 import * as Dialog from "@radix-ui/react-dialog";
 import {
   useState,
@@ -53,12 +55,14 @@ import "../../styles/reward-street-file.css";
 import "../../styles/boss-raid-cinematic.css";
 export const bossArt = (name: string) =>
   getAssetUrl(`assets/boss-raid/${name}.webp`);
-function RaidFormationDialog({ lane, laneName, opposition, owner, cards, round, onClose, onInspect }: {
+function RaidFormationDialog({ lane, laneName, opposition, owner, cards, round, squabbledIds, mode, onClose, onInspect }: {
   lane: Lane;
   laneName: string;
   opposition: string;
   owner: "player" | "cpu";
   cards: CardInstance[];
+  squabbledIds: ReadonlySet<string>;
+  mode: BossRaidMode;
   round: number;
   onClose: () => void;
   onInspect: (card: CardInstance) => void;
@@ -90,10 +94,10 @@ function RaidFormationDialog({ lane, laneName, opposition, owner, cards, round, 
         <div className="raid-formation-cards">
           {cards.map((fighter) => (
             <div className="raid-formation-card" key={fighter.instanceId}>
-              <CardView card={fighter} isBoard isEnemy={owner === "cpu"}
+              {BOSS_NPCS[fighter.cardId as BossNpcId] ? <button className="raid-formation-npc" onClick={()=>onInspect(fighter)}><BossIdleSprite asset={mode==='kumite'?`dojo:npc-${fighter.cardId.replace('raid-','')}`:BOSS_NPCS[fighter.cardId as BossNpcId].art} name={mode==='kumite'?DOJO_NPC_NAMES[fighter.cardId]??fighter.name:fighter.name} paused reduced/><strong>{mode==='kumite'?DOJO_NPC_NAMES[fighter.cardId]??fighter.name:fighter.name}</strong><small>{fighter.cost} MOTION · {getEffectiveCardPower(fighter)} HANDS</small></button> : <CardView card={fighter} squabblePlayed={squabbledIds.has(fighter.instanceId)} isBoard isEnemy={owner === "cpu"}
                 fillContainer disableLayout effectivePower={getEffectiveCardPower(fighter)}
                 currentRound={round} onClick={() => onInspect(fighter)}
-                onInspect={() => onInspect(fighter)} />
+                onInspect={() => onInspect(fighter)} />}
             </div>
           ))}
         </div>
@@ -112,6 +116,7 @@ export function BossRaidView({
   blast = null,
   onAction,
   onExit,
+  exitLabel="← Fadecade",
   error = "",
   onRetry,
   onSync,
@@ -125,6 +130,7 @@ export function BossRaidView({
   blast?: BossBlast | null;
   onAction: (action: BossAction) => void;
   onExit: () => void;
+  exitLabel?: string;
   error?: string;
   onRetry?: () => void;
   onSync?: () => void;
@@ -137,7 +143,10 @@ export function BossRaidView({
     campaign = status.campaign,
     identity = raidIdentity(activeMode, run.bossTier),
     banked = raidBankedRewards(status, activeMode);
+  const playedSquabbles=useMemo(()=>squabbledCardIds(run.match.effectLog),[run.match.effectLog]);
   const [resultsDismissed, setResultsDismissed] = useState(false);
+  const [dojoIntro,setDojoIntro]=useState(activeMode==='kumite' && run.phase==='active');
+  useEffect(()=>{if(activeMode!=="kumite"||run.phase!=="active"){setDojoIntro(false);return;}setDojoIntro(true);const timer=setTimeout(()=>setDojoIntro(false),1200);return()=>clearTimeout(timer);},[run.id,activeMode]);
   const [formation, setFormation] = useState<{ lane: Lane; owner: "player" | "cpu" } | null>(null);
   const arenaRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -295,7 +304,7 @@ export function BossRaidView({
       }
     >
       <header className="raid-top">
-        <button onClick={onExit}>← Fadecade</button>
+        <button onClick={onExit}>{exitLabel}</button>
         {onModeChange && (
           <div className="raid-mode-flip raid-mode-flip--compact" role="tablist" aria-label="Switch Raid Operation">
             <button
@@ -337,7 +346,7 @@ export function BossRaidView({
           data-defeated={run.hp === 0} data-boss-phase={bossPhase}>
           <div className="raid-boss-figure" data-testid="raid-boss-figure">
             {activeMode === "kumite" ? (
-              <img className="raid-scene-portrait" src={getCardImage(kumiteForm.fighterId)} alt="" draggable={false} />
+              <BossIdleSprite className="raid-scene-portrait" asset={`dojo:boss-tier-${run.bossTier}`} name={kumiteForm.bossTitle} paused={modal || resultsOpen} reduced={reducedMotion} phase={blast ? (policeRevealing ? (entrance ? "strike" : "windup") : "recoil") : "idle"} />
             ) : (
               <BossIdleSprite asset={form.art} name={identity.title}
                 paused={modal || resultsOpen || run.hp === 0} reduced={reducedMotion} />
@@ -479,6 +488,7 @@ export function BossRaidView({
             </>
           )}
         </div>
+        {dojoIntro && <div className="dojo-intro-cutin" role="status"><span>WAY OF THE FIST</span><strong>VS {kumiteForm.bossTitle}</strong><small>TIER {run.bossTier} · {kumiteForm.name}</small></div>}
         {entrance && entranceCard && (
           <aside
             className="raid-entrance-banner"
@@ -491,11 +501,9 @@ export function BossRaidView({
               {entranceNpc ? (
                 <BossIdleSprite
                   asset={
-                    entranceCard.cardId === "raid-oink"
-                      ? form.art
-                      : entranceNpc.art
+                    activeMode === "kumite" ? `dojo:npc-${entranceCard.cardId.replace("raid-", "")}` : entranceCard.cardId === "raid-oink" ? form.art : entranceNpc.art
                   }
-                  name={entrance.name}
+                  name={activeMode==="kumite"?DOJO_NPC_NAMES[entranceCard.cardId]??entrance.name:entrance.name}
                   reduced={reducedMotion}
                   paused={modal}
                 />
@@ -512,7 +520,7 @@ export function BossRaidView({
               <small>
                 {identity.opposition.toUpperCase()} DEPLOY · {identity.lanes[entrance.lane].toUpperCase()}
               </small>
-              <h2>{entrance.name}</h2>
+              <h2>{activeMode==="kumite"?DOJO_NPC_NAMES[entranceCard.cardId]??entrance.name:entrance.name}</h2>
               <p>{entranceCard.effect.split(".")[0]}.</p>
             </div>
           </aside>
@@ -560,11 +568,12 @@ export function BossRaidView({
                         }
                         key={c.instanceId}
                         onClick={(e) => open(e, () => setIntel(c))}
-                        aria-label={`${c.name}. Motion ${c.cost}. Hands ${getEffectiveCardPower(c)}. ${c.effect}${c.statuses.silenced ? " Silenced." : c.statuses.frozen ? " Frozen." : ""}`}
+                        aria-label={`${activeMode==="kumite"?(DOJO_NPC_NAMES[c.cardId]??c.name):c.name}. Motion ${c.cost}. Hands ${getEffectiveCardPower(c)}. ${c.effect}${c.statuses.silenced ? " Silenced." : c.statuses.frozen ? " Frozen." : ""}`}
                       >
                         <BossIdleSprite
-                          asset={c.cardId === "raid-oink" ? form.art : npc.art}
-                          name={c.name}
+                          asset={activeMode === "kumite" ? `dojo:npc-${c.cardId.replace("raid-","")}` : c.cardId === "raid-oink" ? form.art : npc.art}
+                          phase={blast ? (policeRevealing ? (entrance?.instanceId===c.instanceId ? "strike" : "windup") : "recoil") : "idle"}
+                          name={activeMode==="kumite"?(DOJO_NPC_NAMES[c.cardId]??c.name):c.name}
                           paused={
                             modal ||
                             resultsOpen ||
@@ -575,7 +584,7 @@ export function BossRaidView({
                         />
                         <b className="raid-npc-power" aria-label={`${getEffectiveCardPower(c)} Hands`}>{getEffectiveCardPower(c)}</b>
                         <small className="raid-npc-cost" aria-label={`${c.cost} Motion`}>⚡{c.cost}</small>
-                        <span className="raid-npc-name">{c.name}</span>
+                        <span className="raid-npc-name">{activeMode==="kumite"?(DOJO_NPC_NAMES[c.cardId]??c.name):c.name}</span>
                         {(c.statuses.silenced || c.statuses.frozen) && (
                           <small>
                             {c.statuses.silenced ? "SILENCED" : "FROZEN"}
@@ -586,6 +595,7 @@ export function BossRaidView({
                       <CardView
                         key={c.instanceId}
                         card={c}
+                        squabblePlayed={playedSquabbles.has(c.instanceId)}
                         isBoard
                         isEnemy
                         disableLayout
@@ -684,6 +694,7 @@ export function BossRaidView({
                     <CardView
                       key={c.instanceId}
                       card={c}
+                      squabblePlayed={playedSquabbles.has(c.instanceId)}
                       effectivePower={getEffectiveCardPower(c)}
                       currentRound={shownMatch.round}
                       isBoard
@@ -838,7 +849,7 @@ export function BossRaidView({
             </button>
           </footer>
           <div className="raid-persistence-note">
-            HP carries over daily · one attack per day ·{" "}
+            HP carries over daily · {activeMode==="kumite"?"two entries per day":"one entry per day"} ·{" "}
             {status.earned.packTickets} daily tickets banked
           </div>
         </section>
@@ -916,8 +927,8 @@ export function BossRaidView({
       </Dialog.Root>
       {formation && <RaidFormationDialog lane={formation.lane} laneName={identity.lanes[formation.lane]} opposition={identity.opposition} owner={formation.owner}
         cards={shownMatch.boards[formation.lane].filter((fighter) => fighter.owner === formation.owner)}
-        round={shownMatch.round} onClose={() => setFormation(null)} onInspect={setIntel} />}
-      {intel && <CardInspector card={intel} match={run.match} onClose={close} />}
+        round={shownMatch.round} mode={activeMode} squabbledIds={playedSquabbles} onClose={() => setFormation(null)} onInspect={setIntel} />}
+      {intel && <CardInspector card={BOSS_NPCS[intel.cardId as BossNpcId] ? BOSS_ARCHIVE.find(e=>e.id===`archive:${activeMode==="kumite"?"dojo":"precinct"}:${intel.cardId}`) ?? intel : intel} match={run.match} onClose={close} />}
       <Dialog.Root
         open={help || retire || forms}
         onOpenChange={(v) => {

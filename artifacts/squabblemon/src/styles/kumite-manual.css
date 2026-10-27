@@ -1,0 +1,152 @@
+.kumite-manual .story-puzzle-bg {
+  opacity: 0.9;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-color: #16100c;
+  background-position: center;
+}
+.kumite-manual .story-puzzle-content {
+  background: linear-gradient(90deg, #100b06f5, #100b0666 42%, #100b06f5);
+  max-width: none;
+}
+.kumite-manual .story-puzzle-header {
+  background: #120d08b8;
+}
+.kumite-manual [data-puzzle-piece] {
+  border-color: #d0b27b;
+  color: #eee1c3;
+  background: #20170cde;
+  box-shadow: none;
+  border-radius: 0;
+  clip-path: polygon(0 0, 100% 0, 100% 88%, 95% 100%, 0 100%);
+}
+.kumite-manual [data-puzzle-piece] button {
+  min-height: 44px;
+}
+.kumite-manual .story-puzzle-title {
+  font-family: var(--font-sign, var(--font-display));
+  color: #ecd5a0;
+}
+@media (max-width: 650px) {
+  .kumite-manual .story-puzzle-bg {
+    background-position: center 25%;
+    background-size: 100% auto;
+  }
+  .kumite-manual .story-puzzle-content {
+    background: linear-gradient(#100b0677, #100b06ef 58%);
+  }
+}
+
+.kumite-manual .story-puzzle-bg {
+  opacity: 0.2;
+}
+.kumite-manual-chart {
+  position: relative;
+  width: min(100%, 760px);
+  margin: 10px auto 20px;
+  isolation: isolate;
+  background: #17110a;
+}
+.kumite-manual-chart > img {
+  display: block;
+  width: 100%;
+  max-height: 54dvh;
+  object-fit: contain;
+}
+.kumite-manual-chart > svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+.kumite-manual-chart polyline {
+  fill: none;
+  stroke: #edd7a2;
+  stroke-width: 0.55;
+  stroke-dasharray: 1 1;
+  vector-effect: non-scaling-stroke;
+}
+.kumite-manual-chart__pin {
+  position: absolute;
+  translate: -50% -50%;
+  background: #edd7a2;
+  color: #17110a;
+  border: 2px solid #17110a;
+  min-width: 26px;
+  height: 26px;
+  display: grid;
+  place-items: center;
+  font-weight: 900;
+  border-radius: 50%;
+  box-shadow: 0 0 12px #f0c66490;
+}
+.kumite-manual-chart figcaption {
+  position: relative;
+  background: #17110a;
+  padding: 10px;
+  color: #edd7a2;
+  font: 900 12px var(--font-display);
+  letter-spacing: 0.08em;
+}
+.kumite-manual-chart figcaption small {
+  display: block;
+  margin-top: 5px;
+  font: 11px/1.5 sans-serif;
+  letter-spacing: normal;
+}
+.kumite-manual .story-puzzle-list {
+  max-width: 760px;
+  width: 100%;
+  margin-inline: auto;
+}
+@media (max-width: 650px) {
+  .kumite-manual-chart > img {
+    max-height: none;
+  }
+  .kumite-manual-chart__pin {
+    min-width: 22px;
+    height: 22px;
+    font-size: 11px;
+  }
+}
+
+.story-puzzle-v3.kumite-manual .story-puzzle-item {
+  background: #e1ca98;
+  border: 1px solid #8d6c37;
+  color: #24170e;
+  min-height: 88px;
+}
+.story-puzzle-v3.kumite-manual .story-puzzle-item-content > strong {
+  color: #24170e;
+}
+.story-puzzle-v3.kumite-manual .story-puzzle-item-content > span {
+  color: #49351b;
+}
+.story-puzzle-v3.kumite-manual .story-puzzle-item-controls button {
+  color: #24170e;
+  background: #f7e6be;
+  border: 1px solid #8c6e3b;
+  min-width: 40px;
+}
+.story-puzzle-v3.kumite-manual .story-puzzle-header p {
+  background: none;
+  border: 0;
+  padding: 0;
+  color: #dfd0ae;
+}
+.kumite-manual-chart__plate {
+  position: relative;
+}
+.kumite-manual-chart__plate > img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+.kumite-manual-chart__plate > svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}

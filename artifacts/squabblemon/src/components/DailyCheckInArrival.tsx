@@ -1,3 +1,5 @@
+import { Link as DojoLink } from 'wouter';
+import { useDojoReminder, dojoReminderNotice } from '../lib/dojoReminder';
 import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { customFetch, getGetPlayerBootstrapQueryKey, type PlayerBootstrap } from '@workspace/api-client-react';
@@ -29,6 +31,8 @@ export function DailyCheckInArrival({ bootstrap }: { bootstrap: PlayerBootstrap 
   const client = useQueryClient();
   const queryKey = ['account-rewards', player];
   const query = useQuery({ queryKey, queryFn: () => customFetch<AccountRewardStatus>('/api/player/rewards/account'), staleTime: 30000, retry: 1 });
+  const dojo=useDojoReminder(bootstrap.profile.id);
+  const dojoNotice=dojoReminderNotice(dojo.data);
   const status = query.data;
   const date = status?.date;
   const eligible = !!status && !!date && !status.claimedToday && status.pending?.some(reward => reward.key === `login:${date}`);
@@ -140,6 +144,7 @@ export function DailyCheckInArrival({ bootstrap }: { bootstrap: PlayerBootstrap 
         {error && <p className="daily-arrival__error" role="alert">{error}</p>}
         <button className="daily-arrival__claim reward-street-file__action" disabled={busy} onClick={() => receipt ? close() : void claim()}>{busy ? 'Collecting…' : receipt ? 'Let’s play' : error ? 'Retry check-in' : 'Collect check-in'}<span aria-hidden="true">→</span></button>
         {!receipt && <button className="daily-arrival__later game-popup__secondary" disabled={busy} onClick={close}>Later · keep my reward</button>}
+        {dojoNotice&&<DojoLink className="daily-arrival__dojo" href={dojoNotice.href} onClick={close}><strong>{dojoNotice.title}</strong><span>CHALLENGE THE FIVE GRANDMASTERS →</span></DojoLink>}
         <AccountCheckInCalendar streak={shownStatus.streak} claimedToday={shownStatus.claimedToday} />
         {shownStatus.monthly && <MonthlyLoginTrack status={shownStatus.monthly} />}
       </div>

@@ -104,3 +104,10 @@
  .house-movie header button { font-size:11px; padding:8px; }
 }
 @media(prefers-reduced-motion:reduce) { .house-puzzle *, .house-atlas * { scroll-behavior:auto!important; transition:none!important; } }
+
+/* Cinema HUD yields the complete frame during playback. Keyboard focus stays visible. */
+.house-movie__hud-top,.house-movie__hud-bottom{transition:opacity .24s ease}
+.house-movie[data-hud-hidden="true"] .house-movie__hud-top:not(:focus-within),.house-movie[data-hud-hidden="true"] .house-movie__hud-bottom:not(:focus-within){opacity:0;pointer-events:none}
+.house-movie__title-art{width:clamp(160px,28vw,430px);height:100px;object-fit:contain;object-position:left center}
+@media(max-width:600px){.house-movie__title-art{height:65px;width:180px}.house-movie__title-slash>span{font-size:8px}}
+@media(prefers-reduced-motion:reduce){.house-movie__hud-top,.house-movie__hud-bottom{transition:none}}

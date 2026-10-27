@@ -103,7 +103,7 @@ export function isStreetPackCard(card: Pick<(typeof cardCatalog)[number], "catal
 
 function availableVariants(ownedVariants: ReadonlySet<string>, ownedCardIds: ReadonlySet<string>) {
   return cardCatalog.filter(card => !isKumiteExclusiveCard(card.catalogId) && (isStreetPackCard(card) || ownedCardIds.has(card.catalogId))).flatMap(card => card.variantSlots
-    .filter(variant => !ownedVariants.has(variant.id))
+    .filter(variant => !variant.progressionOnly && !ownedVariants.has(variant.id))
     .map(variant => ({ card, variant })));
 }
 

@@ -1,3 +1,4 @@
+import {useKumiteHotspotClock} from '../../lib/useKumiteHotspotClock';
 import { JohnHenryMythic } from '../../components/JohnHenryMythic';
 import { useSearch, useLocation } from 'wouter';
 import { LobbyDepth } from '../../components/LobbyDepth';
@@ -91,6 +92,8 @@ export function Home({ bootstrap, onGuideComplete }: { bootstrap: PlayerBootstra
   const frame = useRef<HTMLIFrameElement>(null);
   const welcomeVoice = useRef<HTMLAudioElement | null>(null);
   const [sceneReady, setSceneReady] = useState(false);
+  const [kumiteClockIntent,setKumiteClockIntent]=useState(false);
+  const kumiteHotspotClock=useKumiteHotspotClock(kumiteClockIntent);
   const [sceneFallback, setSceneFallback] = useState<'none' | 'static' | 'error'>('none');
   // Readiness and anchor projection are separate scene events; the guided tour
   // fallback must hold until markers have actually been placed on screen.
@@ -303,7 +306,7 @@ export function Home({ bootstrap, onGuideComplete }: { bootstrap: PlayerBootstra
       </header>
       <nav ref={markerLayer} className="safehouse-room-markers" data-guide-fallback={Boolean(onGuideComplete && !markersPlaced)} hidden={view !== 'room' || (!sceneReady && !onGuideComplete && sceneFallback === 'none')} aria-label="Explore the safehouse">
         {stations.map(item => <button key={item.id} type="button" ref={node => { if (node) markers.current.set(item.id, node); else markers.current.delete(item.id); }}
-          data-station={item.id} aria-label={`Explore ${item.label.toLowerCase()}`} onClick={() => explore(item.id)}>
+          data-station={item.id} title={item.id==='arcade'?`KUMITE // ${kumiteHotspotClock}`:undefined} onPointerEnter={()=>{if(item.id==='arcade')setKumiteClockIntent(true);}} onPointerLeave={()=>setKumiteClockIntent(false)} onFocus={()=>{if(item.id==='arcade')setKumiteClockIntent(true);}} onBlur={()=>setKumiteClockIntent(false)} aria-label={`Explore ${item.label.toLowerCase()}`} onClick={() => explore(item.id)}>
           <item.icon size={16} aria-hidden="true" /><span>{item.short}{item.id !== 'events' && <Attention section={item.id === 'arcade' ? 'challenges' : item.id === 'inventory' ? 'bag' : item.id === 'profile' ? 'style' : item.id} />}</span>{item.id === 'mail' && unreadMail > 0 && <b className="mail-count" aria-label={`${unreadMail} unread`}>{unreadMail}</b>}{item.id === 'events' && bulletinUnread && <b className="mail-count" aria-label="New bulletin posts">NEW</b>}
         </button>)}
       </nav>

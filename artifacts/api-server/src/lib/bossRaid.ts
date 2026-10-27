@@ -113,7 +113,7 @@ async function status(
     day,
     resetsAt: bossReset(now),
     serverNow: now.getTime(),
-    attemptsRemaining: today || campaign.completed ? 0 : 1,
+    attemptsRemaining: campaign.completed ? 0 : Math.max(0, (mode === "kumite" ? 2 : 1) - rows.filter(r => r.reward.bossRaid?.day === day).length),
     run: (latest?.reward.bossRaid?.state as BossRaid) ?? null,
     earned: latest?.reward.bossRaid?.earned ?? {
       softCurrency: 0,
@@ -157,9 +157,10 @@ export async function startBossRaid(
     )
       return status(tx, userId, now, mode);
     const day = bossDay(now);
-    if (rows.some((r) => r.reward.bossRaid?.day === day))
+    const todayCount = rows.filter(r => r.reward.bossRaid?.day === day).length;
+    if (todayCount >= (mode === "kumite" ? 2 : 1))
       throw new PlayerRewardError(
-        "Your daily raid entry is used. The precinct resets at midnight UTC.",
+        "Your daily raid entry is used; no entries remain. Raids reset at midnight UTC.",
         409,
       );
     if (!validateSavedDeck(cardIds, profile.ownedCardIds, cardIds[0]).valid)
@@ -174,7 +175,7 @@ export async function startBossRaid(
     );
     const campaign = await readCampaign(tx, userId, mode);
     if (campaign.completed)
-      throw new PlayerRewardError("All five precinct tiers defeated.", 409);
+      throw new PlayerRewardError("All five raid tiers defeated.", 409);
     const run = createBossRaid(
       requestId,
       day,
@@ -195,7 +196,7 @@ export async function startBossRaid(
     );
     await tx.insert(playerCollectionClaimsTable).values({
       clerkUserId: userId,
-      milestoneKey: prefixFor(mode) + day,
+      milestoneKey: prefixFor(mode) + day + (todayCount ? `:entry:${todayCount + 1}` : ""),
       reward: {
         bossRaid: {
           version: 1,

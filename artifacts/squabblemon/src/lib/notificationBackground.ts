@@ -1,3 +1,4 @@
+import { useDojoReminder } from './dojoReminder';
 import { useEffect, useRef } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { customFetch, getGetPlayerBootstrapQueryKey } from '@workspace/api-client-react';
@@ -15,7 +16,7 @@ export const BOOTSTRAP_RESUME_REFRESH_MS = 60_000;
 /** Own the shell's optional reads; mutations and notification receipts have separate authority. */
 export function useNotificationBackground(playerId: string) {
   const menuActive = useMenuRefreshAllowed(), client = useQueryClient();
-  const mail = useSafehouseMail(playerId), daily = useDailyClout(playerId);
+  const mail = useSafehouseMail(playerId), daily = useDailyClout(playerId), dojo = useDojoReminder(playerId);
   const account = useQuery({ enabled: menuActive, queryKey: ['account-rewards', playerId], queryFn: () => customFetch<{ date: string; pending: { key: string; title: string }[]; growth: { ready: boolean } }>('/api/player/rewards/account'), refetchInterval: MENU_POLL_MS, retry: 1 });
   const johnHenry = useQuery({ enabled: menuActive, queryKey: ['john-henry-mythic', playerId], queryFn: () => customFetch<{ state: string }>('/api/player/rewards/john-henry'), refetchInterval: 60000, retry: 1 });
   const mythic = useQuery({ enabled: menuActive, queryKey: ['starter-mythic', playerId], queryFn: () => customFetch<{ state: string }>('/api/player/rewards/starter-mythic'), refetchInterval: 60000, retry: 1 });
@@ -40,5 +41,5 @@ export function useNotificationBackground(playerId: string) {
     const timer = setInterval(() => refreshIfOlderThan(BOOTSTRAP_BACKGROUND_REFRESH_MS - 1000), BOOTSTRAP_BACKGROUND_REFRESH_MS);
     return () => clearInterval(timer);
   }, [client, menuActive]);
-  return { mail, daily, account, johnHenry, mythic };
+  return { mail, daily, account, johnHenry, mythic, dojo };
 }

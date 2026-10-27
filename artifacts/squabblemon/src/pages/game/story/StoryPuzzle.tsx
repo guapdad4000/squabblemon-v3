@@ -7,8 +7,10 @@ import { GripVertical } from 'lucide-react';
 import { createPortal } from 'react-dom';
 import '../../../styles/puzzle.css';
 import '../../../styles/squabble-house.css';
+import {KumiteManualInstrument} from './KumiteManualInstrument';
 import { PuzzleScene, PuzzleGlyph, puzzlePresentation, puzzleSlotLabel } from './PuzzleScene';
 import '../../../styles/puzzle-display.css';
+import '../../../styles/kumite-manual.css';
 import { DinerPuzzleInstrument } from './DinerPuzzleInstrument';
 import { useStoryModalFocus } from './useStoryModalFocus';
 
@@ -34,6 +36,7 @@ export function StoryPuzzle({
   const listRef = useRef<HTMLUListElement>(null);
   const hostRef = useRef<HTMLDivElement>(null);
   const diner = puzzle.presentation?.theme === 'squabble-house';
+  const kumite = puzzle.presentation?.theme === 'kumite';
   useStoryModalFocus(hostRef);
   const requestLockRef = useRef(false);
   const requestIdentityRef = useRef<{ signature: string; key: string } | null>(null);
@@ -154,7 +157,7 @@ export function StoryPuzzle({
   }, [onClose]);
 
   return createPortal(
-    <div className={`story-puzzle-host story-puzzle-v3 ${diner ? 'house-puzzle' : ''}`} data-layout={puzzle.presentation?.layout} data-puzzle-kind={puzzlePresentation(puzzle).kind}
+    <div className={`story-puzzle-host story-puzzle-v3 ${diner ? 'house-puzzle' : ''} ${kumite ? 'kumite-manual' : ''}`} data-layout={puzzle.presentation?.layout} data-puzzle-kind={puzzlePresentation(puzzle).kind}
       ref={hostRef} role="dialog" aria-modal="true" aria-labelledby="story-puzzle-title">
       <div className="story-puzzle-bg" style={{ backgroundImage: `url(${getAssetUrl(puzzlePresentation(puzzle).art)})` }} />
       <div className="story-puzzle-content">
@@ -164,7 +167,7 @@ export function StoryPuzzle({
           <p>{puzzle.instruction}</p>
         </header>
 
-        <PuzzleScene puzzle={puzzle} />
+        {kumite?<KumiteManualInstrument puzzle={puzzle} order={pieces}/>:<PuzzleScene puzzle={puzzle} />}
         {diner && (puzzle.presentation?.layout === 'route' || puzzle.presentation?.layout === 'pass') && <DinerPuzzleInstrument puzzle={puzzle} order={pieces} />}
         <div className="story-puzzle-main">
           <ul className="story-puzzle-list" ref={listRef} role="listbox" aria-label="Evidence pieces">

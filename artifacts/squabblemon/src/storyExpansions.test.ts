@@ -86,7 +86,7 @@ function permutations<T>(items: readonly T[]): T[][] {
 }
 
 test("no new investigation opens with its answer already arranged", () => {
-  assert.equal(auditedPuzzles.length, 33);
+  assert.equal(auditedPuzzles.length, 43);
   for (const p of auditedPuzzles)
     assert(
       !isStoryPuzzleSolution(

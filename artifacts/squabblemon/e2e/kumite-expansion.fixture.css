@@ -1,0 +1,121 @@
+body {
+  margin: 0;
+  background: #15110c;
+  color: #eee2c9;
+}
+.expansion-review-nav {
+  padding: 12px;
+  background: #17130e;
+  position: relative;
+  z-index: 2;
+  border-bottom: 1px solid #68522c;
+}
+.expansion-review-nav strong,
+.expansion-review-nav small {
+  display: block;
+}
+.expansion-review-nav small {
+  font: 10px/1.5 sans-serif;
+  color: #c2b79c;
+}
+.expansion-review-nav nav,
+.expansion-toolbar {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding-block: 10px;
+}
+.expansion-review-nav button,
+.expansion-toolbar button {
+  padding: 10px 14px;
+  color: #ead4a1;
+  background: #302619;
+  border: 1px solid #675130;
+  min-height: 44px;
+}
+.expansion-review-nav button[aria-pressed="true"] {
+  background: #e4b84c;
+  color: #1c150a;
+}
+.expansion-review-stage {
+  max-width: 1440px;
+  margin: auto;
+  padding: 12px;
+}
+.expansion-art-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(180px, 100%), 1fr));
+  gap: 12px;
+}
+.expansion-art-grid figure {
+  margin: 0;
+  text-align: center;
+  border-bottom: 1px solid #6c552f;
+}
+.expansion-form {
+  height: 300px;
+  position: relative;
+}
+.expansion-form > img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.expansion-art-grid .dojo-motion {
+  display: block;
+  height: 250px;
+}
+.expansion-art-grid figcaption {
+  padding: 8px;
+  font: 12px sans-serif;
+}
+.expansion-title-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr));
+  gap: 16px;
+}
+.expansion-title-grid button {
+  color: #edd8a7;
+  background: #241d13;
+  border: 1px solid #6e562d;
+  min-height: 44px;
+}
+.expansion-title-grid img {
+  width: 100%;
+  height: 180px;
+  object-fit: contain;
+}
+.expansion-title-grid span {
+  display: block;
+  padding: 10px;
+}
+@media (max-width: 500px) {
+  .expansion-art-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .expansion-form {
+    height: 250px;
+  }
+  .expansion-review-stage {
+    padding: 8px;
+  }
+  .expansion-review-nav {
+    padding: 8px;
+  }
+  .expansion-review-nav nav {
+    gap: 4px;
+  }
+  .expansion-review-nav nav button {
+    padding: 8px 10px;
+  }
+}
+html:has(.expansion-review-nav),
+body:has(.expansion-review-nav) {
+  height: auto;
+  overflow: auto;
+}
+.expansion-review-stage {
+  min-height: 70dvh;
+}

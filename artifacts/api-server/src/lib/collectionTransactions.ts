@@ -183,6 +183,7 @@ export async function craftPlayerVariantForPlayer(
     if (profile.ownedVariants.includes(variant.id)) {
       return { alreadyOwned: true };
     }
+    if (variant.progressionOnly) throw new EconomyTransactionError(400,"Earn this alternate art through Kumite mastery.");
     let spent: ReturnType<typeof spendStyleShards>;
     try { spent = spendStyleShards(profile, card.rarity, variant.shardCost); }
     catch (error) { throw new EconomyTransactionError(400, (error as Error).message); }

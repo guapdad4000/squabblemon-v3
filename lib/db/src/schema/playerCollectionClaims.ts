@@ -20,8 +20,10 @@ export type CollectionRoadRewardRecord = {
     paidMatchesToday?: number; resetsAt: string; exclusion?: 'bot' | 'not-full-match'; };
   /** Presentation metadata is recorded atomically with the earned card grant. */
   kumiteUnlock?: { newlyOwned: boolean };
+  kumiteQuest?: {cardId:string;styleShards:number};
+  kumiteAlternate?: {cardId:string;variantId:string};
   kumitePresentation?: { receiptId: string };
-  kumite?: { tournamentId: string; matchId: string; roomCode?: string; event: 'completed' | 'win' | 'champion'; at: number };
+  kumite?: { tournamentId: string; matchId: string; roomCode?: string; event: 'completed' | 'win' | 'champion'; at: number; crew?: string[]; sweep?: boolean };
   /** Alert receipts are durable account state, not rewards. They share this
    * per-player idempotent ledger so logout, a new browser, or a new deploy
    * cannot resurrect already-read alerts. */

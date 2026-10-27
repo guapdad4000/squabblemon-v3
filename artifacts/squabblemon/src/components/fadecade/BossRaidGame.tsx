@@ -1,3 +1,5 @@
+import {useLocation} from 'wouter';
+import { KumiteDojoPractice } from './KumiteDojoPractice';
 import { policeRevealDuration } from "./bossRaidPresentation";
 import { setBattleMusicMode } from "../../musicStore";
 import { getAssetUrl } from "../../lib/assets";
@@ -22,7 +24,7 @@ import { CompactDeckPicker } from "../CompactDeckPicker";
 import { BossRaidView } from "./BossRaidView";
 import "../../styles/boss-raid.css";
 const endpoint = "/api/player/boss-raid";
-export default function BossRaidGame({
+function LiveBossRaidGame({
   bootstrap,
   crews,
   onExit,
@@ -350,4 +352,10 @@ export default function BossRaidGame({
       </div>
     </main>
   );
+}
+
+export default function BossRaidGame(props:Parameters<typeof LiveBossRaidGame>[0]) {
+ const [,navigate]=useLocation();
+ const fighter=typeof window==='undefined'?null:new URLSearchParams(window.location.search).get('practice');
+ return fighter?<KumiteDojoPractice key={props.bootstrap.profile.id+fighter} bootstrap={props.bootstrap} fighterId={fighter} onExit={()=>navigate('/game/kumite')}/>:<LiveBossRaidGame {...props}/>;
 }

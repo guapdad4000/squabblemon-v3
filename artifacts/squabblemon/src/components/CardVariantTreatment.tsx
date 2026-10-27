@@ -22,7 +22,7 @@ export function getVariantKind(variantId?: string | null): CardVariantKind | nul
   if (variantId?.endsWith(':chrome')) return 'chrome';
   if (variantId?.endsWith(':prismatic')) return 'prismatic';
   if (variantId?.endsWith(':crazy')) return 'crazy';
-  if (variantId?.endsWith(':alternate')) return 'alternate';
+  if (variantId?.endsWith(':alternate') || variantId?.endsWith(':kumite-alt-v1')) return 'alternate';
   return null;
 }
 

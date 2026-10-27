@@ -16,7 +16,7 @@ import { generateStreetPack } from "./collectionEconomy";
 
 test("existing shards retain every old crafting price with no migration or re-credit", () => {
   for (const card of cardCatalog)
-    for (const slot of card.variantSlots) {
+    for (const slot of card.variantSlots.filter(slot=>!slot.progressionOnly)) {
       const spent = spendStyleShards(
         { styleShards: slot.shardCost },
         card.rarity,

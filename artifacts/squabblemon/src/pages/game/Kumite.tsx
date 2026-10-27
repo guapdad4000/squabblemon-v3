@@ -74,7 +74,7 @@ export function Kumite({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   const registration = current?.registration;
   const match = current?.currentMatch;
   const now = Number.isFinite(current?.serverTime) ? clock + (current!.serverTime - query.dataUpdatedAt) : clock;
-  const earnedRewards = current?.progression?.rewards.filter(reward => reward.claimed).map(reward => reward.id).sort().join('|') ?? '';
+  const earnedRewards = [...(current?.progression?.rewards.filter(reward => reward.claimed).map(reward => reward.id)??[]),...(current?.progression?.mastery?.flatMap(m=>[...(m.altOwned?[m.variantId]:[]),...m.quests.filter(q=>q.claimed).map(q=>q.id)])??[])].sort().join('|');
   const decks = useMemo(() => {
     const saved = profile.savedDecks.filter(d => validateSavedDeck(d.cardIds, profile.ownedCardIds, d.heroCardId).valid);
     return [
@@ -298,7 +298,7 @@ export function Kumite({ bootstrap }: { bootstrap: PlayerBootstrap }) {
             </KumitePanel>}
           </section>
         </div>
-        <KumiteRewards progression={current?.progression} />
+        <KumiteRewards progression={current?.progression} bootstrap={bootstrap} />
       </>}
     </div>
   </main>;

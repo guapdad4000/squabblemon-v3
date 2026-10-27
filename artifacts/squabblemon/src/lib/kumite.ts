@@ -51,6 +51,7 @@ export interface KumiteCurrent {
   records?: KumiteRecords;
 }
 export interface KumiteProgression {
+  mastery?: {cardId:string;variantId:string;requiredTier:number;dojoCleared:boolean;weeklyWin:boolean;altOwned:boolean;quests:{id:string;label:string;complete:boolean;claimed:boolean;styleShards:number}[]}[];
   completedMatches: number;
   matchWins: number;
   championships: number;
