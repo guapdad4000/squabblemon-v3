@@ -249,7 +249,7 @@ export function Story({ bootstrap }: { bootstrap: PlayerBootstrap }) {
     const observer = new ResizeObserver(centerNext);
     observer.observe(viewport);
     return () => observer.disconnect();
-  }, [currentChapter?.id, activeSeasonId, campaign?.recommendedNodeId, campaign?.nodes]);
+  }, [currentChapter?.id, chapterLoad?.id, activeSeasonId, campaign?.recommendedNodeId, campaign?.nodes]);
   if (storyQuery.error) {
     return (
       <div className="h-full grid place-items-center bg-zinc-950 p-6 text-center">
@@ -321,7 +321,7 @@ export function Story({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   const chapterContent = currentChapter ? getStoryChapter(currentChapter.id) : undefined;
   const recommended = nodes.find(node => node.nodeId === campaign.recommendedNodeId);
   return (
-    <div className={`studio-page story-atlas world-decor-host ${currentChapter?.id.startsWith('squabble-house-') ? 'house-atlas' : ''}`}>
+    <div className={`studio-page story-atlas world-decor-host ${currentChapter?.id === 'kumite-break-the-bracket' ? 'kumite-atlas ' : ''}${currentChapter?.id.startsWith('squabble-house-') ? 'house-atlas' : ''}`}>
       {/* Knock out only the near-white matte in the supplied decorative images. */}
       <svg width="0" height="0" aria-hidden="true" focusable="false" style={{ position: 'absolute' }}>
         <defs>
@@ -719,7 +719,7 @@ export function NodeOverlay({
   );
 
   if (hasMovie && storyNode.cinematic && (movieReplay || (!movieDismissed && !isCleared && !history.length))) {
-    return <StoryMovie key={nodeId} cinematic={storyNode.cinematic} title={getStoryChapter(nodeProgress.chapterId)?.title ?? storyNode.title} onClose={onClose}
+    return <StoryMovie key={nodeId} cinematic={storyNode.cinematic} title={nodeProgress.chapterId === 'kumite-break-the-bracket' ? storyNode.title : getStoryChapter(nodeProgress.chapterId)?.title ?? storyNode.title} onClose={onClose}
       onContinue={() => { setMovieDismissed(true); setMovieReplay(false); }} />;
   }
 

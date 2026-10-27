@@ -53,7 +53,7 @@ export function StoryMovie({ cinematic, title, onContinue, onClose }: {
   };
   const isKumite = cinematic.videoAssetId.startsWith('assets/kumite/');
   return createPortal(
-    <div className="house-movie house-movie--fullscreen" ref={host} role="dialog" aria-modal="true" aria-labelledby="house-movie-title" data-testid="story-movie" data-hud-hidden={hudHidden} onPointerMove={revealHud} onPointerDown={revealHud} onKeyDown={revealHud}>
+    <div className={`house-movie house-movie--fullscreen${isKumite ? " house-movie--kumite" : ""}`} ref={host} role="dialog" aria-modal="true" aria-labelledby="house-movie-title" data-testid="story-movie" data-hud-hidden={hudHidden} onPointerMove={revealHud} onPointerDown={revealHud} onKeyDown={revealHud}>
       <div className="house-movie__screen">
         <video ref={video} src={getAssetUrl(source)} poster={getAssetUrl(poster)}
           controls={started && !failed} playsInline preload="metadata" aria-label={`${title} cinematic`}

@@ -19,14 +19,14 @@ test('Engine bossRaid supports both precinct and kumite 5-tier boss forms and pr
   assert.equal(BOSS_FORMS.length, 5);
   assert.equal(KUMITE_BOSS_FORMS.length, 5);
   assert.equal(bossFormForMode(1, 'precinct').name, 'Patrol Shakedown');
-  assert.equal(bossFormForMode(1, 'kumite').fighterId, 'bushedo-brown');
+  assert.equal(bossFormForMode(1, 'kumite').fighterId, 'chonk-lee');
   assert.equal(bossFormForMode(5, 'kumite').fighterId, 'sho-nuff');
 
   const kumiteRun = createBossRaid('test-kumite-run', '2026-10-14', [...ROOKIE_CORE_IDS.slice(0, 10)], 'Dojo Crew', { tier: 1, hp: 1200 }, 'kumite');
   assert.equal(kumiteRun.mode, 'kumite');
   const preview = bossBlastPreview(kumiteRun.match, 1);
   assert.equal(typeof preview.total, 'number');
-  assert.equal(KUMITE_CARD_REWARDS.length, 8);
+  assert.equal(KUMITE_CARD_REWARDS.length, 9);
 });
 
 test('API kumiteRewards and bossRaid connect Boss Raid completions, 50+ damage wins, and tier clears to Kumite progression', () => {

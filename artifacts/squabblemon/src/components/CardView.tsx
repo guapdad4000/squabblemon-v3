@@ -360,6 +360,7 @@ function CardViewComponent({
             : <KumiteFormPortrait
                 formAsset={fighter && stance && !(stance==='base' && variantId?.endsWith(':kumite-alt-v1')) ? getAssetUrl(kumiteFormAsset(fighter, stance)) : undefined}
                 stance={stance}
+                sizes={isInspector ? "(max-width: 640px) 90vw, 440px" : isBoard ? "(max-width: 640px) 72px, 112px" : fillContainer ? "(max-width: 640px) 132px, 180px" : "(max-width: 767px) 100px, 136px"}
                 src={faceArtwork(instance?.cardId === 'leroy' && instance.goldenGlow ? getAssetUrl('assets/kumite/fighters/bruce-leroy-glow.webp') : isBurntPlate ? getCardImage('burnt-plate') : buddyRockForm ? getBuddySquabbleImage() : instance?.maryElephant ? getCardImage('ms-mary-mack-elephant') : getCardImage(getCardArtworkId(card), variantId))}
                 alt=""
                 decoding="async"

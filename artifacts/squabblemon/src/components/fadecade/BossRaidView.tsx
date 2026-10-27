@@ -219,6 +219,11 @@ export function BossRaidView({
   const entranceNpc = entranceCard
     ? BOSS_NPCS[entranceCard.cardId as BossNpcId]
     : null;
+  const entranceName = entrance
+    ? activeMode === "kumite" && entranceCard
+      ? DOJO_NPC_NAMES[entranceCard.cardId] ?? entrance.name
+      : entrance.name
+    : null;
   const displayedHp = blast && policeRevealing ? blast.hpBefore : run.hp;
   const displayedDamage =
     blast && policeRevealing ? run.score - blast.total : run.score;
@@ -462,7 +467,7 @@ export function BossRaidView({
           ) : blast ? (
             <strong>
               {policeRevealing
-                ? `${identity.opposition.toUpperCase()} TURN · ${step ? blast.policePlays[step - 1].name : blast.policePlays.length ? "DEPLOYING…" : "PASSED"}`
+                ? `${identity.opposition.toUpperCase()} TURN · ${step ? entranceName ?? blast.policePlays[step - 1].name : blast.policePlays.length ? "DEPLOYING…" : "PASSED"}`
                 : `ROUND ${blast.round} · ${blast.winners.filter((w) => w === "player").length} LANES WON · ${blast.total ? `−${blast.total} HP` : "BLOCKED"}`}
             </strong>
           ) : run.phase !== "active" ? (
@@ -503,7 +508,7 @@ export function BossRaidView({
                   asset={
                     activeMode === "kumite" ? `dojo:npc-${entranceCard.cardId.replace("raid-", "")}` : entranceCard.cardId === "raid-oink" ? form.art : entranceNpc.art
                   }
-                  name={activeMode==="kumite"?DOJO_NPC_NAMES[entranceCard.cardId]??entrance.name:entrance.name}
+                  name={entranceName ?? entrance.name}
                   reduced={reducedMotion}
                   paused={modal}
                 />
@@ -520,7 +525,7 @@ export function BossRaidView({
               <small>
                 {identity.opposition.toUpperCase()} DEPLOY · {identity.lanes[entrance.lane].toUpperCase()}
               </small>
-              <h2>{activeMode==="kumite"?DOJO_NPC_NAMES[entranceCard.cardId]??entrance.name:entrance.name}</h2>
+              <h2>{entranceName ?? entrance.name}</h2>
               <p>{entranceCard.effect.split(".")[0]}.</p>
             </div>
           </aside>
@@ -905,7 +910,7 @@ export function BossRaidView({
               {run.hp === 0
                 ? status.campaign.completed ? "All five tiers defeated. Your campaign rewards are saved."
                   : `Tier ${run.bossTier} cleared. Tier ${campaign.tier} opens with your next daily attack.`
-                : `${run.hp} HP left. Your damage stays on ${identity.title}—bring the crew back tomorrow.`}
+                : `${run.hp} HP left. Your damage stays on ${identity.title}. ${status.attemptsRemaining > 0 ? "Another entry is ready today." : "Bring the crew back after the daily reset."}`}
             </Dialog.Description>
             <div className="raid-results-reward reward-street-file__loot" aria-label="Rewards banked by this attack">
               <span><GameGlyph name="cloutStack" /><b>+{banked.softCurrency}</b><small>CLOUT</small></span>
@@ -913,7 +918,7 @@ export function BossRaidView({
               <span><GameGlyph name="shards" /><b>+{banked.styleShards}</b><small>STYLE SHARDS</small></span>
             </div>
             {banked.tierCleared && <p className="raid-results-tier-reward">Includes the confirmed tier-clear bonus.</p>}
-            {!campaign.completed && <p className="raid-results-next">Next attack: {new Date(status.resetsAt).toLocaleString([], { weekday: "short", hour: "numeric", minute: "2-digit" })}</p>}
+            {!campaign.completed && <p className="raid-results-next">{status.attemptsRemaining > 0 ? `${status.attemptsRemaining} ${status.attemptsRemaining === 1 ? "entry" : "entries"} ready today` : `Next entry: ${new Date(status.resetsAt).toLocaleString([], { weekday: "short", hour: "numeric", minute: "2-digit" })}`}</p>}
             <button className="raid-fire reward-street-file__action" onClick={onExit}>
               BACK TO FADECADE →
             </button>
@@ -1032,9 +1037,7 @@ export function BossRaidView({
                   strength.
                 </p>
                 <p>
-                  His HP stays down between days. Expect roughly five daily
-                  attacks per tier; the deck and your decisions change that
-                  pace. Defeat all five forms.
+                  Boss HP stays down between attacks and across daily resets. {activeMode === "kumite" ? "You have two daily entries." : "You have one daily entry."} Your crew and decisions determine the pace. Defeat all five forms.
                 </p>
                 <p>
                   Silence, freeze and protection counter opponent pressure. Tap

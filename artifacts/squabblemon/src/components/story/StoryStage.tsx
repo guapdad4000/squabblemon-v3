@@ -344,6 +344,7 @@ export function StoryStage({ nodeId, node: authoredNode, section, line, position
   const node = authoredNode ?? getStoryNode(nodeId);
   const chapter = storyContent.chapters.find((item) => item.nodes.some((entry) => entry.id === nodeId));
   const houseScene = chapter?.id.startsWith('squabble-house-') ?? false;
+  const kumiteScene = chapter?.id === 'kumite-break-the-bracket';
   const displayChapter = houseScene ? storyContent.chapters.filter(item => item.id.startsWith('squabble-house-')).findIndex(item => item.id === chapter?.id) + 1 : chapter?.order ?? 1;
   const scene = resolveStoryStage(nodeId, node, chapter);
   const lines = node?.kind === 'battle' ? (section === 'post' ? node.postDialogue : node.preDialogue) : node?.scenes ?? [];
@@ -354,9 +355,9 @@ export function StoryStage({ nodeId, node: authoredNode, section, line, position
   const shouting = /[A-Z]{4,}|!/.test(fullText);
   const prop = nodeId === 'welcome-to-the-block' ? 'vip' : nodeId === 'blue-side-pressure' ? 'power' : nodeId === 'receipts-on-camera' ? 'receipt' : nodeId === 'snitch-at-the-corner' ? 'live' : nodeId === 'cracked-head-takes-the-block' && section === 'pre' && position <= 2 ? 'battery' : null;
   return (
-    <section className={`story-stage ${houseScene ? 'story-stage--house ' : ''}${houseScene || scene.backdropAssetId.includes('/story/environments/') ? 'story-stage--environment' : ''} ${still ? 'story-stage--still' : ''} ${dramatic ? 'story-stage--dramatic' : ''}`} aria-label={`${scene.place} — ${section === 'post' ? 'After the fight' : chapter?.title ?? 'Story'}`} onClick={advanceFromSurface}>
+    <section className={`story-stage ${kumiteScene ? 'story-stage--kumite ' : ''}${houseScene ? 'story-stage--house ' : ''}${houseScene || scene.backdropAssetId.includes('/story/environments/') ? 'story-stage--environment' : ''} ${still ? 'story-stage--still' : ''} ${dramatic ? 'story-stage--dramatic' : ''}`} aria-label={`${scene.place} — ${section === 'post' ? 'After the fight' : chapter?.title ?? 'Story'}`} onClick={advanceFromSurface}>
       <div className="story-stage__world" style={{ backgroundImage: `url("${getAssetUrl(scene.backdropAssetId)}")` }} />
-      <img className="story-stage__beam" src={getAssetUrl('brand/story-cinematic/projector-beam.jpg')} alt="" aria-hidden="true" />
+      {kumiteScene ? <div className="story-stage__beam story-stage__beam--kumite" aria-hidden="true" /> : <img className="story-stage__beam" src={getAssetUrl('brand/story-cinematic/projector-beam.jpg')} alt="" aria-hidden="true" />}
       <StoryEnvironmentProp background={scene.backdropAssetId} />
       <div className="story-stage__light" />
       <div className="story-stage__dust" aria-hidden="true" />

@@ -1,0 +1,1091 @@
+{
+  "quest": "kumite-break-the-bracket",
+  "source": "/media/falcon/LaCie/202610140718.mp4",
+  "sourceBytes": 6855862769,
+  "fps": 30,
+  "frameCount": 27554,
+  "chapters": [
+    {
+      "episode": 1,
+      "slug": "ep01-invitation",
+      "masterInFrame": 0,
+      "masterOutFrameExclusive": 2056,
+      "frames": 2056,
+      "durationSeconds": 68.53333333333333,
+      "segments": [
+        {
+          "source": "/media/falcon/LaCie/202610140718.mp4",
+          "inFrame": 0,
+          "frames": 2056,
+          "masterInFrame": 0
+        }
+      ],
+      "delivery": [
+        {
+          "asset": "assets/kumite/films/story-v2/ep01-invitation-landscape.mp4",
+          "bytes": 35879399,
+          "sha256": "f3ca41f0982319d898b8bbdf6fc7ce0656820f08e92e41b4af77d32cccd68bcd",
+          "durationSeconds": 68.533333,
+          "frames": 2056,
+          "width": 1920,
+          "height": 1080,
+          "fps": "30/1",
+          "audio": "AAC stereo 160k; user-approved Roger45 announcer mix; new audio encode, copied identically into both orientations",
+          "poster": "assets/kumite/films/story-v2/ep01-invitation-landscape.webp",
+          "posterBytes": 96174,
+          "decodedEntireAudioAndVideo": true,
+          "streams": [
+            {
+              "codec_type": "video",
+              "r_frame_rate": "30/1",
+              "start_time": "0.000000",
+              "duration": "68.533333"
+            },
+            {
+              "codec_type": "audio",
+              "r_frame_rate": "0/0",
+              "start_time": "0.000000",
+              "duration": "68.532993"
+            }
+          ],
+          "posterSHA256": "1f4558df8f37b57bfc946ae69c2f437725f4eda363894f2aaf35ae6834d95e1f",
+          "posterTimeSeconds": 12,
+          "audioSHA256": "30cd3d453414dd00d27cdd29047098d234690d180c0aac9ce223ccbf9f58c7c5",
+          "audioPacketsUnchanged": false,
+          "audioReencodedForAnnouncer": true,
+          "videoPayloadSHA256": "1c4fd4b156fc6a8616e29046ded1922258f07b5c77b2f41884a23c7a5a6ed291",
+          "videoPayloadUnchangedForAnnouncer": true
+        },
+        {
+          "asset": "assets/kumite/films/story-v2/ep01-invitation-portrait.mp4",
+          "bytes": 12806809,
+          "sha256": "e3b23c2aed3a2caf3fb79d939ca71f702e43c369d2955b5111f601fd992ef024",
+          "durationSeconds": 68.533333,
+          "frames": 2056,
+          "width": 720,
+          "height": 1280,
+          "fps": "30/1",
+          "audio": "AAC stereo 160k; user-approved Roger45 announcer mix; new audio encode, copied identically into both orientations",
+          "poster": "assets/kumite/films/story-v2/ep01-invitation-portrait.webp",
+          "posterBytes": 30046,
+          "decodedEntireAudioAndVideo": true,
+          "streams": [
+            {
+              "codec_type": "video",
+              "r_frame_rate": "30/1",
+              "start_time": "0.000000",
+              "duration": "68.533333"
+            },
+            {
+              "codec_type": "audio",
+              "r_frame_rate": "0/0",
+              "start_time": "0.000000",
+              "duration": "68.532993"
+            }
+          ],
+          "posterSHA256": "7880b62bc99b06f99186b43dbb836b92334cdbab940fb7fc3b9bb5fee7c6824d",
+          "posterTimeSeconds": 12,
+          "audioSHA256": "30cd3d453414dd00d27cdd29047098d234690d180c0aac9ce223ccbf9f58c7c5",
+          "audioPacketsUnchanged": false,
+          "audioReencodedForAnnouncer": true,
+          "videoPayloadSHA256": "67f1f203a77965a3bbbb31e4a5c222e4021f34c0fefc99f93ccde5ee29b1edc3",
+          "videoPayloadUnchangedForAnnouncer": true
+        }
+      ]
+    },
+    {
+      "episode": 2,
+      "slug": "ep02-belt-check",
+      "masterInFrame": 2056,
+      "masterOutFrameExclusive": 5129,
+      "frames": 3073,
+      "durationSeconds": 102.43333333333334,
+      "segments": [
+        {
+          "source": "/media/falcon/LaCie/202610140718.mp4",
+          "inFrame": 2056,
+          "frames": 2204,
+          "masterInFrame": 2056
+        },
+        {
+          "source": "/home/falcon/Documents/New project 9/artifacts/deliverables/kumite-anime-arc-20261015/arc-expansion/outputs/K01-living.mp4",
+          "inFrame": 0,
+          "frames": 180,
+          "masterInFrame": 4260,
+          "approvedTreatment": "K01-living.mp4"
+        },
+        {
+          "source": "/media/falcon/LaCie/202610140718.mp4",
+          "inFrame": 4440,
+          "frames": 196,
+          "masterInFrame": 4440
+        },
+        {
+          "source": "/home/falcon/Documents/New project 9/output/kumite-expansion-20261027-audit/belt-six-impacts/belt-six-impacts.mov",
+          "inFrame": 0,
+          "frames": 136,
+          "masterInFrame": 4636,
+          "editorialRepair": "solo-belt-reaction-no-glasses"
+        },
+        {
+          "source": "/media/falcon/LaCie/202610140718.mp4",
+          "inFrame": 4772,
+          "frames": 357,
+          "masterInFrame": 4772
+        }
+      ],
+      "delivery": [
+        {
+          "asset": "assets/kumite/films/story-v2/ep02-belt-check-landscape.mp4",
+          "bytes": 53418114,
+          "sha256": "4b961dc2f9ce1120a9eb4497ff5c7031d7554da14b823aa65bb52c64ee69cd84",
+          "durationSeconds": 102.433333,
+          "frames": 3073,
+          "width": 1920,
+          "height": 1080,
+          "fps": "30/1",
+          "audio": "AAC stereo 160k; user-approved Roger45 announcer mix; new audio encode, copied identically into both orientations",
+          "poster": "assets/kumite/films/story-v2/ep02-belt-check-landscape.webp",
+          "posterBytes": 135042,
+          "decodedEntireAudioAndVideo": true,
+          "streams": [
+            {
+              "codec_type": "video",
+              "r_frame_rate": "30/1",
+              "start_time": "0.000000",
+              "duration": "102.433333"
+            },
+            {
+              "codec_type": "audio",
+              "r_frame_rate": "0/0",
+              "start_time": "0.000000",
+              "duration": "102.432993"
+            }
+          ],
+          "posterSHA256": "7f470840887dcbd27001853121e2f9f9c0cd6647964ab90f10c57a1f03801a4d",
+          "posterTimeSeconds": 30,
+          "audioSHA256": "8cb7d09e765173d2c961dde93dfbb7d07011ea1240e70cb2897dbc6cca24c51d",
+          "audioPacketsUnchanged": false,
+          "audioPayloadPreservedFromPreviousRepair": false,
+          "audioReencodedForAnnouncer": true,
+          "videoPayloadSHA256": "daa8ea44cadb285a98310c83f58876880a8646ddd29d04cb2687d911ba4ff534",
+          "videoPayloadUnchangedForAnnouncer": true
+        },
+        {
+          "asset": "assets/kumite/films/story-v2/ep02-belt-check-portrait.mp4",
+          "bytes": 20678438,
+          "sha256": "a3f76b0cdee88115978b4edff3df398bd4cf1521772d8fb5d4607796ddc41d65",
+          "durationSeconds": 102.433333,
+          "frames": 3073,
+          "width": 720,
+          "height": 1280,
+          "fps": "30/1",
+          "audio": "AAC stereo 160k; user-approved Roger45 announcer mix; new audio encode, copied identically into both orientations",
+          "poster": "assets/kumite/films/story-v2/ep02-belt-check-portrait.webp",
+          "posterBytes": 37820,
+          "decodedEntireAudioAndVideo": true,
+          "streams": [
+            {
+              "codec_type": "video",
+              "r_frame_rate": "30/1",
+              "start_time": "0.000000",
+              "duration": "102.433333"
+            },
+            {
+              "codec_type": "audio",
+              "r_frame_rate": "0/0",
+              "start_time": "0.000000",
+              "duration": "102.432993"
+            }
+          ],
+          "posterSHA256": "606b753a18bbef0b07540bdb6d8ce0eb603a4f481dd633abe22dd9a0077a023e",
+          "posterTimeSeconds": 30,
+          "audioSHA256": "8cb7d09e765173d2c961dde93dfbb7d07011ea1240e70cb2897dbc6cca24c51d",
+          "audioPacketsUnchanged": false,
+          "audioPayloadPreservedFromPreviousRepair": false,
+          "audioReencodedForAnnouncer": true,
+          "videoPayloadSHA256": "8acc2f6abd6740580495cf027a361addaa88d3c90ac1223f1c33e42040fad176",
+          "videoPayloadUnchangedForAnnouncer": true
+        }
+      ]
+    },
+    {
+      "episode": 3,
+      "slug": "ep03-find-the-glo",
+      "masterInFrame": 5129,
+      "masterOutFrameExclusive": 8403,
+      "frames": 3274,
+      "durationSeconds": 109.13333333333334,
+      "segments": [
+        {
+          "source": "/media/falcon/LaCie/202610140718.mp4",
+          "inFrame": 5129,
+          "frames": 2791,
+          "masterInFrame": 5129
+        },
+        {
+          "source": "/home/falcon/Documents/New project 9/artifacts/deliverables/kumite-anime-arc-20261015/arc-expansion/outputs/K04-living.mp4",
+          "inFrame": 0,
+          "frames": 180,
+          "masterInFrame": 7920,
+          "approvedTreatment": "K04-living.mp4"
+        },
+        {
+          "source": "/media/falcon/LaCie/202610140718.mp4",
+          "inFrame": 8100,
+          "frames": 303,
+          "masterInFrame": 8100
+        }
+      ],
+      "delivery": [
+        {
+          "asset": "assets/kumite/films/story-v2/ep03-find-the-glo-landscape.mp4",
+          "bytes": 57252021,
+          "sha256": "cb6a4f37206e46ebe6374709dc91e531abb0a73e650922f28e350d997b267320",
+          "durationSeconds": 109.133333,
+          "frames": 3274,
+          "width": 1920,
+          "height": 1080,
+          "fps": "30/1",
+          "audio": "AAC stereo 160k; user-approved Roger45 announcer mix; new audio encode, copied identically into both orientations",
+          "poster": "assets/kumite/films/story-v2/ep03-find-the-glo-landscape.webp",
+          "posterBytes": 172540,
+          "decodedEntireAudioAndVideo": true,
+          "streams": [
+            {
+              "codec_type": "video",
+              "r_frame_rate": "30/1",
+              "start_time": "0.000000",
+              "duration": "109.133333"
+            },
+            {
+              "codec_type": "audio",
+              "r_frame_rate": "0/0",
+              "start_time": "0.000000",
+              "duration": "109.132993"
+            }
+          ],
+          "posterSHA256": "bbbf23b4fdf75645031ae80e7e3774be557f10ea6e86e5e157953c7a82c7f5e5",
+          "posterTimeSeconds": 60,
+          "audioSHA256": "ca25f48f777cd2d057b1aa8a595af4210d68d5ebd8636680c17e5ad056cd771c",
+          "audioPacketsUnchanged": false,
+          "audioReencodedForAnnouncer": true,
+          "videoPayloadSHA256": "6e7e60ec0b3bb25b633ac0a7670537ad33e256f401ecf075535733c2ec08a75a",
+          "videoPayloadUnchangedForAnnouncer": true
+        },
+        {
+          "asset": "assets/kumite/films/story-v2/ep03-find-the-glo-portrait.mp4",
+          "bytes": 22467146,
+          "sha256": "83f4d3cba3461fe932e68101fb77232f88628071da6c39dd680f9421ac435f2b",
+          "durationSeconds": 109.133333,
+          "frames": 3274,
+          "width": 720,
+          "height": 1280,
+          "fps": "30/1",
+          "audio": "AAC stereo 160k; user-approved Roger45 announcer mix; new audio encode, copied identically into both orientations",
+          "poster": "assets/kumite/films/story-v2/ep03-find-the-glo-portrait.webp",
+          "posterBytes": 42092,
+          "decodedEntireAudioAndVideo": true,
+          "streams": [
+            {
+              "codec_type": "video",
+              "r_frame_rate": "30/1",
+              "start_time": "0.000000",
+              "duration": "109.133333"
+            },
+            {
+              "codec_type": "audio",
+              "r_frame_rate": "0/0",
+              "start_time": "0.000000",
+              "duration": "109.132993"
+            }
+          ],
+          "posterSHA256": "196810d0305b31da34331d6012b5c4ce4afe3229da3166db71eda9c9e6518eb2",
+          "posterTimeSeconds": 60,
+          "audioSHA256": "ca25f48f777cd2d057b1aa8a595af4210d68d5ebd8636680c17e5ad056cd771c",
+          "audioPacketsUnchanged": false,
+          "audioReencodedForAnnouncer": true,
+          "videoPayloadSHA256": "496c753c2e5cff7f92b7d91ddf7fdb3aed4611a63eecd8261d03d2f2e24b5b86",
+          "videoPayloadUnchangedForAnnouncer": true
+        }
+      ]
+    },
+    {
+      "episode": 4,
+      "slug": "ep04-courtesy",
+      "masterInFrame": 8403,
+      "masterOutFrameExclusive": 11413,
+      "frames": 3010,
+      "durationSeconds": 100.33333333333333,
+      "segments": [
+        {
+          "source": "/media/falcon/LaCie/202610140718.mp4",
+          "inFrame": 8403,
+          "frames": 177,
+          "masterInFrame": 8403
+        },
+        {
+          "source": "/home/falcon/Documents/New project 9/artifacts/deliverables/kumite-anime-arc-20261015/arc-expansion/outputs/full-fight.mp4",
+          "inFrame": 0,
+          "frames": 2640,
+          "masterInFrame": 8580,
+          "approvedTreatment": "full-fight.mp4"
+        },
+        {
+          "source": "/media/falcon/LaCie/202610140718.mp4",
+          "inFrame": 11220,
+          "frames": 193,
+          "masterInFrame": 11220
+        }
+      ],
+      "delivery": [
+        {
+          "asset": "assets/kumite/films/story-v2/ep04-courtesy-landscape.mp4",
+          "bytes": 52295892,
+          "sha256": "b7ac36ef2520c808c4ec13e91f70690ce481e8f8602014d9f0921d60557252f9",
+          "durationSeconds": 100.333333,
+          "frames": 3010,
+          "width": 1920,
+          "height": 1080,
+          "fps": "30/1",
+          "audio": "AAC stereo 160k; user-approved Roger45 announcer mix; new audio encode, copied identically into both orientations",
+          "poster": "assets/kumite/films/story-v2/ep04-courtesy-landscape.webp",
+          "posterBytes": 106562,
+          "decodedEntireAudioAndVideo": true,
+          "streams": [
+            {
+              "codec_type": "video",
+              "r_frame_rate": "30/1",
+              "start_time": "0.000000",
+              "duration": "100.333333"
+            },
+            {
+              "codec_type": "audio",
+              "r_frame_rate": "0/0",
+              "start_time": "0.000000",
+              "duration": "100.332993"
+            }
+          ],
+          "posterSHA256": "490fec661e5aa187487e64ab93f5f182d624e7fb19c8ece4c5740aec168c921c",
+          "posterTimeSeconds": 35,
+          "audioSHA256": "f647927006b870d4d86e0ee21e01da20fddba862ad8a50dc9eae1f05156c9364",
+          "audioPacketsUnchanged": false,
+          "audioReencodedForAnnouncer": true,
+          "videoPayloadSHA256": "45877dad4392ec1f4ca932d49bb530911d73db7da5c886ac1d5addb37085c353",
+          "videoPayloadUnchangedForAnnouncer": true
+        },
+        {
+          "asset": "assets/kumite/films/story-v2/ep04-courtesy-portrait.mp4",
+          "bytes": 19647860,
+          "sha256": "356142568cd78d58aab8246b19b56bc133d9bb7c7f081e1a3bce96c85e99dccf",
+          "durationSeconds": 100.333333,
+          "frames": 3010,
+          "width": 720,
+          "height": 1280,
+          "fps": "30/1",
+          "audio": "AAC stereo 160k; user-approved Roger45 announcer mix; new audio encode, copied identically into both orientations",
+          "poster": "assets/kumite/films/story-v2/ep04-courtesy-portrait.webp",
+          "posterBytes": 32060,
+          "decodedEntireAudioAndVideo": true,
+          "streams": [
+            {
+              "codec_type": "video",
+              "r_frame_rate": "30/1",
+              "start_time": "0.000000",
+              "duration": "100.333333"
+            },
+            {
+              "codec_type": "audio",
+              "r_frame_rate": "0/0",
+              "start_time": "0.000000",
+              "duration": "100.332993"
+            }
+          ],
+          "posterSHA256": "cf77564a4d4ddcfb564731c102f8099483ed5bb93452f744a9017406d9588660",
+          "posterTimeSeconds": 35,
+          "audioSHA256": "f647927006b870d4d86e0ee21e01da20fddba862ad8a50dc9eae1f05156c9364",
+          "audioPacketsUnchanged": false,
+          "audioReencodedForAnnouncer": true,
+          "videoPayloadSHA256": "7276419ff5510e9b86f279846fd47d03420a7448635e2df39e866336c65d138a",
+          "videoPayloadUnchangedForAnnouncer": true
+        }
+      ]
+    },
+    {
+      "episode": 5,
+      "slug": "ep05-break-the-bracket",
+      "masterInFrame": 11413,
+      "masterOutFrameExclusive": 20752,
+      "frames": 9339,
+      "durationSeconds": 311.3,
+      "segments": [
+        {
+          "source": "/media/falcon/LaCie/202610140718.mp4",
+          "inFrame": 11413,
+          "frames": 1247,
+          "masterInFrame": 11413
+        },
+        {
+          "source": "/home/falcon/Documents/New project 9/artifacts/deliverables/kumite-anime-arc-20261015/arc-expansion/outputs/K06-living.mp4",
+          "inFrame": 0,
+          "frames": 180,
+          "masterInFrame": 12660,
+          "approvedTreatment": "K06-living.mp4"
+        },
+        {
+          "source": "/media/falcon/LaCie/202610140718.mp4",
+          "inFrame": 12840,
+          "frames": 7912,
+          "masterInFrame": 12840
+        }
+      ],
+      "delivery": [
+        {
+          "asset": "assets/kumite/films/story-v2/ep05-break-the-bracket-landscape.mp4",
+          "bytes": 94735211,
+          "sha256": "10a8dfb0b18e5c55a9fd220a6469bbdb193b998aa00bb6f4b807a62d9205f3ed",
+          "durationSeconds": 311.3,
+          "frames": 9339,
+          "width": 1920,
+          "height": 1080,
+          "fps": "30/1",
+          "audio": "AAC stereo 160k; user-approved Roger45 announcer mix; new audio encode, copied identically into both orientations",
+          "poster": "assets/kumite/films/story-v2/ep05-break-the-bracket-landscape.webp",
+          "posterBytes": 93170,
+          "decodedEntireAudioAndVideo": true,
+          "streams": [
+            {
+              "codec_type": "video",
+              "r_frame_rate": "30/1",
+              "start_time": "0.000000",
+              "duration": "311.300000"
+            },
+            {
+              "codec_type": "audio",
+              "r_frame_rate": "0/0",
+              "start_time": "0.000000",
+              "duration": "311.300000"
+            }
+          ],
+          "posterSHA256": "cf041242e7e6d28aae2fc015d5074722b260544c3706f7d67c86624c46b9c66c",
+          "encoding": "1080p30 H.264 medium, CRF21 max 2350k; AAC128 stereo; under 100 MB",
+          "posterTimeSeconds": 260,
+          "audioSHA256": "243fc022b8983216e9e4152a28fd85f3611cf35e3b2dd6ff114f9673e13d82c3",
+          "audioPacketsUnchanged": false,
+          "audioReencodedForAnnouncer": true,
+          "videoPayloadSHA256": "a54b03eddd0a8564317bcf46f1141aad37092cd55cc30d9665fe8ce3853e6da1",
+          "videoPayloadUnchangedForAnnouncer": true
+        },
+        {
+          "asset": "assets/kumite/films/story-v2/ep05-break-the-bracket-portrait.mp4",
+          "bytes": 62220266,
+          "sha256": "e186162fd3af34ee618885a0d585f1366c5c9020d02b98d3cb945d0f29f15956",
+          "durationSeconds": 311.3,
+          "frames": 9339,
+          "width": 720,
+          "height": 1280,
+          "fps": "30/1",
+          "audio": "AAC stereo 160k; user-approved Roger45 announcer mix; new audio encode, copied identically into both orientations",
+          "poster": "assets/kumite/films/story-v2/ep05-break-the-bracket-portrait.webp",
+          "posterBytes": 25612,
+          "decodedEntireAudioAndVideo": true,
+          "streams": [
+            {
+              "codec_type": "video",
+              "r_frame_rate": "30/1",
+              "start_time": "0.000000",
+              "duration": "311.300000"
+            },
+            {
+              "codec_type": "audio",
+              "r_frame_rate": "0/0",
+              "start_time": "0.000000",
+              "duration": "311.300000"
+            }
+          ],
+          "posterSHA256": "454dd4a0f31ec60fe354ea0bc13ce30618d0297ae30c66a550fece63ba258f6c",
+          "posterTimeSeconds": 260,
+          "audioSHA256": "243fc022b8983216e9e4152a28fd85f3611cf35e3b2dd6ff114f9673e13d82c3",
+          "audioPacketsUnchanged": false,
+          "audioReencodedForAnnouncer": true,
+          "videoPayloadSHA256": "fc07b561b33a72da1f6ecff77602f607ea976cd91ffec12e91120ca24892148a",
+          "videoPayloadUnchangedForAnnouncer": true
+        }
+      ]
+    },
+    {
+      "episode": 6,
+      "slug": "ep06-arena-is-ours",
+      "masterInFrame": 20752,
+      "masterOutFrameExclusive": 22709,
+      "frames": 1957,
+      "durationSeconds": 65.23333333333333,
+      "segments": [
+        {
+          "source": "/media/falcon/LaCie/202610140718.mp4",
+          "inFrame": 20752,
+          "frames": 1957,
+          "masterInFrame": 20752
+        }
+      ],
+      "delivery": [
+        {
+          "asset": "assets/kumite/films/story-v2/ep06-arena-is-ours-landscape.mp4",
+          "bytes": 34116773,
+          "sha256": "49e8f0e3d7a8239d194fb3dba5f19e61111e8b3df3095ae8528d902ed0308159",
+          "durationSeconds": 65.233333,
+          "frames": 1957,
+          "width": 1920,
+          "height": 1080,
+          "fps": "30/1",
+          "audio": "AAC stereo 128k",
+          "poster": "assets/kumite/films/story-v2/ep06-arena-is-ours-landscape.webp",
+          "posterBytes": 110492,
+          "decodedEntireAudioAndVideo": true,
+          "streams": [
+            {
+              "codec_type": "video",
+              "r_frame_rate": "30/1",
+              "start_time": "0.000000",
+              "duration": "65.233333"
+            },
+            {
+              "codec_type": "audio",
+              "r_frame_rate": "0/0",
+              "start_time": "0.000000",
+              "duration": "65.232993"
+            }
+          ],
+          "posterSHA256": "ddbe3e43bd553e16d8cb4c294361b94804f79edf78c854afd452f3fe15f592e3",
+          "posterTimeSeconds": 35,
+          "audioSHA256": "1501a1aad3ae588c7f921b127596c6a8fa5681c5ec76f62c9a692ed5318f3702",
+          "audioPacketsUnchanged": true
+        },
+        {
+          "asset": "assets/kumite/films/story-v2/ep06-arena-is-ours-portrait.mp4",
+          "bytes": 13206378,
+          "sha256": "588341c561724bd8da390c8721f353b713df1eedfcda54c8f5cd777a893e2e6b",
+          "durationSeconds": 65.233333,
+          "frames": 1957,
+          "width": 720,
+          "height": 1280,
+          "fps": "30/1",
+          "audio": "AAC stereo 128k",
+          "poster": "assets/kumite/films/story-v2/ep06-arena-is-ours-portrait.webp",
+          "posterBytes": 34290,
+          "decodedEntireAudioAndVideo": true,
+          "streams": [
+            {
+              "codec_type": "video",
+              "r_frame_rate": "30/1",
+              "start_time": "0.000000",
+              "duration": "65.233333"
+            },
+            {
+              "codec_type": "audio",
+              "r_frame_rate": "0/0",
+              "start_time": "0.000000",
+              "duration": "65.232993"
+            }
+          ],
+          "posterSHA256": "56e16587617faeb69b41607c469545b272c7a2cd9372b73656b32b5acd00a3bb",
+          "posterTimeSeconds": 35,
+          "audioSHA256": "1501a1aad3ae588c7f921b127596c6a8fa5681c5ec76f62c9a692ed5318f3702",
+          "audioPacketsUnchanged": true
+        }
+      ]
+    },
+    {
+      "episode": 7,
+      "slug": "ep07-i-got-the-glo",
+      "masterInFrame": 22709,
+      "masterOutFrameExclusive": 24251,
+      "frames": 1542,
+      "durationSeconds": 51.4,
+      "segments": [
+        {
+          "source": "/media/falcon/LaCie/202610140718.mp4",
+          "inFrame": 22709,
+          "frames": 541,
+          "masterInFrame": 22709
+        },
+        {
+          "source": "/home/falcon/Documents/New project 9/artifacts/deliverables/kumite-anime-arc-20261015/arc-expansion/outputs/K10-living.mp4",
+          "inFrame": 0,
+          "frames": 180,
+          "masterInFrame": 23250,
+          "approvedTreatment": "K10-living.mp4"
+        },
+        {
+          "source": "/media/falcon/LaCie/202610140718.mp4",
+          "inFrame": 23430,
+          "frames": 60,
+          "masterInFrame": 23430
+        },
+        {
+          "source": "/home/falcon/Documents/New project 9/artifacts/deliverables/kumite-anime-arc-20261015/arc-expansion/outputs/K11-living.mp4",
+          "inFrame": 0,
+          "frames": 180,
+          "masterInFrame": 23490,
+          "approvedTreatment": "K11-living.mp4"
+        },
+        {
+          "source": "/media/falcon/LaCie/202610140718.mp4",
+          "inFrame": 23670,
+          "frames": 581,
+          "masterInFrame": 23670
+        }
+      ],
+      "delivery": [
+        {
+          "asset": "assets/kumite/films/story-v2/ep07-i-got-the-glo-landscape.mp4",
+          "bytes": 26914281,
+          "sha256": "e5a816e85791617c2c9bb90790961f8a80159771556010a2aa14da55c3080589",
+          "durationSeconds": 51.4,
+          "frames": 1542,
+          "width": 1920,
+          "height": 1080,
+          "fps": "30/1",
+          "audio": "AAC stereo 128k",
+          "poster": "assets/kumite/films/story-v2/ep07-i-got-the-glo-landscape.webp",
+          "posterBytes": 91572,
+          "decodedEntireAudioAndVideo": true,
+          "streams": [
+            {
+              "codec_type": "video",
+              "r_frame_rate": "30/1",
+              "start_time": "0.000000",
+              "duration": "51.400000"
+            },
+            {
+              "codec_type": "audio",
+              "r_frame_rate": "0/0",
+              "start_time": "0.000000",
+              "duration": "51.400000"
+            }
+          ],
+          "posterSHA256": "e3bec49a4257e24d968cbfb1b5765b22b6089455f7267a6ebaf72a4eba43670b",
+          "posterTimeSeconds": 15,
+          "audioSHA256": "9739788a1bf0dc36bc0b9ab8a2fd85c9e1ca4e0d76710fe6ee916c117cdbfd45",
+          "audioPacketsUnchanged": true
+        },
+        {
+          "asset": "assets/kumite/films/story-v2/ep07-i-got-the-glo-portrait.mp4",
+          "bytes": 10599637,
+          "sha256": "7bcdbe9a25d2bc25543c90755eaeccb4622381b42d55e0b55813dc8306af167a",
+          "durationSeconds": 51.4,
+          "frames": 1542,
+          "width": 720,
+          "height": 1280,
+          "fps": "30/1",
+          "audio": "AAC stereo 128k",
+          "poster": "assets/kumite/films/story-v2/ep07-i-got-the-glo-portrait.webp",
+          "posterBytes": 26830,
+          "decodedEntireAudioAndVideo": true,
+          "streams": [
+            {
+              "codec_type": "video",
+              "r_frame_rate": "30/1",
+              "start_time": "0.000000",
+              "duration": "51.400000"
+            },
+            {
+              "codec_type": "audio",
+              "r_frame_rate": "0/0",
+              "start_time": "0.000000",
+              "duration": "51.400000"
+            }
+          ],
+          "posterSHA256": "6b7cf2ac31c6b919d6181e70f30a71aa0ab0c023f647f1e3f8fbbf72a3a8bb79",
+          "posterTimeSeconds": 15,
+          "audioSHA256": "9739788a1bf0dc36bc0b9ab8a2fd85c9e1ca4e0d76710fe6ee916c117cdbfd45",
+          "audioPacketsUnchanged": true
+        }
+      ]
+    },
+    {
+      "episode": 8,
+      "slug": "ep08-legends-remain",
+      "masterInFrame": 24251,
+      "masterOutFrameExclusive": 27554,
+      "frames": 3303,
+      "durationSeconds": 110.1,
+      "segments": [
+        {
+          "source": "/media/falcon/LaCie/202610140718.mp4",
+          "inFrame": 24251,
+          "frames": 1739,
+          "masterInFrame": 24251
+        },
+        {
+          "source": "/home/falcon/Documents/New project 9/artifacts/deliverables/kumite-anime-arc-20261015/arc-expansion/outputs/U03-living.mp4",
+          "inFrame": 0,
+          "frames": 180,
+          "masterInFrame": 25990,
+          "approvedTreatment": "U03-living.mp4"
+        },
+        {
+          "source": "/media/falcon/LaCie/202610140718.mp4",
+          "inFrame": 26170,
+          "frames": 1384,
+          "masterInFrame": 26170
+        }
+      ],
+      "delivery": [
+        {
+          "asset": "assets/kumite/films/story-v2/ep08-legends-remain-landscape.mp4",
+          "bytes": 57343089,
+          "sha256": "ef650bedf2b6be8123064eb84f1e57117fbd56f852f14bd1eb66fe61584bb3db",
+          "durationSeconds": 110.1,
+          "frames": 3303,
+          "width": 1920,
+          "height": 1080,
+          "fps": "30/1",
+          "audio": "AAC stereo 160k; user-approved Roger45 announcer mix; new audio encode, copied identically into both orientations",
+          "poster": "assets/kumite/films/story-v2/ep08-legends-remain-landscape.webp",
+          "posterBytes": 134890,
+          "decodedEntireAudioAndVideo": true,
+          "streams": [
+            {
+              "codec_type": "video",
+              "r_frame_rate": "30/1",
+              "start_time": "0.000000",
+              "duration": "110.100000"
+            },
+            {
+              "codec_type": "audio",
+              "r_frame_rate": "0/0",
+              "start_time": "0.000000",
+              "duration": "110.100000"
+            }
+          ],
+          "posterSHA256": "69f7dd6a4b3dad8fa9e9af77aac8bc1e3423d2972bb968e98098b436164e8ff0",
+          "posterTimeSeconds": 35,
+          "audioSHA256": "5ec24f410ee8169657c3116da35cd25b3fc5d35d9dd49af6c7a7f9bc60e0c1bf",
+          "audioPacketsUnchanged": false,
+          "audioReencodedForAnnouncer": true,
+          "videoPayloadSHA256": "aceec3cf5c708f271eaa6ff348aa2e58bef341b6d684ff7640b2e99838c75a9c",
+          "videoPayloadUnchangedForAnnouncer": true
+        },
+        {
+          "asset": "assets/kumite/films/story-v2/ep08-legends-remain-portrait.mp4",
+          "bytes": 22095835,
+          "sha256": "a913f760b9aee0d9871738570ec447cdd018421e23dc686d71c81749ba7f680f",
+          "durationSeconds": 110.1,
+          "frames": 3303,
+          "width": 720,
+          "height": 1280,
+          "fps": "30/1",
+          "audio": "AAC stereo 160k; user-approved Roger45 announcer mix; new audio encode, copied identically into both orientations",
+          "poster": "assets/kumite/films/story-v2/ep08-legends-remain-portrait.webp",
+          "posterBytes": 36416,
+          "decodedEntireAudioAndVideo": true,
+          "streams": [
+            {
+              "codec_type": "video",
+              "r_frame_rate": "30/1",
+              "start_time": "0.000000",
+              "duration": "110.100000"
+            },
+            {
+              "codec_type": "audio",
+              "r_frame_rate": "0/0",
+              "start_time": "0.000000",
+              "duration": "110.100000"
+            }
+          ],
+          "posterSHA256": "21c843cb382fe261c7a8e1b10410d4e61108274aa1d77bf5c0b1ac940088ce7e",
+          "posterTimeSeconds": 35,
+          "audioSHA256": "5ec24f410ee8169657c3116da35cd25b3fc5d35d9dd49af6c7a7f9bc60e0c1bf",
+          "audioPacketsUnchanged": false,
+          "audioReencodedForAnnouncer": true,
+          "videoPayloadSHA256": "7c851d31f813483f56f2ab82376e9a42417366728ecc37d4279ab1147a191896",
+          "videoPayloadUnchangedForAnnouncer": true
+        }
+      ]
+    }
+  ],
+  "coverage": "Every master frame appears once; approved equal-duration treatments replace their exact windows, never add runtime.",
+  "portrait": "720 \u00d7 1280 padded full-frame picture; no destructive crop, stretch or repeated backdrop",
+  "encoding": "Picture unchanged from previous optimized delivery: 30fps H.264 slow animation CRF21, max4Mbps landscape/1.5Mbps portrait; longest landscape bound2.35Mbps; faststart. Chapters01\u201305/08 use newly encoded AAC stereo160k approved Roger45 mix, copied identically into both orientations. Chapters06/07 retain their previous files/audio unchanged.",
+  "boundaryEvidence": [
+    "master-boundary-contact.jpg",
+    "boundary-scenes.json",
+    "existing machine transcript, not approved captions"
+  ],
+  "totalDeliveryBytes": 596882757,
+  "encodeElapsedSeconds": 658.61,
+  "sourceSHA256": "07e89428cf4adfa6bdb82ce6c07a66c8f4b1c0bd103dc88d3379cacf7eac5679",
+  "validation": "Twelve changed movies fully decoded at exact unchanged frame counts/dimensions; compressed picture payloads match their previous approved versions. Each chapter pair uses identical approved AAC payloads. Chapters06/07, all16 posters and all public images hash-verified unchanged. Roger mix user-approved; generic separation/acoustic limitations remain documented. Local installation is not a deployment claim.",
+  "maxFileBytes": 94735211,
+  "sourceIsUntouched": true,
+  "revision": "story-v2-nine-impacts-six-belt-drawings-roger45-20261027",
+  "approvedImpactTreatments": [
+    {
+      "cue": "K01",
+      "startMasterFrame": 4368,
+      "endMasterFrameExclusive": 4380,
+      "frames": 12,
+      "seconds": 0.4,
+      "mode": "approved held cels and moving accents",
+      "chapter": 2,
+      "sourceRender": "/home/falcon/Documents/New project 9/artifacts/deliverables/kumite-anime-arc-20261015/arc-expansion/outputs/K01-living.mp4",
+      "sourceRenderSHA256": "2da248da2ebfb81460d14d91ddf5faa5afe8c7ba00b79357883bdc12b5bd27e4"
+    },
+    {
+      "cue": "K04",
+      "startMasterFrame": 7996,
+      "endMasterFrameExclusive": 8008,
+      "frames": 12,
+      "seconds": 0.4,
+      "mode": "approved held cels and moving accents",
+      "chapter": 3,
+      "sourceRender": "/home/falcon/Documents/New project 9/artifacts/deliverables/kumite-anime-arc-20261015/arc-expansion/outputs/K04-living.mp4",
+      "sourceRenderSHA256": "29b4cc27003ab5f5171345ab13e3a8f33773494ebea722a6869b08ce660917ba"
+    },
+    {
+      "cue": "U01",
+      "startMasterFrame": 9424,
+      "endMasterFrameExclusive": 9436,
+      "frames": 12,
+      "seconds": 0.4,
+      "mode": "approved held cels and moving accents",
+      "chapter": 4,
+      "sourceRender": "/home/falcon/Documents/New project 9/artifacts/deliverables/kumite-anime-arc-20261015/arc-expansion/outputs/U01-living.mp4",
+      "sourceRenderSHA256": "04b6ac1c329426659fea638dddee333807df2b62a361db31960acfde7844c9e2"
+    },
+    {
+      "cue": "K05",
+      "startMasterFrame": 10425,
+      "endMasterFrameExclusive": 10437,
+      "frames": 12,
+      "seconds": 0.4,
+      "mode": "approved held cels and moving accents",
+      "chapter": 4,
+      "sourceRender": "/home/falcon/Documents/New project 9/artifacts/deliverables/kumite-anime-arc-20261015/arc-expansion/outputs/K05-living.mp4",
+      "sourceRenderSHA256": "4a3a8dffbd4a042b7d67d7f1de19dcff9c07d55f45ea43c1c35da2dca752690f"
+    },
+    {
+      "cue": "U02",
+      "startMasterFrame": 10575,
+      "endMasterFrameExclusive": 10587,
+      "frames": 12,
+      "seconds": 0.4,
+      "mode": "approved held cels and moving accents",
+      "chapter": 4,
+      "sourceRender": "/home/falcon/Documents/New project 9/artifacts/deliverables/kumite-anime-arc-20261015/arc-expansion/outputs/U02-living.mp4",
+      "sourceRenderSHA256": "28b95395fec134ce31a94668082528482a9e38e0adf1237e2e525a01655152a9"
+    },
+    {
+      "cue": "K06",
+      "startMasterFrame": 12735,
+      "endMasterFrameExclusive": 12747,
+      "frames": 12,
+      "seconds": 0.4,
+      "mode": "live pressure overlay",
+      "chapter": 5,
+      "sourceRender": "/home/falcon/Documents/New project 9/artifacts/deliverables/kumite-anime-arc-20261015/arc-expansion/outputs/K06-living.mp4",
+      "sourceRenderSHA256": "4fb9093e718ed4a8690a96bfdfe4b81dc988c4f7855908803a7d30f8df932452"
+    },
+    {
+      "cue": "K10",
+      "startMasterFrame": 23316,
+      "endMasterFrameExclusive": 23334,
+      "frames": 18,
+      "seconds": 0.6,
+      "mode": "approved held cels and moving accents",
+      "chapter": 7,
+      "sourceRender": "/home/falcon/Documents/New project 9/artifacts/deliverables/kumite-anime-arc-20261015/arc-expansion/outputs/K10-living.mp4",
+      "sourceRenderSHA256": "514fab3b2c6ea59c283a19cd1d640fea0c17bf0dfb130431abc77558ee6a9cd2"
+    },
+    {
+      "cue": "K11",
+      "startMasterFrame": 23595,
+      "endMasterFrameExclusive": 23610,
+      "frames": 15,
+      "seconds": 0.5,
+      "mode": "approved held cels and moving accents",
+      "chapter": 7,
+      "sourceRender": "/home/falcon/Documents/New project 9/artifacts/deliverables/kumite-anime-arc-20261015/arc-expansion/outputs/K11-living.mp4",
+      "sourceRenderSHA256": "c44014ab24853b3edab8576ab69d476f4791f822a7f90ade3bbb31a16a409830"
+    },
+    {
+      "cue": "U03",
+      "startMasterFrame": 26070,
+      "endMasterFrameExclusive": 26088,
+      "frames": 18,
+      "seconds": 0.6,
+      "mode": "approved held cels and moving accents",
+      "chapter": 8,
+      "sourceRender": "/home/falcon/Documents/New project 9/artifacts/deliverables/kumite-anime-arc-20261015/arc-expansion/outputs/U03-living.mp4",
+      "sourceRenderSHA256": "a35e92f8f0aab23fe7a5d1c8caeaed71757a2a6f74e7d5e90fdcacf2060fa139"
+    }
+  ],
+  "editorialRepairs": [
+    {
+      "id": "solo-belt-reaction-no-glasses",
+      "chapter": 2,
+      "startMasterFrame": 4636,
+      "endMasterFrameExclusive": 4772,
+      "chapterInFrame": 2580,
+      "frames": 136,
+      "seconds": 4.533333333333333,
+      "sourceChapterFrames": [
+        2400,
+        2675,
+        2705
+      ],
+      "sourceFrameSHA256": {
+        "2400": "797cddfff2370795bb52512a86f9807edb9830f5fec284a1cf31103c5b7231af",
+        "2675": "f551fb28d133de158c3addeb846082d488fed5025b82556b131d69963763fd8b",
+        "2705": "4d94a4e9e9ff6d2cc82cd3e90009e62f5fa2feed49f338e3e135145647857308"
+      },
+      "sourceRender": "/home/falcon/Documents/New project 9/output/kumite-expansion-20261027-audit/belt-six-impacts/belt-six-impacts.mov",
+      "sourceRenderSHA256": "ccb0aa23abd845c981878020697b4c24ad7c05e6279b05411650f7507ff3c31e",
+      "generatedArt": true,
+      "description": "Solo Dragonfly belt reaction: six distinct generated contact/recoil drawings, two per original belt hit. Approved anticipation, clean dazed release, 136-frame scene timing, previous repaired belt Foley before AAC, earlier K01 treatment and original match outcome retained. No glasses.",
+      "audio": {
+        "revision": "roger45-20261027",
+        "previousSoloRepairPayloadSHA256": "6acafc9493f9768f9896daf2478065424bdbaa8bf5dac20c3cd0b2eaf41c8619",
+        "currentPayloadSHA256": "8cb7d09e765173d2c961dde93dfbb7d07011ea1240e70cb2897dbc6cca24c51d",
+        "previousAACBitstreamRetained": false,
+        "audioReencodedForAnnouncer": true,
+        "beltFoleyPCMIdenticalBeforeAACOutsideHostMasks": true,
+        "proofScope": "Protected belt reaction and added snaps retain the approved decoded PCM before new AAC encode. This is not bit-identical AAC or post-encode PCM."
+      },
+      "generatedImpactPlateCount": 6,
+      "sourcePlates": [
+        {
+          "asset": "/home/falcon/Documents/New project 9/output/kumite-expansion-20261027-audit/belt-six-impacts/art/belt-1a.webp",
+          "sha256": "7fcb8b512fb0a13cb0da4c228485f0fd88f11ead32304dadb9342f67924e768f",
+          "bytes": 2010348,
+          "patchInFrame": 5,
+          "patchOutFrameExclusive": 11,
+          "chapterInFrame": 2585,
+          "chapterOutFrameExclusive": 2591,
+          "frames": 6,
+          "description": "belt 1 contact"
+        },
+        {
+          "asset": "/home/falcon/Documents/New project 9/output/kumite-expansion-20261027-audit/belt-six-impacts/art/belt-1b.webp",
+          "sha256": "7127517141e8d7ae369e11ce651a535d2ef1ac4bd2144da0995cc7c31ccfe39b",
+          "bytes": 2077440,
+          "patchInFrame": 11,
+          "patchOutFrameExclusive": 21,
+          "chapterInFrame": 2591,
+          "chapterOutFrameExclusive": 2601,
+          "frames": 10,
+          "description": "belt 1 recoil"
+        },
+        {
+          "asset": "/home/falcon/Documents/New project 9/output/kumite-expansion-20261027-audit/belt-six-impacts/art/belt-2a.webp",
+          "sha256": "ec20bd9c27138a9d77709940d8e5e93179b9bc04bb8578fe3b75993548bb7664",
+          "bytes": 2057050,
+          "patchInFrame": 21,
+          "patchOutFrameExclusive": 29,
+          "chapterInFrame": 2601,
+          "chapterOutFrameExclusive": 2609,
+          "frames": 8,
+          "description": "belt 2 contact"
+        },
+        {
+          "asset": "/home/falcon/Documents/New project 9/output/kumite-expansion-20261027-audit/belt-six-impacts/art/belt-2b.webp",
+          "sha256": "483af8e3970c84b8fc4c51d2c3ff611a74cea34ef405c4565ac829fa3165b11a",
+          "bytes": 2059728,
+          "patchInFrame": 29,
+          "patchOutFrameExclusive": 42,
+          "chapterInFrame": 2609,
+          "chapterOutFrameExclusive": 2622,
+          "frames": 13,
+          "description": "belt 2 recoil"
+        },
+        {
+          "asset": "/home/falcon/Documents/New project 9/output/kumite-expansion-20261027-audit/belt-six-impacts/art/belt-3a.webp",
+          "sha256": "77030c3d50bf450468c9b61e6530f85b5b2565a82b129ccd0affac4969c16802",
+          "bytes": 2049518,
+          "patchInFrame": 42,
+          "patchOutFrameExclusive": 48,
+          "chapterInFrame": 2622,
+          "chapterOutFrameExclusive": 2628,
+          "frames": 6,
+          "description": "belt 3 contact"
+        },
+        {
+          "asset": "/home/falcon/Documents/New project 9/output/kumite-expansion-20261027-audit/belt-six-impacts/art/belt-3b.webp",
+          "sha256": "40ca38a78310e419096f848b342aceac74b8feafea861b46520d7bc0d2077420",
+          "bytes": 1998478,
+          "patchInFrame": 48,
+          "patchOutFrameExclusive": 62,
+          "chapterInFrame": 2628,
+          "chapterOutFrameExclusive": 2642,
+          "frames": 14,
+          "description": "belt 3 recoil"
+        }
+      ],
+      "audioPayloadPreservedFromPreviousRepair": false,
+      "previousSoloRepairAudioEvidence": {
+        "source": "/home/falcon/.codex/worktrees/kumite-release/New project 9/artifacts/squabblemon/public/assets/kumite/films/story-v2/ep02-belt-check-landscape.mp4",
+        "sourceSHA256": "a3aebecf1e1259d05d72e0af8366e8392c5bd1754dfc000a14d7f0146a6b9252",
+        "sampleRate": 44100,
+        "samples": 4517310,
+        "sceneFrames": [
+          2580,
+          2716
+        ],
+        "originalAudioUnchangedOutsideAdded80msSnaps": true,
+        "sourcePeak": 0.9645265340805054,
+        "mixedPeak": 0.9645265340805054,
+        "limiterOrNormalization": false,
+        "snapSource": "/home/falcon/Documents/New project 9/output/kumite-expansion-20261027-audit/belt-comedy-repair/audio-audit/belt-snap-short-edged.wav",
+        "snapSourceSHA256": "491cb5cf366df0789cfc43c23216fcadd91eb1e5cafac7c8c547c1b0cda43baf",
+        "snapDescription": "Cropped original mixed belt-contact sound, not a source-separated studio foley stem. Existing 3ms/8ms fades retained.",
+        "addedSnaps": [
+          {
+            "chapterFrame": 2585,
+            "chapterSeconds": 86.16666666666667,
+            "gainDb": -12.0,
+            "samples": 3528
+          },
+          {
+            "chapterFrame": 2601,
+            "chapterSeconds": 86.7,
+            "gainDb": -9.0,
+            "samples": 3528
+          }
+        ],
+        "originalCrackClusterRetained": [
+          87.33,
+          87.43,
+          87.6
+        ],
+        "payloadSHA256": "6acafc9493f9768f9896daf2478065424bdbaa8bf5dac20c3cd0b2eaf41c8619",
+        "preservedFromPreviousRepair": true,
+        "reusedAACSource": "/home/falcon/Documents/New project 9/output/kumite-expansion-20261027-audit/belt-comedy-repair/chapter02-repaired-audio.m4a",
+        "reusedAACFileSHA256": "974ef8b10330370215084279b782cb3343bfb07f9da4c3798dd42cd0f5fb9e20",
+        "newSnapsAddedInThisRevision": 0,
+        "audioReencodedInThisRevision": false
+      },
+      "audioPayloadReencodedForAnnouncer": true
+    }
+  ],
+  "announcer": {
+    "record": "kumite-announcer-20261027.json",
+    "cueCount": 45,
+    "voice": "User-supplied Roger recording",
+    "approvedByUser": true,
+    "changedChapters": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      8
+    ],
+    "unchangedChapters": [
+      6,
+      7
+    ],
+    "allPicturePayloadsUnchanged": true,
+    "audioReencoded": true
+  }
+}

@@ -49,6 +49,10 @@ export const criticalSuites = [
   { id: 'story-delivery-contract', files: [
     sourceTest('lib/story/chapterCatalog.test.ts'), `${frontend}/scripts/check-story-delivery.test.mjs`,
   ] },
+  { id: 'kumite-expansion', files: [
+    sourceTest('kumiteExpansion.test.ts'), sourceTest('kumiteClock.test.ts'),
+    'artifacts/api-server/src/lib/kumiteMastery.test.ts',
+  ] },
   { id: 'rookie-guidance', files: ['lib/tutorialVoice.test.ts', 'components/DrFadeWelcome.test.tsx', 'components/tutorialGuidance.test.ts'].map(sourceTest) },
   { id: 'payment-boundaries', files: [
     'artifacts/api-server/src/lib/payments/provider.test.ts',

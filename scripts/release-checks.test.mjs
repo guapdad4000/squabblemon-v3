@@ -24,9 +24,10 @@ function markerGate(dir) { return { id: 'must-not-build', kind: 'command', args:
 
 test('required inventory covers recovery, films and rewards and both builds share the same path', () => {
   const files = new Set(criticalSuites.flatMap(suite => suite.files));
-  for (const file of ['lib/pullPayment.test.ts', 'lib/packJournal.test.ts', 'lib/shopJournal.test.ts', 'lib/shopDestination.test.ts', 'lib/finishCounter.test.ts', 'lib/packGymFilm.test.ts', 'lib/rewardReceipts.test.ts', 'components/MonthlyLoginTrack.test.tsx']) {
+  for (const file of ['lib/pullPayment.test.ts', 'lib/packJournal.test.ts', 'lib/shopJournal.test.ts', 'lib/shopDestination.test.ts', 'lib/finishCounter.test.ts', 'lib/packGymFilm.test.ts', 'lib/rewardReceipts.test.ts', 'components/MonthlyLoginTrack.test.tsx', 'kumiteExpansion.test.ts', 'kumiteClock.test.ts']) {
     assert.ok(files.has(`artifacts/squabblemon/src/${file}`));
   }
+  assert.ok(files.has('artifacts/api-server/src/lib/kumiteMastery.test.ts'));
   for (const file of files) assert.ok(existsSync(path.join(workspaceRoot, file)), `Missing inventoried test ${file}`);
   const local = JSON.parse(readFileSync(path.join(workspaceRoot, 'artifacts/squabblemon/package.json'), 'utf8')).scripts.build;
   assert.equal(local, 'node ../../scripts/release-checks.mjs --build');

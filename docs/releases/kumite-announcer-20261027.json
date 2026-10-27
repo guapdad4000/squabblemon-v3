@@ -1,0 +1,1073 @@
+{
+  "status": "User-approved Roger45 mix installed in the local release candidate; no deployment claim.",
+  "date": "2026-10-27",
+  "approval": {
+    "source": "User approval in current chat, relayed by coordinating agent",
+    "approved": true,
+    "scope": "Frozen45cue Roger mix and all six changed chapters; both orientations"
+  },
+  "frozenCandidateReceipt": {
+    "sha256": "37607951df08d6878fbb986ea195a09f9377aa9685f4c8cb80a777840341339b",
+    "generationStatusPreserved": "REVIEW CANDIDATE ONLY. No product chapter, poster, art, or master modified.",
+    "generationHumanListeningFlag": false,
+    "note": "Frozen candidate metadata predates subsequent user approval and is not rewritten."
+  },
+  "sourceRecording": {
+    "filename": "ElevenLabs_2026-10-27T22_49_25_Roger - Laid-Back, Casual, Resonant_pre_sp100_s50_sb75_v4.mp3",
+    "sha256": "6c5ae0966bf1fb7ea7ce068516d81553b37270a002a168f1135c837a535a9132",
+    "bytes": 2545590,
+    "suppliedByUser": true,
+    "originalArchivedUnmodified": true
+  },
+  "cueCount": 45,
+  "changedChapters": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    8
+  ],
+  "unchangedChapters": [
+    6,
+    7
+  ],
+  "picturePolicy": "Copy existing compressed picture payloads; no new picture encode, frame insertion, recrop, poster or art change.",
+  "cueTiming": {
+    "ANN01\u2013ANN13": {
+      "tempo": 1.0,
+      "pitchPreserving": true
+    },
+    "ANN14\u2013ANN31": {
+      "tempo": 1.12,
+      "pitchPreserving": true
+    },
+    "ANN32\u2013ANN45": {
+      "tempo": 1.08,
+      "pitchPreserving": true
+    },
+    "ANN08": "Complete new phrase at master380.50s in chapter05; old host removed on both sides of04/05 cut.",
+    "anchorShifts": "ANN22 moves3.917s earlier; ANN43 moves2.028s earlier to retain every word within existing picture runtime."
+  },
+  "cues": [
+    {
+      "id": "ANN01",
+      "text": "Welcome back to the Kumite World Tournament!",
+      "chapter": 1,
+      "masterStart": 4.2,
+      "masterEnd": 6.96,
+      "chapterLocalStart": 4.2,
+      "chapterLocalEnd": 6.96,
+      "tempo": 1.0,
+      "processedSHA256": "99aafd571c5e421ab37de568e50acbb795d103a479782c546adfa4097d29e625"
+    },
+    {
+      "id": "ANN02",
+      "text": "Let\u2019s get ready for some blood!",
+      "chapter": 1,
+      "masterStart": 7.44,
+      "masterEnd": 9.46,
+      "chapterLocalStart": 7.44,
+      "chapterLocalEnd": 9.46,
+      "tempo": 1.0,
+      "processedSHA256": "116134df08caaec72fac38da3bd96667680c156f5bc11519e36280004210dfed"
+    },
+    {
+      "id": "ANN03",
+      "text": "Starting off the Kumite, we have our first contenders. The one who talks but never says anything\u2026",
+      "chapter": 2,
+      "masterStart": 68.57,
+      "masterEnd": 74.75,
+      "chapterLocalStart": 0.03666666666666667,
+      "chapterLocalEnd": 6.216666666666667,
+      "tempo": 1.0,
+      "processedSHA256": "cd187a4555d10ad1b1e2466537285b9590116b4250524efbb5bd8c61b770d056"
+    },
+    {
+      "id": "ANN04",
+      "text": "The handsome P. Tang! Versus a last-minute walk-in\u2026 Dragonfly Jones!",
+      "chapter": 2,
+      "masterStart": 76.32,
+      "masterEnd": 82.1,
+      "chapterLocalStart": 7.786666666666667,
+      "chapterLocalEnd": 13.566666666666666,
+      "tempo": 1.0,
+      "processedSHA256": "b8d73ef565d2082483c1ae52908408348409da72bef8885087abbb09bad2afe0"
+    },
+    {
+      "id": "ANN05",
+      "text": "Now, our next two fighters! The Last Dragon, a student of Master Lee\u2014Bruce Leroy!",
+      "chapter": 3,
+      "masterStart": 174.78,
+      "masterEnd": 181.1,
+      "chapterLocalStart": 3.8133333333333335,
+      "chapterLocalEnd": 10.133333333333333,
+      "tempo": 1.0,
+      "processedSHA256": "dd454ccf1dc903ffbb7bc4f6001668d1409bf7a32daf155ec1799c7cc25d6993"
+    },
+    {
+      "id": "ANN06",
+      "text": "Versus the one who came before even his master. The lord of the split\u2026 Franklin Duke!",
+      "chapter": 3,
+      "masterStart": 186.57,
+      "masterEnd": 192.24,
+      "chapterLocalStart": 15.603333333333333,
+      "chapterLocalEnd": 21.273333333333333,
+      "tempo": 1.0,
+      "processedSHA256": "4b9fca074452b7ff1b523ba17cbc3fc8a3e92b4c91f4ce3392580ab981277a7b"
+    },
+    {
+      "id": "ANN07",
+      "text": "Our next two fighters! The flyest of the fly. He don\u2019t take no jive. He fights the man and gives oppression these hands\u2014Undercova Brotha! Versus the hands for hire, the knock-\u2019em-out knuckler, the Fadefather\u2014Bushedo Brown!",
+      "chapter": 4,
+      "masterStart": 282.84,
+      "masterEnd": 297.74,
+      "chapterLocalStart": 2.74,
+      "chapterLocalEnd": 17.64,
+      "tempo": 1.0,
+      "processedSHA256": "4ef1f1f6f500b0c20f1b48deaf0ecdbcdc5de8726d27e41844c5102d6c1cda4d"
+    },
+    {
+      "id": "ANN08",
+      "text": "Our next two fighters\u2014Chonk Lee!",
+      "chapter": 5,
+      "masterStart": 380.5,
+      "masterEnd": 383.0,
+      "chapterLocalStart": 0.06666666666666667,
+      "chapterLocalEnd": 2.566666666666667,
+      "tempo": 1.0,
+      "processedSHA256": "b78469d2daec0d9b27ecca2e3e46bc4a78cf9b6a2023abc9d83f0c07898c8f5d"
+    },
+    {
+      "id": "ANN09",
+      "text": "And Sho\u2019Nuff\u2014the hardest hitter out of Harlem!",
+      "chapter": 5,
+      "masterStart": 390.78,
+      "masterEnd": 393.82,
+      "chapterLocalStart": 10.346666666666666,
+      "chapterLocalEnd": 13.386666666666667,
+      "tempo": 1.0,
+      "processedSHA256": "cbbf0f4fde57b2a10967791b309561158c6effb6eef84b3b375fc4bfe854035b"
+    },
+    {
+      "id": "ANN10",
+      "text": "Our next two fighters! The Y.N. with the Glo. Captain Save-a-Hoe himself\u2014Bruce Leroy!",
+      "chapter": 5,
+      "masterStart": 514.42,
+      "masterEnd": 520.65,
+      "chapterLocalStart": 133.98666666666668,
+      "chapterLocalEnd": 140.21666666666667,
+      "tempo": 1.0,
+      "processedSHA256": "8e96a5a52c1cef036f31a4d71c3040abe83b67f3a7bc554ff1a6e2417b884a58"
+    },
+    {
+      "id": "ANN11",
+      "text": "Versus the belt-swinging, non-singing assassin!",
+      "chapter": 5,
+      "masterStart": 526.76,
+      "masterEnd": 529.58,
+      "chapterLocalStart": 146.32666666666665,
+      "chapterLocalEnd": 149.14666666666668,
+      "tempo": 1.0,
+      "processedSHA256": "1f447ed38d0aec445a559cb312f03ad314c7161c7c9c217f01d58bb992090acc"
+    },
+    {
+      "id": "ANN12",
+      "text": "You see the leather pants\u2014P. Tang!",
+      "chapter": 5,
+      "masterStart": 532.84,
+      "masterEnd": 535.39,
+      "chapterLocalStart": 152.40666666666667,
+      "chapterLocalEnd": 154.95666666666668,
+      "tempo": 1.0,
+      "processedSHA256": "0753f76345c29c731750d78916ac80b4aba357b2700495aaf6413f123aaf9fde"
+    },
+    {
+      "id": "ANN13",
+      "text": "Our next two fighters\u2014Chonk Lee! And the hands for hire, the Fadefather\u2014Bushedo Brown!",
+      "chapter": 5,
+      "masterStart": 594.57,
+      "masterEnd": 601.28,
+      "chapterLocalStart": 214.13666666666666,
+      "chapterLocalEnd": 220.84666666666666,
+      "tempo": 1.0,
+      "processedSHA256": "b4baa8ef80989be4a379db4e0cf64e6e1cb04422a4a580d6e600f90125013fd9"
+    },
+    {
+      "id": "ANN14",
+      "text": "And he comes out swinging! Absolute chaos in the ring!",
+      "chapter": 8,
+      "masterStart": 812.44,
+      "masterEnd": 815.7792916666667,
+      "chapterLocalStart": 4.073333333333333,
+      "chapterLocalEnd": 7.412625,
+      "tempo": 1.12,
+      "processedSHA256": "b979c85c03933deab356cf059349a7b802d4239b86f52b70685668026e9b3c09"
+    },
+    {
+      "id": "ANN15",
+      "text": "Oh, come on! That's got to be a foul!",
+      "chapter": 8,
+      "masterStart": 815.7992916666667,
+      "masterEnd": 817.96,
+      "chapterLocalStart": 7.432625,
+      "chapterLocalEnd": 9.593333333333334,
+      "tempo": 1.12,
+      "processedSHA256": "8dc1747e0cf972371dc7906866008bb439b279f0ec45cd85b512fe7218162da8"
+    },
+    {
+      "id": "ANN16",
+      "text": "Two on one? They're teaming up, and nobody's calling it!",
+      "chapter": 8,
+      "masterStart": 817.98,
+      "masterEnd": 820.9442916666667,
+      "chapterLocalStart": 9.613333333333333,
+      "chapterLocalEnd": 12.577625,
+      "tempo": 1.12,
+      "processedSHA256": "d1aeddeeb548c17ba11f7d9178aad1c75f24b0169fffff0b74f8148c3c603e07"
+    },
+    {
+      "id": "ANN17",
+      "text": "This is getting wild!",
+      "chapter": 8,
+      "masterStart": 820.9642916666667,
+      "masterEnd": 822.2321458333333,
+      "chapterLocalStart": 12.597625,
+      "chapterLocalEnd": 13.865479166666667,
+      "tempo": 1.12,
+      "processedSHA256": "10245d5ca2ad0a07fb308489643e93a5c87edce93d93f03915c4755cfa9b2c5e"
+    },
+    {
+      "id": "ANN18",
+      "text": "Wait\u2014what is he doing?",
+      "chapter": 8,
+      "masterStart": 822.2521458333333,
+      "masterEnd": 823.5110833333333,
+      "chapterLocalStart": 13.885479166666666,
+      "chapterLocalEnd": 15.144416666666666,
+      "tempo": 1.12,
+      "processedSHA256": "74bb5a111e28b9b336ca0977c119ee8f44da59340f668fc4de077f9034f2de53"
+    },
+    {
+      "id": "ANN19",
+      "text": "Is that a belt trick?",
+      "chapter": 8,
+      "masterStart": 823.5310833333333,
+      "masterEnd": 824.620375,
+      "chapterLocalStart": 15.164416666666666,
+      "chapterLocalEnd": 16.253708333333332,
+      "tempo": 1.12,
+      "processedSHA256": "8e552c040031a57fcb3cb103cca2a501d93027db3c673681807e5638ac088b47"
+    },
+    {
+      "id": "ANN20",
+      "text": "I need a new pair of glasses\u2026 or a nap.",
+      "chapter": 8,
+      "masterStart": 824.640375,
+      "masterEnd": 827.0064375,
+      "chapterLocalStart": 16.27370833333333,
+      "chapterLocalEnd": 18.639770833333333,
+      "tempo": 1.12,
+      "processedSHA256": "b21bf975bca00ba8bee708e742a887f9dd61b5dd52ac578cf38605eed681abe8"
+    },
+    {
+      "id": "ANN21",
+      "text": "Definitely a nap.",
+      "chapter": 8,
+      "masterStart": 827.0264375,
+      "masterEnd": 828.0264375,
+      "chapterLocalStart": 18.659770833333333,
+      "chapterLocalEnd": 19.659770833333333,
+      "tempo": 1.12,
+      "processedSHA256": "052ffa3b2887ddb755b089a59b8a295ed492e7618253f83f9505535ce2dea2ad"
+    },
+    {
+      "id": "ANN22",
+      "text": "And here we go! The Golden Glo Hero\u2014the white-shirt fighter\u2014is in the ring!",
+      "chapter": 8,
+      "masterStart": 828.3228541666666,
+      "masterEnd": 832.805,
+      "chapterLocalStart": 19.9561875,
+      "chapterLocalEnd": 24.438333333333333,
+      "tempo": 1.12,
+      "processedSHA256": "3e66ad1c04b1e18760aa1da82519439e728b48a32cfc08226103eee7a62fb4ee"
+    },
+    {
+      "id": "ANN23",
+      "text": "Wait a minute\u2014is that his girlfriend?",
+      "chapter": 8,
+      "masterStart": 832.825,
+      "masterEnd": 834.5303541666667,
+      "chapterLocalStart": 24.458333333333332,
+      "chapterLocalEnd": 26.1636875,
+      "tempo": 1.12,
+      "processedSHA256": "6ac79f3c8041f9eb2fb843f69e42fa6f1756aa8b2bc918fc5e35b8302ee2507c"
+    },
+    {
+      "id": "ANN24",
+      "text": "She's got front-row seats!",
+      "chapter": 8,
+      "masterStart": 834.5503541666667,
+      "masterEnd": 835.9521458333334,
+      "chapterLocalStart": 26.1836875,
+      "chapterLocalEnd": 27.585479166666666,
+      "tempo": 1.12,
+      "processedSHA256": "4e537f77100f3703373afa51d1629d494da72bf8cb41347861c04d0080ec278b"
+    },
+    {
+      "id": "ANN25",
+      "text": "Oh, come on! The headband fighter's already breaking the rules!",
+      "chapter": 8,
+      "masterStart": 835.9721458333333,
+      "masterEnd": 839.2221458333333,
+      "chapterLocalStart": 27.605479166666665,
+      "chapterLocalEnd": 30.855479166666665,
+      "tempo": 1.12,
+      "processedSHA256": "34ceeea30b1529b63c064f26acee053230e83e526e01b8c72e078253357d4e17"
+    },
+    {
+      "id": "ANN26",
+      "text": "No\u2014he lost his belt!",
+      "chapter": 8,
+      "masterStart": 839.2421458333333,
+      "masterEnd": 840.8403541666667,
+      "chapterLocalStart": 30.87547916666667,
+      "chapterLocalEnd": 32.4736875,
+      "tempo": 1.12,
+      "processedSHA256": "0d2154c3ea17d4addaf4028b7b388a42dcb1e11c4dd2100372cec5b59cbae058"
+    },
+    {
+      "id": "ANN27",
+      "text": "The belt trickster\u2014defeated by his own signature prop!",
+      "chapter": 8,
+      "masterStart": 840.8603541666666,
+      "masterEnd": 843.8603541666666,
+      "chapterLocalStart": 32.4936875,
+      "chapterLocalEnd": 35.4936875,
+      "tempo": 1.12,
+      "processedSHA256": "2575e1ed97502e57ef7c422989b791d503ddb94f93b874cf1b5c69d94961e171"
+    },
+    {
+      "id": "ANN28",
+      "text": "That kick had more style than sense!",
+      "chapter": 8,
+      "masterStart": 843.8803541666666,
+      "masterEnd": 845.9428541666666,
+      "chapterLocalStart": 35.5136875,
+      "chapterLocalEnd": 37.5761875,
+      "tempo": 1.12,
+      "processedSHA256": "08b29d6927779c19d12af86e16e56593d7874d1f3a958cac1232078bc43acef6"
+    },
+    {
+      "id": "ANN29",
+      "text": "Looks like our secret agent has some tricks up his sleeve, too!",
+      "chapter": 8,
+      "masterStart": 845.9628541666667,
+      "masterEnd": 848.7396458333334,
+      "chapterLocalStart": 37.5961875,
+      "chapterLocalEnd": 40.37297916666667,
+      "tempo": 1.12,
+      "processedSHA256": "7a2f9a0d485c62bbd7e4af761a3853eb0e53fb9ef21ded3f588bfd4f6ceefc79"
+    },
+    {
+      "id": "ANN30",
+      "text": "What a night! What a tournament!",
+      "chapter": 8,
+      "masterStart": 848.7596458333334,
+      "masterEnd": 850.6971458333334,
+      "chapterLocalStart": 40.39297916666667,
+      "chapterLocalEnd": 42.33047916666667,
+      "tempo": 1.12,
+      "processedSHA256": "8fa2a6092ef9f8b61cf599080e0eb124dcac9fcee11464da51af81da0aa45b61"
+    },
+    {
+      "id": "ANN31",
+      "text": "Stay tuned, folks!",
+      "chapter": 8,
+      "masterStart": 850.7171458333333,
+      "masterEnd": 851.86,
+      "chapterLocalStart": 42.350479166666666,
+      "chapterLocalEnd": 43.49333333333333,
+      "tempo": 1.12,
+      "processedSHA256": "6b8605d4158e45f01c97c644d01b32b9dd6859e379026b3f165742226bb5715f"
+    },
+    {
+      "id": "ANN32",
+      "text": "And we are off! What a start!",
+      "chapter": 8,
+      "masterStart": 881.59,
+      "masterEnd": 883.84925,
+      "chapterLocalStart": 73.22333333333333,
+      "chapterLocalEnd": 75.48258333333334,
+      "tempo": 1.08,
+      "processedSHA256": "96459341025cabd877b821197b294f25f8a0a149eac1b9ac41873c7c5a4a565e"
+    },
+    {
+      "id": "ANN33",
+      "text": "Whoa! Did you see that? The Golden Glo Hero strikes first!",
+      "chapter": 8,
+      "masterStart": 883.9416458333334,
+      "masterEnd": 887.6360833333333,
+      "chapterLocalStart": 75.57497916666667,
+      "chapterLocalEnd": 79.26941666666667,
+      "tempo": 1.08,
+      "processedSHA256": "b2d4fbd7c12eda279451fdb0b780b74e7f608f124920c9d37f5182906543ffd9"
+    },
+    {
+      "id": "ANN34",
+      "text": "Oh\u2014he's got a partner!",
+      "chapter": 8,
+      "masterStart": 887.6960833333334,
+      "masterEnd": 889.0664583333333,
+      "chapterLocalStart": 79.32941666666666,
+      "chapterLocalEnd": 80.69979166666667,
+      "tempo": 1.08,
+      "processedSHA256": "c8c6aa5c2b01a732d0531d58de2ae6008abd28b960451d2901239ad18ecfba46"
+    },
+    {
+      "id": "ANN35",
+      "text": "Looks like the powerful teacher isn't playing fair!",
+      "chapter": 8,
+      "masterStart": 889.1264583333333,
+      "masterEnd": 891.5153541666666,
+      "chapterLocalStart": 80.75979166666667,
+      "chapterLocalEnd": 83.1486875,
+      "tempo": 1.08,
+      "processedSHA256": "69f2ef74195b8d43f81b5e382435993f39bc8c74a1423f10483132488de3df26"
+    },
+    {
+      "id": "ANN36",
+      "text": "Ha! And his cheating partner brings the heat\u2014literally!",
+      "chapter": 8,
+      "masterStart": 891.5753541666667,
+      "masterEnd": 894.7883125,
+      "chapterLocalStart": 83.2086875,
+      "chapterLocalEnd": 86.42164583333333,
+      "tempo": 1.08,
+      "processedSHA256": "841f7ddc87a5a3568042a8446817d1c42e7b325b8c45fdc4ddddb4e77c022ac7"
+    },
+    {
+      "id": "ANN37",
+      "text": "Ooh, smooth! The stylish technician is composed!",
+      "chapter": 8,
+      "masterStart": 894.8483125,
+      "masterEnd": 898.3946041666667,
+      "chapterLocalStart": 86.48164583333333,
+      "chapterLocalEnd": 90.0279375,
+      "tempo": 1.08,
+      "processedSHA256": "d855bb587f7f26fad10280df0a7d11172d68c5a9ad29bbca8e8826422aa408df"
+    },
+    {
+      "id": "ANN38",
+      "text": "Look at those legs go! The acrobatic kicker is unstoppable!",
+      "chapter": 8,
+      "masterStart": 898.4546041666666,
+      "masterEnd": 902.1675625,
+      "chapterLocalStart": 90.0879375,
+      "chapterLocalEnd": 93.80089583333333,
+      "tempo": 1.08,
+      "processedSHA256": "0a07fe74fcaf45224569e308a4c99c11f4828d0119d2ee0432f46f1655636486"
+    },
+    {
+      "id": "ANN39",
+      "text": "It's the belt trickster!",
+      "chapter": 8,
+      "masterStart": 902.2275625,
+      "masterEnd": 903.5794166666667,
+      "chapterLocalStart": 93.86089583333333,
+      "chapterLocalEnd": 95.21275,
+      "tempo": 1.08,
+      "processedSHA256": "fae14fc86b779c28cbd878b18a1b0c4aefec8bf53d2c51af1d28168386fabfb0"
+    },
+    {
+      "id": "ANN40",
+      "text": "Sa da tay! Oh, wait\u2014wrong guy!",
+      "chapter": 8,
+      "masterStart": 903.8240625,
+      "masterEnd": 906.1759166666667,
+      "chapterLocalStart": 95.45739583333334,
+      "chapterLocalEnd": 97.80925,
+      "tempo": 1.08,
+      "processedSHA256": "edb7d77c9ab3ba67292be73c93b02700a19d55868d0e5b455f6719c19dd7f63f"
+    },
+    {
+      "id": "ANN41",
+      "text": "The goofy competitor gives it his all!",
+      "chapter": 8,
+      "masterStart": 906.2359166666666,
+      "masterEnd": 908.3007291666667,
+      "chapterLocalStart": 97.86925,
+      "chapterLocalEnd": 99.9340625,
+      "tempo": 1.08,
+      "processedSHA256": "9b1fb85cc589ebe9a991f70f2b995719a603978f1487ef0375802aeb69847331"
+    },
+    {
+      "id": "ANN42",
+      "text": "What a fight! What a tournament!",
+      "chapter": 8,
+      "masterStart": 908.3607291666667,
+      "masterEnd": 910.3422083333334,
+      "chapterLocalStart": 99.9940625,
+      "chapterLocalEnd": 101.97554166666667,
+      "tempo": 1.08,
+      "processedSHA256": "39c337857e736730c669ba61072181d41c8995a839363fc2f7c0b5c36035d2f4"
+    },
+    {
+      "id": "ANN43",
+      "text": "Whoa! Did you see that? A golden flash!",
+      "chapter": 8,
+      "masterStart": 910.4022083333333,
+      "masterEnd": 913.2540625,
+      "chapterLocalStart": 102.03554166666666,
+      "chapterLocalEnd": 104.88739583333333,
+      "tempo": 1.08,
+      "processedSHA256": "047b1c37488980c876444d685d28c3c5fc871d56b5f68579504681ffc688eff8"
+    },
+    {
+      "id": "ANN44",
+      "text": "Unbelievable speed!",
+      "chapter": 8,
+      "masterStart": 913.3140625,
+      "masterEnd": 914.7862916666667,
+      "chapterLocalStart": 104.94739583333333,
+      "chapterLocalEnd": 106.419625,
+      "tempo": 1.08,
+      "processedSHA256": "dfc4ade1ab3dadf3321aa8f7283dd93b5a1f4e8a5a203d1e9cb0faf39f26c8e8"
+    },
+    {
+      "id": "ANN45",
+      "text": "Okay, okay\u2014that was clean! Very stylish.",
+      "chapter": 8,
+      "masterStart": 914.8462916666666,
+      "masterEnd": 918.05,
+      "chapterLocalStart": 106.479625,
+      "chapterLocalEnd": 109.68333333333334,
+      "tempo": 1.08,
+      "processedSHA256": "722df06b63a5f3a30dfc52285814a58390196bf9e7b0c5a086e33405a8e1b102"
+    }
+  ],
+  "audioMethod": {
+    "source": "Current approved chapter mix, preserving authoredfight and belt Foley",
+    "model": "Existing cached hash-checked local Spleeter2stem ONNX; no download or new voice generation",
+    "bed": "Original minus estimated vocal only inside reviewed host masks,25ms global outer-edge crossfades",
+    "highBand": "Full-band original residual retained rather than substituting low-band accompaniment output",
+    "RogerProcessing": "70Hz high-pass,3:1compression/makeup and peak protection; intros1x and pitch-preserving ending tempo",
+    "combinedPeakProtection": "Only affected audio regions; existing soundtrack outside those regions not globally remastered",
+    "delivery": "New AAC stereo160k encoded once per changed chapter and copied into both picture orientations"
+  },
+  "protectionProof": {
+    "outsideAffectedRegionPCMIdenticalBeforeAAC": true,
+    "protectedBedPCMIdentity": true,
+    "outsideHostMaskBedPCMIdentity": true,
+    "protectedWindows": "Early fighter material, Step your game up, knuckles/power/Bring it, fighterSa-da-tay569.52\u2013570.92,605.94fighteronset,666.02line, approvedbelt154.533\u2013159.067,party/adlib851.90\u2013879.50.",
+    "AACLimitation": "Pre-encode PCM identity does not imply unchanged AAC packets or sample-identical audio after lossy re-encoding.",
+    "trailingAACPadding": "Previous decoder padding removed to each existing nominal chapter samplecount; video frame counts and meaningful tail unchanged."
+  },
+  "validation": {
+    "changedMovieCount": 12,
+    "allChangedPicturesPayloadIdentical": true,
+    "allChapterPairsSameAACPayload": true,
+    "all12FullyDecoded": true,
+    "all16PostersUnchanged": true,
+    "allPublicImagesUnchanged": true,
+    "publicImageFileCount": 2755,
+    "chapters06And07UnchangedBothOrientations": true,
+    "sourceMasterUnmodified": true
+  },
+  "delivery": {
+    "cinemaAnd16PostersBytes": 596882757,
+    "newArtBytes": 20495790,
+    "responsiveArtBytes": 2340444,
+    "totalNewMediaBytes": 619718991,
+    "maxMovieBytes": 94735211,
+    "allMoviesUnder100MB": true
+  },
+  "movies": [
+    {
+      "episode": 1,
+      "asset": "assets/kumite/films/story-v2/ep01-invitation-landscape.mp4",
+      "original": "/home/falcon/.codex/worktrees/kumite-release/New project 9/artifacts/squabblemon/public/assets/kumite/films/story-v2/ep01-invitation-landscape.mp4",
+      "originalSHA256": "6d2058b07498869b1b801b236615ad9029aab9c71fadc6e803f123a87af429ad",
+      "staged": "/home/falcon/Documents/New project 9/output/kumite-expansion-20261027-audit/announcer-recording/roger-import/approved-install-20261027/staged/ep01-invitation-landscape.mp4",
+      "frames": 2056,
+      "width": 1920,
+      "height": 1080,
+      "oldVideoPayloadSHA256": "1c4fd4b156fc6a8616e29046ded1922258f07b5c77b2f41884a23c7a5a6ed291",
+      "approvedAudioPayloadSHA256": "30cd3d453414dd00d27cdd29047098d234690d180c0aac9ce223ccbf9f58c7c5",
+      "frozenCandidateSHA256": "f3ca41f0982319d898b8bbdf6fc7ce0656820f08e92e41b4af77d32cccd68bcd",
+      "approvedAudioFileSHA256": "faa19f087edfa81ff66a36f255ba62b867a5414cf2d469f02ae924b7954306eb",
+      "sha256": "f3ca41f0982319d898b8bbdf6fc7ce0656820f08e92e41b4af77d32cccd68bcd",
+      "bytes": 35879399,
+      "videoPayloadSHA256": "1c4fd4b156fc6a8616e29046ded1922258f07b5c77b2f41884a23c7a5a6ed291",
+      "audioPayloadSHA256": "30cd3d453414dd00d27cdd29047098d234690d180c0aac9ce223ccbf9f58c7c5",
+      "picturePayloadIdentical": true,
+      "fullDecodePassed": true,
+      "decodedVideoFrames": 2056,
+      "faststart": true,
+      "streams": [
+        {
+          "codec_type": "video",
+          "r_frame_rate": "30/1",
+          "start_time": "0.000000",
+          "duration": "68.533333"
+        },
+        {
+          "codec_type": "audio",
+          "r_frame_rate": "0/0",
+          "start_time": "0.000000",
+          "duration": "68.532993"
+        }
+      ],
+      "durationSeconds": 68.533333,
+      "audioDurationSeconds": 68.532993,
+      "audioBitRate": "160827",
+      "decodeElapsedSeconds": 3.8326754570007324
+    },
+    {
+      "episode": 1,
+      "asset": "assets/kumite/films/story-v2/ep01-invitation-portrait.mp4",
+      "original": "/home/falcon/.codex/worktrees/kumite-release/New project 9/artifacts/squabblemon/public/assets/kumite/films/story-v2/ep01-invitation-portrait.mp4",
+      "originalSHA256": "41ba4c20a1d507479a4ede33ece6708141a68aa42535b72b9d0ddf85fbeb1fe9",
+      "staged": "/home/falcon/Documents/New project 9/output/kumite-expansion-20261027-audit/announcer-recording/roger-import/approved-install-20261027/staged/ep01-invitation-portrait.mp4",
+      "frames": 2056,
+      "width": 720,
+      "height": 1280,
+      "oldVideoPayloadSHA256": "67f1f203a77965a3bbbb31e4a5c222e4021f34c0fefc99f93ccde5ee29b1edc3",
+      "approvedAudioPayloadSHA256": "30cd3d453414dd00d27cdd29047098d234690d180c0aac9ce223ccbf9f58c7c5",
+      "frozenCandidateSHA256": "f3ca41f0982319d898b8bbdf6fc7ce0656820f08e92e41b4af77d32cccd68bcd",
+      "approvedAudioFileSHA256": "faa19f087edfa81ff66a36f255ba62b867a5414cf2d469f02ae924b7954306eb",
+      "sha256": "e3b23c2aed3a2caf3fb79d939ca71f702e43c369d2955b5111f601fd992ef024",
+      "bytes": 12806809,
+      "videoPayloadSHA256": "67f1f203a77965a3bbbb31e4a5c222e4021f34c0fefc99f93ccde5ee29b1edc3",
+      "audioPayloadSHA256": "30cd3d453414dd00d27cdd29047098d234690d180c0aac9ce223ccbf9f58c7c5",
+      "picturePayloadIdentical": true,
+      "fullDecodePassed": true,
+      "decodedVideoFrames": 2056,
+      "faststart": true,
+      "streams": [
+        {
+          "codec_type": "video",
+          "r_frame_rate": "30/1",
+          "start_time": "0.000000",
+          "duration": "68.533333"
+        },
+        {
+          "codec_type": "audio",
+          "r_frame_rate": "0/0",
+          "start_time": "0.000000",
+          "duration": "68.532993"
+        }
+      ],
+      "durationSeconds": 68.533333,
+      "audioDurationSeconds": 68.532993,
+      "audioBitRate": "160827",
+      "decodeElapsedSeconds": 1.5115382671356201
+    },
+    {
+      "episode": 2,
+      "asset": "assets/kumite/films/story-v2/ep02-belt-check-landscape.mp4",
+      "original": "/home/falcon/.codex/worktrees/kumite-release/New project 9/artifacts/squabblemon/public/assets/kumite/films/story-v2/ep02-belt-check-landscape.mp4",
+      "originalSHA256": "b8c892783c1ad9a3a027bb6c45a71162fef909be579002da338d3257f8f62269",
+      "staged": "/home/falcon/Documents/New project 9/output/kumite-expansion-20261027-audit/announcer-recording/roger-import/approved-install-20261027/staged/ep02-belt-check-landscape.mp4",
+      "frames": 3073,
+      "width": 1920,
+      "height": 1080,
+      "oldVideoPayloadSHA256": "daa8ea44cadb285a98310c83f58876880a8646ddd29d04cb2687d911ba4ff534",
+      "approvedAudioPayloadSHA256": "8cb7d09e765173d2c961dde93dfbb7d07011ea1240e70cb2897dbc6cca24c51d",
+      "frozenCandidateSHA256": "4b961dc2f9ce1120a9eb4497ff5c7031d7554da14b823aa65bb52c64ee69cd84",
+      "approvedAudioFileSHA256": "89522dd5bd3eb2968dcc73f253aea71d100ae029f6618a9a683cc79c43aea1e5",
+      "sha256": "4b961dc2f9ce1120a9eb4497ff5c7031d7554da14b823aa65bb52c64ee69cd84",
+      "bytes": 53418114,
+      "videoPayloadSHA256": "daa8ea44cadb285a98310c83f58876880a8646ddd29d04cb2687d911ba4ff534",
+      "audioPayloadSHA256": "8cb7d09e765173d2c961dde93dfbb7d07011ea1240e70cb2897dbc6cca24c51d",
+      "picturePayloadIdentical": true,
+      "fullDecodePassed": true,
+      "decodedVideoFrames": 3073,
+      "faststart": true,
+      "streams": [
+        {
+          "codec_type": "video",
+          "r_frame_rate": "30/1",
+          "start_time": "0.000000",
+          "duration": "102.433333"
+        },
+        {
+          "codec_type": "audio",
+          "r_frame_rate": "0/0",
+          "start_time": "0.000000",
+          "duration": "102.432993"
+        }
+      ],
+      "durationSeconds": 102.433333,
+      "audioDurationSeconds": 102.432993,
+      "audioBitRate": "161796",
+      "decodeElapsedSeconds": 5.3387768268585205
+    },
+    {
+      "episode": 2,
+      "asset": "assets/kumite/films/story-v2/ep02-belt-check-portrait.mp4",
+      "original": "/home/falcon/.codex/worktrees/kumite-release/New project 9/artifacts/squabblemon/public/assets/kumite/films/story-v2/ep02-belt-check-portrait.mp4",
+      "originalSHA256": "466f80286bf195823a4991ca2b95d4bf6e36146aca394450d55b6569a3087204",
+      "staged": "/home/falcon/Documents/New project 9/output/kumite-expansion-20261027-audit/announcer-recording/roger-import/approved-install-20261027/staged/ep02-belt-check-portrait.mp4",
+      "frames": 3073,
+      "width": 720,
+      "height": 1280,
+      "oldVideoPayloadSHA256": "8acc2f6abd6740580495cf027a361addaa88d3c90ac1223f1c33e42040fad176",
+      "approvedAudioPayloadSHA256": "8cb7d09e765173d2c961dde93dfbb7d07011ea1240e70cb2897dbc6cca24c51d",
+      "frozenCandidateSHA256": "4b961dc2f9ce1120a9eb4497ff5c7031d7554da14b823aa65bb52c64ee69cd84",
+      "approvedAudioFileSHA256": "89522dd5bd3eb2968dcc73f253aea71d100ae029f6618a9a683cc79c43aea1e5",
+      "sha256": "a3f76b0cdee88115978b4edff3df398bd4cf1521772d8fb5d4607796ddc41d65",
+      "bytes": 20678438,
+      "videoPayloadSHA256": "8acc2f6abd6740580495cf027a361addaa88d3c90ac1223f1c33e42040fad176",
+      "audioPayloadSHA256": "8cb7d09e765173d2c961dde93dfbb7d07011ea1240e70cb2897dbc6cca24c51d",
+      "picturePayloadIdentical": true,
+      "fullDecodePassed": true,
+      "decodedVideoFrames": 3073,
+      "faststart": true,
+      "streams": [
+        {
+          "codec_type": "video",
+          "r_frame_rate": "30/1",
+          "start_time": "0.000000",
+          "duration": "102.433333"
+        },
+        {
+          "codec_type": "audio",
+          "r_frame_rate": "0/0",
+          "start_time": "0.000000",
+          "duration": "102.432993"
+        }
+      ],
+      "durationSeconds": 102.433333,
+      "audioDurationSeconds": 102.432993,
+      "audioBitRate": "161796",
+      "decodeElapsedSeconds": 2.1735494136810303
+    },
+    {
+      "episode": 3,
+      "asset": "assets/kumite/films/story-v2/ep03-find-the-glo-landscape.mp4",
+      "original": "/home/falcon/.codex/worktrees/kumite-release/New project 9/artifacts/squabblemon/public/assets/kumite/films/story-v2/ep03-find-the-glo-landscape.mp4",
+      "originalSHA256": "755b45ef6b5cf81ffca7301abcae2065e7db45942f8a9e0a6d506862dc00c05b",
+      "staged": "/home/falcon/Documents/New project 9/output/kumite-expansion-20261027-audit/announcer-recording/roger-import/approved-install-20261027/staged/ep03-find-the-glo-landscape.mp4",
+      "frames": 3274,
+      "width": 1920,
+      "height": 1080,
+      "oldVideoPayloadSHA256": "6e7e60ec0b3bb25b633ac0a7670537ad33e256f401ecf075535733c2ec08a75a",
+      "approvedAudioPayloadSHA256": "ca25f48f777cd2d057b1aa8a595af4210d68d5ebd8636680c17e5ad056cd771c",
+      "frozenCandidateSHA256": "cb6a4f37206e46ebe6374709dc91e531abb0a73e650922f28e350d997b267320",
+      "approvedAudioFileSHA256": "2a6924f55920cba918299aedc656a8a0635b97b2ed2fc73e6935317395340f77",
+      "sha256": "cb6a4f37206e46ebe6374709dc91e531abb0a73e650922f28e350d997b267320",
+      "bytes": 57252021,
+      "videoPayloadSHA256": "6e7e60ec0b3bb25b633ac0a7670537ad33e256f401ecf075535733c2ec08a75a",
+      "audioPayloadSHA256": "ca25f48f777cd2d057b1aa8a595af4210d68d5ebd8636680c17e5ad056cd771c",
+      "picturePayloadIdentical": true,
+      "fullDecodePassed": true,
+      "decodedVideoFrames": 3274,
+      "faststart": true,
+      "streams": [
+        {
+          "codec_type": "video",
+          "r_frame_rate": "30/1",
+          "start_time": "0.000000",
+          "duration": "109.133333"
+        },
+        {
+          "codec_type": "audio",
+          "r_frame_rate": "0/0",
+          "start_time": "0.000000",
+          "duration": "109.132993"
+        }
+      ],
+      "durationSeconds": 109.133333,
+      "audioDurationSeconds": 109.132993,
+      "audioBitRate": "161630",
+      "decodeElapsedSeconds": 5.804276704788208
+    },
+    {
+      "episode": 3,
+      "asset": "assets/kumite/films/story-v2/ep03-find-the-glo-portrait.mp4",
+      "original": "/home/falcon/.codex/worktrees/kumite-release/New project 9/artifacts/squabblemon/public/assets/kumite/films/story-v2/ep03-find-the-glo-portrait.mp4",
+      "originalSHA256": "9830c3f3aa900e9cbd2d21e05176a98b54841711e3d4cfe7acbf9c67f2ef8d1b",
+      "staged": "/home/falcon/Documents/New project 9/output/kumite-expansion-20261027-audit/announcer-recording/roger-import/approved-install-20261027/staged/ep03-find-the-glo-portrait.mp4",
+      "frames": 3274,
+      "width": 720,
+      "height": 1280,
+      "oldVideoPayloadSHA256": "496c753c2e5cff7f92b7d91ddf7fdb3aed4611a63eecd8261d03d2f2e24b5b86",
+      "approvedAudioPayloadSHA256": "ca25f48f777cd2d057b1aa8a595af4210d68d5ebd8636680c17e5ad056cd771c",
+      "frozenCandidateSHA256": "cb6a4f37206e46ebe6374709dc91e531abb0a73e650922f28e350d997b267320",
+      "approvedAudioFileSHA256": "2a6924f55920cba918299aedc656a8a0635b97b2ed2fc73e6935317395340f77",
+      "sha256": "83f4d3cba3461fe932e68101fb77232f88628071da6c39dd680f9421ac435f2b",
+      "bytes": 22467146,
+      "videoPayloadSHA256": "496c753c2e5cff7f92b7d91ddf7fdb3aed4611a63eecd8261d03d2f2e24b5b86",
+      "audioPayloadSHA256": "ca25f48f777cd2d057b1aa8a595af4210d68d5ebd8636680c17e5ad056cd771c",
+      "picturePayloadIdentical": true,
+      "fullDecodePassed": true,
+      "decodedVideoFrames": 3274,
+      "faststart": true,
+      "streams": [
+        {
+          "codec_type": "video",
+          "r_frame_rate": "30/1",
+          "start_time": "0.000000",
+          "duration": "109.133333"
+        },
+        {
+          "codec_type": "audio",
+          "r_frame_rate": "0/0",
+          "start_time": "0.000000",
+          "duration": "109.132993"
+        }
+      ],
+      "durationSeconds": 109.133333,
+      "audioDurationSeconds": 109.132993,
+      "audioBitRate": "161630",
+      "decodeElapsedSeconds": 2.352412223815918
+    },
+    {
+      "episode": 4,
+      "asset": "assets/kumite/films/story-v2/ep04-courtesy-landscape.mp4",
+      "original": "/home/falcon/.codex/worktrees/kumite-release/New project 9/artifacts/squabblemon/public/assets/kumite/films/story-v2/ep04-courtesy-landscape.mp4",
+      "originalSHA256": "9963e2c2ed48ea5ba09bd424569caeaeb209495ffbce38b24941e07e98397a40",
+      "staged": "/home/falcon/Documents/New project 9/output/kumite-expansion-20261027-audit/announcer-recording/roger-import/approved-install-20261027/staged/ep04-courtesy-landscape.mp4",
+      "frames": 3010,
+      "width": 1920,
+      "height": 1080,
+      "oldVideoPayloadSHA256": "45877dad4392ec1f4ca932d49bb530911d73db7da5c886ac1d5addb37085c353",
+      "approvedAudioPayloadSHA256": "f647927006b870d4d86e0ee21e01da20fddba862ad8a50dc9eae1f05156c9364",
+      "frozenCandidateSHA256": "b7ac36ef2520c808c4ec13e91f70690ce481e8f8602014d9f0921d60557252f9",
+      "approvedAudioFileSHA256": "dec2400be681d2313f69830c5c8c0b627d20ebce2ce392627bce4a7b09e0f8cf",
+      "sha256": "b7ac36ef2520c808c4ec13e91f70690ce481e8f8602014d9f0921d60557252f9",
+      "bytes": 52295892,
+      "videoPayloadSHA256": "45877dad4392ec1f4ca932d49bb530911d73db7da5c886ac1d5addb37085c353",
+      "audioPayloadSHA256": "f647927006b870d4d86e0ee21e01da20fddba862ad8a50dc9eae1f05156c9364",
+      "picturePayloadIdentical": true,
+      "fullDecodePassed": true,
+      "decodedVideoFrames": 3010,
+      "faststart": true,
+      "streams": [
+        {
+          "codec_type": "video",
+          "r_frame_rate": "30/1",
+          "start_time": "0.000000",
+          "duration": "100.333333"
+        },
+        {
+          "codec_type": "audio",
+          "r_frame_rate": "0/0",
+          "start_time": "0.000000",
+          "duration": "100.332993"
+        }
+      ],
+      "durationSeconds": 100.333333,
+      "audioDurationSeconds": 100.332993,
+      "audioBitRate": "162983",
+      "decodeElapsedSeconds": 5.192973852157593
+    },
+    {
+      "episode": 4,
+      "asset": "assets/kumite/films/story-v2/ep04-courtesy-portrait.mp4",
+      "original": "/home/falcon/.codex/worktrees/kumite-release/New project 9/artifacts/squabblemon/public/assets/kumite/films/story-v2/ep04-courtesy-portrait.mp4",
+      "originalSHA256": "0f34468a103c66893527dc28573819a4d8738bdf38c0cfcc7823d0b5d6e45ce6",
+      "staged": "/home/falcon/Documents/New project 9/output/kumite-expansion-20261027-audit/announcer-recording/roger-import/approved-install-20261027/staged/ep04-courtesy-portrait.mp4",
+      "frames": 3010,
+      "width": 720,
+      "height": 1280,
+      "oldVideoPayloadSHA256": "7276419ff5510e9b86f279846fd47d03420a7448635e2df39e866336c65d138a",
+      "approvedAudioPayloadSHA256": "f647927006b870d4d86e0ee21e01da20fddba862ad8a50dc9eae1f05156c9364",
+      "frozenCandidateSHA256": "b7ac36ef2520c808c4ec13e91f70690ce481e8f8602014d9f0921d60557252f9",
+      "approvedAudioFileSHA256": "dec2400be681d2313f69830c5c8c0b627d20ebce2ce392627bce4a7b09e0f8cf",
+      "sha256": "356142568cd78d58aab8246b19b56bc133d9bb7c7f081e1a3bce96c85e99dccf",
+      "bytes": 19647860,
+      "videoPayloadSHA256": "7276419ff5510e9b86f279846fd47d03420a7448635e2df39e866336c65d138a",
+      "audioPayloadSHA256": "f647927006b870d4d86e0ee21e01da20fddba862ad8a50dc9eae1f05156c9364",
+      "picturePayloadIdentical": true,
+      "fullDecodePassed": true,
+      "decodedVideoFrames": 3010,
+      "faststart": true,
+      "streams": [
+        {
+          "codec_type": "video",
+          "r_frame_rate": "30/1",
+          "start_time": "0.000000",
+          "duration": "100.333333"
+        },
+        {
+          "codec_type": "audio",
+          "r_frame_rate": "0/0",
+          "start_time": "0.000000",
+          "duration": "100.332993"
+        }
+      ],
+      "durationSeconds": 100.333333,
+      "audioDurationSeconds": 100.332993,
+      "audioBitRate": "162983",
+      "decodeElapsedSeconds": 2.0996899604797363
+    },
+    {
+      "episode": 5,
+      "asset": "assets/kumite/films/story-v2/ep05-break-the-bracket-landscape.mp4",
+      "original": "/home/falcon/.codex/worktrees/kumite-release/New project 9/artifacts/squabblemon/public/assets/kumite/films/story-v2/ep05-break-the-bracket-landscape.mp4",
+      "originalSHA256": "fbbd525c0a4a72c972f63f1a5891ec6710a99db62d151964d1d27f30aca7b6ae",
+      "staged": "/home/falcon/Documents/New project 9/output/kumite-expansion-20261027-audit/announcer-recording/roger-import/approved-install-20261027/staged/ep05-break-the-bracket-landscape.mp4",
+      "frames": 9339,
+      "width": 1920,
+      "height": 1080,
+      "oldVideoPayloadSHA256": "a54b03eddd0a8564317bcf46f1141aad37092cd55cc30d9665fe8ce3853e6da1",
+      "approvedAudioPayloadSHA256": "243fc022b8983216e9e4152a28fd85f3611cf35e3b2dd6ff114f9673e13d82c3",
+      "frozenCandidateSHA256": "10a8dfb0b18e5c55a9fd220a6469bbdb193b998aa00bb6f4b807a62d9205f3ed",
+      "approvedAudioFileSHA256": "1621bf048580480d8f1efe8f34afb3c6b662a9ee0d88372a518fe9f345299686",
+      "sha256": "10a8dfb0b18e5c55a9fd220a6469bbdb193b998aa00bb6f4b807a62d9205f3ed",
+      "bytes": 94735211,
+      "videoPayloadSHA256": "a54b03eddd0a8564317bcf46f1141aad37092cd55cc30d9665fe8ce3853e6da1",
+      "audioPayloadSHA256": "243fc022b8983216e9e4152a28fd85f3611cf35e3b2dd6ff114f9673e13d82c3",
+      "picturePayloadIdentical": true,
+      "fullDecodePassed": true,
+      "decodedVideoFrames": 9339,
+      "faststart": true,
+      "streams": [
+        {
+          "codec_type": "video",
+          "r_frame_rate": "30/1",
+          "start_time": "0.000000",
+          "duration": "311.300000"
+        },
+        {
+          "codec_type": "audio",
+          "r_frame_rate": "0/0",
+          "start_time": "0.000000",
+          "duration": "311.300000"
+        }
+      ],
+      "durationSeconds": 311.3,
+      "audioDurationSeconds": 311.3,
+      "audioBitRate": "161793",
+      "decodeElapsedSeconds": 12.706786155700684
+    },
+    {
+      "episode": 5,
+      "asset": "assets/kumite/films/story-v2/ep05-break-the-bracket-portrait.mp4",
+      "original": "/home/falcon/.codex/worktrees/kumite-release/New project 9/artifacts/squabblemon/public/assets/kumite/films/story-v2/ep05-break-the-bracket-portrait.mp4",
+      "originalSHA256": "bd997ec94f67c3e9dbafc83cf1b552e7e5ef47405d65b775506b66faf09aad8c",
+      "staged": "/home/falcon/Documents/New project 9/output/kumite-expansion-20261027-audit/announcer-recording/roger-import/approved-install-20261027/staged/ep05-break-the-bracket-portrait.mp4",
+      "frames": 9339,
+      "width": 720,
+      "height": 1280,
+      "oldVideoPayloadSHA256": "fc07b561b33a72da1f6ecff77602f607ea976cd91ffec12e91120ca24892148a",
+      "approvedAudioPayloadSHA256": "243fc022b8983216e9e4152a28fd85f3611cf35e3b2dd6ff114f9673e13d82c3",
+      "frozenCandidateSHA256": "10a8dfb0b18e5c55a9fd220a6469bbdb193b998aa00bb6f4b807a62d9205f3ed",
+      "approvedAudioFileSHA256": "1621bf048580480d8f1efe8f34afb3c6b662a9ee0d88372a518fe9f345299686",
+      "sha256": "e186162fd3af34ee618885a0d585f1366c5c9020d02b98d3cb945d0f29f15956",
+      "bytes": 62220266,
+      "videoPayloadSHA256": "fc07b561b33a72da1f6ecff77602f607ea976cd91ffec12e91120ca24892148a",
+      "audioPayloadSHA256": "243fc022b8983216e9e4152a28fd85f3611cf35e3b2dd6ff114f9673e13d82c3",
+      "picturePayloadIdentical": true,
+      "fullDecodePassed": true,
+      "decodedVideoFrames": 9339,
+      "faststart": true,
+      "streams": [
+        {
+          "codec_type": "video",
+          "r_frame_rate": "30/1",
+          "start_time": "0.000000",
+          "duration": "311.300000"
+        },
+        {
+          "codec_type": "audio",
+          "r_frame_rate": "0/0",
+          "start_time": "0.000000",
+          "duration": "311.300000"
+        }
+      ],
+      "durationSeconds": 311.3,
+      "audioDurationSeconds": 311.3,
+      "audioBitRate": "161793",
+      "decodeElapsedSeconds": 6.2520856857299805
+    },
+    {
+      "episode": 8,
+      "asset": "assets/kumite/films/story-v2/ep08-legends-remain-landscape.mp4",
+      "original": "/home/falcon/.codex/worktrees/kumite-release/New project 9/artifacts/squabblemon/public/assets/kumite/films/story-v2/ep08-legends-remain-landscape.mp4",
+      "originalSHA256": "908fbd33cb46edf1af9fb121432865b092008866e0385a6738425d433a4d4639",
+      "staged": "/home/falcon/Documents/New project 9/output/kumite-expansion-20261027-audit/announcer-recording/roger-import/approved-install-20261027/staged/ep08-legends-remain-landscape.mp4",
+      "frames": 3303,
+      "width": 1920,
+      "height": 1080,
+      "oldVideoPayloadSHA256": "aceec3cf5c708f271eaa6ff348aa2e58bef341b6d684ff7640b2e99838c75a9c",
+      "approvedAudioPayloadSHA256": "5ec24f410ee8169657c3116da35cd25b3fc5d35d9dd49af6c7a7f9bc60e0c1bf",
+      "frozenCandidateSHA256": "ef650bedf2b6be8123064eb84f1e57117fbd56f852f14bd1eb66fe61584bb3db",
+      "approvedAudioFileSHA256": "f5105aa0c95ae68c2a3b784f44b0e7bcfe5371a0e008aa3caf3a50da3662d56c",
+      "sha256": "ef650bedf2b6be8123064eb84f1e57117fbd56f852f14bd1eb66fe61584bb3db",
+      "bytes": 57343089,
+      "videoPayloadSHA256": "aceec3cf5c708f271eaa6ff348aa2e58bef341b6d684ff7640b2e99838c75a9c",
+      "audioPayloadSHA256": "5ec24f410ee8169657c3116da35cd25b3fc5d35d9dd49af6c7a7f9bc60e0c1bf",
+      "picturePayloadIdentical": true,
+      "fullDecodePassed": true,
+      "decodedVideoFrames": 3303,
+      "faststart": true,
+      "streams": [
+        {
+          "codec_type": "video",
+          "r_frame_rate": "30/1",
+          "start_time": "0.000000",
+          "duration": "110.100000"
+        },
+        {
+          "codec_type": "audio",
+          "r_frame_rate": "0/0",
+          "start_time": "0.000000",
+          "duration": "110.100000"
+        }
+      ],
+      "durationSeconds": 110.1,
+      "audioDurationSeconds": 110.1,
+      "audioBitRate": "162980",
+      "decodeElapsedSeconds": 6.058393478393555
+    },
+    {
+      "episode": 8,
+      "asset": "assets/kumite/films/story-v2/ep08-legends-remain-portrait.mp4",
+      "original": "/home/falcon/.codex/worktrees/kumite-release/New project 9/artifacts/squabblemon/public/assets/kumite/films/story-v2/ep08-legends-remain-portrait.mp4",
+      "originalSHA256": "33612a2d60f48b2d97f2d058d2fd3eb19d0ac837f998332311c94eb7a8bb6af2",
+      "staged": "/home/falcon/Documents/New project 9/output/kumite-expansion-20261027-audit/announcer-recording/roger-import/approved-install-20261027/staged/ep08-legends-remain-portrait.mp4",
+      "frames": 3303,
+      "width": 720,
+      "height": 1280,
+      "oldVideoPayloadSHA256": "7c851d31f813483f56f2ab82376e9a42417366728ecc37d4279ab1147a191896",
+      "approvedAudioPayloadSHA256": "5ec24f410ee8169657c3116da35cd25b3fc5d35d9dd49af6c7a7f9bc60e0c1bf",
+      "frozenCandidateSHA256": "ef650bedf2b6be8123064eb84f1e57117fbd56f852f14bd1eb66fe61584bb3db",
+      "approvedAudioFileSHA256": "f5105aa0c95ae68c2a3b784f44b0e7bcfe5371a0e008aa3caf3a50da3662d56c",
+      "sha256": "a913f760b9aee0d9871738570ec447cdd018421e23dc686d71c81749ba7f680f",
+      "bytes": 22095835,
+      "videoPayloadSHA256": "7c851d31f813483f56f2ab82376e9a42417366728ecc37d4279ab1147a191896",
+      "audioPayloadSHA256": "5ec24f410ee8169657c3116da35cd25b3fc5d35d9dd49af6c7a7f9bc60e0c1bf",
+      "picturePayloadIdentical": true,
+      "fullDecodePassed": true,
+      "decodedVideoFrames": 3303,
+      "faststart": true,
+      "streams": [
+        {
+          "codec_type": "video",
+          "r_frame_rate": "30/1",
+          "start_time": "0.000000",
+          "duration": "110.100000"
+        },
+        {
+          "codec_type": "audio",
+          "r_frame_rate": "0/0",
+          "start_time": "0.000000",
+          "duration": "110.100000"
+        }
+      ],
+      "durationSeconds": 110.1,
+      "audioDurationSeconds": 110.1,
+      "audioBitRate": "162980",
+      "decodeElapsedSeconds": 1.9976933002471924
+    }
+  ],
+  "limitations": [
+    "Genericvocal separation is not speaker-specific and may alter overlapping fightergrunts, tonalSFX or music inside oldhost windows; userapproved audition is not proof of isolatedstudio stems.",
+    "Some ending calls shift relative to their originalvisualanchors; approved placements and1.12x/1.08xtempo are explicit.",
+    "Original burned-in source captions retain previouswording and occasional errors.",
+    "This record verifies local installed media and later sourcehash equality; it does not by itself establish a ready deployment."
+  ]
+}

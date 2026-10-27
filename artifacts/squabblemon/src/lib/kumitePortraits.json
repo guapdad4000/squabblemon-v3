@@ -1,0 +1,194 @@
+{
+  "assets/characters/forms/bushedo-brown-awakened.webp": {
+    "asset": "assets/kumite/portraits/characters--forms--bushedo-brown-awakened.webp",
+    "width": 320,
+    "height": 480,
+    "originalWidth": 683
+  },
+  "assets/characters/forms/bushedo-brown-base.webp": {
+    "asset": "assets/kumite/portraits/characters--forms--bushedo-brown-base.webp",
+    "width": 320,
+    "height": 382,
+    "originalWidth": 857
+  },
+  "assets/characters/forms/bushedo-brown-squabble.webp": {
+    "asset": "assets/kumite/portraits/characters--forms--bushedo-brown-squabble.webp",
+    "width": 320,
+    "height": 382,
+    "originalWidth": 857
+  },
+  "assets/characters/forms/chonk-lee-awakened.webp": {
+    "asset": "assets/kumite/portraits/characters--forms--chonk-lee-awakened.webp",
+    "width": 320,
+    "height": 480,
+    "originalWidth": 683
+  },
+  "assets/characters/forms/chonk-lee-base.webp": {
+    "asset": "assets/kumite/portraits/characters--forms--chonk-lee-base.webp",
+    "width": 320,
+    "height": 480,
+    "originalWidth": 683
+  },
+  "assets/characters/forms/chonk-lee-squabble.webp": {
+    "asset": "assets/kumite/portraits/characters--forms--chonk-lee-squabble.webp",
+    "width": 320,
+    "height": 480,
+    "originalWidth": 683
+  },
+  "assets/characters/forms/dragonfly-jones-awakened.webp": {
+    "asset": "assets/kumite/portraits/characters--forms--dragonfly-jones-awakened.webp",
+    "width": 320,
+    "height": 480,
+    "originalWidth": 683
+  },
+  "assets/characters/forms/dragonfly-jones-base.webp": {
+    "asset": "assets/kumite/portraits/characters--forms--dragonfly-jones-base.webp",
+    "width": 320,
+    "height": 480,
+    "originalWidth": 683
+  },
+  "assets/characters/forms/dragonfly-jones-squabble.webp": {
+    "asset": "assets/kumite/portraits/characters--forms--dragonfly-jones-squabble.webp",
+    "width": 320,
+    "height": 480,
+    "originalWidth": 683
+  },
+  "assets/characters/forms/franklin-duke-awakened.webp": {
+    "asset": "assets/kumite/portraits/characters--forms--franklin-duke-awakened.webp",
+    "width": 320,
+    "height": 480,
+    "originalWidth": 683
+  },
+  "assets/characters/forms/franklin-duke-base.webp": {
+    "asset": "assets/kumite/portraits/characters--forms--franklin-duke-base.webp",
+    "width": 320,
+    "height": 480,
+    "originalWidth": 683
+  },
+  "assets/characters/forms/franklin-duke-squabble.webp": {
+    "asset": "assets/kumite/portraits/characters--forms--franklin-duke-squabble.webp",
+    "width": 320,
+    "height": 480,
+    "originalWidth": 683
+  },
+  "assets/characters/forms/leroy-awakened.webp": {
+    "asset": "assets/kumite/portraits/characters--forms--leroy-awakened.webp",
+    "width": 320,
+    "height": 427,
+    "originalWidth": 1086
+  },
+  "assets/characters/forms/leroy-base.webp": {
+    "asset": "assets/kumite/portraits/characters--forms--leroy-base.webp",
+    "width": 320,
+    "height": 427,
+    "originalWidth": 768
+  },
+  "assets/characters/forms/leroy-squabble.webp": {
+    "asset": "assets/kumite/portraits/characters--forms--leroy-squabble.webp",
+    "width": 320,
+    "height": 427,
+    "originalWidth": 768
+  },
+  "assets/characters/forms/p-tang-awakened.webp": {
+    "asset": "assets/kumite/portraits/characters--forms--p-tang-awakened.webp",
+    "width": 320,
+    "height": 471,
+    "originalWidth": 695
+  },
+  "assets/characters/forms/p-tang-base.webp": {
+    "asset": "assets/kumite/portraits/characters--forms--p-tang-base.webp",
+    "width": 320,
+    "height": 471,
+    "originalWidth": 695
+  },
+  "assets/characters/forms/p-tang-squabble.webp": {
+    "asset": "assets/kumite/portraits/characters--forms--p-tang-squabble.webp",
+    "width": 320,
+    "height": 471,
+    "originalWidth": 695
+  },
+  "assets/characters/forms/sho-nuff-awakened.webp": {
+    "asset": "assets/kumite/portraits/characters--forms--sho-nuff-awakened.webp",
+    "width": 320,
+    "height": 427,
+    "originalWidth": 768
+  },
+  "assets/characters/forms/sho-nuff-base.webp": {
+    "asset": "assets/kumite/portraits/characters--forms--sho-nuff-base.webp",
+    "width": 320,
+    "height": 427,
+    "originalWidth": 768
+  },
+  "assets/characters/forms/sho-nuff-squabble.webp": {
+    "asset": "assets/kumite/portraits/characters--forms--sho-nuff-squabble.webp",
+    "width": 320,
+    "height": 427,
+    "originalWidth": 768
+  },
+  "assets/characters/forms/undercova-brotha-awakened.webp": {
+    "asset": "assets/kumite/portraits/characters--forms--undercova-brotha-awakened.webp",
+    "width": 320,
+    "height": 435,
+    "originalWidth": 754
+  },
+  "assets/characters/forms/undercova-brotha-base.webp": {
+    "asset": "assets/kumite/portraits/characters--forms--undercova-brotha-base.webp",
+    "width": 320,
+    "height": 435,
+    "originalWidth": 754
+  },
+  "assets/characters/forms/undercova-brotha-squabble.webp": {
+    "asset": "assets/kumite/portraits/characters--forms--undercova-brotha-squabble.webp",
+    "width": 320,
+    "height": 435,
+    "originalWidth": 754
+  },
+  "assets/cosmetics/bushedo-brown/kumite-alt-v1.webp": {
+    "asset": "assets/kumite/portraits/cosmetics--bushedo-brown--kumite-alt-v1.webp",
+    "width": 320,
+    "height": 480,
+    "originalWidth": 1024
+  },
+  "assets/cosmetics/chonk-lee/kumite-alt-v1.webp": {
+    "asset": "assets/kumite/portraits/cosmetics--chonk-lee--kumite-alt-v1.webp",
+    "width": 320,
+    "height": 480,
+    "originalWidth": 1024
+  },
+  "assets/cosmetics/dragonfly-jones/kumite-alt-v1.webp": {
+    "asset": "assets/kumite/portraits/cosmetics--dragonfly-jones--kumite-alt-v1.webp",
+    "width": 320,
+    "height": 480,
+    "originalWidth": 1024
+  },
+  "assets/cosmetics/franklin-duke/kumite-alt-v1.webp": {
+    "asset": "assets/kumite/portraits/cosmetics--franklin-duke--kumite-alt-v1.webp",
+    "width": 320,
+    "height": 480,
+    "originalWidth": 1024
+  },
+  "assets/cosmetics/leroy/kumite-alt-v1.webp": {
+    "asset": "assets/kumite/portraits/cosmetics--leroy--kumite-alt-v1.webp",
+    "width": 320,
+    "height": 480,
+    "originalWidth": 1024
+  },
+  "assets/cosmetics/p-tang/kumite-alt-v1.webp": {
+    "asset": "assets/kumite/portraits/cosmetics--p-tang--kumite-alt-v1.webp",
+    "width": 320,
+    "height": 480,
+    "originalWidth": 1024
+  },
+  "assets/cosmetics/sho-nuff/kumite-alt-v1.webp": {
+    "asset": "assets/kumite/portraits/cosmetics--sho-nuff--kumite-alt-v1.webp",
+    "width": 320,
+    "height": 480,
+    "originalWidth": 1024
+  },
+  "assets/cosmetics/undercova-brotha/kumite-alt-v1.webp": {
+    "asset": "assets/kumite/portraits/cosmetics--undercova-brotha--kumite-alt-v1.webp",
+    "width": 320,
+    "height": 480,
+    "originalWidth": 1024
+  }
+}

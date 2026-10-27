@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, type ImgHTMLAttributes } from "react";
+import { kumiteArtSources } from "../../lib/kumiteArt";
 import { cardMotionReduced } from "../../lib/cardFinish";
 import "../../styles/kumite-forms.css";
 /** A bounded cross-dissolve only when artwork changes, with intact original-art fallback. */
@@ -12,6 +13,7 @@ export function KumiteFormPortrait({
   stance?: string | null;
 }) {
   const [failed, setFailed] = useState<string | null>(null);
+  const [failedResponsive, setFailedResponsive] = useState<string | null>(null);
   const current = formAsset && failed !== formAsset ? formAsset : src;
   const previous = useRef(current),
     [leaving, setLeaving] = useState<string | undefined>();
@@ -40,6 +42,7 @@ export function KumiteFormPortrait({
         <img
           {...props}
           src={leaving}
+          {...(failedResponsive !== leaving ? kumiteArtSources(leaving, props.sizes ?? "100vw") : {srcSet: undefined})}
           alt=""
           aria-hidden="true"
           className={`${props.className ?? ""} kumite-form-leaving`}
@@ -48,9 +51,14 @@ export function KumiteFormPortrait({
       <img
         {...props}
         src={current}
+        {...(failedResponsive !== current ? kumiteArtSources(current, props.sizes ?? "100vw") : {srcSet: undefined})}
         data-kumite-form={stance ?? undefined}
         className={`${props.className ?? ""} ${leaving ? "kumite-form-entering" : ""}`}
         onError={(e) => {
+          if (failedResponsive !== current && kumiteArtSources(current, "100vw").srcSet) {
+            setFailedResponsive(current ?? null);
+            return;
+          }
           if (formAsset && failed !== formAsset) setFailed(formAsset);
           else props.onError?.(e);
         }}

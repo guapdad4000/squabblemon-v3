@@ -1,3 +1,7 @@
+import { KUMITE_FILMS } from '../../lib/kumiteFilms';
+import { kumiteBracketClock } from '../../lib/kumiteClock';
+import { KUMITE_BOSS_FORMS } from '@workspace/squabblemon-engine/bossRaid';
+import { catalogCardById } from '@workspace/squabblemon-engine/data';
 import { useEffect, useId, useMemo, useRef, useState, type CSSProperties, type KeyboardEvent } from 'react';
 import { Link, useLocation } from 'wouter';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -20,13 +24,9 @@ import '../../styles/kumite.css';
 const tabs = [{ id: 'signup', label: 'Sign up' }, { id: 'bracket', label: 'Bracket' }, { id: 'history', label: 'Past winners' }, { id: 'rules', label: 'Rules' }] as const;
 type KumiteTab = typeof tabs[number]['id'];
 
-const DOJO_RAID_BOSSES = [
-  { id: 'bushedo-brown', name: 'Bushedo Brown', tier: 'T1' },
-  { id: 'p-tang', name: 'P. Tang', tier: 'T2' },
-  { id: 'dragonfly-jones', name: 'Dragonfly Jones', tier: 'T3' },
-  { id: 'chonk-lee', name: 'Chonk Lee', tier: 'T4' },
-  { id: 'sho-nuff', name: "Sho'Nuff", tier: 'T5' },
-] as const;
+const DOJO_RAID_BOSSES = KUMITE_BOSS_FORMS.map(form => ({
+  id: form.fighterId, name: catalogCardById[form.fighterId].name, tier: `T${form.tier}`,
+}));
 
 const BREAK_BRACKET_EPISODES = [
   '01 · The Invitation',
@@ -69,6 +69,7 @@ export function Kumite({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   const archive = useQuery({ queryKey: ['kumite-winners'], queryFn: ({ signal }) => getKumiteWinners(signal), enabled: inside, retry: 1, staleTime: 30000 });
   const current = query.data;
   const tournament = current?.tournament;
+  const bracketClock = kumiteBracketClock(current, clock, query.dataUpdatedAt);
   const nextRegistration = tournament ? kumiteDate(tournament.registrationOpensAt + 7 * 86400000) : '';
   const rulesUpdated = tournament?.status === 'cancelled' && tournament.cancellationReason === 'rules-updated';
   const registration = current?.registration;
@@ -153,22 +154,8 @@ export function Kumite({ bootstrap }: { bootstrap: PlayerBootstrap }) {
           <div className="kumite-hub__telemetry">
             <div className="kumite-hub__clock" aria-label="Next Kumite tournament countdown">
               <span className="kumite-hub__clock-dot" />
-              <small>{tournament?.status === 'active' ? 'LIVE NOW' : 'BRACKET LOCK'}</small>
-              <strong>{(() => {
-                const safeNow = Number.isFinite(now) ? now : Date.now();
-                const parsedStart = tournament?.startsAt ? (typeof tournament.startsAt === 'number' ? tournament.startsAt : Date.parse(String(tournament.startsAt))) : NaN;
-                const target = Number.isFinite(parsedStart) ? parsedStart : (() => {
-                  const d = new Date(safeNow);
-                  const days = (6 - d.getUTCDay() + 7) % 7 || 7;
-                  return Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate() + days, 2, 0, 0);
-                })();
-                const diff = Math.max(0, target - safeNow);
-                const d = Math.floor(diff / 86_400_000);
-                const h = Math.floor((diff % 86_400_000) / 3_600_000);
-                const m = Math.floor((diff % 3_600_000) / 60_000);
-                const s = Math.floor((diff % 60_000) / 1000);
-                return d > 0 ? `${d}D ${String(h).padStart(2, '0')}H ${String(m).padStart(2, '0')}M` : `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
-              })()}</strong>
+              <small>{bracketClock.label}</small>
+              <strong>{query.isError && !current ? 'OFFLINE' : bracketClock.value}</strong>
             </div>
             <div className="kumite-hub__record-strip" aria-label="Your Kumite record">
               <span><b>{current?.progression?.matchWins ?? 0}</b> WINS</span>
@@ -249,7 +236,7 @@ export function Kumite({ bootstrap }: { bootstrap: PlayerBootstrap }) {
             <div className="kumite-mode-card__media">
               <img src={getAssetUrl('assets/kumite/films/v1/unlock-ptang-landscape.webp')} alt="" draggable={false} />
               <span className="kumite-mode-card__badge">
-                <i /> 9 FIGHTERS · 18 FILMS
+                <i /> {current?.progression?.rewards.length ?? 9} REWARDS · {KUMITE_FILMS.length} UNLOCK REELS
               </span>
               <span className="kumite-mode-card__number">04</span>
             </div>

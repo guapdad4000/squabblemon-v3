@@ -9,7 +9,7 @@ export const KUMITE_PUZZLES: readonly (StoryPuzzleDefinition & {
     afterEpisode: 0,
     title: "Tale of the Tape Reach Matrix",
     instruction:
-      "Seed the four bouts from reach gap to mirror guard, then the gold/red angle.",
+      "Sort four scouting comparisons: reach gap, belt range, mirror guard, then gold/red. These cards are not the live bracket draw.",
     imageAssetId: "assets/story/puzzles/kumite/reach-matrix.webp",
     presentation: {
       theme: "kumite",
@@ -19,22 +19,22 @@ export const KUMITE_PUZZLES: readonly (StoryPuzzleDefinition & {
     pieces: [
       {
         id: "quarter-c",
-        label: "Quarterfinal C",
+        label: "Scouting Pair C",
         detail: "Bushedo Brown / Undercova · orthodox mirror",
       },
       {
         id: "quarter-d",
-        label: "Quarterfinal D",
+        label: "Scouting Pair D",
         detail: "Leroy / Sho’Nuff · gold against red",
       },
       {
         id: "quarter-a",
-        label: "Quarterfinal A",
+        label: "Scouting Pair A",
         detail: "Chonk Lee / Dragonfly Jones · widest reach gap",
       },
       {
         id: "quarter-b",
-        label: "Quarterfinal B",
+        label: "Scouting Pair B",
         detail: "Franklin Duke / P. Tang · power against belt range",
       },
     ],
@@ -387,7 +387,7 @@ export const KUMITE_PUZZLES: readonly (StoryPuzzleDefinition & {
     afterEpisode: 6,
     title: "Qi Waveform Synchronizer",
     instruction:
-      "Align breath, crest, descent, trough and release with the 12:57 film cue.",
+      "Order the five waveform cues. 12:57 marks the Glo moment on the full tournament clock; this chapter has its own timer.",
     imageAssetId: "assets/story/puzzles/kumite/qi-waveform.webp",
     presentation: {
       theme: "kumite",
@@ -407,7 +407,7 @@ export const KUMITE_PUZZLES: readonly (StoryPuzzleDefinition & {
       },
       {
         id: "release",
-        label: "Release · 12:57",
+        label: "Release · Gold Frame",
         detail: "Land on the gold impact marker.",
       },
       {

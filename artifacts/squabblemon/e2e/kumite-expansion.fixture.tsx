@@ -1,3 +1,6 @@
+import { Kumite } from '../src/pages/game/Kumite';
+import '../src/styles/venue.css';
+import '../src/pages/game/gameStyles';
 import { CardInspector } from "../src/components/CardInspector";
 import { cards, type Card } from "../src/data";
 import React, { useState } from "react";
@@ -36,6 +39,15 @@ import { getAssetUrl } from "../src/lib/assets";
 import "../src/index.css";
 import "../src/styles/kumite.css";
 import "./kumite-expansion.fixture.css";
+// Component review must never submit to a signed-in player's real API.
+const reviewFetch = window.fetch.bind(window);
+window.fetch = async (input, init) => {
+  const url = new URL(input instanceof Request ? input.url : String(input), location.origin);
+  if (url.pathname === '/api/kumite/current' && (init?.method ?? (input instanceof Request ? input.method : 'GET')) === 'GET') return Response.json(hubCurrent);
+  if (url.pathname === '/api/kumite/winners' && (init?.method ?? (input instanceof Request ? input.method : 'GET')) === 'GET') return Response.json({ winners: [], serverTime: Date.now() });
+  if (url.pathname.startsWith('/api/')) return Response.json({ error: 'Local component preview. No live saves or rewards.' }, { status: 403 });
+  return reviewFetch(input, init);
+};
 const crew = engineIdsToCatalogIds(decks.find((d) => d.id === "block")!.cards);
 const bootstrap = {
   profile: {
@@ -56,14 +68,17 @@ const progression = {
   completedMatches: 2,
   matchWins: 1,
   championships: 0,
-  rewards: KUMITE_CARD_REWARDS.map((r) => ({
-    ...r,
-    name: catalogCardById[r.cardId].name,
-    rarity: catalogCardById[r.cardId].rarity,
-    owned: false,
-    claimed: false,
-    progress: 1,
-  })),
+  rewards: KUMITE_CARD_REWARDS.map((r) => {
+    const progress = r.metric === "completedMatches" ? 2 : r.metric === "matchWins" ? 1 : 0;
+    return {
+      ...r,
+      name: catalogCardById[r.cardId].name,
+      rarity: catalogCardById[r.cardId].rarity,
+      owned: bootstrap.profile.ownedCardIds.includes(r.cardId),
+      claimed: progress >= r.required,
+      progress,
+    };
+  }),
   mastery: KUMITE_FIGHTERS.map((cardId) => ({
     cardId,
     variantId: kumiteAltId(cardId),
@@ -74,21 +89,21 @@ const progression = {
     quests: [
       {
         id: cardId + "-sweep",
-        label: "WIN · 3 DISTRICTS",
+        label: "WEEKLY SWEEP · 3 DISTRICTS",
         styleShards: 20,
         complete: false,
         claimed: false,
       },
       {
         id: cardId + "-damage",
-        label: "35+ DAMAGE · TIER 3+",
+        label: "DOJO · 35+ TOTAL DAMAGE · TIER 3+",
         styleShards: 20,
         complete: false,
         claimed: false,
       },
       {
         id: cardId + "-glo",
-        label: "AWAKEN · 10+ HANDS",
+        label: "DOJO · REACH 10+ HANDS",
         styleShards: 20,
         complete: false,
         claimed: false,
@@ -96,6 +111,8 @@ const progression = {
     ],
   })),
 };
+const hubNow = Date.now();
+const hubCurrent = { serverTime: hubNow, tournament: { id:'local-review-week', weekLabel:'LOCAL REVIEW', status:'registration', registrationOpensAt:hubNow-86400000, startsAt:hubNow+3*86400000, endsAt:hubNow+4*86400000, capacity:8, poolCount:1, poolSize:8, entrants:[], pools:[], finals:[], champion:null }, registration:null, currentMatch:null, rules:{roundHours:24,turnSeconds:120}, progression, records:{scope:'LOCAL REVIEW', fastestFight:null, recentWinners:[], handThrowers:[]} };
 function Review() {
   const [inspect, setInspect] = useState<Card | null>(null);
   const [view, setView] = useState("Forms"),
@@ -138,6 +155,7 @@ function Review() {
         </small>
         <nav>
           {[
+            "Hub",
             "Forms",
             "Titles",
             "Puzzles",
@@ -157,6 +175,7 @@ function Review() {
         </nav>
       </header>
       <main className="expansion-review-stage">
+        {view === "Hub" && <Kumite bootstrap={bootstrap} />}
         {view === "Forms" && (
           <>
             <div className="expansion-toolbar">
@@ -282,7 +301,7 @@ function Review() {
             </div>
           </div>
         )}
-        {view === "Roadmap" && <KumiteRewards progression={progression} />}
+        {view === "Roadmap" && <KumiteRewards progression={progression} bootstrap={bootstrap} />}
         {view === "Practice" && (
           <KumiteDojoPractice
             bootstrap={bootstrap}
@@ -294,7 +313,7 @@ function Review() {
       {puzzle && (
         <StoryPuzzle
           puzzle={puzzle}
-          nodeId={puzzle.id.replace("kumite-puzzle-", "kumite-training-")}
+          nodeId={puzzle.id}
           onClose={() => setPuzzle(null)}
           onCompleted={() => setPuzzle(null)}
         />

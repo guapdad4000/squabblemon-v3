@@ -45,19 +45,19 @@ export function kumiteMastery(
       quests: [
         quest(
           "sweep",
-          "WIN · 3 DISTRICTS",
+          "WEEKLY SWEEP · 3 DISTRICTS",
           wins.some((r) => r.reward.kumite?.sweep === true),
         ),
         quest(
           "boss-damage",
-          "35+ DAMAGE · TIER 3+",
+          "DOJO · 35+ TOTAL DAMAGE · TIER 3+",
           personal.some(
             (r) => r.phase !== "active" && r.bossTier >= 3 && r.score >= 35,
           ),
         ),
         quest(
           "glo",
-          "AWAKEN · 10+ HANDS",
+          "DOJO · REACH 10+ HANDS",
           personal.some((r) =>
             r.blasts.some((b) =>
               b.boards

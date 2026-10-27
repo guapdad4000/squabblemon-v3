@@ -710,3 +710,13 @@
 }
 
 .story-atlas__rewards-art{height:150px;flex-shrink:0;background-size:cover;background-position:center 40%;border-bottom:1px solid #d6b06b55}.story-reward-explainer{font-size:12px;line-height:1.6;color:#d4cec2;margin:0 0 14px}.story-reward-stop{display:grid;width:100%;gap:5px;text-align:left;padding:14px;margin-bottom:10px;background:#111b26;border:1px solid #c5a36c55;color:#faf0dc}.story-reward-stop span{font:700 10px monospace;text-transform:uppercase;letter-spacing:.1em;color:#ebc777}.story-reward-stop strong{font-size:17px}.story-reward-stop small{line-height:1.6;color:#d5d9df}.story-reward-stop:disabled{opacity:.5;cursor:not-allowed}
+
+/* The one-chapter Kumite special keeps the map usable on short landscape screens. */
+@media(max-height:520px) and (orientation:landscape){
+ .kumite-atlas .story-atlas__header{padding:4px 12px;flex-shrink:0}
+ .kumite-atlas .story-title,.kumite-atlas .chapter-passes__toolbar{display:none}
+ .kumite-atlas .chapter-passes__strip{padding-block:2px}
+ .kumite-atlas .chapter-pass{min-height:62px;max-width:270px}
+ .kumite-atlas .chapter-pass__body{padding:6px;gap:3px}
+ .kumite-atlas .chapter-pass__body>strong{font-size:12px}
+}

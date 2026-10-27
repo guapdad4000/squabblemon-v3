@@ -83,10 +83,11 @@ export function KumiteCrewActions({
       {crew && owned && (
         <small>
           {crew.cardIds.includes(cardId)
-            ? `ALREADY IN ${crew.name}`
-            : `REPLACES ${catalogCardById[replacing ?? ""]?.name ?? replacing} · ${crew.name}`}
+            ? `In ${crew.name}`
+            : `${crew.name} · swaps ${catalogCardById[replacing ?? ""]?.name ?? replacing}`}
         </small>
       )}
+      {owned && crew && (
       <button
         disabled={!owned || !crew || save.isPending}
         onClick={() => void equip()}
@@ -96,17 +97,18 @@ export function KumiteCrewActions({
             : crew?.name
         }
       >
-        {save.isPending ? "SAVING…" : "EQUIP TO ACTIVE CREW"}
+        {save.isPending ? "SAVING…" : "EQUIP FIGHTER"}
       </button>
+      )}
       {owned && crew ? (
         <Link
           href={`/game/challenges?game=punch-on-patrol&raid=kumite&practice=${encodeURIComponent(cardId)}`}
         >
-          TEST STANCE · DOJO
+          TEST IN DOJO
         </Link>
       ) : (
-        <Link href="/game/decks">
-          {owned ? "CHOOSE A TEN-CARD CREW" : "UNLOCK FIGHTER FIRST"}
+        <Link href={owned ? "/game/decks" : "/game/challenges?game=punch-on-patrol&raid=kumite"}>
+          {owned ? "CHOOSE CREW" : "TRAIN TO UNLOCK"}
         </Link>
       )}
       {message && <span role="status">{message}</span>}

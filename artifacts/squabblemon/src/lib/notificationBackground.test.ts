@@ -17,6 +17,7 @@ test('real notification queries stop automatic work in battle/hidden, refresh on
     reads.push(`${accountId}:${path}`);
     const body = path.endsWith('/mail') ? { messages: [{ id: `mail-${accountId}`, title: accountId, body: '', sender: '', sentAt: '', readAt: null, claimedAt: null, gift: { softCurrency: 0, packTickets: 0, styleShards: 0 } }] }
       : path.endsWith('/daily-clout') ? { date: 'today', available: true, amount: 50, attemptsRemaining: 1, resetsAt: '' }
+      : path.endsWith('/boss-raid?mode=kumite') ? { day: 'today', attemptsRemaining: 2, campaign: { completed: false } }
       : path.endsWith('/account') ? { date: 'today', pending: [], growth: { ready: false } }
       : { state: 'not-ready' };
     return Response.json(body);
@@ -43,12 +44,16 @@ test('real notification queries stop automatic work in battle/hidden, refresh on
   let inBattle = false;
   try {
     await act(async () => { renderer = create(tree(accountId)); await flush(); });
-    assert.equal(reads.length, 6, 'five notification reads plus bootstrap');
+    assert.equal(reads.length, 7, 'six notification reads including Dojo, plus bootstrap');
+    assert.equal(reads.filter(path => path.endsWith('/boss-raid?mode=kumite')).length, 1, 'Dojo reminder shares one initial status read');
+    await act(async () => { await flush(); });
+    assert.equal(current!.dojo.data?.attemptsRemaining, 2);
+    assert.ok(client.getQueryData(['boss-raid', accountId, 'kumite']), 'Dojo status uses the account-bound raid query key');
     const initial = reads.length;
     await act(async () => { t.mock.timers.tick(30000); await flush(); });
     await act(async () => { t.mock.timers.tick(30000); await flush(); });
     const menuPollsPerMinute = reads.length - initial;
-    assert.equal(menuPollsPerMinute, 5, 'five narrow notification reads per minute; bootstrap uses its five-minute window');
+    assert.equal(menuPollsPerMinute, 6, 'six narrow notification reads per minute; bootstrap uses its five-minute window');
     assert.equal(reads.filter(path => path.endsWith('/player/bootstrap')).length, 1, 'no bootstrap poll in the first minute');
     const beforeBootstrapWindow = reads.filter(path => path.endsWith('/player/bootstrap')).length;
     await act(async () => { for (let i = 0; i < 8; i++) { t.mock.timers.tick(30000); await flush(); } });
@@ -61,7 +66,7 @@ test('real notification queries stop automatic work in battle/hidden, refresh on
     assert.equal(writes.length, 1);
     assert.deepEqual(client.getQueryData(['notification-receipts', accountId]), { ids: ['receipt-in-battle'], saved: true });
     await act(async () => { setBattleActive(false); inBattle = false; await flush(); });
-    assert.equal(reads.length - beforeBattle, 6, 'each optional query and bootstrap refreshes once on return');
+    assert.equal(reads.length - beforeBattle, 7, 'each optional query and bootstrap refreshes once on return');
     document.visibilityState = 'hidden';
     await act(async () => { document.dispatchEvent(new Event('visibilitychange')); await flush(); });
     const beforeHidden = reads.length;
@@ -70,11 +75,12 @@ test('real notification queries stop automatic work in battle/hidden, refresh on
     accountId = 'account-b';
     await act(async () => { renderer!.update(tree(accountId)); await flush(); });
     assert.equal(current!.mail.data, undefined, 'new account cannot see old account mail');
+    assert.equal(current!.dojo.data, undefined, 'new account cannot see old account Dojo attempts');
     assert.equal(client.getQueryData(['notification-receipts', accountId]), undefined);
     assert.equal(reads.length, beforeHidden, 'hidden account switch must not start optional reads');
     document.visibilityState = 'visible';
     await act(async () => { document.dispatchEvent(new Event('visibilitychange')); await flush(); });
-    assert.equal(reads.length - beforeHidden, 6);
+    assert.equal(reads.length - beforeHidden, 7);
     await act(async () => { await flush(); });
     assert.equal(current!.mail.data?.messages[0].id, 'mail-account-b');
     assert.equal(client.getQueryData(['player-mail', 'account-a']) !== undefined, true, 'old cache remains namespaced');
@@ -82,7 +88,7 @@ test('real notification queries stop automatic work in battle/hidden, refresh on
     const beforeUnmount = reads.length;
     await act(async () => { t.mock.timers.tick(120000); await flush(); });
     assert.equal(reads.length, beforeUnmount);
-    t.diagnostic(JSON.stringify({ baselineScheduledPerMinute: menuPollsPerMinute, bootstrapRefreshMs: 300000, battleScheduledIn120Seconds: 0, hiddenScheduledIn120Seconds: 0, resumeReads: 6, receiptWritesInBattle: writes.length }));
+    t.diagnostic(JSON.stringify({ baselineScheduledPerMinute: menuPollsPerMinute, bootstrapRefreshMs: 300000, battleScheduledIn120Seconds: 0, hiddenScheduledIn120Seconds: 0, resumeReads: 7, receiptWritesInBattle: writes.length }));
   } finally {
     if (inBattle) setBattleActive(false);
     client.clear();

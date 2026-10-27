@@ -111,3 +111,8 @@
 .house-movie__title-art{width:clamp(160px,28vw,430px);height:100px;object-fit:contain;object-position:left center}
 @media(max-width:600px){.house-movie__title-art{height:65px;width:180px}.house-movie__title-slash>span{font-size:8px}}
 @media(prefers-reduced-motion:reduce){.house-movie__hud-top,.house-movie__hud-bottom{transition:none}}
+
+/* Preserve the entire fight frame on phones, tablets and wide cinema displays. */
+.house-movie--kumite .house-movie__screen video { object-fit: contain; }
+.house-movie--kumite .house-movie__hud-actions button,
+.house-movie--kumite .house-movie__hud-bottom button { min-width:44px; min-height:44px; }
