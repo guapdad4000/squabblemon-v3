@@ -19,7 +19,7 @@ Status: implemented and verified locally; not pushed or deployed. The older prim
 
 The user authorized built-in image generation in place of unavailable Imagen. No OpenArt jobs or credits were used. Art follows the existing cel-shaded arcade/anime references: heavy ink, restrained gold/crimson, identifiable character outfits, fists and no crown emblems. Generated masters remain outside Git; optimized WebP derivatives ship in `public/assets`.
 
-71 accepted art sets produce 131 WebP delivery files: 10 manual plates, 14 alpha lockups, 24 form plates, 8 alternate plates, and 15 sprite sets. Each sprite set includes its six-frame 960 ms idle loop plus a still and three attack poses. The generated review `media-manifest.json` records dimensions, alpha, frame count, bytes, delivery SHA-256 and source SHA-256. The local art ledger retains master provenance. Delivery totals approximately 22 MB, loaded by the relevant scene rather than eagerly at login.
+71 art sets produce 131 WebP delivery files: 10 manual plates, 14 alpha lockups, 24 form plates, 8 alternate plates, and 15 sprite sets. Each sprite set includes its six-frame 960 ms idle loop plus a still and three attack poses. The generated review `media-manifest.json` records dimensions, alpha, frame count, bytes, delivery SHA-256 and source SHA-256. The local art ledger retains master provenance. Delivery totals approximately 20.7 MB, loaded by the relevant scene rather than eagerly at login.
 
 The Glo plate deliberately has no baked node circles: seven HTML nodes and their current-order trace provide an exact seven-node instrument at every viewport. Three generated sprite atlases were corrected to remove unwanted sparring partners before acceptance. Tiny disconnected atlas bleed was cleaned during delivery extraction; character poses and weapons remain intact.
 
@@ -90,6 +90,10 @@ Engine source is in `lib/squabblemon-engine/src`. Client source is in `artifacts
 - New art was inspected through contact sheets, full plates, sprite phases and the component review. Animated delivery verifies six frames, transparency and the three pose derivatives for all fifteen sets.
 
 Re-run `pnpm test:kumite-expansion` for the focused source tests plus owned native database suite. Native PostgreSQL must be installed and the runner must execute as an unprivileged user; `KUMITE_POSTGRES_BIN` can point to the installed binaries. The suite refuses a caller-provided `DATABASE_URL`. `scripts/database-test-tiers.mjs` registers this required native suite so the embedded runner cannot silently omit it.
+
+## Fighter form art revision 2
+
+The 24 form plates were revised after review: 23 new dynamic-pose illustrations and the restored original Leroy Golden Glow. See [form art direction](kumite-form-art-direction.md). All 107 approved non-form delivery files are hash-identical. The form set is 18.2% smaller; 14 focused checks and six local phone/desktop form views passed. Runtime source remains unchanged in this artwork revision.
 
 ## Release boundary
 
