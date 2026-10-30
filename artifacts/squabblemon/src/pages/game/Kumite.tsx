@@ -1,3 +1,6 @@
+import { isBreakthroughPublicEntryEnabled } from '@workspace/squabblemon-engine/breakthroughRelease';
+import breakthroughScene from '../../components/breakthrough/assets/dojo-landscape.webp';
+import breakthroughImpact from '../../components/breakthrough/assets/progression/breach-fx.webp';
 import { KUMITE_FILMS } from '../../lib/kumiteFilms';
 import { kumiteBracketClock } from '../../lib/kumiteClock';
 import { KUMITE_BOSS_FORMS } from '@workspace/squabblemon-engine/bossRaid';
@@ -20,6 +23,7 @@ import { KumiteScoreboard } from '../../components/kumite/KumiteScoreboard';
 import { KumiteRewards } from '../../components/kumite/KumiteRewards';
 import { KumiteArena } from '../../components/kumite/KumiteArena';
 import '../../styles/kumite.css';
+import '../../styles/kumite-breakthrough-entry.css';
 
 const tabs = [{ id: 'signup', label: 'Sign up' }, { id: 'bracket', label: 'Bracket' }, { id: 'history', label: 'Past winners' }, { id: 'rules', label: 'Rules' }] as const;
 type KumiteTab = typeof tabs[number]['id'];
@@ -166,6 +170,12 @@ export function Kumite({ bootstrap }: { bootstrap: PlayerBootstrap }) {
         </header>
 
         <div className="kumite-mode-grid">
+          {isBreakthroughPublicEntryEnabled() && (
+            <article className="kumite-mode-card kumite-mode-card--breakthrough" data-mode="breakthrough">
+              <div className="kumite-mode-card__media"><img src={breakthroughScene} alt="" draggable={false} /><img className="kumite-mode-card__chibi" src={breakthroughImpact} alt="" draggable={false} /><span className="kumite-mode-card__badge kumite-mode-card__badge--gold"><i /> THREE LANES · TWO BREACHES</span></div>
+              <div className="kumite-mode-card__body"><span className="kumite-mode-card__eyebrow">CPU PRACTICE · BRING YOUR DECK</span><h2>BREAK<em>THROUGH</em></h2><div className="kumite-entry__actions"><Link className="kumite-button" href="/game/kumite/breakthrough">Play Breakthrough<ArrowRight size={18} aria-hidden="true" /></Link></div></div>
+            </article>
+          )}
           <article className="kumite-mode-card kumite-mode-card--tournament" data-mode="tournament">
             <div className="kumite-mode-card__media">
               <img src={getAssetUrl('assets/kumite/layers/backdrop.webp')} alt="" draggable={false} />

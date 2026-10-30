@@ -5,6 +5,7 @@ import { catalogCardById } from '@workspace/squabblemon-engine/data';
 import { avatarSticker } from '@workspace/squabblemon-engine/cosmetics';
 import { CharacterSticker } from '../CharacterBanner';
 import { getCardImage } from '../../lib/assets';
+import { battlePortraitUrl } from '../../lib/battlePortrait';
 import '../../styles/player-avatar.css';
 
 export function catalogPortrait(id: string) {
@@ -20,8 +21,8 @@ export function profilePortrait(profile: PlayerBootstrap['profile']) {
 }
 
 /** The text fallback remains usable even when every illustration request fails. */
-export function FighterPortrait({ cardId = 'cornball', avatarKey, name, decorative = false }: {
-  cardId?: string; avatarKey?: string; name: string; decorative?: boolean;
+export function FighterPortrait({ cardId = 'cornball', avatarKey, name, decorative = false, battleArtwork = false }: {
+  cardId?: string; avatarKey?: string; name: string; decorative?: boolean; battleArtwork?: boolean;
 }) {
   const [failedSource, setFailedSource] = useState('');
   const sticker = avatarSticker(avatarKey);
@@ -29,7 +30,8 @@ export function FighterPortrait({ cardId = 'cornball', avatarKey, name, decorati
     role={decorative ? undefined : 'img'} aria-label={decorative ? undefined : `${name} avatar`} aria-hidden={decorative || undefined}>
     <CharacterSticker id={sticker.sticker.id} decorative />
   </div>;
-  const src = getCardImage(catalogPortrait(avatarKey ?? '')?.catalogId ?? cardId);
+  const original = getCardImage(catalogPortrait(avatarKey ?? '')?.catalogId ?? cardId);
+  const src = battleArtwork ? battlePortraitUrl(original) : original;
   const failed = failedSource === src;
   return <div className="fighter-portrait" aria-hidden={decorative || undefined}>
     {failed ? <div className="fighter-portrait__fallback">

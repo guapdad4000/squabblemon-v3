@@ -5,7 +5,17 @@ export const STREET_LEGENDS_MAIL_ID = 'patch_1-11_b096c134b668c19b';
 
 export const COLLECTOR_V2_MAIL_ID = 'patch_1-14_69828231cb667d04';
 
+/** Server makePatchLetter identity for version 1.15; changing copy never creates another grant. */
+export const KUMITE_BREAKTHROUGH_MAIL_ID = 'patch_1-15_9f0e787f95cbd2f6';
+
 export function getMailEventPresentation(mailId: string) {
+  if (mailId === KUMITE_BREAKTHROUGH_MAIL_ID) return {
+    bannerAssetId: 'assets/events/kumite-breakthrough-patch-1-15.webp',
+    bannerSmallAssetId: 'assets/events/kumite-breakthrough-patch-1-15-small.webp',
+    bannerAlt: 'Kumite Breakthrough Beta: three lanes, real-time Motion and a two-hit base.',
+    href: '/game/events?patch=1.15',
+    actionLabel: 'Read Breakthrough rules & release info',
+  };
   if (mailId === COLLECTOR_V2_MAIL_ID) return {
     bannerAssetId: 'assets/events/collector-v2-patch-1-14.webp',
     bannerSmallAssetId: 'assets/events/collector-v2-patch-1-14-small.webp',

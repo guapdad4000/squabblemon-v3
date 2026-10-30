@@ -1,0 +1,345 @@
+.bt-arena .bt-finish {
+  align-items: safe center;
+  overscroll-behavior: contain;
+  color: #29180e;
+  background: #21160f;
+  animation: none;
+}
+
+/* Results own this backdrop; the board and center scroll keep their layers. */
+.bt-arena .bt-finish .bt-result-courts {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.bt-result-courts::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 50% 53%, #0c09064d, transparent 65%),
+    linear-gradient(#0c090633, transparent 24% 76%, #0c090655);
+}
+
+.bt-arena .bt-finish .bt-result-court {
+  position: absolute;
+  inset-block: 0;
+  width: 60%;
+  overflow: hidden;
+  opacity: 0.86;
+  filter: brightness(0.78) saturate(0.78);
+}
+
+.bt-result-court-you {
+  left: 0;
+  clip-path: polygon(0 0, 100% 0, 70% 100%, 0 100%);
+  --bt-court-light: #ffe4a5;
+}
+
+.bt-result-court-opps {
+  right: 0;
+  clip-path: polygon(30% 0, 100% 0, 100% 100%, 0 100%);
+  --bt-court-light: #ff7957;
+}
+
+.bt-arena .bt-finish .bt-result-court[data-winning="true"] {
+  opacity: 1;
+  filter: brightness(1.06) saturate(1.04);
+}
+
+.bt-result-court[data-winning="true"]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    164deg,
+    transparent 20%,
+    color-mix(in srgb, var(--bt-court-light) 17%, transparent) 21% 46%,
+    transparent 47%
+  );
+}
+
+.bt-arena .bt-finish-draw .bt-result-court {
+  opacity: 0.88;
+  filter: brightness(0.82) saturate(0.82);
+}
+
+.bt-arena .bt-finish .bt-result-court > .km-match-media {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.bt-arena .bt-finish .bt-result-court > .km-match-media[hidden] {
+  display: none;
+}
+
+.bt-result-court-you > .km-match-media {
+  object-position: 35% center;
+}
+
+.bt-result-court-opps > .km-match-media {
+  object-position: 65% center;
+}
+
+.bt-arena .bt-finish .bt-finish-body {
+  position: relative;
+  z-index: 2;
+  width: min(640px, 80%);
+  max-width: 640px;
+  padding: 24px 24px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+
+.bt-arena .bt-finish .bt-finish-hand {
+  flex: none;
+  width: clamp(112px, 24dvh, 188px);
+  height: clamp(112px, 24dvh, 188px);
+  margin: 0 0 4px;
+  object-fit: contain;
+  transform-origin: 50% 90%;
+  filter: drop-shadow(0 7px 3px #0008);
+  animation: bt-result-slam 420ms both;
+}
+
+.bt-arena .bt-finish .bt-finish-draw {
+  min-height: clamp(112px, 24dvh, 188px);
+  display: grid;
+  place-items: center;
+  margin: 0 0 4px;
+  font:
+    400 clamp(64px, 13vw, 104px)/1 BTBlzee,
+    Impact,
+    sans-serif;
+  color: #29180e;
+  rotate: -3deg;
+  text-shadow: 2px 3px #f1bd4166;
+  animation: bt-result-slam 420ms both;
+}
+
+.bt-arena .bt-finish .bt-finish-score {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 0;
+  animation: bt-result-reveal 220ms 360ms both;
+}
+
+.bt-finish-score > small {
+  font:
+    700 8px/1.2 BTHemi,
+    sans-serif;
+  letter-spacing: 1.6px;
+}
+
+.bt-arena .bt-finish .bt-finish-score > strong {
+  font:
+    700 clamp(29px, 6dvh, 42px)/1 BTHemi,
+    sans-serif;
+  font-variant-numeric: tabular-nums;
+}
+
+.bt-arena .bt-finish .bt-finish-score i {
+  opacity: 0.5;
+}
+.bt-arena .bt-finish .bt-finish-hands {
+  font:
+    700 9px/1.3 BTHemi,
+    sans-serif;
+}
+
+.bt-arena .bt-finish .bt-rank-reveal {
+  width: min(220px, 88%);
+  margin: 14px 0 0;
+  animation: bt-result-reveal 220ms 460ms both;
+}
+
+.bt-arena .bt-finish .bt-rank-reveal > small {
+  font:
+    700 7px/1.2 BTHemi,
+    sans-serif;
+  letter-spacing: 1.3px;
+  color: #4b311c;
+}
+
+.bt-arena .bt-finish .bt-rank-reveal > div:first-of-type {
+  height: 40px;
+  gap: 11px;
+}
+
+.bt-arena .bt-finish .bt-rank-reveal strong {
+  font:
+    700 32px/1 BTHemi,
+    sans-serif;
+}
+
+.bt-arena .bt-finish .bt-rank-reveal b {
+  font:
+    700 18px/1 BTHemi,
+    sans-serif;
+  color: #18462d;
+}
+
+.bt-arena .bt-finish-loss .bt-rank-reveal b {
+  color: #782c1e;
+}
+.bt-arena .bt-finish .bt-rank-track {
+  height: 4px;
+  background: #36200e30;
+}
+.bt-arena .bt-finish .bt-rank-track > i {
+  background: #3c2b16;
+}
+.bt-arena .bt-finish .bt-rank-reveal > span {
+  margin-top: 5px;
+  font-size: 9px;
+  color: #29180e;
+}
+
+.bt-finish-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 15px;
+  animation: bt-result-reveal 220ms 560ms both;
+}
+
+.bt-arena .bt-finish .bt-primary {
+  margin: 0;
+  min-height: 44px;
+  padding: 12px 21px;
+  border-color: #382715;
+  box-shadow: inset 0 0 0 3px #0c2e20;
+}
+
+.bt-arena .bt-finish .bt-text-button {
+  min-height: 44px;
+  margin: 0;
+  padding: 10px 20px;
+  color: #29180e;
+  font-weight: 700;
+}
+
+.bt-arena .bt-finish button:focus-visible {
+  outline: 2px solid #29180e;
+  outline-offset: 3px;
+}
+
+@keyframes bt-result-slam {
+  0% {
+    opacity: 0;
+    transform: translateY(-260px) scale(1.08, 1.16) rotate(-5deg);
+    animation-timing-function: cubic-bezier(0.55, 0, 0.95, 0.55);
+  }
+  54% {
+    opacity: 1;
+    transform: translateY(8px) scale(1.15, 0.8) rotate(1deg);
+    animation-timing-function: cubic-bezier(0.15, 0.6, 0.3, 1);
+  }
+  78% {
+    opacity: 1;
+    transform: translateY(-7px) scale(0.97, 1.06) rotate(-1deg);
+    animation-timing-function: ease-out;
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1) rotate(0);
+  }
+}
+
+@keyframes bt-result-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 400px) {
+  .bt-arena .bt-finish .bt-finish-body {
+    padding: 20px 18px 14px;
+  }
+  .bt-arena .bt-finish .bt-rank-reveal {
+    margin-top: 11px;
+  }
+  .bt-finish-actions {
+    margin-top: 12px;
+  }
+}
+
+@media (max-height: 470px) and (min-width: 600px) {
+  .bt-arena .bt-finish .bt-finish-body {
+    display: grid;
+    grid-template-columns: 150px 1fr;
+    column-gap: 26px;
+    row-gap: 9px;
+    padding: 22px 52px;
+  }
+  .bt-arena .bt-finish .bt-finish-hand,
+  .bt-arena .bt-finish .bt-finish-draw {
+    grid-column: 1;
+    grid-row: 1 / 3;
+    width: 150px;
+    height: 160px;
+    min-height: 0;
+    margin: 0;
+  }
+  .bt-arena .bt-finish .bt-finish-score {
+    grid-column: 2;
+    grid-row: 1;
+    justify-self: center;
+  }
+  .bt-arena .bt-finish .bt-rank-reveal {
+    grid-column: 2;
+    grid-row: 2;
+    margin: 0;
+    justify-self: center;
+  }
+  .bt-arena .bt-finish .bt-finish-actions {
+    grid-column: 1 / -1;
+    grid-row: 3;
+    margin: 0;
+    flex-direction: row;
+    justify-content: center;
+    gap: 12px;
+  }
+}
+
+.bt-arena .bt-finish-still .bt-finish-hand,
+.bt-arena .bt-finish-still .bt-finish-draw,
+.bt-arena .bt-finish-still .bt-finish-score,
+.bt-arena .bt-finish-still .bt-rank-reveal,
+.bt-arena .bt-finish-still .bt-finish-actions {
+  animation: none;
+}
+.bt-arena .bt-finish-still .bt-rank-track > i {
+  transition: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bt-arena .bt-finish .bt-finish-hand,
+  .bt-arena .bt-finish .bt-finish-draw,
+  .bt-arena .bt-finish .bt-finish-score,
+  .bt-arena .bt-finish .bt-rank-reveal,
+  .bt-arena .bt-finish .bt-finish-actions {
+    animation: none;
+  }
+  .bt-arena .bt-finish .bt-rank-track > i {
+    transition: none;
+  }
+}
+
+/* The practice receipt must remain readable against the yellow scroll. */
+.bt-arena .bt-finish .bt-trophy-summary > div > span {
+  color: #4b311c;
+}

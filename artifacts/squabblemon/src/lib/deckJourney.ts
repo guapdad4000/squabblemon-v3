@@ -44,7 +44,7 @@ export function storyDeckEditorPath(deckId: string, nodeId: string) {
 
 export function storyDeckReturnPath(search: string) {
   const path = new URLSearchParams(search).get('returnTo');
-  return path && /^\/game\/story\/play\/[a-zA-Z0-9-]+$/.test(path) ? path : null;
+  return path && (/^\/game\/story\/play\/[a-zA-Z0-9-]+$/.test(path) || path === '/game/kumite/breakthrough') ? path : null;
 }
 
 export function deckTestPath(deckId: string) {

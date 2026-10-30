@@ -1,0 +1,303 @@
+@import "./mediaBudget.css";
+/* The open art is the animation end frame; supplied unrolling can replace this layer. */
+.bt-arena .bt-finish .bt-finish-body,
+.bt-arena .bt-cover-content {
+  position: relative;
+  isolation: isolate;
+  width: min(540px, 92vw, calc(86dvh * 0.666667));
+  max-width: 540px;
+  aspect-ratio: 2/3;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px clamp(22px, 3vw, 40px);
+  overflow: visible;
+  color: #29180e;
+}
+.bt-arena .bt-finish .bt-finish-body:before,
+.bt-arena .bt-cover-content:before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: url("./assets/result-scroll/banner-unrolled.webp") center/100%
+    100% no-repeat;
+  pointer-events: none;
+}
+.bt-arena .bt-finish-ink {
+  display: none;
+}
+.bt-paint-swipe-result {
+  display: none;
+}
+.bt-arena .bt-finish .bt-finish-hand {
+  width: clamp(100px, 22dvh, 180px);
+  height: clamp(100px, 22dvh, 180px);
+}
+.bt-arena .bt-cover {
+  inset: 66px 0 4px;
+  background: #100f0ba8;
+  backdrop-filter: none;
+}
+.bt-arena .bt-cover-content > .bt-feature-trophy {
+  width: 76px;
+  height: 76px;
+  margin: 0 0 4px;
+}
+.bt-arena .bt-cover-content > small:first-of-type {
+  display: none;
+}
+.bt-arena .bt-cover-content > h2 {
+  font-size: clamp(30px, 4vw, 44px);
+  margin: 5px 0;
+  color: #28180f;
+  text-shadow: none;
+}
+.bt-arena .bt-cover-content > p {
+  margin: 4px 0 8px;
+  color: #463019;
+  font-size: 10px;
+}
+.bt-arena .bt-cover-content > .bt-primary {
+  margin-top: 4px;
+  flex-shrink: 0;
+}
+.bt-arena .bt-cover-content > .bt-text-button {
+  color: #28180f;
+  font:
+    700 10px/1 BTHemi,
+    sans-serif;
+  min-height: 38px;
+  margin: 0;
+}
+.bt-arena .bt-cover-content > .bt-practice-label {
+  color: #463019;
+  margin-top: 2px;
+  letter-spacing: 1px;
+}
+.bt-arena .bt-opening-setup {
+  margin: 7px 0 2px;
+}
+.bt-arena .bt-opening-setup label {
+  color: #463019;
+}
+@media (max-width: 400px) {
+  .bt-arena .bt-cover-content {
+    padding-top: 25px;
+    padding-bottom: 25px;
+  }
+  .bt-arena .bt-cover-content > .bt-feature-trophy {
+    width: 60px;
+    height: 60px;
+  }
+  .bt-arena .bt-cover-content > h2 {
+    font-size: 30px;
+    margin: 2px 0;
+  }
+  .bt-arena .bt-cover-content > p {
+    display: none;
+  }
+  .bt-arena .bt-finish .bt-finish-body {
+    padding: 22px;
+  }
+  .bt-arena .bt-finish .bt-finish-hand {
+    width: 112px;
+    height: 112px;
+  }
+  .bt-arena .bt-finish .bt-rank-reveal {
+    margin-top: 8px;
+  }
+  .bt-arena .bt-finish-actions {
+    margin-top: 10px;
+  }
+}
+@media (max-height: 470px) and (min-width: 600px) {
+  .bt-arena .bt-finish .bt-finish-body {
+    width: min(620px, 85vw);
+    max-width: 620px;
+    aspect-ratio: auto;
+    height: 88dvh;
+    display: grid;
+    grid-template-columns: 130px 1fr;
+    padding: 28px 72px;
+    gap: 6px 20px;
+  }
+  .bt-arena .bt-finish .bt-finish-hand {
+    width: 130px;
+    height: 140px;
+  }
+  .bt-arena .bt-cover {
+    inset: 45px 0 0;
+  }
+  .bt-arena .bt-cover-content {
+    width: min(620px, 85vw);
+    aspect-ratio: auto;
+    height: calc(100dvh - 45px);
+    padding: 26px 60px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px 18px;
+  }
+  .bt-arena .bt-cover-content > .bt-feature-trophy {
+    grid-column: 1;
+    grid-row: 1/4;
+    justify-self: center;
+    width: 80px;
+    height: 80px;
+  }
+  .bt-arena .bt-cover-content > h2 {
+    grid-column: 2;
+    font-size: 30px;
+    margin: 0;
+  }
+  .bt-arena .bt-cover-content > p {
+    display: none;
+  }
+  .bt-arena .bt-cover-content > .bt-primary {
+    grid-column: 2;
+  }
+  .bt-arena .bt-cover-content > .bt-opening-setup {
+    grid-column: 1/-1;
+    justify-content: center;
+    margin: 0;
+  }
+  .bt-arena .bt-cover-content > .bt-practice-label {
+    grid-column: 1/-1;
+    text-align: center;
+  }
+  .bt-arena .bt-cover-content > .bt-text-button {
+    min-height: 32px;
+  }
+}
+/* One compact trophy receipt beneath the rematch action. */
+.bt-trophy-summary {
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr);
+  width: min(245px, 100%);
+  gap: 3px 10px;
+  align-items: center;
+  margin-top: 12px;
+  animation: bt-result-reveal 0.22s 0.56s both;
+}
+.bt-trophy-summary > img {
+  width: 64px;
+  height: 76px;
+  object-fit: contain;
+  grid-row: 1/3;
+  filter: drop-shadow(0 3px 2px #20150966);
+}
+.bt-arena .bt-finish .bt-trophy-summary .bt-rank-reveal {
+  width: 100%;
+  margin: 0;
+  animation: none;
+}
+.bt-arena .bt-finish .bt-trophy-summary .bt-rank-reveal > div:first-of-type {
+  height: 33px;
+}
+.bt-arena .bt-finish .bt-trophy-summary .bt-rank-reveal strong {
+  font-size: 29px;
+}
+.bt-arena .bt-finish .bt-trophy-summary .bt-rank-reveal b {
+  font-size: 16px;
+}
+.bt-match-stats {
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+  grid-column: 2;
+  margin: 4px 0 0;
+}
+.bt-match-stats > div {
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+}
+.bt-match-stats dt {
+  font:
+    700 7px/1 BTHemi,
+    sans-serif;
+  letter-spacing: 0.4px;
+}
+.bt-match-stats dd {
+  margin: 0;
+  font:
+    700 14px/1 BTHemi,
+    sans-serif;
+}
+.bt-arena .bt-finish .bt-new-deal {
+  margin-top: 5px;
+  animation: bt-result-reveal 0.22s 0.66s both;
+}
+@media (max-width: 400px) {
+  .bt-trophy-summary {
+    grid-template-columns: 52px minmax(0, 1fr);
+    margin-top: 8px;
+    gap: 2px 6px;
+  }
+  .bt-trophy-summary > img {
+    width: 52px;
+    height: 64px;
+  }
+  .bt-arena .bt-finish .bt-finish-hand {
+    width: 104px;
+    height: 104px;
+  }
+  .bt-arena .bt-finish .bt-finish-actions {
+    margin-top: 8px;
+  }
+}
+@media (max-height: 470px) and (min-width: 600px) {
+  .bt-arena .bt-finish .bt-finish-body {
+    grid-template-columns: 130px 1fr;
+    grid-template-rows: auto auto auto auto;
+    gap: 3px 20px;
+  }
+  .bt-arena .bt-finish .bt-finish-hand,
+  .bt-arena .bt-finish .bt-finish-draw {
+    grid-row: 1/4;
+    grid-column: 1;
+  }
+  .bt-arena .bt-finish .bt-finish-score {
+    grid-row: 1;
+    grid-column: 2;
+  }
+  .bt-arena .bt-finish .bt-finish-actions {
+    grid-row: 2;
+    grid-column: 2;
+  }
+  .bt-arena .bt-finish .bt-trophy-summary {
+    grid-row: 3;
+    grid-column: 2;
+    margin: 2px 0 0;
+    justify-self: center;
+    grid-template-columns: 45px 1fr;
+  }
+  .bt-arena .bt-finish .bt-trophy-summary > img {
+    width: 45px;
+    height: 56px;
+  }
+  .bt-arena .bt-finish .bt-new-deal {
+    grid-row: 4;
+    grid-column: 1/-1;
+    min-height: 32px;
+    justify-self: center;
+    margin: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .bt-trophy-summary,
+  .bt-arena .bt-finish .bt-new-deal {
+    animation: none;
+  }
+}
+.bt-arena .bt-finish-loss .bt-finish-body:before {
+  background-image: url("./assets/result-scroll/banner-loss-unrolled.webp");
+}
+
+/* Saved reduced motion applies to every receipt reveal, as the OS preference does. */
+.bt-arena .bt-finish-still .bt-trophy-summary,
+.bt-arena .bt-finish-still .bt-new-deal {
+  animation: none;
+}

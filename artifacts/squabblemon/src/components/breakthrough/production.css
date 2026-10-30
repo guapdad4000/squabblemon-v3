@@ -1,0 +1,414 @@
+.bt-lobby,
+.bt-lobby * {
+  box-sizing: border-box;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+.bt-lobby img {
+  -webkit-user-drag: none;
+}
+.bt-lobby {
+  min-height: 100dvh;
+  background:
+    linear-gradient(110deg, #100d09ec, #100d09b5),
+    url('./assets/dojo-landscape.webp') center/cover;
+  color: #f3edda;
+  font-family: Arial, sans-serif;
+  padding: 18px max(20px, env(safe-area-inset-right))
+    max(24px, env(safe-area-inset-bottom));
+  overflow-x: clip;
+}
+.bt-lobby-nav {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  align-items: center;
+  max-width: 1100px;
+  margin: auto;
+}
+.bt-lobby-nav a,
+.bt-lobby-actions a {
+  color: #f3edda;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  font:
+    700 12px BTHemi,
+    Impact,
+    sans-serif;
+  text-decoration: none;
+}
+.bt-lobby-nav > span {
+  font:
+    700 9px/1.3 Arial,
+    sans-serif;
+  letter-spacing: 1px;
+  text-align: right;
+  color: #d2c4a2;
+}
+.bt-lobby-stage {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: 50px;
+  max-width: 1100px;
+  margin: 35px auto 0;
+  align-items: center;
+}
+.bt-lobby-title {
+  position: relative;
+  min-height: 420px;
+}
+.bt-lobby-title small {
+  font:
+    700 15px BTHemi,
+    Impact,
+    sans-serif;
+  letter-spacing: 6px;
+  color: #ffdf40;
+}
+.bt-lobby h1 {
+  position: relative;
+  z-index: 1;
+  font:
+    400 clamp(48px, 5vw, 72px)/0.84 BTBlzee,
+    Impact,
+    sans-serif;
+  transform: rotate(-4deg);
+  margin: 24px 0;
+  text-shadow: 5px 5px #401b0b;
+}
+.bt-lobby-title > img {
+  width: 290px;
+  height: 290px;
+  object-fit: contain;
+  display: block;
+  margin: -30px auto 0;
+}
+.bt-lobby-crew {
+  min-width: 0;
+  padding: 20px 0;
+}
+.bt-lobby-identity {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.bt-lobby-identity .fighter-portrait {
+  width: 75px;
+  height: 85px;
+}
+.bt-lobby-identity strong {
+  font:
+    700 22px BTHemi,
+    Impact,
+    sans-serif;
+}
+.bt-lobby-identity small {
+  display: block;
+  font:
+    700 10px Arial,
+    sans-serif;
+  margin-top: 6px;
+  color: #d3c6aa;
+}
+.bt-lobby h2 {
+  font:
+    400 30px/1 BTBlzee,
+    Impact,
+    sans-serif;
+  margin: 20px 0 12px;
+}
+.bt-lobby .compact-deck-picker {
+  width: 100%;
+  margin: 16px 0;
+}
+.bt-lobby-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.bt-lobby .bt-primary {
+  flex: 1 1 220px;
+}
+.bt-lobby .bt-text-button {
+  margin: 0;
+  color: #e6d5a5;
+  min-height: 44px;
+}
+.bt-lobby :is(button, summary) {
+  cursor: pointer;
+}
+.bt-lobby :is(button, a, summary):focus-visible {
+  outline: 3px solid #ffdf40;
+  outline-offset: 4px;
+}
+.bt-lobby button:disabled {
+  cursor: default;
+}
+.bt-compatibility {
+  font:
+    12px/1.5 Arial,
+    sans-serif;
+  margin: 14px 0;
+  color: #efc8bd;
+}
+.bt-compatibility strong {
+  font:
+    700 13px BTHemi,
+    Impact,
+    sans-serif;
+}
+.bt-compatibility ul {
+  margin: 8px 0;
+  padding-left: 18px;
+  max-height: 180px;
+  overflow: auto;
+}
+.bt-loaner-label {
+  font:
+    700 9px/1.3 Arial,
+    sans-serif;
+  color: #ffdf40;
+}
+.bt-mode-rules {
+  margin-top: 18px;
+  color: #d4cbb6;
+  font:
+    12px/1.5 Arial,
+    sans-serif;
+}
+.bt-mode-rules summary {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  font:
+    700 11px BTHemi,
+    Impact,
+    sans-serif;
+  letter-spacing: 1px;
+}
+.bt-mode-rules p {
+  margin: 6px 0 12px;
+}
+.bt-arena {
+  min-height: min(430px, 100dvh);
+}
+.bt-banner-portrait .fighter-portrait,
+.bt-banner-portrait .fighter-portrait img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.bt-player-progress {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  height: 12px;
+  margin: 3px 0;
+  font:
+    700 8px/1 Arial,
+    sans-serif;
+}
+.bt-player-progress .rank-trophy {
+  width: 13px;
+  height: 16px;
+  object-fit: contain;
+}
+.bt-arena .bt-banner-copy > strong {
+  display: block;
+  max-width: 210px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.bt-action-backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 32;
+  display: grid;
+  place-items: center;
+  background: #090c08aa;
+  padding: 15px;
+}
+.bt-action-confirm {
+  width: min(350px, 100%);
+  padding: 28px;
+  text-align: center;
+  background:
+    linear-gradient(#11140ee8, #11140ef0),
+    url('/assets/progression/brick.webp') center/cover;
+  border: 1px solid #dfcf9e;
+  color: #f4eddb;
+}
+.bt-action-confirm small {
+  font:
+    700 10px BTHemi,
+    sans-serif;
+  letter-spacing: 1px;
+  color: #ffdf40;
+}
+.bt-action-confirm h2 {
+  font:
+    400 30px BTBlzee,
+    sans-serif;
+  margin: 12px 0;
+}
+.bt-action-confirm p {
+  font:
+    700 15px BTHemi,
+    sans-serif;
+}
+.bt-action-target {
+  outline: 3px dashed #ffdf40;
+  outline-offset: 4px;
+}
+.bt-trophy-summary > div > span {
+  display: block;
+  font:
+    700 8px/1.4 Arial,
+    sans-serif;
+  margin-top: 4px;
+  color: #d9cbaa;
+}
+.bt-finish .bt-text-button {
+  margin: 2px auto;
+  min-height: 44px;
+}
+.bt-arena .bt-silence-lock {
+  pointer-events: none;
+}
+@media (max-width: 700px) {
+  .bt-lobby {
+    padding: 12px 14px 24px;
+  }
+  .bt-lobby-stage {
+    display: block;
+    margin-top: 16px;
+  }
+  .bt-lobby-title {
+    min-height: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .bt-lobby-title small {
+    display: none;
+  }
+  .bt-lobby h1 {
+    font-size: clamp(38px, 9vw, 62px);
+    flex: 1;
+    margin: 10px 0;
+  }
+  .bt-lobby-title > img {
+    width: 105px;
+    height: 135px;
+    margin: 0;
+  }
+  .bt-lobby-crew {
+    padding: 8px 0;
+  }
+  .bt-lobby h2 {
+    font-size: 25px;
+  }
+  .bt-lobby-identity .fighter-portrait {
+    width: 55px;
+    height: 65px;
+  }
+  .bt-lobby-nav > span {
+    font-size: 8px;
+    max-width: 160px;
+  }
+  .bt-lobby .bt-primary {
+    flex-basis: 100%;
+  }
+  .bt-arena .bt-banner-copy > strong {
+    max-width: 100px;
+  }
+  .bt-player-progress {
+    font-size: 6px;
+    height: 9px;
+    gap: 2px;
+  }
+  .bt-player-progress .rank-trophy {
+    width: 10px;
+    height: 12px;
+  }
+  .bt-compatibility ul {
+    max-height: 145px;
+  }
+}
+@media (orientation: landscape) and (max-height: 500px) {
+  .bt-lobby-stage {
+    display: grid;
+    grid-template-columns: minmax(0, 0.6fr) minmax(0, 1fr);
+    gap: 24px;
+    margin-top: 5px;
+  }
+  .bt-lobby-title {
+    display: block;
+  }
+  .bt-lobby-title > img {
+    width: 130px;
+    height: 140px;
+    margin: auto;
+  }
+  .bt-lobby h1 {
+    font-size: 54px;
+  }
+  .bt-lobby-identity .fighter-portrait {
+    width: 40px;
+    height: 45px;
+  }
+  .bt-lobby h2 {
+    font-size: 23px;
+    margin: 8px 0;
+  }
+  .bt-lobby-crew {
+    padding: 4px 0;
+  }
+  .bt-lobby .compact-deck-picker {
+    margin: 6px 0;
+  }
+}
+
+/* Account preferences match OS reduced motion, including CSS-only battle feedback. */
+.bt-arena[data-reduced-motion='true'] *,
+.bt-arena[data-reduced-motion='true'] *::before,
+.bt-arena[data-reduced-motion='true'] *::after {
+  animation: none !important;
+  transition: none !important;
+}
+.bt-arena[data-reduced-motion='true'] .bt-hit-flash,
+.bt-arena[data-reduced-motion='true'] .bt-media-fx,
+.bt-arena[data-reduced-motion='true'] .bt-defeat-ghost {
+  display: none;
+}
+.bt-arena[data-reduced-motion='true'] .bt-unit.bt-windup {
+  translate: 0 0;
+}
+
+.bt-lane-resource {
+  position: absolute;
+  z-index: 6;
+  width: clamp(30px, 4.5vw, 52px);
+  height: clamp(30px, 4.5vw, 52px);
+  padding: 0;
+  border: 0;
+  background: none;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+  filter: drop-shadow(0 3px 3px #0008);
+}
+.bt-lane-resource img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  -webkit-user-drag: none;
+}
+.bt-lane-resource:focus-visible {
+  outline: 2px dashed #ffdf40;
+  outline-offset: 3px;
+}

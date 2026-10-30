@@ -3,6 +3,13 @@
  * enough: the expected original character art ID must also still be present.
  */
 export const PATCH_BANNERS = {
+  '1.15': {
+    artCardId: 'dragonfly-jones',
+    aspectRatio: '3 / 1',
+    path: 'assets/events/kumite-breakthrough-patch-1-15.webp',
+    smallPath: 'assets/events/kumite-breakthrough-patch-1-15-small.webp',
+    alt: 'Kumite Breakthrough Beta: Dragonfly Jones and Chonk Lee clash through gold and crimson ink.',
+  },
   '1.14': {
     artCardId: 'folks',
     aspectRatio: '3 / 1',

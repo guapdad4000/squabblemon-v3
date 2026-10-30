@@ -45,7 +45,11 @@
     "./battleArtwork": "./src/battleArtwork.ts",
     "./kumiteForms": "./src/kumiteForms.ts",
     "./bossArchive": "./src/bossArchive.ts",
-    "./storyKumitePuzzles": "./src/storyKumitePuzzles.ts"
+    "./storyKumitePuzzles": "./src/storyKumitePuzzles.ts",
+    "./breakthrough": "./src/breakthrough.ts",
+    "./breakthroughCatalog": "./src/breakthroughCatalog.ts",
+    "./breakthroughRoom": "./src/breakthroughRoom.ts",
+    "./breakthroughRelease": "./src/breakthroughRelease.ts"
   },
   "dependencies": {
     "chess.js": "1.4.0"

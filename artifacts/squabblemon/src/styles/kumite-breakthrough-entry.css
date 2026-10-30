@@ -1,0 +1,17 @@
+.kumite-mode-card--breakthrough {
+  grid-column: 1/-1;
+}
+.kumite-mode-card--breakthrough .kumite-mode-card__media {
+  min-height: 220px;
+}
+.kumite-mode-card--breakthrough .kumite-mode-card__chibi {
+  object-fit: contain;
+  width: 45%;
+  left: auto;
+  right: 6%;
+}
+@media (max-width: 600px) {
+  .kumite-mode-card--breakthrough .kumite-mode-card__media {
+    min-height: 170px;
+  }
+}
