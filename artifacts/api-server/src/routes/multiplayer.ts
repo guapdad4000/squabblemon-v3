@@ -12,6 +12,9 @@ import {
   createFriendRoom,
   listFriendRooms,
 } from "../lib/onlineMatches";
+import { hasAnunakiClient } from '../lib/onlineCompatibility';
+import { CLIENT_CAPABILITIES_HEADER } from '@workspace/squabblemon-engine/multiplayer';
+const supports = (req: Request) => hasAnunakiClient(req.header(CLIENT_CAPABILITIES_HEADER));
 
 const router = Router();
 const uuid =
@@ -116,23 +119,23 @@ router.post(
   "/multiplayer",
   endpoint(async (req, userId) => {
     const b = bodyOf(req, ["deckId", "requestId"]);
-    return createFriendRoom(userId, deckId(b.deckId), requestId(b.requestId));
+    return createFriendRoom(userId, deckId(b.deckId), requestId(b.requestId), supports(req));
   }, 201),
 );
 router.get('/multiplayer/ranked/standings', endpoint((_req, userId) => rankedStandings(userId)));
-router.get('/multiplayer/ranked', endpoint((_req, userId) => rankedLobby(userId)));
+router.get('/multiplayer/ranked', endpoint((req, userId) => rankedLobby(userId, undefined, supports(req))));
 router.post('/multiplayer/ranked/search', endpoint((req, userId) => {
   const b = bodyOf(req, ['deckId', 'requestId']);
-  return rankedLobby(userId, { deckId: deckId(b.deckId), requestId: requestId(b.requestId) });
+  return rankedLobby(userId, { deckId: deckId(b.deckId), requestId: requestId(b.requestId) }, supports(req));
 }));
 router.post('/multiplayer/ranked/cancel', endpoint((req, userId) => {
   const b = bodyOf(req, ['code']);
   if (typeof b.code !== 'string' || !/^[A-F0-9]{12}$/.test(b.code)) throw new OnlineError('Invalid search code.', 400);
-  return cancelRankedSearch(userId, b.code);
+  return cancelRankedSearch(userId, b.code, supports(req));
 }));
 router.get(
   "/multiplayer/:code",
-  endpoint((req, userId) => pollFriendRoom(codeOf(req), userId, typeof req.query.since === "string" ? req.query.since : undefined)),
+  endpoint((req, userId) => pollFriendRoom(codeOf(req), userId, typeof req.query.since === "string" ? req.query.since : undefined, supports(req))),
 );
 router.post(
   "/multiplayer/:code/join",
@@ -141,7 +144,7 @@ router.post(
     return accessFriendRoom(codeOf(req), userId, {
       kind: "join",
       deckId: deckId(b.deckId),
-    });
+    }, supports(req));
   }),
 );
 router.post(
@@ -158,13 +161,13 @@ router.post(
       requestId: requestId(b.requestId),
       expectedRevision: b.expectedRevision as number,
       command: parseCommand(b.command),
-    });
+    }, supports(req));
   }),
 );
-router.get('/multiplayer/:code/reactions', endpoint((req, userId) => accessRoomReactions(codeOf(req), userId)));
+router.get('/multiplayer/:code/reactions', endpoint((req, userId) => accessRoomReactions(codeOf(req), userId, undefined, supports(req))));
 router.post('/multiplayer/:code/reactions', endpoint((req, userId) => {
   const b = bodyOf(req, ['requestId', 'reactionId', 'gameNumber']);
   if (typeof b.reactionId !== 'string' || b.reactionId.length > 64 || !Number.isSafeInteger(b.gameNumber) || Number(b.gameNumber) < 1) throw new OnlineError('Choose a valid reaction.', 400);
-  return accessRoomReactions(codeOf(req), userId, { requestId: requestId(b.requestId), reactionId: b.reactionId, gameNumber: b.gameNumber as number });
+  return accessRoomReactions(codeOf(req), userId, { requestId: requestId(b.requestId), reactionId: b.reactionId, gameNumber: b.gameNumber as number }, supports(req));
 }));
 export default router;

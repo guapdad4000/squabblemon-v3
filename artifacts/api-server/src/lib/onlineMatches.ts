@@ -41,6 +41,8 @@ import {
 import { chooseCpuPlay } from "@workspace/squabblemon-engine/gameEngine";
 import { lockSocial, guardTargetedRoom, syncRoomInvitation } from "./socialRoomGuard";
 import { homiesDiagnostics, homiesTransaction } from "./homiesDiagnosticsRuntime";
+import { compatibleMembers, memberHasAnunaki, requireRoomCapability } from './onlineCompatibility';
+import { isAnunakiReaction, reactionViewForClient } from './reactionCompatibility';
 
 type Tx = Parameters<Parameters<typeof db.transaction>[0]>[0];
 const commandFingerprint = (command: object) =>
@@ -53,6 +55,7 @@ export async function loadMember(
   userId: string,
   deckId: string,
   lock = true,
+  supportsAnunaki = false,
 ): Promise<OnlineMember> {
   const query = tx.select().from(playerProfilesTable).where(eq(playerProfilesTable.clerkUserId, userId));
   const [profile] = await (lock ? query.for("update") : query);
@@ -70,7 +73,7 @@ export async function loadMember(
       "Choose a saved gang of ten unique cards you own.",
       400,
     );
-  return {
+  const member: OnlineMember = {
     userId,
     name: profile.displayName,
     avatarKey: profile.avatarKey,
@@ -80,6 +83,7 @@ export async function loadMember(
     ...equippedBanner(profile),
     playerMatId: equippedPlayerMat(profile),
     ready: false,
+    supportsAnunaki,
     deck: {
       id: deckId,
       name: saved?.name ?? recipe!.name,
@@ -87,16 +91,19 @@ export async function loadMember(
       cards: catalogIdsToEngineIds(cardIds),
     },
   };
+  if (!supportsAnunaki && memberHasAnunaki(member)) throw new OnlineError('This gang needs the latest game. Refresh the page and retry.', 409);
+  return member;
 }
 
 export async function createFriendRoom(
   userId: string,
   deckId: string,
   requestId: string,
+  supportsAnunaki = false,
 ) {
   const result = await db.transaction(async (tx) => {
     // Serializes create retries and the per-account open-room limit.
-    const member = await loadMember(tx, userId, deckId);
+    const member = await loadMember(tx, userId, deckId, true, supportsAnunaki);
     const [existing] = await tx
       .select()
       .from(onlineRoomsTable)
@@ -147,7 +154,7 @@ export async function createFriendRoom(
     });
     return onlineRoomView(room, code, userId, now);
   });
-  return 'existingCode' in result ? accessFriendRoom(result.existingCode, userId) : result;
+  return 'existingCode' in result ? accessFriendRoom(result.existingCode, userId, undefined, supportsAnunaki) : result;
 }
 
 export async function listFriendRooms(userId: string) {
@@ -203,36 +210,38 @@ export async function accessFriendRoom(
   code: string,
   userId: string,
   mutation?: Mutation,
+  supportsAnunaki = false,
 ) {
   return homiesDiagnostics.operation("room_access",
     mutation?.kind === "command" ? "room_command" : mutation?.kind === "join" ? "room_join" : "room_read",
-    () => accessFriendRoomOperation(code, userId, mutation));
+    () => accessFriendRoomOperation(code, userId, mutation, supportsAnunaki));
 }
 
 /** Authenticated conditional read. The token hashes every persisted field,
  * including corrections/reactions that do not advance the board revision. */
-export async function pollFriendRoom(code: string, userId: string, token?: string) {
+export async function pollFriendRoom(code: string, userId: string, token?: string, supportsAnunaki = false) {
   if (token && /^[a-f0-9]{32}$/.test(token)) {
     const [row] = await db.select({ live: onlineRoomsTable.liveState, token: onlineRoomsTable.syncToken })
       .from(onlineRoomsTable).where(eq(onlineRoomsTable.code, code));
     if (row?.live) {
       const room = row.live as unknown as OnlineRoom;
-      memberSeat(room, userId);
+      const seat = memberSeat(room, userId);
+      requireRoomCapability(room, supportsAnunaki);
       const now = Date.now();
       // Only settled paired human battles can skip authoritative advancement.
       // Waiting/invited, bot, complete/settlement and incompatible rooms retain
       // the original row/social-lock ordering and recovery path.
-      if (row.token === token && room.members.cpu && room.status === 'active' &&
+      if (!!room.members[seat]?.supportsAnunaki === supportsAnunaki && row.token === token && room.members.cpu && room.status === 'active' &&
           room.rulesVersion === ONLINE_RULES_VERSION && !room.ranked?.bot &&
           room.expiresAt > now && room.deadline !== null && room.deadline > now &&
           (!room.kumite || room.kumite.roundDeadline > now))
         return { unchanged: true as const, syncToken: token, serverTime: now };
     }
   }
-  return accessFriendRoom(code, userId);
+  return accessFriendRoom(code, userId, undefined, supportsAnunaki);
 }
 
-async function accessFriendRoomOperation(code: string, userId: string, mutation?: Mutation) {
+async function accessFriendRoomOperation(code: string, userId: string, mutation?: Mutation, supportsAnunaki = false) {
   const access = (forceSocialLock: boolean) => homiesTransaction(async (tx) => {
     // This unlocked hint only chooses a lock path; it never authorizes access.
     // Joined seats survive remove/block and rematches, so polling or commanding
@@ -260,6 +269,11 @@ async function accessFriendRoomOperation(code: string, userId: string, mutation?
     if (!socialLocked) homiesDiagnostics.roomPath(true);
     await guardTargetedRoom(tx, row.id, room, userId, mutation?.kind === "join", row.inviteOnly);
     if (mutation?.kind !== "join") memberSeat(room, userId);
+    requireRoomCapability(room, supportsAnunaki);
+    const currentSeat = room.members.player.userId === userId ? 'player' : room.members.cpu?.userId === userId ? 'cpu' : null;
+    const capabilityChanged = !!currentSeat && !!room.members[currentSeat]?.supportsAnunaki !== supportsAnunaki;
+    if (capabilityChanged && currentSeat) room = { ...room, members: { ...room.members,
+      [currentSeat]: { ...room.members[currentSeat]!, supportsAnunaki } } };
     const now = Date.now();
     room = retireIncompatibleOnlineRoom(room, now);
     room = advanceRankedBot(room, now);
@@ -278,11 +292,9 @@ async function accessFriendRoomOperation(code: string, userId: string, mutation?
         ) {
           if (room.members.cpu || room.status !== "waiting")
             throw new OnlineError("This room is full or has expired.");
-          room = joinOnlineRoom(
-            room,
-            await loadMember(tx, userId, mutation.deckId),
-            now,
-          );
+          const guest = await loadMember(tx, userId, mutation.deckId, true, supportsAnunaki);
+          if (!compatibleMembers(room.members.player, guest)) throw new OnlineError('Both players need the latest game for this gang. Ask your friend to refresh and retry.', 409);
+          room = joinOnlineRoom(room, guest, now);
         }
       } else if (mutation?.kind === "command") {
         const fingerprint = commandFingerprint(mutation.command);
@@ -349,7 +361,7 @@ async function accessFriendRoomOperation(code: string, userId: string, mutation?
     room = await settleRankedRoom(tx, room, now, row.id);
     room = await syncRoomInvitation(tx, row.id, room);
     // Persist expired turns even when rejecting a late/stale action.
-    if (room.revision !== restore(row.state).revision) {
+    if (room.revision !== restore(row.state).revision || capabilityChanged) {
       const [saved] = await tx
         .update(onlineRoomsTable)
         .set({
@@ -497,6 +509,7 @@ async function matchWaitingRoom(tx: Tx, own: RoomRow, input: OnlineRoom, now: nu
   for (const candidate of candidates) {
     const rival = await refreshRankedRoom(tx, candidate, now);
     if (rival.status !== 'waiting' || !rival.ranked || rival.members.cpu) continue;
+    if (!compatibleMembers(room.members.player, rival.members.player)) continue;
     const waited = Math.max(now - room.ranked!.queuedAt, now - rival.ranked.queuedAt);
     const range = waited >= 4000 ? Infinity : 300 + Math.floor(waited / 1000) * 150;
     if (Math.abs(room.ranked!.ratings.player - rival.ranked.ratings.player) > range) continue;
@@ -513,7 +526,7 @@ async function matchWaitingRoom(tx: Tx, own: RoomRow, input: OnlineRoom, now: nu
     const rookie = (await tx.select({ progress: playerProfilesTable.storyProgress }).from(playerProfilesTable).where(eq(playerProfilesTable.clerkUserId, own.hostUserId)))[0];
     const beginner = rankedStats(rookie?.progress.fadePark).points < 100;
     const persona = PARK_BOT_PERSONAS[parseInt(own.code.slice(-4), 16) % PARK_BOT_PERSONAS.length];
-    const bot: OnlineMember = { userId: `park-bot:${own.code}`, name: `${persona.name} · Park Bot`, avatarKey: persona.avatarKey, banner: { cardId: persona.bannerCardId, finish: 'base' }, level: beginner ? 3 : 10, ready: false,
+    const bot: OnlineMember = { userId: `park-bot:${own.code}`, name: `${persona.name} · Park Bot`, avatarKey: persona.avatarKey, banner: { cardId: persona.bannerCardId, finish: 'base' }, level: beginner ? 3 : 10, ready: false, supportsAnunaki: true,
       deck: { id: 'park-bot', name: persona.personality, hero: beginner ? 'hooper' : recipe.hero,
         cards: catalogIdsToEngineIds(beginner ? [...ROOKIE_CORE_IDS] : recipe.catalogCardIds) } };
     room = readyRanked({ ...room, ranked: { ...room.ranked!, bot: true, botPersona: persona.id, botReactionCount: 0, botNextAt: now + persona.pace,
@@ -530,7 +543,7 @@ async function rankProfile(tx: Tx, userId: string) {
   return rankedStats(profile.storyProgress.fadePark);
 }
 
-export async function rankedLobby(userId: string, search?: { deckId: string; requestId: string }) {
+export async function rankedLobby(userId: string, search?: { deckId: string; requestId: string }, supportsAnunaki = false) {
   // This hint chooses a path only. Both paths recheck under their own locks.
   // Waiting polls go straight to matchmaking rather than paying for two full
   // transactions each time; active and empty lobbies avoid the queue entirely.
@@ -553,6 +566,7 @@ export async function rankedLobby(userId: string, search?: { deckId: string; req
       for (const row of open) {
         if (restore(row.state).status === 'waiting') return { retryQueue: true as const };
         const now = Date.now();
+        requireRoomCapability(restore(row.state), supportsAnunaki);
         const room = await refreshRankedRoom(tx, row, now);
         stats = await rankProfile(tx, userId);
         if (room.status === 'active') {
@@ -576,12 +590,16 @@ export async function rankedLobby(userId: string, search?: { deckId: string; req
       if (previous) {
         let row = previous;
         const state = restore(row.state);
+        requireRoomCapability(state, supportsAnunaki);
         if (!state.ranked || state.members.player.deck.id !== search.deckId) throw new OnlineError('This search request was already used for another gang.');
         if (state.ranked.redirectCode) {
           [row] = await tx.select().from(onlineRoomsTable).where(eq(onlineRoomsTable.code, state.ranked.redirectCode)).for('update');
           if (!row) throw new OnlineError('This fade has expired. Start a new search.', 404);
         }
-        const room = await refreshRankedRoom(tx, row, now);
+        requireRoomCapability(restore(row.state), supportsAnunaki);
+        let room = await refreshRankedRoom(tx, row, now);
+        if (room.members.player.userId === userId && !!room.members.player.supportsAnunaki !== supportsAnunaki)
+          room = { ...room, members: { ...room.members, player: { ...room.members.player, supportsAnunaki } } };
         const found = await matchWaitingRoom(tx, row, room, now);
         const stats = await rankProfile(tx, userId);
         return { stats, progress: rankProgress(stats.points), room: onlineRoomView(found.room, found.row.code, userId, now) };
@@ -590,11 +608,14 @@ export async function rankedLobby(userId: string, search?: { deckId: string; req
     const open = await tx.select().from(onlineRoomsTable).where(openRankedRoomsFor(userId)).orderBy(desc(onlineRoomsTable.createdAt)).for('update');
     let found: { row: RoomRow; room: OnlineRoom } | undefined;
     for (const row of open) {
-      const room = await refreshRankedRoom(tx, row, now);
+      requireRoomCapability(restore(row.state), supportsAnunaki);
+      let room = await refreshRankedRoom(tx, row, now);
+      if (room.members.player.userId === userId && !!room.members.player.supportsAnunaki !== supportsAnunaki)
+        room = { ...room, members: { ...room.members, player: { ...room.members.player, supportsAnunaki } } };
       if (room.status === 'active' || room.status === 'waiting') { found = await matchWaitingRoom(tx, row, room, now); break; }
     }
     if (!found && search) {
-      const member = await loadMember(tx, userId, search.deckId, false);
+      const member = await loadMember(tx, userId, search.deckId, false, supportsAnunaki);
       const stats = await rankProfile(tx, userId);
       const room = createOnlineRoom(member, randomInt(2) ? 'player' : 'cpu', now);
       room.ranked = { queuedAt: now, heartbeatAt: now, botAfter: now + RANKED_BOT_WAIT_MS, bot: false, ratings: { player: stats.rating } };
@@ -607,7 +628,7 @@ export async function rankedLobby(userId: string, search?: { deckId: string; req
   });
 }
 
-export async function cancelRankedSearch(userId: string, code: string) {
+export async function cancelRankedSearch(userId: string, code: string, supportsAnunaki = false) {
   return db.transaction(async tx => {
     await tx.execute(sql`select pg_advisory_xact_lock(72613401)`);
     let [row] = await tx.select().from(onlineRoomsTable).where(eq(onlineRoomsTable.code, code)).for('update');
@@ -617,6 +638,7 @@ export async function cancelRankedSearch(userId: string, code: string) {
     if (redirected) [row] = await tx.select().from(onlineRoomsTable).where(eq(onlineRoomsTable.code, redirected)).for('update');
     if (!row) throw new OnlineError('Search not found.', 404);
     memberSeat(restore(row.state), userId);
+    requireRoomCapability(restore(row.state), supportsAnunaki);
     let room = await refreshRankedRoom(tx, row, Date.now());
     if (room.status === 'waiting') {
       room = { ...room, revision: room.revision + 1, status: 'closed' };
@@ -628,7 +650,9 @@ export async function cancelRankedSearch(userId: string, code: string) {
 }
 
 /** Reactions share the room lock but never change a card-play revision or turn clock. */
-export async function accessRoomReactions(code: string, userId: string, input?: { requestId: string; reactionId: string; gameNumber: number }) {
+export async function accessRoomReactions(code: string, userId: string, input?: { requestId: string; reactionId: string; gameNumber: number }, supportsAnunaki = false) {
+  if (input && !supportsAnunaki && isAnunakiReaction(input.reactionId))
+    throw new OnlineError('This reaction needs the latest game. Refresh the page and try again.', 409);
   if (!input) {
     const [row] = await db.select({ live: onlineRoomsTable.liveState }).from(onlineRoomsTable).where(eq(onlineRoomsTable.code, code));
     if (!row) throw new OnlineError('Room not found.', 404);
@@ -638,8 +662,8 @@ export async function accessRoomReactions(code: string, userId: string, input?: 
       const [profile] = await db.select({ unlockedCosmeticIds: playerProfilesTable.unlockedCosmeticIds, settings: playerProfilesTable.settings })
         .from(playerProfilesTable).where(eq(playerProfilesTable.clerkUserId, userId));
       if (!profile) throw new OnlineError('Player profile not found.', 404);
-      return { ...(room.reactions ?? { revision: 0, latest: {} }), serverTime: Date.now(), owned: ownedReactions(profile.unlockedCosmeticIds),
-        tray: resolveReactionTray(profile.settings.reactionTray, profile.unlockedCosmeticIds) };
+      return reactionViewForClient({ ...(room.reactions ?? { revision: 0, latest: {} }), serverTime: Date.now(), owned: ownedReactions(profile.unlockedCosmeticIds),
+        tray: resolveReactionTray(profile.settings.reactionTray, profile.unlockedCosmeticIds) }, supportsAnunaki);
     }
   }
   return db.transaction(async tx => {
@@ -664,7 +688,7 @@ export async function accessRoomReactions(code: string, userId: string, input?: 
         throw error;
       }
     }
-    return { ...(room.reactions ?? { revision: 0, latest: {} }), serverTime: now, owned, tray: resolveReactionTray(profile.settings.reactionTray, profile.unlockedCosmeticIds) };
+    return reactionViewForClient({ ...(room.reactions ?? { revision: 0, latest: {} }), serverTime: now, owned, tray: resolveReactionTray(profile.settings.reactionTray, profile.unlockedCosmeticIds) }, supportsAnunaki);
   });
 }
 

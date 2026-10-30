@@ -8,6 +8,7 @@ import {
 } from '@workspace/api-client-react';
 import { useAppAuth } from './auth';
 import { isBattleActive, subscribeBattleActive } from './imageWarmup';
+import { ANUNAKI_CLIENT_CAPABILITY, CLIENT_CAPABILITIES_HEADER } from '@workspace/squabblemon-engine/onlineCapabilities';
 
 type RequestAction = 'accept' | 'decline' | 'cancel';
 type SocialContextValue = {
@@ -58,7 +59,7 @@ async function socialRequest<T>(run: (options: RequestInit) => Promise<T>, paren
   parent?.addEventListener('abort', abort, { once: true });
   const timer = window.setTimeout(() => controller.abort(new DOMException('Homies connection timed out. Please retry.', 'TimeoutError')), 10_000);
   try {
-    return await run({ signal: controller.signal, credentials: 'same-origin', cache: 'no-store' });
+    return await run({ signal: controller.signal, credentials: 'same-origin', cache: 'no-store', headers: { [CLIENT_CAPABILITIES_HEADER]: ANUNAKI_CLIENT_CAPABILITY } });
   } finally {
     window.clearTimeout(timer);
     parent?.removeEventListener('abort', abort);

@@ -21,6 +21,7 @@ import {
   BREAKTHROUGH_STARTER_DECKS,
 } from './src/breakthroughCatalog';
 import { cardCatalog } from './src/data';
+import { isAnunakiCardId } from './src/anunakiWave';
 const copy = <T>(v: T): T => JSON.parse(JSON.stringify(v));
 function fixture(card: FighterDefinition, lastStand: boolean): GameState {
   const deck = [
@@ -97,14 +98,21 @@ function invariant(s: GameState, context: string) {
     assert(u.position >= 0 && u.position <= 1, `${context}: track bounds`);
   }
 }
-test('canonical collectible registry is exact and every starter is now compatible', () => {
-  assert.equal(cardCatalog.length, 301);
+test('reviewed registry retains all 301 prior cards while 10 new Anunaki cards await conversion', () => {
+  assert.equal(cardCatalog.length, 311);
   assert.equal(BREAKTHROUGH_ROSTER.length, 301);
   assert.deepEqual(
     [...BREAKTHROUGH_ROSTER.map((c) => c.id)].sort(),
-    cardCatalog.map((c) => c.catalogId).sort(),
+    cardCatalog
+      .filter((c) => !isAnunakiCardId(c.catalogId))
+      .map((c) => c.catalogId)
+      .sort(),
   );
-  assert(BREAKTHROUGH_COMPATIBILITY.every((c) => c.supported));
+  assert(
+    BREAKTHROUGH_COMPATIBILITY.every(
+      (c) => c.supported === !isAnunakiCardId(c.cardId),
+    ),
+  );
   assert.equal(BREAKTHROUGH_STARTER_DECKS.length, 15);
 });
 for (const card of BREAKTHROUGH_ROSTER)

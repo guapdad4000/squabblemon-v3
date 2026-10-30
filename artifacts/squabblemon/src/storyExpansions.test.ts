@@ -86,7 +86,8 @@ function permutations<T>(items: readonly T[]): T[][] {
 }
 
 test("no new investigation opens with its answer already arranged", () => {
-  assert.equal(auditedPuzzles.length, 43);
+  assert.equal(auditedPuzzles.filter(p=>!p.id.startsWith("anunaki-")).length,43);
+  assert.equal(auditedPuzzles.filter(p=>p.id.startsWith("anunaki-")).length,8);
   for (const p of auditedPuzzles)
     assert(
       !isStoryPuzzleSolution(

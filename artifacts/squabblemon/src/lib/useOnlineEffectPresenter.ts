@@ -38,6 +38,7 @@ export function toPresentationEffect(event: PublicEvent, seat: Seat, scores: Pre
     source, targets, scores: event.scores ? { before: seatScores(event.scores.before), after: seatScores(event.scores.after) } : { before: scores, after: scores },
     resources: undefined as never, state: undefined as never, replay: undefined as never,
     cardInstanceId: event.sourceId ?? '', cardId: source?.cardId ?? event.cardId ?? '', owner: owner(event.owner), lane, kind: event.kind, note: event.note,
+    tabletChanged: Boolean(event.tabletPlaced?.length || event.tabletConsumed?.length),
     targetIds: targets.map(t => t.cardInstanceId), impact: false,
     artCues: event.artCues?.map(cue => ({ ...cue, owner: owner(cue.owner) })),
   };

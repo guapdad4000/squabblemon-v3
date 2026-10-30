@@ -1,6 +1,6 @@
 import { grantPullSeasonMilestones, recoverPullSeasonRewards, getPullSeasonProgress } from './pullSeason';
-import type { PullSeasonProgress, PullSeasonReward } from '@workspace/squabblemon-engine/packRules';
-import { pullBannerOddsVersion, resolvePullBanner } from "@workspace/squabblemon-engine/pullBanners";
+import { packReceiptPullCount, type PullSeasonProgress, type PullSeasonReward } from '@workspace/squabblemon-engine/packRules';
+import { pullBannerOddsVersion, pullBannerReceiptIdentity, resolvePullBanner } from "@workspace/squabblemon-engine/pullBanners";
 import { addStyleShardBalances, spendStyleShards } from '@workspace/squabblemon-engine/styleShards';
 import { and, eq, sql } from "drizzle-orm";
 import {
@@ -15,6 +15,8 @@ import { catalogCardById } from "@workspace/squabblemon-engine/data";
 import { MAX_DECK_SLOTS } from "@workspace/squabblemon-engine/economy";
 import {
   type CollectionRoadDefinition,
+  collectionRoadProgress,
+  anunakiBannerPools,
   generateStreetBatch,
   isPullCount,
   STREET_PACK_CONFIG,
@@ -63,6 +65,11 @@ export async function openStreetPackForPlayer(
         ),
       );
     if (existing) {
+      const identity = pullBannerReceiptIdentity(existing.oddsVersion);
+      if (existing.paymentMethod !== input.paymentMethod || packReceiptPullCount(existing.oddsVersion) !== (input.pullCount ?? 1)
+        || identity.bannerId !== (input.bannerId ?? 'standard') || input.bannerOccurrenceId !== undefined && identity.occurrenceId !== input.bannerOccurrenceId) {
+        throw new EconomyTransactionError(409, 'This opening key belongs to a different purchase. Recover the original opening first.');
+      }
       return {
         opening: existing,
         alreadyOpened: true,
@@ -108,12 +115,18 @@ export async function openStreetPackForPlayer(
       );
     }
 
+    const featuredBefore = profile.featuredPackProgress[banner.id] ?? { misses: 0, packs: 0 };
     const generated = generateStreetBatch({ ownedCardIds: profile.ownedCardIds,
-      discoveredCardIds: profile.discoveredCardIds, ownedVariants: profile.ownedVariants, pity: profile.packPity,
-    }, pullCount, undefined, banner.featuredCardIds);
+      discoveredCardIds: profile.discoveredCardIds, ownedVariants: profile.ownedVariants, pity: profile.packPity, featuredMisses: featuredBefore.misses,
+    }, pullCount, undefined, banner.featuredCardIds, banner.id === "anunaki" ? anunakiBannerPools() : undefined);
+    const featuredProgress = banner.featuredCardIds.length ? { bannerId: banner.id,
+      missesBefore: featuredBefore.misses, missesAfter: generated.featuredMissesAfter!,
+      packsBefore: featuredBefore.packs, packsAfter: featuredBefore.packs + pullCount, hits: generated.featuredHits!,
+    } : null;
     await tx
       .update(playerProfilesTable)
       .set({
+        ...(featuredProgress ? { featuredPackProgress: { ...profile.featuredPackProgress, [banner.id]: { misses: featuredProgress.missesAfter, packs: featuredProgress.packsAfter } } } : {}),
         packTickets:
           input.paymentMethod === "ticket"
             ? profile.packTickets - cost
@@ -144,6 +157,7 @@ export async function openStreetPackForPlayer(
         rewards: generated.rewards,
         pityBefore: profile.packPity,
         pityAfter: generated.pityAfter,
+        featuredProgress,
       })
       .returning();
     const season = await grantPullSeasonMilestones(tx, userId, input.idempotencyKey, openedAt);
@@ -234,7 +248,7 @@ export async function claimCollectionRoadForPlayer(
     if (!profile) {
       throw new EconomyTransactionError(404, "Player profile not found");
     }
-    if (profile.ownedCardIds.length < milestone.threshold) {
+    if (collectionRoadProgress(milestone, profile.ownedCardIds) < milestone.threshold) {
       throw new EconomyTransactionError(
         400,
         `Collect ${milestone.threshold} gameplay cards first`,

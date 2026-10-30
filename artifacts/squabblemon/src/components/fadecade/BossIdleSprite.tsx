@@ -1,4 +1,5 @@
 import { DojoMotionSprite, type DojoSpritePhase } from './DojoMotionSprite';
+import { AnunakiMotionSprite } from './AnunakiMotionSprite';
 import { useEffect, useId, useRef, type CSSProperties } from "react";
 import { getAssetUrl } from "../../lib/assets";
 import { observeMotionElement } from "./AnimatedSprite";
@@ -24,6 +25,7 @@ export function BossIdleSprite({
     [],
   );
   if (asset.startsWith('dojo:')) return <DojoMotionSprite asset={asset} name={name} className={className} paused={paused} reduced={reduced} phase={phase}/>;
+  if (asset.startsWith('anunaki:')) return <AnunakiMotionSprite asset={asset} name={name} className={className} paused={paused} reduced={reduced} phase={phase}/>;
   return (
     <span
       ref={ref}

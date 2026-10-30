@@ -7,7 +7,7 @@ import { STREET_PACK_DISCLOSURES, STREET_PACK_RULES } from '@workspace/squabblem
 import '../src/index.css';
 import '../src/styles/venue.css';
 const initial = {
-  profile: { id: 'weekly-fixture', packHistory: [], packTickets: 12, softCurrency: 2000, styleShards: 0, packPity: 4, ownedCardIds: ['dr-fade'], ownedVariants: [], equippedVariants: {}, settings: { reducedMotion: true, turnTimerEnabled: false } },
+  profile: { id: 'weekly-fixture', packHistory: [], packTickets: 12, softCurrency: 2000, styleShards: 0, packPity: 4, featuredPackProgress: Object.fromEntries(['inmates','oz','wonderland','red-blue','anunaki'].map(id => [id, { misses: Number(new URLSearchParams(location.search).get('misses') ?? 4), packs: 14 }])), ownedCardIds: ['dr-fade'], ownedVariants: [], equippedVariants: {}, settings: { reducedMotion: true, turnTimerEnabled: false } },
   packConfig: { id: 'street-pack', name: 'Street Pack', ticketCost: STREET_PACK_RULES.single.ticketCost, softCurrencyCost: STREET_PACK_RULES.single.softCurrencyCost, rewardsPerPack: 6, oddsVersion: 'street-pack-v7', pityLimit: STREET_PACK_RULES.pityLimit, odds: STREET_PACK_DISCLOSURES },
 } as unknown as PlayerBootstrap;
 const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });

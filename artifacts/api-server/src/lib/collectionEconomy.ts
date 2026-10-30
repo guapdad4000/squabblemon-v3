@@ -1,13 +1,16 @@
 import { STYLE_SHARD_TIERS, styleShardRarityForCard, totalStyleShardRewards, type StyleShardBalances, type StyleShardRarity } from '@workspace/squabblemon-engine/styleShards';
 import { randomInt } from "node:crypto";
+import { isAnunakiCardId } from '@workspace/squabblemon-engine/anunakiWave';
+import { ANUNAKI_BANNER_CARD_IDS, ANUNAKI_BANNER_GAMEPLAY_READY } from '@workspace/squabblemon-engine/anunakiBanner';
 import {
   cardCatalog,
   catalogCardById,
-  STORY_ONLY_CARD_IDS,
+  isGeneralPackCardId,
   isKumiteExclusiveCard,
   type CardRarity,
 } from "@workspace/squabblemon-engine/data";
 import {
+  FEATURED_PACK_RULES,
   choosePackCardFromTier,
   RARE_PLUS_GUARANTEE_WEIGHTS,
   rollWeightedRarity,
@@ -69,6 +72,8 @@ export type GeneratedStreetPack = {
   styleShardBalancesGained: StyleShardBalances;
   softCurrencyGained: number;
   pityAfter: number;
+  featuredMissesAfter?: number;
+  featuredHits?: Array<{ index: number; cardId: string; guaranteed: boolean }>;
 };
 
 const choose = <T>(items: readonly T[], rng: PackRandomInt): T => {
@@ -95,25 +100,37 @@ const currencyReward = (amount: number): ApiPackReward => ({
   rarity: null, isNew: false, amount,
 });
 
-const storyOnlyCardIds = new Set<string>(STORY_ONLY_CARD_IDS);
-
 export function isStreetPackCard(card: Pick<(typeof cardCatalog)[number], "catalogId">) {
-  return !storyOnlyCardIds.has(card.catalogId) && !isKumiteExclusiveCard(card.catalogId);
+  return isGeneralPackCardId(card.catalogId);
 }
 
 function availableVariants(ownedVariants: ReadonlySet<string>, ownedCardIds: ReadonlySet<string>) {
-  return cardCatalog.filter(card => !isKumiteExclusiveCard(card.catalogId) && (isStreetPackCard(card) || ownedCardIds.has(card.catalogId))).flatMap(card => card.variantSlots
+  return cardCatalog.filter(card => !isKumiteExclusiveCard(card.catalogId) && !isAnunakiCardId(card.catalogId) && (isStreetPackCard(card) || ownedCardIds.has(card.catalogId))).flatMap(card => card.variantSlots
     .filter(variant => !variant.progressionOnly && !ownedVariants.has(variant.id))
     .map(variant => ({ card, variant })));
 }
 
-type CardPools = Readonly<Record<PackRarity, readonly (typeof cardCatalog)[number][]>>;
+export type CardPools = Readonly<Record<PackRarity, readonly (typeof cardCatalog)[number][]>>;
 const catalogPools = Object.fromEntries(
   Object.keys(STREET_PACK_RARITY_WEIGHTS).map(rarity => [
     rarity,
     cardCatalog.filter(card => card.rarity === rarity && isStreetPackCard(card)),
   ]),
 ) as unknown as CardPools;
+
+/** Only the separately authorized event banner adds its seven cards to normal rarity tiers. */
+export function buildAnunakiBannerPools(source: readonly (typeof cardCatalog)[number][], ready: boolean): CardPools {
+  if (!ready || ANUNAKI_BANNER_CARD_IDS.some(id => !source.some(card => card.catalogId === id))) {
+    throw new Error('Anunaki banner is unavailable.');
+  }
+  return Object.fromEntries(Object.keys(STREET_PACK_RARITY_WEIGHTS).map(rarity => [rarity,
+    source.filter(card => card.rarity === rarity && (isStreetPackCard(card)
+      || (ANUNAKI_BANNER_CARD_IDS as readonly string[]).includes(card.catalogId))),
+  ])) as unknown as CardPools;
+}
+export function anunakiBannerPools(): CardPools {
+  return buildAnunakiBannerPools(cardCatalog, ANUNAKI_BANNER_GAMEPLAY_READY);
+}
 
 /** Testable tier boundary used by pack generation; empty authored tiers fail loudly. */
 export function drawGameplayCard(input: {
@@ -137,21 +154,35 @@ export function drawGameplayCard(input: {
 }
 
 export function generateStreetPack(
-  current: { ownedCardIds: string[]; discoveredCardIds: string[]; ownedVariants: string[]; pity: number },
+  current: { ownedCardIds: string[]; discoveredCardIds: string[]; ownedVariants: string[]; pity: number; featuredMisses?: number },
   rng: PackRandomInt = randomInt,
   featuredCardIds: readonly string[] = [],
+  pools: CardPools = catalogPools,
 ): GeneratedStreetPack {
   const ownedCards = new Set(current.ownedCardIds);
   const discoveredCards = new Set(current.discoveredCardIds);
   const ownedVariants = new Set(current.ownedVariants);
   const pulled = new Set<string>();
   const rewards: ApiPackReward[] = [];
+  const featuredCards = featuredCardIds.map(id => catalogCardById[id]);
+  if (featuredCards.some(card => !card)) throw new Error('Featured banner has an unknown fighter.');
+  const selected = new Set(featuredCardIds);
+  const normalPools = featuredCards.length ? Object.fromEntries(Object.entries(pools).map(([rarity, cards]) => [rarity, cards.filter(card => !selected.has(card.catalogId))])) as unknown as CardPools : pools;
+  const misses = Math.min(9, Math.max(0, current.featuredMisses ?? 0));
+  let featuredMissesAfter = misses;
+  const featuredHits: NonNullable<GeneratedStreetPack['featuredHits']> = [];
 
   for (let slot = 0; slot < STREET_PACK_RULES.gameplaySlots; slot++) {
-    const card = drawGameplayCard({
+    const guaranteed = featuredCards.length > 0 && misses >= FEATURED_PACK_RULES.pityLimit - 1;
+    const featuredSlot = featuredCards.length > 0 && slot === FEATURED_PACK_RULES.slot - 1;
+    const featuredHit = featuredSlot && (guaranteed || rng(10000) < FEATURED_PACK_RULES.chance * 100);
+    const unownedFeatured = guaranteed ? featuredCards.filter(card => !ownedCards.has(card.catalogId)) : [];
+    const card = featuredHit ? choose(unownedFeatured.length ? unownedFeatured : featuredCards, rng) : drawGameplayCard({
       pulledCardIds: pulled, ownedCardIds: ownedCards,
-      protectNew: slot < STREET_PACK_RULES.protectedSlots, rng, featuredCardIds,
+      protectNew: slot < STREET_PACK_RULES.protectedSlots, rng, pools: normalPools,
     });
+    if (featuredSlot) featuredMissesAfter = featuredHit ? 0 : Math.min(9, misses + 1);
+    if (featuredHit) featuredHits.push({ index: slot, cardId: card.catalogId, guaranteed });
     pulled.add(card.catalogId);
     discoveredCards.add(card.catalogId);
     if (ownedCards.has(card.catalogId)) {
@@ -184,6 +215,7 @@ export function generateStreetPack(
 
   return {
     rewards,
+    ...(featuredCards.length ? { featuredMissesAfter, featuredHits } : {}),
     ownedCardIds: [...ownedCards],
     discoveredCardIds: [...discoveredCards],
     ownedVariants: [...ownedVariants],
@@ -217,27 +249,30 @@ function rebuildInventory(
 }
 
 export function generateStreetTenPull(
-  current: { ownedCardIds: string[]; discoveredCardIds: string[]; ownedVariants: string[]; pity: number },
+  current: { ownedCardIds: string[]; discoveredCardIds: string[]; ownedVariants: string[]; pity: number; featuredMisses?: number },
   rng: PackRandomInt = randomInt,
   featuredCardIds: readonly string[] = [],
+  pools: CardPools = catalogPools,
 ): GeneratedStreetTenPull {
   let state = { ...current };
   const rewards: ApiPackReward[] = [];
+  const featuredHits: NonNullable<GeneratedStreetPack['featuredHits']> = [];
   for (let pull = 0; pull < STREET_PACK_TEN_PULL_CONFIG.pullCount; pull++) {
-    const result = generateStreetPack(state, rng, featuredCardIds);
+    const result = generateStreetPack(state, rng, featuredCardIds, pools);
+    featuredHits.push(...(result.featuredHits ?? []).map(hit => ({ ...hit, index: rewards.length + hit.index })));
     rewards.push(...result.rewards);
     state = {
       ownedCardIds: result.ownedCardIds, discoveredCardIds: result.discoveredCardIds,
-      ownedVariants: result.ownedVariants, pity: result.pityAfter,
+      ownedVariants: result.ownedVariants, pity: result.pityAfter, featuredMisses: result.featuredMissesAfter,
     };
   }
 
   let guaranteedRareIndex = rewards.findIndex(gameplayRarePlus);
   if (guaranteedRareIndex < 0) {
     // Final gameplay slot, never the cosmetic/currency bonus.
-    guaranteedRareIndex = rewards.length - 2;
+    guaranteedRareIndex = rewards.length - (featuredCardIds.length ? 3 : 2);
     const rarity = rollWeightedRarity(RARE_PLUS_GUARANTEE_WEIGHTS, rng);
-    const card = choosePackCardFromTier({ rarity, tier: catalogPools[rarity], pulledCardIds: new Set(), ownedCardIds: new Set(), protectNew: false, rng, featuredCardIds });
+    const card = choosePackCardFromTier({ rarity, tier: pools[rarity].filter(card => !featuredCardIds.includes(card.catalogId)), pulledCardIds: new Set(), ownedCardIds: new Set(), protectNew: false, rng });
     const initiallyOrPreviouslyOwned = current.ownedCardIds.includes(card.catalogId)
       || rewards.slice(0, guaranteedRareIndex).some(r => r.kind === "card" && r.cardId === card.catalogId);
     rewards[guaranteedRareIndex] = initiallyOrPreviouslyOwned
@@ -252,25 +287,29 @@ export function generateStreetTenPull(
     ...totalStyleShardRewards(rewards),
     softCurrencyGained: rewards.filter(r => r.kind === "softCurrency").reduce((sum, r) => sum + r.amount, 0),
     pityAfter: state.pity,
+    ...(featuredCardIds.length ? { featuredMissesAfter: state.featuredMisses, featuredHits } : {}),
     guaranteedRareIndex,
   };
 }
 
 /** Exactly N sequential singles, sharing inventory and style pity, with no ten-pack guarantee. */
 export function generateStreetBatch(
-  current: { ownedCardIds: string[]; discoveredCardIds: string[]; ownedVariants: string[]; pity: number },
+  current: { ownedCardIds: string[]; discoveredCardIds: string[]; ownedVariants: string[]; pity: number; featuredMisses?: number },
   count: PullCount, rng: PackRandomInt = randomInt, featuredCardIds: readonly string[] = [],
+  pools: CardPools = catalogPools,
 ): GeneratedStreetPack {
   if (!isPullCount(count)) throw new Error('Pull count must be an integer from 1 to 10');
-  if (count === 10) return generateStreetTenPull(current, rng, featuredCardIds);
+  if (count === 10) return generateStreetTenPull(current, rng, featuredCardIds, pools);
   let state = { ...current };
   const rewards: ApiPackReward[] = [];
+  const featuredHits: NonNullable<GeneratedStreetPack['featuredHits']> = [];
   for (let index = 0; index < count; index++) {
-    const next = generateStreetPack(state, rng, featuredCardIds);
+    const next = generateStreetPack(state, rng, featuredCardIds, pools);
+    featuredHits.push(...(next.featuredHits ?? []).map(hit => ({ ...hit, index: rewards.length + hit.index })));
     rewards.push(...next.rewards);
-    state = { ownedCardIds: next.ownedCardIds, discoveredCardIds: next.discoveredCardIds, ownedVariants: next.ownedVariants, pity: next.pityAfter };
+    state = { ownedCardIds: next.ownedCardIds, discoveredCardIds: next.discoveredCardIds, ownedVariants: next.ownedVariants, pity: next.pityAfter, featuredMisses: next.featuredMissesAfter };
   }
-  return { rewards, ...rebuildInventory(current, rewards), ...totalStyleShardRewards(rewards),
+  return { rewards, ...(featuredCardIds.length ? { featuredMissesAfter: state.featuredMisses, featuredHits } : {}), ...rebuildInventory(current, rewards), ...totalStyleShardRewards(rewards),
     softCurrencyGained: rewards.filter(reward => reward.kind === 'softCurrency').reduce((sum, reward) => sum + reward.amount, 0), pityAfter: state.pity };
 }
 
@@ -288,5 +327,10 @@ export const COLLECTION_ROAD: CollectionRoadDefinition[] = [
   { id: "first-seven", threshold: 7, title: "Gang Certified", description: "Your collection has seven cards. Keep collecting to fill a ten-card gang.", rewardLabel: "Closet Nerd", cardId: "closet-nerd", reward: { cardId: "closet-nerd" } },
   { id: "nine-deep", threshold: 9, title: "Room Reader", description: "Nine different cards means more ways to answer a district.", rewardLabel: "Live Streamer + 50 Shards", cardId: "live-streamer", reward: { cardId: "live-streamer", styleShards: 50 } },
   { id: "twelve-deep", threshold: 12, title: "Neighborhood Name", description: "Your binder is starting to tell its own story.", rewardLabel: "Techbro Rich + 150 Clout", cardId: "techbro-rich", reward: { cardId: "techbro-rich", softCurrency: 150 } },
-  { id: "full-roster", threshold: cardCatalog.length, title: "Whole Block", description: "Every gameplay card in the launch pool is yours.", rewardLabel: "2 deck slots + 300 Clout", cardId: null, reward: { deckSlots: 2, softCurrency: 300 } },
+  { id: "full-roster", threshold: cardCatalog.filter(card => !isAnunakiCardId(card.catalogId)).length, title: "Whole Block", description: "Every gameplay card in the launch pool is yours.", rewardLabel: "2 deck slots + 300 Clout", cardId: null, reward: { deckSlots: 2, softCurrency: 300 } },
 ];
+/** Event cards count toward ordinary early milestones, but cannot replace launch cards in Whole Block. */
+const fullRosterCardIds = new Set(cardCatalog.filter(card => !isAnunakiCardId(card.catalogId)).map(card => card.catalogId));
+export function collectionRoadProgress(milestone: CollectionRoadDefinition, ownedCardIds: readonly string[]): number {
+  return milestone.id === 'full-roster' ? new Set(ownedCardIds.filter(id => fullRosterCardIds.has(id))).size : ownedCardIds.length;
+}

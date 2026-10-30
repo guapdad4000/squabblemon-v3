@@ -2,7 +2,9 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import { cards } from '../data';
 import { getEffectiveCardPower } from '../gameEngine';
-import { getCardFormPreview, previewCardForm, previewBuddyForm } from './cardFormPreview';
+import { getCardFormPreview, previewCardForm, previewBuddyForm, tabletPreviewAsset } from './cardFormPreview';
+import { anunakiCards } from '@workspace/squabblemon-engine/anunakiWave';
+import sharp from 'sharp';
 
 test('Buddy form preview switches element and art key without changing source or inventing battle buffs', () => {
   const source = JSON.stringify(cards.buddy);
@@ -63,4 +65,21 @@ test('unsupported cards have no form controls or transformed state', () => {
     assert.equal(getCardFormPreview(card), undefined);
     assert.equal(previewCardForm(card, true), card);
   }
+});
+
+test('approved tablet artworks are transparent, preview-only, and preserve every gameplay field', async () => {
+  for (const id of ['anu', 'caucus-mountaineer', 'enlil', 'ereshkigal', 'inanna', 'utu']) {
+    const card = anunakiCards[id];
+    const before = JSON.stringify(card);
+    const path = tabletPreviewAsset(card, true)!;
+    assert.equal(path, `assets/characters/tablet-previews/${id}.webp`);
+    assert.equal(tabletPreviewAsset(card, false), undefined);
+    assert.equal(previewCardForm(card, true), card);
+    assert.equal(JSON.stringify(card), before);
+    assert.match(getCardFormPreview(card)!.alternateHint, /artwork preview only/);
+    const metadata = await sharp(`public/${path}`).metadata();
+    assert.equal(metadata.hasAlpha, true);
+    assert.ok(metadata.width! <= 768 && metadata.height! <= 1344);
+  }
+  assert.equal(tabletPreviewAsset(anunakiCards.yakub, true), undefined);
 });

@@ -30,14 +30,14 @@ import {
 } from "./gameEngine";
 
 /** Bumped whenever a persisted online room can no longer be replayed safely. */
-export const ONLINE_RULES_VERSION = 64;
+export const ONLINE_RULES_VERSION = 65;
 /**
  * Card values and trigger semantics are part of a reward match's issued
  * snapshot.  Keep this separate from the transport rules version so a
  * cosmetic/network change does not invalidate an in-progress reward fade.
  * CPU decisions are replayed from the transcript, so policy changes also bump it.
  */
-export const CARD_BALANCE_VERSION = 64;
+export const CARD_BALANCE_VERSION = 65;
 export const TURN_SECONDS = 75;
 export const ROOM_LIFETIME_MS = 30 * 60 * 1000;
 export type Seat = Owner;
@@ -50,6 +50,7 @@ export type OnlineDeck = {
   cards: string[];
 };
 export type OnlineBanner = { cardId: string; finish?: 'base' | 'silver'; stickers?: string[] };
+export { ANUNAKI_CLIENT_CAPABILITY, CLIENT_CAPABILITIES_HEADER } from './onlineCapabilities';
 export type OnlineMember = {
   userId: string;
   name: string;
@@ -61,6 +62,8 @@ export type OnlineMember = {
   /** Display-only equipment, captured when joining the room; never affects play. */
   playerMatId?: string;
   banner?: OnlineBanner;
+  /** Capability of the client that most recently entered or refreshed this seat. */
+  supportsAnunaki?: boolean;
   deck: OnlineDeck;
   ready: boolean;
 };
@@ -495,6 +498,10 @@ export type PublicEvent = {
   owner: Seat;
   lane: Lane;
   cardId: string | null;
+  /** Public marker removal only; private hand and replay state stay server-side. */
+  tabletConsumed?: { owner: Seat; lane: Lane }[];
+  /** Public marker placement only; never includes private replay state. */
+  tabletPlaced?: { owner: Seat; lane: Lane }[];
   /** Board-only presentation data so clients can animate effects. Never includes hand cards. */
   sourceId?: string;
   participants?: PublicParticipant[];
@@ -670,6 +677,13 @@ export function onlineRoomView(
         note: event.type === "pass" ? "Turn ended." : event.note,
         owner: event.owner,
         lane: event.lane,
+        ...(() => {
+          const consumed = (event.replay?.before?.ancientTablets ?? []).filter(tablet =>
+            !(event.replay?.after?.ancientTablets ?? []).some(next => next.owner === tablet.owner && next.lane === tablet.lane));
+          const placed = (event.replay?.after?.ancientTablets ?? []).filter(tablet =>
+            !(event.replay?.before?.ancientTablets ?? []).some(previous => previous.owner === tablet.owner && previous.lane === tablet.lane));
+          return { ...(consumed.length ? { tabletConsumed: consumed } : {}), ...(placed.length ? { tabletPlaced: placed } : {}) };
+        })(),
         cardId:
           event.type === "play" || event.type === "reveal"
             ? event.cardId

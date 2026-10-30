@@ -1,3 +1,4 @@
+import { releasedAnunakiIds } from './anunakiTestCatalog';
 import { CREW_MATCHUP_PATCH } from '../../../lib/squabblemon-engine/src/crewMatchupBalance';
 import assert from 'node:assert/strict';
 import { existsSync } from 'node:fs';
@@ -31,7 +32,7 @@ const advance = (m: Match) => nextRound({ ...m, phase: 'resolved', playerHand: [
 test('all twelve retain collection, rarity, artwork, cosmetics and training IDs at the approved costs', () => {
   const costs = [3, 1, 3, 2, 3, 3, 3, 2, 4, 4, 4, 3];
   assert.equal(CHARACTER_WAVE.length, 12);
-  assert.equal(cardCatalog.filter(c => (c.kind ?? 'character') === 'character').length, 278);
+  assert.equal(cardCatalog.filter(c => (c.kind ?? 'character') === 'character').length, 278 + releasedAnunakiIds.length);
   CHARACTER_WAVE.forEach(([id, art, name, rarity], index) => {
     assert.equal(cards[id].name, name); assert.equal(cards[id].cost, CREW_MATCHUP_PATCH[id]?.cost ?? costs[index]);
     assert.equal(catalogCardById[art].engineId, id); assert.equal(catalogCardById[art].rarity, rarity);

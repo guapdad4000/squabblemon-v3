@@ -17,6 +17,7 @@ import {
   decks,
   engineIdsToCatalogIds,
 } from "@workspace/squabblemon-engine/data";
+import { createCardInstance } from "@workspace/squabblemon-engine/gameEngine";
 import BossRaidGame from "../src/components/fadecade/BossRaidGame";
 import { BossRaidCabinet } from "../src/components/fadecade/BossRaidCabinet";
 import "../src/index.css";
@@ -75,6 +76,13 @@ if (params.has("demo") && !run) {
       campaign = settleBossCampaign(campaign, old, run).campaign;
     }
   }
+}
+if (params.has("choices")) {
+  run = createBossRaid(crypto.randomUUID(), day, crew.cards, crew.name, { tier:campaign.tier,hp:campaign.hp },mode);
+  run.match.playerHand = ["homelessguy","the-dice-game","the-concert","cornball"].map((id,index)=>createCardInstance(id,"player","choices",index));
+  run.match.playerMotion=12; run.match.cpuMotion=12;
+  run.match.boards[0]=[{...createCardInstance("raid-feds","cpu","choice-tax",0),lane:0,playedRound:1}];
+  run.match.boards[1]=[{...createCardInstance("cornball","player","concert-ally",0),lane:1,playedRound:1},{...createCardInstance("cornball","cpu","concert-enemy",0),lane:1,playedRound:1,powerModifier:6}];
 }
 function status(): BossStatus {
   return {

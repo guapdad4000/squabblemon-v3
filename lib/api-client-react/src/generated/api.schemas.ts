@@ -643,6 +643,12 @@ export type CosmeticLoadoutCardBackgrounds = {[key: string]: 'blue-hour'};
 
 export interface CosmeticLoadout {
   /**
+     * Owned deck cover. Null restores the default cover.
+     * @maxLength 80
+     * @nullable
+     */
+  deckCoverId?: string | null;
+  /**
      * Owned player mat for PvP and training. Null restores the free venue.
      * @maxLength 80
      * @nullable
@@ -757,6 +763,21 @@ export interface PullSeasonReward {
   styleShards: number;
 }
 
+export type PackOpeningFeaturedProgressHitsItem = {
+  index: number;
+  cardId: string;
+  guaranteed: boolean;
+};
+
+export type PackOpeningFeaturedProgress = {
+  bannerId: string;
+  missesBefore: number;
+  missesAfter: number;
+  packsBefore: number;
+  packsAfter: number;
+  hits: PackOpeningFeaturedProgressHitsItem[];
+};
+
 export interface PackOpening {
   id: string;
   oddsVersion: string;
@@ -765,10 +786,21 @@ export interface PackOpening {
   pullCount: number;
   rewards: PackReward[];
   seasonRewards?: PullSeasonReward[];
+  featuredProgress?: PackOpeningFeaturedProgress;
   pityBefore: number;
   pityAfter: number;
   createdAt: string;
 }
+
+export type PlayerProfileFeaturedPackProgress = {[key: string]: {
+  /**
+     * @minimum 0
+     * @maximum 9
+     */
+  misses: number;
+  /** @minimum 0 */
+  packs: number;
+}};
 
 export type PlayerProfileCardProgression = {[key: string]: CardProgress};
 
@@ -792,6 +824,7 @@ export interface PlayerProfile {
   packTickets: number;
   styleShards: number;
   styleShardBalances?: StyleShardBalances;
+  featuredPackProgress?: PlayerProfileFeaturedPackProgress;
   packPity: number;
   deckSlots: number;
   cosmeticCurrency: number;

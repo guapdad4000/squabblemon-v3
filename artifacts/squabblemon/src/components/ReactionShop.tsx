@@ -3,7 +3,7 @@ import { useReducedMotion } from 'framer-motion';
 import { Link } from 'wouter';
 import { useQueryClient } from '@tanstack/react-query';
 import { ApiError, customFetch, getGetPlayerBootstrapQueryKey, type PlayerBootstrap } from '@workspace/api-client-react';
-import { REACTIONS, REACTION_PACKS, ownedReactions, type ReactionId } from '@workspace/squabblemon-engine/reactions';
+import { REACTIONS, REACTION_PACKS, ownedReactions, reactionCollectionSize, type ReactionId } from '@workspace/squabblemon-engine/reactions';
 import { type ShopRequest } from '@workspace/squabblemon-engine/economy';
 import { clearShopRequest, readShopRequest, saveShopRequest } from '../lib/shopJournal';
 import { getAssetUrl } from '../lib/assets';
@@ -69,7 +69,7 @@ export function ReactionShop({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   return <section className="reaction-shop" aria-labelledby="reaction-shop-title">
     <header className="reaction-shop__masthead">
       <div><small>FADE MARKET / REACTIONS SHELF</small><h2 id="reaction-shop-title">Block Talk.</h2><p>Pick a sticker. Bring the attitude to your next PvP fade.</p></div>
-      <div className="reaction-shop__count" data-testid="text-reaction-collection"><strong>{owned.length} / {REACTIONS.length}</strong>STICKERS COLLECTED</div>
+      <div className="reaction-shop__count" data-testid="text-reaction-collection"><strong>{owned.length} / {reactionCollectionSize(profile.unlockedCosmeticIds)}</strong>STICKERS COLLECTED</div>
     </header>
     <div className="reaction-shop__chapter reaction-shop__chapter--first"><h3>On the house</h3><small>TWO STARTERS · ALWAYS YOURS</small></div>
     <div className="reaction-shop__shelf" data-owned="true" data-testid="shelf-reaction-starters">

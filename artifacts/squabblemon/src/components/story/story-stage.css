@@ -31,3 +31,5 @@
 
 /* Kumite uses a clean light layer; the legacy projector JPG contains a baked checkerboard. */
 .story-stage--kumite .story-stage__beam--kumite{background:conic-gradient(from 95deg at 4% -8%,transparent 0deg,rgba(246,204,133,.18) 22deg,rgba(246,204,133,.3) 35deg,transparent 61deg),radial-gradient(ellipse at 10% 0%,rgba(255,222,163,.22),transparent 48%);opacity:.5;filter:blur(8px)}
+
+.story-stage--anunaki .story-stage__beam--anunaki{background:radial-gradient(ellipse at 48% 0,#e5c36440,transparent 65%);opacity:.6;filter:blur(12px)}.story-stage--anunaki .story-stage__speaker-name{color:#c4ffdf}.story-stage--anunaki .story-stage__header>span{color:#e5ce8f}

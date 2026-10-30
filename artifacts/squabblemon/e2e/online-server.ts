@@ -46,8 +46,8 @@ await db
         {
           id: "my-online-crew",
           name: seat === "a" ? "The Home Gang" : "The Away Gang",
-          heroCardId: seat === "a" ? "hooper" : "wifey",
-          cardIds: process.env.ONLINE_E2E_KYLE === "1" ? ["kyle", ...ROOKIE_CORE_IDS.slice(0, 9)] : [...ROOKIE_CORE_IDS],
+          heroCardId: process.env.ONLINE_E2E_ANUNAKI === "1" ? "anu" : seat === "a" ? "hooper" : "wifey",
+          cardIds: process.env.ONLINE_E2E_ANUNAKI === '1' ? ['nabu', 'yakub', 'utu', 'caucus-mountaineer', 'ninhursag', 'inanna', 'enki', 'ereshkigal', 'enlil', 'anu'] : process.env.ONLINE_E2E_KYLE === "1" ? ["kyle", ...ROOKIE_CORE_IDS.slice(0, 9)] : [...ROOKIE_CORE_IDS],
         },
       ],
       settings: { reducedMotion: true, turnTimerEnabled: true },

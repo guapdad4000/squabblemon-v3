@@ -3,6 +3,7 @@ import { readFileSync, readdirSync } from 'node:fs';
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { createGame } from './src/breakthrough';
+import { anunakiCards } from './src/anunakiWave';
 import {
   BREAKTHROUGH_ROSTER,
   BREAKTHROUGH_STARTER_DECKS,
@@ -45,13 +46,27 @@ function proof(
     })),
   };
 }
-test('actual301-of301 catalog stays closed without full evidence and approval, including legal decks and loaners', () => {
+test('actual 301-of-311 catalog stays closed with 10 unsupported Anunaki cards, missing evidence and approval', () => {
   const status = getBreakthroughLaunchReadiness();
-  assert.equal(status.totalCards, 301);
+  assert.equal(status.totalCards, 311);
   assert.equal(status.supportedCards, 301);
-  assert.equal(status.unsupportedCardIds.length, 0);
+  assert.deepEqual(
+    [...status.unsupportedCardIds].sort(),
+    Object.keys(anunakiCards).sort(),
+  );
   assert.equal(status.canLaunch, false);
   assert.equal(isBreakthroughPublicEntryEnabled(), false);
+});
+test('Anunaki adapters remain a launch blocker even with hypothetical full proof and approval', () => {
+  const current = getBreakthroughLaunchCoverage();
+  const status = evaluateBreakthroughRelease(current, proof(current), true);
+  assert.equal(status.totalCards, 311);
+  assert.equal(status.supportedCards, 301);
+  assert.equal(status.verifiedCards, 311);
+  assert.equal(status.canLaunch, false);
+  assert.deepEqual(status.reasons, [
+    '10 canonical cards still need concrete Breakthrough effects.',
+  ]);
 });
 test('complete adapter presence never replaces per-card proof or explicit approval', () => {
   const allSupported = {
@@ -62,9 +77,9 @@ test('complete adapter presence never replaces per-card proof or explicit approv
     })),
   };
   const missingProof = evaluateBreakthroughRelease(allSupported, null, true);
-  assert.equal(missingProof.supportedCards, 301);
+  assert.equal(missingProof.supportedCards, 311);
   assert.equal(missingProof.canLaunch, false);
-  assert.equal(missingProof.unverifiedCardIds.length, 301);
+  assert.equal(missingProof.unverifiedCardIds.length, 311);
   assert.equal(
     evaluateBreakthroughRelease(coverage, proof(), false).canLaunch,
     false,

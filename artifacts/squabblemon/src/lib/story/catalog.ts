@@ -14,7 +14,7 @@ export const isStoryCharacterId = (id: string) => id in CHARACTER_BY_ID;
 export const CHARACTER_BY_ID = Object.freeze(Object.fromEntries(STORY_CHARACTERS.map(character => [character.id, character])));
 export const VENUE_BY_ID: Readonly<Record<string, StoryVenueEntry>> = Object.freeze(index.venues);
 export const { MAX_STARS_PER_BATTLE, TICKETS_PER_PERFECT_BATTLE, COMPACT_TICKET_CHAPTER_BATTLES } = index.rules;
-export const ticketsForStars = (stars: number) => stars >= MAX_STARS_PER_BATTLE ? TICKETS_PER_PERFECT_BATTLE : 0;
+export const ticketsForStars = (stars: number,nodeId?:string) => nodeId?.startsWith('anunaki-') ? 0 : stars >= MAX_STARS_PER_BATTLE ? TICKETS_PER_PERFECT_BATTLE : 0;
 export const storyDialogueToken = (nodeId: string, section: 'pre' | 'post' | 'main', position: number) =>
   `${(index.tokens as Record<string, string>)[nodeId] ?? `${nodeId}:script-v3`}:${section}:${position}`;
 

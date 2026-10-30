@@ -1,4 +1,5 @@
 import {useLocation} from 'wouter';
+import { AnunakiRaidGame } from './AnunakiRaidGame';
 import { KumiteDojoPractice } from './KumiteDojoPractice';
 import { policeRevealDuration } from "./bossRaidPresentation";
 import { setBattleMusicMode } from "../../musicStore";
@@ -28,10 +29,12 @@ function LiveBossRaidGame({
   bootstrap,
   crews,
   onExit,
+  onAnunaki,
 }: {
   bootstrap: PlayerBootstrap;
   crews: Deck[];
   onExit: () => void;
+  onAnunaki: () => void;
 }) {
   useEffect(() => {
     setBattleMusicMode("boss");
@@ -162,6 +165,7 @@ function LiveBossRaidGame({
         status={status}
         mode={mode}
         onModeChange={switchMode}
+        onAnunaki={onAnunaki}
         ownedCardIds={bootstrap.profile.ownedCardIds}
         busy={busy}
         blast={blast}
@@ -202,6 +206,7 @@ function LiveBossRaidGame({
     >
       <div className="raid-entry-topbar">
         <button onClick={onExit}>← Fadecade</button>
+        <button type="button" onClick={onAnunaki}>ANUNAKI RAID · ANU</button>
         <div className="raid-mode-flip" role="tablist" aria-label="Choose Raid Operation">
           <button
             type="button"
@@ -354,8 +359,9 @@ function LiveBossRaidGame({
   );
 }
 
-export default function BossRaidGame(props:Parameters<typeof LiveBossRaidGame>[0]) {
+export default function BossRaidGame(props:Omit<Parameters<typeof LiveBossRaidGame>[0], 'onAnunaki'>) {
  const [,navigate]=useLocation();
  const fighter=typeof window==='undefined'?null:new URLSearchParams(window.location.search).get('practice');
- return fighter?<KumiteDojoPractice key={props.bootstrap.profile.id+fighter} bootstrap={props.bootstrap} fighterId={fighter} onExit={()=>navigate('/game/kumite')}/>:<LiveBossRaidGame {...props}/>;
+ const [anunaki,setAnunaki]=useState(() => typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('raid') === 'anunaki');
+ return fighter?<KumiteDojoPractice key={props.bootstrap.profile.id+fighter} bootstrap={props.bootstrap} fighterId={fighter} onExit={()=>navigate('/game/kumite')}/>:anunaki?<AnunakiRaidGame {...props} onBack={()=>setAnunaki(false)}/>:<LiveBossRaidGame {...props} onAnunaki={()=>setAnunaki(true)}/>;
 }

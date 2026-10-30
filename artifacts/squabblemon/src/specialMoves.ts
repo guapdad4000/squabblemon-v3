@@ -9,6 +9,7 @@ export type MoveClip = {
   file: string; label: string; move: string; enabled: boolean; revision?: string;
   chroma: 'cyan' | 'green' | 'none';
   startSeconds: number; durationMs: number; playbackRate: number;
+  keyProfile?: 'anunaki';
 };
 export const moveClips = Object.fromEntries(Object.entries(catalog.clips).map(([id, clip]) => {
   const engineId = Object.entries(catalog.assignments).find(([, assigned]) => assigned === id)?.[0];
@@ -53,7 +54,11 @@ export function resolveSpecialMove(card: Card | string, overrides: MoveOverrides
   return clip?.enabled ? { id: clipId!, ...clip } : null;
 }
 
-export function specialMoveForEvent(event: Pick<EffectLogEntry, 'type' | 'cardId'> & Parameters<typeof abilityTookEffect>[0], overrides: MoveOverrides = {}) {
+export function specialMoveForEvent(event: Pick<EffectLogEntry, 'type' | 'cardId'> & Partial<Pick<EffectLogEntry, 'cardInstanceId'>> & Parameters<typeof abilityTookEffect>[0], overrides: MoveOverrides = {}) {
+  // A Caucus chain can produce eight unique summoned instances. Keep their
+  // damage and summon cues, but do not replay the full movie for every copy.
+  const sourceId = event.source?.cardInstanceId ?? event.cardInstanceId;
+  if (event.cardId === 'caucus-mountaineer' && sourceId?.startsWith('summon:')) return null;
   return abilityTookEffect(event)
     ? resolveSpecialMove(event.cardId, overrides) : null;
 }
@@ -93,16 +98,19 @@ export function markSpecialMovePlayed(playedSet: Set<string> | null, params: Mov
 }
 
 /** Feather the backing color, retaining white highlights and dark outlines. */
-export function keyChromaPixels(data: Uint8ClampedArray, chroma: MoveClip['chroma']) {
+export const ANUNAKI_CHROMA_KEY = { threshold: 24, feather: 58, spill: 18, edgeFeather: .035 } as const;
+export function keyChromaPixels(data: Uint8ClampedArray, chroma: MoveClip['chroma'], profile?: MoveClip['keyProfile']) {
   if (chroma === 'none') return;
+  const key = profile === 'anunaki' ? ANUNAKI_CHROMA_KEY : { threshold: 35, feather: 65, spill: 25 };
   for (let i = 0; i < data.length; i += 4) {
     const r = data[i], g = data[i + 1], b = data[i + 2];
     const dominance = chroma === 'cyan' ? Math.min(g, b) - r : g - Math.max(r, b);
-    const alpha = 1 - Math.max(0, Math.min(1, (dominance - 35) / 65));
+    const alpha = 1 - Math.max(0, Math.min(1, (dominance - key.threshold) / key.feather));
     data[i + 3] = Math.round(data[i + 3] * alpha);
     if (alpha > 0 && alpha < 1) {
-      data[i + 1] = Math.round(g * alpha + Math.min(g, r + 25) * (1 - alpha));
-      if (chroma === 'cyan') data[i + 2] = Math.round(b * alpha + Math.min(b, r + 25) * (1 - alpha));
+      const spillFloor = profile === 'anunaki' && chroma === 'green' ? Math.max(r, b) : r;
+      data[i + 1] = Math.round(g * alpha + Math.min(g, spillFloor + key.spill) * (1 - alpha));
+      if (chroma === 'cyan') data[i + 2] = Math.round(b * alpha + Math.min(b, r + key.spill) * (1 - alpha));
     }
   }
 }

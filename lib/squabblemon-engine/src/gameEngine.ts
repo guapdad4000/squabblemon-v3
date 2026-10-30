@@ -1,5 +1,6 @@
 import { shareReplaySnapshot } from './replayCodec';
 export { compactMatchReplay, restoreMatchReplay } from './replayCodec';
+import { anunakiCards } from './anunakiWave';
 import { PVP_SUPPORT } from './basePvpBalance';
 import { selectedCards, fakeMarriage } from './selectedWave';
 import { selectedReveal, selectedArrived, selectedMoved, selectedGain, selectedDamage, selectedResolved, type SelectedTools } from './selectedAbilities';
@@ -156,6 +157,8 @@ export type CardInstance = Card & {
   idolId?: string;
   fanRound?: number;
   waveTrainingUsed?: boolean;
+  /** A real SQUABBLE play, never recreated by an echo or summon. */
+  anunakiSquabbled?: boolean;
   /** Recruitment changes match control once; collection ownership never changes. */
   swookieRecruited?: boolean;
   /** Caffeine consumes printed Hands, so bouncing cannot heal its cost. */
@@ -245,7 +248,7 @@ export type ReplayState = Pick<Match,
   'swookieRecruitment' | 'rainmakerPayouts' | 'foodzCommunityServed' |
   'playerDrawIndex' | 'cpuDrawIndex' | 'squabbleUsed' | 'plugDiscountLane' |
   'cheapBuffsUsed' | 'timedEffects' | 'discountTokens' | 'nextDiscountOrder' | 'landlordTaxUsed' |
-  'creativeMarks' | 'districtTraps' | 'janitorReversals' | 'lastMovedAlly' | 'roundMovedIds' | 'entranceHistory' | 'guapRounds' | 'cheshireRounds' | 'electricPlays' | 'leaderRounds' | 'pendingLeaderReactions' | 'lingeringScents' | 'sneakerTriggered' | 'storyRuntime' | 'abilityUpgradeSnapshot' | 'squabbleByOwner' | 'districtSnapshot' | 'districtRuntime' | 'blueNextBonus' | 'squabblehouseRevealHistory'
+  'creativeMarks' | 'districtTraps' | 'janitorReversals' | 'lastMovedAlly' | 'roundMovedIds' | 'entranceHistory' | 'guapRounds' | 'cheshireRounds' | 'electricPlays' | 'leaderRounds' | 'pendingLeaderReactions' | 'lingeringScents' | 'sneakerTriggered' | 'storyRuntime' | 'abilityUpgradeSnapshot' | 'squabbleByOwner' | 'districtSnapshot' | 'districtRuntime' | 'blueNextBonus' | 'squabblehouseRevealHistory' | 'ancientTablets' | 'yakubBuffs'
 >;
 
 export type TimedEffect = {
@@ -318,6 +321,10 @@ export type Match = {
   /** Reactions settle after the triggering action, separately from its upgrade checks. */
   pendingLeaderReactions?: LeaderReaction[];
   lingeringScents?: LingeringScent[];
+  /** One public, non-slot marker per owner and district. */
+  ancientTablets?: { owner: Owner; lane: Lane }[];
+  /** A future character deployment, never a summon, consumes this bonus. */
+  yakubBuffs?: { owner: Owner; sourceInstanceId: string; expiresAfterRound: number }[];
   [DAMAGE_OWNER]?: Owner;
   [NON_DAMAGE_HANDS_LOSS]?: Readonly<Record<string, number>>;
   [SUPPRESS_PRESENTATION_EVENTS]?: true;
@@ -729,6 +736,19 @@ const districtTax = (match: Match, owner: Owner, targetLane: Lane): number => {
   const effect = match.districtSnapshot?.locations[targetLane].effect;
   return effect?.kind === 'tithe' && match.districtRuntime?.roundPlays[owner][targetLane] === 0 ? effect.tax : 0;
 };
+/** Use one friendly tablet for Anu's discount only when it beats the existing non-stacking discount. */
+function anuDiscountTablet(match: Match, owner: Owner, card: CardInstance, targetLane: Lane) {
+  if (card.cardId !== 'anu') return undefined;
+  const token = discountFor(match, owner, card, targetLane);
+  const legacy = !token && (match.discountTokens ?? []).length === 0
+    && match.plugDiscountLane[owner] !== null && match.plugDiscountLane[owner] !== targetLane;
+  const buddy = inLane(match, owner, targetLane).some(c => c.cardId === 'buddy' && c.buddyForm !== 'squabble-earth' && activeAbility(c));
+  const otherReduction = token || legacy || buddy ? (token?.eligibility === 'wiseman-prediction' ? 2 : 1)
+    : districtDiscount(match, owner, card, targetLane);
+  if (otherReduction >= 2) return undefined;
+  return [...(match.ancientTablets ?? [])].filter(t => t.owner === owner)
+    .sort((a, b) => Number(b.lane === targetLane) - Number(a.lane === targetLane) || a.lane - b.lane)[0];
+}
 export function getLegalCardCost(match: Match, owner: Owner, card: CardInstance, targetLane: Lane): number {
   const legacyDiscount = (match.discountTokens ?? []).length === 0
     && match.plugDiscountLane[owner] !== null && match.plugDiscountLane[owner] !== targetLane;
@@ -740,7 +760,7 @@ export function getLegalCardCost(match: Match, owner: Owner, card: CardInstance,
   const ignoresLocationMotionPenalty = isMythicalTripleOg(card.cardId) && TRIPLE_OG_LANE[card.cardId] === targetLane;
   const aliceReturnDiscount = card.cardId === 'alice' && !!card.aliceReady;
   const minimum = aliceReturnDiscount || card.rabbitReturnDiscount || token?.eligibility === 'homecoming' || token?.eligibility === 'selected-music' || token?.eligibility === 'wiseman-prediction' || token?.eligibility === 'creative-local' ? 1 : 0;
-  const reduction = discount ? (token?.eligibility === 'wiseman-prediction' ? 2 : 1)
+  const reduction = anuDiscountTablet(match, owner, card, targetLane) ? 2 : discount ? (token?.eligibility === 'wiseman-prediction' ? 2 : 1)
     : districtDiscount(match, owner, card, targetLane);
   return Math.max(minimum, card.cost - reduction - (aliceReturnDiscount ? 1 : 0) - (card.rabbitReturnDiscount ? 1 : 0))
     + (taxed ? 1 : 0) + (ignoresLocationMotionPenalty ? 0 : districtTax(match, owner, targetLane))
@@ -754,12 +774,14 @@ export function getCardCostExplanation(match: Match, owner: Owner, card: CardIns
   const taxed = activeLandlord(match, owner, targetLane) && !(match.landlordTaxUsed?.[owner]?.[targetLane] ?? false);
   const ignoresLocationMotionPenalty = isMythicalTripleOg(card.cardId) && TRIPLE_OG_LANE[card.cardId] === targetLane;
   const parts = [`${card.cost} base`];
-  if (token || legacy) parts.push(token?.eligibility === "wiseman-prediction" ? "−2 Told You discount" : "−1 discount");
+  const tablet = anuDiscountTablet(match, owner, card, targetLane);
+  if (tablet) parts.push(`−2 Ancient Tablet (spends tablet in ${match.districtSnapshot?.locations[tablet.lane]?.name ?? `district ${tablet.lane + 1}`})`);
+  else if (token || legacy) parts.push(token?.eligibility === "wiseman-prediction" ? "−2 Told You discount" : "−1 discount");
   else if (buddyLaneDiscount) parts.push("−1 BUDDY district discount");
   else if (districtDiscount(match, owner, card, targetLane)) parts.push(match.districtSnapshot?.locations[targetLane].effect.kind === 'dive-discount' ? "−1 Dive Bar discount" : "−1 Bodega opening discount");
-  if (token?.eligibility === "creative-local") parts.push("Local pass minimum 1 Motion");
-  if (token?.eligibility === "homecoming") parts.push("Homecoming minimum 1 Motion");
-  if (token?.eligibility === "wiseman-prediction") parts.push("Told You minimum 1 Motion");
+  if (!tablet && token?.eligibility === "creative-local") parts.push("Local pass minimum 1 Motion");
+  if (!tablet && token?.eligibility === "homecoming") parts.push("Homecoming minimum 1 Motion");
+  if (!tablet && token?.eligibility === "wiseman-prediction") parts.push("Told You minimum 1 Motion");
   if (card.cardId === 'alice' && card.aliceReady) parts.push("−1 Drink Me / Eat Me return discount (minimum 1 Motion)");
   if (card.rabbitReturnDiscount) parts.push("−1 Pocket Watch return discount (minimum 1 Motion)");
   if (dmvTax(match, owner, targetLane)) parts.push("+1 Take a Number");
@@ -770,7 +792,7 @@ export function getCardCostExplanation(match: Match, owner: Owner, card: CardIns
   return parts.join(" · ");
 }
 const dmvTax = (m: Match, owner: Owner, lane: Lane) => (m.districtTraps ?? []).some(t => t.kind === "dmv" && t.owner !== owner && t.lane === lane && t.expiresAfterRound >= m.round);
-export type CharacterDistrictMark = { owner: Owner; lane: Lane; text: string; artworkId?: string; id?: string; sourceId?: string; targetIds?: string[]; expiresRound?: number; progress?: { current: number; total: number } };
+export type CharacterDistrictMark = { owner: Owner; lane: Lane; text: string; kind?: 'ancient-tablet'; artworkId?: string; id?: string; sourceId?: string; targetIds?: string[]; expiresRound?: number; progress?: { current: number; total: number } };
 export function getCharacterDistrictMarks(match: Match): CharacterDistrictMark[] {
   const janitorMarks = ([0, 1, 2] as Lane[]).flatMap(targetLane =>
     (['player', 'cpu'] as Owner[]).flatMap(owner => {
@@ -790,6 +812,7 @@ export function getCharacterDistrictMarks(match: Match): CharacterDistrictMark[]
     }));
   return [
     ...janitorMarks,
+    ...(match.ancientTablets ?? []).map(tablet => ({ ...tablet, id: `ancient-tablet-${tablet.owner}-${tablet.lane}`, artworkId: 'ancient-tablet', text: 'Ancient Tablet · ready to consume', kind: 'ancient-tablet' as const })),
     ...creativeDistrictMarks(match).filter(mark => !mark.text.includes('mi-') && !mark.text.includes('sl-')),
     ...streetLegendsDistrictMarks(match),
     ...musicDistrictMarks(match),
@@ -1156,6 +1179,27 @@ const cleanseAlly = (match: Match, targetId: string, apply: (card: CardInstance)
   const cleansed = findCard(after, targetId);
   return before && cleansed && needsCleanse(before) && !needsCleanse(cleansed)
     ? queueLeaderReaction(after, 'nightmedic', targetId, match) : after;
+};
+
+// Resolve the reaction after the tablet's own replay event, so it appears exactly
+// once whether a tablet is spent as a play cost or by an On Reveal ability.
+const reactToConsumedTablet = (match: Match, owner: Owner, lane: Lane): Match => {
+  let result = match;
+  const sources = inLane(match, owner, lane).filter(card => card.cardId === 'ninhursag' && !card.hazard && activeAbility(card));
+  for (const initial of sources) {
+    const source = findCard(result, initial.instanceId);
+    if (!source || source.lane !== lane || !activeAbility(source)) continue;
+    const before = result;
+    result = modify(result, source.instanceId, card => ({ ...card, powerModifier: card.powerModifier + 2,
+      lastEffectNote: 'The Maker’s Touch: consumed Tablet, +2 Hands.' }));
+    const target = lowest(inLane(result, owner, lane).filter(card => card.instanceId !== source.instanceId
+      && !card.hazard && (card.kind ?? 'character') === 'character' && needsCleanse(card)));
+    if (target) result = cleanseAlly(result, target.instanceId, card => ({ ...card, statuses: cleanseStatuses(card.statuses),
+      burnSource: undefined, lastEffectNote: 'The Maker’s Touch: cleansed.' }));
+    result = addEvent(before, result, { type: 'ability', sourceId: source.instanceId, owner, lane,
+      targetIds: target ? [target.instanceId] : [], note: `The Maker’s Touch: consumed Tablet gave +2 Hands${target ? ` and cleansed ${target.name}` : ''}.` });
+  }
+  return result;
 };
 
 const settleLeaderReactions = (match: Match): Match => {
@@ -1684,7 +1728,7 @@ const trainWaveAbility = (m: Match, id: string): Match => {
   const card = m.boards.flat().find(c => c.instanceId === id)
     ?? [...m.playerHand, ...m.cpuHand].find(c => c.instanceId === id && c.cardId === 'cheshire');
   // Initiation has recipient upgrades and uses its own delayed-payoff ledger.
-  if (!card || !(KUMITE_COMBAT_IDS.has(card.cardId) || Object.hasOwn(selectedCards, card.cardId) || HOMECOMING_KIT_IDS.has(card.cardId) || ['triple-og-blue', 'triple-og-red', 'block-spinner', 'look-out'].includes(card.cardId) || Object.hasOwn(characterWaveCards, card.cardId) || Object.hasOwn(fairytaleCards, card.cardId) || Object.hasOwn(neighborhoodWaveCards, card.cardId) || Object.hasOwn(cellblockWaveCards, card.cardId) || Object.hasOwn(afterHoursWaveCards, card.cardId) || Object.hasOwn(sideOzWaveCards, card.cardId) || Object.hasOwn(storyCharacterWaveCards, card.cardId) || Object.hasOwn(squabblehouseWaveCards, card.cardId) || Object.hasOwn(streetLegendsCards, card.cardId) || Object.hasOwn(musicIndustryWaveCards, card.cardId)) || card.waveTrainingUsed) return m;
+  if (!card || !(KUMITE_COMBAT_IDS.has(card.cardId) || Object.hasOwn(selectedCards, card.cardId) || HOMECOMING_KIT_IDS.has(card.cardId) || ['triple-og-blue', 'triple-og-red', 'block-spinner', 'look-out'].includes(card.cardId) || Object.hasOwn(characterWaveCards, card.cardId) || Object.hasOwn(fairytaleCards, card.cardId) || Object.hasOwn(neighborhoodWaveCards, card.cardId) || Object.hasOwn(cellblockWaveCards, card.cardId) || Object.hasOwn(afterHoursWaveCards, card.cardId) || Object.hasOwn(sideOzWaveCards, card.cardId) || Object.hasOwn(storyCharacterWaveCards, card.cardId) || Object.hasOwn(squabblehouseWaveCards, card.cardId) || Object.hasOwn(streetLegendsCards, card.cardId) || Object.hasOwn(musicIndustryWaveCards, card.cardId) || Object.hasOwn(anunakiCards, card.cardId)) || card.waveTrainingUsed) return m;
   const update = (state: Match, change: (c: CardInstance) => CardInstance, copiedGain = false): Match => {
     if (card.lane !== null) return modify(state, id, change, copiedGain);
     const hand = card.owner === 'player' ? 'playerHand' : 'cpuHand';
@@ -3174,6 +3218,141 @@ function resolveAbilityBase(match: Match, source: CardInstance, { echoed = false
   };
   if ((source.statuses.silenced || source.statuses.frozen || source.statuses.weakened)
     && !(UNSILENCEABLE_CARD_IDS as readonly string[]).includes(source.cardId)) { note('Ability did not fire (silenced, frozen, or weakened).'); return m; }
+  if (Object.hasOwn(anunakiCards, source.cardId)) {
+    const allies = inLane(m, source.owner, l).filter(c => c.instanceId !== source.instanceId && !c.hazard && (c.kind ?? 'character') === 'character');
+    const hasTablet = () => (m.ancientTablets ?? []).some(t => t.owner === source.owner && t.lane === l);
+    const placeTablet = () => {
+      if (hasTablet()) return false;
+      const beforeTablet = m;
+      m = { ...m, ancientTablets: [...(m.ancientTablets ?? []), { owner: source.owner, lane: l }] };
+      m = addEvent(beforeTablet, m, { type: 'ability', sourceId: source.instanceId, owner: source.owner, lane: l, note: 'Placed an Ancient Tablet.' });
+      return true;
+    };
+    const consumeTablet = () => {
+      if (!hasTablet()) return false;
+      const beforeTablet = m;
+      m = { ...m, ancientTablets: (m.ancientTablets ?? []).filter(t => !(t.owner === source.owner && t.lane === l)) };
+      m = addEvent(beforeTablet, m, { type: 'ability', sourceId: source.instanceId, owner: source.owner, lane: l, note: 'Consumed an Ancient Tablet.' });
+      m = reactToConsumedTablet(m, source.owner, l);
+      return true;
+    };
+    const give = (target: CardInstance | undefined, amount: number) => {
+      if (!target) return false;
+      targetIds.add(target.instanceId);
+      m = modify(m, target.instanceId, c => ({ ...c, powerModifier: c.powerModifier + amount, lastEffectNote: `${source.ability}: +${amount} Hands.` }));
+      return true;
+    };
+    let succeeded = false, detail = '';
+    if (source.cardId === 'nabu' || source.cardId === 'enki' || source.cardId === 'ninhursag') {
+      const placed = placeTablet();
+      const buffed = source.cardId === 'enki' && give(lowest(allies), 2);
+      succeeded = placed || buffed;
+      detail = `${placed ? 'Placed an Ancient Tablet.' : 'A Tablet is already here.'}${buffed ? ' Strengthened the weakest other ally.' : ''}`;
+    } else if (source.cardId === 'utu' || source.cardId === 'enlil') {
+      const target = highest(inLane(m, enemy, l));
+      if (!target && source.cardId === 'utu') { succeeded = placeTablet(); detail = succeeded ? 'No enemies: placed an Ancient Tablet.' : 'No enemies; a Tablet is already here.'; }
+      else if (target) {
+        const consumed = consumeTablet();
+        const amount = source.cardId === 'utu' ? (consumed ? 2 : 1) : (consumed ? 4 : 2);
+        targetIds.add(target.instanceId);
+        const strike = kumiteStrike(m, source, target, amount, `${source.ability}: −${amount} Hands.`);
+        m = strike.match;
+        succeeded = consumed || strike.landed;
+        detail = `${consumed ? 'Consumed an Ancient Tablet. ' : ''}Targeted ${target.name} for −${amount} Hands.`;
+      }
+    } else if (source.cardId === 'inanna') {
+      const consumed = consumeTablet();
+      succeeded = give(findCard(m, source.instanceId), consumed ? 4 : 1);
+      detail = consumed ? 'Consumed an Ancient Tablet for +4 Hands.' : 'No friendly Ancient Tablet here: gained +1 Hand.';
+    } else if (source.cardId === 'caucus-mountaineer') {
+      // Each copy gets one deterministic 35% roll only after it lands damage.
+      // Resolve explicitly rather than recursively so crowded districts stay bounded.
+      let striker = source;
+      let extras = 0;
+      let hits = 0;
+      while (true) {
+        const target = highest(inLane(m, enemy, l));
+        if (!target) break;
+        targetIds.add(target.instanceId);
+        const beforeStrike = m;
+        const strike = kumiteStrike(m, striker, target, 1, 'Lab Accident: −1 Hands.');
+        m = strike.match;
+        if (strike.landed) { hits++; succeeded = true; }
+        const afterStrikeEvents = m.effectLog.length > beforeStrike.effectLog.length ? m.effectLog.at(-1)!.replay.after : null;
+        m = addEvent(afterStrikeEvents ? { ...m, ...afterStrikeEvents } : beforeStrike, m, { type: 'ability', sourceId: striker.instanceId, owner: striker.owner, lane: l,
+          targetIds: [strike.recipientId ?? target.instanceId], note: strike.landed ? 'Lab Accident landed for 1 damage.' : 'Lab Accident was blocked.' });
+        if (!strike.landed || extras >= 8) break;
+        const seed = JSON.stringify(['caucus-chain', source.instanceId, before.round, before.nextEventSequence, l, extras, before.districtSnapshot]);
+        if (seededIndex(seed, 100) >= 35) break;
+        const beforeSummon = m;
+        const ids = new Set(m.boards[l].map(card => card.instanceId));
+        m = summonCard(m, source.owner, l, anunakiCards['caucus-mountaineer'], 'caucus-mountaineer', striker);
+        const copy = m.boards[l].find(card => !ids.has(card.instanceId) && card.cardId === 'caucus-mountaineer');
+        if (!copy) break;
+        m = fairytaleArrival(m, copy.instanceId);
+        m = applyScentEntry(m, copy.instanceId);
+        targetIds.add(copy.instanceId);
+        const afterArrivalEvents = m.effectLog.length > beforeSummon.effectLog.length ? m.effectLog.at(-1)!.replay.after : null;
+        m = addEvent(afterArrivalEvents ? { ...m, ...afterArrivalEvents } : beforeSummon, m, { type: 'ability', sourceId: striker.instanceId, owner: striker.owner, lane: l,
+          targetIds: [copy.instanceId], note: 'Lab Accident summoned another Caucus Mountaineer.' });
+        extras++;
+        const arrived = findCard(m, copy.instanceId);
+        if (!arrived || arrived.lane !== l || !activeAbility(arrived)) break;
+        striker = arrived;
+      }
+      detail = hits ? `Lab Accident landed ${hits} hit${hits === 1 ? '' : 's'} and summoned ${extras} extra${extras === 1 ? '' : 's'}.${extras === 8 ? ' Chain capped at 8 extras.' : ''}` : 'Lab Accident found no target or was blocked.';
+    } else if (source.cardId === 'ereshkigal') {
+      const target = lowest(inLane(m, enemy, l));
+      if (target) {
+        targetIds.add(target.instanceId);
+        const strike = kumiteStrike(m, source, target, 2, `${source.ability}: −2 Hands.`);
+        m = strike.match;
+        succeeded = strike.landed;
+      }
+      const consumed = consumeTablet();
+      if (consumed) { give(findCard(m, source.instanceId), 3); succeeded = true; }
+      detail = `${target ? `Targeted ${target.name} for −2 Hands. ` : 'No enemy here. '}${consumed ? 'Consumed a Tablet for +3 Hands.' : 'No friendly Tablet here.'}`;
+    } else if (source.cardId === 'anu') {
+      const consumedTablets = (m.ancientTablets ?? []).filter(t => t.owner === source.owner);
+      const count = consumedTablets.length;
+      if (count) {
+        const beforeTablets = m;
+        m = { ...m, ancientTablets: (m.ancientTablets ?? []).filter(t => t.owner !== source.owner) };
+        m = addEvent(beforeTablets, m, { type: 'ability', sourceId: source.instanceId, owner: source.owner, lane: l, note: `Consumed ${count} Ancient Tablet${count === 1 ? '' : 's'}.` });
+        for (const tablet of consumedTablets) m = reactToConsumedTablet(m, tablet.owner, tablet.lane);
+        succeeded = give(findCard(m, source.instanceId), count * 3);
+      } else {
+        succeeded = give(findCard(m, source.instanceId), 2);
+      }
+      detail = count ? `Consumed ${count} Ancient Tablet${count === 1 ? '' : 's'} for +${count * 3} Hands.` : 'No friendly Ancient Tablets: gained +2 Hands.';
+    } else if (source.cardId === 'yakub') {
+      // Retain legacy pending buffs in saved matches, but new reveals only summon.
+      detail = '';
+      const summonCount = !echoed && source.anunakiSquabbled ? 2 : 1;
+      let summonedCount = 0;
+      for (let i = 0; i < summonCount; i++) {
+        const previousIds = new Set(m.boards.flat().map(card => card.instanceId));
+        m = summonCard(m, source.owner, l, anunakiCards['caucus-mountaineer'], 'caucus-mountaineer', source);
+        const summoned = m.boards.flat().find(card => !previousIds.has(card.instanceId)
+          && card.cardId === 'caucus-mountaineer' && card.owner === source.owner);
+        if (summoned) {
+          targetIds.add(summoned.instanceId);
+          m = fairytaleArrival(m, summoned.instanceId);
+          m = applyScentEntry(m, summoned.instanceId);
+          summonedCount++;
+        }
+      }
+      succeeded = summonedCount > 0;
+      if (summonedCount) detail += ` Summoned ${summonedCount} free Caucus Mountaineer${summonedCount === 1 ? '' : 's'} without On Reveal.`;
+    }
+    // Preserve every prior transition, including tablet changes and interception,
+    // then capture any remaining buff or damage in its own complete replay frame.
+    const latest = m.effectLog.length > before.effectLog.length ? m.effectLog.at(-1)!.replay.after : null;
+    const eventBefore = latest ? { ...m, ...latest } : before;
+    m = addEvent(eventBefore, m, { type: 'ability', sourceId: source.instanceId, owner: source.owner, targetIds: [...targetIds], note: detail || `${source.ability}: no effect.`, kind });
+    if (!echoed && succeeded) m = trainWaveAbility(m, source.instanceId);
+    return !echoed ? { ...m, lastRevealedCardId: source.cardId, entranceHistory: [...(m.entranceHistory ?? []).filter(id => id !== source.instanceId), source.instanceId] } : m;
+  }
   const selected = selectedReveal(m, source, waveTools(), echoed);
   if (selected) return !echoed && source.effect.includes('On Reveal:') ? {...selected,lastRevealedCardId:source.cardId,entranceHistory:[...(selected.entranceHistory??[]).filter(id=>id!==source.instanceId),source.instanceId]} : selected;
   const wave = streetLegendsReveal(m, source, waveTools(), echoed) ?? musicReveal(m, source, waveTools(), echoed);
@@ -5218,9 +5397,10 @@ function resolveCardPlay(match: Match, owner: Owner, instanceId: string, targetL
   if (isDice && (match[owner === 'player' ? 'cpuMotion' : 'playerMotion'] < (investment || 1))) throw new Error('Both sides need enough Motion for this wager');
   if (card.kind === 'blockbuster' && squabble) throw new Error('Blockbusters cannot use SQUABBLE');
   const discountLane = match.plugDiscountLane[owner];
-  const usedToken = discountFor(match, owner, card, targetLane);
-  const usedPlugDiscount = (!!usedToken && findCard(match, usedToken.sourceInstanceId)?.cardId === "plug")
-    || (!usedToken && discountLane !== null && discountLane !== targetLane);
+  const paidTablet = anuDiscountTablet(match, owner, card, targetLane);
+  const usedToken = paidTablet ? undefined : discountFor(match, owner, card, targetLane);
+  const usedPlugDiscount = !paidTablet && ((!!usedToken && findCard(match, usedToken.sourceInstanceId)?.cardId === "plug")
+    || (!usedToken && discountLane !== null && discountLane !== targetLane));
   const taxed = activeLandlord(match, owner, targetLane) && !(match.landlordTaxUsed?.[owner]?.[targetLane] ?? false);
   const taxState = match.landlordTaxUsed ?? { player: { 0: false, 1: false, 2: false }, cpu: { 0: false, 1: false, 2: false } };
   const arrivalOrder = nextArrivalOrder(match);
@@ -5229,6 +5409,7 @@ function resolveCardPlay(match: Match, owner: Owner, instanceId: string, targetL
     nextArrivalOrder: arrivalOrder + 1,
     [handKey]: match[handKey].filter((c) => c.instanceId !== instanceId),
     [motionKey]: match[motionKey] - cost,
+    ...(paidTablet ? { ancientTablets: (match.ancientTablets ?? []).filter(t => t.owner !== owner || t.lane !== paidTablet.lane) } : {}),
     plugDiscountLane: { ...match.plugDiscountLane, [owner]: usedPlugDiscount ? null : discountLane },
     discountTokens: (match.discountTokens ?? []).filter((token) => token.id !== usedToken?.id),
     districtTraps: (match.districtTraps ?? []).filter(t => !(t.kind === 'dmv' && t.owner !== owner && t.lane === targetLane && t.expiresAfterRound >= match.round)),
@@ -5270,6 +5451,7 @@ function resolveCardPlay(match: Match, owner: Owner, instanceId: string, targetL
   if (card.cardId === 'luigion') placed = { ...placed, luigionMushroomUsed: false };
   if (card.cardId === 'luigion' && squabble) placed = { ...placed, ...LUIGION_POWERED };
   if (card.cardId === 'homelessguy') placed = { ...placed, wildInvestment: investment, wildEmptyWallet: match[motionKey] === cost };
+  if (card.cardId === 'yakub') placed = { ...placed, anunakiSquabbled: squabble };
   m = reconcileContinuousPower({ ...m, boards: m.boards.map((items, i) => i === targetLane ? [...items, placed] : items) as Match['boards'] });
   {
     const activeBuddies = m.boards.flat().filter(buddy => buddy.instanceId !== instanceId && buddy.cardId === 'buddy'
@@ -5293,8 +5475,9 @@ function resolveCardPlay(match: Match, owner: Owner, instanceId: string, targetL
   }));
   m = addEvent(match, m, {
     type: 'play', sourceId: instanceId, owner, lane: targetLane,
-    note: `${card.name} was played in district ${targetLane + 1} for ${cost} Motion.${usedToken ? ` ${usedToken.eligibility} discount used.` : ''}${taxed ? " Rent Due added 1 Motion." : ""}${squabble ? ' SQUABBLE doubled its base Hands.' : ''}`,
+    note: `${card.name} was played in district ${targetLane + 1} for ${cost} Motion.${paidTablet ? ` An Ancient Tablet in district ${paidTablet.lane + 1} paid for the −2 Motion discount.` : usedToken ? ` ${usedToken.eligibility} discount used.` : ''}${taxed ? " Rent Due added 1 Motion." : ""}${squabble ? ' SQUABBLE doubled its base Hands.' : ''}`,
   });
+  if (paidTablet) m = reactToConsumedTablet(m, paidTablet.owner, paidTablet.lane);
   m = deadAirArrival(m, instanceId, targetLane);
   m = applyInitiationMark(m, instanceId, owner, targetLane);
   m = applySpinnerTrap(m, instanceId, targetLane);
@@ -5330,6 +5513,16 @@ function resolveCardPlay(match: Match, owner: Owner, instanceId: string, targetL
     type: 'reveal', sourceId: instanceId, owner, lane: targetLane,
     note: `${card.name} revealed in district ${targetLane + 1}.`,
   });
+  if (!placed.hazard && (placed.kind ?? 'character') === 'character') {
+    const pending = (m.yakubBuffs ?? []).filter(b => b.owner === owner && b.sourceInstanceId !== instanceId && b.expiresAfterRound >= m.round);
+    if (pending.length) {
+      const beforeBuff = m;
+      const amount = pending.length * (card.cardId === 'caucus-mountaineer' ? 3 : 2);
+      m = { ...m, yakubBuffs: (m.yakubBuffs ?? []).filter(b => !pending.includes(b) && b.expiresAfterRound >= m.round) };
+      m = modify(m, instanceId, c => ({ ...c, powerModifier: c.powerModifier + amount, lastEffectNote: `Tapped In With the Ancient Text: +${amount} Hands.` }));
+      m = addEvent(beforeBuff, m, { type: 'ability', owner, sourceId: pending[0].sourceInstanceId, targetIds: [instanceId], note: `${card.name} gained +${amount} Hands from Tapped In With the Ancient Text.` });
+    }
+  }
   m = applyDistrictArrival(m, owner, instanceId, targetLane);
   m = squabblehouseSecurityArrival(m, instanceId);
   m = squabblehouseManagerArrival(m, instanceId);
@@ -5858,12 +6051,27 @@ export function nextRound(match: Match, onRoundSettled?: (settled: Match) => Mat
     : resolveSwookieRecruitment(resolveRainmakerIncome(settled)));
 }
 
+function radiateCaucusAtRoundEnd(match: Match): Match {
+  let m = match;
+  for (const original of match.boards.flat()) {
+    const card = findCard(m, original.instanceId);
+    if (!card || card.cardId !== 'caucus-mountaineer' || card.lane === null || !activeAbility(card)
+      || !(m.ancientTablets ?? []).some(tablet => tablet.owner === card.owner && tablet.lane === card.lane)) continue;
+    const before = m;
+    m = modify(m, card.instanceId, current => ({ ...current, powerModifier: current.powerModifier + 1,
+      lastEffectNote: 'Lab Accident: Ancient Tablet radiation +1 Hands.' }));
+    m = addEvent(before, m, { type: 'ability', sourceId: card.instanceId, owner: card.owner, lane: card.lane,
+      targetIds: [card.instanceId], note: 'Ancient Tablet radiation gave Caucus Mountaineer +1 Hands.' });
+  }
+  return m;
+}
+
 function settleNextRound(match: Match, onRoundSettled?: (settled: Match) => Match | void): Match {
   if (match.phase !== 'resolved') throw new Error('Round is not resolved');
   // Resolve persistent statuses and hand bonds before either advancing or scoring.
   const trainedRoundEnd = musicRoundEnd(match, waveTools());
   const ordinaryRoundEnd = settleLeaderReactions(returnAliceAtRoundEnd(applyOngoingRoundEndHandEffects(applyOngoingRoundEndEffects(creativeRoundEnd(homecomingRoundEnd(applyBurntPlates(trainedRoundEnd), homecomingTools()), creativeTools())))));
-  let roundEnded = maryMackRoundEnd(settleLeaderReactions(musicAfterAction(match, creativeAfterAction(match,ordinaryRoundEnd,creativeTools()), waveTools())), waveTools());
+  let roundEnded = radiateCaucusAtRoundEnd(maryMackRoundEnd(settleLeaderReactions(musicAfterAction(match, creativeAfterAction(match,ordinaryRoundEnd,creativeTools()), waveTools())), waveTools()));
   const boundaryUpdate = onRoundSettled?.(roundEnded);
   if (boundaryUpdate) roundEnded = boundaryUpdate;
   if (match.round >= getMatchRoundLimit(match)) {
@@ -6270,6 +6478,8 @@ const replayState = (m: Match, previous?: ReplayState): ReplayState => shareRepl
   electricPlays: m.electricPlays,
   pendingLeaderReactions: m.pendingLeaderReactions,
   lingeringScents: m.lingeringScents ?? [],
+  ancientTablets: m.ancientTablets ?? [],
+  yakubBuffs: m.yakubBuffs ?? [],
   creativeMarks: m.creativeMarks ?? [],
   districtTraps: m.districtTraps ?? [],
   janitorReversals: m.janitorReversals ?? [],

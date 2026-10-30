@@ -1,3 +1,4 @@
+import { releasedAnunakiIds } from './anunakiTestCatalog';
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { readFile } from 'node:fs/promises';
@@ -12,8 +13,8 @@ const waveIds = Object.keys(STREET_LEGENDS_STYLE_SCENES);
 test('the thirty-entry release adds thirty unique identities while Nail Tech retains her original ownership, artwork and cosmetics', () => {
   assert.equal(waveIds.length, 30);
   assert.equal(new Set(waveIds).size, 30);
-  assert.equal(cardCatalog.length, 301);
-  assert.equal(cardCatalog.filter(card => (card.kind ?? 'character') === 'character').length, 278);
+  assert.equal(cardCatalog.length, 301 + releasedAnunakiIds.length);
+  assert.equal(cardCatalog.filter(card => (card.kind ?? 'character') === 'character').length, 278 + releasedAnunakiIds.length);
   assert.equal(cardCatalog.filter(card => card.kind === 'support').length, 13);
   assert.equal(cardCatalog.filter(card => card.kind === 'blockbuster').length, 10);
   assert.equal(catalogCardById['nail-tech'].engineId, 'nail');

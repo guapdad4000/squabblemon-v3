@@ -54,7 +54,7 @@ try {
     await expect(page.locator('.pull-feature')).toHaveAttribute('data-banner', 'inmates');
     await expect(page.locator('.pull-feature__schedule')).toContainText('Ended');
     await page.getByRole('button', { name: 'Retry this opening', exact: true }).click();
-    await expect(page.locator('dialog[open].gym-results')).toBeVisible();
+    await expect(page.locator('dialog[open].gacha-reveal-dialog')).toBeVisible();
     assert.deepEqual(requests[1], requests[0]);
     assert.equal(charges, 1);
     await page.evaluate(() => { sessionStorage.clear(); });
@@ -87,7 +87,7 @@ try {
     assert.equal(charges, 1);
     assert.equal(await page.evaluate(() => sessionStorage.getItem('squabblemon:pack-request:weekly-fixture')), null);
     await page.getByRole('button', { name: 'Open · 1 ticket', exact: true }).click();
-    await expect(page.locator('dialog[open].gym-results')).toBeVisible();
+    await expect(page.locator('dialog[open].gacha-reveal-dialog')).toBeVisible();
     assert.equal(charges, 2);
     assert.equal(requests.at(-1).bannerId, 'standard');
     assert.equal(requests.at(-1).bannerOccurrenceId, undefined);

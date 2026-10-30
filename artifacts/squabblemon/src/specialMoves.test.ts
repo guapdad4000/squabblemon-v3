@@ -5,6 +5,7 @@ import { createHash } from 'node:crypto';
 import openart from '../reference/openart-specials.json';
 import { cardCatalog, cards, LATER_DROP_STARTER_IDS } from './data';
 import { getMoveClipEndSeconds, getMoveClipUrl, gateSpecialMoveReplay, getMovePlayKey, keyChromaPixels, markSpecialMovePlayed, planSpecialMoveBeat, moveAssignments, moveClips, resolveSpecialMove, specialMoveForEvent } from './specialMoves';
+import { featherChromaEdges } from './lib/chromaRenderer';
 
 const appliedOutcome = { resources: { before: { playerMotion: 0, cpuMotion: 0 }, after: { playerMotion: 1, cpuMotion: 0 } } };
 
@@ -39,6 +40,31 @@ test('all 100 OpenArt finishers resolve through engine and artwork IDs, preserve
     assert.equal(gateSpecialMoveReplay(clip, key, played), null);
     assert.equal(planSpecialMoveBeat(clip, key, played, 650).durationMs, 650);
   }
+});
+
+test('Anunaki key removes backing spill while retaining blue skin, gold, white and black', () => {
+  const pixels = new Uint8ClampedArray([
+    0, 220, 0, 255, 15, 95, 20, 255,
+    45, 85, 155, 255, 245, 195, 45, 255,
+    240, 240, 240, 128, 10, 10, 10, 255,
+  ]);
+  keyChromaPixels(pixels, 'green', 'anunaki');
+  assert.equal(pixels[3], 0);
+  assert.ok(pixels[7] < 35, 'compressed backing fringe is substantially transparent');
+  assert.deepEqual([...pixels.slice(8)], [45,85,155,255,245,195,45,255,240,240,240,128,10,10,10,255]);
+});
+
+test('Anunaki edge matte only feathers the outside and preserves existing transparency', () => {
+  const width = 40, height = 40;
+  const data = new Uint8ClampedArray(width * height * 4).fill(255);
+  data[3] = 0;
+  featherChromaEdges(data, width, height, .1);
+  assert.equal(data[3], 0);
+  assert.ok(data[7] < 255);
+  assert.equal(data[(20 * width + 20) * 4 + 3], 255);
+  const original = new Uint8ClampedArray([1,2,3,255]);
+  featherChromaEdges(original, 1, 1, 0);
+  assert.deepEqual([...original], [1,2,3,255]);
 });
 
 test('new Side, story-reward and Wiz finishers match their playable fighters', () => {
@@ -325,4 +351,18 @@ test('authored clip window stops a long source at the same pose regardless of pl
   assert.equal(getMoveClipEndSeconds(clip,3),3,'short media finishes at its actual end');
   assert.equal(getMoveClipEndSeconds({...clip,playbackRate:2},12),8.2,'catalog rate is already baked into authored wall-clock duration');
   assert.equal(Math.round((getMoveClipEndSeconds(clip,8)-clip.startSeconds)*500),1800,'2x presents the intended excerpt in half the time');
+});
+
+test('all ten Anunaki fighters resolve to their supplied green-screen finishers', () => {
+  for (const id of ['yakub', 'utu', 'enlil', 'nabu', 'anu', 'ninhursag', 'ereshkigal', 'inanna', 'caucus-mountaineer', 'enki']) {
+    const clip = resolveSpecialMove(id)!;
+    assert.equal(clip?.id, `anunaki-${id}-v1`);
+    assert.equal(clip.chroma, 'green');
+    assert.equal(clip.startSeconds, 0);
+    assert.equal(clip.keyProfile, 'anunaki');
+    assert.ok(clip.durationMs >= 2500 && clip.durationMs < 5100, `${id} keeps a complete, tightened attack`);
+    assert.equal(clip.move, cards[id].ability);
+    assert.equal(specialMoveForEvent({ ...appliedOutcome, type: 'ability', kind: 'ability', cardId: id })?.id, clip.id);
+    assert.equal(resolveSpecialMove(id, { [id]: null }), null);
+  }
 });

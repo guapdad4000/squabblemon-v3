@@ -8,11 +8,15 @@ import { createRequire } from "node:module";
 import { assertCampaignDatabaseTarget } from "./database-safety.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
+const anunakiBrowser = process.argv.includes('--anunaki-browser');
+if (anunakiBrowser && process.argv.slice(2).some(arg => arg !== '--anunaki-browser')) throw new Error('--anunaki-browser cannot be combined with another mode.');
 const onlineRetirementOnly = process.argv.includes('--online-retirement');
 const mailOnly = process.argv.includes('--mail');
 const rankedCloutOnly = process.argv.includes('--ranked-clout');
 const monthlyLoginOnly = process.argv.includes('--monthly-login');
+const featuredPullsOnly = process.argv.includes('--featured-pulls');
 const flexPullsOnly = process.argv.includes('--flex-pulls');
+if (featuredPullsOnly && process.argv.slice(2).some(arg => arg !== '--featured-pulls')) throw new Error('--featured-pulls cannot be combined with another test mode.');
 const socialBrowser = process.argv.includes('--social-browser');
 const socialOnly = process.argv.includes('--social') || socialBrowser;
 const socialLoad = process.argv.includes('--social-load');
@@ -92,7 +96,7 @@ process.on("SIGTERM", interrupt);
 
 try {
   const provided = process.env.DATABASE_URL?.trim();
-  if ((onlineRetirementOnly || mailOnly || socialOnly || socialLoad || rankedCloutOnly || monthlyLoginOnly || flexPullsOnly) && "DATABASE_URL" in process.env) throw new Error('These tests require a fresh owned cluster. Unset DATABASE_URL.');
+  if ((anunakiBrowser || onlineRetirementOnly || mailOnly || socialOnly || socialLoad || rankedCloutOnly || monthlyLoginOnly || flexPullsOnly || featuredPullsOnly) && "DATABASE_URL" in process.env) throw new Error('These tests require a fresh owned cluster. Unset DATABASE_URL.');
   if (provided) {
     const target = assertCampaignDatabaseTarget(process.env);
     if (!target.local) throw new Error("Payment database tests refuse remote databases.");
@@ -133,10 +137,19 @@ try {
   if (rankedCloutOnly) environment.RANKED_CLOUT_TEST_OWNED = '1';
   if (socialLoad) environment.SOCIAL_LOAD_OWNED = '1';
   if (mailOnly) environment.MAIL_TEST_OWNED = '1';
-  if (onlineRetirementOnly) {
+  if (anunakiBrowser) {
+    environment.ANUNAKI_BROWSER_TEST_OWNED = '1';
+    await run(process.execPath, ['--import', 'tsx', 'e2e/verify-anunaki-online.ts'], 'Native Anunaki full browser match', true, join(root, 'artifacts/squabblemon'));
+  } else if (onlineRetirementOnly) {
     environment.ONLINE_RETIREMENT_TEST_OWNED = '1';
     await run(process.execPath, ['--import', 'tsx', '--test', '--test-concurrency=1',
       'src/lib/onlineRetirement.native.test.ts', 'src/lib/onlinePolling.native.test.ts', 'src/lib/onlineRoomRetention.native.test.ts', 'src/lib/playerRewardRoutes.test.ts'], 'Native online synchronization, retirement and replay-compatibility database tests', true, join(root, 'artifacts/api-server'));
+  } else if (featuredPullsOnly) {
+    environment.FEATURED_PULLS_TEST_OWNED = '1';
+    await run(process.execPath, ['--import', 'tsx', '--test', '--test-concurrency=1', '--experimental-test-isolation=none',
+      'src/lib/featuredBanners.test.ts', 'src/lib/featuredBanners.native.test.ts', 'src/lib/collectionEconomy.test.ts',
+      'src/lib/collectionTransactions.test.ts', 'src/lib/pullBanners.test.ts', 'src/lib/flexPulls.test.ts', 'src/lib/anunakiBannerEnabled.test.ts', 'src/lib/promoCodes.test.ts',
+    ], 'Native featured-banner database tests', true, join(root, 'artifacts/api-server'));
   } else if (flexPullsOnly) {
     await run(process.execPath, ['--import', 'tsx', '--test', '--test-concurrency=1', '--experimental-test-isolation=none',
       'src/lib/flexPulls.test.ts', 'src/lib/collectionEconomy.test.ts', 'src/lib/collectionTransactions.test.ts',

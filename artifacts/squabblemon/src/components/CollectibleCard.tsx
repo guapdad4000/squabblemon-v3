@@ -7,16 +7,19 @@ import '../styles/collectible-card.css';
 import '../styles/collectible-layers.css';
 import '../styles/collectible-foil.css';
 import { collectibleElementArtwork } from '../lib/collectiblePrintAssets';
+import { anunakiCardScene } from '../lib/anunakiCardArt';
 
 type Props = React.ComponentProps<typeof CardView> & { foil?: boolean; showRules?: boolean };
 export function collectibleCardLayers(card: Props['card'], foil = true, showRules = true): CollectibleCardLayers {
   const images = collectibleElementArtwork(card);
   const { element } = images;
   const isBlockbuster = card.kind === 'blockbuster';
+  const anunakiScene = !isBlockbuster ? anunakiCardScene(card) : undefined;
   return {
     foil,
     backdrop: <>
       {!isBlockbuster && <div className="layered-print" aria-hidden="true"><img src={images.plate} alt="" draggable={false} decoding="async" /></div>}
+      {anunakiScene && <div className="layered-anunaki-scene" data-anunaki-scene="true" aria-hidden="true"><img src={anunakiScene} alt="" draggable={false} decoding="async" /><span /></div>}
       <div className="layered-material" data-element={isBlockbuster ? undefined : element} aria-hidden="true"><span className="layered-stock"/><span className="layered-reflection"/></div>
       <span className="layered-rarity-rim" aria-hidden="true"/>
     </>,

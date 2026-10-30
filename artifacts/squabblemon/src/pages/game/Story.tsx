@@ -508,7 +508,7 @@ export function Story({ bootstrap }: { bootstrap: PlayerBootstrap }) {
                   onSelect={() => { setRewardsOpen(false); setLocation(`/game/story?node=${encodeURIComponent(node.id)}`); }}
                 />)}
               </div>
-              <div className="story-awards-section-heading story-awards-section-heading--ledger"><span>PERFECT CLEAR LEDGER</span><small>One bonus ticket for each three-star battle</small></div>
+              <div className="story-awards-section-heading story-awards-section-heading--ledger"><span>{currentChapter.id.startsWith('anunaki-') ? 'MASTERY LEDGER' : 'PERFECT CLEAR LEDGER'}</span><small>{currentChapter.id.startsWith('anunaki-') ? 'Earn 10 of 12 stars for the optional journey reward' : 'One bonus ticket for each three-star battle'}</small></div>
               <ChapterTicketProgress
                 chapter={chapterContent}
                 nodeProgressById={Object.fromEntries(

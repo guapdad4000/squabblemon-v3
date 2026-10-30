@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import { randomUUID } from 'node:crypto';
 import { planShopPurchase, type ShopWallet } from '@workspace/squabblemon-engine/economy';
-import { cosmeticId, validateCosmeticLoadout, CHARACTER_STYLE_SETS, hasCharacterStickers } from '@workspace/squabblemon-engine/cosmetics';
+import { cosmeticId, validateCosmeticLoadout, CHARACTER_STYLE_SETS, hasCharacterStickers, isAnunakiEventStickerPack } from '@workspace/squabblemon-engine/cosmetics';
 import { EquipPlayerCosmeticsBody } from '@workspace/api-zod';
 const wallet = (overrides: Partial<ShopWallet> = {}): ShopWallet => ({ softCurrency: 400, packTickets: 2, styleShards: 500, deckSlots: 4, ownedCardIds: ['kyle'], discoveredCardIds: ['kyle'], ownedVariants: [], unlockedCosmeticIds: ['badge:earned'], cardProgression: {}, collectionProgress: 1, ...overrides });
 test('character cosmetics debit only Style Shards, retain badges, and never change card strength', () => {
@@ -65,8 +65,16 @@ test('every completed collection has real unique stickers and isolated purchase 
     if (set.stickerAtlas) assert.deepEqual(set.stickers.filter(s=>!s.image).map(s=>s.cell),[0,1,2,3]);
     assert(!series.has(set.series));series.add(set.series);
     for(const sticker of set.stickers){assert(!stickerIds.has(sticker.id));stickerIds.add(sticker.id);assert(sticker.id.startsWith(cardId+':'));}
-    let bought=planShopPurchase(owner,{itemId:'character-stickers',cardId}).wallet;
-    assert.equal(bought.styleShards,99900);
+    let bought: ShopWallet;
+    if (isAnunakiEventStickerPack(cardId)) {
+      assert.match(validateCosmeticLoadout(owner,{bannerCardId:cardId,stickers:[set.stickers[0].id]})!,/Unlock/);
+      assert.throws(()=>planShopPurchase(owner,{itemId:'character-stickers',cardId}),/event roadmap/);
+      bought={...owner,unlockedCosmeticIds:[...(owner.unlockedCosmeticIds ?? []),cosmeticId(cardId,'character-stickers')]};
+      assert.equal(bought.styleShards,100000);
+    } else {
+      bought=planShopPurchase(owner,{itemId:'character-stickers',cardId}).wallet;
+      assert.equal(bought.styleShards,99900);
+    }
     assert.equal(validateCosmeticLoadout(bought,{bannerCardId:cardId,stickers:set.stickers.slice(0,3).map(s=>s.id)}),null);
     const other=ids.find(id=>id!==cardId && hasCharacterStickers(CHARACTER_STYLE_SETS[id]))!;
     assert.match(validateCosmeticLoadout(bought,{bannerCardId:cardId,stickers:[CHARACTER_STYLE_SETS[other].stickers[0].id]})!,/Unlock/);

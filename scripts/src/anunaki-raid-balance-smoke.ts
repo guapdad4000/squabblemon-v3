@@ -1,0 +1,8 @@
+// Deterministic greedy-policy smoke test; deck rotations are card orders, not RNG seeds.
+// This does not model human play or establish live balance.
+import {createAnunakiRaid,applyAnunakiRaidAction,ANUNAKI_RAID_LOANER} from '../../lib/squabblemon-engine/src/anunakiRaid.ts';
+import {starterRecipes} from '../../lib/squabblemon-engine/src/data.ts';
+import {getEffectiveCardPower} from '../../lib/squabblemon-engine/src/gameEngine.ts';
+const decks=[...starterRecipes.slice(0,4).map(x=>({name:x.name,ids:x.catalogCardIds})),{name:'Anunaki',ids:ANUNAKI_RAID_LOANER}];
+function evaluation(r:any) {const totals=[0,0,0],foes=[0,0,0];for(let i=0;i<3;i++)for(const c of r.match.boards[i]) (c.owner==='player'?totals:foes)[i]+=getEffectiveCardPower(c);const has=r.match.ancientTablets?.some((t:any)=>t.owner==='player'&&t.lane===0);return totals.reduce((a,b)=>a+b,0) - foes.reduce((a,b)=>a+b,0)*0.35 + (has?2:0) + (r.phase!=='descent'&&has&&totals[1]>=6?5:0) + (totals[2]>=6?2:0);}
+for(const d of decks)for(let k=0;k<3;k++) {let ids=[...d.ids]; ids=ids.slice(k).concat(ids.slice(0,k));let r=createAnunakiRaid('sim-'+d.name+'-'+k,'standard',ids);let moves=[];while(r.status==='active') {for(let step=0;step<10;step++){const opts=[];for(const c of r.match.playerHand)for(const l of [0,1,2] as const)try{const n=applyAnunakiRaidAction(r,{type:'play',instanceId:c.instanceId,lane:l});opts.push({n,card:c.name,l,delta:evaluation(n)-evaluation(r)});}catch{}opts.sort((a,b)=>b.delta-a.delta||a.l-b.l);if(!opts.length)break;const o=opts[0]; moves.push(`${r.match.round}:${o.card}@${o.l}`);r=o.n;}r=applyAnunakiRaidAction(r,{type:'blast'});moves.push(`blast:${r.hp}`);}console.log(d.name,k,r.status, r.hp, moves.join(','));}

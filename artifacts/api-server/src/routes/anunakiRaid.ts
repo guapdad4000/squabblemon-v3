@@ -1,0 +1,12 @@
+import { Router } from 'express';
+import { getAuth } from '@clerk/express';
+import { bossRaidRunId, anunakiRaidStartInput, anunakiRaidActionInput } from '@workspace/api-zod';
+import { getAnunakiRaid, startAnunakiRaid, actAnunakiRaid } from '../lib/anunakiRaid';
+import { PlayerRewardError } from '../lib/playerRewardTransactions';
+const router = Router();
+router.use('/player/anunaki-raid', (req, res, next) => { if (!getAuth(req).userId) { res.status(401).json({ error: 'Authentication required.' }); return; } next(); });
+const failure = (res: import('express').Response, e: unknown) => res.status(e instanceof PlayerRewardError ? e.status : 503).json({ error: e instanceof PlayerRewardError ? e.message : 'Could not save the raid. Retry safely.' });
+router.get('/player/anunaki-raid', async (req,res) => { try { res.json(await getAnunakiRaid(getAuth(req).userId!)); } catch(e) { failure(res,e); } });
+router.post('/player/anunaki-raid/start', async (req,res) => { const body = anunakiRaidStartInput.safeParse(req.body); if (!body.success) { res.status(400).json({ error: 'Invalid raid entry.' }); return; } try { res.json(await startAnunakiRaid(getAuth(req).userId!,body.data.requestId,body.data.difficulty,body.data.cardIds)); } catch(e) { failure(res,e); } });
+router.post('/player/anunaki-raid/:id/action', async (req,res) => { const body = anunakiRaidActionInput.safeParse(req.body), id = bossRaidRunId.safeParse(req.params.id); if (!body.success || !id.success) { res.status(400).json({ error: 'Invalid raid action.' }); return; } try { res.json(await actAnunakiRaid(getAuth(req).userId!,id.data,body.data.revision,body.data.actionId,body.data.action)); } catch(e) { failure(res,e); } });
+export default router;

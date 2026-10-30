@@ -1,0 +1,39 @@
+/* Tablets use the same inspectable item strip as other district objects. */
+.battle-arena.battle-hud .battle-item-badge--tablet { --item-glow: #44ffc5b8; }
+.battle-arena.battle-hud .battle-item-badge--tablet[data-owner='cpu'] { --item-glow: #55b8ffbf; }
+.battle-arena.battle-hud .battle-item-badge--tablet img {
+  filter: drop-shadow(0 0 5px var(--item-glow));
+  animation: ancient-tablet-glow 2.6s ease-in-out infinite alternate;
+}
+.battle-arena.battle-hud .battle-item-badge--tablet span {
+  top: auto; bottom: 0; right: 0; height: auto;
+  padding: 2px 3px; border-radius: 2px;
+  background: #073d2ee8; color: #d7ffed;
+  font: 800 8px/1 var(--font-sans, sans-serif); letter-spacing: .04em;
+}
+.battle-arena.battle-hud .battle-item-badge--tablet[data-owner='cpu'] span { background: #133b52ed; color: #e1f6ff; }
+.ancient-tablet-consume { position: absolute; inset: 28% 42%; pointer-events: none; z-index: 3; }
+.ancient-tablet-consume i {
+  position: absolute;
+  width: 8px;
+  height: 12px;
+  opacity: 0;
+  border: 1px solid #d4ffad;
+  background: #28c980;
+  box-shadow: 0 0 12px #5cffb1;
+  animation: ancient-tablet-break .55s ease-out both;
+}
+.ancient-tablet-consume i:nth-child(2) { --tablet-x: -24px; --tablet-y: -20px; animation-delay: .03s; }
+.ancient-tablet-consume i:nth-child(3) { --tablet-x: 24px; --tablet-y: -12px; animation-delay: .06s; }
+@keyframes ancient-tablet-glow { from { opacity: .78; } to { opacity: 1; } }
+@keyframes ancient-tablet-break {
+  0% { opacity: 1; transform: scale(.65); }
+  100% { opacity: 0; transform: translate(var(--tablet-x, 0px), var(--tablet-y, -30px)) rotate(40deg) scale(.3); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .battle-item-badge--tablet img, .ancient-tablet-consume i { animation: none; }
+  .ancient-tablet-consume i:first-child { opacity: 1; }
+}
+.battle-arena[data-reduced-motion='true'] .battle-item-badge--tablet img,
+.battle-arena[data-reduced-motion='true'] .ancient-tablet-consume i { animation: none; }
+.battle-arena[data-reduced-motion='true'] .ancient-tablet-consume i:first-child { opacity: 1; }

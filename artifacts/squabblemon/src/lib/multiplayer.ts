@@ -5,6 +5,7 @@ import type {
   OnlineCommand,
   OnlineRoomView,
 } from "@workspace/squabblemon-engine/multiplayer";
+import { ANUNAKI_CLIENT_CAPABILITY, CLIENT_CAPABILITIES_HEADER } from "@workspace/squabblemon-engine/onlineCapabilities";
 
 export type RoomSummary = {
   code: string;
@@ -93,6 +94,7 @@ export const request = async <T>(
       method: hasBody ? "POST" : "GET",
       body: hasBody ? JSON.stringify(body) : undefined,
       credentials: "same-origin",
+      headers: { [CLIENT_CAPABILITIES_HEADER]: ANUNAKI_CLIENT_CAPABILITY },
       cache: "no-store",
       responseType: "json",
       signal: controller.signal,

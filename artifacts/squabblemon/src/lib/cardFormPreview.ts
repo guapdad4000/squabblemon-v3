@@ -50,13 +50,27 @@ const formPreviews: Readonly<Record<string, FormPreview>> = {
   },
 };
 
+// These are alternate artwork previews, not additional gameplay forms.
+const tabletPreviewIds = new Set(['anu', 'caucus-mountaineer', 'enlil', 'ereshkigal', 'inanna', 'utu']);
+const tabletArtPreview: FormPreview = {
+  normalLabel: 'Original art', alternateLabel: 'Tablet art',
+  normalHint: 'Original character artwork',
+  alternateHint: 'Alternate artwork preview only · card abilities and battle appearance stay the same',
+  powerLabel: 'Base power',
+};
+
+export function tabletPreviewAsset(card: Card, alternate: boolean): string | undefined {
+  return alternate && tabletPreviewIds.has(card.id) ? `assets/characters/tablet-previews/${card.id}.webp` : undefined;
+}
+
 export function getCardFormPreview(card: Card): FormPreview | undefined {
-  return formPreviews[card.id];
+  return formPreviews[card.id] ?? (tabletPreviewIds.has(card.id) ? tabletArtPreview : undefined);
 }
 
 /** Preview actual form data without playing a turn or changing owned/equipped cards. */
 export function previewCardForm(card: Card, alternate: boolean): Card | CardInstance {
   if (!alternate || !getCardFormPreview(card)) return card;
+  if (tabletPreviewIds.has(card.id)) return card;
   if (card.id === 'buddy') return previewBuddyForm(card, true);
   const normal = createCardInstance(card.id, 'player', 'form-preview', 0);
   if (card.id === 'luigion') return {

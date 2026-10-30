@@ -3,7 +3,7 @@ import { db, playerCollectionClaimsTable, playerProfilesTable } from '@workspace
 import { normalizeCardProgress } from '@workspace/squabblemon-engine/cardProgression';
 import { catalogCardById } from '@workspace/squabblemon-engine/data';
 import { EconomyTransactionError } from './collectionTransactions';
-import { findPromoCode } from './promoCodes';
+import { findPromoCode, PROMO_CODES } from './promoCodes';
 
 const POSTGRES_INTEGER_MAX = 2_147_483_647;
 
@@ -16,7 +16,9 @@ function checkedWalletCredit(current: number, credit: number): number {
 }
 
 export async function redeemPromoCode(userId: string, input: string) {
-  const reward = findPromoCode(input);
+  const availableReward = findPromoCode(input);
+  // Closing the beta switch blocks new claims but keeps an already-saved grant recoverable.
+  const reward = availableReward ?? (input.trim().toUpperCase() === 'DEVANUNAKI' ? PROMO_CODES.DEVANUNAKI : null);
   if (!reward) throw new EconomyTransactionError(400, 'This promo code is not available. Check the code and try again.');
   const cardIds = reward.cardIds ?? [];
   // Promo rewards may include support cards as well as characters. Reject
@@ -40,6 +42,7 @@ export async function redeemPromoCode(userId: string, input: string) {
       if (!existing.reward.promoCode) throw new EconomyTransactionError(409, 'This promo code was already claimed.');
       return { receipt: existing.reward.promoCode, alreadyRedeemed: true };
     }
+    if (!availableReward) throw new EconomyTransactionError(400, 'This promo code is not available. Check the code and try again.');
     const [profile] = await tx.select().from(playerProfilesTable).where(eq(playerProfilesTable.clerkUserId, userId));
     if (!profile) throw new EconomyTransactionError(404, 'Player profile not found.');
     if (profile.onboardingStep !== 'complete') throw new EconomyTransactionError(409, 'Finish Rookie Road before redeeming a promo code.');

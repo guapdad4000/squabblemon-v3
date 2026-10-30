@@ -1,4 +1,7 @@
 import { kumiteFighter } from './kumiteForms';
+import { anunakiCards, anunakiRarities, anunakiUpgradeEffects, isAnunakiCardId } from './anunakiWave';
+import { isAnunakiEventCatalogAvailable } from './anunakiEvent';
+import { ANUNAKI_BANNER_GAMEPLAY_READY, isAnunakiBannerCardId } from './anunakiBanner';
 import { applyBasePvpBalance } from './basePvpBalance';
 import { applyCrewMatchupBalance } from './crewMatchupBalance';
 import { selectedCards, selectedRarities, selectedFactions, selectedUpgradeEffects } from './selectedWave';
@@ -34,6 +37,8 @@ export const DECK_SIZE = 10;
 export const MAX_MOTION = 9;
 /** Cards acquired only through their authored story rewards; excluded from random packs. */
 export const STORY_ONLY_CARD_IDS = ['ganger-blue', 'ganger-red', 'snitch', 'cracked-head'] as const;
+/** Shared by the server's ordinary pack pool and the shop's odds display. */
+export const isGeneralPackCardId = (id: string): boolean => !(STORY_ONLY_CARD_IDS as readonly string[]).includes(id) && !isKumiteExclusiveCard(id) && !isAnunakiCardId(id);
 
 /** Rock was merged into Earth; older battle snapshots can still carry its former name. */
 export const canonicalElement = (type: string): string => type === 'Rock' ? 'Earth' : type;
@@ -135,6 +140,7 @@ const upgradeEffects: Record<string, readonly AbilityUpgradeEffect[]> = {
   ...squabblehouseUpgradeEffects,
   ...streetLegendsUpgradeEffects,
   ...musicIndustryUpgradeEffects,
+  ...anunakiUpgradeEffects,
   bossbabe: Array.from({ length: 3 }, () => ({ kind: "self-power" as const, amount: 1 as const, trigger: "base-success" as const })),
   scammer: Array.from({ length: 3 }, () => ({ kind: "self-power" as const, amount: 1 as const, trigger: "base-success" as const })),
   rastamon: [{ kind: "self-power", amount: 1, trigger: "base-success" }, { kind: "target-power", amount: 1, target: "friendly", trigger: "base-success" }, { kind: "self-power", amount: 1, trigger: "base-success" }],
@@ -295,6 +301,7 @@ export const cards: Record<string, Card> = {
   ...squabblehouseWaveCards,
   ...streetLegendsCards,
   ...musicIndustryWaveCards,
+  ...anunakiCards,
   kyle: { id: 'kyle', name: 'KYLE', kind: 'character', type: 'Fire', cost: 4, power: 4, ability: 'Smile Bombs', effect: 'On Reveal: Plant 4 Smile Bombs in random enemy districts. At the start of the next round, each explodes for -2 Hands to one random enemy in its district. KYLE gains +1 Hands for every enemy hit, plus +1 more if that enemy is destroyed.', roles: ['Disruption', 'Growth'], artworkLayout: 'portrait', abilityUpgrades: upgrades('kyle', [['Good Company', 'Keep smiling.', 'Big Grin', 'Turn up the pressure.', 'Last Laugh', 'Make it count.']]), entryVfx: { accent: '#ffe02e' }, portraitAccent: '#ffe02e' },
   stockz: { id: 'stockz', name: 'STOCKZ', kind: 'character', type: 'Electric', cost: 3, power: 3, ability: 'Compound Interest', effect: 'Ongoing: After you play another character in any district, gain +1 Hand. This continues for the rest of the game.', roles: ['Growth', 'Combo'], artworkLayout: 'portrait', abilityUpgrades: upgrades('stockz', [['Seed Money', 'Build your position.', 'Reinvest', 'Let the gains compound.', 'Long Game', 'Stay invested.']]), entryVfx: { accent: '#8aff68' }, portraitAccent: '#8aff68' },
 };
@@ -311,7 +318,7 @@ export function completeEngineCrew(ids: readonly string[], candidates: readonly 
   const result = [...ids];
   for (const id of [...candidates, ...Object.keys(cards)]) {
     if (result.length >= DECK_SIZE) break;
-    if (cards[id] && !isKumiteExclusiveCard(id) && !result.includes(id)) result.push(id);
+    if (cards[id] && !isKumiteExclusiveCard(id) && (!isAnunakiCardId(id) || isAnunakiEventCatalogAvailable(id) || (ANUNAKI_BANNER_GAMEPLAY_READY && isAnunakiBannerCardId(id))) && !result.includes(id)) result.push(id);
   }
   return result;
 }
@@ -369,6 +376,7 @@ export const rarityByEngineId = {
   ...squabblehouseRarityById,
   ...streetLegendsRarities,
   ...musicIndustryRarities,
+  ...anunakiRarities,
   // City Legends overrides: four utility focused legends sit below the Mythical finishers.
   dragonflyjones: "Legendary",
   tron: "Legendary",
@@ -441,6 +449,7 @@ export function validateCardCatalogRarities(
 }
 
 const factionByEngineId: Record<string, string> = {
+  ...Object.fromEntries(Object.keys(anunakiCards).map(id => [id, 'Anunaki'])),
   lola: "Old Heads Know", repoman: "Around the Block", madhatter: "Wonderland",
   ...Object.fromEntries(Object.entries(blockbusterWaveCards).map(([id,c]) => [id,c.kind === "blockbuster" ? "Blockbusters" : "Block Party"])),
   ...squabblehouseFactionById,
@@ -534,7 +543,8 @@ const sourceByEngineId: Record<string, string[]> = {
 
 validateCardCatalogRarities();
 
-export const cardCatalog: CatalogCard[] = Object.entries(cards).map(
+/** Unfinished cards remain out of collection, cosmetics, and pull pools. */
+export const cardCatalog: CatalogCard[] = Object.entries(cards).filter(([id]) => !isAnunakiCardId(id) || isAnunakiEventCatalogAvailable(id) || (ANUNAKI_BANNER_GAMEPLAY_READY && isAnunakiBannerCardId(id))).map(
   ([engineId, card]) => ({
     ...card,
     catalogId: card.id,
@@ -553,7 +563,7 @@ export const cardCatalog: CatalogCard[] = Object.entries(cards).map(
         Object.hasOwn(streetLegendsCards, engineId) ? [engineId === 'lash-tech' ? 'Beauty' : 'Street Legends'] : [],
         Object.hasOwn(sideOzWaveCards, engineId) ? ['side-oz', sideOzWaveFactions[engineId] === 'Red Side' ? 'red-side'
           : sideOzWaveFactions[engineId] === 'Blue Side' ? 'blue-side' : 'the-wiz'] : []),
-    acquisitionSources: sourceByEngineId[engineId] ?? (["barber", "bottle", "sneaker", "church", "landlord", "carmeet", "promoter", "nail", "og", "delivery"].includes(engineId) ? ["City Never Sleeps"] : ["Street Packs"]),
+    acquisitionSources: isAnunakiCardId(engineId) ? [isAnunakiBannerCardId(engineId) ? "Anunaki Banner" : "Anunaki Event"] : sourceByEngineId[engineId] ?? (["barber", "bottle", "sneaker", "church", "landlord", "carmeet", "promoter", "nail", "og", "delivery"].includes(engineId) ? ["City Never Sleeps"] : ["Street Packs"]),
     variantSlots: [
       ...(kumiteFighter(card.id) ? [{id:`${card.id}:kumite-alt-v1`,name:'Kumite Grandmaster Art',description:'Clear the required Dojo tier and win a weekly bracket fight with this fighter in your crew.',shardCost:0,progressionOnly:true}] : []),
       ...(FAIRYTALE_ALTERNATE_ART.some(id => id === card.id) ? [{

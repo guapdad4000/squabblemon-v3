@@ -1,6 +1,6 @@
 import { StreetSelect } from '../components/ui/street-select';
 import { useMemo, useState } from 'react';
-import { cards, getCardImage } from '../data';
+import { cards, catalogCardByEngineId, getCardImage } from '../data';
 import { getAssetUrl } from '../lib/assets';
 import { getMoveClipUrl, MOVE_STORAGE_KEY, moveAssignments, moveClips, readMoveOverrides, type MoveOverrides } from '../specialMoves';
 import { SpecialMove } from '../components/SpecialMove';
@@ -8,7 +8,7 @@ import { SpecialMove } from '../components/SpecialMove';
 export default function MoveStudio() {
   const [cardId, setCardId] = useState(() => {
     const requested = new URLSearchParams(window.location.search).get('card') ?? '';
-    return Object.hasOwn(cards, requested) ? requested : 'barber';
+    return Object.hasOwn(catalogCardByEngineId, requested) ? requested : 'barber';
   });
   const [overrides, setOverrides] = useState<MoveOverrides>(readMoveOverrides);
   const [clipId, setClipId] = useState(() => {
@@ -44,7 +44,7 @@ export default function MoveStudio() {
         const id = event; setCardId(id);
         setClipId((Object.hasOwn(overrides, id) ? overrides[id] : moveAssignments[id]) ?? '');
         setReplay(value => value + 1); setStatus('Ready to review');
-      }}>{Object.entries(cards).map(([id, item]) => <option key={id} value={id}>{item.name}</option>)}</StreetSelect></label>
+      }}>{Object.entries(cards).filter(([id]) => Object.hasOwn(catalogCardByEngineId, id)).map(([id, item]) => <option key={id} value={id}>{item.name}</option>)}</StreetSelect></label>
       <p><strong>{card.ability}</strong><br />{card.effect}</p>
       <label>Animation<StreetSelect aria-label="Animation" value={clipId} onValueChange={event => { setClipId(event); setReplay(value => value + 1); setStatus('Unsaved preview'); }}>
         <option value="">Card effect only (no video)</option>

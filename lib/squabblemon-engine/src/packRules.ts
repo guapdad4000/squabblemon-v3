@@ -149,7 +149,7 @@ export const STREET_PACK_DISCLOSURES = [
   {
     label: "Ten-Pull · Rare or better guarantee",
     chance: 100,
-    detail: `After all 50 gameplay slots roll, the ten-pull checks gameplay cards only. A duplicate ${PACK_RARITY_LABELS.Rare}, ${PACK_RARITY_LABELS.Epic}, ${PACK_RARITY_LABELS.Legendary}, or ${PACK_RARITY_LABELS.Mythical} counts; cosmetic styles do not. If none appeared, the last gameplay card is replaced so the haul stays at ${STREET_PACK_RULES.ten.rewards} rewards. The replacement rarity rolls ${PACK_RARITY_LABELS.Rare} ${RARE_PLUS_GUARANTEE_WEIGHTS.Rare}%, ${PACK_RARITY_LABELS.Epic} ${RARE_PLUS_GUARANTEE_WEIGHTS.Epic}%, ${PACK_RARITY_LABELS.Legendary} ${RARE_PLUS_GUARANTEE_WEIGHTS.Legendary}%, or ${PACK_RARITY_LABELS.Mythical} ${RARE_PLUS_GUARANTEE_WEIGHTS.Mythical}% independent of ownership, so it is not guaranteed to be a new card.`,
+    detail: `After all 50 gameplay slots roll, the ten-pull checks gameplay cards only. A duplicate ${PACK_RARITY_LABELS.Rare}, ${PACK_RARITY_LABELS.Epic}, ${PACK_RARITY_LABELS.Legendary}, or ${PACK_RARITY_LABELS.Mythical} counts; cosmetic styles do not. If none appeared, the final eligible non-featured gameplay card is replaced so the haul stays at ${STREET_PACK_RULES.ten.rewards} rewards. The replacement rarity rolls ${PACK_RARITY_LABELS.Rare} ${RARE_PLUS_GUARANTEE_WEIGHTS.Rare}%, ${PACK_RARITY_LABELS.Epic} ${RARE_PLUS_GUARANTEE_WEIGHTS.Epic}%, ${PACK_RARITY_LABELS.Legendary} ${RARE_PLUS_GUARANTEE_WEIGHTS.Legendary}%, or ${PACK_RARITY_LABELS.Mythical} ${RARE_PLUS_GUARANTEE_WEIGHTS.Mythical}% independent of ownership, so it is not guaranteed to be a new card.`,
   },
 ] as const;
 
@@ -167,3 +167,10 @@ export function pullSeasonCalendar(now: number) {
   const endsAt = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth() + 1, 1));
   return { id: startsAt.toISOString().slice(0, 7), name: `${new Intl.DateTimeFormat('en-US', { month: 'long', year: 'numeric', timeZone: 'UTC' }).format(startsAt)} · Street Pack season`, startsAt: startsAt.toISOString(), endsAt: endsAt.toISOString() };
 }
+
+/** Shared by every featured banner; independent of normal rarity and cosmetic rolls. */
+export const FEATURED_PACK_RULES = { chance: 10, pityLimit: 10, slot: 5, version: 2 } as const;
+export type FeaturedBannerProgress = { misses: number; packs: number };
+export type FeaturedBannerProgressMap = Record<string, FeaturedBannerProgress>;
+export type FeaturedPackReceipt = { bannerId: string; missesBefore: number; missesAfter: number; packsBefore: number; packsAfter: number; hits: Array<{ index: number; cardId: string; guaranteed: boolean }> };
+export const featuredGuaranteeRemaining = (misses: number) => FEATURED_PACK_RULES.pityLimit - Math.min(9, Math.max(0, Math.floor(misses)));

@@ -44,6 +44,7 @@ import {
   serializePackOpening,
 } from "../lib/playerState";
 import { validateVariantEquip } from "../lib/variantEquip";
+import { ANUNAKI_DECK_CAPABILITY, ANUNAKI_DECK_CAPABILITY_HEADER, isAnunakiCardId } from '@workspace/squabblemon-engine/anunakiWave';
 
 const router: IRouter = Router();
 
@@ -84,6 +85,13 @@ function serializeRoadReward(reward: CollectionRoadRewardRecord) {
     deckSlots: reward.deckSlots ?? 0,
     duplicateShards: reward.duplicateShards ?? 0,
   };
+}
+
+function requireAnunakiDeckCapability(req: Request, ...decks: Array<{ cardIds: string[]; heroCardId?: string | null } | undefined>) {
+  const containsAnunaki = decks.some(deck => deck && (deck.cardIds.some(isAnunakiCardId) || (deck.heroCardId && isAnunakiCardId(deck.heroCardId))));
+  if (containsAnunaki && req.get(ANUNAKI_DECK_CAPABILITY_HEADER) !== ANUNAKI_DECK_CAPABILITY) {
+    throw new RouteError(409, 'Refresh the game before changing this gang. Your Anunaki cards and saved lineup are safe.');
+  }
 }
 
 router.put(
@@ -139,6 +147,7 @@ router.put(
         const existingIndex = profile.savedDecks.findIndex(
           (deck) => deck.id === params.data.deckId,
         );
+        requireAnunakiDeckCapability(req, profile.savedDecks[existingIndex], body.data);
         if (
           existingIndex === -1 &&
           profile.savedDecks.length >= profile.deckSlots
@@ -201,6 +210,7 @@ router.delete(
           (deck) => deck.id === params.data.deckId,
         );
         if (!deleting) return;
+        requireAnunakiDeckCapability(req, deleting);
         const deletingIsLegal = validateSavedDeck(
           deleting.cardIds,
           profile.ownedCardIds,

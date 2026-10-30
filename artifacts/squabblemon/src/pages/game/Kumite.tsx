@@ -105,6 +105,16 @@ export function Kumite({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   useEffect(() => {
     if (tournament?.status === 'complete') void client.invalidateQueries({ queryKey: ['kumite-winners'] });
   }, [client, tournament?.id, tournament?.status]);
+  // Re-advertise support through the idempotent registration action when this
+  // account registered in an older tab. Keep the original locked gang intact.
+  useEffect(() => {
+    if (!registration?.clientNeedsUpdate || !['registration', 'active'].includes(tournament?.status ?? '')) return;
+    let cancelled = false;
+    void registerKumite(registration.deckId).then(() => {
+      if (!cancelled) void client.invalidateQueries({ queryKey: ['kumite', profile.id] });
+    }).catch(() => { /* A later mount or registration action retries safely. */ });
+    return () => { cancelled = true; };
+  }, [client, profile.id, registration?.clientNeedsUpdate, registration?.deckId, tournament?.id, tournament?.status]);
 
   const operation = useMutation({
     mutationFn: async (action: 'register' | 'withdraw' | 'match') => {

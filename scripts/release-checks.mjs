@@ -36,6 +36,8 @@ export const criticalSuites = [
     'lib/notificationCatalog.test.ts', 'lib/loadingScenes.test.ts',
     'components/AccountCheckInCalendar.test.tsx', 'components/MonthlyLoginTrack.test.tsx',
     'components/fadecade/bossRaidPresentation.test.ts',
+    'components/fadecade/anunakiRaidPresentation.test.tsx',
+    'components/fadecade/raidCardChoices.test.ts',
   ].map(sourceTest) },
   // React's act-based lifecycle tests need its test runtime even on a production build host.
   { id: 'battle-render-lifecycle', nodeEnv: 'test', files: [
@@ -102,6 +104,15 @@ export const criticalSuites = [
     sourceTest('kumiteExpansion.test.ts'), sourceTest('kumiteClock.test.ts'),
     'artifacts/api-server/src/lib/kumiteMastery.test.ts',
   ] },
+  { id: 'featured-banner-rules', files: [
+    'artifacts/api-server/src/lib/featuredBanners.test.ts',
+    'artifacts/api-server/src/lib/collectionEconomy.test.ts',
+    'artifacts/api-server/src/lib/pullBanners.test.ts',
+  ] },
+  { id: 'anunaki-expansion', files: [
+    'storyAnunaki.test.ts', 'anunakiRaid.test.ts', 'anunakiEvent.test.ts',
+    'anunakiCosmetics.test.ts', 'specialMoves.test.ts', 'lib/chromaBattery.test.ts',
+  ].map(sourceTest) },
   { id: 'rookie-guidance', files: ['lib/tutorialVoice.test.ts', 'components/DrFadeWelcome.test.tsx', 'components/tutorialGuidance.test.ts'].map(sourceTest) },
   { id: 'payment-boundaries', files: [
     'artifacts/api-server/src/lib/payments/provider.test.ts',

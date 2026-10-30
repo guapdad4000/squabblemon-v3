@@ -1,6 +1,8 @@
 # Breakthrough full-catalog implementation verification
 
-The local mode now implements every current collectible: 278 characters, 13 supports and 10 blockbusters. All 15 canonical starter crews validate and finish CPU simulations. This completes the missing-card implementation scope; public launch remains closed.
+This is the historical October 29 verification of the original 301-card candidate. The subsequent Anunaki integration has 311 canonical cards, 301 reviewed Breakthrough adapters and 10 unsupported Anunaki cards. See `kumite-breakthrough-all-cards-launch-gate.md` for current coverage and blockers; the evidence below does not certify the added cards.
+
+At that candidate revision, the local mode implemented every collectible: 278 characters, 13 supports and 10 blockbusters. All 15 canonical starter crews validated and finished CPU simulations. This completed that revision's missing-card implementation scope; public launch remained closed.
 
 Source lives in the isolated `codex/kumite-breakthrough-integration` checkout, based on `77f44c8b597a908202d5f65b8ecc293e4b47f5d6`. The original dirty audition checkout is preserved. Ruleset: `breakthrough-v9-full-catalog`. No commit, push or deployment occurred in this pass.
 

@@ -7,7 +7,7 @@ import { DECK_SIZE } from '@workspace/squabblemon-engine/data';
 import { MAX_DECK_SLOTS, MOVE_TRAINING_COSTS, SHOP_OFFERS, STORY_DUPLICATE_STYLE_SHARDS, WELCOME_REWARD, battleEarnings } from '@workspace/squabblemon-engine/economy';
 import { STREET_PACK_DISCLOSURES, STREET_PACK_RULES } from '@workspace/squabblemon-engine/packRules';
 import { getAssetUrl, getCardImage } from '../lib/assets';
-import { CARD_FINISH, getCardWallpaper } from '../lib/cardFinish';
+import { CARD_FINISH, getCardWallpaperForCard } from '../lib/cardFinish';
 import { DISTRICT_CATALOG } from '../gameEngine';
 import '../styles/how-to-play.css';
 
@@ -46,7 +46,7 @@ function CharacterLab() {
         <span>{catalogCardById[character.id].name}<small>{character.role === 'rival' ? 'The Opps' : character.role}</small></span><ChevronRight size={17} />
       </button>)}
     </div>
-    <div className="guide-showcase" style={{ '--card-accent': rarity.color, backgroundImage: `url(${getCardWallpaper(card.type)})` } as CSSProperties}>
+    <div className="guide-showcase" style={{ '--card-accent': rarity.color, backgroundImage: `url(${getCardWallpaperForCard({ type: card.type, id: card.catalogId })})` } as CSSProperties}>
       <span className="guide-showcase-rarity">{rarity.label} · {CARD_FINISH[card.rarity]}</span>
       <img key={card.catalogId} className="guide-showcase-art" src={getCardImage(card.artworkId)} alt={card.name} loading="lazy" />
       <div className="guide-card-stats"><span><Zap size={16} /><b>{card.cost}</b> Motion</span><span><Swords size={16} /><b>{card.power}</b> Hands</span></div>

@@ -41,7 +41,8 @@ test('API kumiteRewards and bossRaid connect Boss Raid completions, 50+ damage w
 
 test('BossRaidGame, BossRaidView, Kumite, and KumiteRewards expose Operation Mode Flip, Live Projected Strike, Enrage Phase, and Interactive Dossier', () => {
   const bossRaidGame = readFileSync(path.join(sqRoot, 'src/components/fadecade/BossRaidGame.tsx'), 'utf8');
-  const bossRaidView = readFileSync(path.join(sqRoot, 'src/components/fadecade/BossRaidView.tsx'), 'utf8');
+  const bossRaidView = readFileSync(path.join(sqRoot, 'src/components/fadecade/BossRaidView.tsx'), 'utf8')
+    + readFileSync(path.join(sqRoot, 'src/components/fadecade/RaidCinematicHero.tsx'), 'utf8');
   const bossRaidDesignCss = readFileSync(path.join(sqRoot, 'src/styles/boss-raid-design.css'), 'utf8');
   const kumitePage = readFileSync(path.join(sqRoot, 'src/pages/game/Kumite.tsx'), 'utf8');
   const kumiteRewards = readFileSync(path.join(sqRoot, 'src/components/kumite/KumiteRewards.tsx'), 'utf8');
@@ -51,7 +52,7 @@ test('BossRaidGame, BossRaidView, Kumite, and KumiteRewards expose Operation Mod
   assert.match(bossRaidView, /raid-projected-strike/);
   assert.match(bossRaidView, /data-boss-phase/);
   assert.match(bossRaidView, /raid-score-tiers/);
-  assert.match(bossRaidView, /raid-boss-multibar/);
+  assert.match(bossRaidView, /raid-cinema-meta/);
   assert.match(bossRaidView, /raid-lane-clash-bar/);
   assert.match(bossRaidDesignCss, /\.raid-hp-projected/);
   assert.match(bossRaidDesignCss, /\.raid-mode-flip/);

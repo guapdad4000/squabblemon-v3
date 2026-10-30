@@ -18,6 +18,7 @@ import { createStoryMatch, replayMatchPrefix, canAffordSelection, type Transcrip
 import { CARD_BALANCE_VERSION } from "@workspace/squabblemon-engine/multiplayer";
 import { STICKER_AVATARS, stickerAvatarKey } from '@workspace/squabblemon-engine/cosmetics';
 import { REACTION_PACK_UNLOCK } from '@workspace/squabblemon-engine/reactions';
+import { ANUNAKI_CLIENT_CAPABILITY, CLIENT_CAPABILITIES_HEADER } from '@workspace/squabblemon-engine/onlineCapabilities';
 import { createApp } from "../app";
 import { createCardProgressionSnapshot } from "./cardProgression";
 
@@ -79,10 +80,11 @@ async function patchProfile(
   baseUrl: string,
   body: unknown,
   expectedStatus = 200,
+  headers: Record<string, string> = {},
 ) {
   const response = await fetch(`${baseUrl}/player/profile`, {
     method: "PATCH",
-    headers: { "content-type": "application/json" },
+    headers: { "content-type": "application/json", ...headers },
     body: JSON.stringify(body),
   });
   const json = (await response.json()) as Record<string, any>;
@@ -240,6 +242,86 @@ test("HTTP reaction tray persists ordered owned IDs, rejects invalid edits and p
     assert.deepEqual(stored.settings, { ...settings, reactionTray: [] });
     assert.deepEqual(stored.unlockedCosmeticIds, unlocks);
     assert.equal(stored.softCurrency, 321);
+  });
+});
+
+test("stale reaction-tray writes cannot erase event reactions equipped by a newer tab", async (t) => {
+  const clerkUserId = `route-reaction-tray-compat-${randomUUID()}`;
+  cleanup(t, clerkUserId);
+  const eventReaction = 'reaction:yakub:laugh:v1';
+  const unlocks = ['style:yakub:stickers'];
+  const updatedHeaders = { [CLIENT_CAPABILITIES_HEADER]: ANUNAKI_CLIENT_CAPABILITY };
+  await db.insert(playerProfilesTable).values({ clerkUserId, onboardingStep: 'complete',
+    unlockedCosmeticIds: unlocks, settings: { reducedMotion: false, turnTimerEnabled: true, reactionTray: ['big-w'] } });
+  await withPlayerApi(clerkUserId, async baseUrl => {
+    const saved = [eventReaction, 'big-w'];
+    await patchProfile(baseUrl, { reactionTray: saved }, 200, updatedHeaders);
+    const rejected = await patchProfile(baseUrl, { reactionTray: ['lets-go'], displayName: 'Must not save' }, 409);
+    assert.match(rejected.error, /Refresh the game/);
+    assert.deepEqual((await profileFor(clerkUserId)).settings.reactionTray, saved);
+    assert.notEqual((await profileFor(clerkUserId)).displayName, 'Must not save');
+    // An old tab can still save unrelated settings or repeat the exact tray.
+    await patchProfile(baseUrl, { reducedMotion: true });
+    await patchProfile(baseUrl, { reactionTray: saved });
+    assert.deepEqual((await profileFor(clerkUserId)).settings.reactionTray, saved);
+    // Updated tabs can reorder and intentionally remove the event selection.
+    await patchProfile(baseUrl, { reactionTray: ['big-w', eventReaction] }, 200, updatedHeaders);
+    await patchProfile(baseUrl, { reactionTray: [] }, 200, updatedHeaders);
+    await patchProfile(baseUrl, { reactionTray: ['lets-go'] });
+    assert.deepEqual((await profileFor(clerkUserId)).settings.reactionTray, ['lets-go']);
+    // A concurrent stale write is serialized with the updated tab. Whichever
+    // arrives first, the newer event selection is the final stored tray.
+    const writes = await Promise.all([
+      fetch(`${baseUrl}/player/profile`, { method: 'PATCH', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ reactionTray: ['big-w'] }) }),
+      fetch(`${baseUrl}/player/profile`, { method: 'PATCH', headers: { 'content-type': 'application/json', ...updatedHeaders }, body: JSON.stringify({ reactionTray: saved }) }),
+    ]);
+    assert.ok([200, 409].includes(writes[0].status));
+    assert.equal(writes[1].status, 200);
+    const stored = await profileFor(clerkUserId);
+    assert.deepEqual(stored.settings.reactionTray, saved);
+    assert.deepEqual(stored.unlockedCosmeticIds, unlocks);
+  });
+});
+
+test('native PostgreSQL serializes a stale reaction-tray edit behind a concurrent new selection', { skip: process.env.ONLINE_RETIREMENT_TEST_OWNED !== '1' }, async t => {
+  const clerkUserId = `reaction-tray-native-lock-${randomUUID()}`;
+  cleanup(t, clerkUserId);
+  assert.ok((pool.options.max ?? 0) >= 2, 'requires independent database connections');
+  const saved = ['reaction:yakub:laugh:v1', 'big-w'];
+  await db.insert(playerProfilesTable).values({ clerkUserId, onboardingStep: 'complete',
+    unlockedCosmeticIds: ['style:yakub:stickers'], settings: { reducedMotion: false, turnTimerEnabled: true, reactionTray: ['big-w'] } });
+  await withPlayerApi(clerkUserId, async baseUrl => {
+    const blocker = await pool.connect();
+    let pending: Promise<Response> | undefined;
+    try {
+      const version = await blocker.query<{ version: string }>('select version()');
+      assert.match(version.rows[0].version, /^PostgreSQL /);
+      await blocker.query('begin');
+      await blocker.query("update player_profiles set settings = jsonb_set(settings, '{reactionTray}', $2::jsonb) where clerk_user_id = $1", [clerkUserId, JSON.stringify(saved)]);
+      pending = fetch(`${baseUrl}/player/profile`, { method: 'PATCH', signal: AbortSignal.timeout(10_000),
+        headers: { 'content-type': 'application/json' }, body: JSON.stringify({ reactionTray: ['lets-go'], displayName: 'Must not save' }) });
+      let waiting = 0;
+      const deadline = performance.now() + 5_000;
+      while (!waiting && performance.now() < deadline) {
+        await blocker.query('select pg_stat_clear_snapshot()');
+        const result = await blocker.query(`select pid from pg_stat_activity where datname = current_database()
+          and pid <> pg_backend_pid() and wait_event_type = 'Lock' and query like '%player_profiles%'`);
+        waiting = result.rowCount ?? 0;
+        if (!waiting) await new Promise(resolve => setTimeout(resolve, 10));
+      }
+      assert.equal(waiting, 1, 'stale write waits on the changed profile row');
+      await blocker.query('commit');
+      const response = await pending;
+      assert.equal(response.status, 409);
+      assert.match((await response.json() as {error:string}).error, /Refresh the game/);
+      const stored = await profileFor(clerkUserId);
+      assert.deepEqual(stored.settings.reactionTray, saved);
+      assert.notEqual(stored.displayName, 'Must not save');
+    } finally {
+      await blocker.query('rollback').catch(() => undefined);
+      blocker.release();
+      await pending?.catch(() => undefined);
+    }
   });
 });
 

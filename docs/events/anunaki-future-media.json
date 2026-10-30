@@ -1,0 +1,173 @@
+{
+  "description": "Anunaki expansion media provenance. The new Story campaign uses the authored story plates; the Anu raid uses the arrival and raid artwork. Remaining campaign concepts are retained for reference. Runtime availability is defined by the Story and raid rules, rather than the presence of these files.",
+  "masters": "Original full-resolution PNGs are preserved in the separate anunaki-expansion-art-20261028 deliverables gallery.",
+  "encoding": "WebP quality 80, method 6 from retained pre-optimization derivatives; original dimensions and framing preserved.",
+  "assets": [
+    {
+      "category": "story",
+      "source": "story-backgrounds/01-jigga-time-machine-present-day.png",
+      "sourceSha256": "07c06c170a72f1200de0be375a99811b4bdd77119501aff133239f78216371e2",
+      "sourceBytes": 2865161,
+      "asset": "assets/anunaki-future/story/01-jigga-time-machine-present-day.webp",
+      "sha256": "a7d15991f57f84e2f314c20b2cdcf881e06186435dba6f95bb5f99b3efa8aa07",
+      "bytes": 301260,
+      "width": 1672,
+      "height": 941
+    },
+    {
+      "category": "story",
+      "source": "story-backgrounds/01-time-machine-ancient-alternate.png",
+      "sourceSha256": "701738d90365cb7ce4882ad9cc33be953b0df8d30a5d047edb5560bf5a1ea169",
+      "sourceBytes": 2813287,
+      "asset": "assets/anunaki-future/story/01-time-machine-ancient-alternate.webp",
+      "sha256": "05244ef2bd150ee771afe78abcf0fcff42525461cb6994fc55f86276b2adf465",
+      "bytes": 294168,
+      "width": 1672,
+      "height": 941
+    },
+    {
+      "category": "story",
+      "source": "story-backgrounds/02-the-descent.png",
+      "sourceSha256": "0c05915940f21ffe91477267c328f089ec06cf178a18873990faa3e040e65f66",
+      "sourceBytes": 2707351,
+      "asset": "assets/anunaki-future/story/02-the-descent.webp",
+      "sha256": "bf1814e4f1e3da273d6be1e807715d7a0f9f442caf9629dc9da8376130be741e",
+      "bytes": 269852,
+      "width": 1672,
+      "height": 940
+    },
+    {
+      "category": "story",
+      "source": "story-backgrounds/03-enki-workshop.png",
+      "sourceSha256": "ec83dde89ecb49d93db1cc8c84f53048cad950a759f56549777981737a87b061",
+      "sourceBytes": 2950247,
+      "asset": "assets/anunaki-future/story/03-enki-workshop.webp",
+      "sha256": "7d3e0e6e059e9304bcf1995a040c5949b246ec538bbd554843d25010e8759e4c",
+      "bytes": 331162,
+      "width": 1672,
+      "height": 941
+    },
+    {
+      "category": "story",
+      "source": "story-backgrounds/04-enlil-storm.png",
+      "sourceSha256": "17ba482a1d27ecebaa7310f8839f5253b50c39ebe45d57ceb2947c7df55cd70b",
+      "sourceBytes": 2737412,
+      "asset": "assets/anunaki-future/story/04-enlil-storm.webp",
+      "sha256": "cca8560133a1f8868e4c87f502f0a068926f2c4ddcb18666569753d09b0fa67e",
+      "bytes": 265544,
+      "width": 1672,
+      "height": 941
+    },
+    {
+      "category": "story",
+      "source": "story-backgrounds/04b-inanna-arena.png",
+      "sourceSha256": "d92a9d24d78507eb76164f1e527a65261dd31433850cf013ed23e5b731ecf645",
+      "sourceBytes": 2901863,
+      "asset": "assets/anunaki-future/story/04b-inanna-arena.webp",
+      "sha256": "c63c6815546a6636e953d4e3b06aa2bcc6bb3b1433f4c64643088cf02378f171",
+      "bytes": 323254,
+      "width": 1672,
+      "height": 941
+    },
+    {
+      "category": "story",
+      "source": "story-backgrounds/05-yakub-lab.png",
+      "sourceSha256": "25023ef7f9fa7ca7a6909b1c60eb9826493da59de1957f14f2b407a3c0d1b956",
+      "sourceBytes": 2941050,
+      "asset": "assets/anunaki-future/story/05-yakub-lab.webp",
+      "sha256": "3318b15d73f677543f13d5f970a9498074fe22c5497798da2da3fa0ae3a29f10",
+      "bytes": 323572,
+      "width": 1672,
+      "height": 941
+    },
+    {
+      "category": "story",
+      "source": "story-backgrounds/06-nabu-archives.png",
+      "sourceSha256": "3397f79a9230fc181da4fe57200a4ad48a7b03f96e444e481795234977688a43",
+      "sourceBytes": 2741982,
+      "asset": "assets/anunaki-future/story/06-nabu-archives.webp",
+      "sha256": "f4e602364690609d090965eb0767c9045ccbc461823bbd6e4ffded92f165774e",
+      "bytes": 299684,
+      "width": 1672,
+      "height": 941
+    },
+    {
+      "category": "story",
+      "source": "story-backgrounds/07-ereshkigal-underworld.png",
+      "sourceSha256": "3916a2e4ece7727bc37aa0b78e85ce36372fd73c2ba9eba287c08fa0adde9836",
+      "sourceBytes": 2478972,
+      "asset": "assets/anunaki-future/story/07-ereshkigal-underworld.webp",
+      "sha256": "2b01d122726f1fffc36779dfccb37970e7ce7045c395d08885fbce4340cbc433",
+      "bytes": 221954,
+      "width": 1672,
+      "height": 941
+    },
+    {
+      "category": "story",
+      "source": "story-backgrounds/07b-ninhursag-sanctuary.png",
+      "sourceSha256": "795cee3fce333b7b69b40be48f748a53ff6a4d15978630922a7393ec46010228",
+      "sourceBytes": 3041969,
+      "asset": "assets/anunaki-future/story/07b-ninhursag-sanctuary.webp",
+      "sha256": "d418db74b4297fa98c26f9eb126378b3c415ace62a53e8498a6f6dbd37fd6983",
+      "bytes": 347192,
+      "width": 1672,
+      "height": 941
+    },
+    {
+      "category": "story",
+      "source": "story-backgrounds/08-anu-arrival-finale.png",
+      "sourceSha256": "e3a7f24e81998a7034bd601af85448816e3bbfc6f3de23cdd5d5fcd755d71844",
+      "sourceBytes": 2858793,
+      "asset": "assets/anunaki-future/story/08-anu-arrival-finale.webp",
+      "sha256": "37fa921daba06bf3e22f141473b5910c96464400a04e36b946f6a674d7e1d550",
+      "bytes": 302494,
+      "width": 1672,
+      "height": 940
+    },
+    {
+      "category": "story",
+      "source": "story-backgrounds/09-return-to-city.png",
+      "sourceSha256": "b2634d0a710a2ba697a12a1baedd190a90ac7858cbb62008667b345e05e10c3a",
+      "sourceBytes": 2758109,
+      "asset": "assets/anunaki-future/story/09-return-to-city.webp",
+      "sha256": "4b5e76a4b485b4417976299608d627499535ee73cdba1a63cbc89cff64458d8d",
+      "bytes": 295510,
+      "width": 1672,
+      "height": 941
+    },
+    {
+      "category": "concepts",
+      "source": "campaign-art/boss-raid-key-art.png",
+      "sourceSha256": "e7b63eb2e3ea1be29ad6071b36f717f60f9c049e9e032313d088c884e7e480c3",
+      "sourceBytes": 3238882,
+      "asset": "assets/anunaki-future/concepts/boss-raid-key-art.webp",
+      "sha256": "337e0693e0e1c9e042fab13e4aca0109786aa22467e0affda1eca45d3a31daca",
+      "bytes": 381424,
+      "width": 1672,
+      "height": 941
+    },
+    {
+      "category": "concepts",
+      "source": "campaign-art/gacha-poster-concept.png",
+      "sourceSha256": "300ee3437bb32e29d790a0a490362dc0832d33afce85c20af9742ffe4484a755",
+      "sourceBytes": 3565527,
+      "asset": "assets/anunaki-future/concepts/gacha-poster-concept.webp",
+      "sha256": "b226d3cf211087e4765898b3a5ac4867c4665346c043c1df7c2471380fca463e",
+      "bytes": 414168,
+      "width": 941,
+      "height": 1672
+    },
+    {
+      "category": "concepts",
+      "source": "campaign-art/roadmap-journey-background.png",
+      "sourceSha256": "9e1b9f608d926021a74d2cc9bf7ad1472985d594e4ad6e8d39ab74e9aaa35af6",
+      "sourceBytes": 3082424,
+      "asset": "assets/anunaki-future/concepts/roadmap-journey-background.webp",
+      "sha256": "588ca8de669f9b46ebb11a95cee1b70009981db6913c82465f7dd6d27cd73af2",
+      "bytes": 371474,
+      "width": 1672,
+      "height": 941
+    }
+  ],
+  "deliveryOptimization": "See docs/events/anunaki-media-optimization.json for retained input hashes, output hashes and encoding settings. Source art, dimensions and authored timing are unchanged."
+}

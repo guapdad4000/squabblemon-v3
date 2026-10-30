@@ -189,6 +189,10 @@ export function MultiplayerBattle({ room, busy, connected, reducedMotion: profil
   const [preferences, setPreferences] = useFeedbackPreferences();
   const feedback = useRef<BattleFeedback | null>(null);
   const seen = useRef(room.events.at(-1)?.sequence ?? 0);
+  const seenTablets = useRef(room.events.at(-1)?.sequence ?? 0);
+  const tabletSeenGame = useRef(`${room.code}:${room.gameNumber}`);
+  const [tabletBursts, setTabletBursts] = useState<NonNullable<OnlineBattlePresentation['consumedTablets']>>([]);
+  const tabletBurstTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const sending = useRef(false);
   useEffect(() => {
     if (room.status !== 'active') return;
@@ -238,6 +242,25 @@ export function MultiplayerBattle({ room, busy, connected, reducedMotion: profil
     seen.current = room.events.at(-1)?.sequence ?? seen.current;
     if (event && !document.hidden) feedback.current?.cue(event.note.includes('SQUABBLE') ? 'squabble' : event.type === 'play' ? 'play' : event.kind === 'move' ? 'move' : 'status', reducedMotion);
   }, [room.events, reducedMotion]);
+  useEffect(() => {
+    const game = `${room.code}:${room.gameNumber}`;
+    if (tabletSeenGame.current !== game) {
+      tabletSeenGame.current = game; seenTablets.current = room.events.at(-1)?.sequence ?? 0;
+      if (tabletBurstTimer.current) clearTimeout(tabletBurstTimer.current);
+      setTabletBursts([]); return;
+    }
+    const next = room.events.filter(event => event.sequence > seenTablets.current)
+      .flatMap(event => (event.tabletConsumed ?? []).map(tablet => ({
+        owner: tablet.owner === room.seat ? 'player' as const : 'cpu' as const,
+        lane: tablet.lane, sequence: event.sequence,
+      })));
+    seenTablets.current = room.events.at(-1)?.sequence ?? seenTablets.current;
+    if (!reducedMotion || !next.length || document.hidden) return;
+    if (tabletBurstTimer.current) clearTimeout(tabletBurstTimer.current);
+    setTabletBursts(next);
+    tabletBurstTimer.current = setTimeout(() => setTabletBursts([]), reducedMotion ? 400 : 650);
+  }, [room.code, room.gameNumber, room.events, room.seat, reducedMotion]);
+  useEffect(() => () => { if (tabletBurstTimer.current) clearTimeout(tabletBurstTimer.current); }, []);
   const rivalSeat = otherSeat(room.seat), rival = room.members[rivalSeat]!;
   const myTurn = room.status === 'active' && room.activeSeat === room.seat;
   useTurnClockCues(remaining, myTurn, room.deadline, room.status === 'active' && connected);
@@ -248,6 +271,12 @@ export function MultiplayerBattle({ room, busy, connected, reducedMotion: profil
   const projectRoom = useMemo(createOnlineBattleProjector, []);
   const projected = useMemo(() => projectRoom(room), [projectRoom, room]);
   const { effect: liveEffect, presenting: presentingEffects, pendingEffects, playedSpecialMoves } = useOnlineEffectPresenter(room, projected.presentation.scores, Boolean(reducedMotion) || (room.status !== 'active' && room.status !== 'complete'));
+  // Normal-motion tablet bursts follow the existing V2 impact queue. Reduced-motion
+  // skips that queue, so use the short, static event cue above instead.
+  const presentedTablets = reducedMotion ? tabletBursts : liveEffect?.impact
+    ? (room.events.find(event => event.sequence === liveEffect.sequence)?.tabletConsumed ?? []).map(tablet => ({
+      owner: tablet.owner === room.seat ? 'player' as const : 'cpu' as const, lane: tablet.lane, sequence: liveEffect.sequence,
+    })) : [];
   const remembered = useRef({ key: `${room.code}:${room.gameNumber}`, cards: new Map<string, CardInstance>() });
   const matchKey = `${room.code}:${room.gameNumber}`;
   const visualMatch = useMemo(() => ({ ...projected.match, boards: onlinePresentationBoards(projected.match.boards, pendingEffects,
@@ -333,7 +362,7 @@ export function MultiplayerBattle({ room, busy, connected, reducedMotion: profil
     )}
     {!arrival && <BattleReactions key={`${room.code}:${room.gameNumber}`} room={room} connected={connected} reducedMotion={reducedMotion} />}
     <LayoutGroup><Battle match={visualMatch} playedSpecialMoves={playedSpecialMoves} deck={room.ownDeck} rivalDeck={{ id: 'online-rival', name: rival.name, hero: rival.hero, cards: [] }}
-      online={{ ...projected.presentation, status, yourTurn: myTurn, clockRunning: room.status === 'active' && connected, announcementsReady: !arrival && connected }}
+      online={{ ...projected.presentation, reducedMotion: Boolean(reducedMotion), consumedTablets: presentedTablets, status, yourTurn: myTurn, clockRunning: room.status === 'active' && connected, announcementsReady: !arrival && connected }}
       selectedInstanceId={selected} setSelectedInstanceId={setSelected} selectedLane={lane} setSelectedLane={setLane}
       squabble={squabble} setSquabble={setSquabble} setInspect={setInspect}
       commit={() => selected && lane !== null && void act({ type: 'play', instanceId: selected, lane, squabble })}

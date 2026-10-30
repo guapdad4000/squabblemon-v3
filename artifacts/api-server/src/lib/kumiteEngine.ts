@@ -55,7 +55,7 @@ export type KumiteCurrentView = {
     capacity: 8; poolCount: 1; poolSize: 8; entrants: KumitePublicEntrant[];
     pools: []; finals: KumitePublicMatch[][]; champion: KumitePublicEntrant | null;
   };
-  registration: null | { deckId: string; deckName: string; hero: string; registeredAt: number };
+  registration: null | { deckId: string; deckName: string; hero: string; registeredAt: number; clientNeedsUpdate: boolean };
   currentMatch: KumitePublicMatch | null; serverTime: number; rules: typeof KUMITE_RULES;
   progression: KumiteProgression | null;
   records: KumitePublicRecords;
@@ -210,7 +210,7 @@ export function kumiteView(state: KumiteState, userId: string | null, now: numbe
       capacity: 8, poolCount: 1, poolSize: 8, entrants: state.entrants.map(entry => publicEntry(entry.id)!),
       pools: [], finals: state.rounds.map(round => round.map(publicMatch)), champion: publicEntry(state.championId) },
     registration: own ? { deckId: own.member.deck.id, deckName: own.member.deck.name,
-      hero: own.member.deck.hero, registeredAt: own.registeredAt } : null,
+      hero: own.member.deck.hero, registeredAt: own.registeredAt, clientNeedsUpdate: !own.member.supportsAnunaki } : null,
     currentMatch: currentMatch ? publicMatch(currentMatch) : null, serverTime: now, rules: KUMITE_RULES, progression: null,
     records: emptyKumiteRecords(),
   };

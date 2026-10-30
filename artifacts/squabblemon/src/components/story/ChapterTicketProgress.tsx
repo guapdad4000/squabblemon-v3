@@ -53,7 +53,7 @@ export function ChapterTicketProgress({
       </div>
       <div className="grid grid-cols-2 gap-2 font-mono text-[9px] uppercase tracking-widest text-white/55">
         <span data-testid="perfect-ticket-total">
-          Perfect clears <b className="text-white">{progress.perfectTicketsEarned} / {progress.perfectTicketsAvailable}</b>
+          {chapter.id.startsWith('anunaki-') ? 'Mastery stars reward the journey' : <>Perfect clears <b className="text-white">{progress.perfectTicketsEarned} / {progress.perfectTicketsAvailable}</b></>}
         </span>
         {progress.directTicketsAvailable > 0 && (
           <span data-testid="direct-ticket-total" className="text-right">

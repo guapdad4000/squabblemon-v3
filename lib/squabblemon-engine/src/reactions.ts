@@ -1,3 +1,5 @@
+import { ANUNAKI_EVENT_GAMEPLAY_READY } from './anunakiEvent';
+
 /** Curated assets only: clients send catalog IDs, never external URLs or text. */
 export const REACTION_PACK_ID = 'reaction-pack';
 export const REACTION_PACK_UNLOCK = 'reactions:block-talk';
@@ -50,7 +52,24 @@ export const CHARACTER_REACTION_PACKS = [
 {"id": "reaction-pack:church-auntie:v1", "name": "Church Auntie Reactions", "unlock": "reaction-pack:church-auntie:v1", "price": 400, "reactionIds": ["reaction:church-auntie:laugh:v1", "reaction:church-auntie:rage:v1", "reaction:church-auntie:shocked:v1", "reaction:church-auntie:respect:v1"]}
 ] as const;
 export const REACTION_PACKS = [{ id: REACTION_PACK_ID, name: 'Block Talk Reactions', unlock: REACTION_PACK_UNLOCK, price: 300, reactionIds: ['hold-that', 'too-smooth'] }, ...CHARACTER_REACTION_PACKS] as const;
+// Roadmap sticker packs also unlock their battle reactions. These are earned,
+// never offered as separate purchases in the reaction shop.
+export const ANUNAKI_EVENT_REACTION_PACKS = [
+  { id: 'anunaki-reactions:yakub', name: 'Yakub Reactions', unlock: 'style:yakub:stickers', reactionIds: ['reaction:yakub:laugh:v1', 'reaction:yakub:rage:v1', 'reaction:yakub:shocked:v1', 'reaction:yakub:respect:v1'] },
+  { id: 'anunaki-reactions:anu', name: 'Anu Reactions', unlock: 'style:anu:stickers', reactionIds: ['reaction:anu:laugh:v1', 'reaction:anu:rage:v1', 'reaction:anu:shocked:v1', 'reaction:anu:respect:v1'] },
+] as const;
+/** Ascended raid reaction; its animation reuses the approved Anu respect clip. */
+export const ANUNAKI_RAID_REACTION_PACK = { id: 'anunaki-reactions:raid', name: 'Anu Raid Reaction', unlock: 'anunaki-raid:reaction', reactionIds: ['reaction:anu:raid:v1'] } as const;
 export const REACTIONS = [
+  { id: 'reaction:anu:raid:v1', name: 'Anu — Raid Respect', gif: 'assets/reactions/anunaki-drawn-v2/anu/respect.gif', animatedWebp: 'assets/reactions/anunaki-drawn-v2/anu/respect-animated.webp', poster: 'assets/reactions/anunaki-drawn-v2/anu/respect.webp', starter: false, packId: 'anunaki-reactions:raid' },
+  { id: 'reaction:yakub:laugh:v1', name: 'Yakub — Laugh', gif: 'assets/reactions/anunaki-drawn-v2/yakub/laugh.gif', animatedWebp: 'assets/reactions/anunaki-drawn-v2/yakub/laugh-animated.webp', poster: 'assets/reactions/anunaki-drawn-v2/yakub/laugh.webp', starter: false, packId: 'anunaki-reactions:yakub' },
+  { id: 'reaction:yakub:rage:v1', name: 'Yakub — Rage', gif: 'assets/reactions/anunaki-drawn-v2/yakub/rage.gif', animatedWebp: 'assets/reactions/anunaki-drawn-v2/yakub/rage-animated.webp', poster: 'assets/reactions/anunaki-drawn-v2/yakub/rage.webp', starter: false, packId: 'anunaki-reactions:yakub' },
+  { id: 'reaction:yakub:shocked:v1', name: 'Yakub — Shocked', gif: 'assets/reactions/anunaki-drawn-v2/yakub/shocked.gif', animatedWebp: 'assets/reactions/anunaki-drawn-v2/yakub/shocked-animated.webp', poster: 'assets/reactions/anunaki-drawn-v2/yakub/shocked.webp', starter: false, packId: 'anunaki-reactions:yakub' },
+  { id: 'reaction:yakub:respect:v1', name: 'Yakub — Respect', gif: 'assets/reactions/anunaki-drawn-v2/yakub/respect.gif', animatedWebp: 'assets/reactions/anunaki-drawn-v2/yakub/respect-animated.webp', poster: 'assets/reactions/anunaki-drawn-v2/yakub/respect.webp', starter: false, packId: 'anunaki-reactions:yakub' },
+  { id: 'reaction:anu:laugh:v1', name: 'Anu — Laugh', gif: 'assets/reactions/anunaki-drawn-v2/anu/laugh.gif', animatedWebp: 'assets/reactions/anunaki-drawn-v2/anu/laugh-animated.webp', poster: 'assets/reactions/anunaki-drawn-v2/anu/laugh.webp', starter: false, packId: 'anunaki-reactions:anu' },
+  { id: 'reaction:anu:rage:v1', name: 'Anu — Rage', gif: 'assets/reactions/anunaki-drawn-v2/anu/rage.gif', animatedWebp: 'assets/reactions/anunaki-drawn-v2/anu/rage-animated.webp', poster: 'assets/reactions/anunaki-drawn-v2/anu/rage.webp', starter: false, packId: 'anunaki-reactions:anu' },
+  { id: 'reaction:anu:shocked:v1', name: 'Anu — Shocked', gif: 'assets/reactions/anunaki-drawn-v2/anu/shocked.gif', animatedWebp: 'assets/reactions/anunaki-drawn-v2/anu/shocked-animated.webp', poster: 'assets/reactions/anunaki-drawn-v2/anu/shocked.webp', starter: false, packId: 'anunaki-reactions:anu' },
+  { id: 'reaction:anu:respect:v1', name: 'Anu — Respect', gif: 'assets/reactions/anunaki-drawn-v2/anu/respect.gif', animatedWebp: 'assets/reactions/anunaki-drawn-v2/anu/respect-animated.webp', poster: 'assets/reactions/anunaki-drawn-v2/anu/respect.webp', starter: false, packId: 'anunaki-reactions:anu' },
   { id: 'big-w', poster: 'assets/reactions/big-w.png', animatedWebp: 'assets/results/win-w.webp', packId: null, name: 'Big W', gif: 'assets/results/win-w.gif', starter: true },
   { id: 'lets-go', poster: 'assets/reactions/lets-go.png', animatedWebp: null, packId: null, name: "Let's go", gif: 'assets/training/inmate-quick.gif', starter: true },
   { id: 'hold-that', poster: 'assets/reactions/hold-that.png', animatedWebp: 'assets/results/loss-l.webp', packId: REACTION_PACK_ID, name: 'Hold that L', gif: 'assets/results/loss-l.gif', starter: false },
@@ -98,8 +117,15 @@ export type ReactionEvent = { id: string; reactionId: ReactionId; seat: Reaction
 export type ReactionChannel = { revision: number; latest: Partial<Record<ReactionSeat, ReactionEvent>> };
 export type ReactionView = ReactionChannel & { serverTime: number; owned: ReactionId[]; tray: ReactionId[] };
 export const reactionById = (id: string) => REACTIONS.find(reaction => reaction.id === id);
+/** Hide unreleased event art in collection totals, while retaining owned rewards across a gate rollback. */
+export function reactionCollectionSize(unlocks: readonly string[] = []): number {
+  return REACTIONS.filter(reaction => {
+    const event = [...ANUNAKI_EVENT_REACTION_PACKS, ANUNAKI_RAID_REACTION_PACK].find(pack => pack.id === reaction.packId);
+    return !event || ANUNAKI_EVENT_GAMEPLAY_READY || unlocks.includes(event.unlock);
+  }).length;
+}
 export function ownedReactions(unlocks: readonly string[] = []): ReactionId[] {
-  return REACTIONS.filter(r => r.starter || REACTION_PACKS.some(pack => pack.id === r.packId && unlocks.includes(pack.unlock))).map(r => r.id);
+  return REACTIONS.filter(r => r.starter || [...REACTION_PACKS, ...ANUNAKI_EVENT_REACTION_PACKS, ANUNAKI_RAID_REACTION_PACK].some(pack => pack.id === r.packId && unlocks.includes(pack.unlock))).map(r => r.id);
 }
 
 /** An absent legacy preference gets starters; a deliberately empty tray stays empty. */

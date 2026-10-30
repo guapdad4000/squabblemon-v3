@@ -1,3 +1,4 @@
+import { releasedAnunakiIds } from './anunakiTestCatalog';
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { cardCatalog, catalogCardById, catalogCardByEngineId, cards, decks, getCardImage, starterRecipes, validateCardAbilityUpgrades, validateSavedDeck } from './data';
@@ -36,7 +37,7 @@ const rarities: Record<string, string> = {
 
 test('Squabblehouse staff and dogs register as collectible, pack-eligible cards with their authored rarity and faction tags', () => {
   validateCardAbilityUpgrades();
-  assert.equal(cardCatalog.length, 301);
+  assert.equal(cardCatalog.length, 301 + releasedAnunakiIds.length);
   for (const id of newIds) {
     const card = catalogCardById[id];
     assert.ok(card, id);

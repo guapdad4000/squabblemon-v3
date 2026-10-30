@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { cardCatalog, cards } from './data';
+import { isAnunakiCardId } from '../../../lib/squabblemon-engine/src/anunakiWave';
 import { CARD_BALANCE_VERSION, ONLINE_RULES_VERSION } from '../../../lib/squabblemon-engine/src/multiplayer';
 import { createCardInstance, createMatch, getEffectiveCardPower, playTurnCard, type Lane, type Match, type Owner } from './gameEngine';
 
@@ -11,6 +12,8 @@ const approvedBodyCaps: Record<string, number> = {
  'calisthenics-yn':4,'community-cook':4,'group-chat-instigator':5,
  'inmate-crafty':4,'inmate-contraband':4,'triple-og-blue':8,'block-spinner':3,
  'crazy-ex-boyfriend':5,'uncle-sam':6,'demon-trainer':6,'franklin-duke':6,'chonk-lee':7,
+ // Expansion draft exceptions: keep these exact, rather than changing the cap for the roster.
+ utu:3,anu:8,
 };
 const mythicals = cardCatalog.filter(card => card.rarity === 'Mythical');
 const characters = cardCatalog.filter(card => (card.kind ?? 'character') === 'character');
@@ -22,9 +25,9 @@ const totalHands = (match: Match, owner: Owner) => match.boards.flat()
   .reduce((total, card) => total + getEffectiveCardPower(card), 0);
 
 test('Mythicals span early and late Motion without inflated printed Hands', () => {
-  assert.equal(CARD_BALANCE_VERSION, 64);
-  assert.equal(ONLINE_RULES_VERSION, 64);
-  assert.equal(mythicals.length, 25);
+  assert.equal(CARD_BALANCE_VERSION, 65);
+  assert.equal(ONLINE_RULES_VERSION, 65);
+  assert.equal(mythicals.filter(card => !isAnunakiCardId(card.engineId)).length, 25);
   const costs = mythicals.map(card => card.cost);
   assert(costs.filter(cost => cost <= 3).length >= 3, 'early-round Mythicals need more than one cost option');
   assert(costs.filter(cost => cost === 6).length >= 2, 'late finishers should still require six Motion');
@@ -36,7 +39,7 @@ test('Mythicals span early and late Motion without inflated printed Hands', () =
 });
 
 test('every character fits the six-round Motion curve without an oversized free body', () => {
-  assert.equal(characters.length, 278);
+  assert.equal(characters.filter(card => !isAnunakiCardId(card.engineId)).length, 278);
   assert(characters.filter(card => card.cost === 1).length >= 10, 'gangs need enough opening cards');
   assert(characters.filter(card => card.cost >= 4).length >= 15, 'gangs need mid- and late-round choices');
   for (const cost of [1, 2, 3, 4]) {
@@ -48,6 +51,11 @@ test('every character fits the six-round Motion curve without an oversized free 
     const printedBudget = approvedBodyCaps[card.engineId] ?? card.cost + 1;
     assert(card.power >= 1 && card.power <= printedBudget, `${card.name} has excessive unconditional Hands`);
   }
+});
+
+test('Anunaki printed-budget exceptions stay at the authored values', () => {
+  assert.deepEqual([cards.utu.cost, cards.utu.power], [1, 2]);
+  assert.deepEqual([cards.anu.cost, cards.anu.power], [6, 8]);
 });
 
 test('Mythical reveal swings stay bounded in a favorable contested board', () => {
