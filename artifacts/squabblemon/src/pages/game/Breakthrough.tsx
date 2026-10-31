@@ -26,14 +26,15 @@ import { usePersistentDeckSelection } from '../../lib/deckSelection';
 import { getRankedLobby } from '../../lib/multiplayer';
 import '../../components/breakthrough/production.css';
 
-/** Public routes remain closed until every canonical card has usable, verified effects. */
+/** CPU practice is explicit; full public entry retains its release requirements. */
 export function Breakthrough(props: { bootstrap: PlayerBootstrap }) {
-  if (!getBreakthroughLaunchReadiness().canLaunch)
+  const [location] = useLocation();
+  if (location !== '/game/kumite/breakthrough/practice' && !getBreakthroughLaunchReadiness().canLaunch)
     return <Redirect to="/game/kumite" />;
   return <BreakthroughPractice {...props} />;
 }
 
-/** Internal renderer used explicitly by the local synthetic fixture; no URL or account bypass. */
+/** Local CPU matches have no account rewards or online room admission. */
 export function BreakthroughPractice({
   bootstrap,
 }: {

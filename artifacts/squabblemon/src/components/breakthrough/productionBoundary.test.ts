@@ -27,12 +27,15 @@ test('nested routes precede Kumite hub and Breakthrough stays outside eager idle
   assert.match(modules, /key !== 'Breakthrough'/);
 });
 
-test('public entry cannot use the internal audition without full-catalog readiness', () => {
+test('CPU practice is discoverable while full public entry retains readiness', () => {
   const page = text('../../pages/game/Breakthrough.tsx'),
     hub = text('../../pages/game/Kumite.tsx');
   assert.match(page, /getBreakthroughLaunchReadiness\(\)\.canLaunch/);
   assert.match(page, /<Redirect to=["']\/game\/kumite["']/);
-  assert.match(hub, /isBreakthroughPublicEntryEnabled\(\) &&/);
+  assert.ok(page.includes("location !== '/game/kumite/breakthrough/practice' && !getBreakthroughLaunchReadiness().canLaunch"));
+  assert.ok(hub.includes('href="/game/kumite/breakthrough/practice"'));
+  assert.ok(hub.includes('Practice Breakthrough'));
+  assert.doesNotMatch(hub, /href="\/game\/kumite\/breakthrough"/);
   assert.doesNotMatch(
     hub,
     /from ["']@workspace\/squabblemon-engine\/breakthroughCatalog/,

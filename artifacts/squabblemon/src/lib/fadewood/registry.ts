@@ -20,12 +20,17 @@ export function resolveContinue(campaign: StoryCampaign, accountId: string, arcI
     const m = metadata[n.nodeId];
     return n.cleared && n.kind === 'battle' && !!m && Array.from({length:m.post},(_,i)=>`${m.token}:post:${i}`).some(token => !n.dialogueSeen.includes(token));
   };
+  // Authoritative play history recovers the arc after a new session. Old unread
+  // dialogue must not pull a player back from a more recently played chapter.
+  const latestPlayed = campaign.nodes.filter(n => usable(n) && n.lastPlayedAt).sort((a,b)=>Date.parse(b.lastPlayedAt!) - Date.parse(a.lastPlayedAt!))[0];
   const savedNode = saved && campaign.nodes.find(n => n.nodeId === saved.nodeId && usable(n));
-  let node = savedNode && (!savedNode.cleared || hasPost(savedNode)) ? savedNode : undefined;
-  // A server last-played timestamp can recover unread post-dialogue on another
-  // browser; it never resumes a fight or creates completion locally.
-  node ??= campaign.nodes.filter(n => usable(n) && hasPost(n) && n.lastPlayedAt).sort((a,b)=>Date.parse(b.lastPlayedAt!) - Date.parse(a.lastPlayedAt!))[0];
-  const sameSavedArc = !requestedArc && saved ? FADEWOOD_ARCS.find(a => a.id === saved.arcId && a.available) : undefined;
+  const savedIsCurrent = !!saved && (!latestPlayed || Date.parse(latestPlayed.lastPlayedAt!) <= saved.updatedAt)
+    && (!savedNode?.cleared || !latestPlayed || latestPlayed.nodeId === savedNode.nodeId);
+  let node = savedIsCurrent && savedNode && (!savedNode.cleared || hasPost(savedNode)) ? savedNode : undefined;
+  if (latestPlayed && !latestPlayed.cleared) node ??= latestPlayed;
+  const sameSavedArc = !requestedArc
+    ? (savedIsCurrent ? FADEWOOD_ARCS.find(a => a.id === saved!.arcId && a.available) : undefined) ?? (latestPlayed ? getArcForChapter(latestPlayed.chapterId) : undefined)
+    : undefined;
   const remaining = campaign.nodes.filter(n => usable(n) && !n.cleared && n.status === 'available');
   node ??= remaining.find(n => sameSavedArc?.chapterIds.includes(n.chapterId) && !n.optional);
   node ??= remaining.find(n => n.nodeId === campaign.recommendedNodeId);
@@ -50,6 +55,7 @@ const park = mode('ranked','Enter Fade Park','/game/online');
 const home = mode('safehouse','Enter Safehouse','/game');
 const dojo = mode('training','Practice at the Dojo','/game/training');
 const kumite = mode('arena','Enter Kumite','/game/kumite');
+const breakthrough = mode('breakthrough-practice','Breakthrough · CPU practice','/game/kumite/breakthrough/practice');
 const patrol = mode('patrol','Punch on Patrol','/game/challenges?game=punch-on-patrol');
 const events = mode('events','Events on the block','/game/events');
 const bounties = mode('bounties','Check the bounties','/game/missions');
@@ -58,9 +64,9 @@ const ACTIONS: Record<string, readonly WorldAction[]> = {
   cornball:[S1(),market], 'ganger-blue':[S1(),friends], 'ganger-red':[S1(),friends], 'og-blue':[friends], 'og-red':[friends],
   'homeless-guy':[arc('special-leon'),mail], 'squabble-house-manager':[arc('special-squabble-house'),market],
   wifey:[S2(),friends], 'baby-momma':[S1(),park], 'inmate-kingpin':[arc('special-cellblock')], yasuke:[arc('special-yasuke'),dojo],
-  mailman:[mail,home], 'dr-fade':[kumite,arc('special-kumite-break-the-bracket'),dojo], 'blue-yb':[friends], sherlock:[arc('special-sherlock')],
+  mailman:[mail,home], 'dr-fade':[kumite,breakthrough,arc('special-kumite-break-the-bracket'),dojo], 'blue-yb':[friends], sherlock:[arc('special-sherlock')],
   'golden-doberman':[home,dojo], 'cracked-head':[S1(),S2()], snitch:[S1(),S2()], 'officer-oinkston':[patrol,S2()],
-  'alice-hat':[arc('special-alice')], 'anunaki-ufo':[arc('special-anunaki-arrival')], 'underground-arena':[kumite,arc('special-kumite-break-the-bracket')],
+  'alice-hat':[arc('special-alice')], 'anunaki-ufo':[arc('special-anunaki-arrival')], 'underground-arena':[kumite,breakthrough,arc('special-kumite-break-the-bracket')],
   'safehouse-door':[home], safehouse:[home], 'story-mural':[arc('special-oz')], 'oz-mural':[arc('special-oz')],
   'squabble-house':[arc('special-squabble-house')], 'fade-market':[market], 'blue-block':[S1()], 'red-block':[S1()], county:[arc('special-cellblock')],
   'fade-park-bulletin':[events,bounties], 'post-office':[mail], 'fade-park':[park,friends], dojo:[dojo,arc('special-yasuke')], 'open-garage':[S1()],

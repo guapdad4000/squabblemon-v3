@@ -114,3 +114,14 @@ html[data-reduce-motion="true"] .fadewood-world__dialog[open]>.fadewood-panel{an
 .fadewood-world__lighting>p{grid-column:1/-1;margin:0;font:500 12px/1.5 var(--font-sans);color:var(--popup-muted)}
 .fadewood-world__lighting>button:last-child:not(:nth-child(2)){grid-column:1/-1}
 @media(max-width:380px){.fadewood-world__lighting{grid-template-columns:1fr;gap:10px}.fadewood-world__lighting>button{width:100%}}
+
+/* Keep the street and touch movement visible on phones. */
+@media(max-width:650px){
+ .fadewood-world__story-dock{top:78px;bottom:auto;left:14px;right:auto;max-width:calc(100% - 28px)}
+ .fadewood-world__continue{width:fit-content;min-height:44px;max-width:260px;padding:6px 10px;gap:7px;box-shadow:2px 3px 0 #08170db3}
+ .fadewood-world__continue strong{font-size:16px}
+ .fadewood-world__continue small{max-width:190px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:10px}
+ .fadewood-world__continue .game-glyph{--glyph-size:28px}
+ .fadewood-world__continue>svg{width:16px}
+ .fadewood-world__roam-note{display:none}
+}

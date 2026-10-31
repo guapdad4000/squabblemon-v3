@@ -195,7 +195,7 @@ try {
     await page.screenshot({ path: join(output, `${name}-story-hosts.png`) });
     await page.getByRole('button', { name: /View The Anunaki Arrival with Anunaki UFO/ }).click();
     assert.equal(await page.locator('.fadewood-express__story-ticket').getByRole('button', { name: /^Continue/ }).count(), 0);
-    assert.equal(await page.locator('.fadewood-express__story-ticket').getByRole('button', { name: 'Visit the UFO' }).count(), 1);
+    assert.equal(await page.locator('.fadewood-express__story-ticket').getByRole('button', { name: 'View chapters' }).count(), 1);
     await page.keyboard.press('Escape');
     await send('error', { message: 'Synthetic renderer failure' });
     await page.getByRole('button', { name: 'Retry the world' }).waitFor();
