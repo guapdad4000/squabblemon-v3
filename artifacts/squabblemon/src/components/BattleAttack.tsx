@@ -11,7 +11,7 @@ import { readMoveOverrides, specialMoveForEvent, gateSpecialMoveReplay } from '.
 import { cards, cardEntryAccent, getCardImage, type Card } from '../data';
 import { getCardArtworkId } from '../lib/assets';
 import { battleChanges, eventIntensity, isNeutralDeparture } from '../battleChoreography';
-import { getCardWallpaper } from '../lib/cardFinish';
+import { getCardWallpaperForCard } from '../lib/cardFinish';
 import type { PresentationEffect } from './PlayLoop';
 
 import { DrFadeEntrance } from './DrFadeArt';
@@ -219,7 +219,7 @@ export function BattleAttack({ card, effect, impact, replaying = false, audioEna
       && <DrFadeEntrance key={effect.sequence} cueId={effect.sequence} speed={speed}
         squabble={!!effect.source?.after && effect.source.after.powerModifier >= effect.source.after.basePower} />}
     {showCaption && showPortrait && card.id !== 'dr-fade' && <div className="attack-caption">
-      <img className="attack-caption__scene" src={getCardWallpaper(card.type)} alt="" />
+      <img className="attack-caption__scene" src={getCardWallpaperForCard(card)} alt="" />
       <img className="attack-caption__fighter" src={battlePortraitUrl(getCardImage(effect.source?.after?.maryElephant ? 'ms-mary-mack-elephant' : getCardArtworkId({ ...card, cardId: effect.source?.after?.cardId ?? effect.cardId })))} alt="" />
       <div className="attack-caption__copy"><span>{intensity === 'squabble' ? 'SQUABBLE · DOUBLE HANDS' : card.name}</span>
         <strong>{effect.abilityMetadata?.upgradeName ?? card.ability}</strong></div>

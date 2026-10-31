@@ -1,5 +1,6 @@
 import { customFetch } from '@workspace/api-client-react';
 import type { OnlineRoomView } from '@workspace/squabblemon-engine/multiplayer';
+import { ANUNAKI_CLIENT_CAPABILITY, CLIENT_CAPABILITIES_HEADER } from '@workspace/squabblemon-engine/onlineCapabilities';
 
 export interface KumiteEntrant {
   id: string;
@@ -43,7 +44,7 @@ export interface KumiteTournament {
 }
 export interface KumiteCurrent {
   tournament: KumiteTournament;
-  registration: null | { deckId: string; deckName: string; hero: string; registeredAt: number };
+  registration: null | { deckId: string; deckName: string; hero: string; registeredAt: number; clientNeedsUpdate?: boolean };
   currentMatch: KumiteMatch | null;
   serverTime: number;
   rules: { roundHours: number; turnSeconds: number; [key: string]: unknown };
@@ -84,6 +85,7 @@ async function kumiteRequest<T>(path: string, body?: unknown, signal?: AbortSign
   try {
     return await customFetch<T>(`/api/kumite${path}`, {
       method: body === undefined ? 'GET' : 'POST',
+      headers: { [CLIENT_CAPABILITIES_HEADER]: ANUNAKI_CLIENT_CAPABILITY },
       body: body === undefined ? undefined : JSON.stringify(body),
       credentials: 'same-origin', cache: 'no-store', responseType: 'json', signal: controller.signal,
     });

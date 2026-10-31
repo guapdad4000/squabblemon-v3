@@ -118,12 +118,32 @@ for (const [cardId, artwork] of Object.entries(CHARACTER_SIGNATURE_ARTWORK)) {
     ...artwork,
   };
 }
+/** These packs are earned on the event road and cannot be purchased. */
+export const isAnunakiEventStickerPack = (cardId: string) => cardId === 'yakub' || cardId === 'anu';
+const ANUNAKI_STYLE_IDS = ['nabu', 'enki', 'utu', 'ninhursag', 'inanna', 'yakub', 'enlil', 'ereshkigal', 'caucus-mountaineer', 'anu'] as const;
+const isAnunakiStyle = (cardId: string) => (ANUNAKI_STYLE_IDS as readonly string[]).includes(cardId);
+for (const cardId of ANUNAKI_STYLE_IDS) {
+  const card = catalogCardById[cardId];
+  // The fighters and their collections stay hidden until their release gate opens.
+  if (!card) continue;
+  CHARACTER_STYLE_SETS[cardId] = {
+    cardId, series: String(nextSeries++).padStart(3, '0'), title: `${card.name}. Your signature.`,
+    tagline: card.ability, sceneName: 'The Ancient Road', sceneDescription: 'A journey through time.',
+    emblem: '✊', accent: '#d6b25d', background: 'assets/anunaki-event/journey.webp', stickerAtlas: null,
+    banner: `assets/cosmetics/anunaki/${cardId}-banner-v1.webp`, deckCover: `assets/cosmetics/anunaki/${cardId}-deck-cover.webp`,
+    stickers: [
+      { id: `${cardId}:arrival-sticker`, name: `${card.name} · Arrival`, image: `assets/cosmetics/anunaki/${cardId}-sticker.webp` },
+      { id: `${cardId}:action-sticker`, name: `${card.name} · Power`, image: `assets/cosmetics/anunaki/${cardId}-action-sticker.webp` },
+      { id: `${cardId}:tablet-sticker`, name: `${card.name} · Ancient Tablet`, image: `assets/cosmetics/anunaki/${cardId}-tablet-sticker.webp` },
+    ],
+  };
+}
 export function hasCharacterStickers(set: CharacterStyleSet | undefined): boolean {
   return !!set?.stickers.length && set.stickers.every(sticker => !!sticker.image || (!!set.stickerAtlas && sticker.cell !== undefined));
 }
 const stickerIndex = new Map(Object.values(CHARACTER_STYLE_SETS).flatMap(set => set.stickers.map(sticker => [sticker.id, { set, sticker }] as const)));
 /** blue-hour remains the saved default-scene key for compatibility with existing KYLE purchases. */
-export type CosmeticLoadout = { playerMatId?: string | null; bannerCardId?: string | null; bannerFinish?: 'base' | 'silver'; stickers?: string[]; cardBackgrounds?: Record<string, 'blue-hour'> };
+export type CosmeticLoadout = { deckCoverId?: string | null; playerMatId?: string | null; bannerCardId?: string | null; bannerFinish?: 'base' | 'silver'; stickers?: string[]; cardBackgrounds?: Record<string, 'blue-hour'> };
 export type CosmeticOwner = PlayerMatOwner & { ownedCardIds: string[]; unlockedCosmeticIds?: string[] };
 export const cosmeticId = (cardId: string, kind: CharacterStyleOfferId) => 'style:' + cardId + ':' + kind.replace('character-', '');
 export function ownsStyle(owner: CosmeticOwner, cardId: string, kind: CharacterStyleOfferId) {
@@ -135,14 +155,26 @@ export function stickerById(id: string) {
 }
 /** Avatar stickers are available to everyone; banner sticker packs remain separate. */
 export const STICKER_AVATARS = [...stickerIndex.values()].filter(({ set, sticker }) =>
-  Boolean(sticker.image || (set.stickerAtlas && sticker.cell !== undefined)));
+  !isAnunakiStyle(set.cardId) && Boolean(sticker.image || (set.stickerAtlas && sticker.cell !== undefined)));
 export const stickerAvatarKey = (id: string) => `sticker:${id}`;
 export function avatarSticker(key: string | undefined) {
   if (!key?.startsWith('sticker:')) return undefined;
   const found = stickerById(key.slice(8));
-  return found && (found.sticker.image || (found.set.stickerAtlas && found.sticker.cell !== undefined)) ? found : undefined;
+  return found && !isAnunakiStyle(found.set.cardId) && (found.sticker.image || (found.set.stickerAtlas && found.sticker.cell !== undefined)) ? found : undefined;
+}
+/** Earned covers are independent of owning their featured fighter. */
+export const EARNED_DECK_COVERS = [
+  {id:'style:enki:deck-cover',name:'The Blueprint',image:'assets/cosmetics/anunaki/enki-deck-cover.webp'},
+  {id:'style:inanna:deck-cover',name:'Divine Hands',image:'assets/cosmetics/anunaki/inanna-deck-cover.webp'},
+  {id:'style:nabu:deck-cover',name:'One Timeline',image:'assets/cosmetics/anunaki/nabu-deck-cover.webp'},
+  {id:'anunaki-raid:cover',name:'First Arrival',image:'assets/cosmetics/anunaki/anu-deck-cover.webp'},
+] as const;
+export function equippedDeckCover(owner: {unlockedCosmeticIds?: readonly string[];settings?: {cosmetics?: {deckCoverId?:string|null}}}) {
+  const id=owner.settings?.cosmetics?.deckCoverId;
+  return id && owner.unlockedCosmeticIds?.includes(id) ? EARNED_DECK_COVERS.find(cover=>cover.id===id) : undefined;
 }
 export function validateCosmeticLoadout(owner: CosmeticOwner, input: CosmeticLoadout): string | null {
+  if(input.deckCoverId != null && (!EARNED_DECK_COVERS.some(cover=>cover.id===input.deckCoverId) || !owner.unlockedCosmeticIds?.includes(input.deckCoverId))) return 'Earn this deck cover before equipping it.';
   if (input.playerMatId != null && !ownsPlayerMat(owner, input.playerMatId)) return 'Unlock this player mat first.';
   if (input.bannerCardId && (!styleSetFor(input.bannerCardId) || !owner.ownedCardIds.includes(input.bannerCardId))) return 'Unlock this character before equipping their banner.';
   if (input.bannerFinish === 'silver' && (!input.bannerCardId || !ownsStyle(owner, input.bannerCardId, 'character-banner-finish'))) return 'Unlock Silver Lining for this character first.';

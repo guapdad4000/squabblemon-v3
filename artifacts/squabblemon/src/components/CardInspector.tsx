@@ -13,7 +13,7 @@ import { motion, useReducedMotion } from 'framer-motion';
 import { CardView } from './CardView';
 import { CollectibleCard } from './CollectibleCard';
 import { CardRarityStamp } from './CardRarityStamp';
-import { getCardFormPreview, previewCardForm } from '../lib/cardFormPreview';
+import { getCardFormPreview, previewCardForm, tabletPreviewAsset } from '../lib/cardFormPreview';
 import { PageDecor } from './venue/PageDecor';
 import { X } from 'lucide-react';
 import { CardInstance, getEffectiveCardPower } from '../gameEngine';
@@ -26,7 +26,7 @@ import { canonicalElement, catalogCardByEngineId, catalogCardById, CARD_RARITY_D
 import { CardRarityTreatment, getRarityClass } from './CardRarityTreatment';
 import { CardUpgrades } from './CardUpgrades';
 import { snapshotUpgradesForCard } from '@workspace/squabblemon-engine/abilityUpgrades';
-import { CARD_FINISH, cardMotionReduced, cardFinishLabel, VARIANT_FINISH, getCardWallpaper } from '../lib/cardFinish';
+import { CARD_FINISH, cardMotionReduced, cardFinishLabel, VARIANT_FINISH, getCardWallpaperForCard } from '../lib/cardFinish';
 import { getAssetUrl } from '../lib/assets';
 import { KumiteFilmReplay } from './kumite/KumiteFilmPlayer';
 import '../styles/collection-inspector.css';
@@ -136,6 +136,7 @@ function PlayableCardInspector({ card, onClose, bootstrap, variantId, initialPre
 
   const inspectorCardProps: React.ComponentProps<typeof CardView> = {
     card, covered: isCovered, variantId: displayedVariant ?? undefined, progress: progression,
+    previewArtworkUrl: !match && tabletPreviewAsset(sourceCard, alternatePreview) ? getAssetUrl(tabletPreviewAsset(sourceCard, alternatePreview)!) : undefined,
     testId: 'card-inspector',
     inspectionLayout: instance && match && !reduceMotion ? 'battle-inspect-' + instance.instanceId : undefined,
     effectivePower: instance ? getEffectiveCardPower(instance) : undefined,
@@ -154,7 +155,7 @@ function PlayableCardInspector({ card, onClose, bootstrap, variantId, initialPre
       }
     }}>
       {!match && <PageDecor theme={catalogCard?.rarity === 'Mythical' ? 'mythic' : 'profile'} compact />}
-      <div className="collector-inspector-backdrop" style={{ backgroundImage: `url("${getCardWallpaper(card.type)}")` }} aria-hidden="true" />
+      <div className="collector-inspector-backdrop" style={{ backgroundImage: `url("${getCardWallpaperForCard(card)}")` }} aria-hidden="true" />
       <button type="button" className="card-inspector-close" data-testid="button-close-inspector" aria-label="Close card details" onClick={event => { event.stopPropagation(); onClose(); }}><X size={22} aria-hidden="true" /><span>{match ? 'Back to battle' : 'Close details'}</span></button>
       <div className="card-inspector-scroll">
       {isSummon ? <SummonDetails card={card} match={match} /> : <motion.div

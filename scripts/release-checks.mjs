@@ -1,6 +1,6 @@
 import { spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
-import { existsSync, readFileSync, writeFileSync, mkdirSync } from 'node:fs';
+import { existsSync, lstatSync, readFileSync, readlinkSync, writeFileSync, mkdirSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
@@ -36,6 +36,8 @@ export const criticalSuites = [
     'lib/notificationCatalog.test.ts', 'lib/loadingScenes.test.ts',
     'components/AccountCheckInCalendar.test.tsx', 'components/MonthlyLoginTrack.test.tsx',
     'components/fadecade/bossRaidPresentation.test.ts',
+    'components/fadecade/anunakiRaidPresentation.test.tsx',
+    'components/fadecade/raidCardChoices.test.ts',
   ].map(sourceTest) },
   // React's act-based lifecycle tests need its test runtime even on a production build host.
   { id: 'battle-render-lifecycle', nodeEnv: 'test', files: [
@@ -46,13 +48,74 @@ export const criticalSuites = [
   { id: 'battle-runtime', nodeEnv: 'test', files: [
     'replayCodec.test.ts', 'lib/battleComputation.test.ts', 'lib/battleComputation.hooks.test.ts', 'lib/menuRefresh.test.ts', 'lib/notificationBackground.test.ts',
   ].map(sourceTest) },
+  { id: 'fadewood-world', nodeEnv: 'test', files: [sourceTest('lib/fadewood/fadewood.test.ts'), sourceTest('lib/worldSurface.test.ts'), sourceTest('lib/worldLighting.test.ts'), sourceTest('components/world/FadewoodBulletinPanel.test.ts')] },
+  { id: 'fadewood-travel-clock', files: [`${frontend}/worlds/fadewood/tests/presentation-clock.test.js`] },
+  { id: 'fadewood-focus-mail-board', files: [`${frontend}/worlds/fadewood/tests/focus-mail-board.test.js`, `${frontend}/worlds/fadewood/tests/host-bridge.test.js`, `${frontend}/worlds/fadewood/tests/street-lighting.test.js`, `${frontend}/worlds/fadewood/tests/curb-details.test.js`, `${frontend}/worlds/fadewood/tests/humanoid-idle.test.js`, `${frontend}/worlds/fadewood/tests/ambient-actions.test.js`, `${frontend}/worlds/fadewood/tests/resident-motion.test.js`, `${frontend}/worlds/fadewood/tests/character-cast.test.js`, `${frontend}/worlds/fadewood/tests/resident-assets.test.js`, `${frontend}/worlds/fadewood/tests/entrance-staging.test.js`] },
   { id: 'story-delivery-contract', files: [
     sourceTest('lib/story/chapterCatalog.test.ts'), `${frontend}/scripts/check-story-delivery.test.mjs`,
+  ] },
+  { id: 'kumite-breakthrough', nodeEnv: 'test', files: [
+    'lib/squabblemon-engine/breakthrough.test.ts',
+    'lib/squabblemon-engine/breakthroughActions.test.ts',
+    'lib/squabblemon-engine/breakthroughSupports.test.ts',
+    'lib/squabblemon-engine/breakthroughNetwork.test.ts',
+    'lib/squabblemon-engine/breakthroughFitness.test.ts',
+    'lib/squabblemon-engine/breakthroughMusic.test.ts',
+    'lib/squabblemon-engine/breakthroughCommunity.test.ts',
+    'lib/squabblemon-engine/breakthroughHouse.test.ts',
+    'lib/squabblemon-engine/breakthroughSummons.test.ts',
+    'lib/squabblemon-engine/breakthroughReactions.test.ts',
+    'lib/squabblemon-engine/breakthroughContracts.test.ts',
+    'lib/squabblemon-engine/breakthroughFactions.test.ts',
+    'lib/squabblemon-engine/breakthroughControl.test.ts',
+    'lib/squabblemon-engine/breakthroughControlIntegration.test.ts',
+    'lib/squabblemon-engine/breakthroughSpecials.test.ts',
+    'lib/squabblemon-engine/breakthroughSpecials.integration.test.ts',
+    'lib/squabblemon-engine/breakthroughFullCatalog.test.ts',
+    'lib/squabblemon-engine/breakthroughLookup.test.ts',
+    'lib/squabblemon-engine/breakthroughNeighborhood.test.ts',
+    'lib/squabblemon-engine/breakthroughBlockbusters.test.ts',
+    'lib/squabblemon-engine/breakthroughExpansionBatch.test.ts',
+    'lib/squabblemon-engine/breakthroughCatalog.test.ts',
+    'lib/squabblemon-engine/breakthroughWave2.test.ts',
+    'lib/squabblemon-engine/breakthroughPeriodic.test.ts',
+    'lib/squabblemon-engine/breakthroughRoom.test.ts',
+    'lib/squabblemon-engine/breakthroughRelease.test.ts',
+    sourceTest('components/breakthrough/practiceDecks.test.ts'),
+    sourceTest('components/breakthrough/productionBoundary.test.ts'),
+    sourceTest('components/breakthrough/handSlots.test.ts'),
+    sourceTest('components/breakthrough/deploymentInput.test.ts'),
+    sourceTest('components/breakthrough/combatPresentation.test.ts'),
+    sourceTest('components/breakthrough/laneGeometry.test.ts'),
+    sourceTest('components/breakthrough/useDeploymentDrag.test.ts'),
+    sourceTest('components/breakthrough/BreakthroughArena.lifecycle.test.tsx'),
+    sourceTest('components/breakthrough/FlameBaseHealth.lifecycle.test.tsx'),
+    sourceTest('components/breakthrough/mediaBudget.test.ts'),
+    sourceTest('components/breakthrough/BreakthroughHowToPlay.test.tsx'),
+    sourceTest('lib/preparedPatches.test.ts'),
+    sourceTest('components/profile/FighterPortrait.test.tsx'),
+    sourceTest('lib/battlePortrait.test.tsx'),
+    sourceTest('lib/deckJourney.test.ts'),
+    sourceTest('lib/dojoReminder.test.ts'),
+    sourceTest('components/kumite/KumiteOpponentSearch.test.tsx'),
+    sourceTest('components/kumite/KumiteMatchMedia.lifecycle.test.tsx'),
+    sourceTest('components/kumite/KumiteSearchBackdrop.lifecycle.test.tsx'),
+    sourceTest('components/breakthrough/ResultStage.test.tsx'),
+    'artifacts/squabblemon/e2e/kumite-entry-handoff.test.ts',
   ] },
   { id: 'kumite-expansion', files: [
     sourceTest('kumiteExpansion.test.ts'), sourceTest('kumiteClock.test.ts'),
     'artifacts/api-server/src/lib/kumiteMastery.test.ts',
   ] },
+  { id: 'featured-banner-rules', files: [
+    'artifacts/api-server/src/lib/featuredBanners.test.ts',
+    'artifacts/api-server/src/lib/collectionEconomy.test.ts',
+    'artifacts/api-server/src/lib/pullBanners.test.ts',
+  ] },
+  { id: 'anunaki-expansion', files: [
+    'storyAnunaki.test.ts', 'anunakiRaid.test.ts', 'anunakiEvent.test.ts',
+    'anunakiCosmetics.test.ts', 'specialMoves.test.ts', 'lib/chromaBattery.test.ts',
+  ].map(sourceTest) },
   { id: 'rookie-guidance', files: ['lib/tutorialVoice.test.ts', 'components/DrFadeWelcome.test.tsx', 'components/tutorialGuidance.test.ts'].map(sourceTest) },
   { id: 'payment-boundaries', files: [
     'artifacts/api-server/src/lib/payments/provider.test.ts',
@@ -74,6 +137,7 @@ function tsxLoader(root = workspaceRoot) {
 export function requiredSourceChecks(root = workspaceRoot) {
   return [
     ...criticalSuites.map(suite => ({ ...suite, kind: 'tests' })),
+    { id: 'fadewood-runtime-source', kind: 'command', args: ['artifacts/squabblemon/worlds/fadewood/scripts/runtime-integrity.mjs', '--check'] },
     { id: 'story-music', kind: 'command', cwd: frontend, args: ['--import', tsxLoader(root), 'scripts/generate-story-music-routes.ts', '--check'] },
     { id: 'story-delivery-source', kind: 'command', cwd: frontend, args: ['--import', tsxLoader(root), 'scripts/generate-story-delivery.ts', '--check'] },
   ];
@@ -170,12 +234,16 @@ function releaseIdentity(root) {
     return result.stdout;
   };
   const untrackedSourceFiles = git(['ls-files', '--others', '--exclude-standard', '-z', '--',
-    'lib', 'artifacts/api-server/src', 'artifacts/squabblemon/src', 'artifacts/squabblemon/scripts', 'artifacts/squabblemon/public', 'netlify', 'scripts/src',
+    'lib', 'artifacts/api-server/src', 'artifacts/squabblemon/src', 'artifacts/squabblemon/scripts', 'artifacts/squabblemon/public', 'artifacts/squabblemon/worlds', 'netlify', 'scripts/src',
     ':(glob)artifacts/squabblemon/*', ':(glob)artifacts/api-server/*',
     ':(glob)scripts/*.mjs', ':(glob)scripts/*.json', ':(glob)*.json', ':(glob)*.toml',
   ]).split('\0').filter(Boolean).sort();
   return { baseCommit: git(['rev-parse', 'HEAD']).trim(), workingTreeStatus: git(['status', '--porcelain']),
-    untrackedSourceHashes: Object.fromEntries(untrackedSourceFiles.map(file => [file, sha256(readFileSync(path.join(root, file)))])),
+    untrackedSourceHashes: Object.fromEntries(untrackedSourceFiles.map(file => {
+      const absolute = path.join(root, file);
+      // The editable scene references its shared public assets with a directory symlink.
+      return [file, sha256(lstatSync(absolute).isSymbolicLink() ? `symlink:${readlinkSync(absolute)}` : readFileSync(absolute))];
+    })),
     trackedDiffSha256: sha256(git(['diff', '--binary', 'HEAD'])),
     criticalInputHashes: Object.fromEntries([...new Set(criticalSuites.flatMap(suite => suite.files).concat([
       'scripts/release-checks.mjs', 'scripts/release-test-reporter.mjs', 'scripts/release-check-inventory.json',

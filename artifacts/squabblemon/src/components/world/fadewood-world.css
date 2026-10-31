@@ -1,0 +1,116 @@
+.fadewood-world{position:relative;isolation:isolate;width:100%;height:100%;min-height:0;overflow:hidden;background:#081813;color:#f7edcf;font-family:var(--font-sans);font-synthesis:none}
+.fadewood-world__frame{display:block;width:100%;height:100%;border:0;background:#0c241b}
+.fadewood-world__shade{position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(180deg,#06110b73,transparent 130px,transparent 65%,#06110b8c)}
+.fadewood-world__markers{position:absolute;inset:0;z-index:2;pointer-events:none;overflow:hidden}
+.fadewood-world__marker{position:absolute;transform:translate(-50%,-100%);display:grid;grid-template-columns:18px 1fr;align-items:center;gap:3px 5px;max-width:180px;min-height:44px;padding:7px 10px;border:1px solid #f2dca2;background:#123c2ee8;color:#fff0c4;box-shadow:2px 3px 0 #0718107d;pointer-events:auto;cursor:pointer;text-align:left;transition:left 150ms linear,top 150ms linear}
+.fadewood-world__marker::after{content:'';position:absolute;bottom:-6px;left:calc(50% - 5px);width:8px;height:8px;transform:rotate(45deg);border-right:1px solid #f2dca2;border-bottom:1px solid #f2dca2;background:#123c2e}
+.fadewood-world__marker>span{font:700 11px/1.3 var(--font-sans)}.fadewood-world__marker>small{grid-column:1/-1;font:700 8px/1.3 var(--font-mono);letter-spacing:.04em;color:#e7cf96}.fadewood-world__marker--mail{background:#744128ed}.fadewood-world__marker--mail::after{background:#744128}
+.fadewood-world__heading{position:absolute;z-index:2;top:20px;left:24px;pointer-events:none;text-shadow:2px 3px 0 #071810}
+.fadewood-world__heading>span{font:700 9px/1.4 var(--font-mono);letter-spacing:.2em;color:#f2dca2}
+.fadewood-world__heading h1{margin:3px 0;font:400 clamp(32px,4vw,50px)/1 var(--font-sign);letter-spacing:.03em}
+.fadewood-world__tools{position:absolute;z-index:3;right:22px;top:20px;display:flex;gap:7px}
+.fadewood-world__tools button{position:relative;display:flex;align-items:center;justify-content:center;gap:7px;min-height:44px;padding:8px 13px;background:#0c2c22ed;border:2px solid #f2dfae;color:#f7edcf;box-shadow:3px 4px 0 #07130d9e;font:700 12px/1.2 var(--font-sans);cursor:pointer}
+.fadewood-world__tools button b{position:absolute;right:-7px;top:-9px;min-width:21px;height:21px;padding:3px;background:#a33127;border:1px solid #f4dcaa;border-radius:50%;font:700 10px/1.2 var(--font-mono)}
+.fadewood-world button:focus-visible{outline:3px solid #f9d44a;outline-offset:3px}
+.fadewood-world button:disabled{opacity:.55;cursor:default}
+.fadewood-world__story-dock{position:absolute;z-index:3;left:24px;bottom:28px;max-width:min(470px,calc(100% - 48px))}
+.fadewood-world__continue{display:flex;align-items:center;gap:13px;width:100%;min-height:76px;padding:10px 18px 10px 10px;border:2px solid #f1dda4;background:#135b3feF;box-shadow:5px 6px 0 #08170db3;color:#fff1c9;text-align:left;cursor:pointer;transition:transform 120ms}
+.fadewood-world__continue:active{transform:translateY(2px)}
+.fadewood-world__continue .game-glyph{--glyph-size:55px;flex:none}
+.fadewood-world__continue>span{min-width:0;flex:1;display:grid;gap:5px}
+.fadewood-world__continue strong{font:700 clamp(20px,2.3vw,26px)/1.1 var(--font-action-sign);text-transform:uppercase}
+.fadewood-world__continue small{font:500 11px/1.4 var(--font-sans);color:#f4e5c2;max-width:320px}
+.fadewood-world__roam-note{display:block;margin-top:11px;font:500 11px/1.4 var(--font-sans);text-shadow:1px 2px 0 #04100a}
+.fadewood-world__archive{position:absolute;right:22px;bottom:30px;z-index:3;display:flex;align-items:center;gap:7px;padding:10px 13px;min-height:44px;border:1px solid #f4dfad9c;background:#0b291fe8;color:#f6e7c4;font:700 11px/1.4 var(--font-sans);cursor:pointer}
+.fadewood-world__nearby{position:absolute;z-index:3;left:50%;bottom:110px;transform:translateX(-50%);display:flex;align-items:center;justify-content:center;gap:8px;min-height:48px;max-width:calc(100% - 28px);padding:8px 14px;border:2px solid #f2dca2;background:#f2dca2;color:#183c29;box-shadow:3px 4px 0 #0718108f;font:700 13px/1.3 var(--font-sans);cursor:pointer}
+.fadewood-world__nearby .game-glyph{--glyph-size:28px;flex:none}.fadewood-world__nearby>span{min-width:0;text-align:left}
+.fadewood-world__travel{display:flex;align-items:center;gap:12px;padding:14px 12px 14px 16px;min-height:76px;border:2px solid #e0c584;background:#162e24ed;box-shadow:4px 5px 0 #0411099e}
+.fadewood-world__travel>div{display:grid;gap:5px;flex:1}
+.fadewood-world__travel strong{font:700 18px/1.15 var(--font-action-sign)}
+.fadewood-world__travel span{font:500 11px/1.5 var(--font-sans)}
+.fadewood-world__travel button{align-self:stretch;display:grid;place-content:center;justify-items:center;gap:3px;min-width:54px;min-height:44px;border:1px solid #f0dcaa;background:#f0dcaa;color:#243b2a;cursor:pointer}
+.fadewood-world__travel button span{font-weight:700}
+.fadewood-world__announcement{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+.fadewood-world__loading{position:absolute;z-index:4;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:90px 28px 120px;background:#091d17ec;text-align:center}
+.fadewood-world__loading .game-glyph{--glyph-size:86px}
+.fadewood-world__loading strong{font:400 clamp(26px,4vw,36px)/1.1 var(--font-sign)}
+.fadewood-world__loading span{font:700 12px/1.4 var(--font-mono);color:#e0c584}
+.fadewood-world__loading progress{width:min(240px,80%);height:7px;accent-color:#d5be7e}
+.fadewood-world__loading p{font:500 12px/1.5 var(--font-sans);color:#d2d8c8}
+.fadewood-world__fallback{position:absolute;inset:0;z-index:4;display:grid;place-items:center;overflow-y:auto;padding:96px 20px 135px;background:#06120bbc}
+.fadewood-world__fallback .game-popup{max-width:510px;padding:28px}
+.fadewood-world__fallback .reward-street-file__action{display:flex;gap:8px}
+.fadewood-world[data-world-state="error"] .fadewood-world__heading,.fadewood-world[data-world-state="loading"] .fadewood-world__heading,.fadewood-world[data-world-state="error"] .fadewood-world__tools,.fadewood-world[data-world-state="loading"] .fadewood-world__tools,.fadewood-world[data-world-state="error"] .fadewood-world__story-dock{z-index:5}
+.fadewood-world__dialog{position:fixed;margin:auto;inset:0;width:min(850px,calc(100vw - 28px));max-width:850px;max-height:calc(100dvh - 28px);padding:0;overflow-y:auto;overflow-x:hidden;border:0;background:transparent;color:#292319;overscroll-behavior:contain}
+.fadewood-world__dialog::backdrop{background:#06100cdf}
+.fadewood-world__sheet{position:relative;margin:0;padding:clamp(15px,3vw,30px)}
+.fadewood-world__sheet .reward-street-file__paper{margin:0;padding:clamp(18px,3vw,28px)}
+.fadewood-world__sheet .game-popup__label{padding-right:30px;display:block}
+.fadewood-world__sheet .game-popup__title{margin-bottom:13px;padding-right:15px}
+.fadewood-world__sheet .reward-street-file__action{display:flex;justify-content:center;align-items:center;gap:10px;width:100%;margin-top:20px}
+.fadewood-world__destinations{display:grid;grid-template-columns:1fr 1fr;gap:26px;margin:24px 0 12px}
+.fadewood-world__destinations h3{margin:0 0 10px;font:700 17px/1.2 var(--popup-font-amount);color:#284b32;text-transform:uppercase}
+.fadewood-world__destination{display:flex;align-items:center;gap:12px;min-height:88px;padding:13px 0;border-bottom:1px solid #7c6a463b}
+.fadewood-world__destination>div:first-child{flex:1;min-width:0;display:grid;gap:5px}
+.fadewood-world__destination strong{font:700 14px/1.3 var(--popup-font-body);color:#2e3224}
+.fadewood-world__destination span{font:700 10px/1.4 var(--popup-font-label);color:#685b40}
+.fadewood-world__destination small{font:500 11px/1.5 var(--popup-font-body);color:#62563e}
+.fadewood-world__destination button{display:flex;align-items:center;justify-content:center;gap:6px;min-height:44px;max-width:110px;padding:7px 9px;border:1px solid #254831;background:#254831;color:#f7e8be;cursor:pointer;font:700 11px/1.3 var(--popup-font-body)}
+.fadewood-world__destination button:disabled{opacity:.6;cursor:default}
+.fadewood-world__place-actions{display:grid;gap:5px}
+.fadewood-world__place-actions button+button{background:transparent;color:#254831}
+.fadewood-world__controls{display:grid;gap:8px;margin:22px 0;font:500 13px/1.5 var(--popup-font-body)}
+.fadewood-world__controls>div{display:grid;grid-template-columns:100px 1fr;gap:14px;padding:8px 0;border-bottom:1px solid #7c6a463b}
+.fadewood-world__controls dt{font-weight:700;color:var(--popup-stamp)}.fadewood-world__controls dd{margin:0;color:var(--popup-muted)}
+@media(max-width:650px){
+ .fadewood-world__heading{top:17px;left:14px}.fadewood-world__heading h1{font-size:32px}.fadewood-world__heading>span{font-size:8px;letter-spacing:.1em}
+ .fadewood-world__tools{right:12px;top:17px;gap:5px}.fadewood-world__tools button{width:44px;padding:8px}.fadewood-world__tools button>span{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+ .fadewood-world__story-dock{left:14px;right:14px;bottom:max(170px,calc(env(safe-area-inset-bottom) + 155px));max-width:none}.fadewood-world__continue{min-height:70px;padding-right:12px}.fadewood-world__continue .game-glyph{--glyph-size:45px}.fadewood-world__continue small{font-size:10px}.fadewood-world__roam-note{font-size:10px}
+ .fadewood-world__archive{display:none}.fadewood-world__destinations{grid-template-columns:1fr;gap:24px}.fadewood-world__dialog{width:calc(100vw - 16px);max-height:calc(100dvh - 16px)}
+ .fadewood-world__nearby{bottom:275px;font-size:12px;min-height:46px;max-width:calc(100% - 28px);width:max-content}
+ .fadewood-world__sheet{padding:12px}.fadewood-world__sheet .reward-street-file__paper{padding:16px}.fadewood-world__sheet .game-popup__title{font-size:32px;padding-right:18px}.fadewood-world__destination{min-height:80px}.fadewood-world__destination button{min-width:78px}
+ .fadewood-world__fallback{padding:85px 14px 135px}.fadewood-world__fallback .game-popup{padding:20px}.fadewood-world__fallback .game-popup__title{font-size:28px}
+}
+@media(max-height:480px) and (min-width:651px){
+ .fadewood-world__heading{top:12px;left:16px}.fadewood-world__heading h1{font-size:30px}.fadewood-world__tools{top:12px;right:16px}.fadewood-world__story-dock{bottom:18px;left:16px;max-width:400px}.fadewood-world__continue{min-height:62px}.fadewood-world__continue .game-glyph{--glyph-size:42px}.fadewood-world__roam-note{margin-top:6px}.fadewood-world__archive{right:16px;bottom:22px}.fadewood-world__loading{padding:50px 15px 65px;gap:6px}.fadewood-world__loading .game-glyph{--glyph-size:55px}.fadewood-world__loading p{margin:4px}.fadewood-world__fallback{padding:75px 15px 105px}
+}
+@media(max-width:380px){.fadewood-world__heading h1{font-size:28px}.fadewood-world__heading>span{font-size:7px}}
+@media(prefers-reduced-motion:reduce){.fadewood-world__continue,.fadewood-world__marker{transition:none}}
+html[data-reduce-motion="true"] :is(.fadewood-world__continue,.fadewood-world__marker){transition:none}
+@media(pointer:coarse) and (max-height:480px) and (orientation:landscape){.fadewood-world__story-dock{left:174px;right:110px;bottom:18px;max-width:none}.fadewood-world__continue{min-height:58px}.fadewood-world__archive{display:none}.fadewood-world__roam-note{font-size:10px}.fadewood-world__nearby{bottom:115px;font-size:12px}}
+/* The world HUD uses the same signs and paper as the Express and neighborhood. */
+.fadewood-world__tools{align-items:flex-start;top:12px;right:18px;gap:10px}
+.fadewood-world__tools .fadewood-world__express-tool{display:grid;justify-items:center;align-content:center;gap:0;width:82px;height:78px;min-height:44px;padding:0;border:0;background:none;box-shadow:none;color:#fff0bd}
+.fadewood-world__express-tool img{display:block;width:78px;height:68px;object-fit:contain;filter:drop-shadow(2px 3px 0 #03100980);transition:transform 140ms}
+.fadewood-world__tools .fadewood-world__express-tool>span{position:static;clip-path:none;width:auto;height:auto;overflow:visible;font:700 9px/1.2 var(--font-action-sign);text-transform:uppercase;letter-spacing:.09em;text-shadow:1px 2px #07180e}
+.fadewood-world__express-tool:hover img{transform:translateY(-2px) rotate(-3deg)}
+.fadewood-world__tools .fadewood-world__menu-tool{display:flex;gap:5px;min-height:47px;margin-top:9px;padding:12px 16px;border:0;background:var(--fadewood-world-paper) center / 100% 100%;color:#234532;box-shadow:none;transform:rotate(3deg);filter:drop-shadow(2px 3px 0 #04120d66)}
+.fadewood-world__tools .fadewood-world__menu-tool>span{position:static;clip-path:none;width:auto;height:auto;overflow:visible;font:700 13px/1.15 var(--font-action-sign)}
+.fadewood-world__continue{position:relative;transform:rotate(-1deg);border:2px solid #f1dda4;outline:1px solid #122e20;background:linear-gradient(165deg,#3d7955,#154d36 70%);box-shadow:3px 5px 0 #08170d90}
+.fadewood-world__continue::before{content:'';position:absolute;inset:4px;border:1px solid #e7dfba50;pointer-events:none}.fadewood-world__continue::after{content:'';position:absolute;top:7px;right:7px;width:4px;height:4px;border-radius:50%;background:#c9c7aa;box-shadow:0 1px 1px #0009}
+.fadewood-world__nearby{border:0;background:var(--fadewood-world-paper) center / 100% 100%;box-shadow:none;filter:drop-shadow(3px 4px 0 #0718107a);transform:translateX(-50%) rotate(-2deg);padding:10px 19px;color:#234b33}
+.fadewood-world__nearby>span{display:grid;font-size:10px;gap:2px}.fadewood-world__nearby strong{font:700 18px/1.2 var(--font-action-sign)}
+.fadewood-world__archive{border:0;background:var(--fadewood-world-paper) center / 100% 100%;color:#254631;box-shadow:none;filter:drop-shadow(2px 3px 0 #04120d66);padding:12px 18px;transform:rotate(2deg)}
+.fadewood-world__travel button{border:0;background:var(--fadewood-world-paper) center / 100% 100%;color:#234b33;padding:8px 12px}
+.fadewood-world__framing{background:none;border:0;box-shadow:none;min-height:55px;padding:0;gap:14px;color:#fff0c9;text-shadow:1px 2px 0 #08170d}
+.fadewood-world__framing>span{font:700 18px/1.3 var(--font-action-sign)}.fadewood-world__framing button{text-shadow:none;min-height:44px}
+.fadewood-world__dialog--express{width:min(850px,calc(100vw - 16px));max-width:850px;scrollbar-width:thin}
+.fadewood-world__dialog--character{width:min(960px,calc(100vw - 24px));max-width:960px}
+.fadewood-world__dialog--bulletin{width:min(970px,calc(100vw - 20px));max-width:970px}
+.fadewood-world__mail-slip{display:flex;align-items:center;gap:12px;width:100%;text-align:left;margin-top:18px}.fadewood-world__mail-slip img{width:46px;height:58px;object-fit:contain}.fadewood-world__mail-slip>span{display:grid;gap:5px;flex:1}.fadewood-world__mail-slip strong{font:700 14px/1.3 var(--popup-font-body)}.fadewood-world__mail-slip small{font:500 11px/1.4 var(--popup-font-body);text-transform:none}
+.fadewood-world[data-world-framing="true"] .fadewood-world__heading{opacity:.5}
+@media(max-width:650px){.fadewood-world__tools{top:9px;right:10px;gap:4px}.fadewood-world__tools .fadewood-world__express-tool{width:65px;height:69px}.fadewood-world__express-tool img{width:65px;height:58px}.fadewood-world__tools .fadewood-world__express-tool>span{font-size:8px}.fadewood-world__tools .fadewood-world__menu-tool{width:48px;min-height:45px;padding:9px;margin-top:9px}.fadewood-world__menu-tool>svg{display:none}.fadewood-world__tools .fadewood-world__menu-tool>span{font-size:12px}.fadewood-world__dialog--character,.fadewood-world__dialog--bulletin{width:calc(100vw - 12px)}.fadewood-world__nearby{padding:9px 17px}.fadewood-world__nearby strong{font-size:16px}}
+@media(prefers-reduced-motion:reduce){.fadewood-world__express-tool img{transition:none}}
+html[data-reduce-motion="true"] .fadewood-world__express-tool img{transition:none}
+.fadewood-world__dialog[open]>.fadewood-panel{animation:fadewood-panel-arrive 180ms ease-out both}
+@keyframes fadewood-panel-arrive{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@media(prefers-reduced-motion:reduce){.fadewood-world__dialog[open]>.fadewood-panel{animation:none}}
+html[data-reduce-motion="true"] .fadewood-world__dialog[open]>.fadewood-panel{animation:none}
+
+/* The streets and Safehouse share one existing device lighting preference. */
+.fadewood-world__lighting{display:grid;grid-template-columns:1fr auto;align-items:center;gap:8px 16px;padding:16px 0;border-block:1px dashed #806e424f}
+.fadewood-world__lighting>span{font:700 11px/1.3 var(--font-mono);color:var(--popup-stamp);letter-spacing:.06em}
+.fadewood-world__lighting>button{display:flex;gap:8px;align-items:center;justify-content:center;min-height:44px;min-width:150px;color:#173e2d;font:700 13px/1.3 var(--font-sans)}
+.fadewood-world__lighting>p{grid-column:1/-1;margin:0;font:500 12px/1.5 var(--font-sans);color:var(--popup-muted)}
+.fadewood-world__lighting>button:last-child:not(:nth-child(2)){grid-column:1/-1}
+@media(max-width:380px){.fadewood-world__lighting{grid-template-columns:1fr;gap:10px}.fadewood-world__lighting>button{width:100%}}

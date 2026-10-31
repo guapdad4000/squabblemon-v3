@@ -18,6 +18,8 @@ export type CollectionRoadRewardRecord = {
   rankedMatchClout?: { receiptId: string; date: string; softCurrency: number;
     status: 'saved' | 'daily-limit' | 'ineligible'; dailyLimit: number;
     paidMatchesToday?: number; resetsAt: string; exclusion?: 'bot' | 'not-full-match'; };
+  /** Permanent Anunaki journey reward, saved with the profile grant. */
+  anunaki?: { kind: 'card' | 'sticker-pack' | 'player-mat' | 'deck-cover' | 'currency' | 'tickets'; id: string; label: string; cosmeticId?: string; packTickets: number };
   /** Presentation metadata is recorded atomically with the earned card grant. */
   kumiteUnlock?: { newlyOwned: boolean };
   kumiteQuest?: {cardId:string;styleShards:number};
@@ -40,6 +42,7 @@ export type CollectionRoadRewardRecord = {
   shopPurchase?: { itemId: string; cardId: string | null; cost: number; currency: 'softCurrency' | 'styleShards'; summary: string; shardPayment?: { rarity: string; matching: number; universal: number } };
   /** Durable minigame run snapshots; profile lock serializes actions and reward banking. */
   arcadeRun?: { version: 1; runId: string; period: string; kind: string; state: unknown; earned: {softCurrency:number;packTickets:number;styleShards:number}; lastActionId?: string };
+  anunakiRaid?: { version: 1; state: unknown; startFingerprint: string; startResult: unknown; actionReceipts: Record<string, { fingerprint: string; revision: number; result: unknown }>; };
   bossCampaign?: {version:2;state:unknown};
   bossRaid?: {version:1;runId:string;day:string;state:unknown;earned:{softCurrency:number;packTickets:number;styleShards:number};lastActionId?:string};
   waffleRun?: { version: 1; runId: string; day: string; state: unknown; earned: {softCurrency:number;packTickets:number;styleShards:number}; lastActionId?: string };

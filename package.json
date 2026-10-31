@@ -12,6 +12,9 @@
     "balance:smoke": "pnpm --filter @workspace/scripts balance:smoke",
     "balance:full": "pnpm --filter @workspace/scripts balance:full",
     "test:campaign:db": "node scripts/test-api-database.mjs",
+    "test:anunaki-event:db": "node scripts/test-api-database.mjs anunaki-event",
+    "test:online-compat:db": "node scripts/test-api-database.mjs online-compat",
+    "test:online-compat:browser": "node scripts/test-anunaki-mixed-browser.mjs",
     "test:campaign:preflight": "node scripts/campaign-e2e-preflight.mjs",
     "test:store:smoke": "pnpm --filter @workspace/api-server exec tsx src/tools/store-smoke-check.ts",
     "test:campaign:remote": "node scripts/campaign-remote.mjs",
@@ -30,7 +33,8 @@
     "verify:release:inventory": "node scripts/release-checks.mjs --inventory",
     "test:release-gates": "node --test scripts/release-checks.test.mjs scripts/build-netlify.test.mjs",
     "build:release": "node scripts/build-netlify.mjs",
-    "test:kumite-expansion": "node --import ./artifacts/squabblemon/e2e/supplied-battle-fx.setup.mjs --test artifacts/squabblemon/src/kumiteExpansion.test.ts artifacts/squabblemon/src/kumiteClock.test.ts artifacts/squabblemon/src/lib/story/chapterCatalog.test.ts artifacts/squabblemon/src/eighthWaveKumiteRaid.test.ts artifacts/api-server/src/lib/kumiteMastery.test.ts && node scripts/test-kumite-expansion-database.mjs"
+    "test:kumite-expansion": "node --import ./artifacts/squabblemon/e2e/supplied-battle-fx.setup.mjs --test artifacts/squabblemon/src/kumiteExpansion.test.ts artifacts/squabblemon/src/kumiteClock.test.ts artifacts/squabblemon/src/lib/story/chapterCatalog.test.ts artifacts/squabblemon/src/eighthWaveKumiteRaid.test.ts artifacts/api-server/src/lib/kumiteMastery.test.ts && node scripts/test-kumite-expansion-database.mjs",
+    "test:breakthrough": "node --import ./artifacts/squabblemon/e2e/supplied-battle-fx.setup.mjs --test lib/squabblemon-engine/breakthrough*.test.ts artifacts/squabblemon/src/components/breakthrough/*.test.ts artifacts/squabblemon/src/lib/deckJourney.test.ts"
   },
   "private": true,
   "dependencies": {

@@ -1,0 +1,185 @@
+/* Visibility is independent of gameplay activity: completed matches still present results. */
+.bt-arena[data-presentation-visible="false"] *,
+.bt-arena[data-presentation-visible="false"] *::before,
+.bt-arena[data-presentation-visible="false"] *::after {
+  animation-play-state: paused !important;
+}
+.bt-win-motion {
+  position: relative;
+  display: block;
+}
+.bt-win-motion > .km-match-media {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+/* Exact original cells, not reduced-detail atlases. See static-derivatives.json for provenance. */
+.bt-arena[data-reduced-motion="true"] .bt-b10-lock {
+  background-image: url("./assets/batch10/lock-still.webp");
+  background-size: 100% 100%;
+  background-position: 0 0;
+}
+.bt-arena[data-reduced-motion="true"] .bt-b10-loss {
+  background-image: url("./assets/batch10/loss-still.webp");
+  background-size: 100% 100%;
+  background-position: 0 0;
+}
+.bt-finish-still .bt-b10-loss {
+  background-image: url("./assets/batch10/loss-still.webp");
+  background-size: 100% 100%;
+  background-position: 0 0;
+}
+.bt-arena[data-reduced-motion="true"] .bt-flame-empty {
+  background-image: url("./assets/flame-health/flame-empty-still.webp");
+  background-size: 100% 100%;
+  background-position: 0 0;
+}
+.bt-arena[data-reduced-motion="true"] .bt-flame-full {
+  background-image: url("./assets/flame-health/flame-full-still.webp");
+  background-size: 100% 100%;
+  background-position: 0 0;
+}
+.bt-arena[data-reduced-motion="true"] .bt-flame-half {
+  background-image: url("./assets/flame-health/flame-half-still.webp");
+  background-size: 100% 100%;
+  background-position: 0 0;
+}
+.bt-arena[data-reduced-motion="true"] .bt-b4-banner {
+  background-image: url("./assets/supplied-fx/banner-still.webp");
+  background-size: 100% 100%;
+  background-position: 0 0;
+}
+.bt-arena[data-reduced-motion="true"] .bt-b4-bomb {
+  background-image: url("./assets/supplied-fx/bomb-still.webp");
+  background-size: 100% 100%;
+  background-position: 0 0;
+}
+.bt-arena[data-reduced-motion="true"] .bt-b4-bud {
+  background-image: url("./assets/supplied-fx/bud-still.webp");
+  background-size: 100% 100%;
+  background-position: 0 0;
+}
+.bt-arena[data-reduced-motion="true"] .bt-b4-cleanse {
+  background-image: url("./assets/supplied-fx/cleanse-still.webp");
+  background-size: 100% 100%;
+  background-position: 0 0;
+}
+.bt-arena[data-reduced-motion="true"] .bt-b4-growth {
+  background-image: url("./assets/supplied-fx/growth-still.webp");
+  background-size: 100% 100%;
+  background-position: 0 0;
+}
+.bt-arena[data-reduced-motion="true"] .bt-b4-hitDust {
+  background-image: url("./assets/supplied-fx/hitDust-still.webp");
+  background-size: 100% 100%;
+  background-position: 0 0;
+}
+.bt-arena[data-reduced-motion="true"] .bt-b4-ice {
+  background-image: url("./assets/supplied-fx/ice-still.webp");
+  background-size: 100% 100%;
+  background-position: 0 0;
+}
+.bt-arena[data-reduced-motion="true"] .bt-b4-lunch {
+  background-image: url("./assets/supplied-fx/lunch-still.webp");
+  background-size: 100% 100%;
+  background-position: 0 0;
+}
+.bt-arena[data-reduced-motion="true"] .bt-b4-moveDust {
+  background-image: url("./assets/supplied-fx/moveDust-still.webp");
+  background-size: 100% 100%;
+  background-position: 0 0;
+}
+.bt-arena[data-reduced-motion="true"] .bt-smoke-rise-sprite {
+  background-image: url("./assets/supplied-fx/smoke-rise-still.webp");
+  background-size: 100% 100%;
+  background-position: 0 0;
+}
+.bt-arena[data-reduced-motion="true"] .bt-b4-summon {
+  background-image: url("./assets/supplied-fx/summon-still.webp");
+  background-size: 100% 100%;
+  background-position: 0 0;
+}
+@media (prefers-reduced-motion: reduce) {
+  .bt-arena .bt-b10-lock {
+    background-image: url("./assets/batch10/lock-still.webp");
+    background-size: 100% 100%;
+    background-position: 0 0;
+  }
+  .bt-arena .bt-b10-loss {
+    background-image: url("./assets/batch10/loss-still.webp");
+    background-size: 100% 100%;
+    background-position: 0 0;
+  }
+  .bt-arena .bt-flame-empty {
+    background-image: url("./assets/flame-health/flame-empty-still.webp");
+    background-size: 100% 100%;
+    background-position: 0 0;
+  }
+  .bt-arena .bt-flame-full {
+    background-image: url("./assets/flame-health/flame-full-still.webp");
+    background-size: 100% 100%;
+    background-position: 0 0;
+  }
+  .bt-arena .bt-flame-half {
+    background-image: url("./assets/flame-health/flame-half-still.webp");
+    background-size: 100% 100%;
+    background-position: 0 0;
+  }
+  .bt-arena .bt-b4-banner {
+    background-image: url("./assets/supplied-fx/banner-still.webp");
+    background-size: 100% 100%;
+    background-position: 0 0;
+  }
+  .bt-arena .bt-b4-bomb {
+    background-image: url("./assets/supplied-fx/bomb-still.webp");
+    background-size: 100% 100%;
+    background-position: 0 0;
+  }
+  .bt-arena .bt-b4-bud {
+    background-image: url("./assets/supplied-fx/bud-still.webp");
+    background-size: 100% 100%;
+    background-position: 0 0;
+  }
+  .bt-arena .bt-b4-cleanse {
+    background-image: url("./assets/supplied-fx/cleanse-still.webp");
+    background-size: 100% 100%;
+    background-position: 0 0;
+  }
+  .bt-arena .bt-b4-growth {
+    background-image: url("./assets/supplied-fx/growth-still.webp");
+    background-size: 100% 100%;
+    background-position: 0 0;
+  }
+  .bt-arena .bt-b4-hitDust {
+    background-image: url("./assets/supplied-fx/hitDust-still.webp");
+    background-size: 100% 100%;
+    background-position: 0 0;
+  }
+  .bt-arena .bt-b4-ice {
+    background-image: url("./assets/supplied-fx/ice-still.webp");
+    background-size: 100% 100%;
+    background-position: 0 0;
+  }
+  .bt-arena .bt-b4-lunch {
+    background-image: url("./assets/supplied-fx/lunch-still.webp");
+    background-size: 100% 100%;
+    background-position: 0 0;
+  }
+  .bt-arena .bt-b4-moveDust {
+    background-image: url("./assets/supplied-fx/moveDust-still.webp");
+    background-size: 100% 100%;
+    background-position: 0 0;
+  }
+  .bt-arena .bt-smoke-rise-sprite {
+    background-image: url("./assets/supplied-fx/smoke-rise-still.webp");
+    background-size: 100% 100%;
+    background-position: 0 0;
+  }
+  .bt-arena .bt-b4-summon {
+    background-image: url("./assets/supplied-fx/summon-still.webp");
+    background-size: 100% 100%;
+    background-position: 0 0;
+  }
+}

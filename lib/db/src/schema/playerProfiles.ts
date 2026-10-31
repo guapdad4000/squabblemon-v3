@@ -10,7 +10,7 @@ import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod/v4";
 
 export type PlayerSettings = {
-  cosmetics?: { playerMatId?: string | null; bannerCardId?: string | null; bannerFinish?: "base" | "silver"; stickers?: string[]; cardBackgrounds?: Record<string, 'blue-hour'> };
+  cosmetics?: { deckCoverId?: string | null; playerMatId?: string | null; bannerCardId?: string | null; bannerFinish?: "base" | "silver"; stickers?: string[]; cardBackgrounds?: Record<string, 'blue-hour'> };
   reactionTray?: string[];
   reducedMotion: boolean;
   turnTimerEnabled: boolean;
@@ -45,6 +45,7 @@ export const playerProfilesTable = pgTable("player_profiles", {
     .$type<Partial<Record<'Common' | 'Uncommon' | 'Rare' | 'Epic' | 'Legendary' | 'Mythical', number>>>()
     .notNull()
     .default({}),
+  featuredPackProgress: jsonb("featured_pack_progress").$type<Record<string, { misses: number; packs: number }>>().notNull().default({}),
   packPity: integer("pack_pity").notNull().default(0),
   deckSlots: integer("deck_slots").notNull().default(4),
   cosmeticCurrency: integer("cosmetic_currency").notNull().default(0),

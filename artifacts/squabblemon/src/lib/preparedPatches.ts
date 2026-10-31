@@ -1,4 +1,5 @@
 import collectorV2Release from './collectorV2Release.json' with { type: 'json' };
+import kumiteBreakthroughRelease from './kumiteBreakthroughRelease.json' with { type: 'json' };
 import type { PatchInput } from '@workspace/api-client-react';
 import selectedWaveRelease from './selectedWaveRelease.json' with { type: 'json' };
 import streetLegendsRelease from './streetLegendsRelease.json' with { type: 'json' };
@@ -257,4 +258,5 @@ export const PREPARED_PATCHES: readonly PreparedPatch[] = [
     "packTickets": 0
   },
   collectorV2Release satisfies PreparedPatch,
+  kumiteBreakthroughRelease satisfies PreparedPatch,
 ];

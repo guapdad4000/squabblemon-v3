@@ -1,0 +1,123 @@
+{
+  "version": 1,
+  "facade": {
+    "position": [
+      20.75,
+      2.08,
+      -38.035
+    ],
+    "size": [
+      6.3,
+      3.6
+    ],
+    "door": [
+      19.82,
+      1.65,
+      -38.04
+    ],
+    "interactionPosition": [
+      19.82,
+      0.331,
+      -36.95
+    ],
+    "camera": {
+      "position": [
+        17.8,
+        1.7,
+        -34.5
+      ],
+      "target": [
+        19.82,
+        1.65,
+        -38.04
+      ],
+      "fov": 54,
+      "roll": -0.012
+    }
+  },
+  "booth": {
+    "id": "demario-luigion-booth",
+    "name": "DeMario & Luigion",
+    "position": [
+      10.4,
+      0.261,
+      -3.6
+    ],
+    "yaw": -1.5707963267948966,
+    "width": 3.0,
+    "depth": 1.2,
+    "height": 3.28,
+    "interactionPosition": [
+      8.1,
+      0.261,
+      -3.6
+    ],
+    "aimPoint": [
+      10.1,
+      1.65,
+      -3.6
+    ],
+    "radius": 2.6,
+    "camera": {
+      "position": [
+        5.5,
+        1.7,
+        -1.3
+      ],
+      "target": [
+        10.1,
+        1.65,
+        -3.6
+      ],
+      "fov": 56,
+      "roll": 0.015
+    },
+    "collisionSize": [
+      1.65,
+      3.28,
+      3.3
+    ],
+    "hosts": [
+      {
+        "id": "demario",
+        "name": "DeMario",
+        "asset": "demario.glb",
+        "position": [
+          -2.3,
+          0,
+          0.9
+        ],
+        "height": 1.85,
+        "yaw": 0,
+        "animation": {
+          "clip": "Fadewood_Relaxed_Idle",
+          "time": 0,
+          "loop": true
+        },
+        "idle": {
+          "clip": "Fadewood_Relaxed_Idle"
+        }
+      },
+      {
+        "id": "luigion",
+        "name": "Luigion",
+        "asset": "luigion.glb",
+        "position": [
+          2.3,
+          0,
+          0.9
+        ],
+        "height": 1.85,
+        "yaw": 0,
+        "animation": {
+          "clip": "Fadewood_Relaxed_Idle",
+          "time": 0,
+          "loop": true
+        },
+        "idle": {
+          "clip": "Fadewood_Relaxed_Idle"
+        }
+      }
+    ]
+  }
+}

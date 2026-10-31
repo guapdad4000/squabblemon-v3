@@ -16,7 +16,7 @@ import { CardUpgradeCue } from './CardUpgrades';
 import { Card, getAssetUrl, getCardImage, getBuddySquabbleImage } from '../data';
 import { canonicalElement, cardEntryAccent } from '@workspace/squabblemon-engine/data';
 import { CARD_RARITY_DEFINITIONS } from '../data';
-import { cardFinishLabel, cardMotionReduced, getCardWallpaper } from '../lib/cardFinish';
+import { cardFinishLabel, cardMotionReduced, getCardWallpaperForCard } from '../lib/cardFinish';
 import { CardFoil } from './CardFoil';
 import { tryStartGyro } from '../lib/depthQuality';
 import { useCardInspection } from './CardInspection';
@@ -52,6 +52,8 @@ interface CardViewProps {
   boardPresentation?: 'combat';
   /** Use bounded portrait files on battle faces; full inspection keeps original art. */
   battleArtwork?: boolean;
+  /** Read-only artwork preview for a catalog card in its inspector. */
+  previewArtworkUrl?: string;
   isEnemy?: boolean;
   effectivePower?: number;
   cost?: number;
@@ -98,7 +100,7 @@ function movementLockCue(instance: CardInstance | null, currentRound?: number) {
 
 function CardViewComponent({
   card, queued, squabble, squabblePlayed, burnIgniting, onClick, onInspect, inspectable, testId, className = '',
-  isBoard, boardPresentation, battleArtwork, isEnemy, effectivePower, cost, highlighted,
+  isBoard, boardPresentation, battleArtwork, previewArtworkUrl, isEnemy, effectivePower, cost, highlighted,
   effectRole, effectKind, disableLayout, layoutDependency, unavailable, inspectionLayout,
   disabledReason, variantId, progress, isInspector,
   fillContainer, presentationOnly, dragEnabled = false, covered = false,
@@ -345,7 +347,7 @@ function CardViewComponent({
       `}>
         <div className="relative w-full h-full bg-zinc-950 card-bevel-inner overflow-hidden flex flex-col group/inner">
           {decoration?.backdrop}
-          <img src={card.kind === 'blockbuster' ? faceArtwork(getCardImage(card.id, variantId)) : backgroundUrl ?? (!isEnemy && (!instance || instance.owner === 'player') ? equippedScene : undefined) ?? getCardWallpaper(card.type)} alt="" loading="lazy" decoding="async" draggable={false} className="collector-wallpaper" />
+          <img src={card.kind === 'blockbuster' ? faceArtwork(getCardImage(card.id, variantId)) : backgroundUrl ?? (!isEnemy && (!instance || instance.owner === 'player') ? equippedScene : undefined) ?? getCardWallpaperForCard(card)} alt="" loading="lazy" decoding="async" draggable={false} className="collector-wallpaper" />
           <div className="collector-atmosphere" aria-hidden="true" />
           {isBoard && burnStacks > 0 && <span className={`card-burn-media${burnIgniting ? ' is-igniting' : ''}`} data-battle-fx="persistent-burn" aria-hidden="true"><BattleFxImage kind="burn-flame" /><BattleFxImage kind="burn-flame" /></span>}
           <div className="absolute inset-0 bg-[image:var(--rarity-pattern)] opacity-20 mix-blend-screen pointer-events-none z-0" />
@@ -361,7 +363,7 @@ function CardViewComponent({
                 formAsset={fighter && stance && !(stance==='base' && variantId?.endsWith(':kumite-alt-v1')) ? getAssetUrl(kumiteFormAsset(fighter, stance)) : undefined}
                 stance={stance}
                 sizes={isInspector ? "(max-width: 640px) 90vw, 440px" : isBoard ? "(max-width: 640px) 72px, 112px" : fillContainer ? "(max-width: 640px) 132px, 180px" : "(max-width: 767px) 100px, 136px"}
-                src={faceArtwork(instance?.cardId === 'leroy' && instance.goldenGlow ? getAssetUrl('assets/kumite/fighters/bruce-leroy-glow.webp') : isBurntPlate ? getCardImage('burnt-plate') : buddyRockForm ? getBuddySquabbleImage() : instance?.maryElephant ? getCardImage('ms-mary-mack-elephant') : getCardImage(getCardArtworkId(card), variantId))}
+                src={faceArtwork(isInspector && !instance && !isBoard && !battleArtwork && previewArtworkUrl ? previewArtworkUrl : instance?.cardId === 'leroy' && instance.goldenGlow ? getAssetUrl('assets/kumite/fighters/bruce-leroy-glow.webp') : isBurntPlate ? getCardImage('burnt-plate') : buddyRockForm ? getBuddySquabbleImage() : instance?.maryElephant ? getCardImage('ms-mary-mack-elephant') : getCardImage(getCardArtworkId(card), variantId))}
                 alt=""
                 decoding="async"
                 draggable={false}
@@ -486,6 +488,7 @@ function cardViewPropsEqual(previous: CardViewProps, next: CardViewProps) {
     && previous.isBoard === next.isBoard
     && previous.boardPresentation === next.boardPresentation
     && previous.battleArtwork === next.battleArtwork
+    && previous.previewArtworkUrl === next.previewArtworkUrl
     && previous.isEnemy === next.isEnemy
     && previous.effectivePower === next.effectivePower
     && previous.cost === next.cost

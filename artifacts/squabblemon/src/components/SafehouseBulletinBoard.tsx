@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react';
-import { Link } from 'wouter';
+import { Link, useSearch } from 'wouter';
 import { ArrowRight, CalendarDays, ChevronDown, Clock3, Hammer, ListChecks, MessageSquareText, X } from 'lucide-react';
 import { getAssetUrl } from '../lib/assets';
 import { bulletinBoard, BULLETIN_SEEN_STORAGE_KEY, FEEDBACK_HREF, type BulletinEvent } from '../content/bulletinBoard';
 import { PatchNotes } from './PatchNotes';
+import { KumiteReleaseGuide } from './kumite/KumiteReleaseGuide';
 import { markPatchBoardRead, usePublishedPatches } from '../hooks/use-patches';
 import '../styles/safehouse-bulletin.css';
 
@@ -27,11 +28,17 @@ function ExpandedEvent({ event, onNavigate, headingRef, idPrefix }: { event: Bul
         <ul>{event.availability.map(item => <li key={item}>{item}</li>)}</ul></span></div>
       <Link href={event.link.href} onClick={onNavigate} data-testid={`link-detail-${event.id}`}>{event.link.label}<ArrowRight size={15} aria-hidden="true" /></Link>
     </div>
+    {event.id === 'kumite-breakthrough-beta' && <KumiteReleaseGuide />}
   </section>;
 }
 
 export function SafehouseBulletinBoardContent({ playerId, compact = false, onNavigate, children }: { playerId: string; compact?: boolean; onNavigate?: () => void; children?: ReactNode }) {
-  const [expandedId, setExpandedId] = useState<string>(bulletinBoard.events[0].id);
+  const search = useSearch();
+  const params = new URLSearchParams(search);
+  const requested = params.get('event') ?? (params.get('patch') === '1.15' ? 'kumite-breakthrough-beta' : null);
+  const requestedId = bulletinBoard.events.find(event => event.id === requested)?.id;
+  const [expandedId, setExpandedId] = useState<string>(requestedId ?? bulletinBoard.events[0].id);
+  useEffect(() => { if (requestedId) setExpandedId(requestedId); }, [requestedId]);
   const pendingReveal = useRef(false);
   const detailRef = useRef<HTMLDivElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
@@ -73,7 +80,7 @@ export function SafehouseBulletinBoardContent({ playerId, compact = false, onNav
       <div className="bulletin-event-grid">
         {bulletinBoard.events.map((event, index) => <article key={event.id} className={`bulletin-event bulletin-accent--${event.accent}${index === 0 ? ' bulletin-event--featured' : ''}${expandedId === event.id ? ' is-selected' : ''}`} data-testid={`card-event-${event.id}`}>
           <button type="button" className="bulletin-event__expand" onClick={() => select(event.id)} aria-expanded={expandedId === event.id} aria-controls={`${idPrefix}-event-detail`} data-testid={`button-expand-${event.id}`}>
-            <div className="bulletin-photo"><img src={getAssetUrl(event.image)} alt="" /><b className={`bulletin-sticker bulletin-sticker--${event.status}`}>{event.sticker}</b></div>
+            <div className="bulletin-photo"><img src={getAssetUrl(event.image)} srcSet={event.id === 'kumite-breakthrough-beta' ? `${getAssetUrl('assets/events/kumite-breakthrough-patch-1-15-small.webp')} 800w, ${getAssetUrl(event.image)} 1600w` : undefined} sizes="(max-width: 700px) 100vw, 650px" alt="" loading="lazy" decoding="async" draggable={false} /><b className={`bulletin-sticker bulletin-sticker--${event.status}`}>{event.sticker}</b></div>
             <div className="bulletin-copy"><span>{event.eyebrow}</span><h4>{event.title}</h4><time>{event.statusLabel}</time><p>{event.summary}</p><em>{expandedId === event.id ? 'Showing details' : 'Show details'} <ChevronDown size={14} aria-hidden="true" /></em></div>
           </button>
           <Link href={event.link.href} onClick={onNavigate} data-testid={`link-event-${event.id}`}>{event.link.label}<ArrowRight size={14} aria-hidden="true" /></Link>

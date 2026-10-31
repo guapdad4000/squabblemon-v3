@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "purpose": "Supplied animated shared-booth hosts. No geometry or image resampling.",
+  "assets": [
+    {
+      "file": "luigion.glb",
+      "originalPath": "Meshy_AI_Green_Fist_Plumber_All_Animations_compressed.glb",
+      "bytes": 644400,
+      "sha256": "0a863776f7527de47590b7933ffad1e76da1f4e5041d21770a97fbb3642c6bc1",
+      "deliveryUnchanged": true,
+      "triangles": 3128,
+      "joints": 32,
+      "animations": [
+        "Running",
+        "Walking"
+      ],
+      "images": 3,
+      "textureSize": [
+        1024,
+        1024
+      ],
+      "runtimeMaterial": "Existing albedo-preserving unlit cast; unused decoded PBR maps released after loading. All supplied GLB bytes and clips retained."
+    },
+    {
+      "file": "demario.glb",
+      "originalPath": "Meshy_AI_Power_Plumber_Warrior_All_Animations_compressed.glb",
+      "bytes": 875312,
+      "sha256": "adc12b677dab768f98caedd914c592dc1c164bc6b3782519aa7532fa5b5d61af",
+      "deliveryUnchanged": true,
+      "triangles": 3066,
+      "joints": 64,
+      "animations": [
+        "Running",
+        "Walking",
+        "Walk_Turn_Right",
+        "Wave_One_Hand"
+      ],
+      "images": 3,
+      "textureSize": [
+        1024,
+        1024
+      ],
+      "runtimeMaterial": "Existing albedo-preserving unlit cast; unused decoded PBR maps released after loading. All supplied GLB bytes and clips retained."
+    }
+  ]
+}

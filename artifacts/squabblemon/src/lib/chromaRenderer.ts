@@ -1,8 +1,28 @@
 export type ChromaMode = 'green' | 'light' | 'move-green' | 'move-cyan' | 'move-none';
 type MediaSource = HTMLVideoElement | HTMLCanvasElement;
+type KeySettings = { threshold: number; feather: number; spill: number; edgeFeather: number };
+
+/** Softens only the outer frame edge; the central character and impact stay intact. */
+export function featherChromaEdges(pixels: Uint8ClampedArray, width: number, height: number, edge: number) {
+  if (edge <= 0) return;
+  const band = Math.ceil(width * edge);
+  for (let y = 0; y < height; y++) {
+    const rowDistance = Math.min(y + .5, height - y - .5) / height;
+    for (let x = 0; x < width; x++) {
+      // Most rows need only two narrow edge strips; skip the unchanged center.
+      if (rowDistance >= edge && x === band) x = Math.max(x, width - band);
+      if (x >= width) break;
+      const distance = Math.min((x + .5) / width, (width - x - .5) / width, rowDistance);
+      if (distance >= edge) continue;
+      const t = Math.max(0, distance / edge);
+      const offset = (y * width + x) * 4 + 3;
+      pixels[offset] = Math.round(pixels[offset] * t * t * (3 - 2 * t));
+    }
+  }
+}
 
 /** Same byte-domain key as the CPU fallback, without a GPU → CPU readback per frame. */
-export function createChromaRenderer(canvas: HTMLCanvasElement, mode: ChromaMode, keyPixels: (pixels: Uint8ClampedArray) => void, preferGpu = true) {
+export function createChromaRenderer(canvas: HTMLCanvasElement, mode: ChromaMode, keyPixels: (pixels: Uint8ClampedArray) => void, preferGpu = true, settings?: KeySettings) {
   const gl = preferGpu ? canvas.getContext('webgl', { alpha: true, premultipliedAlpha: true, antialias: false, depth: false, stencil: false }) : null;
   if (!gl) {
     const context = canvas.getContext('2d', { willReadFrequently: true });
@@ -16,6 +36,7 @@ export function createChromaRenderer(canvas: HTMLCanvasElement, mode: ChromaMode
         context.drawImage(source, crop[0] * width, crop[1] * height, crop[2] * width, crop[3] * height, 0, 0, canvas.width, canvas.height);
         const pixels = context.getImageData(0, 0, canvas.width, canvas.height);
         keyPixels(pixels.data);
+        if (settings?.edgeFeather) featherChromaEdges(pixels.data, canvas.width, canvas.height, settings.edgeFeather);
         context.putImageData(pixels, 0, 0);
       },
       dispose() {},
@@ -38,6 +59,7 @@ export function createChromaRenderer(canvas: HTMLCanvasElement, mode: ChromaMode
     precision highp float;
     uniform sampler2D frame;
     uniform int mode;
+    uniform vec4 keySettings;
     varying vec2 uv;
     void main() {
       vec4 pixel = texture2D(frame, uv);
@@ -47,13 +69,18 @@ export function createChromaRenderer(canvas: HTMLCanvasElement, mode: ChromaMode
         alpha = clamp((232.0 - dot(rgb, vec3(0.299, 0.587, 0.114))) / 82.0, 0.0, 1.0);
       } else if (mode != 4) {
         float dominance = mode == 3 ? min(rgb.g, rgb.b) - rgb.r : rgb.g - max(rgb.r, rgb.b);
-        alpha = 1.0 - clamp((dominance - (mode == 0 ? 16.0 : 35.0)) / (mode == 0 ? 52.0 : 65.0), 0.0, 1.0);
+        alpha = 1.0 - clamp((dominance - (mode == 0 ? 16.0 : keySettings.x)) / (mode == 0 ? 52.0 : keySettings.y), 0.0, 1.0);
         if (alpha > 0.0) {
-          rgb.g = mode == 0 ? min(rgb.g, max(rgb.r, rgb.b) + 10.0) : floor(mix(min(rgb.g, rgb.r + 25.0), rgb.g, alpha) + 0.5);
-          if (mode == 3) rgb.b = floor(mix(min(rgb.b, rgb.r + 25.0), rgb.b, alpha) + 0.5);
+          float spillFloor = mode == 2 && keySettings.w > 0.0 ? max(rgb.r, rgb.b) : rgb.r;
+          rgb.g = mode == 0 ? min(rgb.g, max(rgb.r, rgb.b) + 10.0) : floor(mix(min(rgb.g, spillFloor + keySettings.z), rgb.g, alpha) + 0.5);
+          if (mode == 3) rgb.b = floor(mix(min(rgb.b, rgb.r + keySettings.z), rgb.b, alpha) + 0.5);
         }
       }
       float a = floor(pixel.a * alpha * 255.0 + 0.5) / 255.0;
+      if (keySettings.w > 0.0) {
+        float edge = min(min(uv.x, 1.0 - uv.x), min(uv.y, 1.0 - uv.y));
+        a = floor(a * smoothstep(0.0, keySettings.w, edge) * 255.0 + 0.5) / 255.0;
+      }
       // Premultiplied output: iOS WebKit mis-composites unpremultiplied WebGL canvases.
       gl_FragColor = vec4(rgb / 255.0 * a, a);
     }
@@ -76,6 +103,7 @@ export function createChromaRenderer(canvas: HTMLCanvasElement, mode: ChromaMode
   gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
   gl.uniform1i(gl.getUniformLocation(program, 'frame'), 0);
   gl.uniform1i(gl.getUniformLocation(program, 'mode'), ['green', 'light', 'move-green', 'move-cyan', 'move-none'].indexOf(mode));
+  gl.uniform4f(gl.getUniformLocation(program, 'keySettings'), settings?.threshold ?? 35, settings?.feather ?? 65, settings?.spill ?? 25, settings?.edgeFeather ?? 0);
   const cropUniform = gl.getUniformLocation(program, 'crop');
   // Cropping is performed by the staging canvas; GPU UVs always cover it all.
   gl.uniform4f(cropUniform, 0, 0, 1, 1);

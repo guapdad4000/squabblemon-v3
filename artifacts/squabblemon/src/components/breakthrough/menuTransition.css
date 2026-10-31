@@ -1,0 +1,162 @@
+/* Decorative paint passes over the already active destination; never intercepts input. */
+.bt-paint-swipe {
+  position: absolute;
+  inset: -10% -30%;
+  z-index: 90;
+  pointer-events: none;
+  transform: skewX(-16deg);
+  animation: bt-paint-cross 0.24s cubic-bezier(0.3, 0.7, 0.4, 1) both;
+  background: linear-gradient(
+    173deg,
+    transparent 0 8%,
+    #161711 8% 13%,
+    #e3b62d 13% 76%,
+    #181911 76% 85%,
+    transparent 85%
+  );
+  clip-path: polygon(
+    0 10%,
+    8% 14%,
+    15% 4%,
+    25% 11%,
+    34% 7%,
+    45% 12%,
+    53% 3%,
+    63% 9%,
+    76% 6%,
+    86% 13%,
+    100% 9%,
+    100% 90%,
+    87% 85%,
+    78% 94%,
+    66% 87%,
+    57% 96%,
+    48% 89%,
+    36% 95%,
+    26% 87%,
+    17% 96%,
+    9% 88%,
+    0 94%
+  );
+}
+@keyframes bt-paint-cross {
+  0% {
+    translate: -140% 0;
+  }
+  45% {
+    translate: -8% 0;
+  }
+  100% {
+    translate: 140% 0;
+  }
+}
+.bt-nameplate:before,
+.bt-nameplate:after {
+  display: none;
+}
+.bt-base-health {
+  position: absolute;
+  width: 100%;
+  aspect-ratio: 384/150;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  z-index: -1;
+}
+.bt-nameplate-opps .bt-base-health {
+  transform: translateY(-50%) scaleX(-1);
+}
+.bt-nameplate {
+  isolation: isolate;
+}
+.bt-base-health > .bt-flame-art {
+  position: absolute;
+  inset: 0;
+  display: block;
+}
+.bt-nameplate .bt-banner-portrait {
+  z-index: 2;
+}
+.bt-base-pips small {
+  font-size: 9px;
+  text-shadow:
+    0 1px 3px #000,
+    0 0 4px #000;
+}
+.bt-banner-copy > strong {
+  text-shadow:
+    0 1px 3px #000,
+    1px 1px #000;
+}
+.bt-ability-lead {
+  margin: 5px 0;
+  font:
+    600 12px/1.35 Arial,
+    sans-serif;
+  color: #f5ecdc;
+}
+.bt-mini-explainer details {
+  margin-top: 6px;
+}
+.bt-mini-explainer summary {
+  font:
+    700 9px/1.4 BTHemi,
+    sans-serif;
+  color: #cebd93;
+  cursor: pointer;
+  min-height: 24px;
+  display: flex;
+  align-items: center;
+}
+.bt-mini-explainer details p {
+  margin-top: 4px;
+}
+@media (max-width: 600px) {
+  .bt-base-pips small {
+    font-size: 6px;
+  }
+  .bt-base-health {
+    width: 115%;
+    left: -7.5%;
+  }
+  .bt-mini-explainer .bt-ability-lead {
+    font-size: 11px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .bt-paint-swipe {
+    display: none;
+  }
+  .bt-base-health .bt-flame-art {
+    animation: none !important;
+  }
+}
+
+/* Focus must never scroll the clipped battle canvas and hide its header. */
+.bt-arena {
+  overflow: clip;
+}
+.bt-arena .bt-mini-explainer .bt-ability-tags > span {
+  font:
+    700 9px/1.25 BTHemi,
+    Arial,
+    sans-serif;
+  color: #cfc5ae;
+  padding: 0;
+  background: none;
+  border: 0;
+}
+.bt-arena .bt-mini-explainer .bt-ability-tags {
+  gap: 4px 10px;
+  margin: 5px 0;
+}
+/* Keep each SM circle directly under its existing 53px avatar on phones. */
+@media (max-width: 600px) {
+  .bt-nameplate-you .bt-base-health {
+    left: calc(17.5px - 13.1645%);
+  }
+  .bt-nameplate-opps .bt-base-health {
+    left: calc(-17.5px - 1.8355%);
+  }
+}

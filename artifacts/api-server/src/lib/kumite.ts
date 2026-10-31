@@ -7,6 +7,7 @@ import {
   type OnlineRoom,
 } from '@workspace/squabblemon-engine/multiplayer';
 import { loadMember } from './onlineMatches';
+import { compatibleMembers, requireRoomCapability } from './onlineCompatibility';
 import { advanceKumite, createKumite, KUMITE_CAPACITY, kumiteView, kumiteWeek,
   retireIncompatibleKumite, settleKumiteRoom, startKumite, type KumiteState } from './kumiteEngine';
 import { kumiteProgression, reconcileKumiteRewards, recordKumiteChampion, recordKumitePlayedRoom } from './kumiteRewards';
@@ -181,17 +182,26 @@ async function currentView(tx: Tx, state: KumiteState, userId: string | null, no
   });
   return view;
 }
-export function registerKumite(userId: string, deckId: string) {
+export function registerKumite(userId: string, deckId: string, supportsAnunaki = false) {
   return currentTransaction(async (tx, state, now) => {
     const own = state.entrants.find(entry => entry.member.userId === userId);
     // Safe retry of the original registration, including after the bracket starts.
     if (own) {
       if (own.member.deck.id !== deckId) throw new OnlineError('Your Kumite gang is locked. Withdraw before choosing a different gang.');
+      // A refreshed client can re-advertise support without changing the locked
+      // deck, seed, position or registration time. An older tab cannot downgrade it.
+      if (supportsAnunaki && !own.member.supportsAnunaki) {
+        own.member.supportsAnunaki = true;
+        await tx.update(kumiteTournamentsTable).set({ state: stored(state), updatedAt: new Date(now) })
+          .where(eq(kumiteTournamentsTable.id, state.id));
+      }
       return currentView(tx, state, userId, now);
     }
     if (state.status !== 'registration' || now >= state.startsAt) throw new OnlineError('Registration has closed for this week.');
     if (state.entrants.length >= KUMITE_CAPACITY) throw new OnlineError('All eight Kumite places are filled.');
-    const member = await loadMember(tx, userId, deckId, false);
+    const member = await loadMember(tx, userId, deckId, false, supportsAnunaki);
+    if (state.entrants.some(entry => !compatibleMembers(entry.member, member)))
+      throw new OnlineError('This bracket includes a player on an older game version. Choose another gang or enter a later bracket.', 409);
     state.entrants.push({ id: randomUUID(), member, seed: null, registeredAt: now });
     await tx.update(kumiteTournamentsTable).set({ state: stored(state), updatedAt: new Date(now) })
       .where(eq(kumiteTournamentsTable.id, state.id));
@@ -207,7 +217,7 @@ export function withdrawKumite(userId: string) {
     return currentView(tx, state, userId, now);
   });
 }
-export function enterKumiteMatch(userId: string) {
+export function enterKumiteMatch(userId: string, supportsAnunaki = false) {
   return currentTransaction(async (tx, state, now) => {
     const own = state.entrants.find(entry => entry.member.userId === userId);
     if (!own) throw new OnlineError('Sign up for this week before entering a bracket match.', 403);
@@ -215,7 +225,6 @@ export function enterKumiteMatch(userId: string) {
     if (state.status !== 'active') throw new OnlineError('Your weekly bracket is not active yet.');
     const match = state.rounds.flat().find(item => item.status !== 'complete' && item.entrantIds.includes(own.id));
     if (!match || match.status === 'pending') return { room: null, current: await currentView(tx, state, userId, now) };
-    match.checkedIn[match.entrantIds[0] === own.id ? 0 : 1] = true;
     let room: OnlineRoom;
     if (match.roomCode) {
       const [row] = await tx.select().from(onlineRoomsTable).where(eq(onlineRoomsTable.code, match.roomCode)).for('update');
@@ -223,7 +232,10 @@ export function enterKumiteMatch(userId: string) {
       room = restoreOnlineRoom(row.state);
     } else {
       const entries = match.entrantIds.map(id => state.entrants.find(entry => entry.id === id)!);
+      if (!compatibleMembers(entries[0].member, entries[1].member))
+        throw new OnlineError('Both players need the latest game update for this gang. Refresh and try again.', 409);
       room = joinOnlineRoom(createOnlineRoom(entries[0].member, randomInt(2) ? 'player' : 'cpu', now), entries[1].member, now);
+      requireRoomCapability(room, supportsAnunaki);
       room.kumite = { tournamentId: state.id, matchId: match.id, roundDeadline: match.deadline };
       // Both assigned humans must ready up. Waiting lasts to the six-hour round cutoff.
       room.expiresAt = match.deadline;
@@ -235,6 +247,8 @@ export function enterKumiteMatch(userId: string) {
         state: storeOnlineRoom(room), expiresAt: new Date(room.expiresAt),
       });
     }
+    requireRoomCapability(room, supportsAnunaki);
+    match.checkedIn[match.entrantIds[0] === own.id ? 0 : 1] = true;
     match.status = 'playing';
     await tx.update(kumiteTournamentsTable).set({ state: stored(state), updatedAt: new Date(now) })
       .where(eq(kumiteTournamentsTable.id, state.id));

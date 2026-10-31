@@ -48,7 +48,7 @@ test('an occurrence cannot be substituted, revived four weeks later, or attached
 test('receipt metadata preserves the week and reads existing v1 banner receipts', () => {
   const banner = resolvePullBanner('red-blue', Date.parse('2026-11-09T00:00:00Z'));
   const version = pullBannerOddsVersion('street-pack-ten-v3', banner);
-  assert.equal(version, 'street-pack-ten-v3:banner-red-blue-v1:week-2026-11-09');
+  assert.equal(version, 'street-pack-ten-v3:banner-red-blue-v2:week-2026-11-09');
   assert.deepEqual(pullBannerReceiptIdentity(version), { bannerId: 'red-blue', occurrenceId: 'red-blue:2026-11-09' });
   assert.deepEqual(pullBannerReceiptIdentity('street-pack-v7:banner-red-blue-v1'), { bannerId: 'red-blue' });
   assert.deepEqual(pullBannerReceiptIdentity('street-pack-v7'), { bannerId: 'standard' });
@@ -85,4 +85,34 @@ test('focused ten pull preserves rewards and Rare+ guarantee', () => {
     assert.equal(result.rewards.length, 60);
     assert.ok(result.rewards.some(r => r.kind === 'card' && ['Rare','Epic','Legendary','Mythical'].includes(r.rarity!)));
   }
+});
+
+test('Anunaki is a separate, explicitly configured occurrence and never changes weekly rotation', async () => {
+  const { ANUNAKI_PULL_BANNER, activeAnunakiBanner, matchesPullBannerRequest } = await import('@workspace/squabblemon-engine/pullBanners');
+  const { ANUNAKI_BANNER_CARD_IDS, ANUNAKI_BANNER_GAMEPLAY_READY, ANUNAKI_BANNER_WINDOWS } = await import('@workspace/squabblemon-engine/anunakiBanner');
+  const observedNow = Date.now();
+  assert.deepEqual(getPullBannerSchedule(observedNow).special, activeAnunakiBanner(observedNow, ANUNAKI_BANNER_WINDOWS, ANUNAKI_BANNER_GAMEPLAY_READY));
+  assert.throws(() => resolvePullBanner('anunaki', Date.now()));
+  const windows = [{ startsAt: '2030-01-07T00:00:00.000Z', endsAt: '2030-01-14T00:00:00.000Z' }];
+  const start = Date.parse(windows[0].startsAt), end = Date.parse(windows[0].endsAt);
+  assert.equal(activeAnunakiBanner(start, windows, false), null);
+  assert.equal(activeAnunakiBanner(start - 1, windows, true), null);
+  const banner = activeAnunakiBanner(start, windows, true)!;
+  assert.equal(banner.occurrenceId, 'anunaki:2030-01-07');
+  assert.equal(matchesPullBannerRequest(banner, 'anunaki'), false);
+  assert.equal(matchesPullBannerRequest(banner, 'anunaki', 'anunaki:2029-01-07'), false);
+  assert.equal(matchesPullBannerRequest(banner, 'anunaki', banner.occurrenceId!), true);
+  assert.equal(matchesPullBannerRequest(null, 'anunaki', banner.occurrenceId!), false);
+  const nextWindow = [{startsAt:'2030-02-04T00:00:00.000Z', endsAt:'2030-02-11T00:00:00.000Z'}];
+  const next = activeAnunakiBanner(Date.parse(nextWindow[0].startsAt), nextWindow, true)!;
+  assert.equal(matchesPullBannerRequest(next, 'anunaki', banner.occurrenceId!), false);
+  assert.equal(matchesPullBannerRequest(getPullBannerSchedule(start).featured, 'inmates'), true, 'legacy weekly requests may omit occurrence');
+  assert.deepEqual(banner.featuredCardIds, ANUNAKI_BANNER_CARD_IDS);
+  assert.equal(activeAnunakiBanner(end - 1, windows, true)?.id, 'anunaki');
+  assert.equal(activeAnunakiBanner(end, windows, true), null);
+  assert.equal(activeAnunakiBanner(start, [...windows, ...windows], true), null);
+  assert.equal(activeAnunakiBanner(start, [{startsAt: 'bad', endsAt: windows[0].endsAt}], true), null);
+  assert.equal(PULL_BANNERS.includes(ANUNAKI_PULL_BANNER), false);
+  assert.equal(pullBannerOddsVersion('street-pack-v7', banner), 'street-pack-v7:banner-anunaki-v2:week-2030-01-07');
+  assert.deepEqual(pullBannerReceiptIdentity('street-pack-v7:banner-anunaki-v1:week-2030-01-07'), { bannerId: 'anunaki', occurrenceId: 'anunaki:2030-01-07' });
 });

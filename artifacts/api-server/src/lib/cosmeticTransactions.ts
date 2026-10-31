@@ -11,6 +11,6 @@ export async function equipCosmetics(userId: string, loadout: CosmeticLoadout) {
     if (!profile) throw new EconomyTransactionError(404, 'Player profile not found.');
     const invalid = validateCosmeticLoadout(profile, loadout);
     if (invalid) throw new EconomyTransactionError(400, invalid);
-    await tx.update(playerProfilesTable).set({ settings: { ...profile.settings, cosmetics: loadout } }).where(eq(playerProfilesTable.clerkUserId, userId));
+    await tx.update(playerProfilesTable).set({ settings: { ...profile.settings, cosmetics: { ...loadout, ...(loadout.deckCoverId === undefined && profile.settings.cosmetics?.deckCoverId !== undefined ? {deckCoverId:profile.settings.cosmetics.deckCoverId} : {}) } } }).where(eq(playerProfilesTable.clerkUserId, userId));
   });
 }

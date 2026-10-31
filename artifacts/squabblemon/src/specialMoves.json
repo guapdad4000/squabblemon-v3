@@ -1235,7 +1235,7 @@
     "oa-bonnet-girl-v1": {
       "file": "oa-bonnet-girl-v1.mp4",
       "label": "Bonnet Girl",
-      "move": "Now I’m Up",
+      "move": "Now I\u2019m Up",
       "enabled": true,
       "chroma": "cyan",
       "startSeconds": 0,
@@ -1620,7 +1620,7 @@
     "oa-grown-man-fanboy-v1": {
       "file": "oa-grown-man-fanboy-v1.mp4",
       "label": "Grown-Man Fanboy",
-      "move": "He Doesn’t Know You",
+      "move": "He Doesn\u2019t Know You",
       "enabled": true,
       "chroma": "cyan",
       "startSeconds": 0,
@@ -1806,7 +1806,7 @@
     },
     "oa-live-streamer-male-v1": {
       "file": "oa-live-streamer-male-v1.mp4",
-      "label": "Live Streamer — Male",
+      "label": "Live Streamer \u2014 Male",
       "move": "Raid the Chat",
       "enabled": true,
       "chroma": "cyan",
@@ -2463,6 +2463,126 @@
       "durationMs": 5042,
       "playbackRate": 1,
       "revision": "98cb5395483bbd4c"
+    },
+    "anunaki-yakub-v1": {
+      "file": "anunaki-yakub-v1.mp4",
+      "label": "Yakub",
+      "move": "",
+      "enabled": true,
+      "chroma": "green",
+      "startSeconds": 0,
+      "durationMs": 4375,
+      "playbackRate": 1,
+      "revision": "24eb8b94db1bf22f",
+      "keyProfile": "anunaki"
+    },
+    "anunaki-utu-v1": {
+      "file": "anunaki-utu-v1.mp4",
+      "label": "Utu",
+      "move": "",
+      "enabled": true,
+      "chroma": "green",
+      "startSeconds": 0,
+      "durationMs": 4380,
+      "playbackRate": 1,
+      "revision": "57489c09b76cd7fe",
+      "keyProfile": "anunaki"
+    },
+    "anunaki-enlil-v1": {
+      "file": "anunaki-enlil-v1.mp4",
+      "label": "Enlil",
+      "move": "",
+      "enabled": true,
+      "chroma": "green",
+      "startSeconds": 0,
+      "durationMs": 4417,
+      "playbackRate": 1,
+      "revision": "459ae6bc74a96b9d",
+      "keyProfile": "anunaki"
+    },
+    "anunaki-nabu-v1": {
+      "file": "anunaki-nabu-v1.mp4",
+      "label": "Nabu",
+      "move": "",
+      "enabled": true,
+      "chroma": "green",
+      "startSeconds": 0,
+      "durationMs": 3970,
+      "playbackRate": 1,
+      "revision": "6a08d5393ed54bd0",
+      "keyProfile": "anunaki"
+    },
+    "anunaki-anu-v1": {
+      "file": "anunaki-anu-v1.mp4",
+      "label": "Anu",
+      "move": "",
+      "enabled": true,
+      "chroma": "green",
+      "startSeconds": 0,
+      "durationMs": 4875,
+      "playbackRate": 1,
+      "revision": "4d99199c773a43e8",
+      "keyProfile": "anunaki"
+    },
+    "anunaki-ninhursag-v1": {
+      "file": "anunaki-ninhursag-v1.mp4",
+      "label": "Ninhursag",
+      "move": "",
+      "enabled": true,
+      "chroma": "green",
+      "startSeconds": 0,
+      "durationMs": 3976,
+      "playbackRate": 1,
+      "revision": "bbc81927f2b83b56",
+      "keyProfile": "anunaki"
+    },
+    "anunaki-ereshkigal-v1": {
+      "file": "anunaki-ereshkigal-v1.mp4",
+      "label": "Ereshkigal",
+      "move": "",
+      "enabled": true,
+      "chroma": "green",
+      "startSeconds": 0,
+      "durationMs": 4148,
+      "playbackRate": 1,
+      "revision": "fbccf2f893875719",
+      "keyProfile": "anunaki"
+    },
+    "anunaki-inanna-v1": {
+      "file": "anunaki-inanna-v1.mp4",
+      "label": "Inanna",
+      "move": "",
+      "enabled": true,
+      "chroma": "green",
+      "startSeconds": 0,
+      "durationMs": 4000,
+      "playbackRate": 1,
+      "revision": "163b9b83773dbcf9",
+      "keyProfile": "anunaki"
+    },
+    "anunaki-caucus-mountaineer-v1": {
+      "file": "anunaki-caucus-mountaineer-v1.mp4",
+      "label": "Caucus Mountaineer",
+      "move": "",
+      "enabled": true,
+      "chroma": "green",
+      "startSeconds": 0,
+      "durationMs": 3750,
+      "playbackRate": 1,
+      "revision": "d06077f2a563507a",
+      "keyProfile": "anunaki"
+    },
+    "anunaki-enki-v1": {
+      "file": "anunaki-enki-v1.mp4",
+      "label": "Enki",
+      "move": "",
+      "enabled": true,
+      "chroma": "green",
+      "startSeconds": 0,
+      "durationMs": 2958,
+      "playbackRate": 1,
+      "revision": "cf95335324abee21",
+      "keyProfile": "anunaki"
     }
   },
   "assignments": {
@@ -2676,6 +2796,16 @@
     "ganger-blue": "oa-ganger-blue-v1",
     "ganger-red": "oa-ganger-red-v1",
     "wickedwitch": "oa-wicked-witch-v1",
-    "flyingmonkeys": "oa-flying-monkeys-v1"
+    "flyingmonkeys": "oa-flying-monkeys-v1",
+    "yakub": "anunaki-yakub-v1",
+    "utu": "anunaki-utu-v1",
+    "enlil": "anunaki-enlil-v1",
+    "nabu": "anunaki-nabu-v1",
+    "anu": "anunaki-anu-v1",
+    "ninhursag": "anunaki-ninhursag-v1",
+    "ereshkigal": "anunaki-ereshkigal-v1",
+    "inanna": "anunaki-inanna-v1",
+    "caucus-mountaineer": "anunaki-caucus-mountaineer-v1",
+    "enki": "anunaki-enki-v1"
   }
 }

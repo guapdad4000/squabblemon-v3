@@ -5,6 +5,7 @@
  * Squabblemon player and game-loop API
  * OpenAPI spec version: 0.2.0
  */
+import type { PackOpeningFeaturedProgress } from './packOpeningFeaturedProgress';
 import type { PackOpeningPaymentMethod } from './packOpeningPaymentMethod';
 import type { PackReward } from './packReward';
 import type { PullSeasonReward } from './pullSeasonReward';
@@ -17,6 +18,7 @@ export interface PackOpening {
   pullCount: number;
   rewards: PackReward[];
   seasonRewards?: PullSeasonReward[];
+  featuredProgress?: PackOpeningFeaturedProgress;
   pityBefore: number;
   pityAfter: number;
   createdAt: Date;

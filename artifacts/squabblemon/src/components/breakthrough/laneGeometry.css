@@ -1,0 +1,66 @@
+/* One center-based track: spawn at each base, contact at the actual fight position. */
+.bt-lanes {
+  container-type: size;
+  --bt-open-fighter-height: min(clamp(92px, 11.5vw, 150px), 26cqh);
+  --bt-track-edge: calc(var(--bt-open-fighter-height)/2 + 4px);
+  --bt-track-span: calc(100cqh - var(--bt-open-fighter-height) - 8px);
+}
+.bt-unit,
+.bt-defeat-ghost {
+  --bt-fighter-height: min(
+    var(--bt-open-fighter-height),
+    max(32px, calc(var(--bt-track-span) * var(--bt-fighter-gap, 1) - 4px))
+  );
+  min-width: 0;
+  min-height: 0;
+  width: calc(var(--bt-fighter-height) * 0.76);
+  height: var(--bt-fighter-height);
+  transform: translate(-50%, calc(50% + var(--bt-stack-offset, 0px)));
+}
+.bt-lanes > .bt-fx-layer {
+  inset: var(--bt-track-edge) 0;
+  width: 100%;
+  height: var(--bt-track-span);
+}
+.bt-authored-event {
+  transform: translate(-50%, 50%);
+}
+.bt-event-art-summon,
+.bt-event-art-hitDust,
+.bt-event-art-moveDust {
+  translate: 0 calc(var(--bt-open-fighter-height) / 2 - 8px);
+}
+.bt-impact {
+  translate: 0 calc(var(--bt-open-fighter-height) * -0.25);
+}
+.bt-combat-number {
+  margin-bottom: 6px;
+}
+
+/* Scale with available phone height without a size jump at the short-screen breakpoint. */
+@media (max-width: 600px) {
+  .bt-lanes {
+    bottom: 58px;
+    --bt-open-fighter-height: min(clamp(56px, 12dvh, 92px), 26cqh);
+  }
+}
+@media (max-width: 600px) and (max-height: 700px) {
+  .bt-unit strong {
+    font-size: 17px;
+    line-height: 20px;
+    min-width: 18px;
+  }
+  .bt-unit > span:not(.bt-batch4-sprite) {
+    font-size: 6px;
+  }
+  .bt-event-art-summon,
+  .bt-event-art-hitDust,
+  .bt-event-art-moveDust {
+    width: min(90px, 105%);
+  }
+}
+@media (max-height: 470px) and (min-width: 600px) {
+  .bt-lanes {
+    bottom: 76px;
+  }
+}

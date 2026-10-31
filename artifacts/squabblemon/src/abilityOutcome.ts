@@ -1,7 +1,7 @@
 import type { EffectLogEntry, EventParticipant, ReplayState } from './gameEngine';
 
 type OutcomeEvent = Pick<EffectLogEntry, 'type'> & { kind: EffectLogEntry['kind'] | 'fizzle' } & Partial<Pick<EffectLogEntry,
-  'source' | 'targets' | 'resources' | 'scores' | 'replay'>>;
+  'source' | 'targets' | 'resources' | 'scores' | 'replay'>> & { tabletChanged?: boolean };
 
 const changed = (before: unknown, after: unknown) => JSON.stringify(before) !== JSON.stringify(after);
 
@@ -29,11 +29,15 @@ function participantChanged(participant: EventParticipant, event: OutcomeEvent) 
 /** Presentation reads the resolved event, never its prose or just its element. */
 export function abilityTookEffect(event: OutcomeEvent): boolean {
   if (event.type !== 'ability' || event.kind === 'blocked' || event.kind === 'fizzle' || event.kind === 'story') return false;
+  if (event.tabletChanged) return true;
   if ([event.source, ...(event.targets ?? [])].some(p => p && participantChanged(p, event))) return true;
   if (event.resources && changed(event.resources.before, event.resources.after)) return true;
   if (event.scores && changed(event.scores.before, event.scores.after)) return true;
   if (!event.replay) return false;
   const { before, after } = event.replay;
+  // District tablets do not occupy a board slot or alter Hands, but placing or
+  // consuming one is still a real ability outcome and deserves its feedback.
+  if (changed(before.ancientTablets ?? [], after.ancientTablets ?? [])) return true;
   // Draws, summons, transformations, and copied/delayed abilities can succeed
   // without changing a participant's current score.
   const consumedShields = new Set(before.timedEffects.filter(shield =>

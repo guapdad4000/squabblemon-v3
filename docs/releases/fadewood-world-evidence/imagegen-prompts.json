@@ -1,0 +1,40 @@
+{
+  "tool": "built-in image_gen.imagegen",
+  "prompts": [
+    {
+      "asset": "night-panorama",
+      "mode": "edit",
+      "references": [
+        "artifacts/squabblemon/public/scenes/fadewood/assets/v3/fadewood-panorama.webp"
+      ],
+      "transparent": false,
+      "prompt": "Use case: lighting-weather. Asset type: horizontally repeating panoramic distant skyline texture for the existing Fadewood 3D game, wide 3:1 aspect ratio. Edit target: the supplied panorama. Transform ONLY the time of day into a beautiful readable nighttime version. Preserve the exact neighborhood silhouette, building arrangement, hills, palms, horizon height, and painterly cel/anime texture style of the source. Deep dark navy indigo upper sky, restrained stars and softly lit blue clouds, warm amber and occasional muted teal windows and streetlights among the houses and distant city. Night should feel lived in and readable, not black. The left and right edges must tile seamlessly with matching cloud, hill and building edges; avoid any distinct object at the join. No huge moon, no sun, no added characters, no UFOs, no new buildings, no text, no logos, no crowns, no watermarks. Keep the source framing and 3:1 horizontal composition; no border or montage."
+    },
+    {
+      "asset": "night-neighborhood",
+      "mode": "edit",
+      "references": [
+        "artifacts/squabblemon/public/scenes/fadewood/assets/v3/fadewood-near-neighborhood.webp",
+        "source-art/night-panorama.png"
+      ],
+      "transparent": true,
+      "prompt": "Use case: lighting-weather. Asset type: horizontally tiling 3:1 transparent near-neighborhood cutout layer for Fadewood's 3D parallax skyline. Image 1 is the EDIT TARGET; Image 2 is supporting NIGHT LIGHTING reference. Change only image 1's daytime lighting to the rich readable nighttime palette of image 2. Preserve image 1's exact house positions, roof and palm silhouette, horizon composition, full transparent background and alpha edges; do not fill the transparent sky. Deep cool navy and muted teal shadows, subtle blue moonlit roof edges, a few welcoming warm amber lit windows. Preserve the original painterly cel/anime neighborhood style and full frame. Keep the top and all spaces between leaves transparent. Left and right edges must repeat seamlessly. No sky, stars, moon, new objects, text, watermarks, logos or crowns. Output a transparent cutout, not an image shown against a checkerboard."
+    },
+    {
+      "asset": "safehouse-facade",
+      "mode": "generate-with-style-reference",
+      "references": [
+        "artifacts/squabblemon/public/scenes/fadewood/assets/v3/fadewood-near-neighborhood.webp"
+      ],
+      "transparent": false,
+      "prompt": "Use case: stylized-concept. Asset type: a single game-ready FLAT ORTHOGRAPHIC BUILDING FACADE TEXTURE, landscape7:4 aspect ratio, ideally1792x1024. Input image is STYLE REFERENCE ONLY for the Fadewood painterly anime/cel neighborhood style. Primary request: the welcoming SAFE HOUSE facade, texture-driven detail for one rectangular 6.30m wide x3.60m high wall. Fill EVERY edge of the image with the wall; no surrounding scene, no sidewalk, no roof, no isometric view, no perspective. Weathered warm cream stucco, restrained exposed old brick base, ink outlines and painted subtle shade matching reference houses. Single dark forest-green security door: CENTER at27.8% of image width, width20.6% of canvas, from image30.5% height down to bottom edge. Painted frame and brass handle integrated into the art, no protruding columns, steps or surrounding builds. One modest rectangular two-pane apartment window: center at75.4% width,51% height; width26%, height36%, pale cream trim, muted blue glass. The exact words \"SAFE HOUSE\" painted directly above the door, centered at27.8% width, near14% image height; distressed dark green condensed street-sign lettering. A small clenched-fist emblem beside that painted title. Keep facade simple and cohesive, warm and neighborhood-authentic; no ornate fantasy portal or clutter, no posters, no people, no cannabis, no vehicles, no billboards. No crowns anywhere, no other text, no watermark. All architectural depth is illustrated in the texture rather than separate structures. Straight-on square horizontal and vertical lines."
+    },
+    {
+      "asset": "demario-luigion-booth",
+      "mode": "generate",
+      "references": [],
+      "transparent": false,
+      "prompt": "Use case: stylized-concept. Asset type: a game-ready FLAT FRONT TEXTURE for a small reversible curbside smoke-shop pop-up booth in Fadewood, very wide3:1 aspect,1536x512. This is a texture sheet used on one rectangular counter front, NOT a perspective mockup or a whole scene. Exact primary lettering: \"DeMario & Luigion\". Exact secondary lettering: \"SMOKE SHOP\". Hand-painted neighborhood storefront style, forest-green painted metal/wood, warm aged cream bold condensed sign letters, restrained mustard-gold trim, slight scuffs and torn-paper sticker details. One small clenched-fist emblem and a few subtle illustrated curling smoke motifs. Maintain strong readability at game distance, with generous flat border to mount the front. Single cohesive wide composition. No characters, no people, no roof, canopy, ground, cash, prices, health claims, cannabis leaf logos, real brands, guns, crowns, watermark or extra text. Full-bleed front artwork with straight vertical/horizontal lines, orthographic view, no depth or shadows outside the rectangle."
+    }
+  ]
+}

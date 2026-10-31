@@ -1,0 +1,81 @@
+{
+  "version": 1,
+  "generator": "worlds/fadewood/scripts/build-bulletin-art.py",
+  "encoder": "Pillow 12.2.0",
+  "resize": "LANCZOS, aspect-preserving, no crop",
+  "quality": 95,
+  "jpegSubsampling": 0,
+  "webpMethod": 6,
+  "sourceDecodedBytes": 20165664,
+  "decodedBytes": 4528128,
+  "art": [
+    {
+      "source": "assets/events/generated/fadepark-board-texture.webp",
+      "sourceSha256": "0810bf4aa628a826d6c4b0f632ece3edd50a3190a64a71202634473893876977",
+      "sourceBytes": 257198,
+      "sourcePixels": [
+        1536,
+        1024
+      ],
+      "file": "cork.webp",
+      "sha256": "951d89ef53e187be273d4cf76fd7eb177da4eeba64f1ebb2de0337b1ab2e28b3",
+      "bytes": 221736,
+      "pixels": [
+        1024,
+        683
+      ],
+      "maxDimension": 1024
+    },
+    {
+      "source": "assets/layered/festival-street.webp",
+      "sourceSha256": "181a9a5fc0387fd2d4a81538c36b3990370def0af4c9f2df5528f28c0a886e5d",
+      "sourceBytes": 239046,
+      "sourcePixels": [
+        1424,
+        800
+      ],
+      "file": "block-party.webp",
+      "sha256": "18846fc297ba09b89a17e959e625f4f2157625803a2596e44bf6c49e4710611a",
+      "bytes": 71522,
+      "pixels": [
+        512,
+        288
+      ],
+      "maxDimension": 512
+    },
+    {
+      "source": "brand/squabblemon-standard-gold-share.jpg",
+      "sourceSha256": "fe61ff9367f677e0407ed71742c1d3aa3c5744e7b51fd4d92274734027d9e7de",
+      "sourceBytes": 129505,
+      "sourcePixels": [
+        1200,
+        630
+      ],
+      "file": "roster-pass.jpg",
+      "sha256": "ac3b9856dd60f1ad144fdb999f3227f94639f23000b79404072709356c66fd4f",
+      "bytes": 55661,
+      "pixels": [
+        512,
+        269
+      ],
+      "maxDimension": 512
+    },
+    {
+      "source": "assets/fight-night/rooms/rooftop-court.webp",
+      "sourceSha256": "73e30370436c05bcb2c915c7ede0b60277a9971754508698720cba4504539b7e",
+      "sourceBytes": 351472,
+      "sourcePixels": [
+        1672,
+        941
+      ],
+      "file": "fight-night.webp",
+      "sha256": "17c43fe5ad92052a8a49325b057de846b906346c8a27325e41e7153a81b6ed3f",
+      "bytes": 76460,
+      "pixels": [
+        512,
+        288
+      ],
+      "maxDimension": 512
+    }
+  ]
+}

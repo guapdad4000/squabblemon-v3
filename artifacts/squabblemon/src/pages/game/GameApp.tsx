@@ -3,6 +3,7 @@ import { installInteractionClickSounds } from '../../lib/interactionClickSounds'
 import './gameStyles';
 import { NotificationProvider } from '../../components/Notifications';
 import { useNavigationScroll } from '../../lib/navigationMemory';
+import { isWorldArrivalRoute, useWorldSurface } from '../../lib/worldSurface';
 import { PlayerLevelCelebration } from '../../components/PlayerLevelCelebration';
 import { CityHeader } from '../../components/venue/CityHeader';
 import { rewardReceipts } from '../../lib/rewardReceiptStore';
@@ -23,7 +24,7 @@ import { SocialProvider } from '../../lib/social';
 import { clearSocialDestination, readSocialDestination, rememberSocialDestination, safeSocialDestination } from '../../lib/socialDestinations';
 import { Home, Events, PatchDesk, Inventory, CharacterStyles, CharacterCollections, Collection,
   DeckEditor, Decks, DeckTest, PlayerDeckPlay, Missions, Onboarding, Settings,
-  Shop, Story, Multiplayer, Kumite, ChallengesHub, preloadGameRoute } from './routeModules';
+  Shop, Story, Multiplayer, Kumite, Breakthrough, ChallengesHub, preloadGameRoute } from './routeModules';
 import { Redirect, Route, Switch, useLocation, useSearch } from 'wouter';
 import '../../styles/paper-tabs.css';
 
@@ -82,6 +83,8 @@ function GameRoutes({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   useEffect(() => { rewardReceipts.reset(); return () => rewardReceipts.reset(); }, [bootstrap.profile.id]);
   const [location, setLocation] = useLocation();
   const search = useSearch();
+  const worldSurface = useWorldSurface();
+  const worldArrivals = isWorldArrivalRoute(location, worldSurface);
   useEffect(() => {
     if (bootstrap.profile.onboardingStep !== 'complete') return;
     const options = { base: basePath, origin: window.location.origin };
@@ -125,10 +128,10 @@ function GameRoutes({ bootstrap }: { bootstrap: PlayerBootstrap }) {
     <CosmeticProvider profile={bootstrap.profile}>
     <NotificationProvider key={bootstrap.profile.id} bootstrap={bootstrap}>
     <RewardRevealGate />
-    {(location === '/game' || location === '/game/shop') && bootstrap.profile.onboardingStep === 'complete' && <Suspense fallback={null}><BagRewardArrival key={bootstrap.profile.id} profile={bootstrap.profile} /></Suspense>}
+    {(location === '/game' || location === '/game/shop' || worldArrivals) && bootstrap.profile.onboardingStep === 'complete' && <Suspense fallback={null}><BagRewardArrival key={bootstrap.profile.id} profile={bootstrap.profile} /></Suspense>}
     <KumiteUnlockGate key={bootstrap.profile.id} bootstrap={bootstrap} />
     <PlayerLevelCelebration profile={bootstrap.profile} />
-    {location === '/game' && bootstrap.profile.onboardingStep === 'complete' && <Suspense fallback={null}><DailyCheckInArrival key={bootstrap.profile.id} bootstrap={bootstrap} /></Suspense>}
+    {(location === '/game' || worldArrivals) && bootstrap.profile.onboardingStep === 'complete' && <Suspense fallback={null}><DailyCheckInArrival key={bootstrap.profile.id} bootstrap={bootstrap} /></Suspense>}
     <Suspense fallback={<LoadingScreen phase="scene" />}>
     <Switch>
       <Route path="/game/onboarding">
@@ -137,6 +140,8 @@ function GameRoutes({ bootstrap }: { bootstrap: PlayerBootstrap }) {
       <Route path="/game/play"><Redirect to="/game/training" /></Route>
       <Route path="/game/training"><ImmersiveGameRoute bootstrap={bootstrap}><ChallengesHub bootstrap={bootstrap} openTraining /></ImmersiveGameRoute></Route>
       <Route path="/game/challenges"><ImmersiveGameRoute bootstrap={bootstrap}><ChallengesHub bootstrap={bootstrap} /></ImmersiveGameRoute></Route>
+      <Route path="/game/kumite/breakthrough/practice"><Breakthrough key={bootstrap.profile.id} bootstrap={bootstrap} /></Route>
+      <Route path="/game/kumite/breakthrough"><Breakthrough key={bootstrap.profile.id} bootstrap={bootstrap} /></Route>
       <Route path="/game/kumite"><Kumite bootstrap={bootstrap} /></Route>
       <Route path="/game/online/:code">{params => <ImmersiveGameRoute bootstrap={bootstrap}><Multiplayer key={params.code} code={params.code.toUpperCase()} bootstrap={bootstrap} /></ImmersiveGameRoute>}</Route>
       <Route path="/game/online"><ImmersiveGameRoute bootstrap={bootstrap}><Multiplayer bootstrap={bootstrap} /></ImmersiveGameRoute></Route>

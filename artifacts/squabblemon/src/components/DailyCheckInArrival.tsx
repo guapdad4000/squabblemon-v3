@@ -10,6 +10,7 @@ import { GameGlyph } from './venue/GameGlyph';
 import { getAssetUrl, getCardImage } from '../lib/assets';
 import { isBattleActive, subscribeBattleActive } from '../lib/imageWarmup';
 import { rewardReceipts } from '../lib/rewardReceiptStore';
+import { isWorldAutoPresentationAllowed, subscribeWorldSurface } from '../lib/worldSurface';
 import '../styles/reward-street-file.css';
 import '../styles/daily-check-in-arrival.css';
 
@@ -25,7 +26,7 @@ function rememberDismissal(player: string, date: string) {
   try { localStorage.setItem(storageKey(player), date); } catch { /* Presentation history is optional; claims are server-authoritative. */ }
 }
 
-/** Home-only arrival: one daily reward, after existing invitations/celebrations. */
+/** Safehouse/world arrival: one daily reward, after existing invitations/celebrations. */
 export function DailyCheckInArrival({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   const player = bootstrap.profile.id;
   const client = useQueryClient();
@@ -49,7 +50,7 @@ export function DailyCheckInArrival({ bootstrap }: { bootstrap: PlayerBootstrap 
   useEffect(() => {
     if (!eligible || !date || open || dismissed === date || wasDismissed(player, date)) return;
     let timer: number | undefined;
-    const safe = () => document.visibilityState === 'visible' && !isBattleActive() && !rewardReceipts.current()
+    const safe = () => isWorldAutoPresentationAllowed() && document.visibilityState === 'visible' && !isBattleActive() && !rewardReceipts.current()
       && !document.querySelector('[data-bag-reward-arrival], dialog[open], [role="dialog"][data-state="open"], [role="dialog"][aria-modal="true"], .gacha-stage[data-phase]:not([data-phase="idle"])');
     const schedule = () => {
       window.clearTimeout(timer);
@@ -64,11 +65,12 @@ export function DailyCheckInArrival({ bootstrap }: { bootstrap: PlayerBootstrap 
     observer.observe(document.body, { subtree: true, childList: true, attributes: true, attributeFilter: ['open', 'data-state', 'data-phase', 'aria-modal'] });
     const unsubscribeBattle = subscribeBattleActive(schedule);
     const unsubscribeRewards = rewardReceipts.subscribe(schedule);
+    const unsubscribeWorld = subscribeWorldSurface(schedule);
     const storage = (event: StorageEvent) => { if (event.key === storageKey(player)) schedule(); };
     document.addEventListener('visibilitychange', schedule);
     window.addEventListener('storage', storage);
     schedule();
-    return () => { window.clearTimeout(timer); observer.disconnect(); unsubscribeBattle(); unsubscribeRewards(); document.removeEventListener('visibilitychange', schedule); window.removeEventListener('storage', storage); };
+    return () => { window.clearTimeout(timer); observer.disconnect(); unsubscribeBattle(); unsubscribeRewards(); unsubscribeWorld(); document.removeEventListener('visibilitychange', schedule); window.removeEventListener('storage', storage); };
   }, [eligible, date, status?.nextResetAt, player, open, dismissed]);
 
   useEffect(() => {

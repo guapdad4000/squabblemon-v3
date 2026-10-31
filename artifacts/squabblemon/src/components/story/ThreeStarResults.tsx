@@ -16,6 +16,7 @@ import { getCardImage } from '../../data';
 
 export interface ThreeStarResultsProps {
   stars: number;
+  nodeId?: string;
   objectives: readonly StoryStarObjective[];
   /** Per-objective pass/fail map; absent entries default to "missed". */
   hitObjectives?: Readonly<Record<string, boolean>>;
@@ -30,12 +31,13 @@ const STAR_PATH =
 
 export function ThreeStarResults({
   stars,
+  nodeId,
   objectives,
   hitObjectives = {},
   rewardLine,
   title,
 }: ThreeStarResultsProps) {
-  const ticketsEarned = ticketsForStars(stars);
+  const ticketsEarned = ticketsForStars(stars,nodeId);
   return (
     <motion.div
       initial={{ opacity: 0, y: 16 }}
@@ -136,7 +138,7 @@ export function ThreeStarResults({
 
       <div className="hidden">{/* Keep imports warm for hot reload safety. */}{getCardImage('unused')}</div>
       <div className="text-[10px] text-white/30">
-        {TICKETS_PER_PERFECT_BATTLE} ticket per 3-star clean sweep — first clear only.
+        {nodeId?.startsWith('anunaki-') ? 'Battle stars advance optional mastery rewards on the Anunaki journey.' : `${TICKETS_PER_PERFECT_BATTLE} ticket per 3-star clean sweep — first clear only.`}
       </div>
     </motion.div>
   );

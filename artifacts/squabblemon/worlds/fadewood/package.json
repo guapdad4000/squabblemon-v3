@@ -1,0 +1,21 @@
+{
+  "name": "squabblemon-fadewood-runtime",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1 --port 4281 --strictPort",
+    "build": "node scripts/build-integrated.mjs",
+    "preview": "vite preview --host 127.0.0.1 --port 4281 --strictPort",
+    "verify:world": "python3 scripts/build-runtime-world.py --verify",
+    "test": "node tests/physics.test.js && node tests/camera.test.js && node tests/fast-travel.test.js && node tests/presentation-clock.test.js && node tests/entrance-design.test.js && node tests/character-cast.test.js && node tests/anime-environment.test.js && node tests/character-interactions.test.js && node tests/anime-surfaces.test.js && node tests/cloud-fists.test.js && node tests/touch-controls.test.js && node tests/render-profile.test.js && node tests/view-layout.test.js && node tests/neighborhood-props.test.js && node tests/prop-staging.test.js && node tests/runtime-world.test.js && node tests/railway.test.js && node tests/story-portals.test.js && node tests/world-portal-interactions.test.js && node tests/neighborhood-surfaces.test.js && node tests/resident-motion.test.js && node tests/resident-assets.test.js && node tests/street-signs.test.js && node tests/entrance-staging.test.js",
+    "test:bridge": "node --test tests/host-bridge.test.js",
+    "test:refinements": "node --test tests/focus-mail-board.test.js"
+  },
+  "dependencies": {
+    "three": "0.184.0"
+  },
+  "devDependencies": {
+    "vite": "7.3.3"
+  }
+}

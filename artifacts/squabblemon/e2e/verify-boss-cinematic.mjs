@@ -18,11 +18,14 @@ for (const [width,height] of viewports) {
  await page.screenshot({path:`${out}/${width}x${height}-precinct.png`});
  const sizes=await page.evaluate(()=>{
   const box=s=>{const r=document.querySelector(s).getBoundingClientRect();return {x:r.x,y:r.y,width:r.width,height:r.height,bottom:r.bottom}};
-  return {boss:box('.raid-boss-figure'), field:box('.raid-field'), hand:box('.raid-hand-dock'),overflow:document.documentElement.scrollWidth>innerWidth+1};
+  return {hero:box('.raid-cinema-hero'), title:box('.raid-boss-title h1'), hp:box('.raid-scoreline'), boss:box('.raid-boss-figure'), field:box('.raid-field'), hand:box('.raid-hand-dock'),overflow:document.documentElement.scrollWidth>innerWidth+1};
  });
  assert(!sizes.overflow,'no horizontal viewport overflow');
- assert(sizes.boss.height>=210,'boss has scene-scale presence');
+ assert(sizes.boss.height>=110,'boss keeps scene-scale presence even on short screens');
+ assert(Math.abs(sizes.boss.x+sizes.boss.width/2-(sizes.hero.x+sizes.hero.width/2))<2,'overarching boss is centered in the cinematic top panel');
+ assert(sizes.hero.bottom<=sizes.field.y+1,'boss occupies the top panel above the actor/field stage');
  assert(sizes.hand.bottom<=height+1,'hand stays in viewport');
+ assert(sizes.title.bottom<=sizes.hp.y+1,'boss name remains clear of HP readout');
  assert.equal(await page.evaluate(()=>window.__raidMusic),'boss');
  assert.equal(await page.locator('.raid-overdrive-bar,.raid-overdrive-cutin').count(),0);
  await page.getByRole('button',{name:'Inspect Officer Oink tiers'}).click();
@@ -88,7 +91,7 @@ for (const [width,height] of viewports) {
  await page.goto(base+'/e2e/boss-raid.fixture.html?reset=1&raid=kumite&demo=1');
  await page.locator('.raid-scene-portrait').waitFor();
  await page.waitForTimeout(250);
- assert.equal(await page.locator('.raid-boss-title h1').innerText(),'BUSHEDO BROWN');
+ assert.equal(await page.locator('.raid-boss-title h1').innerText(),'CHONK LEE');
  assert.match(await page.locator('.raid-lane-label').first().innerText(),/WEST DOJO/i);
  await page.screenshot({path:`${out}/${width}x${height}-kumite.png`});
  assert.deepEqual(errors,[]);

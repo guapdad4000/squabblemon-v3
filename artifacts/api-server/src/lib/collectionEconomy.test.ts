@@ -7,6 +7,10 @@ import {
   STREET_PACK_RULES,
 } from "@workspace/squabblemon-engine/packRules";
 import {
+  collectionRoadProgress,
+  anunakiBannerPools,
+  buildAnunakiBannerPools,
+  COLLECTION_ROAD,
   drawGameplayCard,
   generateStreetPack,
   generateStreetTenPull,
@@ -14,6 +18,40 @@ import {
   STREET_PACK_CONFIG,
   STREET_PACK_TEN_PULL_CONFIG,
 } from "./collectionEconomy";
+
+test("Anunaki roster stays out of ordinary Street Pack cards and event rewards do not change Whole Block", async () => {
+  for (const id of ['nabu', 'enki', 'utu', 'ninhursag', 'inanna', 'yakub', 'enlil', 'ereshkigal', 'caucus-mountaineer', 'anu']) {
+    assert.equal(isStreetPackCard({ catalogId: id }), false, id);
+  }
+  const wholeBlock = COLLECTION_ROAD.find(m => m.id === 'full-roster')!;
+  const { isAnunakiCardId } = await import('@workspace/squabblemon-engine/anunakiWave');
+  const currentLaunch = cardCatalog.filter(card => !isAnunakiCardId(card.catalogId)).map(card => card.catalogId);
+  assert.equal(wholeBlock.threshold, currentLaunch.length);
+  assert.equal(collectionRoadProgress(wholeBlock, [...currentLaunch.slice(1), 'yakub', 'anu', 'invented-card', currentLaunch[1]]), wholeBlock.threshold - 1);
+  assert.equal(collectionRoadProgress(wholeBlock, [...currentLaunch, 'yakub', 'anu']), wholeBlock.threshold);
+  assert.equal(collectionRoadProgress(COLLECTION_ROAD[0], ['yakub']), 1);
+});
+
+test('Anunaki banner pool fails closed until enabled and includes exactly its seven featured cards', async () => {
+  const { anunakiCards, anunakiRarities } = await import('@workspace/squabblemon-engine/anunakiWave');
+  const { ANUNAKI_BANNER_CARD_IDS, ANUNAKI_BANNER_GAMEPLAY_READY } = await import('@workspace/squabblemon-engine/anunakiBanner');
+  if (ANUNAKI_BANNER_GAMEPLAY_READY) assert.doesNotThrow(() => anunakiBannerPools());
+  else assert.throws(() => anunakiBannerPools(), /unavailable/);
+  const base = cardCatalog.filter(card => !Object.hasOwn(anunakiCards, card.engineId));
+  assert.throws(() => buildAnunakiBannerPools(base, true), /unavailable/);
+  const all = Object.entries(anunakiCards).map(([id, card]) => ({ ...cardCatalog[0], ...card,
+    catalogId: id, engineId: id, rarity: anunakiRarities[id] }));
+  const pools = buildAnunakiBannerPools([...base, ...all], true);
+  for (const id of ANUNAKI_BANNER_CARD_IDS) {
+    const card = all.find(item => item.catalogId === id)!;
+    assert(pools[card.rarity].some(item => item.catalogId === id), id);
+    const tier = pools[card.rarity];
+    const index = tier.findIndex(item => item.catalogId === id);
+    const roll = tier.slice(0, index).reduce((sum, item) => sum + (ANUNAKI_BANNER_CARD_IDS.some(featured => featured === item.catalogId) ? 3 : 2), 0);
+    assert.equal(choosePackCardFromTier({ rarity: card.rarity, tier, pulledCardIds: new Set(), ownedCardIds: new Set(), protectNew: false, featuredCardIds: ANUNAKI_BANNER_CARD_IDS, rng: () => roll }).catalogId, id);
+  }
+  for (const id of ['yakub', 'caucus-mountaineer', 'anu']) assert(!Object.values(pools).flat().some(card => card.catalogId === id));
+});
 
 const zero = () => 0;
 const high = (max: number) => max - 1;

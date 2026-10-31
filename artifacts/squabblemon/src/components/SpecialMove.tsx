@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { getMoveClipUrl, getMoveClipEndSeconds, keyChromaPixels, type MoveClip } from '../specialMoves';
+import { getMoveClipUrl, getMoveClipEndSeconds, keyChromaPixels, ANUNAKI_CHROMA_KEY, type MoveClip } from '../specialMoves';
 import './special-moves.css';
 import { createChromaRenderer } from '../lib/chromaRenderer';
 
@@ -32,7 +32,8 @@ export function SpecialMove({ clip, onStatus, audioEnabled = false, speed = 1 }:
       return;
     }
     let renderer: ReturnType<typeof createChromaRenderer>;
-    try { renderer = createChromaRenderer(surface, `move-${clip.chroma}`, pixels => keyChromaPixels(pixels, clip.chroma), useGpu); }
+    try { renderer = createChromaRenderer(surface, `move-${clip.chroma}`, pixels => keyChromaPixels(pixels, clip.chroma, clip.keyProfile), useGpu,
+      clip.keyProfile === 'anunaki' ? ANUNAKI_CHROMA_KEY : undefined); }
     catch { setUseGpu(false); return; }
     if (!renderer) return;
     surface.dataset.renderer = renderer.kind;

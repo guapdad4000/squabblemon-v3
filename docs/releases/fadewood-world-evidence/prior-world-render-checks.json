@@ -1,0 +1,243 @@
+{
+  "status": "passed",
+  "bundle": "integrated-DRour-7L.js",
+  "bundleSha256": "7eaf0e36d94d894fae1ef60d965ef5cac27551dc2cf6623f287ef219555e5781",
+  "boundary": "Real local Fadewood/Safehouse renderers and Story/Home components with a bounded synthetic fixture account/API. Motion is passively observed through the localhost/e2e-only DOM surface; no scene clock seeking, hidden Three object access or fabricated events. Chrome software GPU, not physical-device or production proof.",
+  "sourceChangesDuringFinalProof": "Test harness only; application/runtime bundle stayed frozen.",
+  "evidenceScope": "Pre-integration Fadewood runtime. The combined PR release is checked separately. Raw fixture traces and packed editable Blender files are retained in the local authoring archive.",
+  "runs": [
+    {
+      "status": "passed",
+      "viewport": {
+        "width": 1440,
+        "height": 960,
+        "deviceScaleFactor": 0.5
+      },
+      "steps": [
+        "mailmanWaitingIdle",
+        "arrivalChoice",
+        "reopenedChoice",
+        "savedStory",
+        "boothTravel",
+        "boothIdle",
+        "wood",
+        "booth",
+        "night",
+        "restoredDay",
+        "nightForSafehouse",
+        "ambientAndDogs",
+        "safehouseApproach",
+        "safehouseNight",
+        "returnedDay",
+        "nova"
+      ],
+      "idleMotion": {
+        "mailman": [
+          {
+            "id": "mailman",
+            "clip": "Fadewood_Relaxed_Idle",
+            "animated": true,
+            "beforePlayhead": 0.3850000000000011,
+            "afterPlayhead": 1.2650000000000037,
+            "boneChecksumDelta": -123.20716964596795,
+            "maxRootOffset": 8.881784197001252e-16
+          }
+        ],
+        "booth": [
+          {
+            "id": "demario",
+            "clip": "Fadewood_Relaxed_Idle",
+            "animated": true,
+            "beforePlayhead": 0.24576209537035254,
+            "afterPlayhead": 1.0707620953703483,
+            "boneChecksumDelta": -91.4575533817042,
+            "maxRootOffset": 1.2212453270876722e-15
+          },
+          {
+            "id": "luigion",
+            "clip": "Fadewood_Relaxed_Idle",
+            "animated": true,
+            "beforePlayhead": 0.6240950154448157,
+            "afterPlayhead": 1.4490950154448115,
+            "boneChecksumDelta": -69.43845387995134,
+            "maxRootOffset": 7.771561172376096e-16
+          }
+        ]
+      },
+      "motionInstance": "19567440-0882-4ece-9445-1d2bca08b334",
+      "npcObservationSeconds": 64.581,
+      "npcSamples": 424,
+      "exerciseCoverage": "Both OGs completed down/push-up/stand/idle in this one child instance.",
+      "dogTurns": {
+        "nova": {
+          "samples": 424,
+          "maxObservedTurnRate": 0.7244541607252487,
+          "maxTurnVelocity": 0.7253234442177325
+        },
+        "golden-doberman": {
+          "samples": 424,
+          "maxObservedTurnRate": 0.494693290997976,
+          "maxTurnVelocity": 0.49488042464827786
+        }
+      },
+      "curbComponentStats": {
+        "drawCalls": 6,
+        "triangles": 6306,
+        "textures": 5,
+        "colliders": 1,
+        "colliderTriangles": 12,
+        "hosts": 2,
+        "hostBones": 96,
+        "hostClips": [
+          {
+            "id": "demario",
+            "available": [
+              "Running",
+              "Walking",
+              "Walk_Turn_Right",
+              "Wave_One_Hand",
+              "Fadewood_Relaxed_Idle"
+            ],
+            "active": "Fadewood_Relaxed_Idle",
+            "animated": true
+          },
+          {
+            "id": "luigion",
+            "available": [
+              "Running",
+              "Walking",
+              "Fadewood_Relaxed_Idle"
+            ],
+            "active": "Fadewood_Relaxed_Idle",
+            "animated": true
+          }
+        ]
+      },
+      "errors": [],
+      "crashes": [],
+      "hmr": []
+    },
+    {
+      "status": "passed",
+      "viewport": {
+        "width": 390,
+        "height": 844,
+        "deviceScaleFactor": 0.75
+      },
+      "steps": [
+        "mailmanWaitingIdle",
+        "arrivalChoice",
+        "reopenedChoice",
+        "savedStory",
+        "boothTravel",
+        "boothIdle",
+        "wood",
+        "booth",
+        "night",
+        "restoredDay",
+        "nightForSafehouse",
+        "ambientAndDogs",
+        "safehouseApproach",
+        "safehouseNight",
+        "returnedDay",
+        "nova"
+      ],
+      "idleMotion": {
+        "mailman": [
+          {
+            "id": "mailman",
+            "clip": "Fadewood_Relaxed_Idle",
+            "animated": true,
+            "beforePlayhead": 0.4548999999999994,
+            "afterPlayhead": 1.4981999999999962,
+            "boneChecksumDelta": -176.59211941271133,
+            "maxRootOffset": 2.6645352591003757e-15
+          }
+        ],
+        "booth": [
+          {
+            "id": "demario",
+            "clip": "Fadewood_Relaxed_Idle",
+            "animated": true,
+            "beforePlayhead": 4.300734603091449,
+            "afterPlayhead": 5.13413460309145,
+            "boneChecksumDelta": -114.82660454606776,
+            "maxRootOffset": 5.551115123125783e-16
+          },
+          {
+            "id": "luigion",
+            "clip": "Fadewood_Relaxed_Idle",
+            "animated": true,
+            "beforePlayhead": 4.683967523165915,
+            "afterPlayhead": 5.517367523165916,
+            "boneChecksumDelta": -93.92794886485126,
+            "maxRootOffset": 7.771561172376096e-16
+          }
+        ]
+      },
+      "motionInstance": "f74b5236-c7ad-4ba0-997d-8570b35ad7d2",
+      "npcObservationSeconds": 34.593,
+      "npcSamples": 134,
+      "exerciseCoverage": "Passive phase observation; full cycles are covered by the desktop run.",
+      "dogTurns": {
+        "nova": {
+          "samples": 134,
+          "maxObservedTurnRate": 0.7235077973122696,
+          "maxTurnVelocity": 0.7234250469283476
+        },
+        "golden-doberman": {
+          "samples": 134,
+          "maxObservedTurnRate": 0.4926390463155312,
+          "maxTurnVelocity": 0.4972921258633075
+        }
+      },
+      "curbComponentStats": {
+        "drawCalls": 6,
+        "triangles": 6306,
+        "textures": 5,
+        "colliders": 1,
+        "colliderTriangles": 12,
+        "hosts": 2,
+        "hostBones": 96,
+        "hostClips": [
+          {
+            "id": "demario",
+            "available": [
+              "Running",
+              "Walking",
+              "Walk_Turn_Right",
+              "Wave_One_Hand",
+              "Fadewood_Relaxed_Idle"
+            ],
+            "active": "Fadewood_Relaxed_Idle",
+            "animated": true
+          },
+          {
+            "id": "luigion",
+            "available": [
+              "Running",
+              "Walking",
+              "Fadewood_Relaxed_Idle"
+            ],
+            "active": "Fadewood_Relaxed_Idle",
+            "animated": true
+          }
+        ]
+      },
+      "errors": [],
+      "crashes": [],
+      "hmr": []
+    }
+  ],
+  "harnessCorrections": [
+    {
+      "reason": "Expected waiting instead of documented delivery-waiting. The actual courier was correctly landed and idling."
+    },
+    {
+      "reason": "The extra Nova hold assertion waited for NPC scene time to advance while the native memorial correctly paused it. Corrected to bounded wall-clock pose observation."
+    },
+    {
+      "reason": "At faster rendering, a Day toggle sampled throttled DOM playing state before the new Menu pause receipt. Corrected to wait for a genuine post-Menu playing=false state before toggling."
+    }
+  ]
+}

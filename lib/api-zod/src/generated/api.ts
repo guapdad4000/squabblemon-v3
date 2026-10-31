@@ -1465,6 +1465,13 @@ export const getPlayerBootstrapResponseProfileStyleShardBalancesLegendaryMax = 2
 export const getPlayerBootstrapResponseProfileStyleShardBalancesMythicalMin = 0;
 export const getPlayerBootstrapResponseProfileStyleShardBalancesMythicalMax = 2147483647;
 
+export const getPlayerBootstrapResponseProfileFeaturedPackProgressMissesMin = 0;
+export const getPlayerBootstrapResponseProfileFeaturedPackProgressMissesMax = 9;
+
+export const getPlayerBootstrapResponseProfileFeaturedPackProgressPacksMin = 0;
+
+export const getPlayerBootstrapResponseProfileSettingsCosmeticsDeckCoverIdMax = 80;
+
 export const getPlayerBootstrapResponseProfileSettingsCosmeticsPlayerMatIdMax = 80;
 
 export const getPlayerBootstrapResponseProfileSettingsCosmeticsBannerCardIdMax = 64;
@@ -1505,6 +1512,10 @@ export const GetPlayerBootstrapResponse = zod.object({
   "Legendary": zod.number().min(getPlayerBootstrapResponseProfileStyleShardBalancesLegendaryMin).max(getPlayerBootstrapResponseProfileStyleShardBalancesLegendaryMax).optional(),
   "Mythical": zod.number().min(getPlayerBootstrapResponseProfileStyleShardBalancesMythicalMin).max(getPlayerBootstrapResponseProfileStyleShardBalancesMythicalMax).optional()
 }).optional().describe('Matching rarity currencies. Super Common uses Common. Absent balances are zero; styleShards remains universal.'),
+  "featuredPackProgress": zod.record(zod.string(), zod.object({
+  "misses": zod.number().min(getPlayerBootstrapResponseProfileFeaturedPackProgressMissesMin).max(getPlayerBootstrapResponseProfileFeaturedPackProgressMissesMax),
+  "packs": zod.number().min(getPlayerBootstrapResponseProfileFeaturedPackProgressPacksMin)
+})).optional(),
   "packPity": zod.number(),
   "deckSlots": zod.number(),
   "cosmeticCurrency": zod.number(),
@@ -1517,6 +1528,7 @@ export const GetPlayerBootstrapResponse = zod.object({
   "termsAcceptedAt": zod.coerce.date().nullable(),
   "settings": zod.object({
   "cosmetics": zod.object({
+  "deckCoverId": zod.string().max(getPlayerBootstrapResponseProfileSettingsCosmeticsDeckCoverIdMax).nullish().describe('Owned deck cover. Null restores the default cover.'),
   "playerMatId": zod.string().max(getPlayerBootstrapResponseProfileSettingsCosmeticsPlayerMatIdMax).nullish().describe('Owned player mat for PvP and training. Null restores the free venue.'),
   "bannerCardId": zod.string().max(getPlayerBootstrapResponseProfileSettingsCosmeticsBannerCardIdMax).nullish(),
   "bannerFinish": zod.enum(['base', 'silver']).optional(),
@@ -1572,6 +1584,18 @@ export const GetPlayerBootstrapResponse = zod.object({
   "packTickets": zod.number(),
   "styleShards": zod.number()
 })).optional(),
+  "featuredProgress": zod.object({
+  "bannerId": zod.string(),
+  "missesBefore": zod.number(),
+  "missesAfter": zod.number(),
+  "packsBefore": zod.number(),
+  "packsAfter": zod.number(),
+  "hits": zod.array(zod.object({
+  "index": zod.number(),
+  "cardId": zod.string(),
+  "guaranteed": zod.boolean()
+}))
+}).optional(),
   "pityBefore": zod.number(),
   "pityAfter": zod.number(),
   "createdAt": zod.coerce.date()
@@ -1654,6 +1678,13 @@ export const getPlayerStoryResponseCatchUpBootstrapProfileStyleShardBalancesLege
 
 export const getPlayerStoryResponseCatchUpBootstrapProfileStyleShardBalancesMythicalMin = 0;
 export const getPlayerStoryResponseCatchUpBootstrapProfileStyleShardBalancesMythicalMax = 2147483647;
+
+export const getPlayerStoryResponseCatchUpBootstrapProfileFeaturedPackProgressMissesMin = 0;
+export const getPlayerStoryResponseCatchUpBootstrapProfileFeaturedPackProgressMissesMax = 9;
+
+export const getPlayerStoryResponseCatchUpBootstrapProfileFeaturedPackProgressPacksMin = 0;
+
+export const getPlayerStoryResponseCatchUpBootstrapProfileSettingsCosmeticsDeckCoverIdMax = 80;
 
 export const getPlayerStoryResponseCatchUpBootstrapProfileSettingsCosmeticsPlayerMatIdMax = 80;
 
@@ -1767,6 +1798,10 @@ export const GetPlayerStoryResponse = zod.object({
   "Legendary": zod.number().min(getPlayerStoryResponseCatchUpBootstrapProfileStyleShardBalancesLegendaryMin).max(getPlayerStoryResponseCatchUpBootstrapProfileStyleShardBalancesLegendaryMax).optional(),
   "Mythical": zod.number().min(getPlayerStoryResponseCatchUpBootstrapProfileStyleShardBalancesMythicalMin).max(getPlayerStoryResponseCatchUpBootstrapProfileStyleShardBalancesMythicalMax).optional()
 }).optional().describe('Matching rarity currencies. Super Common uses Common. Absent balances are zero; styleShards remains universal.'),
+  "featuredPackProgress": zod.record(zod.string(), zod.object({
+  "misses": zod.number().min(getPlayerStoryResponseCatchUpBootstrapProfileFeaturedPackProgressMissesMin).max(getPlayerStoryResponseCatchUpBootstrapProfileFeaturedPackProgressMissesMax),
+  "packs": zod.number().min(getPlayerStoryResponseCatchUpBootstrapProfileFeaturedPackProgressPacksMin)
+})).optional(),
   "packPity": zod.number(),
   "deckSlots": zod.number(),
   "cosmeticCurrency": zod.number(),
@@ -1779,6 +1814,7 @@ export const GetPlayerStoryResponse = zod.object({
   "termsAcceptedAt": zod.coerce.date().nullable(),
   "settings": zod.object({
   "cosmetics": zod.object({
+  "deckCoverId": zod.string().max(getPlayerStoryResponseCatchUpBootstrapProfileSettingsCosmeticsDeckCoverIdMax).nullish().describe('Owned deck cover. Null restores the default cover.'),
   "playerMatId": zod.string().max(getPlayerStoryResponseCatchUpBootstrapProfileSettingsCosmeticsPlayerMatIdMax).nullish().describe('Owned player mat for PvP and training. Null restores the free venue.'),
   "bannerCardId": zod.string().max(getPlayerStoryResponseCatchUpBootstrapProfileSettingsCosmeticsBannerCardIdMax).nullish(),
   "bannerFinish": zod.enum(['base', 'silver']).optional(),
@@ -1834,6 +1870,18 @@ export const GetPlayerStoryResponse = zod.object({
   "packTickets": zod.number(),
   "styleShards": zod.number()
 })).optional(),
+  "featuredProgress": zod.object({
+  "bannerId": zod.string(),
+  "missesBefore": zod.number(),
+  "missesAfter": zod.number(),
+  "packsBefore": zod.number(),
+  "packsAfter": zod.number(),
+  "hits": zod.array(zod.object({
+  "index": zod.number(),
+  "cardId": zod.string(),
+  "guaranteed": zod.boolean()
+}))
+}).optional(),
   "pityBefore": zod.number(),
   "pityAfter": zod.number(),
   "createdAt": zod.coerce.date()
@@ -1926,6 +1974,13 @@ export const resetPlayerStoryDevelopmentResponseCatchUpBootstrapProfileStyleShar
 
 export const resetPlayerStoryDevelopmentResponseCatchUpBootstrapProfileStyleShardBalancesMythicalMin = 0;
 export const resetPlayerStoryDevelopmentResponseCatchUpBootstrapProfileStyleShardBalancesMythicalMax = 2147483647;
+
+export const resetPlayerStoryDevelopmentResponseCatchUpBootstrapProfileFeaturedPackProgressMissesMin = 0;
+export const resetPlayerStoryDevelopmentResponseCatchUpBootstrapProfileFeaturedPackProgressMissesMax = 9;
+
+export const resetPlayerStoryDevelopmentResponseCatchUpBootstrapProfileFeaturedPackProgressPacksMin = 0;
+
+export const resetPlayerStoryDevelopmentResponseCatchUpBootstrapProfileSettingsCosmeticsDeckCoverIdMax = 80;
 
 export const resetPlayerStoryDevelopmentResponseCatchUpBootstrapProfileSettingsCosmeticsPlayerMatIdMax = 80;
 
@@ -2039,6 +2094,10 @@ export const ResetPlayerStoryDevelopmentResponse = zod.object({
   "Legendary": zod.number().min(resetPlayerStoryDevelopmentResponseCatchUpBootstrapProfileStyleShardBalancesLegendaryMin).max(resetPlayerStoryDevelopmentResponseCatchUpBootstrapProfileStyleShardBalancesLegendaryMax).optional(),
   "Mythical": zod.number().min(resetPlayerStoryDevelopmentResponseCatchUpBootstrapProfileStyleShardBalancesMythicalMin).max(resetPlayerStoryDevelopmentResponseCatchUpBootstrapProfileStyleShardBalancesMythicalMax).optional()
 }).optional().describe('Matching rarity currencies. Super Common uses Common. Absent balances are zero; styleShards remains universal.'),
+  "featuredPackProgress": zod.record(zod.string(), zod.object({
+  "misses": zod.number().min(resetPlayerStoryDevelopmentResponseCatchUpBootstrapProfileFeaturedPackProgressMissesMin).max(resetPlayerStoryDevelopmentResponseCatchUpBootstrapProfileFeaturedPackProgressMissesMax),
+  "packs": zod.number().min(resetPlayerStoryDevelopmentResponseCatchUpBootstrapProfileFeaturedPackProgressPacksMin)
+})).optional(),
   "packPity": zod.number(),
   "deckSlots": zod.number(),
   "cosmeticCurrency": zod.number(),
@@ -2051,6 +2110,7 @@ export const ResetPlayerStoryDevelopmentResponse = zod.object({
   "termsAcceptedAt": zod.coerce.date().nullable(),
   "settings": zod.object({
   "cosmetics": zod.object({
+  "deckCoverId": zod.string().max(resetPlayerStoryDevelopmentResponseCatchUpBootstrapProfileSettingsCosmeticsDeckCoverIdMax).nullish().describe('Owned deck cover. Null restores the default cover.'),
   "playerMatId": zod.string().max(resetPlayerStoryDevelopmentResponseCatchUpBootstrapProfileSettingsCosmeticsPlayerMatIdMax).nullish().describe('Owned player mat for PvP and training. Null restores the free venue.'),
   "bannerCardId": zod.string().max(resetPlayerStoryDevelopmentResponseCatchUpBootstrapProfileSettingsCosmeticsBannerCardIdMax).nullish(),
   "bannerFinish": zod.enum(['base', 'silver']).optional(),
@@ -2106,6 +2166,18 @@ export const ResetPlayerStoryDevelopmentResponse = zod.object({
   "packTickets": zod.number(),
   "styleShards": zod.number()
 })).optional(),
+  "featuredProgress": zod.object({
+  "bannerId": zod.string(),
+  "missesBefore": zod.number(),
+  "missesAfter": zod.number(),
+  "packsBefore": zod.number(),
+  "packsAfter": zod.number(),
+  "hits": zod.array(zod.object({
+  "index": zod.number(),
+  "cardId": zod.string(),
+  "guaranteed": zod.boolean()
+}))
+}).optional(),
   "pityBefore": zod.number(),
   "pityAfter": zod.number(),
   "createdAt": zod.coerce.date()
@@ -2214,6 +2286,13 @@ export const completePlayerStoryNodeResponseCampaignCatchUpBootstrapProfileStyle
 export const completePlayerStoryNodeResponseCampaignCatchUpBootstrapProfileStyleShardBalancesMythicalMin = 0;
 export const completePlayerStoryNodeResponseCampaignCatchUpBootstrapProfileStyleShardBalancesMythicalMax = 2147483647;
 
+export const completePlayerStoryNodeResponseCampaignCatchUpBootstrapProfileFeaturedPackProgressMissesMin = 0;
+export const completePlayerStoryNodeResponseCampaignCatchUpBootstrapProfileFeaturedPackProgressMissesMax = 9;
+
+export const completePlayerStoryNodeResponseCampaignCatchUpBootstrapProfileFeaturedPackProgressPacksMin = 0;
+
+export const completePlayerStoryNodeResponseCampaignCatchUpBootstrapProfileSettingsCosmeticsDeckCoverIdMax = 80;
+
 export const completePlayerStoryNodeResponseCampaignCatchUpBootstrapProfileSettingsCosmeticsPlayerMatIdMax = 80;
 
 export const completePlayerStoryNodeResponseCampaignCatchUpBootstrapProfileSettingsCosmeticsBannerCardIdMax = 64;
@@ -2248,6 +2327,13 @@ export const completePlayerStoryNodeResponseBootstrapProfileStyleShardBalancesLe
 
 export const completePlayerStoryNodeResponseBootstrapProfileStyleShardBalancesMythicalMin = 0;
 export const completePlayerStoryNodeResponseBootstrapProfileStyleShardBalancesMythicalMax = 2147483647;
+
+export const completePlayerStoryNodeResponseBootstrapProfileFeaturedPackProgressMissesMin = 0;
+export const completePlayerStoryNodeResponseBootstrapProfileFeaturedPackProgressMissesMax = 9;
+
+export const completePlayerStoryNodeResponseBootstrapProfileFeaturedPackProgressPacksMin = 0;
+
+export const completePlayerStoryNodeResponseBootstrapProfileSettingsCosmeticsDeckCoverIdMax = 80;
 
 export const completePlayerStoryNodeResponseBootstrapProfileSettingsCosmeticsPlayerMatIdMax = 80;
 
@@ -2362,6 +2448,10 @@ export const CompletePlayerStoryNodeResponse = zod.object({
   "Legendary": zod.number().min(completePlayerStoryNodeResponseCampaignCatchUpBootstrapProfileStyleShardBalancesLegendaryMin).max(completePlayerStoryNodeResponseCampaignCatchUpBootstrapProfileStyleShardBalancesLegendaryMax).optional(),
   "Mythical": zod.number().min(completePlayerStoryNodeResponseCampaignCatchUpBootstrapProfileStyleShardBalancesMythicalMin).max(completePlayerStoryNodeResponseCampaignCatchUpBootstrapProfileStyleShardBalancesMythicalMax).optional()
 }).optional().describe('Matching rarity currencies. Super Common uses Common. Absent balances are zero; styleShards remains universal.'),
+  "featuredPackProgress": zod.record(zod.string(), zod.object({
+  "misses": zod.number().min(completePlayerStoryNodeResponseCampaignCatchUpBootstrapProfileFeaturedPackProgressMissesMin).max(completePlayerStoryNodeResponseCampaignCatchUpBootstrapProfileFeaturedPackProgressMissesMax),
+  "packs": zod.number().min(completePlayerStoryNodeResponseCampaignCatchUpBootstrapProfileFeaturedPackProgressPacksMin)
+})).optional(),
   "packPity": zod.number(),
   "deckSlots": zod.number(),
   "cosmeticCurrency": zod.number(),
@@ -2374,6 +2464,7 @@ export const CompletePlayerStoryNodeResponse = zod.object({
   "termsAcceptedAt": zod.coerce.date().nullable(),
   "settings": zod.object({
   "cosmetics": zod.object({
+  "deckCoverId": zod.string().max(completePlayerStoryNodeResponseCampaignCatchUpBootstrapProfileSettingsCosmeticsDeckCoverIdMax).nullish().describe('Owned deck cover. Null restores the default cover.'),
   "playerMatId": zod.string().max(completePlayerStoryNodeResponseCampaignCatchUpBootstrapProfileSettingsCosmeticsPlayerMatIdMax).nullish().describe('Owned player mat for PvP and training. Null restores the free venue.'),
   "bannerCardId": zod.string().max(completePlayerStoryNodeResponseCampaignCatchUpBootstrapProfileSettingsCosmeticsBannerCardIdMax).nullish(),
   "bannerFinish": zod.enum(['base', 'silver']).optional(),
@@ -2429,6 +2520,18 @@ export const CompletePlayerStoryNodeResponse = zod.object({
   "packTickets": zod.number(),
   "styleShards": zod.number()
 })).optional(),
+  "featuredProgress": zod.object({
+  "bannerId": zod.string(),
+  "missesBefore": zod.number(),
+  "missesAfter": zod.number(),
+  "packsBefore": zod.number(),
+  "packsAfter": zod.number(),
+  "hits": zod.array(zod.object({
+  "index": zod.number(),
+  "cardId": zod.string(),
+  "guaranteed": zod.boolean()
+}))
+}).optional(),
   "pityBefore": zod.number(),
   "pityAfter": zod.number(),
   "createdAt": zod.coerce.date()
@@ -2512,6 +2615,10 @@ export const CompletePlayerStoryNodeResponse = zod.object({
   "Legendary": zod.number().min(completePlayerStoryNodeResponseBootstrapProfileStyleShardBalancesLegendaryMin).max(completePlayerStoryNodeResponseBootstrapProfileStyleShardBalancesLegendaryMax).optional(),
   "Mythical": zod.number().min(completePlayerStoryNodeResponseBootstrapProfileStyleShardBalancesMythicalMin).max(completePlayerStoryNodeResponseBootstrapProfileStyleShardBalancesMythicalMax).optional()
 }).optional().describe('Matching rarity currencies. Super Common uses Common. Absent balances are zero; styleShards remains universal.'),
+  "featuredPackProgress": zod.record(zod.string(), zod.object({
+  "misses": zod.number().min(completePlayerStoryNodeResponseBootstrapProfileFeaturedPackProgressMissesMin).max(completePlayerStoryNodeResponseBootstrapProfileFeaturedPackProgressMissesMax),
+  "packs": zod.number().min(completePlayerStoryNodeResponseBootstrapProfileFeaturedPackProgressPacksMin)
+})).optional(),
   "packPity": zod.number(),
   "deckSlots": zod.number(),
   "cosmeticCurrency": zod.number(),
@@ -2524,6 +2631,7 @@ export const CompletePlayerStoryNodeResponse = zod.object({
   "termsAcceptedAt": zod.coerce.date().nullable(),
   "settings": zod.object({
   "cosmetics": zod.object({
+  "deckCoverId": zod.string().max(completePlayerStoryNodeResponseBootstrapProfileSettingsCosmeticsDeckCoverIdMax).nullish().describe('Owned deck cover. Null restores the default cover.'),
   "playerMatId": zod.string().max(completePlayerStoryNodeResponseBootstrapProfileSettingsCosmeticsPlayerMatIdMax).nullish().describe('Owned player mat for PvP and training. Null restores the free venue.'),
   "bannerCardId": zod.string().max(completePlayerStoryNodeResponseBootstrapProfileSettingsCosmeticsBannerCardIdMax).nullish(),
   "bannerFinish": zod.enum(['base', 'silver']).optional(),
@@ -2579,6 +2687,18 @@ export const CompletePlayerStoryNodeResponse = zod.object({
   "packTickets": zod.number(),
   "styleShards": zod.number()
 })).optional(),
+  "featuredProgress": zod.object({
+  "bannerId": zod.string(),
+  "missesBefore": zod.number(),
+  "missesAfter": zod.number(),
+  "packsBefore": zod.number(),
+  "packsAfter": zod.number(),
+  "hits": zod.array(zod.object({
+  "index": zod.number(),
+  "cardId": zod.string(),
+  "guaranteed": zod.boolean()
+}))
+}).optional(),
   "pityBefore": zod.number(),
   "pityAfter": zod.number(),
   "createdAt": zod.coerce.date()
@@ -2696,6 +2816,13 @@ export const completePlayerStoryPuzzleResponseCampaignCatchUpBootstrapProfileSty
 export const completePlayerStoryPuzzleResponseCampaignCatchUpBootstrapProfileStyleShardBalancesMythicalMin = 0;
 export const completePlayerStoryPuzzleResponseCampaignCatchUpBootstrapProfileStyleShardBalancesMythicalMax = 2147483647;
 
+export const completePlayerStoryPuzzleResponseCampaignCatchUpBootstrapProfileFeaturedPackProgressMissesMin = 0;
+export const completePlayerStoryPuzzleResponseCampaignCatchUpBootstrapProfileFeaturedPackProgressMissesMax = 9;
+
+export const completePlayerStoryPuzzleResponseCampaignCatchUpBootstrapProfileFeaturedPackProgressPacksMin = 0;
+
+export const completePlayerStoryPuzzleResponseCampaignCatchUpBootstrapProfileSettingsCosmeticsDeckCoverIdMax = 80;
+
 export const completePlayerStoryPuzzleResponseCampaignCatchUpBootstrapProfileSettingsCosmeticsPlayerMatIdMax = 80;
 
 export const completePlayerStoryPuzzleResponseCampaignCatchUpBootstrapProfileSettingsCosmeticsBannerCardIdMax = 64;
@@ -2730,6 +2857,13 @@ export const completePlayerStoryPuzzleResponseBootstrapProfileStyleShardBalances
 
 export const completePlayerStoryPuzzleResponseBootstrapProfileStyleShardBalancesMythicalMin = 0;
 export const completePlayerStoryPuzzleResponseBootstrapProfileStyleShardBalancesMythicalMax = 2147483647;
+
+export const completePlayerStoryPuzzleResponseBootstrapProfileFeaturedPackProgressMissesMin = 0;
+export const completePlayerStoryPuzzleResponseBootstrapProfileFeaturedPackProgressMissesMax = 9;
+
+export const completePlayerStoryPuzzleResponseBootstrapProfileFeaturedPackProgressPacksMin = 0;
+
+export const completePlayerStoryPuzzleResponseBootstrapProfileSettingsCosmeticsDeckCoverIdMax = 80;
 
 export const completePlayerStoryPuzzleResponseBootstrapProfileSettingsCosmeticsPlayerMatIdMax = 80;
 
@@ -2844,6 +2978,10 @@ export const CompletePlayerStoryPuzzleResponse = zod.object({
   "Legendary": zod.number().min(completePlayerStoryPuzzleResponseCampaignCatchUpBootstrapProfileStyleShardBalancesLegendaryMin).max(completePlayerStoryPuzzleResponseCampaignCatchUpBootstrapProfileStyleShardBalancesLegendaryMax).optional(),
   "Mythical": zod.number().min(completePlayerStoryPuzzleResponseCampaignCatchUpBootstrapProfileStyleShardBalancesMythicalMin).max(completePlayerStoryPuzzleResponseCampaignCatchUpBootstrapProfileStyleShardBalancesMythicalMax).optional()
 }).optional().describe('Matching rarity currencies. Super Common uses Common. Absent balances are zero; styleShards remains universal.'),
+  "featuredPackProgress": zod.record(zod.string(), zod.object({
+  "misses": zod.number().min(completePlayerStoryPuzzleResponseCampaignCatchUpBootstrapProfileFeaturedPackProgressMissesMin).max(completePlayerStoryPuzzleResponseCampaignCatchUpBootstrapProfileFeaturedPackProgressMissesMax),
+  "packs": zod.number().min(completePlayerStoryPuzzleResponseCampaignCatchUpBootstrapProfileFeaturedPackProgressPacksMin)
+})).optional(),
   "packPity": zod.number(),
   "deckSlots": zod.number(),
   "cosmeticCurrency": zod.number(),
@@ -2856,6 +2994,7 @@ export const CompletePlayerStoryPuzzleResponse = zod.object({
   "termsAcceptedAt": zod.coerce.date().nullable(),
   "settings": zod.object({
   "cosmetics": zod.object({
+  "deckCoverId": zod.string().max(completePlayerStoryPuzzleResponseCampaignCatchUpBootstrapProfileSettingsCosmeticsDeckCoverIdMax).nullish().describe('Owned deck cover. Null restores the default cover.'),
   "playerMatId": zod.string().max(completePlayerStoryPuzzleResponseCampaignCatchUpBootstrapProfileSettingsCosmeticsPlayerMatIdMax).nullish().describe('Owned player mat for PvP and training. Null restores the free venue.'),
   "bannerCardId": zod.string().max(completePlayerStoryPuzzleResponseCampaignCatchUpBootstrapProfileSettingsCosmeticsBannerCardIdMax).nullish(),
   "bannerFinish": zod.enum(['base', 'silver']).optional(),
@@ -2911,6 +3050,18 @@ export const CompletePlayerStoryPuzzleResponse = zod.object({
   "packTickets": zod.number(),
   "styleShards": zod.number()
 })).optional(),
+  "featuredProgress": zod.object({
+  "bannerId": zod.string(),
+  "missesBefore": zod.number(),
+  "missesAfter": zod.number(),
+  "packsBefore": zod.number(),
+  "packsAfter": zod.number(),
+  "hits": zod.array(zod.object({
+  "index": zod.number(),
+  "cardId": zod.string(),
+  "guaranteed": zod.boolean()
+}))
+}).optional(),
   "pityBefore": zod.number(),
   "pityAfter": zod.number(),
   "createdAt": zod.coerce.date()
@@ -2994,6 +3145,10 @@ export const CompletePlayerStoryPuzzleResponse = zod.object({
   "Legendary": zod.number().min(completePlayerStoryPuzzleResponseBootstrapProfileStyleShardBalancesLegendaryMin).max(completePlayerStoryPuzzleResponseBootstrapProfileStyleShardBalancesLegendaryMax).optional(),
   "Mythical": zod.number().min(completePlayerStoryPuzzleResponseBootstrapProfileStyleShardBalancesMythicalMin).max(completePlayerStoryPuzzleResponseBootstrapProfileStyleShardBalancesMythicalMax).optional()
 }).optional().describe('Matching rarity currencies. Super Common uses Common. Absent balances are zero; styleShards remains universal.'),
+  "featuredPackProgress": zod.record(zod.string(), zod.object({
+  "misses": zod.number().min(completePlayerStoryPuzzleResponseBootstrapProfileFeaturedPackProgressMissesMin).max(completePlayerStoryPuzzleResponseBootstrapProfileFeaturedPackProgressMissesMax),
+  "packs": zod.number().min(completePlayerStoryPuzzleResponseBootstrapProfileFeaturedPackProgressPacksMin)
+})).optional(),
   "packPity": zod.number(),
   "deckSlots": zod.number(),
   "cosmeticCurrency": zod.number(),
@@ -3006,6 +3161,7 @@ export const CompletePlayerStoryPuzzleResponse = zod.object({
   "termsAcceptedAt": zod.coerce.date().nullable(),
   "settings": zod.object({
   "cosmetics": zod.object({
+  "deckCoverId": zod.string().max(completePlayerStoryPuzzleResponseBootstrapProfileSettingsCosmeticsDeckCoverIdMax).nullish().describe('Owned deck cover. Null restores the default cover.'),
   "playerMatId": zod.string().max(completePlayerStoryPuzzleResponseBootstrapProfileSettingsCosmeticsPlayerMatIdMax).nullish().describe('Owned player mat for PvP and training. Null restores the free venue.'),
   "bannerCardId": zod.string().max(completePlayerStoryPuzzleResponseBootstrapProfileSettingsCosmeticsBannerCardIdMax).nullish(),
   "bannerFinish": zod.enum(['base', 'silver']).optional(),
@@ -3061,6 +3217,18 @@ export const CompletePlayerStoryPuzzleResponse = zod.object({
   "packTickets": zod.number(),
   "styleShards": zod.number()
 })).optional(),
+  "featuredProgress": zod.object({
+  "bannerId": zod.string(),
+  "missesBefore": zod.number(),
+  "missesAfter": zod.number(),
+  "packsBefore": zod.number(),
+  "packsAfter": zod.number(),
+  "hits": zod.array(zod.object({
+  "index": zod.number(),
+  "cardId": zod.string(),
+  "guaranteed": zod.boolean()
+}))
+}).optional(),
   "pityBefore": zod.number(),
   "pityAfter": zod.number(),
   "createdAt": zod.coerce.date()
@@ -3178,6 +3346,13 @@ export const savePlayerStoryDialogueResponseCampaignCatchUpBootstrapProfileStyle
 export const savePlayerStoryDialogueResponseCampaignCatchUpBootstrapProfileStyleShardBalancesMythicalMin = 0;
 export const savePlayerStoryDialogueResponseCampaignCatchUpBootstrapProfileStyleShardBalancesMythicalMax = 2147483647;
 
+export const savePlayerStoryDialogueResponseCampaignCatchUpBootstrapProfileFeaturedPackProgressMissesMin = 0;
+export const savePlayerStoryDialogueResponseCampaignCatchUpBootstrapProfileFeaturedPackProgressMissesMax = 9;
+
+export const savePlayerStoryDialogueResponseCampaignCatchUpBootstrapProfileFeaturedPackProgressPacksMin = 0;
+
+export const savePlayerStoryDialogueResponseCampaignCatchUpBootstrapProfileSettingsCosmeticsDeckCoverIdMax = 80;
+
 export const savePlayerStoryDialogueResponseCampaignCatchUpBootstrapProfileSettingsCosmeticsPlayerMatIdMax = 80;
 
 export const savePlayerStoryDialogueResponseCampaignCatchUpBootstrapProfileSettingsCosmeticsBannerCardIdMax = 64;
@@ -3212,6 +3387,13 @@ export const savePlayerStoryDialogueResponseBootstrapProfileStyleShardBalancesLe
 
 export const savePlayerStoryDialogueResponseBootstrapProfileStyleShardBalancesMythicalMin = 0;
 export const savePlayerStoryDialogueResponseBootstrapProfileStyleShardBalancesMythicalMax = 2147483647;
+
+export const savePlayerStoryDialogueResponseBootstrapProfileFeaturedPackProgressMissesMin = 0;
+export const savePlayerStoryDialogueResponseBootstrapProfileFeaturedPackProgressMissesMax = 9;
+
+export const savePlayerStoryDialogueResponseBootstrapProfileFeaturedPackProgressPacksMin = 0;
+
+export const savePlayerStoryDialogueResponseBootstrapProfileSettingsCosmeticsDeckCoverIdMax = 80;
 
 export const savePlayerStoryDialogueResponseBootstrapProfileSettingsCosmeticsPlayerMatIdMax = 80;
 
@@ -3326,6 +3508,10 @@ export const SavePlayerStoryDialogueResponse = zod.object({
   "Legendary": zod.number().min(savePlayerStoryDialogueResponseCampaignCatchUpBootstrapProfileStyleShardBalancesLegendaryMin).max(savePlayerStoryDialogueResponseCampaignCatchUpBootstrapProfileStyleShardBalancesLegendaryMax).optional(),
   "Mythical": zod.number().min(savePlayerStoryDialogueResponseCampaignCatchUpBootstrapProfileStyleShardBalancesMythicalMin).max(savePlayerStoryDialogueResponseCampaignCatchUpBootstrapProfileStyleShardBalancesMythicalMax).optional()
 }).optional().describe('Matching rarity currencies. Super Common uses Common. Absent balances are zero; styleShards remains universal.'),
+  "featuredPackProgress": zod.record(zod.string(), zod.object({
+  "misses": zod.number().min(savePlayerStoryDialogueResponseCampaignCatchUpBootstrapProfileFeaturedPackProgressMissesMin).max(savePlayerStoryDialogueResponseCampaignCatchUpBootstrapProfileFeaturedPackProgressMissesMax),
+  "packs": zod.number().min(savePlayerStoryDialogueResponseCampaignCatchUpBootstrapProfileFeaturedPackProgressPacksMin)
+})).optional(),
   "packPity": zod.number(),
   "deckSlots": zod.number(),
   "cosmeticCurrency": zod.number(),
@@ -3338,6 +3524,7 @@ export const SavePlayerStoryDialogueResponse = zod.object({
   "termsAcceptedAt": zod.coerce.date().nullable(),
   "settings": zod.object({
   "cosmetics": zod.object({
+  "deckCoverId": zod.string().max(savePlayerStoryDialogueResponseCampaignCatchUpBootstrapProfileSettingsCosmeticsDeckCoverIdMax).nullish().describe('Owned deck cover. Null restores the default cover.'),
   "playerMatId": zod.string().max(savePlayerStoryDialogueResponseCampaignCatchUpBootstrapProfileSettingsCosmeticsPlayerMatIdMax).nullish().describe('Owned player mat for PvP and training. Null restores the free venue.'),
   "bannerCardId": zod.string().max(savePlayerStoryDialogueResponseCampaignCatchUpBootstrapProfileSettingsCosmeticsBannerCardIdMax).nullish(),
   "bannerFinish": zod.enum(['base', 'silver']).optional(),
@@ -3393,6 +3580,18 @@ export const SavePlayerStoryDialogueResponse = zod.object({
   "packTickets": zod.number(),
   "styleShards": zod.number()
 })).optional(),
+  "featuredProgress": zod.object({
+  "bannerId": zod.string(),
+  "missesBefore": zod.number(),
+  "missesAfter": zod.number(),
+  "packsBefore": zod.number(),
+  "packsAfter": zod.number(),
+  "hits": zod.array(zod.object({
+  "index": zod.number(),
+  "cardId": zod.string(),
+  "guaranteed": zod.boolean()
+}))
+}).optional(),
   "pityBefore": zod.number(),
   "pityAfter": zod.number(),
   "createdAt": zod.coerce.date()
@@ -3476,6 +3675,10 @@ export const SavePlayerStoryDialogueResponse = zod.object({
   "Legendary": zod.number().min(savePlayerStoryDialogueResponseBootstrapProfileStyleShardBalancesLegendaryMin).max(savePlayerStoryDialogueResponseBootstrapProfileStyleShardBalancesLegendaryMax).optional(),
   "Mythical": zod.number().min(savePlayerStoryDialogueResponseBootstrapProfileStyleShardBalancesMythicalMin).max(savePlayerStoryDialogueResponseBootstrapProfileStyleShardBalancesMythicalMax).optional()
 }).optional().describe('Matching rarity currencies. Super Common uses Common. Absent balances are zero; styleShards remains universal.'),
+  "featuredPackProgress": zod.record(zod.string(), zod.object({
+  "misses": zod.number().min(savePlayerStoryDialogueResponseBootstrapProfileFeaturedPackProgressMissesMin).max(savePlayerStoryDialogueResponseBootstrapProfileFeaturedPackProgressMissesMax),
+  "packs": zod.number().min(savePlayerStoryDialogueResponseBootstrapProfileFeaturedPackProgressPacksMin)
+})).optional(),
   "packPity": zod.number(),
   "deckSlots": zod.number(),
   "cosmeticCurrency": zod.number(),
@@ -3488,6 +3691,7 @@ export const SavePlayerStoryDialogueResponse = zod.object({
   "termsAcceptedAt": zod.coerce.date().nullable(),
   "settings": zod.object({
   "cosmetics": zod.object({
+  "deckCoverId": zod.string().max(savePlayerStoryDialogueResponseBootstrapProfileSettingsCosmeticsDeckCoverIdMax).nullish().describe('Owned deck cover. Null restores the default cover.'),
   "playerMatId": zod.string().max(savePlayerStoryDialogueResponseBootstrapProfileSettingsCosmeticsPlayerMatIdMax).nullish().describe('Owned player mat for PvP and training. Null restores the free venue.'),
   "bannerCardId": zod.string().max(savePlayerStoryDialogueResponseBootstrapProfileSettingsCosmeticsBannerCardIdMax).nullish(),
   "bannerFinish": zod.enum(['base', 'silver']).optional(),
@@ -3543,6 +3747,18 @@ export const SavePlayerStoryDialogueResponse = zod.object({
   "packTickets": zod.number(),
   "styleShards": zod.number()
 })).optional(),
+  "featuredProgress": zod.object({
+  "bannerId": zod.string(),
+  "missesBefore": zod.number(),
+  "missesAfter": zod.number(),
+  "packsBefore": zod.number(),
+  "packsAfter": zod.number(),
+  "hits": zod.array(zod.object({
+  "index": zod.number(),
+  "cardId": zod.string(),
+  "guaranteed": zod.boolean()
+}))
+}).optional(),
   "pityBefore": zod.number(),
   "pityAfter": zod.number(),
   "createdAt": zod.coerce.date()
@@ -3672,6 +3888,13 @@ export const updatePlayerProfileResponseProfileStyleShardBalancesLegendaryMax = 
 export const updatePlayerProfileResponseProfileStyleShardBalancesMythicalMin = 0;
 export const updatePlayerProfileResponseProfileStyleShardBalancesMythicalMax = 2147483647;
 
+export const updatePlayerProfileResponseProfileFeaturedPackProgressMissesMin = 0;
+export const updatePlayerProfileResponseProfileFeaturedPackProgressMissesMax = 9;
+
+export const updatePlayerProfileResponseProfileFeaturedPackProgressPacksMin = 0;
+
+export const updatePlayerProfileResponseProfileSettingsCosmeticsDeckCoverIdMax = 80;
+
 export const updatePlayerProfileResponseProfileSettingsCosmeticsPlayerMatIdMax = 80;
 
 export const updatePlayerProfileResponseProfileSettingsCosmeticsBannerCardIdMax = 64;
@@ -3712,6 +3935,10 @@ export const UpdatePlayerProfileResponse = zod.object({
   "Legendary": zod.number().min(updatePlayerProfileResponseProfileStyleShardBalancesLegendaryMin).max(updatePlayerProfileResponseProfileStyleShardBalancesLegendaryMax).optional(),
   "Mythical": zod.number().min(updatePlayerProfileResponseProfileStyleShardBalancesMythicalMin).max(updatePlayerProfileResponseProfileStyleShardBalancesMythicalMax).optional()
 }).optional().describe('Matching rarity currencies. Super Common uses Common. Absent balances are zero; styleShards remains universal.'),
+  "featuredPackProgress": zod.record(zod.string(), zod.object({
+  "misses": zod.number().min(updatePlayerProfileResponseProfileFeaturedPackProgressMissesMin).max(updatePlayerProfileResponseProfileFeaturedPackProgressMissesMax),
+  "packs": zod.number().min(updatePlayerProfileResponseProfileFeaturedPackProgressPacksMin)
+})).optional(),
   "packPity": zod.number(),
   "deckSlots": zod.number(),
   "cosmeticCurrency": zod.number(),
@@ -3724,6 +3951,7 @@ export const UpdatePlayerProfileResponse = zod.object({
   "termsAcceptedAt": zod.coerce.date().nullable(),
   "settings": zod.object({
   "cosmetics": zod.object({
+  "deckCoverId": zod.string().max(updatePlayerProfileResponseProfileSettingsCosmeticsDeckCoverIdMax).nullish().describe('Owned deck cover. Null restores the default cover.'),
   "playerMatId": zod.string().max(updatePlayerProfileResponseProfileSettingsCosmeticsPlayerMatIdMax).nullish().describe('Owned player mat for PvP and training. Null restores the free venue.'),
   "bannerCardId": zod.string().max(updatePlayerProfileResponseProfileSettingsCosmeticsBannerCardIdMax).nullish(),
   "bannerFinish": zod.enum(['base', 'silver']).optional(),
@@ -3779,6 +4007,18 @@ export const UpdatePlayerProfileResponse = zod.object({
   "packTickets": zod.number(),
   "styleShards": zod.number()
 })).optional(),
+  "featuredProgress": zod.object({
+  "bannerId": zod.string(),
+  "missesBefore": zod.number(),
+  "missesAfter": zod.number(),
+  "packsBefore": zod.number(),
+  "packsAfter": zod.number(),
+  "hits": zod.array(zod.object({
+  "index": zod.number(),
+  "cardId": zod.string(),
+  "guaranteed": zod.boolean()
+}))
+}).optional(),
   "pityBefore": zod.number(),
   "pityAfter": zod.number(),
   "createdAt": zod.coerce.date()
@@ -3877,6 +4117,13 @@ export const advancePlayerOnboardingResponseProfileStyleShardBalancesLegendaryMa
 export const advancePlayerOnboardingResponseProfileStyleShardBalancesMythicalMin = 0;
 export const advancePlayerOnboardingResponseProfileStyleShardBalancesMythicalMax = 2147483647;
 
+export const advancePlayerOnboardingResponseProfileFeaturedPackProgressMissesMin = 0;
+export const advancePlayerOnboardingResponseProfileFeaturedPackProgressMissesMax = 9;
+
+export const advancePlayerOnboardingResponseProfileFeaturedPackProgressPacksMin = 0;
+
+export const advancePlayerOnboardingResponseProfileSettingsCosmeticsDeckCoverIdMax = 80;
+
 export const advancePlayerOnboardingResponseProfileSettingsCosmeticsPlayerMatIdMax = 80;
 
 export const advancePlayerOnboardingResponseProfileSettingsCosmeticsBannerCardIdMax = 64;
@@ -3917,6 +4164,10 @@ export const AdvancePlayerOnboardingResponse = zod.object({
   "Legendary": zod.number().min(advancePlayerOnboardingResponseProfileStyleShardBalancesLegendaryMin).max(advancePlayerOnboardingResponseProfileStyleShardBalancesLegendaryMax).optional(),
   "Mythical": zod.number().min(advancePlayerOnboardingResponseProfileStyleShardBalancesMythicalMin).max(advancePlayerOnboardingResponseProfileStyleShardBalancesMythicalMax).optional()
 }).optional().describe('Matching rarity currencies. Super Common uses Common. Absent balances are zero; styleShards remains universal.'),
+  "featuredPackProgress": zod.record(zod.string(), zod.object({
+  "misses": zod.number().min(advancePlayerOnboardingResponseProfileFeaturedPackProgressMissesMin).max(advancePlayerOnboardingResponseProfileFeaturedPackProgressMissesMax),
+  "packs": zod.number().min(advancePlayerOnboardingResponseProfileFeaturedPackProgressPacksMin)
+})).optional(),
   "packPity": zod.number(),
   "deckSlots": zod.number(),
   "cosmeticCurrency": zod.number(),
@@ -3929,6 +4180,7 @@ export const AdvancePlayerOnboardingResponse = zod.object({
   "termsAcceptedAt": zod.coerce.date().nullable(),
   "settings": zod.object({
   "cosmetics": zod.object({
+  "deckCoverId": zod.string().max(advancePlayerOnboardingResponseProfileSettingsCosmeticsDeckCoverIdMax).nullish().describe('Owned deck cover. Null restores the default cover.'),
   "playerMatId": zod.string().max(advancePlayerOnboardingResponseProfileSettingsCosmeticsPlayerMatIdMax).nullish().describe('Owned player mat for PvP and training. Null restores the free venue.'),
   "bannerCardId": zod.string().max(advancePlayerOnboardingResponseProfileSettingsCosmeticsBannerCardIdMax).nullish(),
   "bannerFinish": zod.enum(['base', 'silver']).optional(),
@@ -3984,6 +4236,18 @@ export const AdvancePlayerOnboardingResponse = zod.object({
   "packTickets": zod.number(),
   "styleShards": zod.number()
 })).optional(),
+  "featuredProgress": zod.object({
+  "bannerId": zod.string(),
+  "missesBefore": zod.number(),
+  "missesAfter": zod.number(),
+  "packsBefore": zod.number(),
+  "packsAfter": zod.number(),
+  "hits": zod.array(zod.object({
+  "index": zod.number(),
+  "cardId": zod.string(),
+  "guaranteed": zod.boolean()
+}))
+}).optional(),
   "pityBefore": zod.number(),
   "pityAfter": zod.number(),
   "createdAt": zod.coerce.date()
@@ -4075,6 +4339,13 @@ export const claimExperimentCardResponseProfileStyleShardBalancesLegendaryMax = 
 export const claimExperimentCardResponseProfileStyleShardBalancesMythicalMin = 0;
 export const claimExperimentCardResponseProfileStyleShardBalancesMythicalMax = 2147483647;
 
+export const claimExperimentCardResponseProfileFeaturedPackProgressMissesMin = 0;
+export const claimExperimentCardResponseProfileFeaturedPackProgressMissesMax = 9;
+
+export const claimExperimentCardResponseProfileFeaturedPackProgressPacksMin = 0;
+
+export const claimExperimentCardResponseProfileSettingsCosmeticsDeckCoverIdMax = 80;
+
 export const claimExperimentCardResponseProfileSettingsCosmeticsPlayerMatIdMax = 80;
 
 export const claimExperimentCardResponseProfileSettingsCosmeticsBannerCardIdMax = 64;
@@ -4115,6 +4386,10 @@ export const ClaimExperimentCardResponse = zod.object({
   "Legendary": zod.number().min(claimExperimentCardResponseProfileStyleShardBalancesLegendaryMin).max(claimExperimentCardResponseProfileStyleShardBalancesLegendaryMax).optional(),
   "Mythical": zod.number().min(claimExperimentCardResponseProfileStyleShardBalancesMythicalMin).max(claimExperimentCardResponseProfileStyleShardBalancesMythicalMax).optional()
 }).optional().describe('Matching rarity currencies. Super Common uses Common. Absent balances are zero; styleShards remains universal.'),
+  "featuredPackProgress": zod.record(zod.string(), zod.object({
+  "misses": zod.number().min(claimExperimentCardResponseProfileFeaturedPackProgressMissesMin).max(claimExperimentCardResponseProfileFeaturedPackProgressMissesMax),
+  "packs": zod.number().min(claimExperimentCardResponseProfileFeaturedPackProgressPacksMin)
+})).optional(),
   "packPity": zod.number(),
   "deckSlots": zod.number(),
   "cosmeticCurrency": zod.number(),
@@ -4127,6 +4402,7 @@ export const ClaimExperimentCardResponse = zod.object({
   "termsAcceptedAt": zod.coerce.date().nullable(),
   "settings": zod.object({
   "cosmetics": zod.object({
+  "deckCoverId": zod.string().max(claimExperimentCardResponseProfileSettingsCosmeticsDeckCoverIdMax).nullish().describe('Owned deck cover. Null restores the default cover.'),
   "playerMatId": zod.string().max(claimExperimentCardResponseProfileSettingsCosmeticsPlayerMatIdMax).nullish().describe('Owned player mat for PvP and training. Null restores the free venue.'),
   "bannerCardId": zod.string().max(claimExperimentCardResponseProfileSettingsCosmeticsBannerCardIdMax).nullish(),
   "bannerFinish": zod.enum(['base', 'silver']).optional(),
@@ -4182,6 +4458,18 @@ export const ClaimExperimentCardResponse = zod.object({
   "packTickets": zod.number(),
   "styleShards": zod.number()
 })).optional(),
+  "featuredProgress": zod.object({
+  "bannerId": zod.string(),
+  "missesBefore": zod.number(),
+  "missesAfter": zod.number(),
+  "packsBefore": zod.number(),
+  "packsAfter": zod.number(),
+  "hits": zod.array(zod.object({
+  "index": zod.number(),
+  "cardId": zod.string(),
+  "guaranteed": zod.boolean()
+}))
+}).optional(),
   "pityBefore": zod.number(),
   "pityAfter": zod.number(),
   "createdAt": zod.coerce.date()
@@ -4365,6 +4653,13 @@ export const completePlayerMatchResponseProfileStyleShardBalancesLegendaryMax = 
 export const completePlayerMatchResponseProfileStyleShardBalancesMythicalMin = 0;
 export const completePlayerMatchResponseProfileStyleShardBalancesMythicalMax = 2147483647;
 
+export const completePlayerMatchResponseProfileFeaturedPackProgressMissesMin = 0;
+export const completePlayerMatchResponseProfileFeaturedPackProgressMissesMax = 9;
+
+export const completePlayerMatchResponseProfileFeaturedPackProgressPacksMin = 0;
+
+export const completePlayerMatchResponseProfileSettingsCosmeticsDeckCoverIdMax = 80;
+
 export const completePlayerMatchResponseProfileSettingsCosmeticsPlayerMatIdMax = 80;
 
 export const completePlayerMatchResponseProfileSettingsCosmeticsBannerCardIdMax = 64;
@@ -4399,6 +4694,13 @@ export const completePlayerMatchResponseCampaignOneCatchUpBootstrapProfileStyleS
 
 export const completePlayerMatchResponseCampaignOneCatchUpBootstrapProfileStyleShardBalancesMythicalMin = 0;
 export const completePlayerMatchResponseCampaignOneCatchUpBootstrapProfileStyleShardBalancesMythicalMax = 2147483647;
+
+export const completePlayerMatchResponseCampaignOneCatchUpBootstrapProfileFeaturedPackProgressMissesMin = 0;
+export const completePlayerMatchResponseCampaignOneCatchUpBootstrapProfileFeaturedPackProgressMissesMax = 9;
+
+export const completePlayerMatchResponseCampaignOneCatchUpBootstrapProfileFeaturedPackProgressPacksMin = 0;
+
+export const completePlayerMatchResponseCampaignOneCatchUpBootstrapProfileSettingsCosmeticsDeckCoverIdMax = 80;
 
 export const completePlayerMatchResponseCampaignOneCatchUpBootstrapProfileSettingsCosmeticsPlayerMatIdMax = 80;
 
@@ -4440,6 +4742,10 @@ export const CompletePlayerMatchResponse = zod.object({
   "Legendary": zod.number().min(completePlayerMatchResponseProfileStyleShardBalancesLegendaryMin).max(completePlayerMatchResponseProfileStyleShardBalancesLegendaryMax).optional(),
   "Mythical": zod.number().min(completePlayerMatchResponseProfileStyleShardBalancesMythicalMin).max(completePlayerMatchResponseProfileStyleShardBalancesMythicalMax).optional()
 }).optional().describe('Matching rarity currencies. Super Common uses Common. Absent balances are zero; styleShards remains universal.'),
+  "featuredPackProgress": zod.record(zod.string(), zod.object({
+  "misses": zod.number().min(completePlayerMatchResponseProfileFeaturedPackProgressMissesMin).max(completePlayerMatchResponseProfileFeaturedPackProgressMissesMax),
+  "packs": zod.number().min(completePlayerMatchResponseProfileFeaturedPackProgressPacksMin)
+})).optional(),
   "packPity": zod.number(),
   "deckSlots": zod.number(),
   "cosmeticCurrency": zod.number(),
@@ -4452,6 +4758,7 @@ export const CompletePlayerMatchResponse = zod.object({
   "termsAcceptedAt": zod.coerce.date().nullable(),
   "settings": zod.object({
   "cosmetics": zod.object({
+  "deckCoverId": zod.string().max(completePlayerMatchResponseProfileSettingsCosmeticsDeckCoverIdMax).nullish().describe('Owned deck cover. Null restores the default cover.'),
   "playerMatId": zod.string().max(completePlayerMatchResponseProfileSettingsCosmeticsPlayerMatIdMax).nullish().describe('Owned player mat for PvP and training. Null restores the free venue.'),
   "bannerCardId": zod.string().max(completePlayerMatchResponseProfileSettingsCosmeticsBannerCardIdMax).nullish(),
   "bannerFinish": zod.enum(['base', 'silver']).optional(),
@@ -4507,6 +4814,18 @@ export const CompletePlayerMatchResponse = zod.object({
   "packTickets": zod.number(),
   "styleShards": zod.number()
 })).optional(),
+  "featuredProgress": zod.object({
+  "bannerId": zod.string(),
+  "missesBefore": zod.number(),
+  "missesAfter": zod.number(),
+  "packsBefore": zod.number(),
+  "packsAfter": zod.number(),
+  "hits": zod.array(zod.object({
+  "index": zod.number(),
+  "cardId": zod.string(),
+  "guaranteed": zod.boolean()
+}))
+}).optional(),
   "pityBefore": zod.number(),
   "pityAfter": zod.number(),
   "createdAt": zod.coerce.date()
@@ -4652,6 +4971,10 @@ export const CompletePlayerMatchResponse = zod.object({
   "Legendary": zod.number().min(completePlayerMatchResponseCampaignOneCatchUpBootstrapProfileStyleShardBalancesLegendaryMin).max(completePlayerMatchResponseCampaignOneCatchUpBootstrapProfileStyleShardBalancesLegendaryMax).optional(),
   "Mythical": zod.number().min(completePlayerMatchResponseCampaignOneCatchUpBootstrapProfileStyleShardBalancesMythicalMin).max(completePlayerMatchResponseCampaignOneCatchUpBootstrapProfileStyleShardBalancesMythicalMax).optional()
 }).optional().describe('Matching rarity currencies. Super Common uses Common. Absent balances are zero; styleShards remains universal.'),
+  "featuredPackProgress": zod.record(zod.string(), zod.object({
+  "misses": zod.number().min(completePlayerMatchResponseCampaignOneCatchUpBootstrapProfileFeaturedPackProgressMissesMin).max(completePlayerMatchResponseCampaignOneCatchUpBootstrapProfileFeaturedPackProgressMissesMax),
+  "packs": zod.number().min(completePlayerMatchResponseCampaignOneCatchUpBootstrapProfileFeaturedPackProgressPacksMin)
+})).optional(),
   "packPity": zod.number(),
   "deckSlots": zod.number(),
   "cosmeticCurrency": zod.number(),
@@ -4664,6 +4987,7 @@ export const CompletePlayerMatchResponse = zod.object({
   "termsAcceptedAt": zod.coerce.date().nullable(),
   "settings": zod.object({
   "cosmetics": zod.object({
+  "deckCoverId": zod.string().max(completePlayerMatchResponseCampaignOneCatchUpBootstrapProfileSettingsCosmeticsDeckCoverIdMax).nullish().describe('Owned deck cover. Null restores the default cover.'),
   "playerMatId": zod.string().max(completePlayerMatchResponseCampaignOneCatchUpBootstrapProfileSettingsCosmeticsPlayerMatIdMax).nullish().describe('Owned player mat for PvP and training. Null restores the free venue.'),
   "bannerCardId": zod.string().max(completePlayerMatchResponseCampaignOneCatchUpBootstrapProfileSettingsCosmeticsBannerCardIdMax).nullish(),
   "bannerFinish": zod.enum(['base', 'silver']).optional(),
@@ -4719,6 +5043,18 @@ export const CompletePlayerMatchResponse = zod.object({
   "packTickets": zod.number(),
   "styleShards": zod.number()
 })).optional(),
+  "featuredProgress": zod.object({
+  "bannerId": zod.string(),
+  "missesBefore": zod.number(),
+  "missesAfter": zod.number(),
+  "packsBefore": zod.number(),
+  "packsAfter": zod.number(),
+  "hits": zod.array(zod.object({
+  "index": zod.number(),
+  "cardId": zod.string(),
+  "guaranteed": zod.boolean()
+}))
+}).optional(),
   "pityBefore": zod.number(),
   "pityAfter": zod.number(),
   "createdAt": zod.coerce.date()
@@ -4841,6 +5177,13 @@ export const savePlayerDeckResponseProfileStyleShardBalancesLegendaryMax = 21474
 export const savePlayerDeckResponseProfileStyleShardBalancesMythicalMin = 0;
 export const savePlayerDeckResponseProfileStyleShardBalancesMythicalMax = 2147483647;
 
+export const savePlayerDeckResponseProfileFeaturedPackProgressMissesMin = 0;
+export const savePlayerDeckResponseProfileFeaturedPackProgressMissesMax = 9;
+
+export const savePlayerDeckResponseProfileFeaturedPackProgressPacksMin = 0;
+
+export const savePlayerDeckResponseProfileSettingsCosmeticsDeckCoverIdMax = 80;
+
 export const savePlayerDeckResponseProfileSettingsCosmeticsPlayerMatIdMax = 80;
 
 export const savePlayerDeckResponseProfileSettingsCosmeticsBannerCardIdMax = 64;
@@ -4881,6 +5224,10 @@ export const SavePlayerDeckResponse = zod.object({
   "Legendary": zod.number().min(savePlayerDeckResponseProfileStyleShardBalancesLegendaryMin).max(savePlayerDeckResponseProfileStyleShardBalancesLegendaryMax).optional(),
   "Mythical": zod.number().min(savePlayerDeckResponseProfileStyleShardBalancesMythicalMin).max(savePlayerDeckResponseProfileStyleShardBalancesMythicalMax).optional()
 }).optional().describe('Matching rarity currencies. Super Common uses Common. Absent balances are zero; styleShards remains universal.'),
+  "featuredPackProgress": zod.record(zod.string(), zod.object({
+  "misses": zod.number().min(savePlayerDeckResponseProfileFeaturedPackProgressMissesMin).max(savePlayerDeckResponseProfileFeaturedPackProgressMissesMax),
+  "packs": zod.number().min(savePlayerDeckResponseProfileFeaturedPackProgressPacksMin)
+})).optional(),
   "packPity": zod.number(),
   "deckSlots": zod.number(),
   "cosmeticCurrency": zod.number(),
@@ -4893,6 +5240,7 @@ export const SavePlayerDeckResponse = zod.object({
   "termsAcceptedAt": zod.coerce.date().nullable(),
   "settings": zod.object({
   "cosmetics": zod.object({
+  "deckCoverId": zod.string().max(savePlayerDeckResponseProfileSettingsCosmeticsDeckCoverIdMax).nullish().describe('Owned deck cover. Null restores the default cover.'),
   "playerMatId": zod.string().max(savePlayerDeckResponseProfileSettingsCosmeticsPlayerMatIdMax).nullish().describe('Owned player mat for PvP and training. Null restores the free venue.'),
   "bannerCardId": zod.string().max(savePlayerDeckResponseProfileSettingsCosmeticsBannerCardIdMax).nullish(),
   "bannerFinish": zod.enum(['base', 'silver']).optional(),
@@ -4948,6 +5296,18 @@ export const SavePlayerDeckResponse = zod.object({
   "packTickets": zod.number(),
   "styleShards": zod.number()
 })).optional(),
+  "featuredProgress": zod.object({
+  "bannerId": zod.string(),
+  "missesBefore": zod.number(),
+  "missesAfter": zod.number(),
+  "packsBefore": zod.number(),
+  "packsAfter": zod.number(),
+  "hits": zod.array(zod.object({
+  "index": zod.number(),
+  "cardId": zod.string(),
+  "guaranteed": zod.boolean()
+}))
+}).optional(),
   "pityBefore": zod.number(),
   "pityAfter": zod.number(),
   "createdAt": zod.coerce.date()
@@ -5040,6 +5400,13 @@ export const deletePlayerDeckResponseProfileStyleShardBalancesLegendaryMax = 214
 export const deletePlayerDeckResponseProfileStyleShardBalancesMythicalMin = 0;
 export const deletePlayerDeckResponseProfileStyleShardBalancesMythicalMax = 2147483647;
 
+export const deletePlayerDeckResponseProfileFeaturedPackProgressMissesMin = 0;
+export const deletePlayerDeckResponseProfileFeaturedPackProgressMissesMax = 9;
+
+export const deletePlayerDeckResponseProfileFeaturedPackProgressPacksMin = 0;
+
+export const deletePlayerDeckResponseProfileSettingsCosmeticsDeckCoverIdMax = 80;
+
 export const deletePlayerDeckResponseProfileSettingsCosmeticsPlayerMatIdMax = 80;
 
 export const deletePlayerDeckResponseProfileSettingsCosmeticsBannerCardIdMax = 64;
@@ -5080,6 +5447,10 @@ export const DeletePlayerDeckResponse = zod.object({
   "Legendary": zod.number().min(deletePlayerDeckResponseProfileStyleShardBalancesLegendaryMin).max(deletePlayerDeckResponseProfileStyleShardBalancesLegendaryMax).optional(),
   "Mythical": zod.number().min(deletePlayerDeckResponseProfileStyleShardBalancesMythicalMin).max(deletePlayerDeckResponseProfileStyleShardBalancesMythicalMax).optional()
 }).optional().describe('Matching rarity currencies. Super Common uses Common. Absent balances are zero; styleShards remains universal.'),
+  "featuredPackProgress": zod.record(zod.string(), zod.object({
+  "misses": zod.number().min(deletePlayerDeckResponseProfileFeaturedPackProgressMissesMin).max(deletePlayerDeckResponseProfileFeaturedPackProgressMissesMax),
+  "packs": zod.number().min(deletePlayerDeckResponseProfileFeaturedPackProgressPacksMin)
+})).optional(),
   "packPity": zod.number(),
   "deckSlots": zod.number(),
   "cosmeticCurrency": zod.number(),
@@ -5092,6 +5463,7 @@ export const DeletePlayerDeckResponse = zod.object({
   "termsAcceptedAt": zod.coerce.date().nullable(),
   "settings": zod.object({
   "cosmetics": zod.object({
+  "deckCoverId": zod.string().max(deletePlayerDeckResponseProfileSettingsCosmeticsDeckCoverIdMax).nullish().describe('Owned deck cover. Null restores the default cover.'),
   "playerMatId": zod.string().max(deletePlayerDeckResponseProfileSettingsCosmeticsPlayerMatIdMax).nullish().describe('Owned player mat for PvP and training. Null restores the free venue.'),
   "bannerCardId": zod.string().max(deletePlayerDeckResponseProfileSettingsCosmeticsBannerCardIdMax).nullish(),
   "bannerFinish": zod.enum(['base', 'silver']).optional(),
@@ -5147,6 +5519,18 @@ export const DeletePlayerDeckResponse = zod.object({
   "packTickets": zod.number(),
   "styleShards": zod.number()
 })).optional(),
+  "featuredProgress": zod.object({
+  "bannerId": zod.string(),
+  "missesBefore": zod.number(),
+  "missesAfter": zod.number(),
+  "packsBefore": zod.number(),
+  "packsAfter": zod.number(),
+  "hits": zod.array(zod.object({
+  "index": zod.number(),
+  "cardId": zod.string(),
+  "guaranteed": zod.boolean()
+}))
+}).optional(),
   "pityBefore": zod.number(),
   "pityAfter": zod.number(),
   "createdAt": zod.coerce.date()
@@ -5247,6 +5631,13 @@ export const openPlayerPackResponseBootstrapProfileStyleShardBalancesLegendaryMa
 export const openPlayerPackResponseBootstrapProfileStyleShardBalancesMythicalMin = 0;
 export const openPlayerPackResponseBootstrapProfileStyleShardBalancesMythicalMax = 2147483647;
 
+export const openPlayerPackResponseBootstrapProfileFeaturedPackProgressMissesMin = 0;
+export const openPlayerPackResponseBootstrapProfileFeaturedPackProgressMissesMax = 9;
+
+export const openPlayerPackResponseBootstrapProfileFeaturedPackProgressPacksMin = 0;
+
+export const openPlayerPackResponseBootstrapProfileSettingsCosmeticsDeckCoverIdMax = 80;
+
 export const openPlayerPackResponseBootstrapProfileSettingsCosmeticsPlayerMatIdMax = 80;
 
 export const openPlayerPackResponseBootstrapProfileSettingsCosmeticsBannerCardIdMax = 64;
@@ -5288,6 +5679,10 @@ export const OpenPlayerPackResponse = zod.object({
   "Legendary": zod.number().min(openPlayerPackResponseBootstrapProfileStyleShardBalancesLegendaryMin).max(openPlayerPackResponseBootstrapProfileStyleShardBalancesLegendaryMax).optional(),
   "Mythical": zod.number().min(openPlayerPackResponseBootstrapProfileStyleShardBalancesMythicalMin).max(openPlayerPackResponseBootstrapProfileStyleShardBalancesMythicalMax).optional()
 }).optional().describe('Matching rarity currencies. Super Common uses Common. Absent balances are zero; styleShards remains universal.'),
+  "featuredPackProgress": zod.record(zod.string(), zod.object({
+  "misses": zod.number().min(openPlayerPackResponseBootstrapProfileFeaturedPackProgressMissesMin).max(openPlayerPackResponseBootstrapProfileFeaturedPackProgressMissesMax),
+  "packs": zod.number().min(openPlayerPackResponseBootstrapProfileFeaturedPackProgressPacksMin)
+})).optional(),
   "packPity": zod.number(),
   "deckSlots": zod.number(),
   "cosmeticCurrency": zod.number(),
@@ -5300,6 +5695,7 @@ export const OpenPlayerPackResponse = zod.object({
   "termsAcceptedAt": zod.coerce.date().nullable(),
   "settings": zod.object({
   "cosmetics": zod.object({
+  "deckCoverId": zod.string().max(openPlayerPackResponseBootstrapProfileSettingsCosmeticsDeckCoverIdMax).nullish().describe('Owned deck cover. Null restores the default cover.'),
   "playerMatId": zod.string().max(openPlayerPackResponseBootstrapProfileSettingsCosmeticsPlayerMatIdMax).nullish().describe('Owned player mat for PvP and training. Null restores the free venue.'),
   "bannerCardId": zod.string().max(openPlayerPackResponseBootstrapProfileSettingsCosmeticsBannerCardIdMax).nullish(),
   "bannerFinish": zod.enum(['base', 'silver']).optional(),
@@ -5355,6 +5751,18 @@ export const OpenPlayerPackResponse = zod.object({
   "packTickets": zod.number(),
   "styleShards": zod.number()
 })).optional(),
+  "featuredProgress": zod.object({
+  "bannerId": zod.string(),
+  "missesBefore": zod.number(),
+  "missesAfter": zod.number(),
+  "packsBefore": zod.number(),
+  "packsAfter": zod.number(),
+  "hits": zod.array(zod.object({
+  "index": zod.number(),
+  "cardId": zod.string(),
+  "guaranteed": zod.boolean()
+}))
+}).optional(),
   "pityBefore": zod.number(),
   "pityAfter": zod.number(),
   "createdAt": zod.coerce.date()
@@ -5438,6 +5846,18 @@ export const OpenPlayerPackResponse = zod.object({
   "packTickets": zod.number(),
   "styleShards": zod.number()
 })).optional(),
+  "featuredProgress": zod.object({
+  "bannerId": zod.string(),
+  "missesBefore": zod.number(),
+  "missesAfter": zod.number(),
+  "packsBefore": zod.number(),
+  "packsAfter": zod.number(),
+  "hits": zod.array(zod.object({
+  "index": zod.number(),
+  "cardId": zod.string(),
+  "guaranteed": zod.boolean()
+}))
+}).optional(),
   "pityBefore": zod.number(),
   "pityAfter": zod.number(),
   "createdAt": zod.coerce.date()
@@ -5494,6 +5914,13 @@ export const craftPlayerVariantResponseBootstrapProfileStyleShardBalancesLegenda
 export const craftPlayerVariantResponseBootstrapProfileStyleShardBalancesMythicalMin = 0;
 export const craftPlayerVariantResponseBootstrapProfileStyleShardBalancesMythicalMax = 2147483647;
 
+export const craftPlayerVariantResponseBootstrapProfileFeaturedPackProgressMissesMin = 0;
+export const craftPlayerVariantResponseBootstrapProfileFeaturedPackProgressMissesMax = 9;
+
+export const craftPlayerVariantResponseBootstrapProfileFeaturedPackProgressPacksMin = 0;
+
+export const craftPlayerVariantResponseBootstrapProfileSettingsCosmeticsDeckCoverIdMax = 80;
+
 export const craftPlayerVariantResponseBootstrapProfileSettingsCosmeticsPlayerMatIdMax = 80;
 
 export const craftPlayerVariantResponseBootstrapProfileSettingsCosmeticsBannerCardIdMax = 64;
@@ -5535,6 +5962,10 @@ export const CraftPlayerVariantResponse = zod.object({
   "Legendary": zod.number().min(craftPlayerVariantResponseBootstrapProfileStyleShardBalancesLegendaryMin).max(craftPlayerVariantResponseBootstrapProfileStyleShardBalancesLegendaryMax).optional(),
   "Mythical": zod.number().min(craftPlayerVariantResponseBootstrapProfileStyleShardBalancesMythicalMin).max(craftPlayerVariantResponseBootstrapProfileStyleShardBalancesMythicalMax).optional()
 }).optional().describe('Matching rarity currencies. Super Common uses Common. Absent balances are zero; styleShards remains universal.'),
+  "featuredPackProgress": zod.record(zod.string(), zod.object({
+  "misses": zod.number().min(craftPlayerVariantResponseBootstrapProfileFeaturedPackProgressMissesMin).max(craftPlayerVariantResponseBootstrapProfileFeaturedPackProgressMissesMax),
+  "packs": zod.number().min(craftPlayerVariantResponseBootstrapProfileFeaturedPackProgressPacksMin)
+})).optional(),
   "packPity": zod.number(),
   "deckSlots": zod.number(),
   "cosmeticCurrency": zod.number(),
@@ -5547,6 +5978,7 @@ export const CraftPlayerVariantResponse = zod.object({
   "termsAcceptedAt": zod.coerce.date().nullable(),
   "settings": zod.object({
   "cosmetics": zod.object({
+  "deckCoverId": zod.string().max(craftPlayerVariantResponseBootstrapProfileSettingsCosmeticsDeckCoverIdMax).nullish().describe('Owned deck cover. Null restores the default cover.'),
   "playerMatId": zod.string().max(craftPlayerVariantResponseBootstrapProfileSettingsCosmeticsPlayerMatIdMax).nullish().describe('Owned player mat for PvP and training. Null restores the free venue.'),
   "bannerCardId": zod.string().max(craftPlayerVariantResponseBootstrapProfileSettingsCosmeticsBannerCardIdMax).nullish(),
   "bannerFinish": zod.enum(['base', 'silver']).optional(),
@@ -5602,6 +6034,18 @@ export const CraftPlayerVariantResponse = zod.object({
   "packTickets": zod.number(),
   "styleShards": zod.number()
 })).optional(),
+  "featuredProgress": zod.object({
+  "bannerId": zod.string(),
+  "missesBefore": zod.number(),
+  "missesAfter": zod.number(),
+  "packsBefore": zod.number(),
+  "packsAfter": zod.number(),
+  "hits": zod.array(zod.object({
+  "index": zod.number(),
+  "cardId": zod.string(),
+  "guaranteed": zod.boolean()
+}))
+}).optional(),
   "pityBefore": zod.number(),
   "pityAfter": zod.number(),
   "createdAt": zod.coerce.date()
@@ -5698,6 +6142,13 @@ export const equipPlayerVariantResponseProfileStyleShardBalancesLegendaryMax = 2
 export const equipPlayerVariantResponseProfileStyleShardBalancesMythicalMin = 0;
 export const equipPlayerVariantResponseProfileStyleShardBalancesMythicalMax = 2147483647;
 
+export const equipPlayerVariantResponseProfileFeaturedPackProgressMissesMin = 0;
+export const equipPlayerVariantResponseProfileFeaturedPackProgressMissesMax = 9;
+
+export const equipPlayerVariantResponseProfileFeaturedPackProgressPacksMin = 0;
+
+export const equipPlayerVariantResponseProfileSettingsCosmeticsDeckCoverIdMax = 80;
+
 export const equipPlayerVariantResponseProfileSettingsCosmeticsPlayerMatIdMax = 80;
 
 export const equipPlayerVariantResponseProfileSettingsCosmeticsBannerCardIdMax = 64;
@@ -5738,6 +6189,10 @@ export const EquipPlayerVariantResponse = zod.object({
   "Legendary": zod.number().min(equipPlayerVariantResponseProfileStyleShardBalancesLegendaryMin).max(equipPlayerVariantResponseProfileStyleShardBalancesLegendaryMax).optional(),
   "Mythical": zod.number().min(equipPlayerVariantResponseProfileStyleShardBalancesMythicalMin).max(equipPlayerVariantResponseProfileStyleShardBalancesMythicalMax).optional()
 }).optional().describe('Matching rarity currencies. Super Common uses Common. Absent balances are zero; styleShards remains universal.'),
+  "featuredPackProgress": zod.record(zod.string(), zod.object({
+  "misses": zod.number().min(equipPlayerVariantResponseProfileFeaturedPackProgressMissesMin).max(equipPlayerVariantResponseProfileFeaturedPackProgressMissesMax),
+  "packs": zod.number().min(equipPlayerVariantResponseProfileFeaturedPackProgressPacksMin)
+})).optional(),
   "packPity": zod.number(),
   "deckSlots": zod.number(),
   "cosmeticCurrency": zod.number(),
@@ -5750,6 +6205,7 @@ export const EquipPlayerVariantResponse = zod.object({
   "termsAcceptedAt": zod.coerce.date().nullable(),
   "settings": zod.object({
   "cosmetics": zod.object({
+  "deckCoverId": zod.string().max(equipPlayerVariantResponseProfileSettingsCosmeticsDeckCoverIdMax).nullish().describe('Owned deck cover. Null restores the default cover.'),
   "playerMatId": zod.string().max(equipPlayerVariantResponseProfileSettingsCosmeticsPlayerMatIdMax).nullish().describe('Owned player mat for PvP and training. Null restores the free venue.'),
   "bannerCardId": zod.string().max(equipPlayerVariantResponseProfileSettingsCosmeticsBannerCardIdMax).nullish(),
   "bannerFinish": zod.enum(['base', 'silver']).optional(),
@@ -5805,6 +6261,18 @@ export const EquipPlayerVariantResponse = zod.object({
   "packTickets": zod.number(),
   "styleShards": zod.number()
 })).optional(),
+  "featuredProgress": zod.object({
+  "bannerId": zod.string(),
+  "missesBefore": zod.number(),
+  "missesAfter": zod.number(),
+  "packsBefore": zod.number(),
+  "packsAfter": zod.number(),
+  "hits": zod.array(zod.object({
+  "index": zod.number(),
+  "cardId": zod.string(),
+  "guaranteed": zod.boolean()
+}))
+}).optional(),
   "pityBefore": zod.number(),
   "pityAfter": zod.number(),
   "createdAt": zod.coerce.date()
@@ -5897,6 +6365,13 @@ export const claimCollectionRoadMilestoneResponseBootstrapProfileStyleShardBalan
 export const claimCollectionRoadMilestoneResponseBootstrapProfileStyleShardBalancesMythicalMin = 0;
 export const claimCollectionRoadMilestoneResponseBootstrapProfileStyleShardBalancesMythicalMax = 2147483647;
 
+export const claimCollectionRoadMilestoneResponseBootstrapProfileFeaturedPackProgressMissesMin = 0;
+export const claimCollectionRoadMilestoneResponseBootstrapProfileFeaturedPackProgressMissesMax = 9;
+
+export const claimCollectionRoadMilestoneResponseBootstrapProfileFeaturedPackProgressPacksMin = 0;
+
+export const claimCollectionRoadMilestoneResponseBootstrapProfileSettingsCosmeticsDeckCoverIdMax = 80;
+
 export const claimCollectionRoadMilestoneResponseBootstrapProfileSettingsCosmeticsPlayerMatIdMax = 80;
 
 export const claimCollectionRoadMilestoneResponseBootstrapProfileSettingsCosmeticsBannerCardIdMax = 64;
@@ -5938,6 +6413,10 @@ export const ClaimCollectionRoadMilestoneResponse = zod.object({
   "Legendary": zod.number().min(claimCollectionRoadMilestoneResponseBootstrapProfileStyleShardBalancesLegendaryMin).max(claimCollectionRoadMilestoneResponseBootstrapProfileStyleShardBalancesLegendaryMax).optional(),
   "Mythical": zod.number().min(claimCollectionRoadMilestoneResponseBootstrapProfileStyleShardBalancesMythicalMin).max(claimCollectionRoadMilestoneResponseBootstrapProfileStyleShardBalancesMythicalMax).optional()
 }).optional().describe('Matching rarity currencies. Super Common uses Common. Absent balances are zero; styleShards remains universal.'),
+  "featuredPackProgress": zod.record(zod.string(), zod.object({
+  "misses": zod.number().min(claimCollectionRoadMilestoneResponseBootstrapProfileFeaturedPackProgressMissesMin).max(claimCollectionRoadMilestoneResponseBootstrapProfileFeaturedPackProgressMissesMax),
+  "packs": zod.number().min(claimCollectionRoadMilestoneResponseBootstrapProfileFeaturedPackProgressPacksMin)
+})).optional(),
   "packPity": zod.number(),
   "deckSlots": zod.number(),
   "cosmeticCurrency": zod.number(),
@@ -5950,6 +6429,7 @@ export const ClaimCollectionRoadMilestoneResponse = zod.object({
   "termsAcceptedAt": zod.coerce.date().nullable(),
   "settings": zod.object({
   "cosmetics": zod.object({
+  "deckCoverId": zod.string().max(claimCollectionRoadMilestoneResponseBootstrapProfileSettingsCosmeticsDeckCoverIdMax).nullish().describe('Owned deck cover. Null restores the default cover.'),
   "playerMatId": zod.string().max(claimCollectionRoadMilestoneResponseBootstrapProfileSettingsCosmeticsPlayerMatIdMax).nullish().describe('Owned player mat for PvP and training. Null restores the free venue.'),
   "bannerCardId": zod.string().max(claimCollectionRoadMilestoneResponseBootstrapProfileSettingsCosmeticsBannerCardIdMax).nullish(),
   "bannerFinish": zod.enum(['base', 'silver']).optional(),
@@ -6005,6 +6485,18 @@ export const ClaimCollectionRoadMilestoneResponse = zod.object({
   "packTickets": zod.number(),
   "styleShards": zod.number()
 })).optional(),
+  "featuredProgress": zod.object({
+  "bannerId": zod.string(),
+  "missesBefore": zod.number(),
+  "missesAfter": zod.number(),
+  "packsBefore": zod.number(),
+  "packsAfter": zod.number(),
+  "hits": zod.array(zod.object({
+  "index": zod.number(),
+  "cardId": zod.string(),
+  "guaranteed": zod.boolean()
+}))
+}).optional(),
   "pityBefore": zod.number(),
   "pityAfter": zod.number(),
   "createdAt": zod.coerce.date()
@@ -6101,6 +6593,13 @@ export const claimPlayerMissionResponseProfileStyleShardBalancesLegendaryMax = 2
 export const claimPlayerMissionResponseProfileStyleShardBalancesMythicalMin = 0;
 export const claimPlayerMissionResponseProfileStyleShardBalancesMythicalMax = 2147483647;
 
+export const claimPlayerMissionResponseProfileFeaturedPackProgressMissesMin = 0;
+export const claimPlayerMissionResponseProfileFeaturedPackProgressMissesMax = 9;
+
+export const claimPlayerMissionResponseProfileFeaturedPackProgressPacksMin = 0;
+
+export const claimPlayerMissionResponseProfileSettingsCosmeticsDeckCoverIdMax = 80;
+
 export const claimPlayerMissionResponseProfileSettingsCosmeticsPlayerMatIdMax = 80;
 
 export const claimPlayerMissionResponseProfileSettingsCosmeticsBannerCardIdMax = 64;
@@ -6141,6 +6640,10 @@ export const ClaimPlayerMissionResponse = zod.object({
   "Legendary": zod.number().min(claimPlayerMissionResponseProfileStyleShardBalancesLegendaryMin).max(claimPlayerMissionResponseProfileStyleShardBalancesLegendaryMax).optional(),
   "Mythical": zod.number().min(claimPlayerMissionResponseProfileStyleShardBalancesMythicalMin).max(claimPlayerMissionResponseProfileStyleShardBalancesMythicalMax).optional()
 }).optional().describe('Matching rarity currencies. Super Common uses Common. Absent balances are zero; styleShards remains universal.'),
+  "featuredPackProgress": zod.record(zod.string(), zod.object({
+  "misses": zod.number().min(claimPlayerMissionResponseProfileFeaturedPackProgressMissesMin).max(claimPlayerMissionResponseProfileFeaturedPackProgressMissesMax),
+  "packs": zod.number().min(claimPlayerMissionResponseProfileFeaturedPackProgressPacksMin)
+})).optional(),
   "packPity": zod.number(),
   "deckSlots": zod.number(),
   "cosmeticCurrency": zod.number(),
@@ -6153,6 +6656,7 @@ export const ClaimPlayerMissionResponse = zod.object({
   "termsAcceptedAt": zod.coerce.date().nullable(),
   "settings": zod.object({
   "cosmetics": zod.object({
+  "deckCoverId": zod.string().max(claimPlayerMissionResponseProfileSettingsCosmeticsDeckCoverIdMax).nullish().describe('Owned deck cover. Null restores the default cover.'),
   "playerMatId": zod.string().max(claimPlayerMissionResponseProfileSettingsCosmeticsPlayerMatIdMax).nullish().describe('Owned player mat for PvP and training. Null restores the free venue.'),
   "bannerCardId": zod.string().max(claimPlayerMissionResponseProfileSettingsCosmeticsBannerCardIdMax).nullish(),
   "bannerFinish": zod.enum(['base', 'silver']).optional(),
@@ -6208,6 +6712,18 @@ export const ClaimPlayerMissionResponse = zod.object({
   "packTickets": zod.number(),
   "styleShards": zod.number()
 })).optional(),
+  "featuredProgress": zod.object({
+  "bannerId": zod.string(),
+  "missesBefore": zod.number(),
+  "missesAfter": zod.number(),
+  "packsBefore": zod.number(),
+  "packsAfter": zod.number(),
+  "hits": zod.array(zod.object({
+  "index": zod.number(),
+  "cardId": zod.string(),
+  "guaranteed": zod.boolean()
+}))
+}).optional(),
   "pityBefore": zod.number(),
   "pityAfter": zod.number(),
   "createdAt": zod.coerce.date()
@@ -6273,6 +6789,8 @@ export const ClaimPlayerMissionResponse = zod.object({
 /**
  * @summary Save an owned banner, stickers, and character card scenes
  */
+export const equipPlayerCosmeticsBodyDeckCoverIdMax = 80;
+
 export const equipPlayerCosmeticsBodyPlayerMatIdMax = 80;
 
 export const equipPlayerCosmeticsBodyBannerCardIdMax = 64;
@@ -6284,6 +6802,7 @@ export const equipPlayerCosmeticsBodyStickersMax = 3;
 
 
 export const EquipPlayerCosmeticsBody = zod.object({
+  "deckCoverId": zod.string().max(equipPlayerCosmeticsBodyDeckCoverIdMax).nullish().describe('Owned deck cover. Null restores the default cover.'),
   "playerMatId": zod.string().max(equipPlayerCosmeticsBodyPlayerMatIdMax).nullish().describe('Owned player mat for PvP and training. Null restores the free venue.'),
   "bannerCardId": zod.string().max(equipPlayerCosmeticsBodyBannerCardIdMax).nullish(),
   "bannerFinish": zod.enum(['base', 'silver']).optional(),
@@ -6308,6 +6827,13 @@ export const equipPlayerCosmeticsResponseProfileStyleShardBalancesLegendaryMax =
 
 export const equipPlayerCosmeticsResponseProfileStyleShardBalancesMythicalMin = 0;
 export const equipPlayerCosmeticsResponseProfileStyleShardBalancesMythicalMax = 2147483647;
+
+export const equipPlayerCosmeticsResponseProfileFeaturedPackProgressMissesMin = 0;
+export const equipPlayerCosmeticsResponseProfileFeaturedPackProgressMissesMax = 9;
+
+export const equipPlayerCosmeticsResponseProfileFeaturedPackProgressPacksMin = 0;
+
+export const equipPlayerCosmeticsResponseProfileSettingsCosmeticsDeckCoverIdMax = 80;
 
 export const equipPlayerCosmeticsResponseProfileSettingsCosmeticsPlayerMatIdMax = 80;
 
@@ -6349,6 +6875,10 @@ export const EquipPlayerCosmeticsResponse = zod.object({
   "Legendary": zod.number().min(equipPlayerCosmeticsResponseProfileStyleShardBalancesLegendaryMin).max(equipPlayerCosmeticsResponseProfileStyleShardBalancesLegendaryMax).optional(),
   "Mythical": zod.number().min(equipPlayerCosmeticsResponseProfileStyleShardBalancesMythicalMin).max(equipPlayerCosmeticsResponseProfileStyleShardBalancesMythicalMax).optional()
 }).optional().describe('Matching rarity currencies. Super Common uses Common. Absent balances are zero; styleShards remains universal.'),
+  "featuredPackProgress": zod.record(zod.string(), zod.object({
+  "misses": zod.number().min(equipPlayerCosmeticsResponseProfileFeaturedPackProgressMissesMin).max(equipPlayerCosmeticsResponseProfileFeaturedPackProgressMissesMax),
+  "packs": zod.number().min(equipPlayerCosmeticsResponseProfileFeaturedPackProgressPacksMin)
+})).optional(),
   "packPity": zod.number(),
   "deckSlots": zod.number(),
   "cosmeticCurrency": zod.number(),
@@ -6361,6 +6891,7 @@ export const EquipPlayerCosmeticsResponse = zod.object({
   "termsAcceptedAt": zod.coerce.date().nullable(),
   "settings": zod.object({
   "cosmetics": zod.object({
+  "deckCoverId": zod.string().max(equipPlayerCosmeticsResponseProfileSettingsCosmeticsDeckCoverIdMax).nullish().describe('Owned deck cover. Null restores the default cover.'),
   "playerMatId": zod.string().max(equipPlayerCosmeticsResponseProfileSettingsCosmeticsPlayerMatIdMax).nullish().describe('Owned player mat for PvP and training. Null restores the free venue.'),
   "bannerCardId": zod.string().max(equipPlayerCosmeticsResponseProfileSettingsCosmeticsBannerCardIdMax).nullish(),
   "bannerFinish": zod.enum(['base', 'silver']).optional(),
@@ -6416,6 +6947,18 @@ export const EquipPlayerCosmeticsResponse = zod.object({
   "packTickets": zod.number(),
   "styleShards": zod.number()
 })).optional(),
+  "featuredProgress": zod.object({
+  "bannerId": zod.string(),
+  "missesBefore": zod.number(),
+  "missesAfter": zod.number(),
+  "packsBefore": zod.number(),
+  "packsAfter": zod.number(),
+  "hits": zod.array(zod.object({
+  "index": zod.number(),
+  "cardId": zod.string(),
+  "guaranteed": zod.boolean()
+}))
+}).optional(),
   "pityBefore": zod.number(),
   "pityAfter": zod.number(),
   "createdAt": zod.coerce.date()
@@ -6516,6 +7059,13 @@ export const purchasePlayerShopItemResponseBootstrapProfileStyleShardBalancesLeg
 export const purchasePlayerShopItemResponseBootstrapProfileStyleShardBalancesMythicalMin = 0;
 export const purchasePlayerShopItemResponseBootstrapProfileStyleShardBalancesMythicalMax = 2147483647;
 
+export const purchasePlayerShopItemResponseBootstrapProfileFeaturedPackProgressMissesMin = 0;
+export const purchasePlayerShopItemResponseBootstrapProfileFeaturedPackProgressMissesMax = 9;
+
+export const purchasePlayerShopItemResponseBootstrapProfileFeaturedPackProgressPacksMin = 0;
+
+export const purchasePlayerShopItemResponseBootstrapProfileSettingsCosmeticsDeckCoverIdMax = 80;
+
 export const purchasePlayerShopItemResponseBootstrapProfileSettingsCosmeticsPlayerMatIdMax = 80;
 
 export const purchasePlayerShopItemResponseBootstrapProfileSettingsCosmeticsBannerCardIdMax = 64;
@@ -6565,6 +7115,10 @@ export const PurchasePlayerShopItemResponse = zod.object({
   "Legendary": zod.number().min(purchasePlayerShopItemResponseBootstrapProfileStyleShardBalancesLegendaryMin).max(purchasePlayerShopItemResponseBootstrapProfileStyleShardBalancesLegendaryMax).optional(),
   "Mythical": zod.number().min(purchasePlayerShopItemResponseBootstrapProfileStyleShardBalancesMythicalMin).max(purchasePlayerShopItemResponseBootstrapProfileStyleShardBalancesMythicalMax).optional()
 }).optional().describe('Matching rarity currencies. Super Common uses Common. Absent balances are zero; styleShards remains universal.'),
+  "featuredPackProgress": zod.record(zod.string(), zod.object({
+  "misses": zod.number().min(purchasePlayerShopItemResponseBootstrapProfileFeaturedPackProgressMissesMin).max(purchasePlayerShopItemResponseBootstrapProfileFeaturedPackProgressMissesMax),
+  "packs": zod.number().min(purchasePlayerShopItemResponseBootstrapProfileFeaturedPackProgressPacksMin)
+})).optional(),
   "packPity": zod.number(),
   "deckSlots": zod.number(),
   "cosmeticCurrency": zod.number(),
@@ -6577,6 +7131,7 @@ export const PurchasePlayerShopItemResponse = zod.object({
   "termsAcceptedAt": zod.coerce.date().nullable(),
   "settings": zod.object({
   "cosmetics": zod.object({
+  "deckCoverId": zod.string().max(purchasePlayerShopItemResponseBootstrapProfileSettingsCosmeticsDeckCoverIdMax).nullish().describe('Owned deck cover. Null restores the default cover.'),
   "playerMatId": zod.string().max(purchasePlayerShopItemResponseBootstrapProfileSettingsCosmeticsPlayerMatIdMax).nullish().describe('Owned player mat for PvP and training. Null restores the free venue.'),
   "bannerCardId": zod.string().max(purchasePlayerShopItemResponseBootstrapProfileSettingsCosmeticsBannerCardIdMax).nullish(),
   "bannerFinish": zod.enum(['base', 'silver']).optional(),
@@ -6632,6 +7187,18 @@ export const PurchasePlayerShopItemResponse = zod.object({
   "packTickets": zod.number(),
   "styleShards": zod.number()
 })).optional(),
+  "featuredProgress": zod.object({
+  "bannerId": zod.string(),
+  "missesBefore": zod.number(),
+  "missesAfter": zod.number(),
+  "packsBefore": zod.number(),
+  "packsAfter": zod.number(),
+  "hits": zod.array(zod.object({
+  "index": zod.number(),
+  "cardId": zod.string(),
+  "guaranteed": zod.boolean()
+}))
+}).optional(),
   "pityBefore": zod.number(),
   "pityAfter": zod.number(),
   "createdAt": zod.coerce.date()
@@ -6730,6 +7297,13 @@ export const redeemPlayerPromoCodeResponseBootstrapProfileStyleShardBalancesLege
 export const redeemPlayerPromoCodeResponseBootstrapProfileStyleShardBalancesMythicalMin = 0;
 export const redeemPlayerPromoCodeResponseBootstrapProfileStyleShardBalancesMythicalMax = 2147483647;
 
+export const redeemPlayerPromoCodeResponseBootstrapProfileFeaturedPackProgressMissesMin = 0;
+export const redeemPlayerPromoCodeResponseBootstrapProfileFeaturedPackProgressMissesMax = 9;
+
+export const redeemPlayerPromoCodeResponseBootstrapProfileFeaturedPackProgressPacksMin = 0;
+
+export const redeemPlayerPromoCodeResponseBootstrapProfileSettingsCosmeticsDeckCoverIdMax = 80;
+
 export const redeemPlayerPromoCodeResponseBootstrapProfileSettingsCosmeticsPlayerMatIdMax = 80;
 
 export const redeemPlayerPromoCodeResponseBootstrapProfileSettingsCosmeticsBannerCardIdMax = 64;
@@ -6779,6 +7353,10 @@ export const RedeemPlayerPromoCodeResponse = zod.object({
   "Legendary": zod.number().min(redeemPlayerPromoCodeResponseBootstrapProfileStyleShardBalancesLegendaryMin).max(redeemPlayerPromoCodeResponseBootstrapProfileStyleShardBalancesLegendaryMax).optional(),
   "Mythical": zod.number().min(redeemPlayerPromoCodeResponseBootstrapProfileStyleShardBalancesMythicalMin).max(redeemPlayerPromoCodeResponseBootstrapProfileStyleShardBalancesMythicalMax).optional()
 }).optional().describe('Matching rarity currencies. Super Common uses Common. Absent balances are zero; styleShards remains universal.'),
+  "featuredPackProgress": zod.record(zod.string(), zod.object({
+  "misses": zod.number().min(redeemPlayerPromoCodeResponseBootstrapProfileFeaturedPackProgressMissesMin).max(redeemPlayerPromoCodeResponseBootstrapProfileFeaturedPackProgressMissesMax),
+  "packs": zod.number().min(redeemPlayerPromoCodeResponseBootstrapProfileFeaturedPackProgressPacksMin)
+})).optional(),
   "packPity": zod.number(),
   "deckSlots": zod.number(),
   "cosmeticCurrency": zod.number(),
@@ -6791,6 +7369,7 @@ export const RedeemPlayerPromoCodeResponse = zod.object({
   "termsAcceptedAt": zod.coerce.date().nullable(),
   "settings": zod.object({
   "cosmetics": zod.object({
+  "deckCoverId": zod.string().max(redeemPlayerPromoCodeResponseBootstrapProfileSettingsCosmeticsDeckCoverIdMax).nullish().describe('Owned deck cover. Null restores the default cover.'),
   "playerMatId": zod.string().max(redeemPlayerPromoCodeResponseBootstrapProfileSettingsCosmeticsPlayerMatIdMax).nullish().describe('Owned player mat for PvP and training. Null restores the free venue.'),
   "bannerCardId": zod.string().max(redeemPlayerPromoCodeResponseBootstrapProfileSettingsCosmeticsBannerCardIdMax).nullish(),
   "bannerFinish": zod.enum(['base', 'silver']).optional(),
@@ -6846,6 +7425,18 @@ export const RedeemPlayerPromoCodeResponse = zod.object({
   "packTickets": zod.number(),
   "styleShards": zod.number()
 })).optional(),
+  "featuredProgress": zod.object({
+  "bannerId": zod.string(),
+  "missesBefore": zod.number(),
+  "missesAfter": zod.number(),
+  "packsBefore": zod.number(),
+  "packsAfter": zod.number(),
+  "hits": zod.array(zod.object({
+  "index": zod.number(),
+  "cardId": zod.string(),
+  "guaranteed": zod.boolean()
+}))
+}).optional(),
   "pityBefore": zod.number(),
   "pityAfter": zod.number(),
   "createdAt": zod.coerce.date()

@@ -74,7 +74,8 @@ test('HTTP batch payload, original retry and seasonal bonus metadata remain exac
   const post=(body:unknown)=>fetch(`${origin}/player/packs/open`,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(body)});
   const first=await post(request);assert.equal(first.status,200);const body=await first.json() as OpenPackResult;
   assert.equal(body.opening.pullCount,5);assert.equal(body.opening.rewards.length,30);assert.equal(body.opening.cost,5);assert.equal(body.pullSeason!.count,5);assert.equal(body.opening.seasonRewards![0].softCurrency,100);
-  const retry=await post({...request,pullCount:9,paymentMethod:'softCurrency'});assert.equal(retry.status,200);const recovered=await retry.json() as OpenPackResult;assert.equal(recovered.alreadyOpened,true);assert.deepEqual(recovered.opening,body.opening);assert.equal(recovered.bootstrap.profile.packTickets,0);
+  const changed=await post({...request,pullCount:9,paymentMethod:'softCurrency'});assert.equal(changed.status,409);await changed.arrayBuffer();
+  const retry=await post(request);assert.equal(retry.status,200);const recovered=await retry.json() as OpenPackResult;assert.equal(recovered.alreadyOpened,true);assert.deepEqual(recovered.opening,body.opening);assert.equal(recovered.bootstrap.profile.packTickets,0);
   const invalid=await post({...request,idempotencyKey:randomUUID(),pullCount:2.5});assert.equal(invalid.status,400);await invalid.arrayBuffer();
   const status=await fetch(`${origin}/player/packs/welcome`);const advertised=await status.json() as { supportsFlexibleBatches:boolean; pullSeason:{count:number} };assert.equal(advertised.supportsFlexibleBatches,true);assert.equal(advertised.pullSeason.count,5);
 });

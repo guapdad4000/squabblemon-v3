@@ -2,9 +2,10 @@ import assert from 'node:assert/strict';
 import { existsSync, readFileSync } from 'node:fs';
 import test from 'node:test';
 import { createHash } from 'node:crypto';
-import { COLLECTOR_V2_MAIL_ID, getMailEventPresentation } from './mailEvents';
+import { COLLECTOR_V2_MAIL_ID, KUMITE_BREAKTHROUGH_MAIL_ID, getMailEventPresentation } from './mailEvents';
 import { catalogCardById, KUMITE_CARD_REWARDS } from '@workspace/squabblemon-engine/data';
 import { PREPARED_PATCHES } from './preparedPatches';
+import { bulletinBoard } from '../content/bulletinBoard';
 import { getPatchBanner, PATCH_BANNERS } from './patchBanners';
 
 test('prepared patch notes fit the publication contract', () => {
@@ -25,7 +26,7 @@ test('prepared patch notes fit the publication contract', () => {
       ...(patch.changes.length ? ['', 'Changes', ...patch.changes.map(line => `• ${line}`)] : []),
     ].join('\n');
     assert.ok(mailBody.length <= 6000, `${patch.version} rendered mail exceeds server limit`);
-    assert.equal(patch.softCurrency, ['1.9', '1.10', '1.11', '1.12', '1.13', '1.14'].includes(patch.version) ? 0 : patch.version === '1.8' ? 50 : 100);
+    assert.equal(patch.softCurrency, ['1.9', '1.10', '1.11', '1.12', '1.13', '1.14'].includes(patch.version) ? 0 : ['1.8', '1.15'].includes(patch.version) ? 50 : 100);
     assert.equal(patch.packTickets, ['1.11', '1.12'].includes(patch.version) ? 10 : ['1.8', '1.9', '1.10', '1.13', '1.14'].includes(patch.version) ? 0 : 1);
   }
   const versionParts = (version: string) => version.split('.').map(Number);
@@ -140,4 +141,42 @@ test('Collector V2 draft binds the reviewed notes, mail campaign and responsive 
   assert.equal(mail.href, '/game/events?patch=1.14');
   for (const path of [banner.path, banner.smallPath]) assert.ok(existsSync(new URL(`../../public/${path}`, import.meta.url)));
   assert.equal(getMailEventPresentation('patch_1-14_wrong'), undefined);
+});
+
+
+test('Breakthrough beta has a reviewable, one-time launch package without opening PvP', () => {
+  const patch = PREPARED_PATCHES.find(item => item.version === '1.15');
+  assert.ok(patch);
+  const reviewed = JSON.parse(readFileSync(new URL('../../../../docs/releases/kumite-breakthrough-1.15.json', import.meta.url), 'utf8'));
+  assert.deepEqual(patch, reviewed, 'the desk imports the exact reviewed gift and release text');
+  assert.equal(patch.title, 'Kumite Breakthrough Beta');
+  assert.equal(patch.artCardId, 'dragonfly-jones');
+  assert.equal(patch.softCurrency, 50);
+  assert.equal(patch.packTickets, 1);
+  assert.deepEqual(patch.buffs, []);
+  const id = `patch_1-15_${createHash('sha256').update(patch.version).digest('hex').slice(0, 16)}`;
+  assert.equal(KUMITE_BREAKTHROUGH_MAIL_ID, id, 'presentation uses the server-stable publication identity');
+  const mail = getMailEventPresentation(id);
+  assert.ok(mail);
+  const banner = getPatchBanner(patch.version, patch.artCardId);
+  assert.ok(banner && 'smallPath' in banner);
+  assert.equal(mail.bannerAssetId, banner.path);
+  assert.equal(mail.bannerSmallAssetId, banner.smallPath);
+  for (const asset of [banner.path, banner.smallPath]) assert.ok(existsSync(new URL(`../../public/${asset}`, import.meta.url)));
+  assert.equal(getPatchBanner('1.15', 'leroy'), undefined);
+  const event = bulletinBoard.events.find(item => item.id === 'kumite-breakthrough-beta');
+  assert.ok(event);
+  assert.equal(event.status, 'planned');
+  assert.equal(event.image, banner.path);
+  assert.equal(event.link.href, '/game/kumite');
+  assert.equal(mail.href, '/game/events?patch=1.15', 'mail opens the explanation instead of bypassing the release gate');
+  assert.equal(getMailEventPresentation('patch_1-15_wrong'), undefined);
+  const text = [patch.overview, ...patch.changes].join('\n');
+  assert.match(text, /1 free Street Pack Ticket and 50 Clout/);
+  assert.match(text, /not a Kumite entry fee/);
+  assert.match(text, /Public matchmaking stays closed/);
+  assert.match(text, /do not award PvP rank, Breakthrough trophies or Kumite roadmap credit/);
+  assert.match(text, /final 30-second Last Stand/);
+  assert.match(text, /With breaches tied/);
+  assert.match(text, /only be claimed once/);
 });

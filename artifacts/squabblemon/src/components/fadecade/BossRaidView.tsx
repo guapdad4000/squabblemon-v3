@@ -20,7 +20,6 @@ import {
   bossFormForMode,
   BOSS_ROUNDS,
   bossBlastPreview,
-  bossCardCost,
   type BossAction,
   type BossStatus,
   type BossBlast,
@@ -48,6 +47,9 @@ import {
 import { BossRaidRoundBlast } from "./BossRaidRoundBlast";
 import { BossRaidTargetLine } from "./BossRaidTargetLine";
 import { BossIdleSprite } from "./BossIdleSprite";
+import type { BossRaidViewAdapter, RaidCinematicPresentation } from "./bossRaidViewAdapter";
+import { RaidCinematicHero } from "./RaidCinematicHero";
+import { legacyRaidCardQuote, raidCardChoices } from "./raidCardChoices";
 import "../../styles/boss-raid.css";
 import "../../styles/boss-raid-design.css";
 import "../battle-board.css";
@@ -108,9 +110,12 @@ function RaidFormationDialog({ lane, laneName, opposition, owner, cards, round, 
 }
 
 export function BossRaidView({
-  status,
+  status: providedStatus,
+  adapter,
+  cinematic,
   mode,
   onModeChange,
+  onAnunaki,
   ownedCardIds = [],
   busy = false,
   blast = null,
@@ -122,9 +127,12 @@ export function BossRaidView({
   onSync,
   reducedMotion = false,
 }: {
-  status: BossStatus;
+  status?: BossStatus;
+  adapter?: BossRaidViewAdapter;
+  cinematic?: RaidCinematicPresentation;
   mode?: BossRaidMode;
   onModeChange?: (mode: BossRaidMode) => void;
+  onAnunaki?: () => void;
   ownedCardIds?: string[];
   busy?: boolean;
   blast?: BossBlast | null;
@@ -136,12 +144,14 @@ export function BossRaidView({
   onSync?: () => void;
   reducedMotion?: boolean;
 }) {
+  const status = adapter?.status ?? providedStatus!;
+  const cinema = cinematic ?? adapter?.cinematic;
   const run = status.run!,
     activeMode: BossRaidMode = mode ?? run.mode ?? "precinct",
     form = bossFormForMode(run.bossTier, activeMode),
     kumiteForm = KUMITE_BOSS_FORMS[run.bossTier - 1],
     campaign = status.campaign,
-    identity = raidIdentity(activeMode, run.bossTier),
+    identity = adapter?.identity ?? raidIdentity(activeMode, run.bossTier),
     banked = raidBankedRewards(status, activeMode);
   const playedSquabbles=useMemo(()=>squabbledCardIds(run.match.effectLog),[run.match.effectLog]);
   const [resultsDismissed, setResultsDismissed] = useState(false);
@@ -232,15 +242,16 @@ export function BossRaidView({
     locked = busy || !!blast || run.phase !== "active" || !!error,
     modal = !!intel || help || retire || forms || !!formation;
   const resultsOpen =
-    run.phase !== "active" && !blast && !resultsDismissed && !modal;
+    !adapter && run.phase !== "active" && !blast && !resultsDismissed && !modal;
   const preview = useMemo(
-    () => bossBlastPreview(shownMatch, run.bossTier),
-    [run, blast, revealStep],
+    () => adapter?.preview ?? bossBlastPreview(shownMatch, run.bossTier),
+    [adapter, run, blast, revealStep],
   );
   const targets = useMemo(
     () =>
       ([0, 1, 2] as const).map((lane) => {
         if (!card) return false;
+        if (adapter) return adapter.canPlay(run, card, lane, squabble, investment);
         try {
           applyBossAction(run, {
             type: "play",
@@ -254,7 +265,7 @@ export function BossRaidView({
           return false;
         }
       }),
-    [run, card, squabble, investment],
+    [adapter, run, card, squabble, investment],
   );
   useEffect(() => {
     if (selected && !card) {
@@ -285,22 +296,22 @@ export function BossRaidView({
         : displayedHp <= run.maxHp * 0.5
           ? "bloodied"
           : "healthy";
-  const projectedLoss =
-    run.phase === "active" && !blast ? Math.min(displayedHp, preview.total) : 0;
-  const isLethalProjection = projectedLoss >= displayedHp && displayedHp > 0;
   const totalBoardHands = preview.hands[0] + preview.hands[1] + preview.hands[2];
+  const cardCost = adapter?.cardCost ?? legacyRaidCardQuote;
+  const extraChoice = card ? (adapter?.extraChoices ?? raidCardChoices)(card) : null;
   return (
     <main
       className="boss-raid raid-v2 raid-v3 raid-combat-layout raid-cinematic"
-      aria-label={activeMode === "kumite" ? "Kumite Dojo Raid battle" : "Punch on Patrol battle"}
+      aria-label={adapter?.stageLabel ?? (activeMode === "kumite" ? "Kumite Dojo Raid battle" : "Punch on Patrol battle")}
       data-testid="boss-raid-stage"
-      data-raid-mode={activeMode}
+      data-raid-mode={adapter?.mode ?? activeMode}
       data-round={shownMatch.round}
       data-tier={run.bossTier}
       data-reduced-motion={reducedMotion}
       style={
         {
-          "--raid-bg": `url("${getAssetUrl(
+          ...adapter?.style,
+          "--raid-bg": adapter ? `url("${adapter.background}")` : `url("${getAssetUrl(
             activeMode === "kumite"
               ? "assets/kumite/layers/backdrop.webp"
               : "assets/boss-raid/precinct-arena-v3.webp",
@@ -310,6 +321,7 @@ export function BossRaidView({
     >
       <header className="raid-top">
         <button onClick={onExit}>{exitLabel}</button>
+        {onAnunaki && <button type="button" onClick={onAnunaki}>ANU RAID</button>}
         {onModeChange && (
           <div className="raid-mode-flip raid-mode-flip--compact" role="tablist" aria-label="Switch Raid Operation">
             <button
@@ -347,123 +359,37 @@ export function BossRaidView({
         </button>
       </header>
       <div className="raid-arena" ref={arenaRef}>
-        <div className="raid-boss-scene" aria-hidden="true" data-hit={!!blast?.total && !policeRevealing}
-          data-defeated={run.hp === 0} data-boss-phase={bossPhase}>
-          <div className="raid-boss-figure" data-testid="raid-boss-figure">
-            {activeMode === "kumite" ? (
-              <BossIdleSprite className="raid-scene-portrait" asset={`dojo:boss-tier-${run.bossTier}`} name={kumiteForm.bossTitle} paused={modal || resultsOpen} reduced={reducedMotion} phase={blast ? (policeRevealing ? (entrance ? "strike" : "windup") : "recoil") : "idle"} />
-            ) : (
-              <BossIdleSprite asset={form.art} name={identity.title}
-                paused={modal || resultsOpen || run.hp === 0} reduced={reducedMotion} />
-            )}
-            <span className="raid-boss-impact-anchor" />
-          </div>
-          <span className="raid-scene-ground" />
-        </div>
+        <RaidCinematicHero
+          {...(cinema ?? {
+            title: identity.title,
+            subtitle: `TIER ${run.bossTier} / 5 · ${form.name}`,
+            backdrop: getAssetUrl(activeMode === "kumite" ? "assets/kumite/layers/backdrop.webp" : "assets/boss-raid/precinct-arena-v3.webp"),
+            portrait: getAssetUrl(activeMode === "kumite" ? `assets/boss-raid/dojo-motion/boss-tier-${run.bossTier}-still.webp` : `assets/boss-raid/${form.art}.webp`),
+            sprite: <BossIdleSprite className="raid-scene-portrait"
+              asset={activeMode === "kumite" ? `dojo:boss-tier-${run.bossTier}` : form.art}
+              name={identity.title} paused={modal || resultsOpen || run.hp === 0}
+              reduced={reducedMotion}
+              phase={blast ? (policeRevealing ? (entrance ? "strike" : "windup") : "recoil") : "idle"} />,
+            phaseLabel: bossPhase === "critical" ? "FINAL STAND" : bossPhase === "bloodied" ? "WOUNDED" : identity.operation,
+            meta: <><b>×{form.multiplier} STRIKE</b><small>{totalBoardHands} CREW HANDS · −{displayedDamage} BANKED</small></>,
+          })}
+          hp={displayedHp} maxHp={run.maxHp} projectedDamage={run.phase === "active" && !blast ? preview.total : 0}
+          phase={cinema?.phase ?? bossPhase} hit={adapter?.hit ?? (!!blast?.total && !policeRevealing)}
+          paused={modal || resultsOpen} reducedMotion={reducedMotion}
+          onInspect={() => { trigger.current = document.activeElement as HTMLElement | null; adapter ? setHelp(true) : setForms(true); }}
+          inspectLabel={adapter ? "Inspect Anu raid rules" : activeMode === "kumite" ? "Inspect Kumite Grandmaster tiers" : "Inspect Officer Oink tiers"}
+        />
         {card && selectedLane !== null && targets[selectedLane] && (
-          <BossRaidTargetLine
-            instanceId={card.instanceId}
-            lane={selectedLane}
-          />
+          <BossRaidTargetLine instanceId={card.instanceId} lane={selectedLane} />
         )}
-        <section
-          className="raid-boss"
-          data-hit={!!blast?.total && !policeRevealing}
-          data-defeated={run.hp === 0}
-          data-boss-phase={bossPhase}
-        >
-          <span className="raid-tier-stamp" aria-hidden="true">
-            0{run.bossTier}
-          </span>
-          <div className="raid-boss-title">
-            <div className="raid-boss-title__eyebrow-row">
-              <button className="raid-boss-inspect" onClick={(e) => open(e, () => setForms(true))}
-                aria-label={activeMode === "kumite" ? "Inspect Kumite Grandmaster tiers" : "Inspect Officer Oink tiers"}>
-                TIER {run.bossTier} / 5 · {form.name}
-              </button>
-              {(bossPhase === "bloodied" || bossPhase === "critical") && (
-                <span className="raid-phase-badge" data-phase={bossPhase}>
-                  {bossPhase === "critical" ? "CRITICAL · <25% HP" : "WOUNDED · <50% HP"}
-                </span>
-              )}
-            </div>
-            <h1>{identity.title}</h1>
-          </div>
-          <div
-            className="raid-hp-wrap"
-            data-animated={!modal && !resultsOpen && !reducedMotion}
-          >
-            <div
-              className="raid-hp"
-              role="progressbar"
-              aria-label="Persistent boss HP"
-              aria-valuemin={0}
-              aria-valuemax={run.maxHp}
-              aria-valuenow={displayedHp}
-            >
-              <span
-                className="raid-hp-trail"
-                aria-hidden="true"
-                style={{ width: `${(displayedHp / run.maxHp) * 100}%` }}
-              />
-              <span
-                className="raid-hp-live"
-                aria-hidden="true"
-                style={{ width: `${(displayedHp / run.maxHp) * 100}%` }}
-              >
-                <i className="raid-hp-glint" />
-                <i className="raid-hp-edge" />
-              </span>
-              {projectedLoss > 0 && (
-                <span
-                  className="raid-hp-projected"
-                  aria-hidden="true"
-                  data-lethal={isLethalProjection}
-                  style={
-                    {
-                      "--projected-left": `${Math.max(0, ((displayedHp - projectedLoss) / run.maxHp) * 100)}%`,
-                      "--projected-width": `${(projectedLoss / run.maxHp) * 100}%`,
-                    } as CSSProperties
-                  }
-                />
-              )}
-            </div>
-            <div
-              className="raid-boss-multibar"
-              aria-label={`${6 - run.bossTier} boss health bars remaining`}
-            >
-              <b>×{6 - run.bossTier}</b>
-              <small>×{form.multiplier} DMG</small>
-            </div>
-            <div className="raid-scoreline">
-              <b>
-                {displayedHp}
-                <small> / {run.maxHp} HP</small>
-              </b>
-              {run.phase === "active" && !blast && (
-                <span
-                  className="raid-projected-strike"
-                  data-lethal={isLethalProjection}
-                >
-                  {isLethalProjection
-                    ? `★ TIER BREAK · −${preview.total} HP`
-                    : `STRIKE −${preview.total} HP (×${form.multiplier})`}
-                </span>
-              )}
-            </div>
-            <div className="raid-crew-pressure" aria-label={`${totalBoardHands} crew Hands; ${displayedDamage} damage banked`}>
-              <span><b>{totalBoardHands}</b> CREW HANDS</span>
-              <span><b>−{displayedDamage}</b> BANKED</span>
-              <span>{Math.max(0, run.match.cpuCardIds.length - run.match.cpuDrawIndex)} TO DRAW</span>
-            </div>
-          </div>
-        </section>
         <div className="raid-directive" aria-live="polite">
           {error ? (
             <div role="alert">
               {error} <button onClick={onRetry}>Retry save</button>
               <button onClick={onSync}>Sync</button>
             </div>
+          ) : adapter ? (
+            adapter.directive
           ) : blast ? (
             <strong>
               {policeRevealing
@@ -543,7 +469,7 @@ export function BossRaidView({
               `${laneName}. ${identity.opposition} ${preview.policeHands[lane]} Hands. You ${preview.hands[lane]} Hands. ${laneResult}.`,
               blast && !policeRevealing ? `${blast.damage[lane]} damage to the boss.` : "",
               card ? targets[lane]
-                ? `Select to deploy ${card.name} for ${bossCardCost(run, card, lane, squabble, investment)} Motion.${selectedLane === lane ? " Selected." : ""}`
+                ? `Select to deploy ${card.name} for ${cardCost(run, card, lane, squabble, investment)} Motion.${selectedLane === lane ? " Selected." : ""}`
                 : `Cannot play ${card.name} here.`
                 : "",
             ].filter(Boolean).join(" ");
@@ -555,6 +481,7 @@ export function BossRaidView({
                 data-target={!!card}
                 data-playable={!!card && targets[lane]}
                 data-selected={!!card && selectedLane === lane}
+                data-announced-target={adapter?.targetLane === lane}
               >
                 <div className="raid-formation">
                 <div className="raid-police" role="group" data-count={enemy.length} data-overflow={enemy.length > 4}
@@ -562,7 +489,18 @@ export function BossRaidView({
                   aria-label={`${identity.opposition} in lane ${lane + 1}: ${enemy.length} cards`}>
                   {enemy.map((c) => {
                     const npc = BOSS_NPCS[c.cardId as BossNpcId];
-                    return npc ? (
+                    const adaptedEnemy = adapter?.renderEnemy?.(c, { paused: modal || resultsOpen || c.statuses.silenced || c.statuses.frozen, reducedMotion });
+                    return adaptedEnemy ? (
+                      <button className="raid-npc" key={c.instanceId}
+                        onClick={(e) => open(e, () => setIntel(c))}
+                        aria-label={`${c.name}. Motion ${c.cost}. Hands ${getEffectiveCardPower(c)}. ${c.effect}${c.statuses.silenced ? " Silenced." : c.statuses.frozen ? " Frozen." : ""}`}>
+                        {adaptedEnemy}
+                        <b className="raid-npc-power" aria-label={`${getEffectiveCardPower(c)} Hands`}>{getEffectiveCardPower(c)}</b>
+                        <small className="raid-npc-cost" aria-label={`${c.cost} Motion`}>⚡{c.cost}</small>
+                        <span className="raid-npc-name">{c.name}</span>
+                        {(c.statuses.silenced || c.statuses.frozen) && <small>{c.statuses.silenced ? "SILENCED" : "FROZEN"}</small>}
+                      </button>
+                    ) : npc ? (
                       <button
                         className="raid-npc"
                         data-arriving={
@@ -637,7 +575,7 @@ export function BossRaidView({
                     <b className="raid-police-score">
                       {preview.policeHands[lane]}
                     </b>
-                    <span>{activeMode === "kumite" ? "OPPS" : "POLICE"}</span>
+                    <span>{adapter ? "OPPS" : activeMode === "kumite" ? "OPPS" : "POLICE"}</span>
                     <strong>{preview.hands[lane]}</strong>
                     <span>YOU</span>
                   </div>
@@ -677,9 +615,13 @@ export function BossRaidView({
                     <i />
                   </span>
                   {card && <span className="raid-lane-choice">{targets[lane]
-                    ? selectedLane === lane ? "✓ SELECTED" : `SELECT · ${bossCardCost(run, card, lane, squabble, investment)} ⚡`
+                    ? selectedLane === lane ? "✓ SELECTED" : `SELECT · ${cardCost(run, card, lane, squabble, investment)} ⚡`
                     : "BLOCKED"}</span>}
                 </button>
+                {adapter && <div className="raid-district-summary">
+                  <span>{adapter.targetLane === lane ? "⚡ NEXT STRIKE" : adapter.tabletLanes?.includes(lane) ? "✦ TABLET ACTIVE" : adapter.districtRules[lane].rule}</span>
+                  <details><summary aria-label={`Rules for ${laneName}`}>?</summary><p>{adapter.districtRules[lane].rule} {adapter.districtRules[lane].objective}</p></details>
+                </div>}
                 <div className="raid-formation">
                 <div
                   className="raid-crew"
@@ -740,25 +682,19 @@ export function BossRaidView({
                     disabled={
                       locked ||
                       run.match.squabbleUsed ||
-                      card.kind !== "character"
+                      (card.kind ?? "character") !== "character"
                     }
                     onChange={(e) => setSquabble(e.target.checked)}
                   />{" "}
-                  Squabble ×2
+                  Squabble · ×2 Hands
                 </label>
-                {card.kind === "blockbuster" && (
-                  <label>
-                    Invest {investment}
-                    <input
-                      type="range"
-                      min={0}
-                      max={9}
-                      value={investment}
-                      disabled={locked}
-                      onChange={(e) => setInvestment(Number(e.target.value))}
-                    />
+                {extraChoice ? (
+                  <label>{extraChoice.label}
+                    <select aria-label={extraChoice.label} value={investment} disabled={locked} onChange={event => setInvestment(Number(event.target.value))}>
+                      {extraChoice.options.map(option => <option key={option.value} value={option.value}>{option.label}</option>)}
+                    </select>
                   </label>
-                )}
+                ) : null}
               </>
             )}
           </div>
@@ -775,6 +711,8 @@ export function BossRaidView({
                 onClick={() => {
                   setSelected(selected === c.instanceId ? null : c.instanceId);
                   setSelectedLane(null);
+                  setInvestment((adapter?.extraChoices ?? raidCardChoices)(c)?.defaultValue ?? 0);
+                  setSquabble(false);
                 }}
               >
                 <CardView
@@ -833,7 +771,7 @@ export function BossRaidView({
                     : card
                       ? selectedLane === null
                         ? "CHOOSE A LANE"
-                        : `PLAY CARD · ${bossCardCost(run, card, selectedLane, squabble, investment)} ⚡ →`
+                        : `PLAY CARD · ${cardCost(run, card, selectedLane, squabble, investment)} ⚡ →`
                       : "END TURN →"}
               </button>
             ) : (
@@ -848,14 +786,14 @@ export function BossRaidView({
               className="raid-more"
               disabled={locked}
               onClick={(e) => open(e, () => setRetire(true))}
-              aria-label="End daily attack"
+              aria-label={adapter ? "Retire raid" : "End daily attack"}
             >
               ⋯
             </button>
           </footer>
           <div className="raid-persistence-note">
-            HP carries over daily · {activeMode==="kumite"?"two entries per day":"one entry per day"} ·{" "}
-            {status.earned.packTickets} daily tickets banked
+            {adapter ? adapter.persistenceNote : <>HP carries over daily · {activeMode==="kumite"?"two entries per day":"one entry per day"} ·{" "}
+            {status.earned.packTickets} daily tickets banked</>}
           </div>
         </section>
       </div>
@@ -953,7 +891,7 @@ export function BossRaidView({
             <Dialog.Title className="sr-only">
               {intel?.name ??
                 (retire
-                  ? "End daily attack"
+                  ? adapter?.retire.title ?? "End daily attack"
                   : forms
                     ? `${identity.title} tiers`
                     : "How to fight")}
@@ -967,10 +905,9 @@ export function BossRaidView({
             </button>
             {retire ? (
               <>
-                <h2>End today's attack?</h2>
+                <h2>{adapter?.retire.title ?? "End today's attack?"}</h2>
                 <p>
-                  Your damage and earned rewards stay saved. The daily entry is
-                  used.
+                  {adapter?.retire.description ?? "Your damage and earned rewards stay saved. The daily entry is used."}
                 </p>
                 <button
                   className="raid-fire"
@@ -979,9 +916,11 @@ export function BossRaidView({
                     onAction({ type: "retire" });
                   }}
                 >
-                  BANK DAMAGE & LEAVE
+                  {adapter?.retire.action ?? "BANK DAMAGE & LEAVE"}
                 </button>
               </>
+            ) : adapter ? (
+              adapter.helpContent
             ) : forms ? (
               <>
                 <small>{activeMode === "kumite" ? "KUMITE DOJO RAID · FIVE GRANDMASTERS" : "PUNCH ON PATROL · FIVE FORMS"}</small>

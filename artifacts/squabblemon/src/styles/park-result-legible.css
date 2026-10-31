@@ -39,4 +39,9 @@ html .park-result.park-result--illustrated .park-result-score b { color: #111; }
 @media (prefers-reduced-motion: reduce) { .park-result-splashes { display: none; } }
 /* Force dark readable text on the cream receipt (win + loss). */
 html body .park-result.park-result--illustrated .park-result-receipt :is(p, span, small, b, i, h3, strong, .park-award-label) { color: #1d1a16 !important; -webkit-text-fill-color: #1d1a16 !important; text-shadow: none !important; }
+/* This nested record shares the receipt's ink; give it a matching paper surface. */
+.park-result.park-result--illustrated .personal-fade-record {
+  background: #eee0bf;
+  border-left: 0;
+}
 html body .park-result.park-result--illustrated .park-result-receipt .park-award-label { color: #8a1f17 !important; -webkit-text-fill-color: #8a1f17 !important; }

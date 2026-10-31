@@ -10,6 +10,12 @@ import type { CosmeticLoadoutCardBackgrounds } from './cosmeticLoadoutCardBackgr
 
 export interface CosmeticLoadout {
   /**
+     * Owned deck cover. Null restores the default cover.
+     * @maxLength 80
+     * @nullable
+     */
+  deckCoverId?: string | null;
+  /**
      * Owned player mat for PvP and training. Null restores the free venue.
      * @maxLength 80
      * @nullable

@@ -6,8 +6,10 @@ import { highestPackRewardRarity as highestRarity, PACK_REWARD_RARITY_RANK as RA
 import { GymVenue, GYM_BAG_POSTER } from '../../components/venue/GymVenue';
 import { CornerStore } from './CornerStore';
 import '../../styles/ui-polish.css';
-import { PULL_BANNERS, getPullBannerSchedule, getPullBannerOccurrence, isPullBannerActive, pullBannerOddsVersion, pullBannerReceiptIdentity } from "@workspace/squabblemon-engine/pullBanners";
-import { STREET_PACK_RULES, streetPackCost, packReceiptPullCount, isPullCount, type PullCount, type PullSeasonProgress } from '@workspace/squabblemon-engine/packRules';
+import { PULL_BANNERS, ANUNAKI_PULL_BANNER, getPullBannerSchedule, getPullBannerOccurrence, nextAnunakiBanner, isPullBannerActive, pullBannerOddsVersion, pullBannerReceiptIdentity } from "@workspace/squabblemon-engine/pullBanners";
+import { isAnunakiCardId } from '@workspace/squabblemon-engine/anunakiWave';
+import { isAnunakiBannerCardId } from '@workspace/squabblemon-engine/anunakiBanner';
+import { FEATURED_PACK_RULES, featuredGuaranteeRemaining, STREET_PACK_RULES, streetPackCost, packReceiptPullCount, isPullCount, type PullCount, type PullSeasonProgress } from '@workspace/squabblemon-engine/packRules';
 import { GameGlyph } from '../../components/venue/GameGlyph';
 import { useLocation, useSearch } from 'wouter';
 import { Market } from './Market';
@@ -35,7 +37,7 @@ import {
   type PlayerBootstrap,
 } from '@workspace/api-client-react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { cardCatalog, catalogCardById, getCardImage, CARD_RARITY_DEFINITIONS } from '../../data';
+import { cardCatalog, catalogCardById, getCardImage, CARD_RARITY_DEFINITIONS, isGeneralPackCardId, isKumiteExclusiveCard } from '../../data';
 import { SceneFrame, sendScene } from '../../components/venue/SceneFrame';
 import { e2eAuthEnabled } from '../../lib/auth';
 import {
@@ -164,11 +166,13 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
     };
   }, [welcome.data?.serverNow, welcome.data?.receivedAt]);
   const schedule = getPullBannerSchedule(bannerNow);
-  const availableBanners = [schedule.standard, ...(schedule.featured ? [schedule.featured] : [])];
+  const upcomingAnunaki = nextAnunakiBanner(bannerNow);
+  const eventBanner = schedule.special ?? upcomingAnunaki;
+  const availableBanners = [schedule.standard, ...(schedule.featured ? [schedule.featured] : []), ...(eventBanner ? [eventBanner] : [])];
   const savedOccurrence = pending?.bannerOccurrenceId ?? pullBannerReceiptIdentity(opening?.oddsVersion).occurrenceId;
   const banner = getPullBannerOccurrence(savedOccurrence)
     ?? availableBanners.find(item => item.id === bannerId)
-    ?? { ...(PULL_BANNERS.find(item => item.id === bannerId) ?? PULL_BANNERS[0]), startsAt: null, endsAt: null, occurrenceId: null };
+    ?? { ...([...PULL_BANNERS, ANUNAKI_PULL_BANNER].find(item => item.id === bannerId) ?? PULL_BANNERS[0]), startsAt: null, endsAt: null, occurrenceId: null };
   const bannerIds = [...availableBanners.map(item => item.id), 'neighborhood'];
   const bannerIndex = neighborhood ? availableBanners.length : availableBanners.findIndex(item => item.id === banner.id);
   const browseLocked = phase !== 'idle' || Boolean(pending) || directPurchaseBusy;
@@ -180,7 +184,8 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   };
   useEffect(() => {
     const current = getPullBannerSchedule(bannerNow);
-    const active = [current.standard, ...(current.featured ? [current.featured] : [])];
+    const special = current.special ?? nextAnunakiBanner(bannerNow);
+    const active = [current.standard, ...(current.featured ? [current.featured] : []), ...(special ? [special] : [])];
     const index = active.findIndex(item => item.id === banner.id);
     for (const direction of [-1, 1]) {
       const neighbor = active[(Math.max(0, index) + direction + active.length) % active.length];
@@ -189,8 +194,10 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
         image.src = `${PUBLIC_BASE}assets/gacha-banners/${neighbor.id}-v1.webp`;
       }
     }
-  }, [banner.id, schedule.featured?.occurrenceId]);
+  }, [banner.id, schedule.featured?.occurrenceId, schedule.special?.occurrenceId]);
   const bannerActive = isPullBannerActive(banner, bannerNow);
+  const featuredProgress = bootstrap.profile.featuredPackProgress?.[banner.id] ?? { misses: 0, packs: 0 };
+  const guaranteeRemaining = featuredGuaranteeRemaining(featuredProgress.misses);
   const bannerRemaining = banner.endsAt ? Math.max(0, Date.parse(banner.endsAt) - bannerNow) : 0;
   const bannerTime = !bannerActive ? (banner.startsAt && bannerNow < Date.parse(banner.startsAt) ? 'Coming soon' : 'Ended') : `${Math.floor(bannerRemaining / 86400000)}d ${Math.floor(bannerRemaining / 3600000) % 24}h ${Math.floor(bannerRemaining / 60000) % 60}m left`;
   const [hits, setHits] = useState(0);
@@ -269,11 +276,12 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
     if (!sound || !welcomeVoiceCue) return;
     return playTutorialSequence(welcomeVoiceCue.split(','));
   }, [sound, welcomeVoiceCue]);
-  const unownedGameplayCards = cardCatalog.filter(card => !bootstrap.profile.ownedCardIds.includes(card.catalogId)).length;
-  const unownedCosmeticVariants = cardCatalog.reduce(
-    (count, card) => count + card.variantSlots.filter(variant => !bootstrap.profile.ownedVariants.includes(variant.id)).length,
-    0,
-  );
+  const unownedGameplayCards = cardCatalog.filter(card => (isGeneralPackCardId(card.catalogId)
+    || (banner.id === 'anunaki' && isAnunakiBannerCardId(card.catalogId)))
+    && !bootstrap.profile.ownedCardIds.includes(card.catalogId)).length;
+  const unownedCosmeticVariants = cardCatalog.filter(card => !isKumiteExclusiveCard(card.catalogId)
+    && !isAnunakiCardId(card.catalogId) && (isGeneralPackCardId(card.catalogId) || bootstrap.profile.ownedCardIds.includes(card.catalogId)))
+    .reduce((count, card) => count + card.variantSlots.filter(variant => !variant.progressionOnly && !bootstrap.profile.ownedVariants.includes(variant.id)).length, 0);
 
   useEffect(() => {
     mounted.current = true;
@@ -805,10 +813,10 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
         {neighborhood ? <NeighborhoodRecruit bootstrap={bootstrap} onBusyChange={setDirectPurchaseBusy}/> : banner.id !== 'standard' && <><div className="pull-feature__composition" key={banner.id}>
           <img className="pull-feature__poster-art" src={`${PUBLIC_BASE}assets/gacha-banners/${neighborhood ? 'standard' : banner.id}-v1.webp`} alt="" aria-hidden="true" />
           <header className="pull-feature__billing">
-            <p className="pull-feature__edition">{banner.id === 'standard' ? 'THE ORIGINAL STREET PACK' : `${banner.name} · WEEKLY FEATURE`}</p>
+            <p className="pull-feature__edition">{banner.id === 'standard' ? 'THE ORIGINAL STREET PACK' : `${banner.name} · ${banner.id === 'anunaki' ? 'EVENT FEATURE' : 'WEEKLY FEATURE'}`}</p>
             <h2 className="pull-feature__title">{banner.headline}</h2>
             <p className="pull-feature__schedule">{banner.endsAt
-              ? <time dateTime={banner.endsAt} title={`Ends ${new Date(banner.endsAt).toLocaleString()}`}>{bannerTime}</time>
+              ? <time dateTime={!bannerActive && banner.startsAt && bannerNow < Date.parse(banner.startsAt) ? banner.startsAt : banner.endsAt} title={`${bannerActive ? 'Ends' : 'Returns'} ${new Date(bannerActive ? banner.endsAt : banner.startsAt!).toLocaleString()}`}>{!bannerActive && banner.startsAt && bannerNow < Date.parse(banner.startsAt) ? `RETURNS ${bannerDateLabel(banner.startsAt)}` : bannerTime}</time>
               : bannerActive ? 'EVERY FIGHT STARTS SOMEWHERE' : 'FEATURE ENDED · CHOOSE ANOTHER BANNER'}</p>
           </header>
           <div className="pull-feature__cast" aria-label={`${banner.name} showcase`}>
@@ -841,6 +849,11 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
                 </button>;
               })}
             </div>
+            <div className="pull-feature__guarantee" aria-label="Featured fighter guarantee" data-ready={guaranteeRemaining === 1}>
+              <strong>{FEATURED_PACK_RULES.chance}% FEATURED</strong>
+              <span>{preview ? 'Preview · sample rewards' : guaranteeRemaining === 1 ? 'NEXT PACK: FEATURED GUARANTEED' : `Featured within ${guaranteeRemaining} packs`}</span>
+              <small>{featuredProgress.packs} opened · Progress saved for this banner</small>
+            </div>
             <p className="pull-feature__pity">{preview ? 'Preview · sample rewards' : isMultiPull ? 'Rare+ per full 10-pull'
               : unownedCosmeticVariants === 0 ? 'All featured styles owned'
               : `Style guarantee ${bootstrap.profile.packPity} / ${bootstrap.packConfig.pityLimit}`}</p>
@@ -855,9 +868,15 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
           </div>
         </>}
         <p className="pull-feature__description" data-testid="banner-rotation" hidden={neighborhood}>
-          {banner.id !== 'standard' && <span className="pull-feature__boost">1.5× featured weight · Same rarity odds</span>}
-          {schedule.featured && <span>This week: {schedule.featured.name} · Ends <time dateTime={schedule.featured.endsAt!}>{bannerDateLabel(schedule.featured.endsAt!)}</time></span>}
-          <span>Next: {schedule.next.name} · <time dateTime={schedule.next.startsAt!}>{bannerDateLabel(schedule.next.startsAt!)}</time></span>
+          {banner.id !== 'standard' && <span className="pull-feature__boost">10% featured chance · Guaranteed within 10 packs</span>}
+          {banner.id === 'anunaki' ? <>
+            <span>{bannerActive ? 'Anunaki · Ends ' : 'Anunaki returns '}<time dateTime={bannerActive ? banner.endsAt! : upcomingAnunaki?.startsAt!}>{bannerDateLabel(bannerActive ? banner.endsAt! : upcomingAnunaki?.startsAt!)}</time></span>
+            {bannerActive && upcomingAnunaki && <span>Next return: <time dateTime={upcomingAnunaki.startsAt!}>{bannerDateLabel(upcomingAnunaki.startsAt!)}</time> · 7 days</span>}
+            <span>Monthly first Monday · Saved guarantee progress</span>
+          </> : <>
+            {schedule.featured && <span>This week: {schedule.featured.name} · Ends <time dateTime={schedule.featured.endsAt!}>{bannerDateLabel(schedule.featured.endsAt!)}</time></span>}
+            <span>Next: {schedule.next.name} · <time dateTime={schedule.next.startsAt!}>{bannerDateLabel(schedule.next.startsAt!)}</time></span>
+          </>}
         </p>
       </section>
       </aside>
@@ -934,12 +953,13 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
         </header>
         {info === 'odds' ? (
           <>
-            <p><strong>{banner.name} banner.</strong> {banner.id === 'standard' ? 'Standard card selection.' : 'Featured cards receive 1.5× relative selection weight within the rolled rarity. Rarity odds stay the same. A featured card is not guaranteed. New-card protection and within-pack repeat protection apply before the featured weights. The ten-pull guarantee uses the same featured weights.'}</p>
-            <p>One featured theme rotates every Monday at 00:00 UTC. Street Pack stays available. Style pity carries across every banner and rotation.</p>
+            <p><strong>{banner.name} banner.</strong> {banner.id === 'standard' ? 'Standard card selection.' : 'Slot 5 has a 10% base chance for a featured fighter, selected equally from this roster. A miss draws a normal card. Featured fighters are excluded from the other four slots and from the normal fallback, so ownership never changes the 10% base chance.'}</p>
+            {banner.id !== 'standard' && <p><strong>Featured guaranteed within {guaranteeRemaining} {guaranteeRemaining === 1 ? 'pack' : 'packs'}.</strong> After nine consecutive misses, the next pack guarantees a featured fighter and prioritizes an unowned fighter. Any featured hit resets this counter. Singles and batches advance identically. Progress is saved separately for each banner and survives its return. Including the ten-pack guarantee, the long-run featured rate is approximately 15.35% per pack.</p>}
+            <p>One featured theme rotates every Monday at 00:00 UTC. Anunaki returns for seven days from the first Monday each month after its launch window. Street Pack stays available. Cosmetic pity carries across banners and is separate from the featured-fighter guarantee.{banner.id === 'anunaki' ? ' The seven featured characters are available on this event banner only. The poster also shows Anu, who is earned through the Anunaki event along with Yakub and Caucus Mountaineer.' : ''}</p>
             {banner.id !== 'standard' && <div className="pull-banner-roster">
               <h3>{banner.featuredCardIds.length} featured cards</h3>
               <p>Story-exclusive rewards keep their story unlocks and are excluded from all random pulls.</p>
-              <ul>{banner.featuredCardIds.map(id => <li key={id}>{catalogCardById[id].name} <small>{CARD_RARITY_DEFINITIONS[catalogCardById[id].rarity].label}</small></li>)}</ul>
+              <ul>{banner.featuredCardIds.map(id => <li key={id}>{catalogCardById[id]?.name ?? id} <small>{(FEATURED_PACK_RULES.chance / banner.featuredCardIds.length).toFixed(3)}% per pack · {catalogCardById[id] ? CARD_RARITY_DEFINITIONS[catalogCardById[id].rarity].label : 'Unavailable'}</small></li>)}</ul>
             </div>}
             {preview ? (
               <p>
@@ -959,11 +979,12 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
                     : `You own every featured cosmetic variant, so a featured-style result converts to ${STREET_PACK_RULES.bonus.exhaustedStyleClout} Clout and cosmetic pity resets.`}
                 </p>
                 <div className="gym-odds">
+                  {banner.id !== 'standard' && <div><span><strong>Slot 5 · Featured fighter</strong><small>10% base chance, equal selection among the listed roster. After nine misses, the next pack guarantees an unowned featured fighter when available. Natural hits reset the counter. Base individual rates below exclude this ownership-aware guarantee.</small></span><b>10%</b></div>}
                   {bootstrap.packConfig.odds.map((odd, i) => (
                     <div key={i}>
                       <span>
-                        <strong>{odd.label}</strong>
-                        <small>{odd.detail}</small>
+                        <strong>{banner.id !== 'standard' && i === 1 ? 'Slots 3–4 and slot 5 fallback · Normal fighters' : odd.label}</strong>
+                        <small>{banner.id !== 'standard' && i === 1 ? `Slots 1–4 draw normal fighters. Slot 5 draws a normal fighter on its 90% featured miss (except when the featured guarantee is due). Normal draws use the rarity rates below and exclude this banner’s featured roster. ${odd.detail}` : odd.detail}</small>
                       </span>
                       <b>{odd.chance}%</b>
                     </div>
@@ -981,7 +1002,8 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
               <article key={item.id}>
                 <span>{new Date(item.createdAt).toLocaleString()}</span>
                 <strong>
-                  {PULL_BANNERS.find(b => b.id === pullBannerReceiptIdentity(item.oddsVersion).bannerId)?.name ?? 'Street Pack'} · {item.pullCount > 1 ? `${item.pullCount}× · ` : ''}{item.cost} {item.paymentMethod === 'ticket' ? 'ticket(s)' : 'Clout'}
+                  {[...PULL_BANNERS, ANUNAKI_PULL_BANNER].find(b => b.id === pullBannerReceiptIdentity(item.oddsVersion).bannerId)?.name ?? 'Street Pack'} · {item.pullCount > 1 ? `${item.pullCount}× · ` : ''}{item.cost} {item.paymentMethod === 'ticket' ? 'ticket(s)' : 'Clout'}
+                  {item.featuredProgress && <small> · {item.featuredProgress.hits.length} featured · Featured within {featuredGuaranteeRemaining(item.featuredProgress.missesAfter)} packs</small>}
                 </strong>
                 <p>{item.rewards.map((r) => r.name ?? resourceName(r)).join(' · ')}</p>
               </article>

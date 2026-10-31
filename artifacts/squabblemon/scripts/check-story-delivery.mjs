@@ -5,7 +5,7 @@ export const STORY_CHAPTER_BUDGET = 128 * 1024;
 export function checkStoryDelivery(report, index) {
   const chunks = new Map(report.chunks.map(chunk => [chunk.fileName, chunk]));
   const normalize = id => id.replaceAll('\\', '/').split('?')[0];
-  const canonical = /\/lib\/squabblemon-engine\/src\/(?:story|chapterOneDialogue|seasonChapters|seasonTwo|seasonOneRewrite|seasonTwoDialogueExpansion|storyExpansions|storySpecials|storySquabbleHouse|storyKumite)(?:\.|\/)/;
+  const canonical = /\/lib\/squabblemon-engine\/src\/(?:story|chapterOneDialogue|seasonChapters|seasonTwo|seasonOneRewrite|seasonTwoDialogueExpansion|storyExpansions|storySpecials|storySquabbleHouse|storyKumite|storyAnunaki)(?:\.|\/)/;
   const chapter = /\/src\/lib\/story\/generated\/(?!index\.json$)[^/]+\.json$/;
   const closure = start => {
     const seen = new Set();

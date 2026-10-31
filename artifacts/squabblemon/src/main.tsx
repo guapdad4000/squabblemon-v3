@@ -26,7 +26,10 @@ const root = createRoot(document.getElementById('root')!, {
 
 root.render(<LoadingScreen />);
 
-if (import.meta.env.VITE_BATTLE_PERF === '1' && new URLSearchParams(window.location.search).has('__battle_perf')) {
+if (import.meta.env.DEV && new URLSearchParams(window.location.search).has('__anunaki_arena')) {
+  const { AnunakiArena } = await import('./components/AnunakiArena');
+  root.render(<ErrorBoundary><AnunakiArena /></ErrorBoundary>);
+} else if (import.meta.env.VITE_BATTLE_PERF === '1' && new URLSearchParams(window.location.search).has('__battle_perf')) {
   const { BattlePerfHarness } = await import('./components/BattlePerfHarness');
   root.render(<BattlePerfHarness />);
 } else {

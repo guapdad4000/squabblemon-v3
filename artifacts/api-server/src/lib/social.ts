@@ -6,6 +6,7 @@ import { socialIdentitiesTable as identities,
   socialInvitationsTable as invites, socialThrottleTable as throttles, onlineRoomsTable as rooms } from "@workspace/db";
 import { OnlineError, createOnlineRoom, joinOnlineRoom, expireOnlineRoom, type OnlineRoom } from "@workspace/squabblemon-engine/multiplayer";
 import { loadMember } from "./onlineMatches";
+import { compatibleMembers } from './onlineCompatibility';
 import { eligiblePair, lockSocial, pair, syncRoomInvitation, type SocialTx } from "./socialRoomGuard";
 import type { SocialPlayer, SocialRequest } from "@workspace/api-zod";
 import { homiesDiagnostics, homiesTransaction } from "./homiesDiagnosticsRuntime";
@@ -186,7 +187,7 @@ export async function mutateRelationship(userId: string, operation: "send" | "re
     return state(tx, userId);
   }));
 }
-export async function sendFadeInvitation(userId: string, input: { friendCode: string; deckId: string; requestId: string }) {
+export async function sendFadeInvitation(userId: string, input: { friendCode: string; deckId: string; requestId: string }, supportsAnunaki = false) {
   return homiesDiagnostics.operation("social_write", "invitation_send", () => homiesTransaction(async tx => {
     await lockSocial(tx);
     const other = await target(tx, input.friendCode);
@@ -208,7 +209,7 @@ export async function sendFadeInvitation(userId: string, input: { friendCode: st
     const [active] = await tx.select().from(invites).where(and(eq(invites.low, low), eq(invites.high, high))).orderBy(desc(invites.createdAt)).limit(1);
     if (active?.status === "pending") throw new OnlineError("An invitation is already pending between you.", 409);
     if (active && Date.now() - active.createdAt.getTime() < 60_000) throw new OnlineError("Wait a minute before inviting this homie again.", 429);
-    const member = await loadMember(tx, userId, input.deckId);
+    const member = await loadMember(tx, userId, input.deckId, true, supportsAnunaki);
     const open = await tx.select({ status: sql<string>`coalesce(${rooms.liveState}, ${rooms.state})->>'status'` }).from(rooms).where(and(eq(rooms.hostUserId, userId), sql`${rooms.expiresAt} > now()`));
     if (open.filter(r => ["waiting", "active"].includes(r.status)).length >= 5) throw new OnlineError("Close an existing room first.", 429);
     const current = createOnlineRoom(member, randomInt(2) ? "player" : "cpu", Date.now());
@@ -221,7 +222,7 @@ export async function sendFadeInvitation(userId: string, input: { friendCode: st
     return invitationView(tx, invitation, userId);
   }));
 }
-export async function accessInvitation(userId: string, id: string, input?: { action: string; deckId?: string }) {
+export async function accessInvitation(userId: string, id: string, input?: { action: string; deckId?: string }, supportsAnunaki = false) {
   return homiesDiagnostics.operation(input ? "social_write" : "social_read", input ? "invitation_write" : "invitation_read", () => homiesTransaction(async tx => {
     await lockSocial(tx);
     const [row] = await tx.select().from(invites).where(eq(invites.id, id));
@@ -235,7 +236,9 @@ export async function accessInvitation(userId: string, id: string, input?: { act
     if (input.action === "accept") {
       if (!input.deckId) throw new OnlineError("Choose a gang.", 400);
       if (!(await eligiblePair(tx, row.sender, row.recipient))) throw new OnlineError("This invitation is unavailable.", 409);
-      current = joinOnlineRoom(current, await loadMember(tx, userId, input.deckId), Date.now());
+      const member = await loadMember(tx, userId, input.deckId, true, supportsAnunaki);
+      if (!compatibleMembers(current.members.player, member)) throw new OnlineError('Both players need the latest game update for this gang. Refresh and try again.', 409);
+      current = joinOnlineRoom(current, member, Date.now());
       await tx.update(invites).set({ status: "accepted" }).where(eq(invites.id, id));
     } else {
       await tx.update(invites).set({ status: input.action === "cancel" ? "cancelled" : "declined" }).where(eq(invites.id, id));

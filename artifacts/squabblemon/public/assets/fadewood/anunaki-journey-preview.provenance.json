@@ -1,0 +1,19 @@
+{
+  "asset": "assets/fadewood/anunaki-journey-preview.webp",
+  "source": "output/anunaki-v2-src/artifacts/squabblemon/public/assets/anunaki-event/journey.webp",
+  "canonicalSourceReference": "output/anunaki-v2-src/lib/squabblemon-engine/src/storySeasons.ts: special-anunaki-arrival posterAssetId",
+  "sourceSha256": "507718c2ceec5421378a5a0f1e0335a92e37c38b2b258b0af4df7bd7b9027ca3",
+  "sourceBytes": 341774,
+  "sourceDimensions": [
+    1400,
+    788
+  ],
+  "derivativeSha256": "78831f664cf1f58b9f857b262aa4af6ade3c80b36b29a6f6684f80aa374b058f",
+  "derivativeBytes": 161668,
+  "derivativeDimensions": [
+    960,
+    540
+  ],
+  "processing": "Full frame, width960px without enlargement; WebP quality84 effort6. No crop or generated content.",
+  "use": "Fadewood UI illustration only. UFO remains host. No story/gameplay content, unlock, or reward is enabled."
+}

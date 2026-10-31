@@ -1,0 +1,1217 @@
+/* Combat accents are decorative. Lane geometry and release hit areas stay still. */
+.bt-combat-number {
+  --bt-number-drift: -14px;
+  --bt-number-angle: -9deg;
+  position: absolute;
+  z-index: 10;
+  pointer-events: none;
+  text-align: center;
+  white-space: nowrap;
+  transform: translateX(-50%);
+  animation: bt-number-flight 1.25s cubic-bezier(0.16, 0.75, 0.25, 1) both;
+}
+.bt-number-opps {
+  --bt-number-drift: 14px;
+  --bt-number-angle: 9deg;
+}
+.bt-combat-number > b {
+  display: block;
+  color: #fff9ed;
+  font:
+    700 40px/0.85 BTHemi,
+    Impact,
+    sans-serif;
+  letter-spacing: -1.5px;
+  -webkit-text-stroke: 1.2px #211811;
+  paint-order: stroke fill;
+  text-shadow:
+    2px 3px 0 #211811,
+    4px 5px 0 #21181180;
+  animation: bt-number-punch 0.38s cubic-bezier(0.14, 0.8, 0.25, 1) both;
+}
+.bt-number-you.bt-number-damage > b {
+  color: #efc4b9;
+  text-shadow:
+    2px 3px 0 #472820,
+    4px 5px 0 #21181180;
+}
+.bt-combat-number > small {
+  display: block;
+  margin: 5px -12px 0;
+  color: #fff7e5;
+  font:
+    700 10px/0.9 BTHemi,
+    sans-serif;
+  letter-spacing: 1.1px;
+  text-shadow:
+    1px 2px 0 #1c1812,
+    -1px -1px #1c1812;
+}
+.bt-number-heavy > b {
+  font-size: 49px;
+  -webkit-text-stroke: 1.6px #211811;
+}
+.bt-number-burn > b {
+  color: #f4ba8a;
+}
+.bt-number-gain > b {
+  color: #d6efc4;
+}
+.bt-number-gain {
+  --bt-number-angle: -4deg;
+}
+.bt-number-burn > small {
+  color: #f4c697;
+}
+.bt-impact {
+  z-index: 8;
+  letter-spacing: 0.35px;
+  -webkit-text-stroke: 0.8px #201a13;
+  paint-order: stroke fill;
+  text-shadow: 1px 2px #1a1510;
+}
+.bt-taking-hit,
+.bt-unit-opponent.bt-taking-hit {
+  animation: none;
+}
+.bt-unit > .bt-art-recoil {
+  animation: bt-portrait-recoil 0.34s ease-out both;
+  transform-origin: 50% 80%;
+}
+.bt-unit-opponent > .bt-art-recoil {
+  animation-name: bt-portrait-recoil-opps;
+}
+.bt-unit > .bt-hands-hit {
+  animation: bt-hands-punch 0.3s ease-out both;
+}
+.bt-unit > .bt-hit-flash {
+  background: #fff2cf;
+  animation: bt-impact-exposure 0.23s ease-out both;
+}
+
+.bt-contact-burst {
+  position: absolute;
+  z-index: 7;
+  left: 50%;
+  width: min(168px, 110%);
+  height: 0;
+  pointer-events: none;
+  transform: translateX(-50%);
+}
+.bt-contact-burst > .bt-contact-fx {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 80/87;
+  left: 50%;
+  bottom: 0;
+}
+.bt-contact-ink {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 118%;
+  height: 72px;
+  transform: translate(-50%, 10%) rotate(-14deg);
+  animation: bt-contact-cut 0.38s ease-out both;
+}
+.bt-contact-ink:before,
+.bt-contact-ink:after {
+  content: '';
+  position: absolute;
+  inset: 18% 0;
+  background: #fff7df;
+  clip-path: polygon(
+    0 67%,
+    42% 43%,
+    58% 0,
+    54% 43%,
+    100% 18%,
+    59% 57%,
+    44% 100%,
+    47% 58%
+  );
+  filter: drop-shadow(2px 3px #19140e);
+}
+.bt-contact-ink:after {
+  inset: -30% 28%;
+  rotate: 73deg;
+  opacity: 0.75;
+}
+.bt-contact-fx {
+  filter: drop-shadow(0 2px 1px #2f1b0b66);
+}
+
+/* A breach drives inward from the correct base, then throws wood out across that lane. */
+.bt-breach-impact {
+  --bt-shatter-y: 1;
+  --bt-shatter-turn: -8deg;
+  position: absolute;
+  left: 50%;
+  width: min(280px, 116%);
+  height: min(250px, 58%);
+  transform: translateX(-50%);
+  z-index: 9;
+  pointer-events: none;
+  isolation: isolate;
+  animation: bt-base-life 1.45s linear both;
+}
+.bt-breach-top {
+  top: 0;
+}
+.bt-breach-bottom {
+  bottom: 0;
+  --bt-shatter-y: -1;
+  --bt-shatter-turn: 8deg;
+}
+.bt-breach-art {
+  position: absolute;
+  inset: 0;
+  animation: bt-base-punch 0.7s cubic-bezier(0.12, 0.8, 0.22, 1) both;
+}
+.bt-breach-art > img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 6px 3px #160e0780);
+}
+.bt-breach-impact > strong {
+  position: absolute;
+  top: 57%;
+  left: 50%;
+  transform: translateX(-50%) rotate(-9deg);
+  color: #fff8e7;
+  font:
+    400 clamp(35px, 4.8vw, 65px)/0.95 BTBlzee,
+    Impact,
+    sans-serif;
+  white-space: nowrap;
+  -webkit-text-stroke: 3px #241810;
+  paint-order: stroke fill;
+  text-shadow: 3px 4px 0 #5b271c;
+  animation: bt-break-word 0.6s cubic-bezier(0.1, 0.8, 0.3, 1) both;
+}
+.bt-breach-impact > span {
+  position: absolute;
+  top: 82%;
+  left: 50%;
+  transform: translateX(-50%) rotate(-5deg);
+  color: #fff6dc;
+  font:
+    700 34px/0.9 BTHemi,
+    Impact,
+    sans-serif;
+  -webkit-text-stroke: 1px #241810;
+  paint-order: stroke fill;
+  text-shadow: 2px 3px #2b1a10;
+  white-space: nowrap;
+}
+.bt-breach-impact > span > small {
+  font-size: 16px;
+  color: #e9cc94;
+}
+.bt-breach-bottom > strong {
+  color: #f2c4b5;
+}
+.bt-breach-split {
+  position: absolute;
+  left: 50%;
+  top: -4%;
+  width: 140%;
+  height: 20%;
+  transform: translateX(-50%);
+  background: linear-gradient(transparent, #fff2c7aa, transparent);
+  clip-path: polygon(
+    0 20%,
+    19% 40%,
+    25% 17%,
+    39% 52%,
+    48% 0,
+    55% 45%,
+    72% 25%,
+    80% 50%,
+    100% 35%,
+    100% 70%,
+    76% 57%,
+    64% 90%,
+    50% 60%,
+    35% 100%,
+    29% 63%,
+    0 80%
+  );
+  animation: bt-base-crack 0.52s ease-out both;
+}
+.bt-breach-bottom > .bt-breach-split {
+  top: auto;
+  bottom: -4%;
+  rotate: 180deg;
+}
+.bt-splinter {
+  --bt-chip-x: -90px;
+  --bt-chip-y: 50px;
+  --bt-chip-r: -120deg;
+  position: absolute;
+  left: 50%;
+  top: 45%;
+  width: 14px;
+  height: 27px;
+  background: linear-gradient(
+    100deg,
+    #3b261a 0 22%,
+    #b7894d 24% 55%,
+    #edc789 57% 68%,
+    #79512c 70%
+  );
+  clip-path: polygon(19% 0, 90% 14%, 100% 66%, 60% 100%, 0 71%);
+  animation: bt-wood-chip 0.8s 0.04s cubic-bezier(0.14, 0.6, 0.38, 1) both;
+}
+.bt-splinter-1 {
+  --bt-chip-x: 90px;
+  --bt-chip-y: 35px;
+  --bt-chip-r: 175deg;
+  width: 11px;
+  height: 20px;
+}
+.bt-splinter-2 {
+  --bt-chip-x: -65px;
+  --bt-chip-y: -65px;
+  --bt-chip-r: 80deg;
+  width: 9px;
+  height: 16px;
+}
+.bt-splinter-3 {
+  --bt-chip-x: 62px;
+  --bt-chip-y: -75px;
+  --bt-chip-r: -140deg;
+  width: 16px;
+  height: 24px;
+}
+.bt-splinter-4 {
+  --bt-chip-x: -38px;
+  --bt-chip-y: 95px;
+  --bt-chip-r: -230deg;
+  width: 6px;
+  height: 14px;
+}
+.bt-splinter-5 {
+  --bt-chip-x: 40px;
+  --bt-chip-y: 110px;
+  --bt-chip-r: 215deg;
+  width: 8px;
+  height: 19px;
+}
+.bt-base-pips img.bt-pip-scored {
+  animation: bt-score-punch 0.65s cubic-bezier(0.12, 0.8, 0.25, 1) both;
+}
+.bt-arena[data-active='false']
+  :is(
+    .bt-combat-number,
+    .bt-combat-number > b,
+    .bt-contact-ink,
+    .bt-breach-impact,
+    .bt-breach-art,
+    .bt-breach-impact > strong,
+    .bt-breach-split,
+    .bt-splinter,
+    .bt-pip-scored,
+    .bt-art-recoil,
+    .bt-hands-hit,
+    .bt-hit-flash
+  ) {
+  animation-play-state: paused;
+}
+
+@keyframes bt-number-flight {
+  0% {
+    opacity: 0;
+    translate: 0 9px;
+    rotate: var(--bt-number-angle);
+  }
+  8%,
+  62% {
+    opacity: 1;
+  }
+  18% {
+    translate: 0 -7px;
+  }
+  62% {
+    translate: calc(var(--bt-number-drift) * 0.45) -14px;
+  }
+  100% {
+    opacity: 0;
+    translate: var(--bt-number-drift) -44px;
+    rotate: 0deg;
+  }
+}
+@keyframes bt-number-punch {
+  0% {
+    scale: 1.8 0.6;
+  }
+  24% {
+    scale: 0.88 1.18;
+  }
+  48% {
+    scale: 1.1 0.96;
+  }
+  100% {
+    scale: 1;
+  }
+}
+@keyframes bt-portrait-recoil {
+  0% {
+    translate: 0 0;
+    rotate: 0;
+  }
+  18% {
+    translate: -3px 8px;
+    rotate: -4deg;
+  }
+  42% {
+    translate: 2px 3px;
+    rotate: 2deg;
+  }
+  100% {
+    translate: 0 0;
+    rotate: 0;
+  }
+}
+@keyframes bt-portrait-recoil-opps {
+  0% {
+    translate: 0 0;
+    rotate: 0;
+  }
+  18% {
+    translate: 3px -8px;
+    rotate: 4deg;
+  }
+  42% {
+    translate: -2px -3px;
+    rotate: -2deg;
+  }
+  100% {
+    translate: 0 0;
+    rotate: 0;
+  }
+}
+@keyframes bt-hands-punch {
+  0% {
+    scale: 1.5;
+    color: #8d352c;
+  }
+  100% {
+    scale: 1;
+  }
+}
+@keyframes bt-impact-exposure {
+  0%,
+  18% {
+    opacity: 0.65;
+  }
+  55% {
+    opacity: 0.15;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes bt-contact-cut {
+  0% {
+    opacity: 0;
+    scale: 0.35 1.5;
+  }
+  12% {
+    opacity: 0.9;
+    scale: 1.1 0.85;
+  }
+  35% {
+    opacity: 0.6;
+  }
+  100% {
+    opacity: 0;
+    scale: 1.35 0.5;
+  }
+}
+@keyframes bt-base-life {
+  0% {
+    opacity: 0;
+  }
+  4%,
+  78% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes bt-base-punch {
+  0% {
+    scale: 0.35;
+    rotate: var(--bt-shatter-turn);
+    translate: 0 calc(-24px * var(--bt-shatter-y));
+  }
+  12% {
+    scale: 1.15;
+    translate: 0 calc(8px * var(--bt-shatter-y));
+  }
+  23% {
+    scale: 0.96;
+    translate: 3px 0;
+    rotate: 2deg;
+  }
+  36% {
+    scale: 1.04;
+    translate: -2px 0;
+    rotate: -1deg;
+  }
+  58%,
+  100% {
+    scale: 1;
+    translate: 0 0;
+    rotate: 0deg;
+  }
+}
+@keyframes bt-break-word {
+  0%,
+  15% {
+    opacity: 0;
+    scale: 1.9 0.65;
+  }
+  32% {
+    opacity: 1;
+    scale: 0.92 1.1;
+  }
+  60%,
+  100% {
+    opacity: 1;
+    scale: 1;
+  }
+}
+@keyframes bt-base-crack {
+  0% {
+    opacity: 0;
+    scale: 0.2 1.6;
+  }
+  12% {
+    opacity: 0.9;
+    scale: 1 1;
+  }
+  100% {
+    opacity: 0;
+    scale: 1.2 0.3;
+  }
+}
+@keyframes bt-wood-chip {
+  0% {
+    opacity: 0;
+    translate: 0 0;
+    rotate: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 0;
+    translate: var(--bt-chip-x) calc(var(--bt-chip-y) * var(--bt-shatter-y));
+    rotate: var(--bt-chip-r);
+  }
+}
+@keyframes bt-score-punch {
+  0% {
+    scale: 0.65;
+    rotate: -20deg;
+  }
+  22% {
+    scale: 1.8;
+    rotate: 8deg;
+    filter: drop-shadow(0 0 5px #ffd95e);
+  }
+  55% {
+    scale: 0.92;
+    rotate: -4deg;
+  }
+  100% {
+    scale: 1;
+    rotate: 0;
+    filter: none;
+  }
+}
+
+@media (max-width: 600px) {
+  .bt-combat-number > b {
+    font-size: 32px;
+  }
+  .bt-number-heavy > b {
+    font-size: 39px;
+  }
+  .bt-combat-number > small {
+    font-size: 8px;
+    letter-spacing: 0.7px;
+  }
+  .bt-contact-burst {
+    width: min(110px, 120%);
+  }
+  .bt-contact-ink {
+    height: 51px;
+  }
+  .bt-breach-impact {
+    width: 128%;
+    height: min(175px, 50%);
+  }
+  .bt-breach-impact > strong {
+    font-size: 35px;
+    -webkit-text-stroke: 2px #241810;
+  }
+  .bt-breach-impact > span {
+    font-size: 29px;
+  }
+  .bt-breach-impact > span > small {
+    font-size: 13px;
+  }
+  .bt-splinter {
+    scale: 0.7;
+    --bt-chip-x: -45px;
+  }
+  .bt-splinter-1 {
+    --bt-chip-x: 45px;
+  }
+  .bt-splinter-2 {
+    --bt-chip-x: -35px;
+  }
+  .bt-splinter-3 {
+    --bt-chip-x: 35px;
+  }
+}
+@media (max-height: 470px) and (min-width: 600px) {
+  .bt-combat-number > b {
+    font-size: 29px;
+  }
+  .bt-number-heavy > b {
+    font-size: 35px;
+  }
+  .bt-combat-number > small {
+    font-size: 8px;
+  }
+  .bt-contact-burst {
+    width: 100px;
+  }
+  .bt-contact-ink {
+    height: 48px;
+  }
+  .bt-breach-impact {
+    width: min(190px, 100%);
+    height: 85%;
+  }
+  .bt-breach-impact > strong {
+    font-size: 33px;
+  }
+  .bt-breach-impact > span {
+    font-size: 25px;
+  }
+  .bt-breach-impact > span > small {
+    font-size: 12px;
+  }
+  .bt-splinter {
+    scale: 0.65;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .bt-contact-burst,
+  .bt-breach-split,
+  .bt-splinter {
+    display: none;
+  }
+  .bt-combat-number {
+    opacity: 1;
+    translate: 0 0;
+    rotate: 0;
+  }
+  .bt-breach-impact {
+    opacity: 1;
+  }
+  .bt-breach-art {
+    opacity: 0.8;
+  }
+  .bt-unit > .bt-art-recoil {
+    translate: 0 0;
+    rotate: 0;
+  }
+}
+
+/* Brief material smoke, with one plume per damaged lane. Never captures a drop. */
+.bt-lane-smoke {
+  position: absolute;
+  left: 50%;
+  width: min(105px, 92%);
+  height: 160px;
+  object-fit: contain;
+  object-position: bottom;
+  transform: translateX(-50%);
+  transform-origin: 50% 100%;
+  z-index: 6;
+  pointer-events: none;
+  animation: bt-smoke-rise 1.25s ease-out both;
+}
+.bt-lane-smoke-base {
+  width: min(180px, 125%);
+  height: 220px;
+}
+.bt-hands-shed {
+  position: absolute;
+  right: -8px;
+  top: 0;
+  z-index: 30;
+  font:
+    700 23px/1 BTHemi,
+    Impact,
+    sans-serif;
+  color: #f2b4a4;
+  -webkit-text-stroke: 1px #25130e;
+  paint-order: stroke fill;
+  text-shadow: 1px 2px #25130e;
+  pointer-events: none;
+  animation: bt-hands-shed 0.65s ease-out both;
+}
+.bt-breach-impact {
+  width: min(360px, 145%);
+  z-index: 35;
+}
+.bt-breach-speed {
+  position: absolute;
+  inset: -15%;
+  background: repeating-conic-gradient(
+    from 8deg at 50% 50%,
+    transparent 0deg 17deg,
+    #fff0cbcc 18deg 19deg,
+    transparent 20deg 32deg
+  );
+  mask-image: radial-gradient(transparent 10%, #000 55%, transparent 72%);
+  animation: bt-base-rays 0.5s ease-out both;
+  pointer-events: none;
+}
+.bt-breach-art {
+  filter: drop-shadow(0 0 7px #efc35f88);
+}
+@keyframes bt-smoke-rise {
+  0% {
+    opacity: 0;
+    scale: 0.35 0.2;
+    translate: 0 15px;
+  }
+  18% {
+    opacity: 0.75;
+    scale: 0.85 0.8;
+  }
+  65% {
+    opacity: 0.4;
+    scale: 1 1;
+    translate: 0 -12px;
+  }
+  100% {
+    opacity: 0;
+    scale: 1.1 1.1;
+    translate: 12px -38px;
+  }
+}
+@keyframes bt-hands-shed {
+  0% {
+    opacity: 1;
+    translate: 0 0;
+    scale: 1.2;
+  }
+  100% {
+    opacity: 0;
+    translate: 20px 30px;
+    rotate: 22deg;
+    scale: 0.75;
+  }
+}
+@keyframes bt-base-rays {
+  0% {
+    opacity: 0;
+    scale: 0.5;
+  }
+  18% {
+    opacity: 1;
+    scale: 1.2;
+  }
+  100% {
+    opacity: 0;
+    scale: 1.45;
+  }
+}
+.bt-arena[data-active='false']
+  :is(.bt-lane-smoke, .bt-hands-shed, .bt-breach-speed) {
+  animation-play-state: paused;
+}
+
+/* Result is an arcade stage, not another settings window. */
+.bt-finish {
+  position: absolute;
+  inset: 0;
+  z-index: 60;
+  display: grid;
+  place-items: center;
+  overflow: auto;
+  background: #100f0bd9;
+  isolation: isolate;
+  color: #fff2d5;
+  text-align: center;
+  animation: bt-finish-arrive 0.35s ease-out both;
+}
+.bt-finish-ink {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    linear-gradient(
+      165deg,
+      transparent 24%,
+      #e7b83222 25% 60%,
+      transparent 61%
+    ),
+    radial-gradient(ellipse at 50% 30%, #b9872233, transparent 65%);
+  pointer-events: none;
+}
+.bt-finish-body {
+  width: min(560px, 94%);
+  padding: 16px 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.bt-finish-body > small {
+  font:
+    700 9px/1.2 BTHemi,
+    sans-serif;
+  letter-spacing: 1.3px;
+}
+.bt-finish-hand {
+  width: clamp(80px, 19dvh, 170px);
+  height: clamp(80px, 19dvh, 170px);
+  object-fit: contain;
+  filter: drop-shadow(0 6px 8px #0009);
+  animation: bt-finish-hand 0.65s cubic-bezier(0.15, 0.8, 0.2, 1) both;
+}
+.bt-finish h2 {
+  margin: 0;
+  font:
+    400 clamp(32px, 7vw, 65px)/1 BTBlzee,
+    Impact,
+    sans-serif;
+  rotate: -3deg;
+  text-shadow: 3px 4px #100c08;
+  animation: bt-finish-title 0.55s 0.12s both;
+}
+.bt-finish-body > p {
+  margin: 9px 0;
+  font:
+    700 11px/1.3 BTHemi,
+    sans-serif;
+  color: #cbbda5;
+}
+.bt-finish-score {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin: 5px 0;
+}
+.bt-finish-score > span {
+  font:
+    700 10px/1 BTHemi,
+    sans-serif;
+}
+.bt-finish-score > strong {
+  font:
+    700 39px/1 BTHemi,
+    sans-serif;
+}
+.bt-finish-score i {
+  font-style: normal;
+  opacity: 0.35;
+}
+.bt-finish .bt-primary {
+  margin: 12px 0 0;
+  min-height: 44px;
+  background: #185646;
+  color: #fff5dc;
+  border-color: #bcd7bf;
+}
+.bt-finish .bt-text-button {
+  min-height: 38px;
+  margin: 0;
+}
+.bt-rank-reveal {
+  width: min(290px, 90%);
+  margin: 16px 0 0;
+  animation: bt-finish-arrive 0.45s 0.35s both;
+}
+.bt-rank-reveal > small {
+  font:
+    700 8px/1.2 BTHemi,
+    sans-serif;
+  letter-spacing: 1px;
+  color: #cabb9e;
+}
+.bt-rank-reveal > div:first-of-type {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  height: 52px;
+}
+.bt-rank-reveal img {
+  width: 42px;
+  height: 48px;
+  object-fit: contain;
+}
+.bt-rank-reveal strong {
+  font:
+    700 42px/1 BTHemi,
+    sans-serif;
+  font-variant-numeric: tabular-nums;
+}
+.bt-rank-reveal b {
+  font:
+    700 24px/1 BTHemi,
+    sans-serif;
+  color: #e5ce72;
+}
+.bt-rank-track {
+  height: 5px;
+  background: #fff2;
+  transform: skewX(-17deg);
+  overflow: hidden;
+}
+.bt-rank-track > i {
+  display: block;
+  height: 100%;
+  background: #eed480;
+  transition: width 0.12s linear;
+}
+.bt-rank-reveal > span {
+  display: block;
+  margin-top: 7px;
+  font:
+    700 11px/1 BTHemi,
+    sans-serif;
+  text-transform: uppercase;
+}
+.bt-finish-loss h2,
+.bt-finish-loss .bt-rank-reveal b {
+  color: #e6aa98;
+}
+.bt-finish-loss .bt-finish-ink {
+  background: linear-gradient(
+    165deg,
+    transparent 24%,
+    #a5403022 25% 60%,
+    transparent 61%
+  );
+}
+.bt-finish .bt-finish-note {
+  font-size: 7px;
+  letter-spacing: 0.6px;
+  color: #b7a78c;
+  margin-top: 2px;
+}
+@keyframes bt-finish-arrive {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes bt-finish-hand {
+  0% {
+    opacity: 0;
+    scale: 2;
+    rotate: -15deg;
+  }
+  45% {
+    opacity: 1;
+    scale: 0.93;
+    rotate: 5deg;
+  }
+  100% {
+    opacity: 1;
+    scale: 1;
+    rotate: 0;
+  }
+}
+@keyframes bt-finish-title {
+  0% {
+    opacity: 0;
+    translate: -50px 0;
+    scale: 1.2;
+  }
+  100% {
+    opacity: 1;
+    translate: 0 0;
+    scale: 1;
+  }
+}
+@media (max-width: 600px) {
+  .bt-lane-smoke {
+    height: 110px;
+    width: 72px;
+  }
+  .bt-lane-smoke-base {
+    height: 150px;
+    width: 100px;
+  }
+  .bt-hands-shed {
+    font-size: 17px;
+  }
+  .bt-breach-impact {
+    width: 150%;
+  }
+  .bt-finish-body {
+    padding: 10px;
+  }
+  .bt-rank-reveal {
+    margin-top: 12px;
+  }
+}
+@media (max-height: 470px) and (min-width: 600px) {
+  .bt-finish-body {
+    display: grid;
+    grid-template-columns: 140px 1fr;
+    column-gap: 18px;
+    max-width: 570px;
+  }
+  .bt-finish-hand {
+    grid-column: 1;
+    grid-row: 2/7;
+    width: 140px;
+    height: 160px;
+  }
+  .bt-finish-body > small:first-child {
+    grid-column: 1/-1;
+  }
+  .bt-finish h2,
+  .bt-finish-body > p,
+  .bt-finish-score,
+  .bt-rank-reveal {
+    grid-column: 2;
+    justify-self: center;
+  }
+  .bt-finish h2 {
+    font-size: 35px;
+  }
+  .bt-finish-body > small:not(:first-child) {
+    grid-column: 2;
+  }
+  .bt-rank-reveal {
+    margin-top: 8px;
+  }
+  .bt-finish .bt-primary {
+    grid-column: 1;
+    grid-row: 7;
+  }
+  .bt-finish .bt-text-button {
+    grid-column: 2;
+    grid-row: 7;
+  }
+  .bt-finish .bt-finish-note {
+    grid-column: 1/-1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .bt-lane-smoke,
+  .bt-hands-shed,
+  .bt-breach-speed {
+    display: none;
+  }
+  .bt-finish,
+  .bt-finish-hand,
+  .bt-finish h2,
+  .bt-rank-reveal {
+    animation: none;
+  }
+  .bt-rank-track > i {
+    transition: none;
+  }
+}
+.bt-hands-meter {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -5px;
+  height: 4px;
+  background: #181611;
+  pointer-events: none;
+  isolation: isolate;
+  box-shadow: 0 1px 2px #0008;
+}
+.bt-hands-meter > i {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  display: block;
+}
+.bt-meter-fill {
+  background: #b6c597;
+  transition:
+    width 0.14s ease-out,
+    background-color 0.14s;
+}
+.bt-meter-hurt .bt-meter-fill {
+  background: #dfc36e;
+}
+.bt-meter-critical .bt-meter-fill {
+  background: #d38d78;
+}
+.bt-meter-chunk {
+  background: #c16b48;
+  transition: width 0.24s ease-out;
+}
+.bt-meter-pulse {
+  position: absolute;
+  inset: -2px 0;
+  pointer-events: none;
+  transform-origin: 50% 50%;
+}
+.bt-meter-damage {
+  background: #fff7de;
+  animation: bt-meter-hit 0.22s ease-out both;
+}
+.bt-meter-heal {
+  animation: bt-meter-heal 0.25s ease-out both;
+}
+.bt-meter-heal > i {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  background: #ecffd8;
+  left: 25%;
+  top: 0;
+  rotate: 45deg;
+  animation: bt-heal-spark 0.5s ease-out both;
+}
+.bt-meter-heal > i:nth-child(2) {
+  left: 55%;
+  animation-delay: 0.05s;
+}
+.bt-meter-heal > i:nth-child(3) {
+  left: 80%;
+  animation-delay: 0.1s;
+}
+@keyframes bt-meter-hit {
+  0% {
+    opacity: 0.8;
+    scale: 1 2;
+    translate: -2px 0;
+  }
+  35% {
+    opacity: 0.6;
+    scale: 1 1.4;
+    translate: 2px 1px;
+  }
+  65% {
+    translate: -1px 0;
+  }
+  100% {
+    opacity: 0;
+    scale: 1;
+    translate: 0 0;
+  }
+}
+@keyframes bt-meter-heal {
+  0% {
+    scale: 1 1.8;
+    translate: 0 -2px;
+  }
+  100% {
+    scale: 1;
+    translate: 0 0;
+  }
+}
+@keyframes bt-heal-spark {
+  0% {
+    opacity: 1;
+    translate: 0 0;
+    scale: 0.5;
+  }
+  40% {
+    scale: 1.4;
+  }
+  100% {
+    opacity: 0;
+    translate: 0 -15px;
+    scale: 0.5;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .bt-meter-fill,
+  .bt-meter-chunk {
+    transition: none;
+  }
+  .bt-meter-pulse {
+    display: none;
+  }
+}
+
+/* The supplied animation provides its own rise; play once at native timing. */
+.bt-lane-smoke {
+  animation: none;
+  opacity: 0.72;
+}
+
+/* Match the painted fist emblems on the full-height wallpaper, not lane bounds. */
+.bt-field > .bt-lane-smoke {
+  width: min(150px, 20%);
+  height: auto;
+  aspect-ratio: 178/256;
+  z-index: 11;
+}
+.bt-smoke-base-bottom {
+  bottom: 4.2%;
+  transform: translateX(-50%);
+}
+.bt-smoke-base-top {
+  top: 3.7%;
+  transform: translateX(-50%) rotate(180deg);
+  transform-origin: 50% 50%;
+}
+.bt-field > .bt-lane-smoke > .bt-smoke-rise-sprite {
+  position: absolute;
+  inset: 0;
+}
+@media (max-width: 600px) {
+  .bt-field > .bt-lane-smoke {
+    width: min(90px, 21%);
+  }
+}
+
+.bt-field > .bt-lane-smoke[data-lane='0'] {
+  left: 21.9%;
+}
+.bt-field > .bt-lane-smoke[data-lane='1'] {
+  left: 50%;
+}
+.bt-field > .bt-lane-smoke[data-lane='2'] {
+  left: 77.9%;
+}
+@media (orientation: landscape) {
+  .bt-field > .bt-lane-smoke[data-lane='0'] {
+    left: 20.8%;
+  }
+  .bt-field > .bt-lane-smoke[data-lane='2'] {
+    left: 79.3%;
+  }
+  .bt-smoke-base-top {
+    top: 5%;
+  }
+  .bt-smoke-base-bottom {
+    bottom: 6.25%;
+  }
+}
+
+/* Breached base markers survive transient VFX cleanup and repeat until match reset. */
+.bt-field > .bt-lane-smoke .bt-smoke-rise-sprite {
+  animation-iteration-count: infinite;
+}

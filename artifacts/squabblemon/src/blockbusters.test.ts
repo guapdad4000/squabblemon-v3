@@ -1,3 +1,4 @@
+import { releasedAnunakiIds } from './anunakiTestCatalog';
 import assert from "node:assert/strict";
 import test from "node:test";
 import { cards, decks, cardCatalog, validateCardAbilityUpgrades } from "./data";
@@ -64,7 +65,7 @@ function cast(
 }
 const end = (m: Match) => nextRound({ ...m, phase: "resolved" });
 test("catalog entries include all 18 new fighters and 10 lane events", () => {
-  assert.equal(cardCatalog.length, 301);
+  assert.equal(cardCatalog.length, 301 + releasedAnunakiIds.length);
   assert.equal(BLOCKBUSTER_CHARACTERS.length, 18);
   assert.equal(BLOCKBUSTERS.length, 10);
   validateCardAbilityUpgrades();

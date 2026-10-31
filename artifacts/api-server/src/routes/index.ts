@@ -1,5 +1,6 @@
 import communityDecksRouter from './communityDecks';
 import bossRaidRouter from './bossRaid';
+import anunakiRaidRouter from './anunakiRaid';
 import parkChessRouter from './parkChess';
 import arcadeGamesRouter from './arcadeGames';
 import waffleRunRouter from './waffleRun';
@@ -25,6 +26,7 @@ import notificationsRouter from './notifications';
 import socialRouter from './social';
 import eventFeedbackRouter from './eventFeedback';
 import patchesRouter from './patches';
+import anunakiEventRouter from './anunakiEvent';
 
 const router: IRouter = Router();
 
@@ -40,10 +42,12 @@ router.use(kumiteRouter);
 router.use(challengeRouter);
 router.use(paymentsRouter);
 router.use(accountRewardsRouter);
+router.use(anunakiEventRouter);
 router.use(starterMythicRouter);
 router.use(waffleRunRouter);
 router.use(arcadeGamesRouter);
 router.use(bossRaidRouter);
+router.use(anunakiRaidRouter);
 router.use(parkChessRouter);
 router.use(legendBountiesRouter);
 router.use(mailRouter);

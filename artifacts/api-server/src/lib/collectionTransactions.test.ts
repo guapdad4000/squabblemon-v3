@@ -294,7 +294,7 @@ test('weekly banner retries recover the original receipt across rotation without
   await assert.rejects(openStreetPackForPlayer(clerkUserId, { idempotencyKey: randomUUID(), paymentMethod: 'ticket', bannerId: 'missing' }), error => error instanceof EconomyTransactionError && error.status === 400);
   const request = { idempotencyKey: randomUUID(), paymentMethod: 'ticket' as const, bannerId: 'inmates', bannerOccurrenceId: 'inmates:2026-10-19' };
   const first = await openStreetPackForPlayer(clerkUserId, request);
-  assert.equal(first.opening.oddsVersion, 'street-pack-v7:banner-inmates-v1:week-2026-10-19');
+  assert.equal(first.opening.oddsVersion, 'street-pack-v7:banner-inmates-v2:week-2026-10-19');
   now = Date.parse('2026-10-26T00:00:00Z');
   const retries = await Promise.all([openStreetPackForPlayer(clerkUserId, request), openStreetPackForPlayer(clerkUserId, request)]);
   for (const retry of retries) {
@@ -323,7 +323,7 @@ test('legacy active-theme requests still work and existing v1 receipts remain re
   await db.insert(playerProfilesTable).values({ clerkUserId, onboardingStep: 'complete', packTickets: 1 });
   t.after(async () => { await db.delete(playerProfilesTable).where(eq(playerProfilesTable.clerkUserId, clerkUserId)); });
   const current = await openStreetPackForPlayer(clerkUserId, { idempotencyKey: randomUUID(), paymentMethod: 'ticket', bannerId: 'inmates' });
-  assert.equal(current.opening.oddsVersion, 'street-pack-v7:banner-inmates-v1:week-2026-10-19');
+  assert.equal(current.opening.oddsVersion, 'street-pack-v7:banner-inmates-v2:week-2026-10-19');
   const [legacy] = await db.insert(playerPackOpeningsTable).values({ clerkUserId, idempotencyKey: randomUUID(), oddsVersion: 'street-pack-v7:banner-red-blue-v1', paymentMethod: 'ticket', cost: 1, rewards: current.opening.rewards, pityBefore: 0, pityAfter: 1 }).returning();
   const retry = await openStreetPackForPlayer(clerkUserId, { idempotencyKey: legacy.idempotencyKey, paymentMethod: 'ticket', bannerId: 'red-blue' });
   assert.equal(retry.alreadyOpened, true);
@@ -363,7 +363,7 @@ test('HTTP banner transport retains occurrence guards and supplies an uncached s
   const accepted = await post({ ...input, bannerOccurrenceId: 'inmates:2026-10-19' });
   assert.equal(accepted.status, 200);
   const result = await accepted.json() as { opening: { oddsVersion: string; pullCount: number }; bootstrap: { profile: { packTickets: number } } };
-  assert.equal(result.opening.oddsVersion, 'street-pack-v7:banner-inmates-v1:week-2026-10-19');
+  assert.equal(result.opening.oddsVersion, 'street-pack-v7:banner-inmates-v2:week-2026-10-19');
   assert.equal(result.opening.pullCount, 1);
   assert.equal(result.bootstrap.profile.packTickets, 1);
 });

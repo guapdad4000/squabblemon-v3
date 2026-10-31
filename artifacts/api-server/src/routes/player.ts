@@ -3,6 +3,9 @@ import { randomUUID } from "node:crypto";
 import { avatarSticker } from '@workspace/squabblemon-engine/cosmetics';
 import { deliverLatePatchLetters } from "../lib/patches";
 import { ownedReactions, reactionById, REACTION_TRAY_SIZE } from '@workspace/squabblemon-engine/reactions';
+import { CLIENT_CAPABILITIES_HEADER } from '@workspace/squabblemon-engine/onlineCapabilities';
+import { hasAnunakiClient } from '../lib/onlineCompatibility';
+import { isAnunakiReaction } from '../lib/reactionCompatibility';
 import { rookieDistricts, rookieEncounter } from "@workspace/squabblemon-engine/rookie";
 import { activities, eventWeek, isActivityId, makeActivityEncounter, validateDraft } from "@workspace/squabblemon-engine/activities";
 import { createDistrictSnapshot, validateDistrictSnapshot, validateTurnRules } from "@workspace/squabblemon-engine/gameEngine";
@@ -192,6 +195,8 @@ router.get("/player/bootstrap", async (req, res): Promise<void> => {
   res.json(GetPlayerBootstrapResponse.parse(state));
 });
 
+const STALE_REACTION_TRAY_ERROR = "Refresh the game before editing your reaction tray. Your saved reactions are safe.";
+
 router.patch("/player/profile", async (req, res): Promise<void> => {
   const userId = authenticatedUserId(req, res);
   if (!userId) return;
@@ -225,6 +230,15 @@ router.patch("/player/profile", async (req, res): Promise<void> => {
     }
     if (parsed.data.reactionTray !== undefined) {
       const tray = parsed.data.reactionTray;
+      const savedTray = current.settings.reactionTray ?? [];
+      // Old tabs filter unknown reactions from their draft. Never let their
+      // replacement erase or reorder the player's equipped event reactions.
+      // Check under the profile lock so a concurrent new-tab edit is safe too.
+      if (!hasAnunakiClient(req.get(CLIENT_CAPABILITIES_HEADER)) &&
+          (savedTray.some(isAnunakiReaction) || tray.some(isAnunakiReaction)) &&
+          (tray.length !== savedTray.length || tray.some((id, index) => id !== savedTray[index]))) {
+        return STALE_REACTION_TRAY_ERROR;
+      }
       if (tray.length > REACTION_TRAY_SIZE || new Set(tray).size !== tray.length) return "Choose up to four different reactions";
       if (tray.some(id => !reactionById(id))) return "Unknown reaction";
       const owned = ownedReactions(current.unlockedCosmeticIds);
@@ -243,7 +257,7 @@ router.patch("/player/profile", async (req, res): Promise<void> => {
     return null;
   });
   if (profileError) {
-    res.status(400).json({ error: profileError });
+    res.status(profileError === STALE_REACTION_TRAY_ERROR ? 409 : 400).json({ error: profileError });
     return;
   }
 

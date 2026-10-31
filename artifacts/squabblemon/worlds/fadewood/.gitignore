@@ -1,0 +1,9 @@
+# Local dependencies and writable tool caches; runtime delivery lives in ../../public/scenes/fadewood.
+/node_modules
+/.cache/
+/.vite/
+/dist/
+__pycache__/
+*.pyc
+*.pyo
+*.log

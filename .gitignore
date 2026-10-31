@@ -88,3 +88,6 @@ Thumbs.db
 
 # Resumable balance scratch files; completed evidence reports remain tracked
 /scripts/results/**/*-checkpoint.json
+
+# Local Blender authoring files and raw Fadewood review archive; curated release evidence is tracked.
+/docs/plans/fadewood-integration-2026-10-30/

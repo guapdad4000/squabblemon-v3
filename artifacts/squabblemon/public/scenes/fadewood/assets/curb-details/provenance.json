@@ -1,0 +1,77 @@
+{
+  "version": 1,
+  "art": [
+    {
+      "id": "safehouse-facade",
+      "source": "exec-22a430be-b58f-4b86-988e-3898a07bbd3c.png",
+      "sourceSha256": "d4d9bfa678b6958f3ddc38af85342bf35a114d8e5805854c8db0e1544633615e",
+      "sourcePixels": [
+        1659,
+        948
+      ],
+      "file": "safehouse-facade.webp",
+      "pixels": [
+        1536,
+        878
+      ],
+      "bytes": 445620,
+      "sha256": "90b09f501cbae67531d2b1aab01d98bd68baae5486c5a9c8fc395eaf13daaa4f",
+      "resize": "LANCZOS/aspect-preserving/no crop",
+      "quality": 95
+    },
+    {
+      "id": "demario-luigion-booth",
+      "source": "exec-cf3f9321-75ed-4ce8-baf0-05aec706ee2e.png",
+      "sourceSha256": "dede0082a4d8afd0b3649954502be6e2c7a24fd6b5aac7430d90d6fe0f18ff5a",
+      "sourcePixels": [
+        2172,
+        724
+      ],
+      "file": "demario-luigion-booth.webp",
+      "pixels": [
+        1024,
+        341
+      ],
+      "bytes": 159368,
+      "sha256": "4e6aeb44a7a987702d9be62c12d53a58129b5a05b51b2d04ca05d569f0d34788",
+      "resize": "LANCZOS/aspect-preserving/no crop",
+      "quality": 95
+    },
+    {
+      "id": "demario",
+      "source": "artifacts/squabblemon/public/assets/characters/demario.webp",
+      "sourceSha256": "84e827c279a2be5a61e4c5c055aeb15fdfdf246812448ae9e513a6b382071faa",
+      "sourcePixels": [
+        936,
+        1536
+      ],
+      "file": "demario.webp",
+      "pixels": [
+        312,
+        512
+      ],
+      "bytes": 45660,
+      "sha256": "9e984347e016733104c5ce3d94279a861d680397a8f58c5e62e065d380a930ba",
+      "resize": "LANCZOS/aspect-preserving/no crop",
+      "quality": 95
+    },
+    {
+      "id": "luigion",
+      "source": "artifacts/squabblemon/public/assets/characters/luigion.webp",
+      "sourceSha256": "a14b574229f7425bc14b9bdd209646371ae48ef250c405b10a1c279d2eaf1d64",
+      "sourcePixels": [
+        941,
+        1536
+      ],
+      "file": "luigion.webp",
+      "pixels": [
+        314,
+        512
+      ],
+      "bytes": 51100,
+      "sha256": "480f76e6e85ca0871f07a6df77399279e1beaf6527f126b4f15217c46e2c4079",
+      "resize": "LANCZOS/aspect-preserving/no crop",
+      "quality": 95
+    }
+  ]
+}

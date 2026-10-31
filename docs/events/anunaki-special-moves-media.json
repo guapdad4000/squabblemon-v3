@@ -1,0 +1,366 @@
+{
+  "note": "User-supplied animation sources. Revised 432x768 H.264/AAC derivatives retain the core attack, trim individual setup/return frames and apply modest authored speed increases. Per-clip edit provenance is retained below. Game GPU and CPU share the Anunaki green-key profile with soft outer-edge feathering; authored central effects and non-green scenery are preserved.",
+  "clips": [
+    {
+      "name": "yakub",
+      "source": "MiniMax H3 - Chromakey green background remains constant throughout the entire sequence_ Hand-drawn.mp4",
+      "sha256": "24eb8b94db1bf22f0edde88998de851bddca7f90168683e4bba6e55b01dfac04",
+      "bytes": 945297,
+      "probe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 432,
+            "height": 768,
+            "r_frame_rate": "24/1"
+          },
+          {
+            "codec_name": "aac",
+            "codec_type": "audio",
+            "r_frame_rate": "0/0"
+          }
+        ],
+        "format": {
+          "duration": "4.375000"
+        }
+      },
+      "source_sha256": "6479912862810c5760025a9daff3524a5e406e965f39cb167f81ba9cba855e31",
+      "inputDerivativeSha256": "76d4f7e56d3209f308150e4050d0339712f3bb2c84d5f40b1b7a795f510fc608",
+      "edit": {
+        "sourceStartSeconds": 0.35,
+        "sourceEndSeconds": 5.05,
+        "speed": 1.08,
+        "keyProfile": "anunaki",
+        "edgeFeather": 0.035
+      }
+    },
+    {
+      "name": "utu",
+      "source": "MiniMax H3 - Chromakey green background remains perfectly static throughout the entire sequence _ no (1).mp4",
+      "sha256": "57489c09b76cd7fecf3d23d61ad6614029c6b2afee745b5741036670561b36a5",
+      "bytes": 638230,
+      "probe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 432,
+            "height": 768,
+            "r_frame_rate": "24/1"
+          },
+          {
+            "codec_name": "aac",
+            "codec_type": "audio",
+            "r_frame_rate": "0/0"
+          }
+        ],
+        "format": {
+          "duration": "4.380000"
+        }
+      },
+      "source_sha256": "ae7d2f413729d1b74ad236fe01a89f5b377e25cbf215de3f2315d037acc2979e",
+      "inputDerivativeSha256": "72ba299ea67b39c127490b7027e96b44bc4fac3699df47bb8d4cecf59227113a",
+      "edit": {
+        "sourceStartSeconds": 0.35,
+        "sourceEndSeconds": 5.05,
+        "speed": 1.08,
+        "keyProfile": "anunaki",
+        "edgeFeather": 0.035
+      }
+    },
+    {
+      "name": "enlil",
+      "source": "MiniMax H3 - Chromakey green background remains perfectly static throughout the entire sequence _ no.mp4",
+      "sha256": "459ae6bc74a96b9da4d2241f62924698ead7a5855792566c0f2fc8c52ea87d96",
+      "bytes": 721595,
+      "probe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 432,
+            "height": 768,
+            "r_frame_rate": "24/1"
+          },
+          {
+            "codec_name": "aac",
+            "codec_type": "audio",
+            "r_frame_rate": "0/0"
+          }
+        ],
+        "format": {
+          "duration": "4.416667"
+        }
+      },
+      "source_sha256": "7342c7beefa5fceb75ade71fd921d870811940be4fa584c08986c4b37b45616e",
+      "inputDerivativeSha256": "24323aa8affd7cac11b00215b0ae16c10b77997da410cf719105555f3482735f",
+      "edit": {
+        "sourceStartSeconds": 0.3,
+        "sourceEndSeconds": 5.05,
+        "speed": 1.08,
+        "keyProfile": "anunaki",
+        "edgeFeather": 0.035
+      }
+    },
+    {
+      "name": "nabu",
+      "source": "MiniMax H3 - Chromakey green background remains perfectly static throughout the entire shot _ no mov.mp4",
+      "sha256": "6a08d5393ed54bd0b9d891b22642253ba21621d48a58f9fa7a087fc61c021e99",
+      "bytes": 1105912,
+      "probe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 432,
+            "height": 768,
+            "r_frame_rate": "24/1"
+          },
+          {
+            "codec_name": "aac",
+            "codec_type": "audio",
+            "r_frame_rate": "0/0"
+          }
+        ],
+        "format": {
+          "duration": "3.970000"
+        }
+      },
+      "source_sha256": "3d68024a42eb1d64d4e9138aaed8019600bf29c25e3a8a1676c4ab91dbea08a6",
+      "inputDerivativeSha256": "a6bd199459ac6bfce8eff99390359c7d69f2a8921c0babc56edffdea01fcfa1b",
+      "edit": {
+        "sourceStartSeconds": 0.4,
+        "sourceEndSeconds": 4.55,
+        "speed": 1.05,
+        "keyProfile": "anunaki",
+        "edgeFeather": 0.035
+      }
+    },
+    {
+      "name": "anu",
+      "source": "MiniMax H3 - Chromakey green background remains perfectly static throughout the entire shot pure_ fl.mp4",
+      "sha256": "4d99199c773a43e858561249334d628a5416784f7b2d47941c341ac8ef6c82e9",
+      "bytes": 1051565,
+      "probe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 432,
+            "height": 768,
+            "r_frame_rate": "24/1"
+          },
+          {
+            "codec_name": "aac",
+            "codec_type": "audio",
+            "r_frame_rate": "0/0"
+          }
+        ],
+        "format": {
+          "duration": "4.875000"
+        }
+      },
+      "source_sha256": "da866721ddf50cf424177dd2837aa255e8fcd958dfdf13d8c37268fbc2c98cb4",
+      "inputDerivativeSha256": "09587fae40ff74746106d180870382c14aeb093b9222c258a02b1b0cc8f17186",
+      "edit": {
+        "sourceStartSeconds": 0.35,
+        "sourceEndSeconds": 6.9,
+        "speed": 1.35,
+        "keyProfile": "anunaki",
+        "edgeFeather": 0.035
+      }
+    },
+    {
+      "name": "ninhursag",
+      "source": "MiniMax H3 - Chromakey green background remains perfectly static throughoutHand-drawn anime_ cel-sha.mp4",
+      "sha256": "bbc81927f2b83b56b6fceaeb56637e5028e075dfcec0e5ddd62c8bc315c7e504",
+      "bytes": 808065,
+      "probe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 432,
+            "height": 768,
+            "r_frame_rate": "24/1"
+          },
+          {
+            "codec_name": "aac",
+            "codec_type": "audio",
+            "r_frame_rate": "0/0"
+          }
+        ],
+        "format": {
+          "duration": "3.976000"
+        }
+      },
+      "source_sha256": "270e94233946897f55858a2e8b318515738b45fc08ba24d2daa3a9dba38e58ce",
+      "inputDerivativeSha256": "1e5bf798000b15074965e27e5823c6cb37fea2d350ab3a4aee5b1a0541109fe8",
+      "edit": {
+        "sourceStartSeconds": 0.3,
+        "sourceEndSeconds": 4.45,
+        "speed": 1.05,
+        "keyProfile": "anunaki",
+        "edgeFeather": 0.035
+      }
+    },
+    {
+      "name": "ereshkigal",
+      "source": "MiniMax H3 - Chromakey green background remains perfectly static throughout_ Hand-drawn anime_ cel-s (1).mp4",
+      "sha256": "fbccf2f893875719c0971cc4eebf6ed8c5078dc486dbef880b78acd246dc93d9",
+      "bytes": 682220,
+      "probe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 432,
+            "height": 768,
+            "r_frame_rate": "24/1"
+          },
+          {
+            "codec_name": "aac",
+            "codec_type": "audio",
+            "r_frame_rate": "0/0"
+          }
+        ],
+        "format": {
+          "duration": "4.148000"
+        }
+      },
+      "source_sha256": "dd3b7294db2db55fb7bc8e62d3d70ab1420e9e409a564c8d1d13da44d9306ac5",
+      "inputDerivativeSha256": "a7fa6ecf3ca795c2d42530e99525b044bd69d4c111b66c16e551c245c2c07ff0",
+      "edit": {
+        "sourceStartSeconds": 0.4,
+        "sourceEndSeconds": 4.85,
+        "speed": 1.08,
+        "keyProfile": "anunaki",
+        "edgeFeather": 0.035
+      }
+    },
+    {
+      "name": "inanna",
+      "source": "MiniMax H3 - Chromakey green background remains perfectly static throughout_ Hand-drawn anime_ cel-s (2).mp4",
+      "sha256": "163b9b83773dbcf90462e44b624f3a444f59db23572bd625e07f234f81b918fc",
+      "bytes": 1025892,
+      "probe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 432,
+            "height": 768,
+            "r_frame_rate": "24/1"
+          },
+          {
+            "codec_name": "aac",
+            "codec_type": "audio",
+            "r_frame_rate": "0/0"
+          }
+        ],
+        "format": {
+          "duration": "4.000000"
+        }
+      },
+      "source_sha256": "68520a62ef69c4509f0ada17b169e0ee2215d79e284f72c3aecd9481bab160f5",
+      "inputDerivativeSha256": "4046ce128f18ae89a15b08b25370b8d1e18d4215d7a2a0bad582ec0861f45382",
+      "edit": {
+        "sourceStartSeconds": 0.3,
+        "sourceEndSeconds": 4.6,
+        "speed": 1.08,
+        "keyProfile": "anunaki",
+        "edgeFeather": 0.035
+      }
+    },
+    {
+      "name": "caucus-mountaineer",
+      "source": "MiniMax H3 - Chromakey green background remains perfectly static throughout_ Hand-drawn anime_ cel-s (3).mp4",
+      "sha256": "d06077f2a563507a1db8a718618a748e93344d3eef02c17bcf609bff3f6004df",
+      "bytes": 671291,
+      "probe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 432,
+            "height": 768,
+            "r_frame_rate": "24/1"
+          },
+          {
+            "codec_name": "aac",
+            "codec_type": "audio",
+            "r_frame_rate": "0/0"
+          }
+        ],
+        "format": {
+          "duration": "3.750000"
+        }
+      },
+      "source_sha256": "d27870769704007ea4bb5306488acc6059379e363700096cfd20a3cb8ce5f90e",
+      "inputDerivativeSha256": "908b24ef59caa24ff9b38542188d85170da2876d8ee2632bcf5baa18490162bf",
+      "edit": {
+        "sourceStartSeconds": 0.65,
+        "sourceEndSeconds": 4.55,
+        "speed": 1.05,
+        "keyProfile": "anunaki",
+        "edgeFeather": 0.035
+      }
+    },
+    {
+      "name": "enki",
+      "source": "MiniMax H3 - Chromakey green background remains perfectly static throughout_ Hand-drawn anime_ cel-s.mp4",
+      "sha256": "cf95335324abee211f677459e9d9ced5de1a919d2f2c89d796cf47cd1f5159a9",
+      "bytes": 642056,
+      "probe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 432,
+            "height": 768,
+            "r_frame_rate": "24/1"
+          },
+          {
+            "codec_name": "aac",
+            "codec_type": "audio",
+            "r_frame_rate": "0/0"
+          }
+        ],
+        "format": {
+          "duration": "2.958333"
+        }
+      },
+      "source_sha256": "09e4ddb6be373357624f45d34a35f72ba2cb48d6bd6b3f87503005ab3e23dc92",
+      "inputDerivativeSha256": "e3a2da92a4dfa53370696cdc4c8e03bf75a53d6b9bac12b9ce89da1ffa1f76be",
+      "edit": {
+        "sourceStartSeconds": 1.45,
+        "sourceEndSeconds": 4.55,
+        "speed": 1.05,
+        "keyProfile": "anunaki",
+        "edgeFeather": 0.035
+      }
+    }
+  ],
+  "deliveryOptimization": "See docs/events/anunaki-media-optimization.json for retained input hashes, output hashes and encoding settings. Source art, dimensions and authored timing are unchanged."
+}

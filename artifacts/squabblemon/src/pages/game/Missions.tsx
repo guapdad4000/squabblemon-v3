@@ -1,3 +1,4 @@
+import { AnunakiEvent } from '../../components/AnunakiEvent';
 import { JohnHenryMythic } from '../../components/JohnHenryMythic';
 import { BountyPayout, type BountyPayoutData } from '../../components/LegendBountyJourney';
 import { LegendBountyBar } from '../../components/LegendBountyBar';
@@ -307,6 +308,7 @@ export function Missions({ bootstrap }: { bootstrap: PlayerBootstrap }) {
         </div>
       )}
       {tab === 'bounties' && <LegendBountyBar openJourney={openJourney} statuses={legends.data ?? []} busy={!!claimState} onClaim={id => void collectAll(id)} loading={legends.isPending} error={legends.isError} onRetry={() => void legends.refetch()} />}
+      {tab === 'bounties' && <AnunakiEvent bootstrap={bootstrap} />}
       {tab === 'bounties' && <div className="bounty-milestones" aria-label="Mythical contracts"><StarterMythic bootstrap={bootstrap} placement="banner" /><JohnHenryMythic bootstrap={bootstrap} placement="banner" /></div>}
       </div>
       {tab === 'bounties' && claimState && (

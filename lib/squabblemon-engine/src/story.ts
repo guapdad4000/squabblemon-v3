@@ -9,6 +9,7 @@ import { extendedStoryChapters } from "./storyExpansions";
 import { specialPresentationChapters } from "./storySpecials";
 import { squabbleHouseChapters } from "./storySquabbleHouse";
 import { kumiteBreakTheBracketChapter } from "./storyKumite";
+import { anunakiStoryChapters } from "./storyAnunaki";
 import { hasSeasonOneRewrite, rewriteSeasonOne, seasonOneRewriteRevision } from "./seasonOneRewrite";
 import { expandSeasonTwoDialogue } from "./seasonTwoDialogueExpansion";
 export { storySeasons, getStorySeason, getStorySeasonForChapter, type StorySeasonDefinition } from "./storySeasons";
@@ -100,8 +101,8 @@ export const isStoryCharacterId = (id: string) => id in CHARACTER_BY_ID;
 // surface that wants to render a "3 stars → ticket" preview agree on the rule.
 export const MAX_STARS_PER_BATTLE = 3;
 export const TICKETS_PER_PERFECT_BATTLE = 1;
-export const ticketsForStars = (stars: number): number =>
-  stars >= MAX_STARS_PER_BATTLE ? TICKETS_PER_PERFECT_BATTLE : 0;
+export const ticketsForStars = (stars: number, nodeId?: string): number =>
+  nodeId?.startsWith('anunaki-') ? 0 : stars >= MAX_STARS_PER_BATTLE ? TICKETS_PER_PERFECT_BATTLE : 0;
 
 // Major story nodes use the shared economy constant. Re-export it here for
 // existing story consumers without creating a story/season circular import.
@@ -274,7 +275,9 @@ export const storyDialogueToken = (nodeId: string, section: 'pre' | 'post' | 'ma
 const storyPayoutContractKey = (nodeId: string, reward: "clout" | "ticket") =>
   `story-payout-contract:v1:${nodeId}:${reward}`;
 function applyStoryPayoutContract(chapters: readonly StoryChapter[]): StoryChapter[] {
+  // Anunaki has an explicitly authored campaign economy; preserve legacy chapter payouts.
   return chapters.map((chapter) => {
+    if (chapter.id.startsWith("anunaki-")) return chapter;
     const finale = [...chapter.nodes].reverse().find((node) => !node.optional);
     return {
       ...chapter,
@@ -319,13 +322,13 @@ function applyStoryPayoutContract(chapters: readonly StoryChapter[]): StoryChapt
   });
 }
 export const blockPartyChapter = applyStoryPayoutContract([blockPartyChapterSource])[0];
-export const storyContent = validateStoryContent({ version: 12, chapters: withStoryEnvironments(applyStoryPayoutContract([...rewriteSeasonOne([{ ...blockPartyChapter, nodes: blockPartyChapter.nodes.map((node): StoryNode => {
+export const storyContent = validateStoryContent({ version: 13, chapters: withStoryEnvironments(applyStoryPayoutContract([...rewriteSeasonOne([{ ...blockPartyChapter, nodes: blockPartyChapter.nodes.map((node): StoryNode => {
   const dialogue = screenplay[node.id];
   if (!dialogue) return node;
   return node.kind === 'battle'
     ? { ...node, preDialogue: dialogue.pre ?? node.preDialogue, postDialogue: dialogue.post ?? node.postDialogue }
     : { ...node, scenes: dialogue.main ?? node.scenes };
-}) }, ...sequelChapters]), ...expandSeasonTwoDialogue(seasonTwoChapters), ...specialPresentationChapters, ...extendedStoryChapters, ...squabbleHouseChapters, kumiteBreakTheBracketChapter])) });
+}) }, ...sequelChapters]), ...expandSeasonTwoDialogue(seasonTwoChapters), ...specialPresentationChapters, ...extendedStoryChapters, ...squabbleHouseChapters, kumiteBreakTheBracketChapter, ...anunakiStoryChapters])) });
 export const getStoryChapter = (chapterId: string) => storyContent.chapters.find((chapter) => chapter.id === chapterId);
 export const getStoryNode = (nodeId: string) => storyContent.chapters.flatMap((chapter) => chapter.nodes).find((node) => node.id === nodeId);
 

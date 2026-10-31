@@ -1,0 +1,52 @@
+import assert from 'node:assert/strict';
+import { randomUUID } from 'node:crypto';
+import type { AddressInfo } from 'node:net';
+import test from 'node:test';
+import { eq } from 'drizzle-orm';
+import { db, playerPackOpeningsTable, playerProfilesTable } from '@workspace/db';
+import { ANUNAKI_BANNER_GAMEPLAY_READY, ANUNAKI_BANNER_WINDOWS, ANUNAKI_BANNER_CARD_IDS } from '@workspace/squabblemon-engine/anunakiBanner';
+import { getPullBannerSchedule } from '@workspace/squabblemon-engine/pullBanners';
+import { cardCatalog } from '@workspace/squabblemon-engine/data';
+import { createApp } from '../app';
+
+test('enabled Anunaki banner accepts authenticated purchases once and rejects stale occurrences', { skip: !ANUNAKI_BANNER_GAMEPLAY_READY || !ANUNAKI_BANNER_WINDOWS.length }, async t => {
+  const window = ANUNAKI_BANNER_WINDOWS[0]!;
+  const now = Date.parse(window.startsAt) + 1000;
+  t.mock.method(Date, 'now', () => now);
+  const active = getPullBannerSchedule(now).special;
+  assert(active, 'the configured window must produce an active banner');
+  assert.deepEqual(active.featuredCardIds, ANUNAKI_BANNER_CARD_IDS);
+  assert(ANUNAKI_BANNER_CARD_IDS.every(id => cardCatalog.some(card => card.catalogId === id)));
+  const userId = `anunaki-banner-${randomUUID()}`;
+  await db.insert(playerProfilesTable).values({ clerkUserId: userId, onboardingStep: 'complete', packTickets: 2 });
+  const server = createApp((req, _res, next) => {
+    const auth = Object.assign(() => ({ userId, sessionId: 'banner-test', tokenType: 'session_token', isAuthenticated: true }), { [Symbol.for('@clerk/express.auth')]: true });
+    Object.assign(req, { auth });
+    next();
+  }).listen(0, '127.0.0.1');
+  await new Promise<void>((resolve, reject) => { server.once('listening', resolve); server.once('error', reject); });
+  t.after(async () => {
+    await new Promise<void>((resolve, reject) => server.close(error => error ? reject(error) : resolve()));
+    await db.delete(playerProfilesTable).where(eq(playerProfilesTable.clerkUserId, userId));
+  });
+  const origin = `http://127.0.0.1:${(server.address() as AddressInfo).port}/api`;
+  const input = { idempotencyKey: randomUUID(), paymentMethod: 'ticket', bannerId: 'anunaki', bannerOccurrenceId: 'anunaki:2000-01-01' };
+  const post = (body: typeof input) => fetch(`${origin}/player/packs/open`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) });
+  const stale = await post(input);
+  assert.equal(stale.status, 400);
+  await stale.arrayBuffer();
+  const [uncharged] = await db.select().from(playerProfilesTable).where(eq(playerProfilesTable.clerkUserId, userId));
+  assert.equal(uncharged.packTickets, 2);
+  const acceptedInput = { ...input, bannerOccurrenceId: active.occurrenceId! };
+  const [first, retry] = await Promise.all([post(acceptedInput), post(acceptedInput)]);
+  assert.equal(first.status, 200);
+  assert.equal(retry.status, 200);
+  const results = await Promise.all([first.json(), retry.json()]) as { opening: { id: string; oddsVersion: string }; alreadyOpened: boolean }[];
+  assert.equal(results[0].opening.id, results[1].opening.id);
+  assert.deepEqual(results.map(result => result.alreadyOpened).sort(), [false, true]);
+  assert.equal(results[0].opening.oddsVersion, `street-pack-v7:banner-anunaki-v2:week-${window.startsAt.slice(0, 10)}`);
+  const [profile] = await db.select().from(playerProfilesTable).where(eq(playerProfilesTable.clerkUserId, userId));
+  assert.equal(profile.packTickets, 1);
+  const openings = await db.select().from(playerPackOpeningsTable).where(eq(playerPackOpeningsTable.clerkUserId, userId));
+  assert.equal(openings.length, 1);
+});

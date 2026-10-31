@@ -1,0 +1,135 @@
+.bt-choice-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  background: #08070570;
+  backdrop-filter: blur(2px);
+}
+.bt-choice {
+  position: relative;
+  display: grid;
+  grid-template-columns: 96px minmax(0, 1fr);
+  gap: 20px;
+  width: min(540px, 100%);
+  max-height: calc(100dvh - 32px);
+  overflow: auto;
+  padding: 28px 25px 24px 18px;
+  color: #f6f1df;
+  background:
+    linear-gradient(105deg, #16120bea, #16120bd4),
+    var(--bt-choice-wall) center/cover;
+  border: 2px solid #efebd5;
+  box-shadow: 7px 8px 0 #080704bb;
+  transform: rotate(-1deg);
+}
+.bt-choice > img {
+  width: 96px;
+  aspect-ratio: 5/7;
+  object-fit: cover;
+  align-self: center;
+  transform: rotate(-5deg);
+  box-shadow: 3px 4px 0 #0009;
+}
+.bt-choice-body {
+  min-width: 0;
+}
+.bt-choice h2 {
+  font:
+    400 clamp(25px, 5vw, 36px)/1 BTBlzee,
+    Impact,
+    sans-serif;
+  margin: 5px 26px 12px 0;
+}
+.bt-choice small {
+  font:
+    700 10px/1.4 BTHemi,
+    Impact,
+    sans-serif;
+  letter-spacing: 0.8px;
+  color: #d3c7a7;
+}
+.bt-choice-rule {
+  font:
+    700 12px BTHemi,
+    Impact,
+    sans-serif;
+  margin: 0 0 10px;
+  color: #ffdf40;
+}
+.bt-choice-options {
+  display: grid;
+  gap: 4px;
+  margin-bottom: 12px;
+}
+.bt-choice-options button {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  padding: 9px 12px;
+  border: 0;
+  color: #f6f1df;
+  background: linear-gradient(100deg, #605b4c6e, #605b4c08);
+  clip-path: polygon(2% 0, 100% 4%, 98% 100%, 0 96%);
+  font:
+    700 12px/1.25 BTHemi,
+    Impact,
+    sans-serif;
+  text-align: left;
+  cursor: pointer;
+}
+.bt-choice-options button:hover,
+.bt-choice-options button:focus-visible {
+  color: #13110b;
+  background: #ffdf40;
+  outline: 2px solid #fff;
+  outline-offset: -3px;
+}
+.bt-choice-options button:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+.bt-choice-cancel {
+  position: absolute;
+  right: 4px;
+  top: 4px;
+  width: 44px;
+  height: 44px;
+  background: none;
+  border: 0;
+  color: #f6f1df;
+  font: 24px Arial;
+  cursor: pointer;
+}
+.bt-choice-cancel:focus-visible {
+  outline: 2px solid #ffdf40;
+  outline-offset: -5px;
+}
+.bt-choice,
+.bt-choice * {
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  box-sizing: border-box;
+}
+.bt-choice img {
+  -webkit-user-drag: none;
+  pointer-events: none;
+}
+@media (max-width: 460px) {
+  .bt-choice {
+    grid-template-columns: 60px minmax(0, 1fr);
+    gap: 12px;
+    padding: 23px 15px 18px 12px;
+  }
+  .bt-choice > img {
+    width: 60px;
+  }
+  .bt-choice-options button {
+    font-size: 11px;
+  }
+}

@@ -4,7 +4,7 @@ import { useViewMemory } from '../../lib/navigationMemory';
 import { revealStoryRewards } from '../../lib/rewardReceipts';
 import { GameGlyph } from '../../components/venue/GameGlyph';
 import { PageDecor } from '../../components/venue/PageDecor';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { ArrowRight, Check, LockKeyhole, MessageCircle, Star, Ticket, X, Film, UtensilsCrossed, BookOpen } from 'lucide-react';
 import '../../styles/studio.css';
 import '../../styles/story-map.css';
@@ -56,6 +56,9 @@ import {
 import { CardRarityTreatment, getRarityClass } from '../../components/CardRarityTreatment';
 import { StoryTheater } from './story/StoryTheater';
 import { StoryPuzzle } from './story/StoryPuzzle';
+import { saveStoryResume } from '../../lib/fadewood/journey';
+
+const FadewoodWorld = lazy(() => import('../../components/world/FadewoodWorld').then(module => ({ default: module.FadewoodWorld })));
 
 type SceneEntry = {
   token: string;
@@ -149,6 +152,7 @@ export function Story({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   const mapDrag = useRef<{ x: number; y: number; left: number; top: number; moved: boolean } | null>(null);
   const [location, setLocation] = useLocation();
   const search = useSearch();
+  const archiveMode = new URLSearchParams(search).get('view') === 'archive';
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
   const [activeChapterId, setActiveChapterId] = useViewMemory<string | null>(`story-chapter:${bootstrap.profile.id}`, null);
   const [activeSeasonId, setActiveSeasonId] = useState<string | null>(null);
@@ -212,6 +216,13 @@ export function Story({ bootstrap }: { bootstrap: PlayerBootstrap }) {
       ? current : recommended?.chapterId ?? allowedChapters[0]?.id ?? null);
   }, [campaign, location, search]);
 
+  useEffect(() => {
+    if (!selectedNodeId || !Array.isArray(campaign?.nodes)) return;
+    const progress = campaign.nodes.find(node => node.nodeId === selectedNodeId && node.status !== 'locked');
+    const season = progress && getStorySeasonForChapter(progress.chapterId);
+    if (season) saveStoryResume(bootstrap.profile.id, selectedNodeId, season.id);
+  }, [selectedNodeId, campaign, bootstrap.profile.id]);
+
   const currentChapter = (Array.isArray(campaign?.chapters)
     ? campaign.chapters.find((chapter) => chapter.id === activeChapterId) ??
       campaign.chapters.find((chapter) => chapter.status !== 'locked') ??
@@ -220,7 +231,7 @@ export function Story({ bootstrap }: { bootstrap: PlayerBootstrap }) {
 
   const [chapterLoad, setChapterLoad] = useState<{ id: string; error?: string } | null>(null);
   const [chapterAttempt, retryChapter] = useState(0);
-  const needsChapter = !!(activeSeasonId || selectedNodeId);
+  const needsChapter = archiveMode && !!(activeSeasonId || selectedNodeId);
   const chapterToLoad = needsChapter ? currentChapter?.id : undefined;
   useEffect(() => {
     if (!chapterToLoad) return;
@@ -300,13 +311,26 @@ export function Story({ bootstrap }: { bootstrap: PlayerBootstrap }) {
     return <div className="h-full grid place-items-center bg-black text-sm text-white/55">No chapters are active.</div>;
   }
 
+  if (!archiveMode) {
+    return <div className="story-world-route" style={{ position: 'relative', height: '100%', minHeight: 0, overflow: 'hidden' }}>
+      <Suspense fallback={<div className="h-full grid place-items-center" role="status">Opening Fadewood…</div>}>
+        <FadewoodWorld campaign={campaign} bootstrap={bootstrap} blocked={!!selectedNodeId}
+          onOpenNode={nodeId => setLocation(`/game/story?node=${encodeURIComponent(nodeId)}`)}
+          onOpenArchive={() => setLocation('/game/story?view=archive')} />
+      </Suspense>
+      <AnimatePresence>{selectedNodeId && <NodeOverlay key={selectedNodeId} nodeId={selectedNodeId} campaign={campaign}
+        onClose={() => { setSelectedNodeId(null); setLocation('/game/story', { replace: true }); }}
+        onStartBattle={nodeId => setLocation(`/game/story/play/${encodeURIComponent(nodeId)}`)} />}</AnimatePresence>
+    </div>;
+  }
+
   if (!activeSeasonId && !selectedNodeId) {
     return (
-      <StoryTheater
+      <div className="h-full" data-story-content-active="true"><StoryTheater
         campaign={campaign}
-        onSelectSeason={(seasonId) => setLocation(`/game/story?season=${seasonId}`)}
-        onContinue={(nodeId) => setLocation(`/game/story?node=${encodeURIComponent(nodeId)}`)}
-      />
+        onSelectSeason={(seasonId) => setLocation(`/game/story?view=archive&season=${encodeURIComponent(seasonId)}`)}
+        onContinue={(nodeId) => setLocation(`/game/story?view=archive&node=${encodeURIComponent(nodeId)}`)}
+      /></div>
     );
   }
 
@@ -321,7 +345,7 @@ export function Story({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   const chapterContent = currentChapter ? getStoryChapter(currentChapter.id) : undefined;
   const recommended = nodes.find(node => node.nodeId === campaign.recommendedNodeId);
   return (
-    <div className={`studio-page story-atlas world-decor-host ${currentChapter?.id === 'kumite-break-the-bracket' ? 'kumite-atlas ' : ''}${currentChapter?.id.startsWith('squabble-house-') ? 'house-atlas' : ''}`}>
+    <div data-story-content-active="true" className={`studio-page story-atlas world-decor-host ${currentChapter?.id === 'kumite-break-the-bracket' ? 'kumite-atlas ' : ''}${currentChapter?.id.startsWith('squabble-house-') ? 'house-atlas' : ''}`}>
       {/* Knock out only the near-white matte in the supplied decorative images. */}
       <svg width="0" height="0" aria-hidden="true" focusable="false" style={{ position: 'absolute' }}>
         <defs>
@@ -404,7 +428,7 @@ export function Story({ bootstrap }: { bootstrap: PlayerBootstrap }) {
                 aria-disabled={locked}
                 aria-label={`${node.title}, ${node.status}`}
                 onClick={() => {
-                  if (!locked) setLocation(`/game/story?node=${encodeURIComponent(node.nodeId)}`);
+                  if (!locked) setLocation(`/game/story?view=archive&node=${encodeURIComponent(node.nodeId)}`);
                 }}
                 className={`story-atlas__node ${isNext ? 'is-next' : ''} ${boss ? 'is-boss' : ''} ${locked ? 'is-locked' : ''} ${cleared ? 'is-cleared' : ''} ${node.optional ? 'is-optional' : ''}`}
                 style={{ left: `${node.mapPosition.x}%`, top: `${node.mapPosition.y}%` }}
@@ -505,10 +529,10 @@ export function Story({ bootstrap }: { bootstrap: PlayerBootstrap }) {
                   node={node}
                   progress={campaign.nodes.find(item => item.nodeId === node.id)}
                   finale={node.id === chapterContent.nodes.filter(item => !item.optional).at(-1)?.id}
-                  onSelect={() => { setRewardsOpen(false); setLocation(`/game/story?node=${encodeURIComponent(node.id)}`); }}
+                  onSelect={() => { setRewardsOpen(false); setLocation(`/game/story?view=archive&node=${encodeURIComponent(node.id)}`); }}
                 />)}
               </div>
-              <div className="story-awards-section-heading story-awards-section-heading--ledger"><span>PERFECT CLEAR LEDGER</span><small>One bonus ticket for each three-star battle</small></div>
+              <div className="story-awards-section-heading story-awards-section-heading--ledger"><span>{currentChapter.id.startsWith('anunaki-') ? 'MASTERY LEDGER' : 'PERFECT CLEAR LEDGER'}</span><small>{currentChapter.id.startsWith('anunaki-') ? 'Earn 10 of 12 stars for the optional journey reward' : 'One bonus ticket for each three-star battle'}</small></div>
               <ChapterTicketProgress
                 chapter={chapterContent}
                 nodeProgressById={Object.fromEntries(
@@ -517,7 +541,7 @@ export function Story({ bootstrap }: { bootstrap: PlayerBootstrap }) {
                 onSelectBattle={(nodeId) => {
                   const progress = campaign.nodes.find((node) => node.nodeId === nodeId);
                   if (progress?.status !== 'locked') {
-                    setLocation(`/game/story?node=${encodeURIComponent(nodeId)}`);
+                    setLocation(`/game/story?view=archive&node=${encodeURIComponent(nodeId)}`);
                     setRewardsOpen(false);
                   }
                 }}
@@ -536,7 +560,7 @@ export function Story({ bootstrap }: { bootstrap: PlayerBootstrap }) {
             onClose={() => {
               setSelectedNodeId(null);
               const season = getStorySeasonForChapter(currentChapter!.id);
-              setLocation(season ? `/game/story?season=${season.id}` : '/game/story', { replace: true });
+              setLocation(season ? `/game/story?view=archive&season=${season.id}` : '/game/story?view=archive', { replace: true });
             }}
             onStartBattle={(nodeId) => setLocation(`/game/story/play/${nodeId}`)}
           />
@@ -729,6 +753,7 @@ export function NodeOverlay({
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       className="story-node-overlay absolute inset-0 z-50 bg-black/95"
+      data-story-content-active="true"
     >
       {replayIndex !== null && replayEntries[replayIndex] ? (
         <DialogueView nodeId={nodeId} entry={replayEntries[replayIndex]}

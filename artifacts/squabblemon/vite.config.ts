@@ -230,7 +230,9 @@ export default defineConfig({
     allowedHosts: true,
     // Generated builds/captures are not source inputs. Multiple retained audit
     // builds can otherwise exhaust Linux watchers before a test reaches the UI.
-    watch: { ignored: ['**/dist/**', '**/screenshots/**', '**/test-results/**', '**/playwright-report/**', '**/.cache/**', '**/output/**'] },
+    // Only ignore this checkout's generated output, not an ancestor named
+    // "output" that may contain the checkout itself.
+    watch: { ignored: ['**/dist/**', '**/screenshots/**', '**/test-results/**', '**/playwright-report/**', '**/.cache/**', `${path.resolve(import.meta.dirname, '../../output')}/**`] },
     fs: {
       strict: true,
     },

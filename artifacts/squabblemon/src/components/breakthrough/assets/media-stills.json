@@ -1,0 +1,299 @@
+{
+  "version": 1,
+  "policy": "Exact approved representative frames. Original animation files and authored timing stay intact.",
+  "budget": {
+    "totalStillBytes": 1048576,
+    "maxStillAxis": 512
+  },
+  "assets": [
+    {
+      "selector": ".bt-b10-lock",
+      "source": "src/components/breakthrough/assets/batch10/lock-atlas.webp",
+      "sourceSha256": "ba7ed3c84cfc5fff36685e1ada44853c01d90204dd37f92fa4994384c916d269",
+      "still": "src/components/breakthrough/assets/batch10/lock-still.webp",
+      "stillSha256": "e83cb015d6b12a5ddf5acbb07ee8b948f5f3a665fd3e74af49dc6ac53ead0b37",
+      "frame": 36,
+      "pages": 1,
+      "origin": [
+        0,
+        1024
+      ],
+      "size": [
+        140,
+        256
+      ]
+    },
+    {
+      "selector": ".bt-b10-loss",
+      "source": "src/components/breakthrough/assets/batch10/loss-atlas.webp",
+      "sourceSha256": "317223ae334b104df822aee83fc5f920bf8c4e0a26d8eabd7cd14463ce6f53a4",
+      "still": "src/components/breakthrough/assets/batch10/loss-still.webp",
+      "stillSha256": "bb2223ad1f1c665f0f84b671231b0366c267f94aeeacb976f693a4d4edf6921e",
+      "frame": 36,
+      "pages": 1,
+      "origin": [
+        0,
+        1024
+      ],
+      "size": [
+        157,
+        256
+      ]
+    },
+    {
+      "selector": ".bt-flame-empty",
+      "source": "src/components/breakthrough/assets/flame-health/flame-empty-atlas.webp",
+      "sourceSha256": "4776b6a4c9952596757e5c4e587c37def8e06ff8033230fc495f27147e36a60c",
+      "still": "src/components/breakthrough/assets/flame-health/flame-empty-still.webp",
+      "stillSha256": "d62bfb65fe6ee2d83e14b869190d2f1d6422348cc5e94fbf1993cf8fa6952e09",
+      "frame": 0,
+      "pages": 1,
+      "origin": [
+        0,
+        0
+      ],
+      "size": [
+        384,
+        150
+      ]
+    },
+    {
+      "selector": ".bt-flame-full",
+      "source": "src/components/breakthrough/assets/flame-health/flame-full-atlas.webp",
+      "sourceSha256": "995a7fbf7e301eafa60529017b6e9318eff2d44bc6ad29da639af3ffdc167d8a",
+      "still": "src/components/breakthrough/assets/flame-health/flame-full-still.webp",
+      "stillSha256": "bbab3d4326ed3cc5a6883078968a19daf768a917a711f1374c927b5db049c285",
+      "frame": 0,
+      "pages": 1,
+      "origin": [
+        0,
+        0
+      ],
+      "size": [
+        384,
+        150
+      ]
+    },
+    {
+      "selector": ".bt-flame-half",
+      "source": "src/components/breakthrough/assets/flame-health/flame-half-atlas.webp",
+      "sourceSha256": "1db4ebe2886b5659295a47ae527243bd8e62850fe8206bf4c8f8f975792f39aa",
+      "still": "src/components/breakthrough/assets/flame-health/flame-half-still.webp",
+      "stillSha256": "a8335d2d4f71f6851b5fd6cb5e7df2329d0fd928bf6c441ec9973111a1112ccc",
+      "frame": 0,
+      "pages": 1,
+      "origin": [
+        0,
+        0
+      ],
+      "size": [
+        384,
+        150
+      ]
+    },
+    {
+      "selector": ".bt-b4-banner",
+      "source": "src/components/breakthrough/assets/supplied-fx/banner-atlas.webp",
+      "sourceSha256": "cb4cfa2b1395fabc2687c08bdc2571383fd829b8ab88735f462b6bb01c59ff91",
+      "still": "src/components/breakthrough/assets/supplied-fx/banner-still.webp",
+      "stillSha256": "55b7d72e232ff95502bbef55054253034b0d1ca8508ab42dde02b920ea6c7574",
+      "frame": 17,
+      "pages": 1,
+      "origin": [
+        3072,
+        127
+      ],
+      "size": [
+        384,
+        127
+      ]
+    },
+    {
+      "selector": ".bt-b4-bomb",
+      "source": "src/components/breakthrough/assets/supplied-fx/bomb-atlas.webp",
+      "sourceSha256": "88f42f4c86f66d60434193b19a25037017a94e30fbc82cfda0bb1135db9a09c4",
+      "still": "src/components/breakthrough/assets/supplied-fx/bomb-still.webp",
+      "stillSha256": "f6b27916b57aaa1fd1aa78eeb28ec656540dd6665cc7af6dd6993247246cb412",
+      "frame": 18,
+      "pages": 1,
+      "origin": [
+        0,
+        256
+      ],
+      "size": [
+        102,
+        128
+      ]
+    },
+    {
+      "selector": ".bt-b4-bud",
+      "source": "src/components/breakthrough/assets/supplied-fx/bud-atlas.webp",
+      "sourceSha256": "8c7e9a0b6cc83574b9cbae7e3a3eaeb96bea7d43d9c966ba00404e231594aeed",
+      "still": "src/components/breakthrough/assets/supplied-fx/bud-still.webp",
+      "stillSha256": "bdb370b905e413f950a0e81404705df6499a7fb24bc4fab3c37ec04701d250e7",
+      "frame": 18,
+      "pages": 1,
+      "origin": [
+        0,
+        288
+      ],
+      "size": [
+        144,
+        144
+      ]
+    },
+    {
+      "selector": ".bt-b4-cleanse",
+      "source": "src/components/breakthrough/assets/supplied-fx/cleanse-atlas.webp",
+      "sourceSha256": "35e04c99569d19306e94eb5ea23c7803ff307cf06929da4f81e354a5ead65713",
+      "still": "src/components/breakthrough/assets/supplied-fx/cleanse-still.webp",
+      "stillSha256": "7741b30472da06f5f6e10c2ef41806de9be0ff16145ec1390d995100cfb80a51",
+      "frame": 18,
+      "pages": 1,
+      "origin": [
+        0,
+        368
+      ],
+      "size": [
+        192,
+        184
+      ]
+    },
+    {
+      "selector": ".bt-b4-growth",
+      "source": "src/components/breakthrough/assets/supplied-fx/growth-atlas.webp",
+      "sourceSha256": "41228dd2c23e5e1b9311db29409a3e1cc112c4f8adbb3e8520729dc12fa512d8",
+      "still": "src/components/breakthrough/assets/supplied-fx/growth-still.webp",
+      "stillSha256": "3b3539e5bd4ae11bf75b6420bfd9a8456fd41203cec0c5d8654e11af030423a1",
+      "frame": 18,
+      "pages": 1,
+      "origin": [
+        0,
+        296
+      ],
+      "size": [
+        160,
+        148
+      ]
+    },
+    {
+      "selector": ".bt-b4-hitDust",
+      "source": "src/components/breakthrough/assets/supplied-fx/hitDust-atlas.webp",
+      "sourceSha256": "45e8849baf92dc25fa5f964fb9d9273bec353bf2ebd5f9f0aff9cd46fc3cbd98",
+      "still": "src/components/breakthrough/assets/supplied-fx/hitDust-still.webp",
+      "stillSha256": "6c6e4f2bfabb97c21323cd602a6395db0461eeea0af68f2eb902bbc604c1ed66",
+      "frame": 18,
+      "pages": 1,
+      "origin": [
+        0,
+        288
+      ],
+      "size": [
+        224,
+        144
+      ]
+    },
+    {
+      "selector": ".bt-b4-ice",
+      "source": "src/components/breakthrough/assets/supplied-fx/ice-atlas.webp",
+      "sourceSha256": "659e162faae49e147fb66a745985e2ab2cb4e232c96e0b664f5daae11af085e1",
+      "still": "src/components/breakthrough/assets/supplied-fx/ice-still.webp",
+      "stillSha256": "7c70c23bf343f21b26ebc9cec62f621743dae79ff33572c1e98ef9a741ab8444",
+      "frame": 18,
+      "pages": 1,
+      "origin": [
+        0,
+        384
+      ],
+      "size": [
+        189,
+        192
+      ]
+    },
+    {
+      "selector": ".bt-b4-lunch",
+      "source": "src/components/breakthrough/assets/supplied-fx/lunch-atlas.webp",
+      "sourceSha256": "17a80af479c5f8f9889ae6d578b0d2115ad16b1b44f5db79ee7d8177e91db95d",
+      "still": "src/components/breakthrough/assets/supplied-fx/lunch-still.webp",
+      "stillSha256": "01b65a3b5043103eb9a029297777643a8dcb9348a9260eb14ab50b8b5fd91011",
+      "frame": 18,
+      "pages": 1,
+      "origin": [
+        0,
+        320
+      ],
+      "size": [
+        160,
+        160
+      ]
+    },
+    {
+      "selector": ".bt-b4-moveDust",
+      "source": "src/components/breakthrough/assets/supplied-fx/moveDust-atlas.webp",
+      "sourceSha256": "e147e9449a465784f8c5d6cc51bbf2e82da5a14c3efb663240bfece4823abb6f",
+      "still": "src/components/breakthrough/assets/supplied-fx/moveDust-still.webp",
+      "stillSha256": "54908a1070b4b9151b0a9124d952dd953c1f1c5705521e326868364c18131c32",
+      "frame": 18,
+      "pages": 1,
+      "origin": [
+        0,
+        184
+      ],
+      "size": [
+        224,
+        92
+      ]
+    },
+    {
+      "selector": ".bt-smoke-rise-sprite",
+      "source": "src/components/breakthrough/assets/supplied-fx/smoke-rise-atlas.webp",
+      "sourceSha256": "b4d36ea2814740e040df2c51c604fd832312f1f71cc1ecc2c2576fea7eccd5cf",
+      "still": "src/components/breakthrough/assets/supplied-fx/smoke-rise-still.webp",
+      "stillSha256": "6ef7c77933ab94f03289fa2ff47e6afcdf012cfec46ee60383cd949273de18e5",
+      "frame": 0,
+      "pages": 1,
+      "origin": [
+        0,
+        0
+      ],
+      "size": [
+        178,
+        256
+      ]
+    },
+    {
+      "selector": ".bt-b4-summon",
+      "source": "src/components/breakthrough/assets/supplied-fx/summon-atlas.webp",
+      "sourceSha256": "ccfd881341b7aab54ddf05c80a29fe8780cffffda7ed34c64c8a62830a482d23",
+      "still": "src/components/breakthrough/assets/supplied-fx/summon-still.webp",
+      "stillSha256": "c3a65ae765c9f3f145c5adfe7638f1e88a2da694329ebc3c6eb761402d968f95",
+      "frame": 18,
+      "pages": 1,
+      "origin": [
+        0,
+        378
+      ],
+      "size": [
+        192,
+        189
+      ]
+    },
+    {
+      "selector": ".bt-finish-hand / result win media",
+      "source": "public/assets/results/win-w.webp",
+      "sourceSha256": "7992a31f136626a9640a871e48f7df773091da2709f93ac93bc8b9cf30c4dba0",
+      "still": "public/assets/results/win-w-still.webp",
+      "stillSha256": "5d90435ef34123f387f5482f915fb5ef640fe3c5bf2298dc81850c0948d566f1",
+      "frame": 57,
+      "pages": 91,
+      "origin": [
+        0,
+        0
+      ],
+      "size": [
+        256,
+        256
+      ]
+    }
+  ]
+}
