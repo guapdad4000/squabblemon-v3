@@ -26,12 +26,26 @@ test('the world bulletin preserves canonical availability and routes without cla
     await act(async () => { renderer = create(React.createElement(FadewoodBulletinPanel, props)); });
     const buttons = () => renderer!.root.findAllByType('button');
     const button = (label: string) => buttons().find(item => text(item) === label || item.findAllByType('strong').some(child => text(child) === label))!;
+    const flyers = new Map<string, ReactTestInstance>();
     for (const event of bulletinBoard.events) {
-      assert.ok(text(renderer!.root).includes(event.statusLabel));
-      await act(async () => { button(event.link.label).props.onClick(); });
+      const flyer = renderer!.root.findAllByType('article').find(item => item.findAllByType('h4').some(heading => text(heading) === event.title));
+      assert.ok(flyer, `missing canonical event ${event.id}`);
+      flyers.set(event.id, flyer);
+      assert.equal(flyer.props['data-status'], event.status);
+      assert.ok(text(flyer).includes(event.statusLabel), event.id);
+      assert.ok(text(flyer).includes(event.summary), event.id);
+      const link = flyer.findByType('button');
+      assert.equal(text(link), event.link.label);
+      await act(async () => { link.props.onClick(); });
       assert.equal(routes.at(-1), event.link.href, 'event routing uses its existing published destination');
     }
-    const planned = renderer!.root.findAllByType('article').find(item => item.props['data-status'] === 'planned')!;
+    const beta = flyers.get('kumite-breakthrough-beta')!;
+    assert.equal(beta.props['data-status'], 'planned');
+    assert.match(text(beta), /Public matchmaking not yet open/);
+    assert.match(text(beta), /Three lanes\. Refilling Motion\. Two breaches to win\./);
+    assert.equal(text(beta.findByType('button')), 'Explore Kumite');
+    const planned = flyers.get('ranked-fight-night')!;
+    assert.equal(planned.props['data-status'], 'planned');
     assert.match(text(planned), /Planned · No date set/);
     assert.match(text(planned), /There is no date or reward yet/);
     const missionButtons = buttons().filter(item => String(item.props['aria-label'] ?? '').startsWith('Open bounty:'));
