@@ -7,6 +7,7 @@ import { AnimatedNumber } from './AnimatedNumber';
 import { isBattleActive, subscribeBattleActive } from '../lib/imageWarmup';
 import { rewardReceipts } from '../lib/rewardReceiptStore';
 import { getAssetUrl } from '../lib/assets';
+import { isWorldAutoPresentationAllowed, subscribeWorldSurface } from '../lib/worldSurface';
 import '../styles/bag-reward-arrival.css';
 
 type Batch = { ids: string[]; amounts: Partial<Record<BagResource, number>> };
@@ -15,7 +16,7 @@ const resources: { kind: BagResource; label: string; glyph: GameGlyphName }[] = 
   { kind: 'tickets', label: 'Tickets', glyph: 'ticket' },
   { kind: 'shards', label: 'Universal Shards', glyph: 'shards' },
 ];
-const blocked = () => document.visibilityState !== 'visible' || isBattleActive() || !!rewardReceipts.current()
+const blocked = () => !isWorldAutoPresentationAllowed() || document.visibilityState !== 'visible' || isBattleActive() || !!rewardReceipts.current()
   || !!document.querySelector('dialog[open], [role="dialog"][data-state="open"], [role="dialog"][aria-modal="true"], .gacha-stage[data-phase]:not([data-phase="idle"])');
 
 /** Presents existing positive wallet notices; never grants or modifies currency. */
@@ -50,10 +51,10 @@ export function BagRewardArrival({ profile }: { profile: PlayerBootstrap['profil
     };
     const observer = new MutationObserver(schedule);
     observer.observe(document.body, { subtree: true, childList: true, attributes: true, attributeFilter: ['open', 'data-state', 'data-phase', 'aria-modal'] });
-    const battle = subscribeBattleActive(schedule), rewards = rewardReceipts.subscribe(schedule);
+    const battle = subscribeBattleActive(schedule), rewards = rewardReceipts.subscribe(schedule), world = subscribeWorldSurface(schedule);
     document.addEventListener('visibilitychange', schedule);
     schedule();
-    return () => { window.clearTimeout(timer); observer.disconnect(); battle(); rewards(); document.removeEventListener('visibilitychange', schedule); };
+    return () => { window.clearTimeout(timer); observer.disconnect(); battle(); rewards(); world(); document.removeEventListener('visibilitychange', schedule); };
   }, [pendingKey, batch]);
 
   useEffect(() => {
@@ -82,10 +83,10 @@ export function BagRewardArrival({ profile }: { profile: PlayerBootstrap['profil
     const timer = window.setTimeout(() => { if (!blocked()) { seen(batch.ids); setBatch(null); } }, 3600);
     const observer = new MutationObserver(abortIfBlocked);
     observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['open', 'data-state', 'data-phase', 'aria-modal'] });
-    const battle = subscribeBattleActive(abortIfBlocked), rewards = rewardReceipts.subscribe(abortIfBlocked);
+    const battle = subscribeBattleActive(abortIfBlocked), rewards = rewardReceipts.subscribe(abortIfBlocked), world = subscribeWorldSurface(abortIfBlocked);
     document.addEventListener('visibilitychange', abortIfBlocked);
     abortIfBlocked();
-    return () => { window.clearTimeout(timer); observer.disconnect(); battle(); rewards(); document.removeEventListener('visibilitychange', abortIfBlocked); };
+    return () => { window.clearTimeout(timer); observer.disconnect(); battle(); rewards(); world(); document.removeEventListener('visibilitychange', abortIfBlocked); };
   }, [batch, seen, profile.settings.reducedMotion]);
 
   if (!batch) return null;

@@ -29,3 +29,26 @@ for (const name of await readdir(directory)) if (name.endsWith('.json') && !file
   await unlink(new URL(name, directory));
 }
 console.log(`Story delivery ${check ? 'verified' : 'generated'}: ${chapters.length} chapters, ${revision}`);
+
+
+// Lightweight world markers and resume tokens. Screenplay remains chapter-on-demand.
+const worldActors: Record<string, string> = {
+  'Cornball':'cornball', 'Ganger Blue':'ganger-blue', 'Ganger Red':'ganger-red',
+  'Wifey':'wifey', 'Baby Momma':'baby-momma', 'BabyMomma':'baby-momma',
+  'Snitch':'snitch', 'Cracked Head':'cracked-head', 'Sherlock':'sherlock', 'Yasuke':'yasuke',
+  'Inmate Kingpin':'inmate-kingpin', 'Homeless Guy':'homeless-guy', 'Leon':'homeless-guy',
+  'SquabbleHouse Manager':'squabble-house-manager', 'Manager':'squabble-house-manager', 'Dr. Fade':'dr-fade',
+};
+const worldTracking = JSON.stringify({ revision, nodes: Object.fromEntries(storyContent.chapters.flatMap(chapter => chapter.nodes.map(node => {
+  const lines = node.kind === 'battle' ? [...node.preDialogue, ...node.postDialogue] : node.scenes;
+  return [node.id, { token: tokens[node.id] ?? `${node.id}:script-v3`, post: node.kind === 'battle' ? node.postDialogue.length : 0,
+    participants: [...new Set(lines.flatMap(line => Object.hasOwn(worldActors, line.speaker) ? [worldActors[line.speaker]] : []))] }];
+}))) }) + '\n';
+const trackingDirectory = new URL('../src/lib/fadewood/', import.meta.url);
+const trackingFile = new URL('node-tracking.json', trackingDirectory);
+if (check) {
+  if (await readFile(trackingFile, 'utf8').catch(() => '') !== worldTracking) throw new Error('Fadewood Story tracking is stale. Run generate-story-delivery.ts.');
+} else {
+  await mkdir(trackingDirectory, { recursive: true });
+  await writeFile(trackingFile, worldTracking);
+}

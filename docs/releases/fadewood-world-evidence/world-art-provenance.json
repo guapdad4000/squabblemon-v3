@@ -1,0 +1,63 @@
+{
+  "version": 1,
+  "date": "2026-10-30",
+  "scope": "New night backdrop pair, texture-led Safehouse facade and reversible joint-host curb booth. Existing masters untouched.",
+  "art": [
+    {
+      "name": "night-panorama",
+      "tool": "built-in image_gen.imagegen",
+      "generatedFile": "/home/falcon/.codex/generated_images/01a18ee4-50a2-72f2-8697-7630b4175979/exec-cb2d3ebe-30f9-44b8-9f06-72ea108732b4.png",
+      "sourceMaster": "docs/plans/fadewood-integration-2026-10-30/source-art/night-panorama.png",
+      "sourceSha256": "ccfa7d89cfbdc4079934cae4f87d2f72c1b7065baffe6c77ff2d07fed2233166",
+      "sourcePixels": [
+        2172,
+        724
+      ],
+      "delivery": "artifacts/squabblemon/public/scenes/fadewood/assets/v3/fadewood-night-panorama.webp",
+      "deliverySha256": "b8a3bd8ebefa479f9b431595a732e1e0b68bac570130bc7d629b77611285418d",
+      "deliveryPixels": [
+        2048,
+        683
+      ],
+      "deliveryBytes": 248648,
+      "alphaRequired": false,
+      "encoding": "WebP quality90 method6; aspect-preserving LANCZOS derivative; no artwork crop"
+    },
+    {
+      "name": "night-neighborhood",
+      "tool": "built-in image_gen.imagegen",
+      "generatedFile": "/home/falcon/.codex/generated_images/01a18ee4-50a2-72f2-8697-7630b4175979/exec-49c82764-b245-411b-8881-619fb16c8b2a.png",
+      "sourceMaster": "docs/plans/fadewood-integration-2026-10-30/source-art/night-neighborhood.png",
+      "sourceSha256": "03391a77e291bade990e0a6015289aa9b1f1660971ece3a5a377c736a51c073a",
+      "sourcePixels": [
+        2172,
+        724
+      ],
+      "delivery": "artifacts/squabblemon/public/scenes/fadewood/assets/v3/fadewood-night-neighborhood.webp",
+      "deliverySha256": "87b670198781864d0619c06af6951ba95ede9039c414111f326ec974340532df",
+      "deliveryPixels": [
+        2048,
+        683
+      ],
+      "deliveryBytes": 289140,
+      "alphaRequired": true,
+      "encoding": "WebP quality90 method6; aspect-preserving LANCZOS derivative; no artwork crop"
+    },
+    {
+      "name": "safehouse-facade",
+      "tool": "built-in image_gen.imagegen",
+      "generatedFile": "/home/falcon/.codex/generated_images/01a18ee4-50a2-72f2-8697-7630b4175979/exec-22a430be-b58f-4b86-988e-3898a07bbd3c.png",
+      "sourceMaster": "docs/plans/fadewood-integration-2026-10-30/source-art/safehouse-facade.png",
+      "sourceSha256": "d4d9bfa678b6958f3ddc38af85342bf35a114d8e5805854c8db0e1544633615e",
+      "deliveryProvenance": "artifacts/squabblemon/public/scenes/fadewood/assets/curb-details/provenance.json"
+    },
+    {
+      "name": "demario-luigion-booth",
+      "tool": "built-in image_gen.imagegen",
+      "generatedFile": "/home/falcon/.codex/generated_images/01a18ee4-50a2-72f2-8697-7630b4175979/exec-cf3f9321-75ed-4ce8-baf0-05aec706ee2e.png",
+      "sourceMaster": "docs/plans/fadewood-integration-2026-10-30/source-art/demario-luigion-booth.png",
+      "sourceSha256": "dede0082a4d8afd0b3649954502be6e2c7a24fd6b5aac7430d90d6fe0f18ff5a",
+      "deliveryProvenance": "artifacts/squabblemon/public/scenes/fadewood/assets/curb-details/provenance.json"
+    }
+  ]
+}

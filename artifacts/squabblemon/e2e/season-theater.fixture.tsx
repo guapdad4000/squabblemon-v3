@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import {
   getGetPlayerBootstrapQueryKey,
   getGetPlayerStoryQueryKey,
+  useGetPlayerBootstrap,
   type PlayerBootstrap,
   type StoryCampaign,
 } from '@workspace/api-client-react';
@@ -12,12 +13,15 @@ import {
   storyDialogueToken,
   storySeasons,
 } from '@workspace/squabblemon-engine/story';
-import { Router } from 'wouter';
+import { Router, useLocation, useSearch } from 'wouter';
+import { memoryLocation } from 'wouter/memory-location';
 import { CityHeader } from '../src/components/venue/CityHeader';
 import { CosmeticProvider } from '../src/components/CosmeticContext';
 import { RewardReveal } from '../src/components/RewardReveal';
 import { Story } from '../src/pages/game/Story';
 import '../src/index.css';
+import '../src/pages/game/gameStyles';
+import '../src/styles/venue.css';
 
 // The managed-preview development banner is external chrome, not part of the
 // game. Keep it from covering fixed portal controls in screenshot fixtures.
@@ -25,7 +29,7 @@ const fixtureChromeStyle = document.createElement('style');
 fixtureChromeStyle.textContent = '#replit-dev-banner { display: none !important; }';
 document.head.append(fixtureChromeStyle);
 
-type FixtureScenario = 'theater' | 'existing-save' | 'season-two' | 'puzzle-dialogue' | 'puzzle' | 'puzzle-complete';
+type FixtureScenario = 'theater' | 'existing-save' | 'season-two' | 'puzzle-dialogue' | 'puzzle' | 'puzzle-complete' | 'world' | 'world-existing-save';
 
 const params = new URLSearchParams(window.location.search);
 const requestedScenario = params.get('scenario');
@@ -34,9 +38,14 @@ const scenario: FixtureScenario =
   requestedScenario === 'season-two' ||
   requestedScenario === 'puzzle-dialogue' ||
   requestedScenario === 'puzzle' ||
-  requestedScenario === 'puzzle-complete'
+  requestedScenario === 'puzzle-complete' ||
+  requestedScenario === 'world' ||
+  requestedScenario === 'world-existing-save'
     ? requestedScenario
     : 'theater';
+const worldScenario = scenario === 'world' || scenario === 'world-existing-save';
+const existingSave = scenario === 'existing-save' || scenario === 'world-existing-save';
+const FixtureHome = React.lazy(() => import('../src/pages/game/Home').then(module => ({ default: module.Home })));
 const requestedPuzzle = params.get('puzzleNode');
 const puzzleNode = storyContent.chapters
   .flatMap((chapter) => chapter.nodes)
@@ -46,12 +55,14 @@ if (!puzzleNode) throw new Error('The real story registry has no puzzle node.');
 if (scenario === 'season-two' && !params.has('theater')) params.set('season', 'season-2');
 if (scenario === 'puzzle-dialogue' || scenario === 'puzzle' || scenario === 'puzzle-complete') params.set('node', puzzleNode.id);
 params.delete('scenario');
+if (worldScenario) params.delete('view');
+else params.set('view', 'archive');
 
 function createBootstrap(): PlayerBootstrap {
   const timestamp = new Date(0);
   return {
     profile: {
-      id: 'season-theater-fixture-player',
+      id: worldScenario ? `season-theater-fixture-${scenario}` : 'season-theater-fixture-player',
       displayName: 'Theater QA',
       avatarKey: 'cornball',
       onboardingStep: 'complete',
@@ -72,7 +83,7 @@ function createBootstrap(): PlayerBootstrap {
       starterRewardClaimed: true,
       ageConfirmedAt: timestamp,
       termsAcceptedAt: timestamp,
-      settings: { reducedMotion: false, turnTimerEnabled: false },
+      settings: { reducedMotion: params.has('reduced'), turnTimerEnabled: false },
       ownedCardIds: [],
       discoveredCardIds: [],
       ownedVariants: [],
@@ -140,12 +151,12 @@ function createCampaign(): StoryCampaign {
       const isFirstChapter = chapter.id === firstSeasonOneChapter.id;
       const isPuzzleChapter = chapter.id === puzzleChapter.id;
       const cleared =
-        (scenario === 'existing-save' && isFirstChapter && nodeIndex < 2) ||
+        (existingSave && isFirstChapter && nodeIndex < 2) ||
         (unlockSeasonTwo && chapter.order < puzzleChapter.order) ||
         (unlockSeasonTwo && isPuzzleChapter && nodeIndex < firstS2PuzzleIndex) ||
         (completePuzzle && node.id === puzzleNode.id);
       const available =
-        (!unlockSeasonTwo && isFirstChapter && nodeIndex === (scenario === 'existing-save' ? 2 : 0)) ||
+        (!unlockSeasonTwo && isFirstChapter && nodeIndex === (existingSave ? 2 : 0)) ||
         (unlockSeasonTwo && isPuzzleChapter && nodeIndex === firstS2PuzzleIndex);
       return {
         chapterId: chapter.id,
@@ -235,18 +246,50 @@ function createCampaign(): StoryCampaign {
 
 let bootstrap = createBootstrap();
 let campaign = createCampaign();
+const fixtureMail = [{ id: 'local-world-delivery', title: 'A delivery for the local fixture',
+  body: 'Synthetic mail for testing the real Mailman overlay. These gifts exist only in this local fixture.',
+  sender: 'LOCAL FIXTURE', sentAt: '2026-10-30T12:00:00Z', readAt: null as string | null, claimedAt: null as string | null,
+  gift: { softCurrency: 125, packTickets: 1, styleShards: 5 } }];
 Object.assign(window, { storyClarityFixture: { campaign: () => campaign } });
 const realFetch = window.fetch.bind(window);
 window.fetch = async (input, init) => {
   const request = input instanceof Request ? input : new Request(input, init);
   const url = new URL(request.url, window.location.origin);
-  if (!url.pathname.startsWith('/api/player/')) return realFetch(input, init);
+  if (!url.pathname.startsWith('/api/')) return realFetch(input, init);
   const json = (body: unknown, status = 200) => new Response(JSON.stringify(body), {
     status,
     headers: { 'content-type': 'application/json' },
   });
   if (request.method === 'GET' && url.pathname.endsWith('/bootstrap')) return json(bootstrap);
   if (request.method === 'GET' && url.pathname.endsWith('/story')) return json(campaign);
+  if (request.method === 'GET' && url.pathname.endsWith('/mail')) return json({ messages: fixtureMail });
+  if (worldScenario && request.method === 'GET') {
+    if (url.pathname === '/api/player/challenges/runs' || url.pathname === '/api/events/patches') return json([]);
+    if (url.pathname === '/api/player/rewards/starter-mythic' || url.pathname === '/api/player/rewards/john-henry') {
+      return json({ state: 'claimed', ownsCard: true, chapters: [] });
+    }
+  }
+  const mailMatch = url.pathname.match(/\/mail\/([^/]+)\/(read|claim)$/);
+  if (request.method === 'POST' && mailMatch) {
+    const letter = fixtureMail.find(item => item.id === decodeURIComponent(mailMatch[1]));
+    if (!letter) return json({ error: 'Unknown fixture delivery.' }, 404);
+    letter.readAt ??= new Date().toISOString();
+    const credited = mailMatch[2] === 'claim' && !letter.claimedAt;
+    if (credited) {
+      letter.claimedAt = new Date().toISOString();
+      bootstrap = structuredClone(bootstrap);
+      bootstrap.profile.softCurrency += letter.gift.softCurrency;
+      bootstrap.profile.packTickets += letter.gift.packTickets;
+      bootstrap.profile.styleShards += letter.gift.styleShards;
+    }
+    return json({ mail: letter, credited });
+  }
+  const objectivesMatch = url.pathname.match(/\/story\/nodes\/([^/]+)\/objectives$/);
+  if (request.method === 'GET' && objectivesMatch) {
+    const progress = campaign.nodes.find(node => node.nodeId === decodeURIComponent(objectivesMatch[1]));
+    return progress ? json({ nodeId: progress.nodeId, stars: progress.stars, completedObjectiveIds: [] })
+      : json({ error: 'Unknown fixture story node.' }, 404);
+  }
   if (request.method === 'POST' && url.pathname.endsWith('/story/puzzle')) {
     const fixtureWindow = window as typeof window & {
       __seasonPuzzleRequests?: number;
@@ -291,7 +334,10 @@ window.fetch = async (input, init) => {
 // no production auth path or production data fallback is changed.
 window.localStorage.setItem('squabblemon_e2e_user', 'signed-in');
 const query = params.size ? `?${params}` : '';
-window.history.replaceState({}, '', `${import.meta.env.BASE_URL}game/story${query}`);
+// Keep world fixtures reloadable through Vite while the real Story coordinator
+// still receives and changes its normal path/query through Wouter.
+const worldLocation = worldScenario ? memoryLocation({ path: `/game/story${query}` }) : null;
+if (!worldScenario) window.history.replaceState({}, '', `${import.meta.env.BASE_URL}game/story${query}`);
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { retry: false }, mutations: { retry: false } },
@@ -299,25 +345,65 @@ const queryClient = new QueryClient({
 queryClient.setQueryData(getGetPlayerBootstrapQueryKey(), bootstrap);
 queryClient.setQueryData(getGetPlayerStoryQueryKey(), campaign);
 
+function FixtureSurface() {
+  const { data: currentBootstrap = bootstrap } = useGetPlayerBootstrap();
+  const [fixturePath] = useLocation();
+  const fixtureSearch = useSearch();
+  return <CosmeticProvider profile={currentBootstrap.profile}>
+    <RewardReveal />
+    {worldScenario && <aside role="status" data-fixture-route={`${fixturePath}${fixtureSearch ? `?${fixtureSearch}` : ''}`} style={{ position: 'fixed', zIndex: 100000, bottom: 0, left: 0, right: 0,
+      padding: '5px 10px', background: '#f5e3ac', color: '#161a16', textAlign: 'center', font: '700 12px monospace', pointerEvents: 'none' }}>
+      LOCAL FIXTURE · SYNTHETIC CAMPAIGN AND MAIL <output id="fixture-world-frame-count" aria-label="World renderer mounts" />
+      <output id="fixture-world-events" aria-label="Local renderer event trace" style={{ display: 'block', fontSize: 10 }} />
+    </aside>}
+    <div className="game-shell game-shell--compact-nav h-[100dvh] bg-[#070707] text-white">
+      <div className="noise-overlay" />
+      <div className="game-shell__content">
+        <CityHeader bootstrap={currentBootstrap} />
+        <div className="game-route-stage">{worldScenario && fixturePath === '/game'
+          ? <React.Suspense fallback={<p role="status">Opening the local Safehouse…</p>}><FixtureHome bootstrap={currentBootstrap} /></React.Suspense>
+          : <Story bootstrap={currentBootstrap} />}</div>
+      </div>
+    </div>
+  </CosmeticProvider>;
+}
+
 function Fixture() {
   return (
-    <Router base={import.meta.env.BASE_URL.replace(/\/$/, '')}>
+    <Router hook={worldLocation?.hook} base={import.meta.env.BASE_URL.replace(/\/$/, '')}>
       <QueryClientProvider client={queryClient}>
-        <CosmeticProvider profile={bootstrap.profile}>
-          <RewardReveal />
-          <div className="game-shell game-shell--compact-nav h-[100dvh] bg-[#070707] text-white">
-            <div className="noise-overlay" />
-            <div className="game-shell__content">
-              <CityHeader bootstrap={bootstrap} />
-              <div className="game-route-stage">
-                <Story bootstrap={bootstrap} />
-              </div>
-            </div>
-          </div>
-        </CosmeticProvider>
+        <FixtureSurface />
       </QueryClientProvider>
     </Router>
   );
 }
 
 createRoot(document.getElementById('root')!).render(<Fixture />);
+if (worldScenario) {
+  const observedFrames = new WeakSet<HTMLIFrameElement>();
+  let rendererMounts = 0;
+  const recordRendererMounts = () => {
+    document.querySelectorAll<HTMLIFrameElement>('iframe[title="Explore Fadewood"]').forEach(frame => {
+      if (!observedFrames.has(frame)) { observedFrames.add(frame); rendererMounts++; }
+    });
+    const output = document.getElementById('fixture-world-frame-count');
+    const value = `· Renderer mounts: ${rendererMounts}`;
+    if (output && output.textContent !== value) output.textContent = value;
+  };
+  new MutationObserver(recordRendererMounts).observe(document.getElementById('root')!, { childList: true, subtree: true });
+  recordRendererMounts();
+  const worldEvents: string[] = [];
+  let lastState = '';
+  window.addEventListener('message', event => {
+    const frame = document.querySelector<HTMLIFrameElement>('iframe[title="Explore Fadewood"]');
+    if (event.origin !== window.location.origin || event.source !== frame?.contentWindow || event.data?.channel !== 'squabblemon-fadewood') return;
+    const data = event.data;
+    const value = data.type === 'state' ? `state:playing=${data.playing},travel=${data.travel},arrival=${data.checkpoint?.arrivalId ?? '-'}`
+      : `${data.type}${data.requestId ? `:${data.requestId}:${data.destinationId ?? ''}` : ''}`;
+    if (data.type === 'progress' || (data.type === 'state' && value === lastState)) return;
+    if (data.type === 'state') lastState = value;
+    worldEvents.push(value);
+    const output = document.getElementById('fixture-world-events');
+    if (output) { output.textContent = worldEvents.slice(-2).join(' → '); output.dataset.events = JSON.stringify(worldEvents); }
+  });
+}

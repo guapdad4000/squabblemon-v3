@@ -1,3 +1,4 @@
+import { useWorldLighting } from '../../lib/worldLighting';
 import {useKumiteHotspotClock} from '../../lib/useKumiteHotspotClock';
 import { JohnHenryMythic } from '../../components/JohnHenryMythic';
 import { useSearch, useLocation } from 'wouter';
@@ -114,9 +115,7 @@ export function Home({ bootstrap, onGuideComplete }: { bootstrap: PlayerBootstra
   }, [noticeSearch, navigate]);
   const mail = useSafehouseMail(bootstrap.profile.id);
   const unreadMail = (mail.data?.messages ?? []).filter(item => !item.readAt).length;
-  const [night, setNight] = useState(() => {
-    try { return localStorage.getItem('squabblemon_safehouse_lighting') === 'night'; } catch { return false; }
-  });
+  const [night, setNight] = useWorldLighting();
   const music = useMusic();
   const arcadeRuns = useListChallengeRuns({ query: { queryKey: getListChallengeRunsQueryKey(), refetchOnMount: 'always', refetchInterval: MENU_POLL_MS, refetchOnWindowFocus: true } });
   const arcadeProgress = { status: arcadeRuns.isError ? 'unavailable' : !Array.isArray(arcadeRuns.data) ? 'loading' : arcadeRuns.data.some(run => run.status === 'active') ? 'continue' : 'new', wins: Array.isArray(arcadeRuns.data) ? arcadeRuns.data.find(run => run.status === 'active')?.wins ?? 0 : 0 };
@@ -223,7 +222,6 @@ export function Home({ bootstrap, onGuideComplete }: { bootstrap: PlayerBootstra
   }, [markersPlaced, view]);
   useEffect(() => {
     sendScene(frame, { type: 'light', night });
-    try { localStorage.setItem('squabblemon_safehouse_lighting', night ? 'night' : 'day'); } catch { /* Preferences are optional. */ }
   }, [night]);
   useEffect(() => { sendScene(frame, { type: 'music', playing: music.playing }); }, [music.playing]);
   const preview = bootstrap.profile.id === 'e2e-player';

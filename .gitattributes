@@ -18,3 +18,6 @@ scripts/results/squabblehouse-counter-revision-comparison/janitor-only/diner/cur
 # Preserve checksummed CSV CRLF and literal whitespace in archived patches.
 artifacts/deliverables/**/*.csv whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
 artifacts/deliverables/**/*.patch -whitespace
+
+# Preserve upstream GLSL template whitespace in the generated Three.js vendor bundle.
+artifacts/squabblemon/public/scenes/fadewood/assets/three-*.js -whitespace

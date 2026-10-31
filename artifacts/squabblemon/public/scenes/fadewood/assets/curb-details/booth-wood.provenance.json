@@ -1,0 +1,60 @@
+{
+  "asset": "booth-wood.webp",
+  "source": "artifacts/squabblemon/public/assets/events/supplied/wood-borders.webp",
+  "sourceSha256": "90ec1de37b862420f5482b53d24930d4b43b46581893f21e6f50943ebf001c62",
+  "sourceSize": [
+    1448,
+    1086
+  ],
+  "approvedExistingUse": "public/scenes/safehouse/bulletin-board.js wood frame",
+  "derivation": "Four existing timber interiors, cropped, opaque alpha flatten and Lanczos resize; no generated artwork.",
+  "cropBoxesPixels": [
+    [
+      170,
+      57,
+      1250,
+      97
+    ],
+    [
+      180,
+      154,
+      1110,
+      193
+    ],
+    [
+      170,
+      258,
+      1055,
+      296
+    ],
+    [
+      200,
+      356,
+      1220,
+      395
+    ]
+  ],
+  "outputSize": [
+    1024,
+    128
+  ],
+  "outputSha256": "31dec2422c327d77d44ec2e88e472c2c1182def43aed54216a41748c369d15d2",
+  "physicalTileMetres": [
+    3.2,
+    0.4
+  ],
+  "colorSpace": "sRGB",
+  "wrap": "mirrored-repeat",
+  "grainDirection": "U follows the long plank; four 0.1m rows per V tile",
+  "surfaces": [
+    "counter slab all faces",
+    "low front trim all faces",
+    "canopy all faces",
+    "narrow timber edge trim"
+  ],
+  "preserved": [
+    "green counter/structure",
+    "green painted joint-host sign",
+    "supplied host models"
+  ]
+}

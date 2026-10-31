@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#142327" />
+    <meta name="description" content="Walk the Squabble Block. An anime neighborhood to explore." />
+    <title>Fadewood — Story Mode V3</title>
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body>
+    <div id="game" aria-label="Squabble Block interactive street"></div>
+
+    <div id="hud" class="hud" aria-label="Walkaround information">
+      <div class="district-badge">
+        <svg class="fist-mark" viewBox="0 0 40 40" fill="none" aria-hidden="true">
+          <path d="M11 20V9c0-4 6-4 6 0V7c0-4 6-4 6 0v2c0-4 6-4 6 0v4c0-4 6-4 6 0v11l-5 7v6H15v-7L6 21c-3-3 1-7 4-4l7 6" fill="currentColor" stroke="#142327" stroke-width="2.5" stroke-linejoin="round" />
+          <path d="M17 11v7m6-7v7m6-4v5M16 29h13" stroke="#142327" stroke-width="2.5" stroke-linecap="round" />
+        </svg>
+        <div>
+          <span class="badge-kicker">SQUABBLE BLOCK</span>
+          <span id="district-name">FADE DISTRICT</span>
+        </div>
+      </div>
+      <div class="hud-actions">
+        <button id="travel-button" class="text-button travel-button" type="button" aria-haspopup="dialog" aria-controls="travel-panel" title="Fast travel (F)" disabled>Fast travel <kbd aria-hidden="true">F</kbd></button>
+        <button id="help-button" class="icon-button" type="button" aria-label="Show controls" title="Controls">?</button>
+        <button id="reset-button" class="text-button" type="button" aria-label="Return to the start" title="Return to the start"><span class="reset-label">Back to start</span><span class="reset-arrow" aria-hidden="true">↺</span></button>
+        <button id="pause-button" class="icon-button pause-button" type="button" aria-label="Pause game" title="Pause game" disabled><span aria-hidden="true">Ⅱ</span></button>
+      </div>
+      <div class="hud-bottom">
+        <div class="motion-tag"><span class="status-dot" aria-hidden="true"></span><span id="motion-state">STANDING BY</span></div>
+        <div class="key-tips" aria-label="Controls">
+          <span><kbd>WASD</kbd> move</span>
+          <span><kbd>Mouse</kbd> look</span>
+          <span><kbd>Shift</kbd> sprint</span>
+          <span><kbd>E</kbd> interact</span><span><kbd>F</kbd> fast travel</span>
+          <span><kbd>Esc</kbd> pause</span>
+        </div>
+      </div>
+    </div>
+
+    <section id="menu" class="menu" aria-labelledby="menu-title">
+      <div class="menu-card">
+        <div class="menu-eyebrow"><span class="eyebrow-line" aria-hidden="true"></span>SQUABBLE BLOCK <span class="edition">STORY MODE / V3</span></div>
+        <h1 id="menu-title">WALK<br /><span>THE BLOCK.</span></h1>
+        <p id="menu-copy">Step into Fadewood. Meet the block, talk to your neighbors, and find your next fade.</p>
+        <div class="load-area">
+          <div class="load-label"><span id="load-status" role="status" aria-live="polite">Opening the neighborhood…</span><span class="load-glyph" aria-hidden="true">↗</span></div>
+          <progress id="load-progress" max="100" value="0" aria-label="Loading the neighborhood">0%</progress>
+        </div>
+        <button id="play-button" class="play-button" type="button" disabled><span>Loading the block…</span><span class="play-arrow" aria-hidden="true">→</span></button>
+        <p id="resume-hint" class="resume-hint" hidden>Click to jump back in. Press <kbd>Esc</kbd> whenever you need a break.</p>
+        <div class="menu-controls menu-controls-desktop" aria-label="Keyboard and mouse controls"><span><kbd>W A S D</kbd> MOVE</span><span><kbd>↔ MOUSE</kbd> LOOK</span><span><kbd>SHIFT</kbd> SPRINT</span><span><kbd>F</kbd> FAST TRAVEL</span></div>
+        <div class="menu-controls menu-controls-touch" aria-label="Touch controls"><span><strong>LEFT STICK</strong> MOVE</span><span><strong>DRAG THE VIEW</strong> LOOK</span><span><strong>HOLD RUN</strong> SPRINT</span><span><strong>TAP PROMPT</strong> ENTER / TALK</span></div>
+        <p id="touch-note" class="touch-note">Move with the left stick, drag the view to look around, and tap the prompt near a neighbor, door, or the roaming hat. Travel takes you around the block.</p>
+      </div>
+      <div class="menu-caption" aria-hidden="true"><span class="caption-rule"></span>FRIENDLY FADES<span class="caption-separator">/</span>FADEWOOD / STORY MODE V3</div>
+    </section>
+
+    <section id="help-panel" class="help-panel" role="dialog" aria-modal="true" aria-labelledby="help-title" hidden>
+      <div class="help-card">
+        <div class="help-heading"><span class="badge-kicker">MAKE YOURSELF AT HOME</span><button id="help-close" class="icon-button" type="button" aria-label="Close controls">×</button></div>
+        <h2 id="help-title">Know your moves.</h2>
+        <dl class="control-list control-list-desktop">
+          <div><dt><kbd>W A S D</kbd></dt><dd>Walk around</dd></div>
+          <div><dt><kbd>Mouse</kbd></dt><dd>Look around</dd></div>
+          <div><dt><kbd>Shift</kbd></dt><dd>Hold to sprint</dd></div>
+          <div><dt><kbd>F</kbd></dt><dd>Fast travel around the block</dd></div>
+          <div><dt><kbd>E</kbd></dt><dd>Talk to a neighbor or enter a nearby story location</dd></div>
+          <div><dt><kbd>Esc</kbd></dt><dd>Pause &amp; release the mouse</dd></div>
+        </dl>
+        <dl class="control-list control-list-touch">
+          <div><dt>LEFT STICK</dt><dd>Walk around</dd></div>
+          <div><dt>DRAG VIEW</dt><dd>Look around with your other thumb</dd></div>
+          <div><dt>RUN</dt><dd>Hold to sprint</dd></div>
+          <div><dt>INTERACT</dt><dd>Tap the prompt near a neighbor, door, or roaming hat</dd></div>
+          <div><dt>TRAVEL</dt><dd>Pick any corner on the block</dd></div>
+          <div><dt>Ⅱ PAUSE</dt><dd>Take a break or resume your walk</dd></div>
+        </dl>
+        <p class="help-footnote">Take a lap. Check the park. See what's open.</p>
+      </div>
+    </section>
+
+    <section id="travel-panel" class="travel-panel" role="dialog" aria-modal="true" aria-labelledby="travel-title" aria-describedby="travel-copy" hidden>
+      <div class="travel-card">
+        <div class="travel-heading"><span class="badge-kicker">FAST TRAVEL / SQUABBLE BLOCK</span><button id="travel-close" class="icon-button" type="button" aria-label="Close fast travel">×</button></div>
+        <h2 id="travel-title">Catch a <span>fade?</span></h2>
+        <p id="travel-copy">Pick your next corner. We’ll get you there in a cloud of trouble.</p>
+        <div id="travel-destinations" class="travel-destinations" aria-label="Travel destinations"></div>
+        <div class="travel-footer travel-footer-desktop"><span><kbd>1–9</kbd> pick a spot</span><span><kbd>Esc</kbd> back to the block</span></div>
+        <div class="travel-footer travel-footer-touch"><span>Tap a destination to catch a fade.</span><span>× closes the map.</span></div>
+      </div>
+    </section>
+
+    <div id="travel-transition" class="travel-transition" hidden>
+      <div class="travel-transition-caption">
+        <span class="travel-transition-kicker" aria-hidden="true">WHOOSH!</span>
+        <p id="travel-announcement" role="status" aria-live="polite" aria-atomic="true"></p>
+      </div>
+    </div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

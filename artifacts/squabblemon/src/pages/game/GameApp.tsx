@@ -3,6 +3,7 @@ import { installInteractionClickSounds } from '../../lib/interactionClickSounds'
 import './gameStyles';
 import { NotificationProvider } from '../../components/Notifications';
 import { useNavigationScroll } from '../../lib/navigationMemory';
+import { isWorldArrivalRoute, useWorldSurface } from '../../lib/worldSurface';
 import { PlayerLevelCelebration } from '../../components/PlayerLevelCelebration';
 import { CityHeader } from '../../components/venue/CityHeader';
 import { rewardReceipts } from '../../lib/rewardReceiptStore';
@@ -82,6 +83,8 @@ function GameRoutes({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   useEffect(() => { rewardReceipts.reset(); return () => rewardReceipts.reset(); }, [bootstrap.profile.id]);
   const [location, setLocation] = useLocation();
   const search = useSearch();
+  const worldSurface = useWorldSurface();
+  const worldArrivals = isWorldArrivalRoute(location, worldSurface);
   useEffect(() => {
     if (bootstrap.profile.onboardingStep !== 'complete') return;
     const options = { base: basePath, origin: window.location.origin };
@@ -125,10 +128,10 @@ function GameRoutes({ bootstrap }: { bootstrap: PlayerBootstrap }) {
     <CosmeticProvider profile={bootstrap.profile}>
     <NotificationProvider key={bootstrap.profile.id} bootstrap={bootstrap}>
     <RewardRevealGate />
-    {(location === '/game' || location === '/game/shop') && bootstrap.profile.onboardingStep === 'complete' && <Suspense fallback={null}><BagRewardArrival key={bootstrap.profile.id} profile={bootstrap.profile} /></Suspense>}
+    {(location === '/game' || location === '/game/shop' || worldArrivals) && bootstrap.profile.onboardingStep === 'complete' && <Suspense fallback={null}><BagRewardArrival key={bootstrap.profile.id} profile={bootstrap.profile} /></Suspense>}
     <KumiteUnlockGate key={bootstrap.profile.id} bootstrap={bootstrap} />
     <PlayerLevelCelebration profile={bootstrap.profile} />
-    {location === '/game' && bootstrap.profile.onboardingStep === 'complete' && <Suspense fallback={null}><DailyCheckInArrival key={bootstrap.profile.id} bootstrap={bootstrap} /></Suspense>}
+    {(location === '/game' || worldArrivals) && bootstrap.profile.onboardingStep === 'complete' && <Suspense fallback={null}><DailyCheckInArrival key={bootstrap.profile.id} bootstrap={bootstrap} /></Suspense>}
     <Suspense fallback={<LoadingScreen phase="scene" />}>
     <Switch>
       <Route path="/game/onboarding">

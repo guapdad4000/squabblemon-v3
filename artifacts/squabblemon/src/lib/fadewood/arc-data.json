@@ -1,0 +1,178 @@
+[
+  {
+    "id": "season-1",
+    "hostId": "cornball",
+    "arrivalId": "fade-market",
+    "participantIds": [
+      "cornball",
+      "ganger-blue",
+      "ganger-red",
+      "snitch",
+      "baby-momma",
+      "wifey",
+      "cracked-head"
+    ],
+    "fallbackTitle": "The Block Crown",
+    "fallbackChapterIds": [
+      "block-party",
+      "red-side-tapes",
+      "blue-side-blues",
+      "side-show",
+      "old-heads-know",
+      "the-function",
+      "return-of-the-block",
+      "the-crown"
+    ]
+  },
+  {
+    "id": "season-2",
+    "hostId": "wifey",
+    "arrivalId": "fade-park",
+    "participantIds": [
+      "wifey",
+      "cornball",
+      "ganger-blue",
+      "ganger-red",
+      "snitch",
+      "baby-momma",
+      "cracked-head",
+      "officer-oinkston"
+    ],
+    "fallbackTitle": "Blockbuster on the Block",
+    "fallbackChapterIds": [
+      "s2-the-morning-after",
+      "s2-the-rent-party",
+      "s2-unlicensed-improvements",
+      "s2-regular-guy-behavior",
+      "s2-museum-of-the-block",
+      "s2-everybody-has-a-buyer",
+      "s2-premiere-night",
+      "s2-the-blockbuster"
+    ]
+  },
+  {
+    "id": "special-sherlock",
+    "hostId": "sherlock",
+    "arrivalId": "blue-block",
+    "participantIds": [
+      "sherlock",
+      "snitch",
+      "cornball"
+    ],
+    "fallbackTitle": "The Missing Motion",
+    "fallbackChapterIds": [
+      "special-sherlock-missing-motion",
+      "special-sherlock-false-bottom",
+      "special-sherlock-last-reel",
+      "sherlock-thirteenth-bell",
+      "sherlock-dead-air",
+      "sherlock-negative-space"
+    ]
+  },
+  {
+    "id": "special-oz",
+    "hostId": "story-mural",
+    "arrivalId": "story-mural",
+    "participantIds": [],
+    "fallbackTitle": "The Yellow Line",
+    "fallbackChapterIds": [
+      "oz-yellow-line",
+      "oz-behind-the-curtain"
+    ]
+  },
+  {
+    "id": "special-alice",
+    "hostId": "alice-hat",
+    "arrivalId": "blue-block",
+    "participantIds": [],
+    "fallbackTitle": "The Borrowed Hour",
+    "fallbackChapterIds": [
+      "alice-borrowed-hour",
+      "alice-full-stop"
+    ]
+  },
+  {
+    "id": "special-yasuke",
+    "hostId": "yasuke",
+    "arrivalId": "dojo",
+    "participantIds": [
+      "yasuke"
+    ],
+    "fallbackTitle": "A Banner Without a Master",
+    "fallbackChapterIds": [
+      "yasuke-banner-without-master"
+    ]
+  },
+  {
+    "id": "special-cellblock",
+    "hostId": "inmate-kingpin",
+    "arrivalId": "county",
+    "participantIds": [
+      "inmate-kingpin"
+    ],
+    "fallbackTitle": "The Library Hour",
+    "fallbackChapterIds": [
+      "cellblock-library-hour"
+    ]
+  },
+  {
+    "id": "special-leon",
+    "hostId": "homeless-guy",
+    "arrivalId": "fade-market",
+    "participantIds": [
+      "homeless-guy",
+      "cornball"
+    ],
+    "fallbackTitle": "A Place to Return",
+    "fallbackChapterIds": [
+      "homeless-a-place-to-return"
+    ]
+  },
+  {
+    "id": "special-squabble-house",
+    "hostId": "squabble-house-manager",
+    "arrivalId": "squabble-house",
+    "participantIds": [
+      "squabble-house-manager"
+    ],
+    "fallbackTitle": "The Last Waffle",
+    "fallbackChapterIds": [
+      "squabble-house-last-waffle",
+      "squabble-house-receipts",
+      "squabble-house-family-discount",
+      "squabble-house-hands-on-the-clock",
+      "squabble-house-wet-floor",
+      "squabble-house-real-thief"
+    ]
+  },
+  {
+    "id": "special-kumite-break-the-bracket",
+    "hostId": "dr-fade",
+    "arrivalId": "underground-arena",
+    "participantIds": [
+      "dr-fade",
+      "yasuke"
+    ],
+    "fallbackTitle": "Break the Bracket",
+    "fallbackChapterIds": [
+      "kumite-break-the-bracket"
+    ]
+  },
+  {
+    "id": "special-anunaki-arrival",
+    "hostId": "anunaki-ufo",
+    "arrivalId": "anunaki-ufo",
+    "participantIds": [],
+    "fallbackTitle": "The Anunaki Arrival",
+    "fallbackChapterIds": [
+      "anunaki-01-no-refunds",
+      "anunaki-02-tapped-in",
+      "anunaki-03-instructions",
+      "anunaki-04-something-got-out",
+      "anunaki-05-divine-hands",
+      "anunaki-06-life-has-a-price",
+      "anunaki-07-wrong-millennium",
+      "anunaki-08-original-arrival"
+    ]
+  }
+]

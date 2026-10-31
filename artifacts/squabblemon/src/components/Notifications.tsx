@@ -15,6 +15,7 @@ import { useCollectionNotices } from '../lib/useCollectionNotices';
 import { CORNER_OFFERS } from '../lib/cornerStore';
 import '../styles/notifications.css';
 import { NotificationArrival } from './NotificationArrival';
+import { getWorldSurface, storyOverviewReceiptAllowed, subscribeWorldSurface } from '../lib/worldSurface';
 import { GamePopupTitle, GamePopupCopy, GamePopupClose, GamePopupSecondary } from './ui/game-popup';
 
 type Section = 'cards' | 'style' | 'bag' | 'mail' | 'missions' | 'challenges' | 'shop' | 'growth' | 'story' | 'profile' | 'friends' | 'friendly fade';
@@ -140,8 +141,8 @@ function PlayerNotifications({ bootstrap, children }: { bootstrap: PlayerBootstr
   return <Context.Provider value={{ notices: visible, seen, dismiss, has }}>{children}<NotificationArrival /><NotificationPageReceipt /><Suspense fallback={null}><SocialRequestPopups bootstrap={bootstrap} /></Suspense></Context.Provider>;
 }
 
-/** Story and Fighter ID are overview destinations. Seeing the page is enough;
- * players should never have to locate every badge or old story reward. */
+/** The actual Story overview and Fighter ID can acknowledge their visible content.
+ * Roaming the world must not silently read unseen chapter notifications. */
 function NotificationPageReceipt() {
   const { notices, seen } = useNotifications();
   const [location] = useLocation();
@@ -152,22 +153,34 @@ function NotificationPageReceipt() {
   useEffect(() => {
     if (!ids) return;
     let timer: number | undefined;
-    const ready = () => document.visibilityState === 'visible' && !document.querySelector('dialog[open], [role="dialog"][data-state="open"]');
+    const ready = () => {
+      if (document.visibilityState !== 'visible') return false;
+      const storyContent = section === 'story'
+        ? [...document.querySelectorAll<HTMLElement>('[data-story-content-active="true"]')].find(element => element.getClientRects().length > 0 && !element.closest('[hidden], [inert], [aria-hidden="true"]'))
+        : undefined;
+      if (section === 'story' && !storyOverviewReceiptAllowed(getWorldSurface(), !!storyContent)) return false;
+      // A chapter shown in a modal is real Story content. Other dialogs still
+      // obscure the overview and defer its receipts until the player returns.
+      return ![...document.querySelectorAll('dialog[open], [role="dialog"][data-state="open"], [role="dialog"][aria-modal="true"]')]
+        .some(dialog => !storyContent || !dialog.contains(storyContent));
+    };
     const schedule = () => {
       window.clearTimeout(timer);
       if (!ready()) return;
       timer = window.setTimeout(() => { if (ready()) seen(ids.split('\n')); }, 700);
     };
     const dialogs = new MutationObserver(schedule);
-    dialogs.observe(document.body, { subtree: true, attributes: true, attributeFilter: ['open', 'data-state'] });
+    dialogs.observe(document.body, { subtree: true, childList: true, attributes: true, attributeFilter: ['open', 'data-state', 'aria-modal', 'data-story-content-active', 'hidden', 'inert', 'aria-hidden'] });
+    const unsubscribeWorld = subscribeWorldSurface(schedule);
     document.addEventListener('visibilitychange', schedule);
     schedule();
     return () => {
       window.clearTimeout(timer);
       dialogs.disconnect();
+      unsubscribeWorld();
       document.removeEventListener('visibilitychange', schedule);
     };
-  }, [ids, seen]);
+  }, [ids, seen, section]);
   return null;
 }
 export function Attention({ section, micro = false }: { section: string; micro?: boolean }) {

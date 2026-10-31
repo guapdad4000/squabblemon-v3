@@ -1,6 +1,6 @@
 import { spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
-import { existsSync, readFileSync, writeFileSync, mkdirSync } from 'node:fs';
+import { existsSync, lstatSync, readFileSync, readlinkSync, writeFileSync, mkdirSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
@@ -46,6 +46,9 @@ export const criticalSuites = [
   { id: 'battle-runtime', nodeEnv: 'test', files: [
     'replayCodec.test.ts', 'lib/battleComputation.test.ts', 'lib/battleComputation.hooks.test.ts', 'lib/menuRefresh.test.ts', 'lib/notificationBackground.test.ts',
   ].map(sourceTest) },
+  { id: 'fadewood-world', nodeEnv: 'test', files: [sourceTest('lib/fadewood/fadewood.test.ts'), sourceTest('lib/worldSurface.test.ts'), sourceTest('lib/worldLighting.test.ts'), sourceTest('components/world/FadewoodBulletinPanel.test.ts')] },
+  { id: 'fadewood-travel-clock', files: [`${frontend}/worlds/fadewood/tests/presentation-clock.test.js`] },
+  { id: 'fadewood-focus-mail-board', files: [`${frontend}/worlds/fadewood/tests/focus-mail-board.test.js`, `${frontend}/worlds/fadewood/tests/host-bridge.test.js`, `${frontend}/worlds/fadewood/tests/street-lighting.test.js`, `${frontend}/worlds/fadewood/tests/curb-details.test.js`, `${frontend}/worlds/fadewood/tests/humanoid-idle.test.js`, `${frontend}/worlds/fadewood/tests/ambient-actions.test.js`, `${frontend}/worlds/fadewood/tests/resident-motion.test.js`, `${frontend}/worlds/fadewood/tests/character-cast.test.js`, `${frontend}/worlds/fadewood/tests/resident-assets.test.js`, `${frontend}/worlds/fadewood/tests/entrance-staging.test.js`] },
   { id: 'story-delivery-contract', files: [
     sourceTest('lib/story/chapterCatalog.test.ts'), `${frontend}/scripts/check-story-delivery.test.mjs`,
   ] },
@@ -74,6 +77,7 @@ function tsxLoader(root = workspaceRoot) {
 export function requiredSourceChecks(root = workspaceRoot) {
   return [
     ...criticalSuites.map(suite => ({ ...suite, kind: 'tests' })),
+    { id: 'fadewood-runtime-source', kind: 'command', args: ['artifacts/squabblemon/worlds/fadewood/scripts/runtime-integrity.mjs', '--check'] },
     { id: 'story-music', kind: 'command', cwd: frontend, args: ['--import', tsxLoader(root), 'scripts/generate-story-music-routes.ts', '--check'] },
     { id: 'story-delivery-source', kind: 'command', cwd: frontend, args: ['--import', tsxLoader(root), 'scripts/generate-story-delivery.ts', '--check'] },
   ];
@@ -170,12 +174,16 @@ function releaseIdentity(root) {
     return result.stdout;
   };
   const untrackedSourceFiles = git(['ls-files', '--others', '--exclude-standard', '-z', '--',
-    'lib', 'artifacts/api-server/src', 'artifacts/squabblemon/src', 'artifacts/squabblemon/scripts', 'artifacts/squabblemon/public', 'netlify', 'scripts/src',
+    'lib', 'artifacts/api-server/src', 'artifacts/squabblemon/src', 'artifacts/squabblemon/scripts', 'artifacts/squabblemon/public', 'artifacts/squabblemon/worlds', 'netlify', 'scripts/src',
     ':(glob)artifacts/squabblemon/*', ':(glob)artifacts/api-server/*',
     ':(glob)scripts/*.mjs', ':(glob)scripts/*.json', ':(glob)*.json', ':(glob)*.toml',
   ]).split('\0').filter(Boolean).sort();
   return { baseCommit: git(['rev-parse', 'HEAD']).trim(), workingTreeStatus: git(['status', '--porcelain']),
-    untrackedSourceHashes: Object.fromEntries(untrackedSourceFiles.map(file => [file, sha256(readFileSync(path.join(root, file)))])),
+    untrackedSourceHashes: Object.fromEntries(untrackedSourceFiles.map(file => {
+      const absolute = path.join(root, file);
+      // The editable scene references its shared public assets with a directory symlink.
+      return [file, sha256(lstatSync(absolute).isSymbolicLink() ? `symlink:${readlinkSync(absolute)}` : readFileSync(absolute))];
+    })),
     trackedDiffSha256: sha256(git(['diff', '--binary', 'HEAD'])),
     criticalInputHashes: Object.fromEntries([...new Set(criticalSuites.flatMap(suite => suite.files).concat([
       'scripts/release-checks.mjs', 'scripts/release-test-reporter.mjs', 'scripts/release-check-inventory.json',
