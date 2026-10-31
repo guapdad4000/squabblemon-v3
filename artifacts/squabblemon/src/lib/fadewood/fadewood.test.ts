@@ -149,3 +149,46 @@ test('courier attention is bounded, account-specific and stable across harmless 
   assert.notEqual(mailAttentionIdentity('account-a',[{...first,readAt:'read'},second]),id);
   assert.equal(mailAttentionIdentity('account-a',[{...first,readAt:'read',claimedAt:'claimed'}]),'');
 });
+
+
+test('fresh browser recovers latest played arc instead of old unread Cornball dialogue',()=>{
+  values.clear();
+  const c=campaign([
+    node('welcome-to-the-block','block-party',{cleared:true,status:'cleared',lastPlayedAt:'2026-10-01T00:00:00Z'}),
+    node('kumite-done','kumite-break-the-bracket',{cleared:true,status:'cleared',lastPlayedAt:'2026-10-31T00:00:00Z'}),
+    node('next-on-block','red-side-tapes'),node('next-kumite','kumite-break-the-bracket')
+  ],'next-on-block');
+  assert.equal(resolveContinue(c,'returning')?.node.nodeId,'next-kumite');
+  assert.equal(resolveContinue(c,'returning')?.arc.hostId,'dr-fade');
+});
+test('completed old dialogue does not pull a fresh browser back into an earned fight',()=>{
+  values.clear();
+  const c=campaign([node('welcome-to-the-block','block-party',{cleared:true,status:'cleared',lastPlayedAt:'2026-10-01T00:00:00Z'}),node('next','block-party')]);
+  assert.equal(resolveContinue(c,'returning')?.node.nodeId,'next');
+});
+test('Dr Fade and arena expose an explicit reward-free CPU practice route',()=>{
+  for(const source of ['dr-fade','underground-arena']) assert.deepEqual(resolveWorldIntent(source,'breakthrough-practice'),{kind:'mode',route:'/game/kumite/breakthrough/practice'});
+});
+
+test('account-scoped resume survives a new session without sharing another account hint',()=>{
+  values.clear();
+  const persistent=new Map<string,string>();
+  Object.defineProperty(globalThis,'localStorage',{configurable:true,value:{getItem:(k:string)=>persistent.get(k)??null,setItem:(k:string,v:string)=>persistent.set(k,v),removeItem:(k:string)=>persistent.delete(k)}});
+  try {
+    saveStoryResume('a','done','season-1'); values.clear();
+    assert.equal(readStoryResume('a')?.nodeId,'done');
+    assert.equal(readStoryResume('b'),null);
+    const c=campaign([node('done','block-party',{cleared:true,status:'cleared'}),node('next','red-side-tapes')]);
+    assert.equal(resolveContinue(c,'a')?.node.nodeId,'next');
+  } finally { Reflect.deleteProperty(globalThis,'localStorage'); }
+});
+
+test('a stale completed Cornball hint cannot override newer server progress at Dr Fade',()=>{
+  values.clear(); saveStoryResume('a','welcome-to-the-block','season-1');
+  const c=campaign([
+    node('welcome-to-the-block','block-party',{cleared:true,status:'cleared',lastPlayedAt:'2026-10-01T00:00:00Z'}),
+    node('kumite-done','kumite-break-the-bracket',{cleared:true,status:'cleared',lastPlayedAt:'2026-10-02T00:00:00Z'}),
+    node('next-on-block','red-side-tapes'),node('next-kumite','kumite-break-the-bracket')
+  ],'next-on-block');
+  assert.equal(resolveContinue(c,'a')?.node.nodeId,'next-kumite');
+});

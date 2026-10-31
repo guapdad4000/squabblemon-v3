@@ -6,6 +6,8 @@ import type { StoryCampaign } from '@workspace/api-client-react';
 import { storyContent } from '@workspace/squabblemon-engine/story';
 import { Router } from 'wouter';
 import { memoryLocation } from 'wouter/memory-location';
+import { Breakthrough } from '../src/pages/game/Breakthrough';
+import { Story } from '../src/pages/game/Story';
 import { FadewoodWorld } from '../src/components/world/FadewoodWorld';
 import { createBootstrap } from './squabble-house-bootstrap';
 import '../src/index.css';
@@ -25,7 +27,7 @@ const campaign: StoryCampaign = {
   recommendedNodeId: storyContent.chapters[0].nodes[0].id, totalStars: 0, completedNodes: 0, bossStatus: 'locked',
 };
 const dynamic = new URLSearchParams(location.search).get('dynamic');
-const dynamicNodeId = dynamic === 'cornball-s2' ? 's2-the-morning-after-opening' : dynamic === 'snitch-sherlock' ? 'sherlock-three-bad-alibis' : null;
+const dynamicNodeId = dynamic === 'cornball-s2' ? 's2-the-morning-after-opening' : dynamic === 'snitch-sherlock' ? 'sherlock-three-bad-alibis' : dynamic === 'kumite' ? storyContent.chapters.find(chapter => chapter.id === 'kumite-break-the-bracket')!.nodes[0].id : null;
 if (dynamicNodeId) {
   for (const node of campaign.nodes) node.status = node.nodeId === dynamicNodeId ? 'available' : 'locked';
   const selected = campaign.nodes.find(node => node.nodeId === dynamicNodeId)!;
@@ -40,6 +42,7 @@ window.fetch = async (input, init) => {
   if (!url.pathname.startsWith('/api/')) return fetchOriginal(input, init);
   const request = input instanceof Request ? input : new Request(url, init);
   const json = (value: unknown, status = 200) => new Response(JSON.stringify(value), { status, headers: { 'content-type': 'application/json' } });
+  if (url.pathname === '/api/player/story') return json(campaign);
   if (url.pathname === '/api/player/mail' && request.method === 'GET') return json({ messages });
   const match = url.pathname.match(/^\/api\/player\/mail\/([^/]+)\/(read|claim)$/);
   if (match && request.method === 'POST') {
@@ -61,7 +64,7 @@ function Fixture() {
   const [fixtureRoute] = memory.hook();
   return <Router hook={memory.hook}><QueryClientProvider client={client}>
     <div data-fixture-route={fixtureRoute} style={{ height: 68, padding: '12px 16px', boxSizing: 'border-box', display: 'flex', alignItems: 'center', background: '#092016', color: '#f3e1ad', font: '700 11px var(--font-sans)' }}>LOCAL UI FIXTURE · SYNTHETIC CAMPAIGN AND MAIL</div>
-    <div style={{ height: 'calc(100dvh - 68px)' }}><FadewoodWorld bootstrap={bootstrap} campaign={campaign} blocked={Boolean(nodeId) || archive} onOpenNode={setNodeId} onOpenArchive={() => setArchive(true)} /></div>
+    <div style={{ height: 'calc(100dvh - 68px)' }}>{new URLSearchParams(location.search).has('route') ? fixtureRoute.startsWith('/game/kumite/breakthrough') ? <Breakthrough bootstrap={bootstrap} /> : <Story bootstrap={bootstrap} /> : <FadewoodWorld bootstrap={bootstrap} campaign={campaign} blocked={Boolean(nodeId) || archive} onOpenNode={setNodeId} onOpenArchive={() => setArchive(true)} />}</div>
     {(nodeId || archive) && <div role="dialog" aria-modal="true" aria-label={archive ? 'Story archive fixture' : 'Story arrival fixture'} data-testid="fixture-story-overlay" style={{ position: 'fixed', inset: 40, zIndex: 500, padding: 25, background: '#ecdcb8', color: '#213b29' }}><h2>{archive ? 'Story archive' : nodeId}</h2><p>Local host callback reached. This fixture does not play or save a live Story scene.</p><button onClick={() => { setNodeId(null); setArchive(false); }}>Return to world</button></div>}
   </QueryClientProvider></Router>;
 }

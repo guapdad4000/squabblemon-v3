@@ -174,7 +174,7 @@ function GameRoutes({ bootstrap }: { bootstrap: PlayerBootstrap }) {
         <GameShell bootstrap={bootstrap} location={location}><Settings bootstrap={bootstrap} /></GameShell>
       </Route>
       <Route path="/game/story">
-        <GameShell bootstrap={bootstrap} location={location}><Story bootstrap={bootstrap} /></GameShell>
+        <GameShell bootstrap={bootstrap} location={location}><Story key={bootstrap.profile.id} bootstrap={bootstrap} /></GameShell>
       </Route>
       <Route path="/game">
         <GameShell bootstrap={bootstrap} location={location}><Home bootstrap={bootstrap} /></GameShell>

@@ -4,11 +4,14 @@ const PREFIX = 'squabblemon:fadewood:v1:';
 export type StoryResume = { nodeId: string; arcId: string; updatedAt: number };
 function read<T>(accountId: string, part: string): T | null {
   if (typeof sessionStorage === 'undefined') return null;
-  try { return JSON.parse(sessionStorage.getItem(`${PREFIX}${encodeURIComponent(accountId)}:${part}`) ?? 'null') as T | null; } catch { return null; }
+  try { const key = `${PREFIX}${encodeURIComponent(accountId)}:${part}`;
+    return JSON.parse((part === 'story' && typeof localStorage !== 'undefined' ? localStorage.getItem(key) : null) ?? sessionStorage.getItem(key) ?? 'null') as T | null; } catch { return null; }
 }
 function write(accountId: string, part: string, value: unknown) {
   if (typeof sessionStorage === 'undefined') return;
-  try { sessionStorage.setItem(`${PREFIX}${encodeURIComponent(accountId)}:${part}`, JSON.stringify(value)); } catch { /* Storage restrictions do not block play. */ }
+  try { const key = `${PREFIX}${encodeURIComponent(accountId)}:${part}`;
+    sessionStorage.setItem(key, JSON.stringify(value));
+    if (part === 'story' && typeof localStorage !== 'undefined') localStorage.setItem(key, JSON.stringify(value)); } catch { /* Storage restrictions do not block play. */ }
 }
 export function readWorldCheckpoint(accountId: string): WorldCheckpoint | null {
   const value = read<unknown>(accountId, 'checkpoint');
@@ -27,5 +30,6 @@ export function saveStoryResume(accountId: string, nodeId: string, arcId: string
 }
 export function forgetStoryResume(accountId: string) {
   if (typeof sessionStorage === 'undefined') return;
-  try { sessionStorage.removeItem(`${PREFIX}${encodeURIComponent(accountId)}:story`); } catch { /* Optional view memory. */ }
+  try { sessionStorage.removeItem(`${PREFIX}${encodeURIComponent(accountId)}:story`);
+    if (typeof localStorage !== 'undefined') localStorage.removeItem(`${PREFIX}${encodeURIComponent(accountId)}:story`); } catch { /* Optional view memory. */ }
 }

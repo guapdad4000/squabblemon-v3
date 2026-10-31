@@ -152,7 +152,7 @@ export function Story({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   const mapDrag = useRef<{ x: number; y: number; left: number; top: number; moved: boolean } | null>(null);
   const [location, setLocation] = useLocation();
   const search = useSearch();
-  const archiveMode = new URLSearchParams(search).get('view') === 'archive';
+  const archiveMode = new URLSearchParams(search).get('view') === 'archive' || new URLSearchParams(search).has('node');
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
   const [activeChapterId, setActiveChapterId] = useViewMemory<string | null>(`story-chapter:${bootstrap.profile.id}`, null);
   const [activeSeasonId, setActiveSeasonId] = useState<string | null>(null);
@@ -197,6 +197,7 @@ export function Story({ bootstrap }: { bootstrap: PlayerBootstrap }) {
     const params = new URLSearchParams(search);
     const requestedNode = params.get('node');
     const requestedSeason = params.get('season');
+    const requestedChapter = params.get('chapter');
 
     const requestedProgress = campaign.nodes.find((node) => node.nodeId === requestedNode);
     if (requestedProgress && requestedProgress.status !== 'locked') {
@@ -212,7 +213,7 @@ export function Story({ bootstrap }: { bootstrap: PlayerBootstrap }) {
     const allowedChapters = campaign.chapters.filter(chapter => !season || season.chapterIds.includes(chapter.id));
     const recommended = campaign.nodes.find(node => node.nodeId === campaign.recommendedNodeId && allowedChapters.some(chapter => chapter.id === node.chapterId))
       ?? campaign.nodes.find(node => node.status === 'available' && !node.optional && allowedChapters.some(chapter => chapter.id === node.chapterId));
-    setActiveChapterId(current => allowedChapters.some(chapter => chapter.id === current)
+    setActiveChapterId(current => allowedChapters.some(chapter => chapter.id === requestedChapter) ? requestedChapter : allowedChapters.some(chapter => chapter.id === current)
       ? current : recommended?.chapterId ?? allowedChapters[0]?.id ?? null);
   }, [campaign, location, search]);
 
@@ -315,12 +316,14 @@ export function Story({ bootstrap }: { bootstrap: PlayerBootstrap }) {
     return <div className="story-world-route" style={{ position: 'relative', height: '100%', minHeight: 0, overflow: 'hidden' }}>
       <Suspense fallback={<div className="h-full grid place-items-center" role="status">Opening Fadewood…</div>}>
         <FadewoodWorld campaign={campaign} bootstrap={bootstrap} blocked={!!selectedNodeId}
-          onOpenNode={nodeId => setLocation(`/game/story?node=${encodeURIComponent(nodeId)}`)}
+          onOpenNode={nodeId => {
+            const node = campaign.nodes.find(item => item.nodeId === nodeId);
+            const season = node && getStorySeasonForChapter(node.chapterId);
+            if (node && season) setLocation(`/game/story?view=archive&season=${encodeURIComponent(season.id)}&chapter=${encodeURIComponent(node.chapterId)}`);
+          }}
           onOpenArchive={() => setLocation('/game/story?view=archive')} />
       </Suspense>
-      <AnimatePresence>{selectedNodeId && <NodeOverlay key={selectedNodeId} nodeId={selectedNodeId} campaign={campaign}
-        onClose={() => { setSelectedNodeId(null); setLocation('/game/story', { replace: true }); }}
-        onStartBattle={nodeId => setLocation(`/game/story/play/${encodeURIComponent(nodeId)}`)} />}</AnimatePresence>
+
     </div>;
   }
 
@@ -560,7 +563,7 @@ export function Story({ bootstrap }: { bootstrap: PlayerBootstrap }) {
             onClose={() => {
               setSelectedNodeId(null);
               const season = getStorySeasonForChapter(currentChapter!.id);
-              setLocation(season ? `/game/story?view=archive&season=${season.id}` : '/game/story?view=archive', { replace: true });
+              setLocation(season ? `/game/story?view=archive&season=${season.id}&chapter=${encodeURIComponent(currentChapter!.id)}` : '/game/story?view=archive', { replace: true });
             }}
             onStartBattle={(nodeId) => setLocation(`/game/story/play/${nodeId}`)}
           />
@@ -632,7 +635,7 @@ export function NodeOverlay({
   }, [isBattle, hasPuzzle, isCleared, nodeId, pendingEntries.length]);
 
   if (!storyNode && nodeProgress && chapterQuery.isPending) {
-    return <div className="fixed inset-0 z-50 grid place-items-center bg-black/95 p-6 text-center" role="status">Loading chapter...</div>;
+    return <div className="fixed inset-0 z-50 grid place-content-center gap-4 bg-black/95 p-6 text-center" role="status"><p>Loading chapter...</p><button type="button" onClick={onClose}>Back to map</button></div>;
   }
   if (!storyNode || !nodeProgress) {
     return (

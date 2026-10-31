@@ -24,7 +24,7 @@ const chapterUrls = import.meta.env?.SSR !== false ? {} : import.meta.glob<strin
 const catalog = createChapterCatalog(index, async id => {
   const url = chapterUrls[`./generated/${id}.json`];
   if (!url) throw new Error(`Story chapter delivery unavailable: ${id}`);
-  const response = await fetch(url, { credentials: 'omit' });
+  const response = await fetch(url, { credentials: 'omit', signal: AbortSignal.timeout(20_000) });
   if (!response.ok) throw new Error(`Could not load chapter (${response.status}). Retry or reload current story.`);
   try { return await response.json() as ChapterArtifact; }
   catch { throw new Error('Story content changed. Reload to get the current chapter.'); }

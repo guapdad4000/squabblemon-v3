@@ -144,7 +144,10 @@ export function FadewoodWorld({ campaign, bootstrap, onOpenNode, onOpenArchive, 
   }, [cancelTravel, releaseCamera]);
   const openArchive = (arcId?: string) => {
     cancelTravel(''); releaseCamera(); setPanel(null);
-    if (arcId && FADEWOOD_ARCS.some(arc => arc.id === arcId && arc.available)) navigate(`/game/story?view=archive&season=${encodeURIComponent(arcId)}`);
+    if (arcId && FADEWOOD_ARCS.some(arc => arc.id === arcId && arc.available)) {
+      const next = resolveContinue(campaign, accountId, arcId);
+      navigate(`/game/story?view=archive&season=${encodeURIComponent(arcId)}${next ? `&chapter=${encodeURIComponent(next.node.chapterId)}` : ''}`);
+    }
     else onOpenArchive();
   };
 
@@ -238,9 +241,8 @@ export function FadewoodWorld({ campaign, bootstrap, onOpenNode, onOpenArchive, 
   const continueFromCharacter = (arcId: string) => {
     const next = resolveContinue(campaign, accountId, arcId);
     if (!next || modalBusy) return;
-    if (panel?.kind === 'source' && (panel.sourceId === next.arc.hostId || panel.sourceId === getActiveCharacterId(next.arc, next.node.nodeId))) {
-      saveStoryResume(accountId, next.node.nodeId, next.arc.id); setPanel(null); onOpenNode(next.node.nodeId);
-    } else continueStory(arcId);
+    saveStoryResume(accountId, next.node.nodeId, next.arc.id);
+    cancelTravel(''); releaseCamera(); setPanel(null); onOpenNode(next.node.nodeId);
   };
   const handleStatus = useCallback((value: FadewoodFrameStatus, message?: string) => {
     setStatus(value); if (message) setFailure(message);
