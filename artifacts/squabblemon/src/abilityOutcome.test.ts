@@ -3,6 +3,9 @@ import test from 'node:test';
 import { abilityFailed, abilityTookEffect, FAILED_ABILITY_BEAT_MS } from './abilityOutcome';
 import { createCardInstance, createMatch, playCard, type CardInstance } from './gameEngine';
 import { specialMoveForEvent, planSpecialMoveBeat } from './specialMoves';
+import { createOnlineRoom, joinOnlineRoom, onlineRoomView } from '@workspace/squabblemon-engine/multiplayer';
+import { decks } from './data';
+import { toPresentationEffect } from './lib/useOnlineEffectPresenter';
 
 function cast(id: string, targets: CardInstance[] = [], disabled = false, index = 0) {
   const source = createCardInstance(id, 'player', 'outcome', index);
@@ -84,4 +87,67 @@ test('successful delayed creative setups retain their special before they change
 test('buffs to frozen targets count even when effective Hands stay unchanged', () => {
   const frozen = target('player'); frozen.statuses.frozen = true;
   assert.equal(abilityTookEffect(cast('barber', [frozen])), true);
+});
+
+test('tablet-only Anunaki placement succeeds and has its special locally and online', () => {
+  for (const id of ['nabu', 'utu']) {
+    const source = createCardInstance(id, 'player', 'tablet-outcome', 0);
+    const initial = { ...createMatch('block', 'combo'), playerMotion: 20, playerHand: [source], boards: [[], [], []] as [CardInstance[], CardInstance[], CardInstance[]] };
+    const resolved = playCard(initial, 'player', source.instanceId, 0);
+    const event = resolved.effectLog.find(e => e.note === 'Placed an Ancient Tablet.')!;
+    assert(event && abilityTookEffect(event));
+    assert(specialMoveForEvent(event), `${id} should play its placement movie`);
+    const member = (userId: string) => ({ userId, name: userId, ready: false, deck: decks[0] });
+    let room = joinOnlineRoom(createOnlineRoom(member('a'), 'player', 0), member('b'), 0);
+    room.match = resolved;
+    for (const viewer of ['a', 'b']) {
+      const view = onlineRoomView(room, 'TABLET', viewer, 1);
+      const publicEvent = view.events.find(e => e.sequence === event.sequence)!;
+      assert.deepEqual(publicEvent.tabletPlaced, [{ owner: 'player', lane: 0 }]);
+      assert(!('replay' in publicEvent));
+      const presentation = toPresentationEffect(publicEvent, view.seat, [])!;
+      assert(presentation && abilityTookEffect(presentation));
+      assert(specialMoveForEvent(presentation));
+    }
+  }
+});
+
+test('Caucus starts one movie, while chain-copy damage and summon events skip extra movies', () => {
+  let chain: ReturnType<typeof playCard> | undefined;
+  for (let index = 0; index < 50 && !chain; index++) {
+    const source = createCardInstance('caucus-mountaineer', 'player', 'caucus-film', index);
+    const enemy = target('cpu', false, 50);
+    const initial = { ...createMatch('block', 'combo'), playerMotion: 20, playerHand: [source], boards: [[enemy], [], []] as [CardInstance[], CardInstance[], CardInstance[]] };
+    const resolved = playCard(initial, 'player', source.instanceId, 0);
+    if (resolved.boards[0].filter(c => c.cardId === 'caucus-mountaineer').length > 1) chain = resolved;
+  }
+  assert(chain, 'found a deterministic seed with a chain');
+  const hits = chain.effectLog.filter(e => e.note === 'Lab Accident landed for 1 damage.');
+  assert(hits.length > 1);
+  assert(specialMoveForEvent(hits[0]), 'original play keeps its movie');
+  for (const hit of hits.slice(1)) {
+    assert(hit.cardInstanceId.startsWith('summon:'));
+    assert.equal(specialMoveForEvent(hit), null, 'copies keep their hit feedback without another movie');
+  }
+});
+
+test('Anu tablet payment is a visible play event for both seats, without revealing replay data', () => {
+  const source = createCardInstance('anu', 'player', 'tablet-payment', 0);
+  const initial = { ...createMatch('block', 'combo'), playerMotion: 20, playerHand: [source],
+    ancientTablets: [{ owner: 'player' as const, lane: 1 as const }], boards: [[], [], []] as [CardInstance[], CardInstance[], CardInstance[]] };
+  const resolved = playCard(initial, 'player', source.instanceId, 0);
+  const event = resolved.effectLog.find(e => e.type === 'play' && e.cardId === 'anu')!;
+  assert.deepEqual(event.replay.before.ancientTablets, [{ owner: 'player', lane: 1 }]);
+  assert.deepEqual(event.replay.after.ancientTablets, []);
+  const member = (userId: string) => ({ userId, name: userId, ready: false, deck: decks[0] });
+  const room = { ...joinOnlineRoom(createOnlineRoom(member('a'), 'player', 0), member('b'), 0), match: resolved };
+  for (const viewer of ['a', 'b']) {
+    const view = onlineRoomView(room, 'ANU', viewer, 1);
+    const publicEvent = view.events.find(e => e.sequence === event.sequence)!;
+    assert.deepEqual(publicEvent.tabletConsumed, [{ owner: 'player', lane: 1 }]);
+    assert(!('replay' in publicEvent));
+    const presentation = toPresentationEffect(publicEvent, view.seat, [])!;
+    assert(presentation && presentation.tabletChanged);
+    assert.equal(specialMoveForEvent(presentation), null, 'paying the cost is a play, not a second ability movie');
+  }
 });

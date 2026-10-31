@@ -1,3 +1,4 @@
+import { ANUNAKI_STORY_CHAPTERS, ANUNAKI_STORY_SEASON } from './anunakiStoryIds';
 export type StorySeasonDefinition = {
   readonly id: string;
   readonly kind: "season" | "special";
@@ -142,6 +143,7 @@ export const storySeasons: readonly StorySeasonDefinition[] = [
     chapterIds: ["kumite-break-the-bracket"],
     posterAssetId: "assets/kumite/films/v1/unlock-glo-portrait.webp",
   },
+  { id: ANUNAKI_STORY_SEASON, kind: "special", title: "The Anunaki Arrival", subtitle: "You Bought a Time Machine From Who?", description: "Captain Jigga offers Yasuke a way home. Cracked Head’s time machine sends them to Earth’s first Anunaki arrival. Eight chapters, one repair, and a choice about what home means.", chapterIds: ANUNAKI_STORY_CHAPTERS, posterAssetId: "assets/anunaki-event/journey.webp" },
 ];
 
 export const getStorySeason = (id: string) =>

@@ -111,3 +111,18 @@
 .collector-card[data-layered-card]:not(.collector-card--inspector) .layered-rules p { display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
 .collector-card[data-layered-card]:not(.collector-card--inspector) .layered-rules { min-height:24cqw; }
 @media(prefers-reduced-motion:reduce) { .collector-card[data-layered-card] .layered-reflection { background-position:48% 50%; } }
+/* A character-scoped inner scene; rarity rim and Normal fist remain independent. */
+.collector-card[data-layered-card] .layered-anunaki-scene {
+  /* Run the illustrated field behind the variable-height rules. Stopping it at
+     70% left an empty black shelf whenever a short ability was inspected. */
+  position:absolute; z-index:1; top:8%; left:8%; width:84%; height:82%; overflow:hidden;
+  border:1.2cqw solid #d2b468; background:#102f2a; pointer-events:none;
+  clip-path:polygon(6% 0,94% 0,100% 6%,100% 93%,94% 100%,6% 100%,0 93%,0 6%);
+  box-shadow:inset 0 0 0 1cqw #204f3b;
+}
+.collector-card[data-layered-card] .layered-anunaki-scene img {width:100%;height:100%;display:block;object-fit:cover;object-position:center 35%;filter:brightness(.83)}
+.collector-card[data-layered-card] .layered-anunaki-scene span {position:absolute;inset:0;border:1cqw solid #14543d;box-shadow:inset 0 0 0 .45cqw #e4c77b;pointer-events:none}
+/* Keep these long roster names intact on the small postal label. */
+.collectible-print .collector-card[data-layered-card]:is([data-card-id="ereshkigal"],[data-card-id="caucus-mountaineer"]) .collector-card-copy > h4 {
+  width:75cqw; max-width:75cqw; font-size:6.6cqw; overflow-wrap:normal;
+}

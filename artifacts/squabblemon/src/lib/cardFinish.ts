@@ -1,6 +1,7 @@
 import type { CardRarity } from '../data';
 import type { CardVariantKind } from '../components/CardVariantTreatment';
 import { getAssetUrl } from './assets';
+import { anunakiCardScene } from './anunakiCardArt';
 
 export const CARD_FINISH: Record<CardRarity, string> = {
   SuperCommon: 'Pressed stock',
@@ -34,6 +35,10 @@ const locations: Record<string, string> = {
 
 export function getCardWallpaper(type: string) {
   return getAssetUrl(`assets/layered/${locations[type] ?? 'gold-plaza'}.webp`);
+}
+
+export function getCardWallpaperForCard(card: {type: string; id?: string; cardId?: string}) {
+  return anunakiCardScene(card) ?? getCardWallpaper(card.type);
 }
 
 const crewLocations: Record<string, string> = {

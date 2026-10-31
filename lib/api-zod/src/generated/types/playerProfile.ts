@@ -8,6 +8,7 @@
 import type { PackOpening } from './packOpening';
 import type { PlayerProfileCardProgression } from './playerProfileCardProgression';
 import type { PlayerProfileEquippedVariants } from './playerProfileEquippedVariants';
+import type { PlayerProfileFeaturedPackProgress } from './playerProfileFeaturedPackProgress';
 import type { PlayerProfileInboxItem } from './playerProfileInboxItem';
 import type { PlayerProfileOnboardingStep } from './playerProfileOnboardingStep';
 import type { PlayerProfileStoryProgress } from './playerProfileStoryProgress';
@@ -29,6 +30,7 @@ export interface PlayerProfile {
   packTickets: number;
   styleShards: number;
   styleShardBalances?: StyleShardBalances;
+  featuredPackProgress?: PlayerProfileFeaturedPackProgress;
   packPity: number;
   deckSlots: number;
   cosmeticCurrency: number;

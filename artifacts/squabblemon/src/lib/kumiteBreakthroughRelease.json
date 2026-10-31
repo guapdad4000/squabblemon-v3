@@ -1,0 +1,22 @@
+{
+  "version": "1.15",
+  "date": "2026-10-30",
+  "title": "Kumite Breakthrough Beta",
+  "artCardId": "dragonfly-jones",
+  "overview": "Breakthrough brings a new real-time fight to Kumite: three lanes, refilling Motion and a two-hit base. This beta release is being prepared for PvP. Public matchmaking stays closed until the full-catalog and online release checks are approved. Your launch letter includes 1 free Street Pack Ticket and 50 Clout; the ticket opens a Street Pack and is not a Kumite entry fee.",
+  "buffs": [],
+  "changes": [
+    "THE FIGHT — Both sides deploy at the same time for three minutes. Fighters march through three lanes, clash using their current Hands and try to reach The Opps’ base. Score two base breaches to win immediately.",
+    "MOTION — Start with 4 Motion. It refills continuously at 1 Motion every 2 seconds, up to 9. Spend what you have without waiting for a round or an effect animation; deployment has immediate input feedback.",
+    "YOUR HAND — Hold up to four cards, with a draw opportunity every 3 seconds. Eligible removed fighters return to the draw queue after 8 seconds. During the final 30-second Last Stand, new draws stop. Motion keeps refilling, but you must finish with the cards already in your hand or on the mat.",
+    "AT THE BELL — If neither side scores its second breach, the side with more base breaches wins. With breaches tied, the higher total of effective Hands still on the mat wins. Equal breaches and equal Hands are a draw.",
+    "YOUR CREW — The prepared mode uses the existing ten-card saved-deck picker and editor. Cards use their canonical base stats and versioned Breakthrough effects; account training upgrades and normal-battle hero passives do not silently carry over.",
+    "CARD EFFECTS — Burns, freezes, silence, protection, summons, supports and blockbusters have real-time rules. Inspect a card for its mode-specific effect. Frozen allies can be passed by teammates instead of stopping their whole lane.",
+    "PRESENTATION — Painted player bars, animated courtyard search art, a color-burst arena entry, authored hit and base-break effects, persistent damage smoke and flaming two-hit health bars carry the fight into cleaner W/L results.",
+    "PERFORMANCE — Compact battle portraits, exact still frames for reduced motion, bounded effect loading and quiet hidden animations reduce media cost while preserving the approved moving artwork and timing.",
+    "PVP STATUS — This prepared announcement does not open the online queue. Internal CPU and development previews do not award PvP rank, Breakthrough trophies or Kumite roadmap credit. Ordinary Fade Park PvP and the weekly Kumite bracket keep their existing rules.",
+    "MAIL GIFT — After this patch is published, open Mailman and claim 1 Street Pack Ticket plus 50 Clout. Reading the letter does not claim the gift; the saved delivery can only be claimed once."
+  ],
+  "softCurrency": 50,
+  "packTickets": 1
+}

@@ -1,0 +1,133 @@
+.bt-howto, .bt-howto * { box-sizing: border-box; }
+.bt-howto {
+  --guide-ink: #f5efdf;
+  --guide-muted: #cec5b2;
+  color: var(--guide-ink);
+  text-align: left;
+  font: 400 13px/1.55 Arial, sans-serif;
+  min-width: 0;
+  max-width: 760px;
+  margin-inline: auto;
+  overflow-wrap: anywhere;
+}
+.bt-howto .bt-howto-heading {
+  padding: 18px 16px;
+  background: linear-gradient(105deg, #18150be8, #18150bc7), var(--bt-guide-brick) center / cover;
+  clip-path: polygon(0 5%, 97% 0, 100% 95%, 2% 100%);
+}
+.bt-howto .bt-howto-heading > small {
+  color: #ffde42;
+  font: 700 10px/1.4 var(--font-action-sign, 'Hemi Head', Impact, sans-serif);
+  letter-spacing: 1px;
+}
+.bt-howto h3 {
+  margin: 10px 0 8px;
+  font: 400 clamp(23px, 5vw, 35px)/1.05 var(--font-sign, 'Blzee', Impact, sans-serif);
+  color: var(--guide-ink);
+}
+.bt-howto h4 {
+  font: 700 17px/1.2 var(--font-action-sign, 'Hemi Head', Impact, sans-serif);
+  margin: 0 0 7px;
+  color: var(--guide-ink);
+}
+.bt-howto .bt-howto-heading p,
+.bt-howto .bt-howto-beats p,
+.bt-howto .bt-howto-detail p {
+  color: var(--guide-ink);
+  font: inherit;
+  margin: 6px 0 10px;
+}
+.bt-howto .bt-howto-stakes {
+  display: flex;
+  gap: 10px 18px;
+  align-items: baseline;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+.bt-howto-stakes span {
+  font: 700 9px/1.2 Arial, sans-serif;
+  color: var(--guide-muted);
+}
+.bt-howto-stakes b {
+  display: block;
+  color: #ffde42;
+  font: 700 29px/1.1 var(--font-action-sign, 'Hemi Head', Impact, sans-serif);
+}
+.bt-howto ol.bt-howto-beats {
+  list-style: none;
+  padding: 0;
+  margin: 22px 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+  gap: 23px;
+}
+.bt-howto .bt-howto-beats li {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr);
+  gap: 11px;
+  margin: 0;
+}
+.bt-howto-number {
+  align-self: start;
+  font: 700 26px/1 var(--font-action-sign, 'Hemi Head', Impact, sans-serif);
+  color: #ffde42;
+  transform: rotate(-5deg);
+  white-space: nowrap;
+  overflow-wrap: normal;
+}
+.bt-howto .bt-howto-beats strong {
+  display: block;
+  color: #ffde42;
+  font: 700 12px/1.5 Arial, sans-serif;
+}
+.bt-howto .bt-howto-tip {
+  color: var(--guide-muted);
+  font-size: 11px;
+}
+.bt-howto-clash {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 9px;
+  margin: 4px 0 8px;
+  font: 700 12px/1.2 var(--font-action-sign, 'Hemi Head', Impact, sans-serif);
+}
+.bt-howto-clash b {
+  font: 700 38px/1 var(--font-action-sign, 'Hemi Head', Impact, sans-serif);
+  color: var(--guide-ink);
+}
+.bt-howto-clash .bt-howto-survivor { color: #ffde42; }
+.bt-howto-clash small { font-size: 9px; }
+.bt-howto details.bt-howto-detail {
+  border-top: 1px dashed #e5d9b844;
+  margin: 0;
+  padding: 0;
+}
+.bt-howto .bt-howto-detail > summary {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  list-style: none;
+  min-height: 44px;
+  padding: 12px 2px;
+  color: var(--guide-ink);
+  font: 700 11px/1.6 var(--font-action-sign, 'Hemi Head', Impact, sans-serif);
+  cursor: pointer;
+  letter-spacing: .4px;
+}
+.bt-howto .bt-howto-detail > summary:focus-visible {
+  outline: 2px solid #ffde42;
+  outline-offset: 2px;
+}
+.bt-howto .bt-howto-detail p { margin: 0 0 14px; }
+@media (max-width: 380px) {
+  .bt-howto .bt-howto-heading { padding: 16px 11px; }
+  .bt-howto .bt-howto-beats li { grid-template-columns: 32px minmax(0, 1fr); gap: 8px; }
+  .bt-howto .bt-howto-stakes { gap: 10px 12px; }
+}
+
+.bt-howto .bt-howto-detail > summary::-webkit-details-marker { display: none; }
+.bt-howto .bt-howto-detail > summary::after { content: '+'; color: #ffde42; font-size: 17px; line-height: 1; }
+.bt-howto .bt-howto-detail[open] > summary::after { content: '−'; }
+.bt-howto p.bt-howto-availability { color: var(--guide-muted); font: 400 11px/1.5 Arial, sans-serif; margin: 18px 0; }
+.bt-howto-availability strong { display: block; color: #ffde42; font-size: 10px; letter-spacing: .8px; }

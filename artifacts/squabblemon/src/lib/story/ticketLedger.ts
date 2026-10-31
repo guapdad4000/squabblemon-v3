@@ -9,6 +9,7 @@
 import {
   COMPACT_TICKET_CHAPTER_BATTLES,
   TICKETS_PER_PERFECT_BATTLE,
+  ticketsForStars,
   type StoryChapter,
   type StoryNode,
 } from "./catalog";
@@ -62,13 +63,13 @@ export function summarizeChapterBattles(
       title: node.title,
       stars: progress.stars,
       cleared: progress.cleared,
-      ticketAwarded: progress.stars >= 3,
+      ticketAwarded: ticketsForStars(progress.stars,node.id) > 0,
       mapPosition: node.mapPosition,
     });
   }
-  const perfectClears = battles.filter((b) => b.ticketAwarded).length;
-  const perfectTicketsEarned = perfectClears * TICKETS_PER_PERFECT_BATTLE;
-  const perfectTicketsAvailable = battles.length * TICKETS_PER_PERFECT_BATTLE;
+  const perfectClears = battles.filter((b) => b.stars >= 3).length;
+  const perfectTicketsEarned = battles.reduce((total,battle)=>total+ticketsForStars(battle.stars,battle.nodeId),0);
+  const perfectTicketsAvailable = battles.reduce((total,battle)=>total+ticketsForStars(3,battle.nodeId),0);
   let directTicketsEarned = 0;
   let directTicketsAvailable = 0;
   for (const node of chapter.nodes) {
@@ -122,6 +123,7 @@ export function battleEarnedTicket(stars: number): boolean {
  */
 export const STORY_TICKET_CONSTANTS = {
   TICKETS_PER_PERFECT_BATTLE,
+  ticketsForStars,
   COMPACT_TICKET_CHAPTER_BATTLES,
   MAX_STARS_PER_BATTLE: 3,
 } as const;

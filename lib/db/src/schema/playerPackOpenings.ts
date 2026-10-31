@@ -38,6 +38,7 @@ export const playerPackOpeningsTable = pgTable(
     paymentMethod: text("payment_method").notNull(),
     cost: integer("cost").notNull(),
     rewards: jsonb("rewards").$type<PackRewardRecord[]>().notNull(),
+    featuredProgress: jsonb("featured_progress").$type<{ bannerId: string; missesBefore: number; missesAfter: number; packsBefore: number; packsAfter: number; hits: Array<{ index: number; cardId: string; guaranteed: boolean }> }>(),
     pityBefore: integer("pity_before").notNull(),
     pityAfter: integer("pity_after").notNull(),
     createdAt: timestamp("created_at", { withTimezone: true })

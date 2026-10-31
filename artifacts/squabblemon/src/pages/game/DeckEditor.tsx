@@ -67,7 +67,7 @@ export function DeckEditor({ bootstrap }: { bootstrap: PlayerBootstrap }) {
     <GangBackdrop />
     <PageDecor theme="crew" />
     {returnToStory && <button type="button" className="deck-editor-screen__story-return" onClick={() => setLocation(returnToStory)}>
-      <ArrowLeft size={17} aria-hidden="true" /> Back to story crew selection
+      <ArrowLeft size={17} aria-hidden="true" /> {returnToStory === '/game/kumite/breakthrough' ? 'Back to Breakthrough' : 'Back to story crew selection'}
     </button>}
     <DeckWorkbench key={`${bootstrap.profile.id}:${deckId}`} initial={initial} ownedCardIds={bootstrap.profile.ownedCardIds} equippedVariants={bootstrap.profile.equippedVariants}
       showBackdrop={false} externalError={error} deleting={remove.isPending}

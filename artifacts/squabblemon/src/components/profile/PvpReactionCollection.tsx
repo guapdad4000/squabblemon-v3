@@ -3,7 +3,9 @@ import { Link } from 'wouter';
 import { useReducedMotion } from 'framer-motion';
 import { useQueryClient } from '@tanstack/react-query';
 import { ApiError, getGetPlayerBootstrapQueryKey, useUpdatePlayerProfile, type PlayerBootstrap } from '@workspace/api-client-react';
-import { REACTIONS, REACTION_PACKS, REACTION_TRAY_SIZE, ownedReactions, reactionById, resolveReactionTray, type ReactionId } from '@workspace/squabblemon-engine/reactions';
+import { ANUNAKI_EVENT_REACTION_PACKS, REACTION_PACKS, REACTION_TRAY_SIZE, ownedReactions, reactionById, reactionCollectionSize, resolveReactionTray, type ReactionId } from '@workspace/squabblemon-engine/reactions';
+import { ANUNAKI_EVENT_GAMEPLAY_READY } from '@workspace/squabblemon-engine/anunakiEvent';
+import { ANUNAKI_CLIENT_CAPABILITY, CLIENT_CAPABILITIES_HEADER } from '@workspace/squabblemon-engine/onlineCapabilities';
 import { setDeckExitGuard } from '../../lib/deckExitGuard';
 import { ReactionArt } from '../ReactionArt';
 import '../../styles/pvp-reactions.css';
@@ -27,7 +29,7 @@ export function PvpReactionCollection({ bootstrap, onBusyChange, onDirtyChange }
 }) {
   const { profile } = bootstrap;
   const client = useQueryClient();
-  const update = useUpdatePlayerProfile();
+  const update = useUpdatePlayerProfile({ request: { headers: { [CLIENT_CAPABILITIES_HEADER]: ANUNAKI_CLIENT_CAPABILITY } } });
   const systemReduced = useReducedMotion();
   const motionOff = !!systemReduced || profile.settings.reducedMotion;
   const unlocks = profile.unlockedCosmeticIds;
@@ -101,6 +103,7 @@ export function PvpReactionCollection({ bootstrap, onBusyChange, onDirtyChange }
   }
 
   const lockedPacks = REACTION_PACKS.filter(pack => !unlocks.includes(pack.unlock));
+  const lockedEventPacks = ANUNAKI_EVENT_GAMEPLAY_READY ? ANUNAKI_EVENT_REACTION_PACKS.filter(pack => !unlocks.includes(pack.unlock)) : [];
   const statusText = saving ? 'Saving your tray…' : state === 'error' ? error : dirty ? 'Unsaved changes. Save to take this tray into PvP.' : state === 'saved' ? 'Saved. This tray rides with you into your next fade.' : 'Saved tray. Edit it any time.';
   const statusKind = saving ? 'saving' : state === 'error' ? 'error' : dirty ? 'dirty' : 'saved';
 
@@ -111,7 +114,7 @@ export function PvpReactionCollection({ bootstrap, onBusyChange, onDirtyChange }
         <h2 id="pvp-reactions-title">PvP Reactions</h2>
         <p>Load up to four into your battle tray. They show in the speech bubble during online fades, in this order.</p>
       </div>
-      <div className="pvp-reactions__count" data-testid="text-pvp-reactions-owned"><strong>{owned.length}<small>/{REACTIONS.length}</small></strong>collected</div>
+      <div className="pvp-reactions__count" data-testid="text-pvp-reactions-owned"><strong>{owned.length}<small>/{reactionCollectionSize(unlocks)}</small></strong>collected</div>
     </header>
 
     <div className="pvp-tray" data-testid="tray-pvp-reactions">
@@ -172,13 +175,17 @@ export function PvpReactionCollection({ bootstrap, onBusyChange, onDirtyChange }
       })}
     </ul>
 
-    <h3 className="pvp-reactions__chapter">Still on the wall <small>{lockedPacks.length ? `${lockedPacks.length} PACKS LOCKED` : 'ALL COLLECTED'}</small></h3>
-    {lockedPacks.length ? <ul className="pvp-locked" data-testid="list-pvp-reactions-locked">
+    <h3 className="pvp-reactions__chapter">Still on the wall <small>{lockedPacks.length + lockedEventPacks.length ? `${lockedPacks.length + lockedEventPacks.length} PACKS LOCKED` : 'ALL COLLECTED'}</small></h3>
+    {lockedPacks.length + lockedEventPacks.length ? <ul className="pvp-locked" data-testid="list-pvp-reactions-locked">
       {lockedPacks.map(pack => <li key={pack.id} className="pvp-locked__pack" data-testid={`pack-locked-${pack.id}`}>
         <div className="pvp-locked__art" aria-hidden="true">
           {pack.reactionIds.slice(0, 3).map(id => <span key={id}><ReactionArt id={id} still /></span>)}
         </div>
         <div className="pvp-locked__info"><strong>{pack.name}</strong><small>{pack.reactionIds.length} reactions · {pack.price} Clout</small></div>
+      </li>)}
+      {lockedEventPacks.map(pack => <li key={pack.id} className="pvp-locked__pack" data-testid={`pack-locked-${pack.id}`}>
+        <div className="pvp-locked__art" aria-hidden="true">{pack.reactionIds.slice(0, 3).map(id => <span key={id}><ReactionArt id={id} still /></span>)}</div>
+        <div className="pvp-locked__info"><strong>{pack.name}</strong><small>4 reactions · event reward</small><Link className="style-link" href="/game/missions">Earn on the Anunaki roadmap →</Link></div>
       </li>)}
     </ul> : <p className="pvp-reactions__done">Every pack on the wall is yours. Respect.</p>}
     <Link className="street-sign-btn street-sign-btn--secondary pvp-reactions__market" href="/game/shop?view=corner&shelf=reactions" data-testid="link-reaction-market">Browse reactions in Fade Market →</Link>

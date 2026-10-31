@@ -5,6 +5,8 @@ import * as schemas from "@workspace/api-zod";
 import { OnlineError } from "@workspace/squabblemon-engine/multiplayer";
 import { getSocialState, lookupSocialPlayer, mutateRelationship, sendFadeInvitation, accessInvitation, socialThrottle, updateSocialUsername } from "../lib/social";
 import { searchSocialPlayers, getSocialMatchOpponent } from "../lib/socialDiscovery";
+import { hasAnunakiClient } from '../lib/onlineCompatibility';
+import { CLIENT_CAPABILITIES_HEADER } from '@workspace/squabblemon-engine/multiplayer';
 
 const router = Router();
 type Parser = { parse: (input: unknown) => unknown };
@@ -61,8 +63,8 @@ router.post("/social/blocks", endpoint(schemas.BlockSocialPlayerResponse, (req, 
 router.post("/social/blocks/:code/remove", endpoint(schemas.UnblockSocialPlayerResponse, (req, userId) =>
   mutateRelationship(userId, "unblock", { code: String(req.params.code) }), "mutate"));
 router.post("/social/invitations", endpoint(schemas.SendFadeInvitationResponse, (req, userId) =>
-  sendFadeInvitation(userId, body<{ friendCode: string; deckId: string; requestId: string }>(schemas.SendFadeInvitationBody, req)), "mutate"));
+  sendFadeInvitation(userId, body<{ friendCode: string; deckId: string; requestId: string }>(schemas.SendFadeInvitationBody, req), hasAnunakiClient(req.get(CLIENT_CAPABILITIES_HEADER))), "mutate"));
 router.get("/social/invitations/:id", endpoint(schemas.GetFadeInvitationResponse, (req, userId) => accessInvitation(userId, id(req))));
 router.post("/social/invitations/:id/respond", endpoint(schemas.RespondFadeInvitationResponse, (req, userId) =>
-  accessInvitation(userId, id(req), body<{ action: string; deckId?: string }>(schemas.RespondFadeInvitationBody, req)), "mutate"));
+  accessInvitation(userId, id(req), body<{ action: string; deckId?: string }>(schemas.RespondFadeInvitationBody, req), hasAnunakiClient(req.get(CLIENT_CAPABILITIES_HEADER))), "mutate"));
 export default router;

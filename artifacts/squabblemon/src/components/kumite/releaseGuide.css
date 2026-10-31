@@ -1,0 +1,19 @@
+.kumite-release-guide { grid-column: 1 / -1; min-width: 0; margin-top: 16px; color: #f7f1dd; }
+.kumite-release-guide > button { min-height: 44px; border: 0; padding: 10px 20px; background: #f5cc37; color: #17150e; cursor: pointer; font-family: var(--font-action, sans-serif); font-size: 13px; font-weight: 800; }
+.kumite-release-guide button:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+.kumite-release-guide__rules { padding: clamp(12px, 3vw, 28px); margin-top: 16px; background: #14130ff2; }
+.kumite-release-guide__status { margin: 0 0 22px; max-width: 72ch; color: #e6d9a4; font: 600 12px/1.6 sans-serif; }
+.kumite-release-guide__rules .bt-howto { max-width: 940px; margin-inline: auto; }
+/* The editorial-wide poster is shown whole, including its title and both fighters. */
+.bulletin-event[data-testid="card-event-kumite-breakthrough-beta"] .bulletin-photo { height: auto; aspect-ratio: 3 / 1; background: #17140e; }
+.bulletin-event[data-testid="card-event-kumite-breakthrough-beta"] .bulletin-photo img { object-fit: contain; }
+.bulletin-expanded[data-event-id="kumite-breakthrough-beta"] { display: block; background: #181710; color: #f7f1dd; border-color: #d5b13e; }
+.bulletin-expanded[data-event-id="kumite-breakthrough-beta"] .bulletin-expanded__hero { min-height: 0; aspect-ratio: 3 / 1; background: #17140e; }
+.bulletin-expanded[data-event-id="kumite-breakthrough-beta"] .bulletin-expanded__hero img { object-fit: contain; }
+.bulletin-shell .bulletin-expanded[data-event-id="kumite-breakthrough-beta"] .bulletin-expanded__copy h4 { color: #f7f1dd !important; }
+.bulletin-expanded[data-event-id="kumite-breakthrough-beta"] .bulletin-expanded__copy p,
+.bulletin-expanded[data-event-id="kumite-breakthrough-beta"] .bulletin-expanded__copy li,
+.bulletin-expanded[data-event-id="kumite-breakthrough-beta"] .bulletin-expanded__reward { color: #e1d8bf; }
+.bulletin-expanded[data-event-id="kumite-breakthrough-beta"] .bulletin-expanded__copy > span,
+.bulletin-expanded[data-event-id="kumite-breakthrough-beta"] .bulletin-expanded__copy > a { color: #f5cc37; }
+.bulletin-expanded[data-event-id="kumite-breakthrough-beta"] > .kumite-release-guide { margin: 0; padding: 0 clamp(16px, 3vw, 32px) 24px; }

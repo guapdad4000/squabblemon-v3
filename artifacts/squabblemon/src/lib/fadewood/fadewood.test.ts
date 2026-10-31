@@ -2,11 +2,12 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import type { StoryCampaign, StoryNodeProgress } from '@workspace/api-client-react';
 import { storySeasons } from '@workspace/squabblemon-engine/storySeasons';
-import { FADEWOOD_ARCS, WORLD_PLACES, getWorldActions, getWorldActionsForCampaign, getHostName, isMemorialSource, resolveContinue, resolveWorldIntent } from './registry';
+import { FADEWOOD_ARCS, WORLD_PLACES, getActiveCharacterId, getWorldActions, getWorldActionsForCampaign, getHostName, isMemorialSource, resolveContinue, resolveWorldIntent } from './registry';
 import { isWorldEvent, validateWorldCheckpoint } from './contracts';
 import { readStoryResume, saveStoryResume, readWorldCheckpoint, saveWorldCheckpoint } from './journey';
 import tracking from './node-tracking.json';
 import index from '../story/generated/index.json';
+import { storyDialogueToken } from '../story/catalog';
 import { mailAttentionIdentity } from './mail-attention';
 
 const values = new Map<string,string>();
@@ -14,14 +15,40 @@ Object.defineProperty(globalThis,'sessionStorage',{configurable:true,value:{getI
 const node=(nodeId:string,chapterId:string,extra:Partial<StoryNodeProgress>={}):StoryNodeProgress=>({nodeId,chapterId,title:nodeId,kind:'battle',optional:false,status:'available',mapPosition:{x:0,y:0},prerequisites:[],rewards:[],cleared:false,stars:0,attempts:0,wins:0,lastOutcome:null,dialogueSeen:[],bossHighestPhase:0,firstClearedAt:null,lastPlayedAt:null,...extra});
 const campaign=(nodes:StoryNodeProgress[],recommendedNodeId:string|null=nodes[0]?.nodeId??null)=>({contentVersion:12,chapters:[],nodes,recommendedNodeId,totalStars:0,completedNodes:0,bossStatus:'locked'}) as StoryCampaign;
 
-test('every installed canonical chapter has exactly one arc, without requiring Anunaki to be installed',()=>{
+test('every installed canonical chapter has exactly one arc, including the installed Anunaki expansion',()=>{
   for(const s of storySeasons) for(const c of s.chapterIds) assert.equal(FADEWOOD_ARCS.filter(a=>a.available&&a.chapterIds.includes(c)).length,1,c);
-  assert.equal(FADEWOOD_ARCS.find(a=>a.id==='special-anunaki-arrival')?.available,false);
+  assert.equal(FADEWOOD_ARCS.find(a=>a.id==='special-anunaki-arrival')?.available,true);
   assert.equal(FADEWOOD_ARCS.find(a=>a.id==='special-oz')?.hostId,'story-mural');
 });
-test('tracking is bound to current generated screenplay revision and covers all nodes',()=>{
+test('tracking covers the current screenplay and uses the canonical dialogue receipts for every node',()=>{
   assert.equal(tracking.revision,index.revision);
   assert.deepEqual(Object.keys(tracking.nodes).sort(),index.chapters.flatMap(c=>c.nodes.map(n=>n.id)).sort());
+  for(const [nodeId,metadata] of Object.entries(tracking.nodes)){
+    assert.ok(typeof metadata.token==='string'&&metadata.token.length>0,nodeId);
+    assert.equal(`${metadata.token}:post:0`,storyDialogueToken(nodeId,'post',0),nodeId);
+  }
+});
+test('unlocked Anunaki Continue resolves to the UFO and Yasuke dialogue never replaces its host',()=>{
+  values.clear();
+  const arcId='special-anunaki-arrival',nodeId='anunaki-01-no-refunds-arrival';
+  const target=node(nodeId,'anunaki-01-no-refunds',{kind:'dialogue'});
+  const c=campaign([target,node('welcome-to-the-block','block-party')],'welcome-to-the-block');
+  saveStoryResume('a',nodeId,arcId);
+  const resumed=resolveContinue(c,'a');
+  assert.ok(resumed);
+  assert.equal(resumed.node.nodeId,nodeId);
+  assert.equal(resumed.arc.id,arcId);
+  assert.equal(resumed.arc.hostId,'anunaki-ufo');
+  assert.equal(resumed.arc.arrivalId,'anunaki-ufo');
+  assert.equal(resolveContinue(c,'a',arcId)?.node.nodeId,nodeId);
+  assert.deepEqual(getWorldActionsForCampaign('anunaki-ufo',c,'a',arcId).find(action=>action.id===arcId)?.intent,{kind:'arc',arcId});
+  assert.equal(getWorldActionsForCampaign('yasuke',c,'a',arcId).some(action=>action.id===arcId),false);
+  const yasukeNodes=index.chapters.filter(chapter=>resumed.arc.chapterIds.includes(chapter.id)).flatMap(chapter=>chapter.nodes)
+    .filter(item=>tracking.nodes[item.id as keyof typeof tracking.nodes].participants.includes('yasuke'));
+  assert.ok(yasukeNodes.length>0,'The authored Anunaki dialogue must exercise a Yasuke participant.');
+  for(const item of yasukeNodes)assert.equal(getActiveCharacterId(resumed.arc,item.id),'anunaki-ufo',item.id);
+  target.status='locked';
+  assert.equal(resolveContinue(c,'a',arcId),null);
 });
 test('Continue retains the saved arc while the global recommendation points elsewhere',()=>{
   values.clear();saveStoryResume('a','red','season-1');
@@ -43,7 +70,7 @@ test('saved cleared fight resumes unread post-dialogue and then advances after t
   n.dialogueSeen=Array.from({length:m.post},(_,i)=>`${m.token}:post:${i}`);
   assert.equal(resolveContinue(c,'a')?.node.nodeId,'next');
 });
-test('locked nodes, absent expansion and account boundaries cannot be bypassed by resume storage',()=>{
+test('locked nodes, missing campaign chapters and account boundaries cannot be bypassed by resume storage',()=>{
   values.clear();saveStoryResume('a','locked','season-1');
   const c=campaign([node('locked','block-party',{status:'locked'}),node('available','special-sherlock-missing-motion')]);
   assert.equal(resolveContinue(c,'a')?.node.nodeId,'available');assert.equal(readStoryResume('b'),null);

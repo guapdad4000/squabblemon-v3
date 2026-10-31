@@ -1,3 +1,4 @@
+import { releasedAnunakiIds } from './anunakiTestCatalog';
 import { BLOCKBUSTERS } from '../../../lib/squabblemon-engine/src/blockbusterWave';
 import assert from "node:assert/strict";
 import { existsSync } from "node:fs";
@@ -66,6 +67,11 @@ function readWebpMetadata(bytes: Buffer): WebpMetadata {
       width: bytes.readUInt16LE(26) & 0x3fff,
       height: bytes.readUInt16LE(28) & 0x3fff,
     };
+  }
+  if (chunk === 'VP8L') {
+    assert.equal(bytes[20], 0x2f, 'lossless WebP must have the VP8L signature');
+    const dimensions = bytes.readUInt32LE(21);
+    return { hasAlpha: !!(dimensions & 0x10000000), width: (dimensions & 0x3fff) + 1, height: ((dimensions >>> 14) & 0x3fff) + 1 };
   }
   assert.equal(chunk, "VP8X", "must use a supported extended or opaque WebP format");
 
@@ -285,7 +291,7 @@ test('Simmy has no opaque black matte, while Foodz retains the supplied portrait
     if (original[i + 3] === 0) { original.fill(0, i, i + 3); imported.fill(0, i, i + 3); }
   }
   assert(imported.equals(original), 'foodz: importing must preserve visible pixels and the full alpha channel');
-  assert.deepEqual(cardCatalog.filter(card => card.artworkLayout === 'portrait').map(card => card.artworkId), [
+  assert.deepEqual(cardCatalog.filter(card => card.artworkLayout === 'portrait' && !releasedAnunakiIds.includes(card.engineId)).map(card => card.artworkId), [
     'church-auntie',
     'simmy',
     'captain-jigga',

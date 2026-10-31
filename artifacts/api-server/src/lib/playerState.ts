@@ -29,7 +29,7 @@ import {
   validateSavedDeck, DECK_SIZE, upgradeLegacySavedDeck,
   ROOKIE_FOUNDATION_ID, ROOKIE_DECK_ID, ROOKIE_MENTOR_ID,
 } from "@workspace/squabblemon-engine/data";
-import { COLLECTION_ROAD, STREET_PACK_CONFIG, STREET_PACK_TEN_PULL_CONFIG } from "./collectionEconomy";
+import { COLLECTION_ROAD, collectionRoadProgress, STREET_PACK_CONFIG, STREET_PACK_TEN_PULL_CONFIG } from "./collectionEconomy";
 import { resetExpiredMissionsInTransaction } from "./playerRewardTransactions";
 import {
   normalizeCardProgress,
@@ -340,6 +340,7 @@ export function serializePackOpening(opening: SerializedPackOpening, seasonRewar
     pullCount,
     ...(seasonRewards?.length ? { seasonRewards } : {}),
     rewards: opening.rewards,
+    ...(opening.featuredProgress ? { featuredProgress: opening.featuredProgress } : {}),
     pityBefore: opening.pityBefore,
     pityAfter: opening.pityAfter,
     createdAt: opening.createdAt.toISOString(),
@@ -363,6 +364,7 @@ function serializeProfile(
     packTickets: profile.packTickets,
     styleShards: profile.styleShards,
     styleShardBalances: normalizeStyleShardBalances(profile.styleShardBalances),
+    featuredPackProgress: profile.featuredPackProgress,
     packPity: profile.packPity,
     deckSlots: profile.deckSlots,
     cosmeticCurrency: profile.cosmeticCurrency,
@@ -554,7 +556,7 @@ export async function getInitializedPlayerBootstrap(clerkUserId: string) {
         (claim) => claim.milestoneKey === milestone.id,
       )
         ? ("claimed" as const)
-        : profile.ownedCardIds.length >= milestone.threshold
+        : collectionRoadProgress(milestone, profile.ownedCardIds) >= milestone.threshold
           ? ("claimable" as const)
           : ("locked" as const),
     })),

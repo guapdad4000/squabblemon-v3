@@ -1,3 +1,7 @@
+import { useCosmeticProfile } from './cosmeticState';
+import { EARNED_DECK_COVERS, equippedDeckCover } from '@workspace/squabblemon-engine/cosmetics';
+import { EarnedDeckCoverSelector } from './EarnedDeckCoverSelector';
+import { getAssetUrl } from '../lib/assets';
 import { useCollectionCardViewport } from '../lib/useCollectionCardViewport';
 import { AutoDeckDialog } from './AutoDeckDialog';
 import { ROOKIE_FOUNDATION_IDS } from '../data';
@@ -5,7 +9,7 @@ import { crewInsights } from '@workspace/squabblemon-engine/insights';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { CoachSpotlight } from './CoachSpotlight';
 import { DrFadePortrait } from './DrFade';
-import { ArrowLeft, ArrowRight, ChartNoAxesColumn, Check, ChevronDown, Crown, Pencil, Plus, Save, Search, Trash2, Undo2, X, Zap } from 'lucide-react';
+import { ArrowLeft, ArrowRight, ChartNoAxesColumn, Check, ChevronDown, Pencil, Plus, Save, Search, Trash2, Undo2, X, Zap } from 'lucide-react';
 import { DECK_SIZE, catalogCardById, getCardImage, validateSavedDeck } from '../data';
 import { CollectibleCard as CardView } from './CollectibleCard';
 import { CardPressTarget } from './CardInspection';
@@ -25,6 +29,9 @@ export function DeckWorkbench({ initial, ownedCardIds, equippedVariants, onSave,
   onDraftChange?: (draft: DeckDraft) => void; onDirtyChange?: (dirty: boolean) => void; lesson?: boolean;
   onDelete?: () => Promise<void>; deleting?: boolean; externalError?: string; showBackdrop?: boolean; subtitle?: string;
 }) {
+  const cosmeticProfile = useCosmeticProfile();
+  const earnedCovers = EARNED_DECK_COVERS.filter(cover=>cosmeticProfile?.unlockedCosmeticIds.includes(cover.id));
+  const earnedCover = cosmeticProfile ? equippedDeckCover(cosmeticProfile) : undefined;
   const [draft, setDraft] = useState<DeckDraft>(() => ({ ...initial, cardIds: [...initial.cardIds] }));
   const [savedDraft, setSavedDraft] = useState<DeckDraft>(() => ({ ...initial, cardIds: [...initial.cardIds] }));
   const [undo, setUndo] = useState<DeckDraft | null>(null);
@@ -172,7 +179,7 @@ export function DeckWorkbench({ initial, ownedCardIds, equippedVariants, onSave,
   }
   return <ArsenalScreen className="deck-workbench" label={lesson ? 'Build your first gang' : 'Deck builder'}>
     {showBackdrop && <GangBackdrop />}
-    <header className="deck-workbench__header">
+    <header className={`deck-workbench__header${earnedCovers.length ? " deck-workbench__header--earned" : ""}`}>
       {lesson && <DrFadePortrait pose="right" className="deck-workbench__coach-art" />}
       <div className="deck-workbench__title">
         <h1 className="sr-only">{lesson ? 'Your cards. Your call.' : 'Build your gang.'}</h1>
@@ -186,9 +193,10 @@ export function DeckWorkbench({ initial, ownedCardIds, equippedVariants, onSave,
         <div className="deck-workbench__header-tools">
           {lesson && <button type="button" className="arsenal-link deck-workbench__replay-lesson" data-testid="button-review-setup-lesson" onClick={() => { setGuideStep(0); setPlannedCardId(null); setShowLessonTip(true); setNotice('Setup lesson restarted.'); }}>Review setup lesson</button>}
           <div className="deck-workbench__cover-preview" data-testid="deck-cover-preview">
-            {draft.heroCardId && catalogCardById[draft.heroCardId] && <img src={getCardImage(draft.heroCardId, equippedVariants[draft.heroCardId])} alt="" />}
-            <span>Gang cover<strong>{catalogCardById[draft.heroCardId]?.name ?? 'Choose a cover'}</strong></span>
+            {draft.heroCardId && catalogCardById[draft.heroCardId] && <img src={earnedCover ? getAssetUrl(earnedCover.image) : getCardImage(draft.heroCardId, equippedVariants[draft.heroCardId])} alt="" />}
+            <span>Gang cover<strong>{earnedCover?.name ?? catalogCardById[draft.heroCardId]?.name ?? 'Choose a cover'}</strong></span>
           </div>
+          {cosmeticProfile && earnedCovers.length > 0 && <EarnedDeckCoverSelector key={cosmeticProfile.id} profile={cosmeticProfile} />}
           <span className="deck-workbench__count"><strong>{draft.cardIds.length}</strong>/ {DECK_SIZE}<small>{new Set(ownedCardIds).size} owned</small></span>
         {onDelete && <button type="button" className="arsenal-icon arsenal-danger" title="Delete deck" aria-label="Delete deck" disabled={busy || deleting} onClick={() => void onDelete()}><Trash2 size={16} aria-hidden="true" /></button>}
       </div>
@@ -209,7 +217,7 @@ export function DeckWorkbench({ initial, ownedCardIds, equippedVariants, onSave,
                 <button type="button" className="deck-slot__cover" title={draft.heroCardId === id ? 'Gang cover' : `Set ${card.name} as cover`}
                   aria-label={`Set ${card.name} as cover`} aria-pressed={draft.heroCardId === id}
                   onClick={() => { setUndo(draft); setDraft({ ...draft, heroCardId: id }); setNotice(`${card.name} is your gang cover.`); }}>
-                  <Crown size={15} fill={draft.heroCardId === id ? 'currentColor' : 'none'} aria-hidden="true" />
+                  <GameGlyph name="fight" />
                 </button>
               </> : <button type="button" aria-label={`Add card to slot ${index + 1}`} onClick={() => { setSlot(null); searchInput.current?.focus(); searchInput.current?.scrollIntoView({ block: 'nearest' }); }}><Plus size={22} aria-hidden="true" /><span>Recruit</span></button>}
             </div>;

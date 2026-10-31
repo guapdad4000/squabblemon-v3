@@ -137,7 +137,8 @@ test("Block Party content validates and rejects unknown cards, cycles, and optio
 
 test("later-season encounters use authored dialogue cards and preserve reveal order", () => {
   const later = storyContent.chapters.filter((chapter) => chapter.order >= 3);
-  assert.equal(later.length, 33);
+  assert.equal(later.filter(chapter => chapter.id !== 'kumite-break-the-bracket' && !chapter.id.startsWith('anunaki-')).length, 33);
+  assert.equal(later.filter(chapter => chapter.id === 'kumite-break-the-bracket').length, 1);
   for (const chapter of later) {
     for (const node of chapter.nodes) {
       const lines = node.kind === "battle"
@@ -439,9 +440,14 @@ test("late campaign phase timing fits every shortened encounter and validates", 
 });
 
 test("early campaign balance content retains IDs, rewards, and authored encounter rules", () => {
-  assert.equal(storyContent.version, 12);
-  assert.equal(storyContent.chapters.flatMap((chapter) => chapter.nodes).length, 233);
-  assert.equal(storyContent.chapters.flatMap((chapter) => chapter.nodes).filter((node) => node.kind === "battle").length, 107);
+  assert.equal(storyContent.version, 13);
+  const kumite = storyContent.chapters.find(chapter => chapter.id === 'kumite-break-the-bracket');
+  assert(kumite);
+  assert.equal(kumite.nodes.length, 18);
+  assert.equal(kumite.nodes.filter(node => node.kind === 'battle').length, 5);
+  const originalNodes = storyContent.chapters.filter(chapter => chapter.id !== 'kumite-break-the-bracket' && !chapter.id.startsWith('anunaki-')).flatMap(chapter => chapter.nodes);
+  assert.equal(originalNodes.length, 233);
+  assert.equal(originalNodes.filter(node => node.kind === "battle").length, 107);
 
   const newAccountCards = new Set(catalogIdsToEngineIds(ROOKIE_FOUNDATION_IDS));
   for (const chapter of storyContent.chapters.filter(({ order }) => order <= 2)) {

@@ -5,7 +5,7 @@ import { lockPlayerProfile, PlayerRewardError } from './playerRewardTransactions
 async function read(reader:Pick<typeof db,'select'>, userId:string) {
  const [profile]=await reader.select().from(playerProfilesTable).where(eq(playerProfilesTable.clerkUserId,userId));
  if(!profile) throw new PlayerRewardError('Player profile not found',404);
- const receipts=await reader.select().from(playerCollectionClaimsTable).where(eq(playerCollectionClaimsTable.clerkUserId,userId));
+ const receipts=await reader.select({milestoneKey:playerCollectionClaimsTable.milestoneKey}).from(playerCollectionClaimsTable).where(eq(playerCollectionClaimsTable.clerkUserId,userId));
  return {profile,receipts,statuses:legendBountyStatuses(null,[],profile.ownedCardIds,receipts.map(r=>r.milestoneKey),profile.storyProgress.bountyCampaign)};
 }
 export async function getLegendBounties(userId:string){return (await read(db,userId)).statuses;}

@@ -1,3 +1,5 @@
+import { useCosmeticProfile } from './cosmeticState';
+import { equippedDeckCover } from '@workspace/squabblemon-engine/cosmetics';
 import { CompactDeckPicker } from './CompactDeckPicker';
 import useEmblaCarousel from 'embla-carousel-react';
 import { Check, ChevronLeft, ChevronRight, Layers } from 'lucide-react';
@@ -48,7 +50,8 @@ function DeckBox({
   renderScene: boolean;
 }) {
   const hostRef = useRef<HTMLSpanElement>(null);
-  const cover = styleSetFor(heroCardId)?.deckCover;
+  const profile=useCosmeticProfile();
+  const cover = (profile ? equippedDeckCover(profile)?.image : undefined) ?? styleSetFor(heroCardId)?.deckCover;
   const image = cover ? getAssetUrl(cover) : heroCardId ? getCardImage(heroCardId) : null;
 
   useEffect(() => {

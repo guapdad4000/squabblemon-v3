@@ -31,7 +31,7 @@ Runtime source is in `artifacts/squabblemon/worlds/fadewood`; checked-in deliver
 
 The prior world candidate passed 386 required tests, 80 affected runtime cases and 55 frontend-Three compatibility cases. Desktop and phone software-renderer fixtures verified real bone motion, landed Mailman, smooth dog turns, Story save/resume/choice, wood assets, direct Safehouse entry, shared lighting, restored checkpoint and Nova. Full OG cycles were observed on desktop; phone exercised passive phases and interactions. These are synthetic local account/API fixtures, not live-account or physical-device proof.
 
-Combined-PR release validation: pending final build and publication. Breakthrough's public queue/unsupported-card gate, Anunaki banner calendar and existing tester-code switches retain their reviewed policies; this integration does not enable grants, broadcasts or unfinished transport.
+Combined-PR verification includes all 16 critical suites and 19 required source checks, plus TypeScript, deployment packaging and migration-coverage checks. Final run results and hosted deployment state are recorded on [PR #21](https://github.com/guapdad4000/squabblemon-v3/pull/21). Breakthrough's public queue/unsupported-card gate, Anunaki banner calendar and existing tester-code switches retain their reviewed policies; this integration does not enable grants, broadcasts or unfinished transport.
 
 [Prior renderer summary](fadewood-world-evidence/prior-world-render-checks.json) · [World-art provenance](fadewood-world-evidence/world-art-provenance.json) · [Image-generation prompts](fadewood-world-evidence/imagegen-prompts.json) · [Blender preview](fadewood-world-evidence/blender-source-preview.png).
 

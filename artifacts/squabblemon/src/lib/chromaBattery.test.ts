@@ -50,8 +50,8 @@ function gpuCanvas(width = 288, height = 162) {
   gl.isContextLost = () => lost;
   gl.uniform4f = (location: unknown, ...values: number[]) => {
     record('uniform4f', [location, ...values]);
-    assert.equal(location, 'crop');
-    state.crop = values;
+    assert.ok(location === 'crop' || location === 'keySettings');
+    if (location === 'crop') state.crop = values;
   };
   gl.viewport = (...values: number[]) => { record('viewport', values); state.viewport = values; };
   gl.texImage2D = (...args: unknown[]) => { record('texImage2D', args); state.texture = args.slice(3, 5) as number[]; };
@@ -106,12 +106,13 @@ test('GPU chroma retains every staged frame and upload while hoisting invariant 
   for (let frame = 0; frame < 60; frame++) renderer!.draw(video, crop);
 
   assert.equal(keyCalls, 0, 'GPU path must not add a CPU readback/key pass');
-  assert.equal(named(gpu.calls, 'uniform4f').length, 1);
+  assert.equal(named(gpu.calls, 'uniform4f').length, 2, 'crop and key settings are each uploaded once');
   assert.equal(named(gpu.calls, 'viewport').length, 1);
   assert.equal(named(gpu.calls, 'texImage2D').length, 1);
   assert.equal(named(gpu.calls, 'texSubImage2D').length, 60);
   assert.equal(named(gpu.calls, 'drawArrays').length, 60);
-  assert.deepEqual(named(gpu.calls, 'uniform4f')[0].args, ['crop', 0, 0, 1, 1]);
+  assert.deepEqual(named(gpu.calls, 'uniform4f').find(call => call.args[0] === 'crop')!.args, ['crop', 0, 0, 1, 1]);
+  assert.deepEqual(named(gpu.calls, 'uniform4f').find(call => call.args[0] === 'keySettings')!.args, ['keySettings', 35, 65, 25, 0]);
   for (let frame = 0; frame < 60; frame++) {
     assert.deepEqual(staging[0].calls.slice(frame * 2, frame * 2 + 2), [
       { name: 'clearRect', args: [0, 0, 288, 162] },
@@ -146,7 +147,7 @@ test('GPU resize changes viewport/storage once and preserves canvas-source cropp
   assert.deepEqual(named(gpu.calls, 'viewport').map(call => call.args), [
     [0, 0, 288, 162], [0, 0, 400, 162], [0, 0, 400, 300],
   ]);
-  assert.equal(named(gpu.calls, 'uniform4f').length, 1);
+  assert.equal(named(gpu.calls, 'uniform4f').length, 2, 'resizing does not reupload invariant settings');
   assert.equal(named(gpu.calls, 'texImage2D').length, 3);
   assert.equal(named(gpu.calls, 'texSubImage2D').length, 5);
   assert.equal(gpu.draws.length, 5);

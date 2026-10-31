@@ -165,23 +165,25 @@ test("clock widgets keep 120/150 ms resolution, use fresh server samples and sto
   await act(async () => renderer.unmount());
 });
 
-test("Girl Fade ticks only its active fight, not the cabinet/objective/footer (6 seconds)", async (t) => {
+test("Girl Fade ticks only its active fight, not the cabinet/title/footer (6 seconds)", async (t) => {
   environment(t);
   const { renderer } = await mount(t, arcadeStatus("girl-fade", true));
   const cabinet = renderer.root.findByType("main").props;
-  const objective = renderer.root.findByProps({ "aria-label": "Run objective" }).props;
+  const title = renderer.root.findByProps({ className: "arc-run-title" }).props;
+  const footer = renderer.root.findByProps({ className: "arc-run-footer" }).props;
   let previousFight = renderer.root.findByProps({ className: "girl-arena" }).props;
   let fightRenders = 0;
   for (let frame = 0; frame < 50; frame++) {
     await tick(t, 120);
     assert.equal(renderer.root.findByType("main").props, cabinet);
-    assert.equal(renderer.root.findByProps({ "aria-label": "Run objective" }).props, objective);
+    assert.equal(renderer.root.findByProps({ className: "arc-run-title" }).props, title);
+    assert.equal(renderer.root.findByProps({ className: "arc-run-footer" }).props, footer);
     const current = renderer.root.findByProps({ className: "girl-arena" }).props;
     if (current !== previousFight) fightRenders++;
     previousFight = current;
   }
   assert.equal(fightRenders, 50);
-  t.diagnostic("6,000 ms / 120 ms: 50 active fight renders, 0 cabinet/objective renders.");
+  t.diagnostic("6,000 ms / 120 ms: 50 active fight renders, 0 cabinet/title/footer renders.");
 });
 
 test("ready Girl Fade, Block Takeover and non-hopping Waffle phases have no idle clock renders", async (t) => {

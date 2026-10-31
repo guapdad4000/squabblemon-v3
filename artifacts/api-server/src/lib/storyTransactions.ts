@@ -575,7 +575,7 @@ export async function grantStoryTicketAward(
   stars: number,
 ): Promise<GrantedStoryReward | null> {
   if (stars < MAX_STARS_PER_BATTLE) return null;
-  const amount = ticketsForStars(stars);
+  const amount = ticketsForStars(stars, nodeId);
   if (amount <= 0) return null;
   const rewardKey = `${nodeId}:stars:${MAX_STARS_PER_BATTLE}:auto-ticket:v1`;
   const base: PlayerStoryReward = { kind: "pack-ticket", id: "street-pack-ticket", amount };

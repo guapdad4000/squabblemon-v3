@@ -1,6 +1,9 @@
 // Native suites need independent connections or their own migration/ownership setup.
 // Every deferred suite has an explicit maintained command; additions fail closed.
 export const nativeDatabaseTestCommands = Object.freeze({
+  "anunakiRaid.native.test.ts": "node scripts/test-anunaki-native.mjs",
+  "anunakiStory.native.test.ts": "node scripts/test-anunaki-native.mjs",
+  "featuredBanners.native.test.ts": "node scripts/test-payments-database.mjs --featured-pulls",
   "kumiteExpansion.native.test.ts": "node scripts/test-kumite-expansion-database.mjs",
   "social.test.ts": "node scripts/test-payments-database.mjs --social",
   "homiesDiagnostics.native.test.ts": "node scripts/test-payments-database.mjs --social",

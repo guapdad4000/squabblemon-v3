@@ -1,6 +1,8 @@
 import type { Card, CardRarity } from '../data';
+import { anunakiCardScene } from './anunakiCardArt';
 import normalPlate from '../assets/collector-v2/normal-plate.webp';
 import normalFist from '../assets/collector-v2/normal-fist.webp';
+import anunakiPlate from '../assets/collector-v2/anunaki-plate.webp';
 import firePlate from '../assets/collector-v2/fire-plate.webp';
 import fireFist from '../assets/collector-v2/fire-fist.webp';
 import waterPlate from '../assets/collector-v2/water-plate.webp';
@@ -38,16 +40,17 @@ const art: Record<string, { plate: string; fist: string }> = {
 };
 
 /** One element asset map for both rendered print layers and receipt warmup. */
-export function collectibleElementArtwork(card: Pick<Card, 'type'>) {
+export function collectibleElementArtwork(card: Pick<Card, 'type'> & { id?: string; cardId?: string }) {
   const element = card.type === 'Rock' ? 'Earth' : card.type;
-  return { element, ...(art[element] ?? art.Normal) };
+  const defaults = art[element] ?? art.Normal;
+  return { element, ...defaults, plate: anunakiCardScene(card) ? anunakiPlate : defaults.plate };
 }
 
 /** Exact static resources used by an approved print; no other element is loaded. */
-export function collectiblePrintArtworkSources(card: Pick<Card, 'type' | 'kind'> & { rarity: CardRarity }, foil = true): string[] {
+export function collectiblePrintArtworkSources(card: Pick<Card, 'type' | 'kind'> & { rarity: CardRarity; id?: string; cardId?: string }, foil = true): string[] {
   const images = collectibleElementArtwork(card);
   return [
-    ...(card.kind === 'blockbuster' ? [] : [images.plate]),
+    ...(card.kind === 'blockbuster' ? [] : [images.plate, ...[anunakiCardScene(card)].filter((scene): scene is string => Boolean(scene))]),
     images.fist, wordmark, namePaper,
     ...(foil && ['Rare', 'Epic', 'Legendary', 'Mythical'].includes(card.rarity) ? [foilFlakes] : []),
   ];

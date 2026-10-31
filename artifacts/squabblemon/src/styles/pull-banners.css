@@ -48,6 +48,7 @@
 .pull-feature__next { right:12px; transform:rotate(5deg); }
 .pull-feature__previous:hover:not(:disabled) { transform:translateX(-4px) rotate(-5deg); }
 .pull-feature__next:hover:not(:disabled) { transform:translateX(4px) rotate(5deg); }
+.pull-feature[data-banner='anunaki'] .pull-feature__title { color:#e5ffe8; text-shadow:3px 4px #153b31,6px 7px #169f70,0 12px 35px #000a; }
 .pull-feature[data-banner='inmates'] .pull-feature__title { color:#ffe3ba; text-shadow:3px 4px #25150e,6px 7px #d46525,0 12px 35px #000a; }
 .pull-feature[data-banner='oz'] .pull-feature__title { color:#fff2a5; text-shadow:3px 4px #133f32,6px 7px #389d66,0 12px 35px #000a; }
 .pull-feature[data-banner='wonderland'] .pull-feature__title { color:#ffe0f3; text-shadow:3px 4px #251833,6px 7px #b44791,0 12px 35px #000a; }
@@ -235,3 +236,18 @@
 .fight-bill:has(> .pull-feature:not([hidden])) { margin-bottom:100px; }
 .fight-bill .pull-feature__description { font:11px/1.45 var(--font-sans); color:#fff0d4; }
 .fight-bill .pull-feature__description > span { display:block; }
+
+/* Shared featured guarantee reads like a fight-poster billing stamp. */
+.fight-bill .pull-feature__guarantee { display:grid; grid-template-columns:auto 1fr; gap:2px 8px; margin:5px 2px; color:#fff0c9; font:11px/1.35 var(--font-sans); text-align:left; }
+.fight-bill .pull-feature__guarantee strong { color:#18150c; background:#ffe596; padding:3px 5px; transform:rotate(-2deg); font-weight:900; white-space:nowrap; }
+.fight-bill .pull-feature__guarantee span { align-self:center; font-weight:800; }
+.fight-bill .pull-feature__guarantee small { grid-column:1 / -1; font-size:9px; text-align:center; }
+.fight-bill .pull-feature__guarantee[data-ready='true'] strong { background:#bfffe1; }
+.fight-bill .pull-feature__cast { bottom:148px; }
+@media(max-width:700px) { .fight-bill .pull-feature__guarantee { font-size:10px; } .fight-bill .pull-feature__cast { bottom:142px; } }
+
+.fight-bill:has(> .pull-feature[data-banner="anunaki"]:not([hidden])) { margin-bottom:125px; }
+/* Rate text owns its dark-dialog contrast even when venue.css loads after Shop. */
+.venue-info.gacha-info > p,
+.venue-info.gacha-info .pull-banner-roster p { color:#d6dfce; font:500 12px/1.7 var(--font-sans); }
+.venue-info.gacha-info > p strong { color:inherit; }

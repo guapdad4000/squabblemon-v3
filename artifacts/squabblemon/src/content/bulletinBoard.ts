@@ -38,9 +38,24 @@ export type DeveloperPost = {
  * `edition` whenever a new post should light the NEW marker in the room.
  */
 export const bulletinBoard = {
-  edition: '2026-09-26-rules-1-1-feedback',
-  updatedLabel: 'Board refreshed for Rules 1.1',
+  edition: '2026-10-30-kumite-breakthrough-beta',
+  updatedLabel: 'Kumite Breakthrough · Beta in preparation',
   events: [
+    {
+      id: 'kumite-breakthrough-beta',
+      kind: 'event',
+      status: 'planned',
+      eyebrow: 'New mode · Beta in preparation',
+      title: 'Kumite Breakthrough',
+      statusLabel: 'Public matchmaking not yet open',
+      summary: 'Three lanes. Refilling Motion. Two breaches to win. Get to know the new real-time fight.',
+      image: 'assets/events/kumite-breakthrough-patch-1-15.webp',
+      sticker: 'BETA',
+      accent: 'yellow',
+      details: 'Both sides play at once. Build a push, defend your base and fight through the final 30-second Last Stand. This is a separate mode from the weekly Kumite bracket and ordinary Fade Park PvP.',
+      availability: ['Read the full rules below', 'Online queue and progression remain in preparation', 'Patch 1.15 mail gift after publication: 1 Street Pack Ticket + 50 Clout'],
+      link: { label: 'Explore Kumite', href: '/game/kumite' },
+    },
     {
       id: 'block-party-weekend',
       kind: 'event',

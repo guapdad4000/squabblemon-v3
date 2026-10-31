@@ -1,3 +1,4 @@
+import { releasedAnunakiIds } from './anunakiTestCatalog';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import test from 'node:test';
@@ -24,12 +25,14 @@ const budgets: Record<string, { cost: number; power: number }> = {
   rainmaker: { cost: 3, power: 4 },
 };
 
-test('all 301 collectible cards retain the approved printed budgets in either authoritative seat', () => {
-  assert.equal(CARD_BALANCE_VERSION, 64);
-  assert.equal(cardCatalog.length, 301);
-  assert.deepEqual(Object.keys(budgets).sort(), cardCatalog.map(c => c.engineId).sort());
+test('all collectible cards retain their approved printed budgets in either authoritative seat', () => {
+  const additions: Record<string, { cost: number; power: number }> = { nabu: { cost: 1, power: 2 }, enki: { cost: 2, power: 3 }, utu: { cost: 1, power: 2 }, ninhursag: { cost: 2, power: 3 }, inanna: { cost: 2, power: 3 }, yakub: { cost: 2, power: 1 }, enlil: { cost: 4, power: 4 }, ereshkigal: { cost: 3, power: 3 }, 'caucus-mountaineer': { cost: 2, power: 3 }, anu: { cost: 6, power: 8 } };
+  const expectedBudgets = { ...budgets, ...Object.fromEntries(releasedAnunakiIds.map(id => [id, additions[id]])) };
+  assert.equal(CARD_BALANCE_VERSION, 65);
+  assert.equal(cardCatalog.length, 301 + releasedAnunakiIds.length);
+  assert.deepEqual(Object.keys(expectedBudgets).sort(), cardCatalog.map(c => c.engineId).sort());
   for (const entry of cardCatalog) {
-    const expected = budgets[entry.engineId];
+    const expected = expectedBudgets[entry.engineId];
     assert.deepEqual({cost: entry.cost, power: entry.power}, expected, entry.name);
     assert.equal(entry.catalogId, cards[entry.engineId].id);
     for (const owner of ['player', 'cpu'] as const) {

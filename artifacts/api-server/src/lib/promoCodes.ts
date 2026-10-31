@@ -7,7 +7,8 @@ export type PromoCodeReward = {
   cardIds?: string[];
 };
 
-export const PROMO_CODES: Record<'DEVTEST' | 'DEVTEST2' | 'SIMMYFOODZ' | 'CITYLEGENDS' | 'JETSETCABIN' | 'DEVSTOCKZ' | 'KYLE' | 'DEVBLUEGANG' | 'DEVREDGANG' | 'DEVWITCHMONKEY' | 'TRIPLEOGDEV' | 'DEVSQUABBLEHOUSE' | 'DEVMARYMACK', PromoCodeReward> = {
+export const PROMO_CODES: Record<'DEVTEST' | 'DEVTEST2' | 'SIMMYFOODZ' | 'CITYLEGENDS' | 'JETSETCABIN' | 'DEVSTOCKZ' | 'KYLE' | 'DEVBLUEGANG' | 'DEVREDGANG' | 'DEVWITCHMONKEY' | 'TRIPLEOGDEV' | 'DEVSQUABBLEHOUSE' | 'DEVMARYMACK' | 'DEVANUNAKI', PromoCodeReward> = {
+  DEVANUNAKI: { code: 'DEVANUNAKI', packTickets: 0, softCurrency: 0, styleShards: 0, cardIds: ['anu', 'nabu', 'enki', 'utu', 'ninhursag', 'inanna', 'enlil', 'ereshkigal', 'yakub', 'caucus-mountaineer'] },
   DEVSTOCKZ: { code: 'DEVSTOCKZ', packTickets: 0, softCurrency: 0, styleShards: 0, cardIds: ['stockz'] },
   // Possession-based tester codes: intentionally available in production.
   DEVMARYMACK: { code: 'DEVMARYMACK', packTickets: 0, softCurrency: 0, styleShards: 0, cardIds: ['ms-mary-mack'] },
@@ -53,6 +54,8 @@ export function findPromoCode(
   const code = input.trim().toUpperCase();
   if (!Object.hasOwn(PROMO_CODES, code)) return null;
   const promoCode = code as PromoCode;
+  // This beta runs on the live site; operations can retire its tester code independently of NODE_ENV.
+  if (promoCode === 'DEVANUNAKI' && process.env.ANUNAKI_BETA_CODE_ENABLED !== 'true') return null;
   if (DEVELOPMENT_ONLY_PROMO_CODES.has(promoCode) && !isDevelopmentPromoCodeEnabled(environment)) return null;
   return PROMO_CODES[promoCode];
 }

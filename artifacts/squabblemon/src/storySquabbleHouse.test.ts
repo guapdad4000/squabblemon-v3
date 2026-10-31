@@ -34,6 +34,7 @@ test("each chapter references its own movie, keyframe, environment and full-body
     const clip = `ch${String(index + 1).padStart(2, "0")}`;
     for (const node of chapter.nodes) {
       assert.deepEqual(node.cinematic, {
+        titleAssetId: `assets/story/squabble-house/titles/${clip}.webp`,
         videoAssetId: `assets/story/squabble-house/media/${clip}.mp4`,
         posterAssetId: `assets/story/squabble-house/keyframes/${clip}.webp`,
         environmentAssetId: `assets/story/squabble-house/environments/${clip}.webp`,

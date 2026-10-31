@@ -23,8 +23,9 @@ test('every delivered chapter is byte-equivalent canonical JSON, including rewar
     assert.equal(artifact.revision, index.revision);
     assert.equal(artifact.chapterRevision, digest(chapter));
     for (const node of chapter.nodes) for (const section of ['pre', 'post', 'main'] as const)
-      assert.equal(`${index.tokens[node.id]}:${section}:0`, storyDialogueToken(node.id, section, 0));
+      assert.equal(`${index.tokens[node.id] ?? `${node.id}:script-v3`}:${section}:0`, storyDialogueToken(node.id, section, 0));
   }
+  assert(Object.entries(index.tokens).every(([id, token]) => token !== `${id}:script-v3`), 'default dialogue tokens are derived rather than shipped twice');
 });
 
 test('first load requests exactly one chapter, concurrent calls deduplicate and visited chapters reuse data', async () => {

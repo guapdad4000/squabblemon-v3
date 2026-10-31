@@ -1,0 +1,1100 @@
+{
+  "revision": "anunaki-drawn-v2",
+  "created": "2026-10-29",
+  "method": "Four different generated hand-drawn cels per emotion/phase; extraction follows transparent gutters between neighboring cutouts. No affine pose animation.",
+  "sources": [
+    {
+      "path": "docs/art-sources/anunaki-drawn-v2/yakub-reactions-sheet.png",
+      "sha256": "f9cf2a4671b21c1c2cfad097027ce90efa469fc04806fa207441def3ce70f8cb",
+      "width": 1254,
+      "height": 1254,
+      "grid": {
+        "columns": 4,
+        "rows": 4
+      },
+      "generatedBy": "built-in image_gen",
+      "transparent": true
+    },
+    {
+      "path": "docs/art-sources/anunaki-drawn-v2/anu-reactions-sheet.png",
+      "sha256": "b6ef46905f2c297579ed7df27ec7bab5b831975b261611d53882fa6c88ecd174",
+      "width": 1278,
+      "height": 1230,
+      "grid": {
+        "columns": 4,
+        "rows": 4
+      },
+      "generatedBy": "built-in image_gen",
+      "transparent": true
+    },
+    {
+      "path": "docs/art-sources/anunaki-drawn-v2/anu-boss-sheet.png",
+      "sha256": "61be84778066a53c77e0422dc7e9b0837b72e3ffc975bb55f0a483d6f94ee629",
+      "width": 1086,
+      "height": 1448,
+      "grid": {
+        "columns": 4,
+        "rows": 4
+      },
+      "generatedBy": "built-in image_gen",
+      "transparent": true
+    },
+    {
+      "path": "docs/art-sources/anunaki-drawn-v2/anunaki-npc-sheet-a.png",
+      "sha256": "34c82ad94a07b196c84757af6f45ba26d23b9d49d4214c8d3f0e0a35ce867591",
+      "width": 1024,
+      "height": 1536,
+      "grid": {
+        "columns": 4,
+        "rows": 4
+      },
+      "generatedBy": "built-in image_gen",
+      "transparent": true
+    },
+    {
+      "path": "docs/art-sources/anunaki-drawn-v2/anunaki-npc-sheet-b.png",
+      "sha256": "0ed7df8e963880a84e3907e4590783534fefd2f863954f6c20e6f7257bff7805",
+      "width": 1024,
+      "height": 1536,
+      "grid": {
+        "columns": 4,
+        "rows": 4
+      },
+      "generatedBy": "built-in image_gen",
+      "transparent": true
+    },
+    {
+      "path": "docs/art-sources/anunaki-drawn-v2/yakub-fullbody-sheet.png",
+      "sha256": "1042bbe4095ce121208dfde593186be31e79fe9317b3f6123468f783c4245f7c",
+      "width": 1536,
+      "height": 1024,
+      "grid": {
+        "columns": 4,
+        "rows": 1
+      },
+      "generatedBy": "built-in image_gen",
+      "transparent": true
+    }
+  ],
+  "assets": [
+    {
+      "character": "yakub",
+      "emotion": "laugh",
+      "source": "docs/art-sources/anunaki-drawn-v2/yakub-reactions-sheet.png",
+      "sourceRow": 0,
+      "distinctDrawnCels": 4,
+      "celPixelSha256": [
+        "d8c9cd430e4eea89e4d79f16190148674136c80c662cd20010e654216ee04ed0",
+        "2d48d56bbccb450bbd4a78d76d5ce87e049b9dc07abc6675c285110efd3e46fe",
+        "4139f276a643c6b5d38c8de7c873ebcb58f5822fa24db2b10842c2e88ab5bef4",
+        "2de4334ee07d21922379a2b7701ca4d2ad0dd10f6f2e16e4b302ad97f80b4cc1"
+      ],
+      "sequence": [
+        0,
+        1,
+        2,
+        3,
+        2,
+        1
+      ],
+      "durationsMs": [
+        180,
+        130,
+        250,
+        180,
+        130,
+        130
+      ],
+      "size": [
+        256,
+        256
+      ],
+      "files": [
+        {
+          "path": "assets/reactions/anunaki-drawn-v2/yakub/laugh.webp",
+          "sha256": "abc78bc82f5dc129671aa1fe5ae42bf21e0f8602bdb735c163df727cb63352eb",
+          "bytes": 25532
+        },
+        {
+          "path": "assets/reactions/anunaki-drawn-v2/yakub/laugh-animated.webp",
+          "sha256": "9fc69f164fab442ff0564287193bb0cad0939b8a3e5c621bbc8659a055dfa9f0",
+          "bytes": 146486
+        },
+        {
+          "path": "assets/reactions/anunaki-drawn-v2/yakub/laugh.gif",
+          "sha256": "e73681fff6bc57f5423eb31f9ea6c2951317f614cc34b64b4d9e99e9669d12f9",
+          "bytes": 246095
+        }
+      ]
+    },
+    {
+      "character": "yakub",
+      "emotion": "rage",
+      "source": "docs/art-sources/anunaki-drawn-v2/yakub-reactions-sheet.png",
+      "sourceRow": 1,
+      "distinctDrawnCels": 4,
+      "celPixelSha256": [
+        "455284d7d08ca99c0bd19a6900cc9adbdca23438631f08bf185547919554489d",
+        "3efedd5dba534026d1fbfbf2f8bcba21ab28a4fe57fe2e2aab02bd1a16a81080",
+        "31545b4e0d4e3e0a1dfab111aee1527452c58c51d3c503ddd2dcd35b3eb4bdf3",
+        "0528e554111ba202cc5e03737276395f605e5863eb817213981db706c5c896bd"
+      ],
+      "sequence": [
+        0,
+        1,
+        2,
+        3,
+        2,
+        1
+      ],
+      "durationsMs": [
+        180,
+        130,
+        250,
+        180,
+        130,
+        130
+      ],
+      "size": [
+        256,
+        256
+      ],
+      "files": [
+        {
+          "path": "assets/reactions/anunaki-drawn-v2/yakub/rage.webp",
+          "sha256": "45169d6a24ca408eb7b2690c7c67f6fa3f4ec65450606cb53b4ab0a88ad85ff5",
+          "bytes": 27192
+        },
+        {
+          "path": "assets/reactions/anunaki-drawn-v2/yakub/rage-animated.webp",
+          "sha256": "193bce52fd9a2c5a46661bacce3f02939b8473f87ca6fd42b5f6aa364f29cfb6",
+          "bytes": 151424
+        },
+        {
+          "path": "assets/reactions/anunaki-drawn-v2/yakub/rage.gif",
+          "sha256": "ec6688b619e4a082d81776ae73dc866def96c744c8cfaeb9644550f06f4ed36b",
+          "bytes": 252076
+        }
+      ]
+    },
+    {
+      "character": "yakub",
+      "emotion": "shocked",
+      "source": "docs/art-sources/anunaki-drawn-v2/yakub-reactions-sheet.png",
+      "sourceRow": 2,
+      "distinctDrawnCels": 4,
+      "celPixelSha256": [
+        "deef61bee3cdb212001789b06e9295a3134f0577a15848aed584e4af331010bc",
+        "d778b7c197775135ae7bb7c1ebe69886035c2e3e1a079723794411008e4faf1a",
+        "91b7714e4906692d6c8017ff5cf674f5d2c5679396707e335772ea09cee6db99",
+        "3ac69eaebb9a4650b70e2b4c91ef02b416d60d7bc378a4868e5f77135256f762"
+      ],
+      "sequence": [
+        0,
+        1,
+        2,
+        3,
+        2,
+        1
+      ],
+      "durationsMs": [
+        180,
+        130,
+        250,
+        180,
+        130,
+        130
+      ],
+      "size": [
+        256,
+        256
+      ],
+      "files": [
+        {
+          "path": "assets/reactions/anunaki-drawn-v2/yakub/shocked.webp",
+          "sha256": "034a05d2c6d1bae635fbd40a59714ed1441ae87e349bf99b42e33564b9f0356d",
+          "bytes": 24808
+        },
+        {
+          "path": "assets/reactions/anunaki-drawn-v2/yakub/shocked-animated.webp",
+          "sha256": "08b560a45e788df2411ea9c922421f28db91f5dcba87fad0899ab149dce799bc",
+          "bytes": 142684
+        },
+        {
+          "path": "assets/reactions/anunaki-drawn-v2/yakub/shocked.gif",
+          "sha256": "7bd480e355ac35e08569a881759dc03a2798050466ca0e5a37b7b3b59f979099",
+          "bytes": 232631
+        }
+      ]
+    },
+    {
+      "character": "yakub",
+      "emotion": "respect",
+      "source": "docs/art-sources/anunaki-drawn-v2/yakub-reactions-sheet.png",
+      "sourceRow": 3,
+      "distinctDrawnCels": 4,
+      "celPixelSha256": [
+        "89ee3aec3a2842655898d9565641ff6d739431133109ebd111f2abc3d1faf999",
+        "be570e9c887e2becc7d4455c5487237ccbd012c4498d92335072bb5e221d21b8",
+        "6b767d4d1cbd5337f2384f108babe4d219d5961978ab0abaeea94eec03ea8f29",
+        "69116bf5e951a3c37bb3a204d8ebc4d32783fff6c650efa5d8bbb0968ea833c9"
+      ],
+      "sequence": [
+        0,
+        1,
+        2,
+        3,
+        2,
+        1
+      ],
+      "durationsMs": [
+        180,
+        130,
+        250,
+        180,
+        130,
+        130
+      ],
+      "size": [
+        256,
+        256
+      ],
+      "files": [
+        {
+          "path": "assets/reactions/anunaki-drawn-v2/yakub/respect.webp",
+          "sha256": "44fa47e2f448b049bb0593ffb92345ca7cbb604efd50067f6fcd8d1a0f0a5c60",
+          "bytes": 27656
+        },
+        {
+          "path": "assets/reactions/anunaki-drawn-v2/yakub/respect-animated.webp",
+          "sha256": "a2ea76217315eeca3df26b17e53df39f9f57af86f18f9d1124405926e6cd660c",
+          "bytes": 156776
+        },
+        {
+          "path": "assets/reactions/anunaki-drawn-v2/yakub/respect.gif",
+          "sha256": "5ee0991dc7f7f8f983ae414701d4db00a86cd62d7b4f66cefcda0d68e0cb279e",
+          "bytes": 263246
+        }
+      ]
+    },
+    {
+      "character": "anu",
+      "emotion": "laugh",
+      "source": "docs/art-sources/anunaki-drawn-v2/anu-reactions-sheet.png",
+      "sourceRow": 0,
+      "distinctDrawnCels": 4,
+      "celPixelSha256": [
+        "7c39f7fbf541a3b09e263e2f51ca10839e03d1013d4f13885af6bf7c9d8cbfc1",
+        "1a0eb8d55b5e94bfdf913fb45fe7e59349f36ceb54a033e3af7541657ff6bcf9",
+        "af7c3e61682dca3c5fead52df55663b4b4fb875d33f39e7725d6d154a4c227ff",
+        "93e0a2428bedb443b33606bc0a622306aafb9605c71a85e0e9c5d9a7e4a7c7a9"
+      ],
+      "sequence": [
+        0,
+        1,
+        2,
+        3,
+        2,
+        1
+      ],
+      "durationsMs": [
+        180,
+        130,
+        250,
+        180,
+        130,
+        130
+      ],
+      "size": [
+        256,
+        256
+      ],
+      "files": [
+        {
+          "path": "assets/reactions/anunaki-drawn-v2/anu/laugh.webp",
+          "sha256": "1a9e6590848ba435618568f57d36d58b34a0187e78f84dfc8925139d1445a579",
+          "bytes": 22502
+        },
+        {
+          "path": "assets/reactions/anunaki-drawn-v2/anu/laugh-animated.webp",
+          "sha256": "a65d2147637d9ec832bc9b1227a2caf927b9d50df7938791ca3ba5b7a3ff14e0",
+          "bytes": 126982
+        },
+        {
+          "path": "assets/reactions/anunaki-drawn-v2/anu/laugh.gif",
+          "sha256": "ae26ca6d9bfb9d453020843e361393469846f3e497e02bb4b302b28ba480f97a",
+          "bytes": 227372
+        }
+      ]
+    },
+    {
+      "character": "anu",
+      "emotion": "rage",
+      "source": "docs/art-sources/anunaki-drawn-v2/anu-reactions-sheet.png",
+      "sourceRow": 1,
+      "distinctDrawnCels": 4,
+      "celPixelSha256": [
+        "94a7f100780080e1dba7e2f5a1dce4bb9d885d49ca7a2849508d0c68700d6f7c",
+        "3d2fa8183c7526c85ce864aced024fd943526b2a205f02bc4c5721639cde17be",
+        "0563a404df254f76d2679f1afab882abb8050f9b60c73d46e7ddbc8fa231918f",
+        "3056fe1bec98cc98f0bce22b819c2d1b6319a527c2d321863f09a5831fda6ae9"
+      ],
+      "sequence": [
+        0,
+        1,
+        2,
+        3,
+        2,
+        1
+      ],
+      "durationsMs": [
+        180,
+        130,
+        250,
+        180,
+        130,
+        130
+      ],
+      "size": [
+        256,
+        256
+      ],
+      "files": [
+        {
+          "path": "assets/reactions/anunaki-drawn-v2/anu/rage.webp",
+          "sha256": "43327b6bf9019d6408f5c5162f0df862fca889fbdbd3df687c3011fd0f838fda",
+          "bytes": 22960
+        },
+        {
+          "path": "assets/reactions/anunaki-drawn-v2/anu/rage-animated.webp",
+          "sha256": "6eecbb44cc6952d86144d0ddad68d5964514a9b07c5a112b26768067dc86f000",
+          "bytes": 128608
+        },
+        {
+          "path": "assets/reactions/anunaki-drawn-v2/anu/rage.gif",
+          "sha256": "0e555345a6db3ae18faad74b42ab5fd8b63487df5604c227d7c202475bac45fa",
+          "bytes": 209349
+        }
+      ]
+    },
+    {
+      "character": "anu",
+      "emotion": "shocked",
+      "source": "docs/art-sources/anunaki-drawn-v2/anu-reactions-sheet.png",
+      "sourceRow": 2,
+      "distinctDrawnCels": 4,
+      "celPixelSha256": [
+        "ef0e3aad9404e876787d05c98523d52c8bbe73dd82a01e25b2b3906650e9c0f1",
+        "727db2e0bdea6ea57e818ca75b3632dd62b00ff5d8cf04385f63a7055d59a6c6",
+        "fa0e51eddaea765a4739646176bdd25c65ae36aa2ea3ba38b02e09f6014d9df9",
+        "6f29aa1322b804ed128b3c11cd10dc46c12bfe60fbae6564bedf7d9fc2942ce6"
+      ],
+      "sequence": [
+        0,
+        1,
+        2,
+        3,
+        2,
+        1
+      ],
+      "durationsMs": [
+        180,
+        130,
+        250,
+        180,
+        130,
+        130
+      ],
+      "size": [
+        256,
+        256
+      ],
+      "files": [
+        {
+          "path": "assets/reactions/anunaki-drawn-v2/anu/shocked.webp",
+          "sha256": "5450ae870a7530eb3c6ddbfbe7f9e7e35673b6450c68c87aa48e9eac1dfb920a",
+          "bytes": 22730
+        },
+        {
+          "path": "assets/reactions/anunaki-drawn-v2/anu/shocked-animated.webp",
+          "sha256": "644893dcd0e766ae1f201c2e32c855e44989511dbe0cc911636dcc094d82fae4",
+          "bytes": 126700
+        },
+        {
+          "path": "assets/reactions/anunaki-drawn-v2/anu/shocked.gif",
+          "sha256": "50fe2124c6343b8a6071c08985e58ccebd63e44ff6e267a87a448dca08a0491b",
+          "bytes": 213685
+        }
+      ]
+    },
+    {
+      "character": "anu",
+      "emotion": "respect",
+      "source": "docs/art-sources/anunaki-drawn-v2/anu-reactions-sheet.png",
+      "sourceRow": 3,
+      "distinctDrawnCels": 4,
+      "celPixelSha256": [
+        "ef5c2a21e0142d2d812f0164424a3e924a99910f279c8ffa47370536ee739101",
+        "c8e6fab358ac26d4c3a0092e902a981abcc4b2b82b932e0370821cd160d7b7d6",
+        "a9a3f255e1ae0eb4c8d2f661c8abebad61f8e678f711a2e75376c79d11c2969c",
+        "97e061a85a7df87293e0cff8ef5ed8dc37e1dc9cb1ac2f233a76045f2a27fe99"
+      ],
+      "sequence": [
+        0,
+        1,
+        2,
+        3,
+        2,
+        1
+      ],
+      "durationsMs": [
+        180,
+        130,
+        250,
+        180,
+        130,
+        130
+      ],
+      "size": [
+        256,
+        256
+      ],
+      "files": [
+        {
+          "path": "assets/reactions/anunaki-drawn-v2/anu/respect.webp",
+          "sha256": "543985d6fc4df0c1715393f95be967dadbb497cb0581b61b7c5495ca5c1d7fb8",
+          "bytes": 20018
+        },
+        {
+          "path": "assets/reactions/anunaki-drawn-v2/anu/respect-animated.webp",
+          "sha256": "42d40f83882e45382b8f5f5474dce3a43e3f71748bc37bb85b186274844f6f2a",
+          "bytes": 116474
+        },
+        {
+          "path": "assets/reactions/anunaki-drawn-v2/anu/respect.gif",
+          "sha256": "7961e19be74b1a477bcc6c49107d0c606a948a9ada137e7f6b3a79602eb62170",
+          "bytes": 201437
+        }
+      ]
+    },
+    {
+      "character": "anu",
+      "phase": "idle",
+      "source": "docs/art-sources/anunaki-drawn-v2/anu-boss-sheet.png",
+      "sourceRow": 0,
+      "distinctDrawnCels": 4,
+      "celPixelSha256": [
+        "c0e424435c06f5e12cc89838f2108f122c7475d4555b2901227c0f14019e30b8",
+        "09bb9e4704f71a0561dcdca5f156a8ae0a22dd63839ee1b600a4861cedbac94e",
+        "0eaa2b2d1540ea8ca566f08c5bdae970c87d44e802f15b72b583850bdeff4b9a",
+        "e43142dfdf47e07061acb4d64b20116cdc8ca784f4780f7d1943c19ed9e61cee"
+      ],
+      "sequence": [
+        0,
+        1,
+        2,
+        3,
+        2,
+        1
+      ],
+      "durationsMs": [
+        190,
+        170,
+        200,
+        190,
+        170,
+        200
+      ],
+      "size": [
+        320,
+        480
+      ],
+      "files": [
+        {
+          "path": "assets/boss-raid/anunaki-motion-v1/boss-anu-still.webp",
+          "sha256": "96c9e304f5f6725244db110667fa499197be91b751274d4bc0804376d438fcc8",
+          "bytes": 43426
+        },
+        {
+          "path": "assets/boss-raid/anunaki-motion-v1/boss-anu-idle.webp",
+          "sha256": "220da3e1d2fd156e6c74589b3a79db5e0a4777332c015f5281c821102cac9fa2",
+          "bytes": 268292
+        }
+      ]
+    },
+    {
+      "character": "anu",
+      "phase": "windup",
+      "source": "docs/art-sources/anunaki-drawn-v2/anu-boss-sheet.png",
+      "sourceRow": 1,
+      "distinctDrawnCels": 4,
+      "celPixelSha256": [
+        "f41ae8f762ff633c6b6eec743864f1f2a1e858751d0666d35fdd6edf16089f72",
+        "0513ef5cf52abcd63d02e18eed0d2c7bdfc95718edad47355295a3e8e7d399b5",
+        "b0f086c1687f58710ef6371d1af75a0892644bd8ebf6b82d16bd8eaa84235089",
+        "2c69d55746b5cf4d5871e9b6a1758bcb1254a0c9c1167c7f5391483bed49ebff"
+      ],
+      "sequence": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "durationsMs": [
+        180,
+        180,
+        240,
+        280
+      ],
+      "size": [
+        320,
+        480
+      ],
+      "files": [
+        {
+          "path": "assets/boss-raid/anunaki-motion-v1/boss-anu-windup-still.webp",
+          "sha256": "d8a72b559bd016555808d1d8161ce6d1144c2b2749b2409bd28b36dc19c9b3a1",
+          "bytes": 39876
+        },
+        {
+          "path": "assets/boss-raid/anunaki-motion-v1/boss-anu-windup.webp",
+          "sha256": "f11d582be34ebe4538d2405d6ee715f4f71ca25b3c05618b91b75178df494028",
+          "bytes": 187646
+        }
+      ]
+    },
+    {
+      "character": "anu",
+      "phase": "strike",
+      "source": "docs/art-sources/anunaki-drawn-v2/anu-boss-sheet.png",
+      "sourceRow": 2,
+      "distinctDrawnCels": 4,
+      "celPixelSha256": [
+        "21106490cdb675d181ebd2ca918a88d047f448167304a788d11b556ce291f852",
+        "c5a204125bbd5d5900e644c0c8d31cee365f8e269163946088f8e3dd1c53a995",
+        "c59d4de5b7226ec847337c7cbfdec16c5df890c80ea2c23cb426fb781e255682",
+        "7c0bf5c801302651cd9abca355d08deec31fa577771737809817ea3a6433f6d5"
+      ],
+      "sequence": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "durationsMs": [
+        110,
+        110,
+        180,
+        120
+      ],
+      "size": [
+        320,
+        480
+      ],
+      "files": [
+        {
+          "path": "assets/boss-raid/anunaki-motion-v1/boss-anu-strike-still.webp",
+          "sha256": "88c838604cc4e7e560e0f7150ec3f3db05488b0fd32c8ec1924a0cfef5e6db3c",
+          "bytes": 38596
+        },
+        {
+          "path": "assets/boss-raid/anunaki-motion-v1/boss-anu-strike.webp",
+          "sha256": "06063a235ed91577e860e5bc96caea4b733424963e507876340de14227a1cf54",
+          "bytes": 181740
+        }
+      ]
+    },
+    {
+      "character": "anu",
+      "phase": "recoil",
+      "source": "docs/art-sources/anunaki-drawn-v2/anu-boss-sheet.png",
+      "sourceRow": 3,
+      "distinctDrawnCels": 4,
+      "celPixelSha256": [
+        "a7f4e3edd62f835c014c207ca78d030bfe2d2bae18a4f5e6e4f1901252f35670",
+        "ab8abab481df41b31e5af29b50026f9a5cf9b835d0f0e1419e940f8349b15f3d",
+        "4d8549641a071d19dd0cdd326f4ebbb0680bc0079d3e0bf3f2e9d1873bf81dff",
+        "3f4cff2d36c9b02e2e25e2a7d9cb29268cdcbe33b19b639a5c61e62d67bddab8"
+      ],
+      "sequence": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "durationsMs": [
+        140,
+        180,
+        160,
+        160
+      ],
+      "size": [
+        320,
+        480
+      ],
+      "files": [
+        {
+          "path": "assets/boss-raid/anunaki-motion-v1/boss-anu-recoil-still.webp",
+          "sha256": "5a9be514efcee842af9c9e20c4d329e061291d663df151073453e4345eafeaef",
+          "bytes": 37526
+        },
+        {
+          "path": "assets/boss-raid/anunaki-motion-v1/boss-anu-recoil.webp",
+          "sha256": "51ee88cdff41ef8ac2e2c927d800aaf37b24b541909151ad68d8c75307e1c908",
+          "bytes": 164584
+        }
+      ]
+    },
+    {
+      "character": "utu",
+      "phase": "encounter-idle",
+      "source": "docs/art-sources/anunaki-drawn-v2/anunaki-npc-sheet-a.png",
+      "sourceRow": 0,
+      "distinctDrawnCels": 4,
+      "celPixelSha256": [
+        "d0629c4f394a272b36a04a852bfeda2f5944f3f3afd0d84e5d390e7e46fa6253",
+        "b02637ebdc3c3b99183e6e26932a66e63694cf0cc85f37b99b1f46f8f56bf3a8",
+        "1b6b9ea54023afc4d7043947c7efe4ee6cdf0f4126fe123c85ba62ad6c0024c4",
+        "4e9012b59c66236bfde264f7641b365f60aa20eb50aa581a6939a6077a281071"
+      ],
+      "sequence": [
+        0,
+        1,
+        2,
+        3,
+        2,
+        1
+      ],
+      "durationsMs": [
+        300,
+        180,
+        210,
+        300,
+        180,
+        180
+      ],
+      "size": [
+        320,
+        480
+      ],
+      "files": [
+        {
+          "path": "assets/boss-raid/anunaki-motion-v1/utu-still.webp",
+          "sha256": "c26bea1b86221df2c80f8670a9142b5fb4ff217e67d8b83334bf9d814455dc95",
+          "bytes": 35670
+        },
+        {
+          "path": "assets/boss-raid/anunaki-motion-v1/utu-idle.webp",
+          "sha256": "f994e00ffce77cb9f90425098672dacb5f1671e4231850abe868e7e6cbb547ba",
+          "bytes": 258122
+        }
+      ]
+    },
+    {
+      "character": "enki",
+      "phase": "encounter-idle",
+      "source": "docs/art-sources/anunaki-drawn-v2/anunaki-npc-sheet-a.png",
+      "sourceRow": 1,
+      "distinctDrawnCels": 4,
+      "celPixelSha256": [
+        "e802dc0e3db06c8bfedc990d39840f27b2dfc9e58bfccb45d6325528bf468ab2",
+        "f978a9961cafcedc6cd8daf66f224f7d59d6edbeeb2449d042ae0a858550aadb",
+        "7d2cf6f56d83ade0cedb83b60816949bc1d1deccdb75d11b1bcfbcb245616120",
+        "f93ec7e674b5e7c128b4f6017795c476e37e57c90e289d700c0218a2212e591a"
+      ],
+      "sequence": [
+        0,
+        1,
+        2,
+        3,
+        2,
+        1
+      ],
+      "durationsMs": [
+        300,
+        180,
+        210,
+        300,
+        180,
+        180
+      ],
+      "size": [
+        320,
+        480
+      ],
+      "files": [
+        {
+          "path": "assets/boss-raid/anunaki-motion-v1/enki-still.webp",
+          "sha256": "85cca54e60eb9485f78354b94cfe2c853bf12f45ff4a88a2caefe669529c1541",
+          "bytes": 36146
+        },
+        {
+          "path": "assets/boss-raid/anunaki-motion-v1/enki-idle.webp",
+          "sha256": "21caeba59139555e8d6c3359079ccacbe3f106e321cac2300a56a91ba153963b",
+          "bytes": 261910
+        }
+      ]
+    },
+    {
+      "character": "nabu",
+      "phase": "encounter-idle",
+      "source": "docs/art-sources/anunaki-drawn-v2/anunaki-npc-sheet-a.png",
+      "sourceRow": 2,
+      "distinctDrawnCels": 4,
+      "celPixelSha256": [
+        "16380c3f47b4fdbe5755e65a6d6e8e205c52d932569fdd6c9966443de16cc63d",
+        "e5dda8874a27f82a417e9c570cc55e1729ac0e79e17d722c07b820a57453dfcb",
+        "e0a90355e52f1daf6ec3fccbb07d15f406cd404b470ec460b0dd25db7ec35772",
+        "327b8294f8fa6b3e31ea6ffd11b44ab38b1a43a62c426088a79f372f004ccf8c"
+      ],
+      "sequence": [
+        0,
+        1,
+        2,
+        3,
+        2,
+        1
+      ],
+      "durationsMs": [
+        300,
+        180,
+        210,
+        300,
+        180,
+        180
+      ],
+      "size": [
+        320,
+        480
+      ],
+      "files": [
+        {
+          "path": "assets/boss-raid/anunaki-motion-v1/nabu-still.webp",
+          "sha256": "836e4e7549e18727700cc01650cc4b49b6856caf554f24151b8ef2feedc78c8a",
+          "bytes": 32454
+        },
+        {
+          "path": "assets/boss-raid/anunaki-motion-v1/nabu-idle.webp",
+          "sha256": "01f2e99085fa0559b0772d5253c4c7175347125e1a20bd4c46fdb666447da2f5",
+          "bytes": 265682
+        }
+      ]
+    },
+    {
+      "character": "ninhursag",
+      "phase": "encounter-idle",
+      "source": "docs/art-sources/anunaki-drawn-v2/anunaki-npc-sheet-a.png",
+      "sourceRow": 3,
+      "distinctDrawnCels": 4,
+      "celPixelSha256": [
+        "3b1587ff9aa965fd9998c80e329dacb6ff098d898f81574eb71a93de8336a359",
+        "801ebda246f8c5fa7509b0601741b5b27ab08c9d2c15fc6a69bd592e4123c262",
+        "a33ef5ee413059b452d814ad474ef204c50c497daa235828a2bf457d9070a7b1",
+        "487936edc7293fcd93e6e0959dd63e477a58d950bbe13bc62a88d054dbe3d8c3"
+      ],
+      "sequence": [
+        0,
+        1,
+        2,
+        3,
+        2,
+        1
+      ],
+      "durationsMs": [
+        300,
+        180,
+        210,
+        300,
+        180,
+        180
+      ],
+      "size": [
+        320,
+        480
+      ],
+      "files": [
+        {
+          "path": "assets/boss-raid/anunaki-motion-v1/ninhursag-still.webp",
+          "sha256": "3765d85065ee65b57c190454d7a9051904dda8104db6a81300c79c99bde93079",
+          "bytes": 46194
+        },
+        {
+          "path": "assets/boss-raid/anunaki-motion-v1/ninhursag-idle.webp",
+          "sha256": "f1d4280026b93b11013fb9703969b10b6a6c429c7bd73d84629d20c293707043",
+          "bytes": 314244
+        }
+      ]
+    },
+    {
+      "character": "inanna",
+      "phase": "encounter-idle",
+      "source": "docs/art-sources/anunaki-drawn-v2/anunaki-npc-sheet-b.png",
+      "sourceRow": 0,
+      "distinctDrawnCels": 4,
+      "celPixelSha256": [
+        "a2a4acddd8b2730444938cbfef1238745e6ee0b0dd437fab996cd518c366ce77",
+        "ae6285a863fcdf453765326691f10583c0ded8e7d2ffc35b1bcfec6140cf54d4",
+        "bef29c626b9278dc3cf749cb4c92c26c817247158db958715397f256baeee9b7",
+        "c50f572c418ec56b8ef422a625562fa009f7d23d8c575f80fc8512446f3e6cfb"
+      ],
+      "sequence": [
+        0,
+        1,
+        2,
+        3,
+        2,
+        1
+      ],
+      "durationsMs": [
+        300,
+        180,
+        210,
+        300,
+        180,
+        180
+      ],
+      "size": [
+        320,
+        480
+      ],
+      "files": [
+        {
+          "path": "assets/boss-raid/anunaki-motion-v1/inanna-still.webp",
+          "sha256": "0bc77b4d3da0741a529812d53ab7e0b7d36dfc69874e01ce8c163f2ba76869db",
+          "bytes": 41958
+        },
+        {
+          "path": "assets/boss-raid/anunaki-motion-v1/inanna-idle.webp",
+          "sha256": "a1be3a2e74041e9fe13a722bbc11ec8a1d2d79f64bf91d7e28af5016f440953a",
+          "bytes": 291170
+        }
+      ]
+    },
+    {
+      "character": "enlil",
+      "phase": "encounter-idle",
+      "source": "docs/art-sources/anunaki-drawn-v2/anunaki-npc-sheet-b.png",
+      "sourceRow": 1,
+      "distinctDrawnCels": 4,
+      "celPixelSha256": [
+        "c84b670352edc12bc6dc8a8c14909cc9ae78e9fe4a1417f20eb6659c4032cc92",
+        "ade9b806c7345928410e7afb59bd71ea4d43d0cf923a5995147fae917ce79342",
+        "b1a62da4eaab4cd315e1130ef2e2fc9f43b6be337f86c84af9cb57427449b42a",
+        "9643c505a9c297806e51f80616202aa65ff2a4bbd0c41be5005d415d153bb75b"
+      ],
+      "sequence": [
+        0,
+        1,
+        2,
+        3,
+        2,
+        1
+      ],
+      "durationsMs": [
+        300,
+        180,
+        210,
+        300,
+        180,
+        180
+      ],
+      "size": [
+        320,
+        480
+      ],
+      "files": [
+        {
+          "path": "assets/boss-raid/anunaki-motion-v1/enlil-still.webp",
+          "sha256": "2b53f3a3f1c670f741e1b68287782e193cf830142601c266216238dc50941cc8",
+          "bytes": 47900
+        },
+        {
+          "path": "assets/boss-raid/anunaki-motion-v1/enlil-idle.webp",
+          "sha256": "2e9cecd60df9f31e2ec2648e7eb7ab03f9ff1a50ed16429fb055e6789a3ef702",
+          "bytes": 325164
+        }
+      ]
+    },
+    {
+      "character": "ereshkigal",
+      "phase": "encounter-idle",
+      "source": "docs/art-sources/anunaki-drawn-v2/anunaki-npc-sheet-b.png",
+      "sourceRow": 2,
+      "distinctDrawnCels": 4,
+      "celPixelSha256": [
+        "476d2c6e827e73e15794f9a72ae05ce342d835a73113986a623f94e54856ee74",
+        "0106a0ae2ecdc3af1408fe9e20758a84d6b22fa44402b2e0af52f74d86cdeb49",
+        "42a43a2751c0687cc22a6e8b0ad2c482c525657c119cd56d0dd2b8609820ad46",
+        "db7ef38c42707a79b79b6554fa3f9d5acad088990aaea8213e2b01a4a085f74c"
+      ],
+      "sequence": [
+        0,
+        1,
+        2,
+        3,
+        2,
+        1
+      ],
+      "durationsMs": [
+        300,
+        180,
+        210,
+        300,
+        180,
+        180
+      ],
+      "size": [
+        320,
+        480
+      ],
+      "files": [
+        {
+          "path": "assets/boss-raid/anunaki-motion-v1/ereshkigal-still.webp",
+          "sha256": "ac3868fdbef0565e3b646f06085b3884802d63a4d789ce95aab99da0ecf636cc",
+          "bytes": 41404
+        },
+        {
+          "path": "assets/boss-raid/anunaki-motion-v1/ereshkigal-idle.webp",
+          "sha256": "6fe20ede835b2492ae5ea2d520108a47a5e5f0e2f695fbac6c580741e9c59415",
+          "bytes": 290036
+        }
+      ]
+    },
+    {
+      "character": "caucus-mountaineer",
+      "phase": "encounter-idle",
+      "source": "docs/art-sources/anunaki-drawn-v2/anunaki-npc-sheet-b.png",
+      "sourceRow": 3,
+      "distinctDrawnCels": 4,
+      "celPixelSha256": [
+        "8a8bc22a42771251c3f97e42e4fd578f3aa623bbddc87207d9a73f87122e94b3",
+        "e0d33e29f6c631dcd612b162f98b7dc89006bbb6ac86aae44f1dd809702757e7",
+        "b7a49f23a6eabefdd5a63797d9610568adb4047ae4b77fbb414794ae6fd2faf9",
+        "27d1bb8d909102f8abda6d02c08c3bdfec089518a5412b8ece287c03b1d142b3"
+      ],
+      "sequence": [
+        0,
+        1,
+        2,
+        3,
+        2,
+        1
+      ],
+      "durationsMs": [
+        300,
+        180,
+        210,
+        300,
+        180,
+        180
+      ],
+      "size": [
+        320,
+        480
+      ],
+      "files": [
+        {
+          "path": "assets/boss-raid/anunaki-motion-v1/caucus-mountaineer-still.webp",
+          "sha256": "d5b0bb14228471c995885301dcc723fb594224d387dd52fa433fe645ec076570",
+          "bytes": 40576
+        },
+        {
+          "path": "assets/boss-raid/anunaki-motion-v1/caucus-mountaineer-idle.webp",
+          "sha256": "85ef407134850bcbb5848ec2fac173486c3a23e73bd3c97376953552d67d0608",
+          "bytes": 244180
+        }
+      ]
+    },
+    {
+      "character": "yakub",
+      "phase": "encounter-idle",
+      "source": "docs/art-sources/anunaki-drawn-v2/yakub-fullbody-sheet.png",
+      "sourceRow": 0,
+      "distinctDrawnCels": 4,
+      "celPixelSha256": [
+        "af58cf1ffb8947f6972980fa216d89164ff6783f08f1b38bf9d0426081f5cba6",
+        "13d442623c14ffc94dd59e1ae725a80e7a2ea714e5b5030440c1a9aee96fcf5e",
+        "6c858d24201dd5756d757fbd5ff38154dfb1e9dbdc7fa56a897d15bb87040e66",
+        "c2149f301b9a4a5971fe698615016d927d52faa2bf156f6e815115e4d27c6d2e"
+      ],
+      "sequence": [
+        0,
+        1,
+        2,
+        3,
+        2,
+        1
+      ],
+      "durationsMs": [
+        300,
+        180,
+        210,
+        300,
+        180,
+        180
+      ],
+      "size": [
+        320,
+        480
+      ],
+      "files": [
+        {
+          "path": "assets/boss-raid/anunaki-motion-v1/yakub-still.webp",
+          "sha256": "af7e6fd1eda27f1c8c9ce05abe890f09d9a9d831facbb177ac792a85f8c1f87f",
+          "bytes": 38112
+        },
+        {
+          "path": "assets/boss-raid/anunaki-motion-v1/yakub-idle.webp",
+          "sha256": "07b91d52713d0c0ff5d45dbc2c81f66818eaf6adc8e5513f42ed394f35b25edf",
+          "bytes": 213336
+        }
+      ]
+    },
+    {
+      "character": "anu",
+      "phase": "encounter-idle",
+      "source": "docs/art-sources/anunaki-drawn-v2/anu-boss-sheet.png",
+      "sourceRow": 0,
+      "distinctDrawnCels": 4,
+      "celPixelSha256": [
+        "c0e424435c06f5e12cc89838f2108f122c7475d4555b2901227c0f14019e30b8",
+        "09bb9e4704f71a0561dcdca5f156a8ae0a22dd63839ee1b600a4861cedbac94e",
+        "0eaa2b2d1540ea8ca566f08c5bdae970c87d44e802f15b72b583850bdeff4b9a",
+        "e43142dfdf47e07061acb4d64b20116cdc8ca784f4780f7d1943c19ed9e61cee"
+      ],
+      "sequence": [
+        0,
+        1,
+        2,
+        3,
+        2,
+        1
+      ],
+      "durationsMs": [
+        300,
+        180,
+        210,
+        300,
+        180,
+        180
+      ],
+      "size": [
+        320,
+        480
+      ],
+      "files": [
+        {
+          "path": "assets/boss-raid/anunaki-motion-v1/anu-still.webp",
+          "sha256": "96c9e304f5f6725244db110667fa499197be91b751274d4bc0804376d438fcc8",
+          "bytes": 43426
+        },
+        {
+          "path": "assets/boss-raid/anunaki-motion-v1/anu-idle.webp",
+          "sha256": "acd3e31a979fb0cef4d57d596e9ca551b820e08f98bdda6faad37ee9d0ad7796",
+          "bytes": 268292
+        }
+      ]
+    }
+  ],
+  "deliveryOptimization": "See docs/events/anunaki-media-optimization.json for retained input hashes, output hashes and encoding settings. Source art, dimensions and authored timing are unchanged."
+}

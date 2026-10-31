@@ -193,19 +193,33 @@ for (const owner of ['player', 'cpu'] as const) {
   });
 }
 
-test('House trial character copies remain explicit, limited to authored player grants', () => {
+test('House and Kumite trial character copies remain explicit, limited to authored player grants', () => {
   const exceptions: string[] = [];
+  const kumiteExceptions: string[] = [];
   for (const chapter of storyContent.chapters) for (const node of chapter.nodes) {
     if (node.kind !== 'battle') continue;
     const effects = [...(node.encounter.modifiers?.reinforcements ?? []),
       ...(node.encounter.phases ?? []).flatMap(p => (p.onEnter ?? []).filter(e => e.kind === 'reinforcement'))];
     for (const effect of effects) if (effect.allowDuplicate) {
       assert.equal(effect.owner, 'player');
-      assert(chapter.id.startsWith('squabble-house-'));
-      exceptions.push(node.id);
+      if (chapter.id === 'kumite-break-the-bracket') {
+        kumiteExceptions.push(`${node.id}:${effect.cardId}:${effect.round}`);
+      } else {
+        assert(chapter.id.startsWith('squabble-house-'));
+        exceptions.push(node.id);
+      }
     }
   }
   assert.equal(exceptions.length, 12, 'only the two trial grants in each of the six House chapters allow copies');
+  assert.deepEqual(kumiteExceptions, [
+    'kumite-break-the-bracket-belt-check:dragonflyjones:1',
+    'kumite-break-the-bracket-find-the-glo:leroy:1',
+    'kumite-break-the-bracket-courtesy:undercova:1',
+    'kumite-break-the-bracket-arena-is-ours:bushedo-brown:1',
+    'kumite-break-the-bracket-arena-is-ours:leroy:2',
+    'kumite-break-the-bracket-i-got-the-glo:leroy:1',
+    'kumite-break-the-bracket-i-got-the-glo:bushedo-brown:2',
+  ]);
   const chapter = storyContent.chapters.find(c => c.id === 'squabble-house-last-waffle')!;
   const battle = chapter.nodes.find(n => n.kind === 'battle')!;
   assert.equal(battle.kind, 'battle');

@@ -10,7 +10,7 @@ import {fileURLToPath} from 'node:url';
 const root=fileURLToPath(new URL('../public/',import.meta.url));
 test('every eligible character has dedicated correctly proportioned art with no portrait fallbacks',async()=>{
  const eligible=cardCatalog.filter(c=>(c.kind??'character')==='character' && (['Mythical','Legendary','Epic'].includes(c.rarity)||CHARACTER_STYLE_SETS[c.catalogId]||KUMITE_CARD_REWARDS.some(r=>r.cardId===c.catalogId)));
- assert.equal(eligible.length,128);
+ assert.equal(eligible.length,128 + cardCatalog.filter(card=>card.faction==='Anunaki').length);
  for(const card of eligible){const set=CHARACTER_STYLE_SETS[card.catalogId];assert(set,card.name);
   for(const [kind,ratio] of [['banner',3],['deckCover',2/3]] as const){const file=set[kind];assert(file?.startsWith('assets/cosmetics/'),card.name+' '+kind);await access(root+file);const m=await sharp(root+file).metadata();assert.equal(m.format,'webp');assert(m.width&&m.height);assert(Math.abs(m.width/m.height-ratio)<(CHARACTER_SIGNATURE_ARTWORK[card.catalogId]?0.01:0.05),card.name+' aspect ratio');}
  }
