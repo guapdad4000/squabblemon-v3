@@ -1,5 +1,7 @@
 # Kumite Breakthrough PvP launch preparation
 
+Implementation update: the ten Anunaki adapters and efficient room owner, delta protocol and PostgreSQL journal adapter are now implemented locally. See [current implementation and evidence boundaries](kumite-breakthrough-anunaki-efficient-rooms.md). The baseline counts and proposed work below are historical; hosted public PvP remains closed.
+
 Audited November 2, 2026. Baseline: `ddf77549cd1323d1ab5b30e6a220e5ef8a8d26ad`.
 
 **Live PvP is not ready to open.** The shipped mode is explicit, reward-free CPU practice. This preparation adds a repeatable source preflight and repairs practice → edit deck → return. It does not approve public PvP or change the weekly tournament rules.

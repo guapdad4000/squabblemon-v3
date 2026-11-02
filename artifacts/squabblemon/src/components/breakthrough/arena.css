@@ -2852,3 +2852,36 @@
     padding: 2px 1px;
   }
 }
+
+/* Persistent lane resources do not intercept play or inspection targets. */
+.bt-ancient-tablet {
+  position: absolute;
+  z-index: 4;
+  left: 3%;
+  display: grid;
+  justify-items: center;
+  pointer-events: none;
+  width: 36px;
+  color: #fff;
+  font: 700 9px/1.2 sans-serif;
+  text-shadow: 0 1px 3px #000;
+}
+.bt-ancient-tablet img {
+  object-fit: contain;
+  width: 32px;
+  height: 44px;
+}
+.bt-tablet-player {
+  bottom: 22%;
+}
+.bt-tablet-opponent {
+  top: 14%;
+}
+
+.bt-deploy-explainer {
+  pointer-events: none;
+}
+.bt-deploy-explainer > button,
+.bt-deploy-explainer details {
+  pointer-events: auto;
+}

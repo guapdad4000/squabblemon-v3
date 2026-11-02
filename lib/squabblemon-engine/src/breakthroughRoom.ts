@@ -559,6 +559,7 @@ export interface BreakthroughRoomView {
     lane: Lane;
     readyAt: number;
   }[];
+  tablets: { side: Side; lane: Lane }[];
   events: BattleEvent[];
 }
 /** Explicit public whitelist. Never spread GameState, roster definitions, players or events. */
@@ -693,8 +694,21 @@ export function projectBreakthroughRoom(
       lane: hazard.lane,
       readyAt: hazard.readyAt,
     })),
+    tablets: sides.flatMap((side) =>
+      (game.anunaki?.tablets[side] ?? []).map((lane) => ({ side, lane })),
+    ),
     events,
   };
+}
+// PostgreSQL JSONB normalizes object key order; replay compares values, retaining array order.
+function canonicalJson(value: unknown): string {
+  if (Array.isArray(value)) return `[${value.map(canonicalJson).join(',')}]`;
+  if (value && typeof value === 'object')
+    return `{${Object.entries(value)
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([key, v]) => `${JSON.stringify(key)}:${canonicalJson(v)}`)
+      .join(',')}}`;
+  return JSON.stringify(value);
 }
 /** Replay retained journal suffix against its matching checkpoint, using the same pinned ruleset. */
 export function replayBreakthroughRoomJournal(
@@ -723,7 +737,7 @@ export function replayBreakthroughRoomJournal(
             entry.envelope,
             entry.serverTimeMs,
           );
-    if (JSON.stringify(mutation.journal) !== JSON.stringify(entry))
+    if (canonicalJson(mutation.journal) !== canonicalJson(entry))
       fail(
         'invalid-journal',
         'Journal replay differs from the pinned reducer.',

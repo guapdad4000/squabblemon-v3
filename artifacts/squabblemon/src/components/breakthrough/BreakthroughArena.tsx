@@ -85,6 +85,13 @@ type Props = {
   onExit(): void;
 };
 const LANES = [0, 1, 2] as const;
+// Catalog portraits are already base-prefixed; runtime forms may use asset-relative paths.
+const arenaPortrait = (path: string) =>
+  battlePortraitUrl(
+    path.startsWith('/') || /^https?:\/\//.test(path)
+      ? path
+      : getAssetUrl(path),
+  );
 /** The finished transition releases its atlas without changing its authored lifetime. */
 function ArenaFireTransition() {
   const [finished, setFinished] = useState(false);
@@ -986,6 +993,25 @@ export default function BreakthroughArena({
                         style={trackPosition(event.position ?? 0.5)}
                       />
                     ))}
+                {(['player', 'opponent'] as const).map((side) =>
+                  game.anunaki?.tablets[side].includes(lane) ? (
+                    <span
+                      key={`tablet-${side}`}
+                      className={`bt-ancient-tablet bt-tablet-${side}`}
+                      role="img"
+                      aria-label={`${side === 'player' ? 'Your' : 'Opponent'} Ancient Tablet ready in lane ${lane + 1}`}
+                    >
+                      <img
+                        src={getAssetUrl('assets/items/ancient-tablet.webp')}
+                        alt=""
+                        width="32"
+                        height="44"
+                        draggable={false}
+                      />
+                      <b>{side === 'player' ? 'YOU' : 'OPP'}</b>
+                    </span>
+                  ) : null,
+                )}
                 {game.hazards
                   .filter((hazard) => hazard.lane === lane)
                   .map((hazard, _index, local) => {
@@ -1050,9 +1076,9 @@ export default function BreakthroughArena({
                           <img
                             src={
                               unit.art
-                                ? battlePortraitUrl(getAssetUrl(unit.art))
+                                ? arenaPortrait(unit.art)
                                 : card?.art
-                                  ? battlePortraitUrl(getAssetUrl(card.art))
+                                  ? arenaPortrait(card.art)
                                   : undefined
                             }
                             alt=""
@@ -1118,9 +1144,9 @@ export default function BreakthroughArena({
                           className={lastHit ? 'bt-art-recoil' : undefined}
                           src={
                             unit.art
-                              ? battlePortraitUrl(getAssetUrl(unit.art))
+                              ? arenaPortrait(unit.art)
                               : card?.art
-                                ? battlePortraitUrl(getAssetUrl(card.art))
+                                ? arenaPortrait(card.art)
                                 : undefined
                           }
                           alt=""
@@ -1265,7 +1291,9 @@ export default function BreakthroughArena({
                 : '')}
         </div>
         {inspectedCard && active && (
-          <aside className="bt-mini-explainer">
+          <aside
+            className={`bt-mini-explainer ${selected ? 'bt-deploy-explainer' : ''}`}
+          >
             <button
               aria-label="Close fighter explanation"
               onClick={() => {

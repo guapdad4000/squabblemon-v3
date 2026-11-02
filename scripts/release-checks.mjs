@@ -80,6 +80,8 @@ export const criticalSuites = [
     'lib/squabblemon-engine/breakthroughWave2.test.ts',
     'lib/squabblemon-engine/breakthroughPeriodic.test.ts',
     'lib/squabblemon-engine/breakthroughRoom.test.ts',
+    'lib/squabblemon-engine/breakthroughAnunaki.test.ts',
+    'lib/squabblemon-engine/breakthroughRoomOwner.test.ts',
     'lib/squabblemon-engine/breakthroughRelease.test.ts',
     sourceTest('components/breakthrough/practiceDecks.test.ts'),
     sourceTest('components/breakthrough/productionBoundary.test.ts'),

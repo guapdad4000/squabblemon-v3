@@ -1,5 +1,7 @@
 # Breakthrough: Anunaki conversion plan
 
+Implementation update: the ten Anunaki adapters and efficient room owner, delta protocol and PostgreSQL journal adapter are now implemented locally. See [current implementation and evidence boundaries](kumite-breakthrough-anunaki-efficient-rooms.md). The baseline counts and proposed work below are historical; hosted public PvP remains closed.
+
 Prepared November 2, 2026 against `origin/main` / `ddf77549cd1323d1ab5b30e6a220e5ef8a8d26ad`. This is a source-inspected implementation plan. It adds no adapters, gameplay, completed acceptance evidence or launch approval.
 
 The October 29 every-card release policy remains binding for public PvP: every current deck-legal collectible and its generated objects must be playable and usable; a restricted-card PvP launch is not the policy. The later shipped release separately permits explicit reward-free CPU practice. See the [current PvP worklist](kumite-breakthrough-pvp-launch-readiness.md). At this baseline the canonical catalog contains **311 cards; Breakthrough has 301 reviewed adapters and 10 missing Anunaki adapters**. `BREAKTHROUGH_PUBLIC_LAUNCH_APPROVED` is false and `BREAKTHROUGH_FULL_CATALOG_EVIDENCE` is null. Completing this plan removes the adapter gap; authenticated PvP, progression, device and deployment gates remain separate.

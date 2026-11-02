@@ -98,19 +98,18 @@ function invariant(s: GameState, context: string) {
     assert(u.position >= 0 && u.position <= 1, `${context}: track bounds`);
   }
 }
-test('reviewed registry retains all 301 prior cards while 10 new Anunaki cards await conversion', () => {
+test('reviewed registry covers all 311 canonical cards', () => {
   assert.equal(cardCatalog.length, 311);
-  assert.equal(BREAKTHROUGH_ROSTER.length, 301);
+  assert.equal(BREAKTHROUGH_ROSTER.length, 311);
   assert.deepEqual(
     [...BREAKTHROUGH_ROSTER.map((c) => c.id)].sort(),
     cardCatalog
-      .filter((c) => !isAnunakiCardId(c.catalogId))
       .map((c) => c.catalogId)
       .sort(),
   );
   assert(
     BREAKTHROUGH_COMPATIBILITY.every(
-      (c) => c.supported === !isAnunakiCardId(c.cardId),
+      (c) => c.supported,
     ),
   );
   assert.equal(BREAKTHROUGH_STARTER_DECKS.length, 15);

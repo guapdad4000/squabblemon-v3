@@ -4,11 +4,13 @@ export const BREAKTHROUGH_PUBLIC_LAUNCH_APPROVED: boolean = false;
 export const BREAKTHROUGH_RULE_INPUT_SHA256: Readonly<Record<string, string>> =
   {
     'breakthrough.ts':
-      'b323bbd94015434923b83e6e07d15998a1e5bd978341ce2c533788a9c15d1ef4',
+      '487cd4b5266f1de0bf9d7b277b54a125f2ce2665f099c032fbef6754381eabab',
+    'breakthroughAnunaki.ts':
+      '4ca5cca3104378f3fad08bcbd9267bfd9986691d94a88ccdb87b2870d7233839',
     'breakthroughBlockbusters.ts':
       '0b2911eac133733c493059b982f808c3545b8d32875c21ce27cab224418b3348',
     'breakthroughCatalog.ts':
-      '5141b5b65deb5a9533525d25078140b446045c6ac4588bca10176aeac07ee3d3',
+      '6409c168a24bedae04cf3f37db4d09bc948c3424536626dc808ec7600f635b42',
     'breakthroughCommunity.ts':
       '51be659c9874a50f784ec4c5810f30b686bb5fc9c7baa8d50e767ded710af40e',
     'breakthroughContracts.ts':
@@ -30,7 +32,11 @@ export const BREAKTHROUGH_RULE_INPUT_SHA256: Readonly<Record<string, string>> =
     'breakthroughReactions.ts':
       '80c5773f06efa8a7e3c2b47c121ac0f857c6b97653cae91c32f295af96d57ebb',
     'breakthroughRoom.ts':
-      'ed5c5d6ddac94a5e51d1f0a588cb6af274cb280910b23efd00fef270f487d489',
+      'b7beefa539c7a1fa21c56b697d26be54bb2aa9277d2c926834e4e44668bd5a21',
+    'breakthroughRoomOwner.ts':
+      '42f995882a23b44f577986e323bb1abad61f72848c8411a33fd01927eea7e70a',
+    'breakthroughRoomStream.ts':
+      'ab366669bdf23cc31c91a1f00bffc2d3ae00df74bf4cd5ef055e7aa7636d283d',
     'breakthroughSpecials.ts':
       '248accfe4350355cd36d103e7cb701b36902a5ab4bbe58e4c46e0d26c99f144c',
     'breakthroughSummons.ts':

@@ -1,3 +1,4 @@
+import { ANUNAKI_ADAPTERS } from './breakthroughAnunaki';
 import { CONTROL_ADAPTERS } from './breakthroughControl';
 import { SPECIAL_ADAPTERS } from './breakthroughSpecials';
 import { FACTION_ADAPTERS } from './breakthroughFactions';
@@ -233,6 +234,7 @@ export const BREAKTHROUGH_ADAPTERS: Readonly<Record<string, Adapter>> = {
   ...SUMMON_ADAPTERS,
   ...REACTION_ADAPTERS,
   ...CONTRACT_ADAPTERS,
+  ...ANUNAKI_ADAPTERS,
   ...FACTION_ADAPTERS,
   ...CONTROL_ADAPTERS,
   ...SPECIAL_ADAPTERS,

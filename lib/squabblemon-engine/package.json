@@ -54,7 +54,9 @@
     "./breakthrough": "./src/breakthrough.ts",
     "./breakthroughCatalog": "./src/breakthroughCatalog.ts",
     "./breakthroughRoom": "./src/breakthroughRoom.ts",
-    "./breakthroughRelease": "./src/breakthroughRelease.ts"
+    "./breakthroughRelease": "./src/breakthroughRelease.ts",
+    "./breakthroughRoomOwner": "./src/breakthroughRoomOwner.ts",
+    "./breakthroughRoomStream": "./src/breakthroughRoomStream.ts"
   },
   "dependencies": {
     "chess.js": "1.4.0"

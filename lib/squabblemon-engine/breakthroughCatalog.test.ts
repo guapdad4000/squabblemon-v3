@@ -12,19 +12,19 @@ import {
   resolveBreakthroughCard,
   validateBreakthroughDeck,
 } from './src/breakthroughCatalog';
-test('registry reports 311 canonical cards, preserves 301 reviewed adapters and leaves 10 Anunaki cards unsupported', () => {
+test('registry supports all 311 canonical cards including Anunaki', () => {
   assert.equal(cardCatalog.length, 311);
   assert.equal(BREAKTHROUGH_COMPATIBILITY.length, 311);
-  assert.equal(BREAKTHROUGH_ROSTER.length, 301);
+  assert.equal(BREAKTHROUGH_ROSTER.length, 311);
   assert.equal(
     BREAKTHROUGH_COMPATIBILITY.filter((c) => c.supported).length,
-    301,
+    311,
   );
   assert.deepEqual(
     BREAKTHROUGH_COMPATIBILITY.filter((c) => !c.supported)
       .map((c) => c.cardId)
       .sort(),
-    Object.keys(anunakiCards).sort(),
+    [],
   );
   for (const c of BREAKTHROUGH_ROSTER) {
     const canonical = cardCatalog.find((x) => x.catalogId === c.id)!;
@@ -42,58 +42,16 @@ test('registry reports 311 canonical cards, preserves 301 reviewed adapters and 
   for (const c of BREAKTHROUGH_COMPATIBILITY.filter((c) => !c.supported))
     assert.ok(c.reason, c.cardId);
 });
-test('owned Anunaki cards are canonical but safely rejected without rewriting the deck or consuming Motion', () => {
-  const starter = BREAKTHROUGH_STARTER_DECKS[0];
-  const original = structuredClone(starter);
-  const replaceIndex = starter.catalogCardIds.findIndex((id) => id !== starter.hero);
-  for (const cardId of Object.keys(anunakiCards)) {
-    const cards = starter.catalogCardIds.map((id, index) =>
-      index === replaceIndex ? cardId : id,
-    );
-    const before = [...cards];
-    assert.equal(validateSavedDeck(cards, cards, starter.hero).valid, true);
-    const result = validateBreakthroughDeck(cards, cards, starter.hero);
-    assert.equal(result.valid, false, cardId);
-    assert.deepEqual(result.unknownCardIds, [], cardId);
-    assert.deepEqual(result.missingCardIds, [], cardId);
-    assert.deepEqual(result.unsupportedCardIds, [cardId]);
-    assert.match(
-      breakthroughCardCompatibility(cardId).reason!,
-      /no reviewed Breakthrough ability conversion/,
-    );
-    assert.equal(resolveBreakthroughCard(cardId), undefined);
-    assert.throws(
-      () =>
-        createGame(BREAKTHROUGH_ROSTER, {
-          decks: { player: cards, opponent: starter.catalogCardIds },
-        }),
-      /Invalid player deck: choose ten unique supported cards/,
-    );
-    assert.deepEqual(cards, before);
-
-    const state = createGame(BREAKTHROUGH_ROSTER, {
-      decks: {
-        player: starter.catalogCardIds,
-        opponent: starter.catalogCardIds,
-      },
-    });
-    state.players.player.hand = [cardId];
+test('owned Anunaki decks validate and cards deploy without mutating inputs', () => {
+  const cards = Object.keys(anunakiCards);
+  assert.equal(validateBreakthroughDeck(cards, cards, 'anu').valid, true);
+  for (const cardId of cards) {
+    const state = createGame(BREAKTHROUGH_ROSTER, { decks: { player: cards, opponent: cards } });
+    state.players.player.hand = [cardId]; state.players.player.motion = 9;
     const snapshot = structuredClone(state);
-    assert.equal(deploymentCost(state, 'player', cardId, 0), Infinity);
-    const rejected = deploy(state, 'player', cardId, 0);
-    assert.equal(rejected.error, 'Card not in hand');
-    assert.equal(rejected.state, state);
+    assert.equal(deploy(state, 'player', cardId, 0).error, undefined);
     assert.deepEqual(state, snapshot);
   }
-  assert.deepEqual(starter, original);
-  assert.equal(
-    validateBreakthroughDeck(
-      starter.catalogCardIds,
-      starter.catalogCardIds,
-      starter.hero,
-    ).valid,
-    true,
-  );
 });
 test('all fifteen canonical starter recipes are complete and passownership/hero/compatibility together', () => {
   assert.equal(BREAKTHROUGH_STARTER_DECKS.length, 15);

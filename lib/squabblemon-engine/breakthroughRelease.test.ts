@@ -46,27 +46,16 @@ function proof(
     })),
   };
 }
-test('actual 301-of-311 catalog stays closed with 10 unsupported Anunaki cards, missing evidence and approval', () => {
+test('all 311 adapters stay closed without evidence and approval', () => {
   const status = getBreakthroughLaunchReadiness();
   assert.equal(status.totalCards, 311);
-  assert.equal(status.supportedCards, 301);
+  assert.equal(status.supportedCards, 311);
   assert.deepEqual(
     [...status.unsupportedCardIds].sort(),
-    Object.keys(anunakiCards).sort(),
+    [],
   );
   assert.equal(status.canLaunch, false);
   assert.equal(isBreakthroughPublicEntryEnabled(), false);
-});
-test('Anunaki adapters remain a launch blocker even with hypothetical full proof and approval', () => {
-  const current = getBreakthroughLaunchCoverage();
-  const status = evaluateBreakthroughRelease(current, proof(current), true);
-  assert.equal(status.totalCards, 311);
-  assert.equal(status.supportedCards, 301);
-  assert.equal(status.verifiedCards, 311);
-  assert.equal(status.canLaunch, false);
-  assert.deepEqual(status.reasons, [
-    '10 canonical cards still need concrete Breakthrough effects.',
-  ]);
 });
 test('complete adapter presence never replaces per-card proof or explicit approval', () => {
   const allSupported = {

@@ -1,4 +1,14 @@
 import {
+  ANUNAKI_ABILITY_DESCRIPTIONS,
+  anunakiEntrance,
+  anunakiTick,
+  anunakiConsume,
+  anunakiTabletLane,
+  cloneAnunakiRuntime,
+  type AnunakiRuntime,
+  type AnunakiContext,
+} from './breakthroughAnunaki';
+import {
   SPECIAL_ABILITY_DESCRIPTIONS,
   SPECIAL_TOKEN_DEFINITIONS,
   specialsEntrance,
@@ -462,6 +472,7 @@ export interface GameState {
   summons?: SummonMatchState;
   reactions?: ReactionMatchState;
   contracts?: ContractsRuntime;
+  anunaki?: AnunakiRuntime;
   factions?: FactionMatchState;
   control?: ControlMatchState;
   specials?: SpecialsRuntime;
@@ -479,8 +490,9 @@ export const RULES = {
   lastStandMs: 30000,
   spacing: 0.22,
 } as const;
-export const BREAKTHROUGH_RULESET = 'breakthrough-v9-full-catalog';
+export const BREAKTHROUGH_RULESET = 'breakthrough-v10-anunaki';
 export const ABILITY_DESCRIPTIONS = {
+  ...ANUNAKI_ABILITY_DESCRIPTIONS,
   ...SUPPORT_DESCRIPTIONS,
   ...NETWORK_ABILITY_DESCRIPTIONS,
   ...FITNESS_ABILITY_DESCRIPTIONS,
@@ -639,6 +651,7 @@ function clone(state: GameState): GameState {
     ...(state.reactions
       ? { reactions: cloneReactionState(state.reactions) }
       : {}),
+    ...(state.anunaki ? { anunaki: cloneAnunakiRuntime(state.anunaki) } : {}),
     ...(state.contracts
       ? { contracts: cloneContractsRuntime(state.contracts) }
       : {}),
@@ -2295,6 +2308,7 @@ function expansionEntrance(
   const contractsResult = contractsEntrance(contractsContext(s), u, { echoed });
   const factionResult = factionsEntrance(factionsContext(s), u, { echoed });
   const controlResult = controlEntrance(controlContext(s), u, echoed);
+  const anunakiResult = anunakiEntrance(anunakiContext(s), u, echoed);
   const specialResult = specialsEntrance(specialsContext(s), u, { echoed });
   if (ability === 'nothing-to-lose' && activeUnit(u))
     homelessInvestment(
@@ -2305,6 +2319,7 @@ function expansionEntrance(
     );
   const musicResult = musicEntrance(musicContext(s), u, { echoed });
   return (
+    anunakiResult ??
     musicResult ??
     communityResult ??
     houseResult ??
@@ -2677,6 +2692,24 @@ function factionsContext(s: GameState): FactionsContext {
     refund: (side, n, source) => refundMotion(s, side, n, source),
     random: () => effectRandom(s),
     event: (data) => event(s, data),
+  };
+}
+function anunakiContext(s: GameState): AnunakiContext {
+  return {
+    state: s,
+    definition: (u) => definition(s, u),
+    active: activeUnit,
+    power: effectiveHands,
+    gain: (u, n, from) => gain(s, u, n, false, from),
+    damage: (from, u, n) => strike(s, u, n, from),
+    cleanse: (u, from) => fullCleanse(s, u, undefined, from),
+    spawn: (source) =>
+      summonContext(s).spawn(source, 'caucus-mountaineer', source.lane, {
+        kind: 'fighter',
+        suppressEntrance: true,
+      }),
+    random: () => effectRandom(s),
+    emit: (e) => event(s, e),
   };
 }
 function contractsContext(s: GameState): ContractsContext {
@@ -3944,21 +3977,13 @@ function quotedDiscount(
       }
     : undefined;
 }
-export function deploymentCost(
+function deploymentPayment(
   state: GameState,
   side: Side,
-  cardId: string,
+  card: FighterDefinition,
   lane: Lane,
-): number {
-  const card = state.roster.find((c) => c.id === cardId);
-  if (
-    !card ||
-    card.kind === 'token' ||
-    !sides.includes(side) ||
-    ![0, 1, 2].includes(lane)
-  )
-    return Infinity;
-  if (card.allowedLanes && !card.allowedLanes.includes(lane)) return Infinity;
+) {
+  const cardId = card.id;
   const quote = quotedDiscount(state, side, card, lane);
   const discount = quote?.amount ?? 0;
   const buddy = fighterUnits(state).some(
@@ -3984,14 +4009,56 @@ export function deploymentCost(
       buddy -
       ticket,
   );
-  return controlQuoteCost(
+  const alternative = controlQuoteCost(
     controlContext(state),
     side,
     cardId,
     lane,
     base,
     !quote,
-  ).cost;
+  );
+  const tabletLane =
+    card.id === 'anu' ? anunakiTabletLane(state, side, lane) : undefined;
+  const tablet =
+    tabletLane === undefined
+      ? undefined
+      : controlQuoteCost(
+          controlContext(state),
+          side,
+          cardId,
+          lane,
+          Math.max(
+            0,
+            (state.players[side].returnedUnits?.[cardId]?.formCost ??
+              card.cost) - 2,
+          ),
+          false,
+        );
+  return tablet && tablet.cost < alternative.cost
+    ? { cost: tablet.cost, control: tablet, tabletLane, quote: undefined }
+    : {
+        cost: alternative.cost,
+        control: alternative,
+        tabletLane: undefined,
+        quote,
+      };
+}
+export function deploymentCost(
+  state: GameState,
+  side: Side,
+  cardId: string,
+  lane: Lane,
+): number {
+  const card = state.roster.find((c) => c.id === cardId);
+  if (
+    !card ||
+    card.kind === 'token' ||
+    !sides.includes(side) ||
+    ![0, 1, 2].includes(lane) ||
+    (card.allowedLanes && !card.allowedLanes.includes(lane))
+  )
+    return Infinity;
+  return deploymentPayment(state, side, card, lane).cost;
 }
 export interface DeploymentChoiceOption {
   value: string;
@@ -4194,38 +4261,26 @@ export function deploy(
   const s = clone(state),
     own = s.players[side];
   own.motion -= cost;
-  const quote = quotedDiscount(s, side, card, lane);
-  const buddy = fighterUnits(s).some(
-    (u) =>
-      u.side === side &&
-      u.lane === lane &&
-      !u.squabbled &&
-      activeUnit(u) &&
-      definition(s, u).ability === 'buddy-buds',
-  )
-    ? 1
-    : 0;
-  const ticket = !isActionCard(card) && own.transferTicket ? 1 : 0;
-  const base = Math.max(
-    quote?.kind === 'music' ||
-      quote?.kind === 'contract' ||
-      quote?.kind === 'special'
-      ? quote.minimum
-      : 0,
-    (own.returnedUnits?.[cardId]?.formCost ?? card.cost) -
-      (quote?.amount ?? 0) -
-      buddy -
-      ticket,
-  );
-  const controlQuote = controlQuoteCost(
-    controlContext(s),
-    side,
-    cardId,
-    lane,
-    base,
-    !quote,
-  );
-  let entryBonus = controlSpendCost(controlContext(s), controlQuote);
+  const payment = deploymentPayment(s, side, card, lane);
+  const quote = payment.quote;
+  let entryBonus = controlSpendCost(controlContext(s), payment.control);
+  if (payment.tabletLane !== undefined) {
+    const source: Unit = {
+      id: own.returnedUnits?.[cardId]?.id ?? `u${s.nextUnitId}`,
+      cardId,
+      side,
+      lane,
+      position: side === 'player' ? 0 : 1,
+      hands: card.hands,
+      baseHands: card.hands,
+      maxHands: card.hands,
+      squabbled: false,
+      deployedAt: s.elapsedMs,
+      arrivalOrder: s.nextEventId,
+      nextEffectAt: s.elapsedMs + 5000,
+    };
+    anunakiConsume(anunakiContext(s), source, payment.tabletLane);
+  }
   if (quote?.kind === 'plug') delete own.discount;
   else if (quote?.kind === 'network')
     entryBonus += networkSpendDiscount(
@@ -4746,6 +4801,7 @@ function tick(s: GameState) {
   summonTick(summonContext(s));
   reactionPulse(reactionContext(s));
   contractsTick(contractsContext(s));
+  anunakiTick(anunakiContext(s));
   factionsTick(factionsContext(s));
   controlPulse(controlContext(s));
   for (const side of sides) {
