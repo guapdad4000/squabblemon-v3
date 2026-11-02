@@ -414,3 +414,45 @@
 }
 
 .bt-online-status { position: fixed; z-index: 90; top: max(8px, env(safe-area-inset-top)); left: 50%; transform: translateX(-50%); max-width: calc(100vw - 24px); padding: 10px 16px; border-radius: 8px; color: #fff; background: #231c16; box-shadow: 0 2px 12px #0009; font: 600 14px/1.4 sans-serif; pointer-events: none; }
+
+/* Match preparation: one crew, one action; detailed rules stay in the playbook. */
+.bt-lobby { font-family: var(--font-body, Arial, sans-serif); }
+.bt-lobby-crew { padding: 24px; background: linear-gradient(120deg,#20150ff2,#100d09d9); border: 1px solid #9f794a75; box-shadow: 0 16px 40px #0005; }
+.bt-lobby .bt-primary { min-height: 54px; padding: 14px 20px; border: 1px solid #e2be70; border-radius: 0; background: linear-gradient(#ae2e23,#681b16); color: #fff0d5; font: 700 17px/1.2 var(--font-action-sign,'Hemi Head',Impact,sans-serif); box-shadow: 0 4px 0 #3f160f; }
+.bt-lobby .bt-primary:disabled { opacity: .45; box-shadow: none; }
+.bt-lobby .bt-primary:active:not(:disabled) { transform: translateY(2px); box-shadow: 0 2px 0 #3f160f; }
+.bt-lobby .bt-text-button,.bt-lobby-actions>a { padding: 10px 0; background: none; border: 0; font: 700 11px/1.4 var(--font-action-sign,'Hemi Head',Impact,sans-serif); letter-spacing: .05em; }
+.bt-lobby-identity>div { min-width: 0; }
+.bt-lobby-identity strong { font-size: clamp(16px,3vw,22px); overflow-wrap: anywhere; }
+.bt-lobby-record { margin-left: auto; text-align: right; flex-shrink: 0; }
+.bt-lobby-record b { display: block; color:#f3d07c; font:700 28px/1 var(--font-action-sign,'Hemi Head',Impact,sans-serif); }
+.bt-lobby-record small { font-size: 9px; letter-spacing: .06em; }
+.bt-lobby .bt-lobby-status { min-height: 2.8em; margin:18px 0 8px; color:#d6c8ad; font-size:12px; line-height:1.4; }
+.bt-lobby .bt-mode-rules { margin-top:18px; border-top:1px solid #997b4e70; }
+.bt-lobby .bt-mode-rules>summary { display:flex; align-items:center; justify-content:space-between; gap:10px; min-height:48px; padding:10px 0; list-style:none; color:#efd094; font:700 11px/1.4 var(--font-action-sign,'Hemi Head',Impact,sans-serif); }
+.bt-mode-rules>summary::after { content:'+'; font-size:22px; }
+.bt-mode-rules[open]>summary::after { content:'−'; }
+.bt-mode-rules>summary::-webkit-details-marker { display:none; }
+.bt-trophy-values { display:flex; justify-content:space-between; gap:12px; padding:10px 0; }
+.bt-trophy-values>span { color:#d7c9af; font:700 10px/1.4 Arial,sans-serif; }
+.bt-trophy-values b { display:block; color:#f5d382; font:700 28px/1.3 var(--font-action-sign,'Hemi Head',Impact,sans-serif); }
+.bt-trophy-rules>p { font:12px/1.6 Arial,sans-serif; color:#dfd2bb; margin:8px 0; }
+.bt-lobby .compact-deck-picker__deck { border:1px solid #826844; background:#241b12; color:#e7dac0; }
+.bt-lobby .compact-deck-picker__deck[aria-pressed=true] { border:2px solid #efd28b; background:#44301b; outline:none; }
+.bt-lobby .compact-deck-picker__deck strong { color:#fff1d6; }
+.bt-lobby .compact-deck-picker__deck small { color:#d9c5a2; }
+@media(max-width:700px) {
+ .bt-lobby { padding-inline:max(14px,env(safe-area-inset-left)); }
+ .bt-lobby-stage { gap:10px; margin-top:20px; }
+ .bt-lobby-crew { padding:18px 15px; }
+ .bt-lobby h2 { font-size:24px; }
+ .bt-lobby-identity { gap:10px; }
+ .bt-lobby-identity .fighter-portrait { width:48px; height:58px; }
+ .bt-lobby-title>img { width:108px; height:120px; }
+}
+@media(orientation:landscape) and (max-height:500px) {
+ .bt-lobby-stage { gap:24px; align-items:start; }
+ .bt-lobby-crew { padding:16px; }
+}
+
+.bt-lobby .compact-deck-picker__deck:focus-visible { outline:3px solid #fff2d8; outline-offset:3px; }

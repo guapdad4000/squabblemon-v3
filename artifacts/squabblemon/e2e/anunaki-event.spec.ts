@@ -1,8 +1,10 @@
 import { expect, test } from '@playwright/test';
 import { ANUNAKI_EVENT_MILESTONES } from '@workspace/squabblemon-engine/anunakiEvent';
+const assetBase = process.env.ANUNAKI_EVENT_ASSET_BASE ?? '/squabblemon/';
+const fixture = process.env.ANUNAKI_EVENT_FIXTURE ?? '/squabblemon/e2e/anunaki-event.fixture.html';
 
 test('event roadmap shows locked preparation state and no claim actions', async ({ page }) => {
-  await page.goto('/squabblemon/e2e/anunaki-event.fixture.html');
+  await page.goto(fixture + '');
   await page.getByRole('button', { name: /follow the ancient text/i }).click();
   await expect(page.getByText('The Anunaki cards and event are still being prepared.')).toBeVisible();
   await expect(page.locator('.anunaki-roadmap__step')).toHaveCount(24);
@@ -11,22 +13,22 @@ test('event roadmap shows locked preparation state and no claim actions', async 
   await expect(page.locator('.anunaki-roadmap__step').last()).toContainText('Optional mastery');
   for (const milestone of ANUNAKI_EVENT_MILESTONES) {
     const image = page.locator(`[data-milestone-id="${milestone.id}"] .anunaki-roadmap__reward-art`);
-    await expect(image).toHaveAttribute('src', `/squabblemon/${milestone.reward.artwork}`);
+    await expect(image).toHaveAttribute('src', `${assetBase}${milestone.reward.artwork}`);
   }
   await expect(page.getByRole('button', { name: 'Claim reward' })).toHaveCount(0);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
 });
 
 test('a ready claim uses the saved server response before showing collected', async ({ page }) => {
-  await page.goto('/squabblemon/e2e/anunaki-event.fixture.html?ready');
+  await page.goto(fixture + '?ready');
   await page.getByRole('button', { name: /follow the ancient text/i }).click();
   await page.getByRole('button', { name: 'Claim reward' }).click();
   await expect(page.getByText('Reward collected.')).toBeVisible();
-  await expect(page.locator('.anunaki-roadmap__step').first()).toContainText('Collected');
+  await expect(page.locator('.anunaki-roadmap__step').first()).toContainText('COLLECTED');
 });
 
 test('switching profiles invalidates an in-flight claim and unlocks the new player', async ({ page }) => {
-  await page.goto('/squabblemon/e2e/anunaki-event.fixture.html?switch');
+  await page.goto(fixture + '?switch');
   await page.getByRole('button', { name: /follow the ancient text/i }).click();
   await page.getByRole('button', { name: 'Claim reward' }).click();
   await expect(page.getByRole('button', { name: 'Saving…' })).toBeDisabled();
@@ -44,7 +46,7 @@ test('switching profiles invalidates an in-flight claim and unlocks the new play
 
 test('roadmap remains readable at a narrow viewport and restores keyboard focus', async ({ page }) => {
   await page.setViewportSize({ width: 320, height: 568 });
-  await page.goto('/squabblemon/e2e/anunaki-event.fixture.html?ready');
+  await page.goto(fixture + '?ready');
   const opener = page.getByRole('button', { name: /follow the ancient text/i });
   await opener.focus();
   await page.keyboard.press('Enter');
@@ -64,7 +66,7 @@ test('roadmap remains readable at a narrow viewport and restores keyboard focus'
 
 
 test('duplicate receipt stays beside its stop and includes shards with the server label', async ({ page }) => {
-  await page.goto('/squabblemon/e2e/anunaki-event.fixture.html?duplicate');
+  await page.goto(fixture + '?duplicate');
   await page.getByRole('button', { name: /follow the ancient text/i }).click();
   await page.getByRole('button', { name: 'Claim reward' }).click();
   const receipt=page.locator('.anunaki-roadmap__step').first().getByRole('status');

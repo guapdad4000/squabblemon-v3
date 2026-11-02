@@ -12,7 +12,7 @@ export default function BreakthroughHowToPlay() {
       <header className="bt-howto-heading">
         <small>KUMITE · REAL-TIME CARD BATTLE</small>
         <h3 id={titleId}>BREAK THEIR BASE.</h3>
-        <p>Both sides play at once. No turns. No waiting for an animation.</p>
+        <p>Both sides play at once.</p>
         <div className="bt-howto-stakes" aria-label="Match rules">
           <span><b>3</b> LANES</span>
           <span><b>{RULES.durationMs / 60000}:00</b> CLOCK</span>
@@ -23,15 +23,15 @@ export default function BreakthroughHowToPlay() {
         <li>
           <span className="bt-howto-number" aria-hidden="true">01</span>
           <div><h4>DROP YOUR CREW</h4>
-            <p>Drag a card into a lane, or tap the card then the lane. Pay its yellow Motion cost. Fighters enter from your base and march toward The Opps.</p>
+            <p>Drag a card into a lane, or tap card → lane. Pay its Motion cost; fighters march toward The Opps.</p>
             <strong>Start {RULES.startingMotion} Motion · +1 every {1 / RULES.motionPerSecond} seconds · cap {RULES.motionCap}</strong>
-            <p className="bt-howto-tip">Have the Motion? Play again immediately, even in the same lane.</p>
+            <p className="bt-howto-tip">Play again as soon as you can afford it.</p>
           </div>
         </li>
         <li>
           <span className="bt-howto-number" aria-hidden="true">02</span>
           <div><h4>HANDS SETTLE IT</h4>
-            <p>Opposing fighters collide in their lane. Each loses the other’s Hands at the same time. The survivor keeps marching with what’s left.</p>
+            <p>On contact, both fighters lose the other’s Hands. Survivors keep marching.</p>
             <div className="bt-howto-clash" aria-label="Without abilities or protection: 7 Hands against 5 Hands leaves the 7-Hands fighter alive with 2 Hands.">
               <b>7</b><span>vs</span><b>5</b><span>→</span><b className="bt-howto-survivor">2</b><small>LEFT STANDING*</small>
             </div>
@@ -41,7 +41,7 @@ export default function BreakthroughHowToPlay() {
         <li>
           <span className="bt-howto-number" aria-hidden="true">03</span>
           <div><h4>BREAK THROUGH TWICE</h4>
-            <p>A fighter reaching the enemy base scores one breach and leaves the field. Score two before The Opps do. Any lane can score again.</p>
+            <p>Reach the enemy base twice to win. Each scoring fighter leaves the field.</p>
             <strong>Any lane · one breach per scoring fighter</strong>
             <p className="bt-howto-tip">Support and Action cards resolve their effects; they do not march or breach. Some summoned pieces cannot breach either.</p>
           </div>
@@ -51,7 +51,7 @@ export default function BreakthroughHowToPlay() {
           <div><h4>LAST STAND · {RULES.lastStandMs / 1000}s</h4>
             <p>Draws stop for the final {RULES.lastStandMs / 1000} seconds. Motion keeps refilling. Play what’s left and protect your lead.</p>
             <strong>At 0:00 → most breaches → most surviving Hands → draw</strong>
-            <p className="bt-howto-tip">Only fighters on the field count toward Hands. Cards in your hand or returning to the deck do not.</p>
+            <p className="bt-howto-tip">Only surviving fighters on the field count.</p>
           </div>
         </li>
       </ol>

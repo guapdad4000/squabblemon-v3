@@ -118,7 +118,7 @@ export function BreakthroughPractice({
     >
       <header className="bt-lobby-nav">
         <Link href="/game/kumite">← KUMITE</Link>
-        <span>CPU PRACTICE · NO ACCOUNT REWARDS</span>
+        <span>PRACTICE · NO REWARDS</span>
       </header>
       <section
         className="bt-lobby-stage"
@@ -140,6 +140,7 @@ export function BreakthroughPractice({
               avatarKey={identity.avatarKey}
               name={identity.name}
               decorative
+              battleArtwork
             />
             <div>
               <strong>{identity.name}</strong>
@@ -154,7 +155,7 @@ export function BreakthroughPractice({
               <h2>{deck.name}</h2>
               {loaner && (
                 <small className="bt-loaner-label">
-                  TEMPORARY LOANER · YOUR SAVED DECKS STAY YOURS
+                  LOANER CREW
                 </small>
               )}
             </>
@@ -190,14 +191,14 @@ export function BreakthroughPractice({
             </button>
             {deck && !loaner && (
               <Link href={breakthroughDeckEditorPath(deck.id, '/game/kumite/breakthrough/practice')}>
-                CLICK TO EDIT ↗
+                EDIT DECK ↗
               </Link>
             )}
             <button
               className="bt-text-button"
               onClick={() => setLoaner((value) => !value)}
             >
-              {loaner ? 'USE MY DECK' : 'TRY A REVIEWED LOANER'} ↗
+              {loaner ? 'USE MY DECK' : 'USE A LOANER'} ↗
             </button>
           </div>
           <details className="bt-mode-rules">

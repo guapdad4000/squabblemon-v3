@@ -1,3 +1,4 @@
+import { HandFist } from 'lucide-react';
 import { lazy, Suspense, useRef, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import {
@@ -71,8 +72,8 @@ export function CommunityCrewStudio({
         </DialogTitle>
         <DialogDescription>
           {ready || playing
-            ? "Practice loaner · Collection and rank stay unchanged."
-            : "Borrow the full crew for practice, or save your own version using cards you own."}
+            ? "LOANER PRACTICE · NO REWARDS"
+            : "Borrow this crew, or build a version with your cards."}
         </DialogDescription>
         {error && <p role="alert">{error}</p>}
         {ready || playing ? (
@@ -95,12 +96,11 @@ export function CommunityCrewStudio({
           <div className="community-trial-brief">
             <strong>ALL TEN CARDS. YOUR HANDS.</strong>
             <p>
-              Test the creator’s exact lineup, including cards you haven’t
-              collected. This practice doesn’t award currency, bounty progress,
-              XP or ranked points.
+              Use all ten cards, including unowned cards. No currency, bounty
+              progress, XP or ranked points.
             </p>
             <label>
-              Choose The Opps
+              OPPONENT
               <select value={rival} onChange={(e) => setRival(e.target.value)}>
                 {starterRecipes.map((recipe) => (
                   <option key={recipe.id} value={recipe.id}>
@@ -110,7 +110,7 @@ export function CommunityCrewStudio({
               </select>
             </label>
             <button className="notes-action" onClick={() => setReady(true)}>
-              STEP INTO PRACTICE ✊
+              STEP INTO PRACTICE <HandFist size={16} aria-hidden="true" />
             </button>
           </div>
         ) : (
@@ -124,8 +124,7 @@ export function CommunityCrewStudio({
                     .join(" · ")}
                 </p>
                 <p>
-                  Your owned cards stay in the crew. Suggested owned
-                  replacements fill the gaps; edit them below.
+                  Missing cards are replaced with cards you own. Edit below.
                 </p>
               </div>
             )}

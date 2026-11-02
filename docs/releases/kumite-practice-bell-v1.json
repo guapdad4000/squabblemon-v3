@@ -1,0 +1,10 @@
+{
+  "source": "Built-in image generation",
+  "sourceSha256": "f1c561fddb0623dd682ce706742ac0ff859114e574db0b9642a094c0bf10e78b",
+  "asset": "artifacts/squabblemon/public/assets/kumite/practice-bell-v1.webp",
+  "width": 600,
+  "height": 400,
+  "bytes": 56894,
+  "prompt": "Transparent game prop: hand-painted cel-shaded bronze sparring bell on dark wooden stand, oxblood hand wraps, striker, embossed clenched-fist emblem. Anime dojo style, warm gold, black ink contours, no lettering, crowns, characters or emoji.",
+  "delivery": "600px WebP derivative; original generated PNG retained outside runtime assets"
+}

@@ -1,3 +1,4 @@
+import { Check, LockKeyhole, X } from 'lucide-react';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Link } from 'wouter';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
@@ -73,18 +74,18 @@ export function AnunakiEvent({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   return <>
     <button type="button" className="anunaki-banner" onClick={() => setOpen(true)} style={{ backgroundImage: `linear-gradient(90deg, #071d20f5, #071d20c9 52%, #071d2033), url("${art('journey')}")` }}>
       <img src={art('tablet')} alt="" />
-      <span className="anunaki-banner__copy"><small>THE ANUNAKI ARRIVAL · EVENT ROADMAP</small><strong>Follow the<br />ancient text<span>.</span></strong><span>8 chapters. 24 rewards. One journey through time.</span><b>Explore the journey <span aria-hidden="true">↗</span></b></span>
+      <span className="anunaki-banner__copy"><small>THE ANUNAKI ARRIVAL · EVENT ROADMAP</small><strong>Follow the<br />ancient text<span>.</span></strong><span>Story rewards · optional mastery</span><b>Explore the journey <span aria-hidden="true">↗</span></b></span>
     </button>
     <dialog ref={dialog} className="anunaki-event" aria-labelledby="anunaki-event-title" onCancel={() => setOpen(false)} onClose={() => setOpen(false)}>
-      <button className="anunaki-event__close" type="button" onClick={() => setOpen(false)} aria-label="Close Anunaki event">×</button>
+      <button className="anunaki-event__close" type="button" onClick={() => setOpen(false)} aria-label="Close Anunaki event"><X size={22} aria-hidden="true" /></button>
       <header className="anunaki-event__hero" style={{ backgroundImage: `linear-gradient(90deg, #061b1cf7 5%, #061b1cd9 45%, #061b1c33), url("${art('journey')}")` }}>
-        <span className="anunaki-event__kicker">SQUABBLEMON PRESENTS / AN EVENT THROUGH TIME</span>
+        <span className="anunaki-event__kicker">STORY EVENT</span>
         <h2 id="anunaki-event-title">The Anunaki<br /><em>Arrival</em></h2>
-        <p>A janky time machine. An ancient arrival. Follow the trail and recruit the crew.</p>
+        <p>Follow their story. Recruit the Anunaki.</p>
         <span className="anunaki-event__seal" aria-hidden="true">TIME<br />TRAVEL<br /><b>{data ? `01—${String(data.milestones.length).padStart(2, '0')}` : 'THE JOURNEY'}</b></span>
       </header>
       <div className="anunaki-event__body" style={{ backgroundImage: `linear-gradient(180deg, #09251fc9, #09251fd9), url("${art('journey')}")` }}>
-        <div className="anunaki-event__section-head"><div><span>THE ANCIENT ROAD / REWARDS AHEAD</span><h3>Follow the<br /><em>ancient text.</em></h3></div><p>Eight chapters.<br />Three rewards each.<br /><b>Mastery is your choice.</b></p></div>
+        <div className="anunaki-event__section-head"><div><span>YOUR JOURNEY</span><h3>THE<br /><em>REWARDS.</em></h3></div><p>8 chapters.<br /><b>24 rewards.</b></p></div>
         {query.isPending ? <p className="anunaki-event__message" role="status">Checking your journey…</p> : query.isError ? <div className="anunaki-event__message" role="alert">Could not load the event. <button type="button" onClick={() => void query.refetch()}>Try again</button></div> : <>
           {!data?.available && <p className="anunaki-event__message" role="status">{data?.reason || 'This event is not available yet. Check back for the journey.'}</p>}
           <nav className="anunaki-chapter-jumps" aria-label="Jump to a roadmap chapter">{Array.from({length:8},(_,i)=><button key={i} type="button" onClick={()=>dialog.current?.querySelector(`[data-milestone-id="${data?.milestones[i*3]?.id}"]`)?.scrollIntoView({behavior:window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",block:"start"})}>CH {String(i+1).padStart(2,"0")}</button>)}</nav>
@@ -96,9 +97,9 @@ export function AnunakiEvent({ bootstrap }: { bootstrap: PlayerBootstrap }) {
               return <li className="anunaki-roadmap__step" key={step.id} data-milestone-id={step.id} data-state={step.state} data-reward-kind={step.reward.kind}>
                 <span className="anunaki-roadmap__number" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
                 <div className="anunaki-roadmap__portrait"><span className="anunaki-roadmap__flare" aria-hidden="true" /><img className="anunaki-roadmap__reward-art" src={rewardArt(step.reward.artwork)} alt="" loading="lazy" />{(step.reward.kind === 'currency' || step.reward.kind === 'tickets') && <GameGlyph name={step.reward.kind === 'currency' ? 'cloutStack' : 'ticket'} className="anunaki-roadmap__glyph" />}</div>
-                <div className="anunaki-roadmap__copy"><small>CH {String(step.chapter).padStart(2, '0')} · {step.optional ? 'OPTIONAL MASTERY' : rewardKindLabel[step.reward.kind]}</small><h4>{step.reward.label}</h4>{step.title !== step.reward.label && <p className="anunaki-roadmap__step-title">{step.title}</p>}<span className="anunaki-roadmap__badge">{step.state === 'claimed' ? '✓ COLLECTED' : step.state === 'ready' && data.available ? '✦ READY TO CLAIM' : '◆ LOCKED'}</span><p>{step.requirement}</p>
+                <div className="anunaki-roadmap__copy"><small>CH {String(step.chapter).padStart(2, '0')} · {step.optional ? 'OPTIONAL MASTERY' : rewardKindLabel[step.reward.kind]}</small><h4>{step.reward.label}</h4>{step.title !== step.reward.label && <p className="anunaki-roadmap__step-title">{step.title}</p>}<span className="anunaki-roadmap__badge">{step.state === 'claimed' ? <><Check size={13} aria-hidden="true" /> COLLECTED</> : step.state === 'ready' && data.available ? 'READY TO CLAIM' : <><LockKeyhole size={13} aria-hidden="true" /> LOCKED</>}</span><p>{step.requirement}</p>
                   {data.available && <><div className="anunaki-roadmap__meter" role="progressbar" aria-label={`${step.reward.label} progress`} aria-valuemin={0} aria-valuemax={step.target} aria-valuenow={progress}><i style={{ width: `${step.target ? progress / step.target * 100 : 0}%` }} /></div><span className="anunaki-roadmap__progress">{progress} / {step.target}{step.ownsReward && step.state !== 'claimed' ? ' · Already owned' : ''}</span></>}
-                  {step.state === 'ready' && data.available ? <button type="button" disabled={busy !== null} onClick={() => void claim(step.id)}>{busy === step.id ? 'Saving…' : 'Claim reward'}</button> : <span className="anunaki-roadmap__state">{step.state === 'claimed' ? '✓ Collected' : '✦ Awaiting arrival'}</span>}
+                  {step.state === 'ready' && data.available ? <button type="button" disabled={busy !== null} onClick={() => void claim(step.id)}>{busy === step.id ? 'Saving…' : 'Claim reward'}</button> : null}
                   {notice?.id === step.id && <p className="anunaki-roadmap__receipt" role="status">{notice.text}</p>}
                   {error?.id === step.id && <p className="anunaki-roadmap__receipt" role="alert">{error.text}</p>}
                 </div>

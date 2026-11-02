@@ -1,3 +1,5 @@
+import { getAssetUrl } from "../../lib/assets";
+import "../../styles/kumite.css";
 import { useEffect, useState } from "react";
 import {
   createBossRaid,
@@ -90,10 +92,12 @@ export function KumiteDojoPractice({
   if (!run || (run.phase !== "active" && !blast))
     return (
       <section className="kumite-practice-result">
-        <h1>DOJO PRACTICE</h1>
+        <img className="kumite-practice-result__bell" width={600} height={400} src={getAssetUrl('assets/kumite/practice-bell-v1.webp')} alt="" />
+        <small>THE KUMITE · PRACTICE</small>
+        <h1>{run ? "ROUND FINISHED" : "CHOOSE YOUR CREW"}</h1>
         <strong>{run ? `${run.score} DAMAGE` : "CREW NOT READY"}</strong>
-        <p>NO ENTRIES USED · NO REWARDS CLAIMED</p>
-        <button
+        <p>PRACTICE · NO REWARDS</p>
+        <button className="kumite-button"
           onClick={() => {
             try {
               setRun(setup());
@@ -106,7 +110,7 @@ export function KumiteDojoPractice({
         >
           TRY AGAIN
         </button>
-        <button onClick={onExit}>BACK TO KUMITE</button>
+        <button className="kumite-text-button" onClick={onExit}>BACK TO KUMITE</button>
         {error && <p role="alert">{error}</p>}
       </section>
     );

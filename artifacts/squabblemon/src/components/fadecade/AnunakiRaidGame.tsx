@@ -1,3 +1,5 @@
+import { ArrowLeft, ArrowUpRight, HandFist, LockKeyhole } from 'lucide-react';
+import { GameGlyph } from '../venue/GameGlyph';
 import { useEffect, useRef, useState } from 'react';
 import type { DojoSpritePhase } from './DojoMotionSprite';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
@@ -43,17 +45,31 @@ export function AnunakiRaidGame({ bootstrap, crews, onBack, onExit }: { bootstra
   } catch (e) { clearCue(); setCue('idle'); setError(e instanceof Error ? e.message : 'Connection lost. Retry safely.'); } finally { setBusy(false); } };
   const run = query.data?.run, crew = crews.find(c => c.id === deck) ?? crews[0];
   const act = (action: AnunakiRaidAction) => { if (run) void send(`${endpoint}/${run.id}/action`, { revision: run.revision, actionId: crypto.randomUUID(), action }); };
-  if (query.isPending || query.isError || !query.data) return <main className="anu-raid"><button onClick={onBack}>← Other raids</button><h1>{query.isError ? 'Connection lost' : 'Opening the gate…'}</h1>{query.isError && <button onClick={() => void query.refetch()}>Retry</button>}</main>;
+  if (query.isPending || query.isError || !query.data) return <main className="anu-raid anu-raid-loading"><button onClick={onBack}><ArrowLeft size={16} aria-hidden="true" /> Other raids</button><h1>{query.isError ? 'CONNECTION LOST' : 'OPENING THE GATE'}</h1>{query.isError && <button className="anu-raid-primary" onClick={() => void query.refetch()}>RETRY</button>}</main>;
   if (!run || run.status !== 'active') return <main className="anu-raid anu-raid-entry" style={{ backgroundImage: `linear-gradient(90deg,#031b1ce8,#031b1c80),url('${getAssetUrl('assets/anunaki-future/concepts/boss-raid-key-art.webp')}')` }}>
-    <nav><button onClick={onBack}>← Other raids</button><button onClick={onExit}>Fadecade</button></nav><div className="anu-raid-intro"><small>THE ANUNAKI ARRIVAL · SOLO RAID</small><h1>ANU<br/><span>FIRST ARRIVAL</span></h1><p>Break the gate. Interrupt the charge. Send the sky king back.</p>
-    {bootstrap.profile.unlockedCosmeticIds?.includes('anunaki-raid:title') && <p>✊ FIRST ARRIVAL CHAMPION</p>}
-    {run && <section className="anu-raid-receipt" aria-label="Saved raid result" role="status"><strong>{run.status === 'won' ? 'ANU DEFEATED' : `RAID ${run.status.toUpperCase()}`}</strong><p>{run.maxHp - run.hp} damage · {run.difficulty.toUpperCase()}</p>{run.reward && <><p>Saved: {run.reward.packTickets} tickets · {run.reward.softCurrency} Clout · {run.reward.styleShards} shards</p>{!run.reward.weekly && <p>Weekly reward already claimed.</p>}{run.reward.firstClear && <p>{run.difficulty === 'standard' ? 'First Arrival cover and champion title unlocked.' : 'Heaven Comes Down mat and Anu Raid Respect reaction unlocked.'}</p>}</>}</section>}
-    <div className="anu-raid-difficulties" aria-label="Raid difficulty">{(['training','standard','ascended'] as const).map(item => <button key={item} aria-pressed={difficulty === item} onClick={() => { setDifficulty(item); setLoaner(item === 'training'); }}>{item.toUpperCase()} {query.data!.eligibility[item] ? '' : '🔒'}</button>)}</div>
-    <p>{difficulty === 'training' ? 'Unlock: finish chapter 7. Practice pays no rewards and can use a loaner crew.' : difficulty === 'standard' ? 'Unlock: finish chapter 8. First win: First Arrival cover, title and 2 tickets. Weekly win: 1 ticket, 300 Clout and 30 shards.' : 'Unlock: defeat standard. First win: Heaven Comes Down mat, Anu Raid Respect reaction and 2 tickets. Weekly win: 1 ticket, 300 Clout and 30 shards.'}</p>
-    {difficulty === 'training' && <label><input type="checkbox" checked={loaner} onChange={e => setLoaner(e.target.checked)}/> Use the Anunaki loaner crew</label>}
-    {!loaner && <CompactDeckPicker decks={crews.map(c => ({id:c.id,name:c.name,heroCardId:c.hero,cardIds:c.cards}))} selectedId={crew?.id ?? ''} onSelect={setDeck} label="Raid crew"/>}
-    <button className="anu-raid-primary" disabled={busy || !query.data.eligibility[difficulty] || (!loaner && !crew)} onClick={() => void send(`${endpoint}/start`, { requestId: crypto.randomUUID(), difficulty, cardIds: loaner && difficulty === 'training' ? [] : crew.cards })}>ENTER THE RAID →</button>
-    {error && <div role="alert">{error}<button onClick={() => pending && void send(pending.path,pending.body)}>Retry safely</button><button onClick={() => { setPending(null);setError('');void query.refetch(); }}>Sync</button></div>}</div></main>;
+    <nav><button onClick={onBack}><ArrowLeft size={16} aria-hidden="true" /> Other raids</button><button onClick={onExit}>Fadecade <ArrowUpRight size={16} aria-hidden="true" /></button></nav>
+    <div className="anu-raid-intro">
+      <header className="anu-entry-heading">
+        <div><small>THE ANUNAKI ARRIVAL · SOLO RAID</small><h1>ANU<span>FIRST<br/>ARRIVAL</span></h1><p>Break the gate. Interrupt the charge.</p></div>
+        <img src={getAssetUrl('assets/anunaki-event/anu.webp')} alt="Anu guards the arrival gate" width={375} height={666} />
+      </header>
+      <section className="anu-entry-loadout" aria-label="Prepare your raid">
+        {bootstrap.profile.unlockedCosmeticIds?.includes('anunaki-raid:title') && <p className="anu-champion-mark"><HandFist size={18} aria-hidden="true" /> FIRST ARRIVAL CHAMPION</p>}
+        {run && <section className="anu-raid-receipt" aria-label="Saved raid result" role="status">
+          <strong>{run.status === 'won' ? 'ANU DEFEATED' : `RAID ${run.status.toUpperCase()}`}</strong>
+          <p>{run.maxHp - run.hp} DAMAGE · {run.difficulty.toUpperCase()}</p>
+          {run.reward && <><div className="anu-reward-tokens" aria-label="Saved rewards"><span><GameGlyph name="ticket" />{run.reward.packTickets} tickets</span><span><GameGlyph name="clout" />{run.reward.softCurrency} Clout</span><span><GameGlyph name="shards" />{run.reward.styleShards} shards</span></div>{!run.reward.weekly && <p>Weekly reward already claimed.</p>}{run.reward.firstClear && <p>{run.difficulty === 'standard' ? 'First Arrival cover + champion title unlocked.' : 'Heaven Comes Down mat + Anu Raid Respect reaction unlocked.'}</p>}</>}
+        </section>}
+        <div className="anu-raid-difficulties" role="group" aria-label="Raid difficulty">{(['training','standard','ascended'] as const).map(item => <button key={item} aria-pressed={difficulty === item} onClick={() => { setDifficulty(item); setLoaner(item === 'training'); }}>{!query.data!.eligibility[item] && <LockKeyhole size={14} aria-hidden="true" />}{item.toUpperCase()}</button>)}</div>
+        {!query.data.eligibility[difficulty] && <p className="anu-unlock-note"><LockKeyhole size={14} aria-hidden="true" />{difficulty === 'training' ? 'Finish chapter 7 to unlock.' : difficulty === 'standard' ? 'Finish chapter 8 to unlock.' : 'Defeat Standard to unlock.'}</p>}
+        {difficulty === 'training' && <div className="anu-crew-toggle" role="group" aria-label="Training crew"><button aria-pressed={loaner} onClick={()=>setLoaner(true)}>LOANER CREW</button><button aria-pressed={!loaner} onClick={()=>setLoaner(false)}>MY CREW</button><small>PRACTICE · NO REWARDS</small></div>}
+        {!loaner && <CompactDeckPicker decks={crews.map(c => ({id:c.id,name:c.name,heroCardId:c.hero,cardIds:c.cards}))} selectedId={crew?.id ?? ''} onSelect={setDeck} label="Raid crew"/>}
+        {!loaner && !crew && <p className="anu-unlock-note">Save a ten-card crew to enter.</p>}
+        <button className="anu-raid-primary" disabled={busy || !query.data.eligibility[difficulty] || (!loaner && !crew)} onClick={() => void send(`${endpoint}/start`, { requestId: crypto.randomUUID(), difficulty, cardIds: loaner && difficulty === 'training' ? [] : crew.cards })}>{busy ? 'ENTERING…' : 'ENTER THE RAID →'}</button>
+        <details className="anu-entry-rules"><summary>RAID RULES &amp; REWARDS</summary><p>Six rounds. Your surviving Hands strike Anu at ×2; protection halves the damage. Interrupt his final charge before its third round.</p><p>{difficulty === 'training' ? 'Training uses your crew or a loaner. No rewards.' : difficulty === 'standard' ? 'First win: First Arrival cover, champion title and 2 tickets. Weekly win: 1 ticket, 300 Clout and 30 shards.' : 'First win: Heaven Comes Down mat, Anu Raid Respect reaction and 2 tickets. Weekly win: 1 ticket, 300 Clout and 30 shards.'}</p></details>
+        {error && <div className="anu-entry-error" role="alert"><p>{error}</p><button onClick={() => pending && void send(pending.path,pending.body)}>RETRY</button><button onClick={() => { setPending(null);setError('');void query.refetch(); }}>SYNC</button></div>}
+      </section>
+    </div></main>;
   return <BossRaidView adapter={makeAnunakiRaidViewAdapter(run, { phase: cue })} busy={busy} onAction={act}
     onExit={onBack} exitLabel="← Other raids" error={error}
     onRetry={() => pending && void send(pending.path, pending.body)}

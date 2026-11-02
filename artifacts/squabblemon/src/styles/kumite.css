@@ -1195,3 +1195,12 @@ html[data-reduce-motion='true'] .kumite-shortcut { transition: none; }
 }
 
 .kumite-crew-actions > a:only-child { grid-column: 1 / -1; }
+
+.kumite-practice-result { padding:32px 20px; text-align:center; gap:14px; background:radial-gradient(ellipse at 50% 25%,#58361c70,transparent 65%),#17100b; }
+.kumite-practice-result__bell { width:min(300px,65vw); height:auto; object-fit:contain; }
+.kumite-practice-result>small { font:700 10px/1.4 var(--font-action-sign,'Hemi Head',Impact,sans-serif); letter-spacing:.15em; }
+.kumite-practice-result h1 { margin:8px 0; color:#ffe2a1; font:400 clamp(30px,7vw,56px)/1.05 var(--font-sign,'Blzee',Impact,sans-serif); }
+.kumite-practice-result>strong { color:#fff2d6; font:700 26px var(--font-action-sign,'Hemi Head',Impact,sans-serif); }
+.kumite-practice-result>p { margin:0 0 12px; color:#b8a88a; font-size:10px; letter-spacing:.07em; }
+.kumite-practice-result .kumite-button { min-width:min(280px,100%); }
+.kumite-practice-result .kumite-text-button { background:none; border:0; color:#e3c68a; font:700 11px var(--font-action-sign,'Hemi Head',Impact,sans-serif); }

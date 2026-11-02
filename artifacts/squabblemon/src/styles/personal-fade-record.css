@@ -35,3 +35,5 @@
   text-align: center;
   margin: 0.25rem 0;
 }
+
+.personal-fade-record__homie { display:flex; justify-content:center; align-items:center; gap:8px; }

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import '../src/index.css';
 import { createRoot } from 'react-dom/client';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ANUNAKI_STORY_CHAPTERS, anunakiClaimKey, anunakiEventStatus } from '@workspace/squabblemon-engine/anunakiEvent';

@@ -15,6 +15,7 @@ import {
   breakthroughRequest,
   BreakthroughConnection,
 } from "../../lib/breakthroughOnline";
+import { FighterPortrait } from "../profile/FighterPortrait";
 import { getCardImage } from "../../data";
 import BreakthroughArena from "./BreakthroughArena";
 import { BREAKTHROUGH_TROPHY } from "./progressionArt";
@@ -163,8 +164,11 @@ export default function BreakthroughOnline({
           <img src={BREAKTHROUGH_TROPHY} alt="Breakthrough fist trophy" />
         </div>
         <div className="bt-lobby-crew">
-          <h2>{profile.displayName}</h2>
-          <p>{lobby.data?.record.trophies ?? 0} BREAKTHROUGH TROPHIES</p>
+          <div className="bt-lobby-identity">
+            <FighterPortrait cardId={deck?.heroCardId ?? profile.avatarKey} avatarKey={profile.avatarKey} name={profile.displayName} decorative battleArtwork />
+            <div><strong>{profile.displayName}</strong><small>YOUR CREW</small></div>
+            <div className="bt-lobby-record"><b>{lobby.data?.record.trophies ?? 0}</b><small>TROPHIES</small></div>
+          </div>
           <CompactDeckPicker
             decks={decks}
             selectedId={selected}
@@ -196,19 +200,19 @@ export default function BreakthroughOnline({
               </button>
             )}
           </div>
-          <p role="status">
+          {(waiting || error || lobby.error) && <p className="bt-lobby-status" role="status">
             {waiting
               ? "Searching for another player…"
               : error ||
                 lobby.error?.message ||
-                "Your match continues if you disconnect. Reopen Breakthrough to recover it."}
-          </p>
-          <p>
-            Completed active matches earn Breakthrough trophies: win +20, draw
-            +3, loss −6 (minimum 0). First 20 rated matches per UTC day; first 3
-            against each opponent. Both players must deploy twice and play at
-            least 30 seconds.
-          </p>
+                ""}
+          </p>}
+          <details className="bt-mode-rules bt-trophy-rules">
+            <summary>TROPHIES &amp; MATCH RULES</summary>
+            <div className="bt-trophy-values"><span><b>+20</b> WIN</span><span><b>+3</b> DRAW</span><span><b>−6</b> LOSS</span></div>
+            <p>Trophies never fall below zero. First 20 rated matches per UTC day; first 3 against each opponent. Both players must deploy twice and play at least 30 seconds. Surrenders and expired matches are unrated.</p>
+            <p>Your match continues if you disconnect. Reopen Breakthrough to rejoin.</p>
+          </details>
         </div>
       </section>
     </main>
@@ -276,7 +280,7 @@ export function OnlineMatch({
   if (!view)
     return (
       <main className="bt-lobby">
-        <p role="status">{message}</p>
+        <p className="bt-lobby-status" role="status">{message}</p>
         <button onClick={onExit}>BACK TO KUMITE</button>
       </main>
     );

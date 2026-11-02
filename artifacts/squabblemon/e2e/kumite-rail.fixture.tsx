@@ -24,9 +24,11 @@ createRoot(document.getElementById('root')!).render(<QueryClientProvider client=
         <img src={getAssetUrl('scenes/safehouse/concept.webp')} alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center' }} />
         <div className="safehouse__shade" />
         <header className="safehouse-room-header"><div className="safehouse-room-title"><span>SQUABBLEMON · SAFEHOUSE</span><h1>Home court.</h1></div></header>
+        <nav className="safehouse-shortcuts" aria-label="Safehouse shortcuts">
         <a className="safehouse-bounty-logo" href="#bounties" aria-label="Open bounties"><img src={getAssetUrl('assets/bounty-hunter/hero.webp')} alt="" /></a>
         <StarterMythic bootstrap={bootstrap} placement="shortcut" />
         <KumiteShortcut />
+        </nav>
       </main>
     </div></div>
     <GameNav bootstrap={bootstrap} />

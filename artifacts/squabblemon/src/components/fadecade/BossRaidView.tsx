@@ -496,7 +496,7 @@ export function BossRaidView({
                         aria-label={`${c.name}. Motion ${c.cost}. Hands ${getEffectiveCardPower(c)}. ${c.effect}${c.statuses.silenced ? " Silenced." : c.statuses.frozen ? " Frozen." : ""}`}>
                         {adaptedEnemy}
                         <b className="raid-npc-power" aria-label={`${getEffectiveCardPower(c)} Hands`}>{getEffectiveCardPower(c)}</b>
-                        <small className="raid-npc-cost" aria-label={`${c.cost} Motion`}>⚡{c.cost}</small>
+                        <small className="raid-npc-cost" aria-label={`${c.cost} Motion`}><GameGlyph name="motion" />{c.cost}</small>
                         <span className="raid-npc-name">{c.name}</span>
                         {(c.statuses.silenced || c.statuses.frozen) && <small>{c.statuses.silenced ? "SILENCED" : "FROZEN"}</small>}
                       </button>
@@ -526,7 +526,7 @@ export function BossRaidView({
                           reduced={reducedMotion}
                         />
                         <b className="raid-npc-power" aria-label={`${getEffectiveCardPower(c)} Hands`}>{getEffectiveCardPower(c)}</b>
-                        <small className="raid-npc-cost" aria-label={`${c.cost} Motion`}>⚡{c.cost}</small>
+                        <small className="raid-npc-cost" aria-label={`${c.cost} Motion`}><GameGlyph name="motion" />{c.cost}</small>
                         <span className="raid-npc-name">{activeMode==="kumite"?(DOJO_NPC_NAMES[c.cardId]??c.name):c.name}</span>
                         {(c.statuses.silenced || c.statuses.frozen) && (
                           <small>
@@ -615,11 +615,11 @@ export function BossRaidView({
                     <i />
                   </span>
                   {card && <span className="raid-lane-choice">{targets[lane]
-                    ? selectedLane === lane ? "✓ SELECTED" : `SELECT · ${cardCost(run, card, lane, squabble, investment)} ⚡`
+                    ? selectedLane === lane ? "✓ SELECTED" : `SELECT · ${cardCost(run, card, lane, squabble, investment)} MOTION`
                     : "BLOCKED"}</span>}
                 </button>
                 {adapter && <div className="raid-district-summary">
-                  <span>{adapter.targetLane === lane ? "⚡ NEXT STRIKE" : adapter.tabletLanes?.includes(lane) ? "✦ TABLET ACTIVE" : adapter.districtRules[lane].rule}</span>
+                  <span>{adapter.targetLane === lane ? "NEXT STRIKE" : adapter.tabletLanes?.includes(lane) ? "✦ TABLET ACTIVE" : adapter.districtRules[lane].rule}</span>
                   <details><summary aria-label={`Rules for ${laneName}`}>?</summary><p>{adapter.districtRules[lane].rule} {adapter.districtRules[lane].objective}</p></details>
                 </div>}
                 <div className="raid-formation">
@@ -741,7 +741,7 @@ export function BossRaidView({
             )}
             <div className="raid-motion">
               <span>
-                ⚡ <b>{run.match.playerMotion}</b>
+                <GameGlyph name="motion" /> <b>{run.match.playerMotion}</b>
               </span>
               <small>MOTION</small>
             </div>
@@ -771,7 +771,7 @@ export function BossRaidView({
                     : card
                       ? selectedLane === null
                         ? "CHOOSE A LANE"
-                        : `PLAY CARD · ${cardCost(run, card, selectedLane, squabble, investment)} ⚡ →`
+                        : `PLAY CARD · ${cardCost(run, card, selectedLane, squabble, investment)} MOTION →`
                       : "END TURN →"}
               </button>
             ) : (

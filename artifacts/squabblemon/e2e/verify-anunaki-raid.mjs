@@ -103,7 +103,7 @@ try {
     await choicePage.getByRole('combobox',{name:'Dice wager'}).selectOption(String(wager));
     await choicePage.locator('.raid-lane-label').first().click();
     const baseDice = await choicePage.evaluate(() => window.raidState.match.playerHand.find(card=>card.cardId==='the-dice-game').cost);
-    assert.ok((await choicePage.getByRole('button',{name:/^PLAY CARD /}).textContent()).includes(`${baseDice+wager} ⚡`),'Dice price includes the exact selected wager');
+    assert.ok((await choicePage.getByRole('button',{name:/^PLAY CARD /}).textContent()).includes(`${baseDice+wager} MOTION`),'Dice price includes the exact selected wager');
     await choicePage.getByRole('button',{name:/^PLAY CARD /}).click();
     await choicePage.waitForFunction(()=>window.raidActions.length===1);
     await choicePage.getByRole('button',{name:'Select The Concert',exact:true}).click();

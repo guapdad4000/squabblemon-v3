@@ -1,3 +1,4 @@
+import { HandFist } from 'lucide-react';
 import type {
   BreakthroughRoomView,
   RoomIntent,
@@ -1251,7 +1252,7 @@ export default function BreakthroughArena({
                           )}
                         />
                         <span>{card?.name}</span>
-                        {unit.squabbled && <i>✊</i>}
+                        {unit.squabbled && <i aria-label="Squabbled"><HandFist size={14} aria-hidden="true" /></i>}
                         {unit.burnStacks ? (
                           <img
                             className="bt-status-burn"

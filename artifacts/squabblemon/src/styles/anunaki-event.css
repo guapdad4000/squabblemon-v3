@@ -63,3 +63,11 @@
 .anunaki-roadmap__copy .anunaki-roadmap__receipt{padding:9px 11px;border-left:3px solid #a4ffbe;background:#08251d;color:#dcffe2;font-size:12px;line-height:1.4}
 
 .anunaki-chapter-jumps{display:flex;flex-wrap:wrap;gap:8px;position:relative;margin:8px 0 22px}.anunaki-chapter-jumps button{min-height:44px;padding:10px 14px;border:0;background:#e8ca78;color:#0b2b21;font:900 11px monospace;transform:rotate(-2deg);cursor:pointer;clip-path:polygon(5% 0,100% 4%,94% 100%,0 94%)}.anunaki-chapter-jumps button:nth-child(even){transform:rotate(2deg);background:#aeebc2}.anunaki-roadmap__step{scroll-margin-top:20px}.anunaki-roadmap__step:nth-child(3n){opacity:.94}.anunaki-roadmap__step:nth-child(3n) .anunaki-roadmap__copy small{color:#ebd28b}
+
+.anunaki-roadmap__badge { display:inline-flex; align-items:center; gap:6px; }
+.anunaki-event__close { display:grid; place-items:center; min-width:44px; min-height:44px; }
+.anunaki-roadmap__copy:after { content:none; }
+.anunaki-roadmap__copy .anunaki-roadmap__receipt { border-left:0; border:1px solid #a4ffbe55; }
+
+.anunaki-event,.anunaki-banner { font-family:Arial,sans-serif; }
+.anunaki-event__hero p { max-width:min(390px,calc(100% - 80px)); }

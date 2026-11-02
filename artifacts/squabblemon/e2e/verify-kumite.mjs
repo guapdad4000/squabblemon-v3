@@ -166,7 +166,8 @@ try {
       assert.ok(fit.scrollWidth <= fit.width + 1, `Flag ${index + 1} text fits cloth at ${width}px`);
       assert.ok(fit.scrollHeight <= fit.height + 1, `Flag ${index + 1} dates/records stay above the fist emblem at ${width}px`);
     });
-    await page.locator('.kumite-scoreboard-stage').screenshot({ path: `${output}/${name}-flags.png` });
+    // The stage uses display:contents on mobile, so capture its rendered page.
+    await capture(page, `${output}/${name}-flags.png`);
     await page.evaluate(() => window.scrollTo(0, 0));
     await capture(page, `${output}/${name}-history.png`);
     await page.getByRole('tab', { name: 'Rules' }).click();
@@ -242,7 +243,7 @@ try {
     });
     await page.evaluate(() => window.scrollTo(0, 0));
     await capture(page, `${output}/${name}-scoreboard-live.png`);
-    await page.locator('.kumite-scoreboard-stage').screenshot({ path: `${output}/${name}-flags-live.png` });
+    await capture(page, `${output}/${name}-flags-live.png`);
     await page.locator('.kumite-registration').screenshot({ path: `${output}/${name}-signup-panel.png` });
     await page.getByRole('button', { name: 'Return to your fight' }).click();
     await page.waitForURL('**/game/online/REVIEW2');

@@ -11,3 +11,51 @@
 @media(prefers-reduced-motion:reduce){.anu-raid-hand-card{transition:none}}
 @media(max-width:600px){.anu-raid-battle .anu-raid-lane details[open] p{position:fixed;left:16px;right:16px;top:min(48vh,340px);width:auto;max-height:40vh;overflow-y:auto;z-index:30}}
 html[data-reduce-motion=true] .anu-raid-hand-card{transition:none}
+
+/* Arrival preparation shares the character-led hierarchy of the dojo. */
+.anu-raid-entry .anu-raid-intro { display:grid; grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr); align-items:center; gap:32px; padding:36px 0 48px; }
+.anu-entry-heading { position:relative; display:grid; grid-template-columns:minmax(0,1fr) minmax(0,.9fr); align-items:center; min-width:0; }
+.anu-entry-heading>div { position:relative; z-index:1; }
+.anu-entry-heading>img { width:100%; height:auto; max-height:520px; object-fit:contain; filter:drop-shadow(0 14px 14px #0009); }
+.anu-entry-heading h1 { margin:20px 0; font:400 clamp(62px,7vw,108px)/.9 var(--font-sign,'Blzee',Impact,sans-serif); letter-spacing:0; transform:rotate(-3deg); }
+.anu-entry-heading h1 span { display:block; font-size:.64em; line-height:1.05; margin-top:12px; }
+.anu-entry-heading p { color:#e2e2bf; font-size:13px; line-height:1.5; max-width:210px; }
+.anu-entry-heading small { font-size:9px; letter-spacing:.12em; }
+.anu-entry-loadout { min-width:0; padding:24px; background:linear-gradient(120deg,#062d27f2,#021b18ed); border:1px solid #9fba815e; box-shadow:0 16px 40px #0006; }
+.anu-entry-loadout .anu-raid-difficulties { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:4px; margin:0 0 20px; }
+.anu-raid-difficulties button { display:flex; justify-content:center; align-items:center; gap:5px; font:700 11px/1.2 var(--font-action-sign,'Hemi Head',Impact,sans-serif); letter-spacing:.03em; }
+.anu-raid-difficulties [aria-pressed=true] { background:#f0cb72; color:#062820; border-color:#f0cb72; }
+.anu-raid>nav button { display:inline-flex; align-items:center; gap:8px; font:700 11px var(--font-action-sign,'Hemi Head',Impact,sans-serif); text-decoration:none; }
+.anu-entry-loadout>.anu-raid-primary { display:block; width:100%; margin-top:24px; padding:17px 14px; min-height:56px; font:700 18px/1.2 var(--font-action-sign,'Hemi Head',Impact,sans-serif); transform:none; border:1px solid #ffe3a1; }
+.anu-entry-rules { margin-top:20px; border-top:1px solid #a1b38650; }
+.anu-entry-rules summary { display:flex; align-items:center; justify-content:space-between; min-height:48px; list-style:none; cursor:pointer; color:var(--anu-gold); font:700 11px var(--font-action-sign,'Hemi Head',Impact,sans-serif); }
+.anu-entry-rules summary::after { content:'+'; font-size:22px; }
+.anu-entry-rules[open] summary::after { content:'−'; }
+.anu-entry-rules summary::-webkit-details-marker { display:none; }
+.anu-entry-rules p,.anu-entry-loadout>p { font-size:12px; line-height:1.6; color:#d7dec4; }
+.anu-crew-toggle { display:flex; flex-wrap:wrap; gap:8px; align-items:center; }
+.anu-crew-toggle button { flex:1; border:1px solid #9ca77565; font-size:11px; }
+.anu-crew-toggle [aria-pressed=true] { border-color:#f0cb72; color:#f0cb72; background:#0d4435; }
+.anu-crew-toggle>small { flex-basis:100%; letter-spacing:.06em; font-size:9px; margin-top:4px; color:#b9c7ad; }
+.anu-unlock-note,.anu-champion-mark { display:flex; align-items:center; gap:8px; }
+.anu-champion-mark { color:var(--anu-gold); font-size:11px; }
+.anu-reward-tokens { display:flex; flex-wrap:wrap; gap:14px; }
+.anu-reward-tokens>span { display:inline-flex; align-items:center; gap:5px; font-size:12px; }
+.anu-reward-tokens .game-glyph { width:24px; height:24px; }
+.anu-entry-error { margin-top:16px; color:#ffe4c2; font-size:12px; }
+.anu-entry-error button { margin-right:8px; border:1px solid #b29a62; }
+.anu-raid-loading h1 { font:400 clamp(32px,6vw,60px) var(--font-sign,'Blzee',Impact,sans-serif); margin:20vh auto 20px; max-width:600px; }
+@media(max-width:800px) {
+ .anu-raid-entry .anu-raid-intro { display:block; padding:24px 0; }
+ .anu-entry-heading { max-width:570px; margin:auto; }
+ .anu-entry-heading>img { max-height:300px; }
+ .anu-entry-heading h1 { font-size:clamp(56px,13vw,80px); }
+ .anu-entry-loadout { max-width:570px; margin:auto; padding:20px 16px; }
+ .anu-entry-heading p { font-size:12px; }
+ .anu-raid-difficulties button { padding-inline:4px; font-size:10px; }
+}
+@media(orientation:landscape) and (max-height:500px) {
+ .anu-raid-entry .anu-raid-intro { display:grid; grid-template-columns:1fr 1fr; gap:24px; padding-top:12px; }
+ .anu-entry-heading>img { max-height:270px; }
+ .anu-entry-heading h1 { font-size:50px; }
+}

@@ -21,6 +21,8 @@ import {
   type BossRaidMode,
 } from "@workspace/squabblemon-engine/bossRaid";
 import { KUMITE_LINEUP_REWARDS, getCardImage, type Deck } from "../../data";
+import { battlePortraitUrl } from "../../lib/battlePortrait";
+import { Check, ArrowLeft, ArrowUpRight } from "lucide-react";
 import { CompactDeckPicker } from "../CompactDeckPicker";
 import { BossRaidView } from "./BossRaidView";
 import "../../styles/boss-raid.css";
@@ -152,7 +154,7 @@ function LiveBossRaidGame({
   if (query.isPending || query.isError || !status)
     return (
       <main className="boss-raid raid-loading">
-        <button onClick={onExit}>← Fadecade</button>
+        <button className="raid-back-link" onClick={onExit}><ArrowLeft size={16} aria-hidden="true" /> Fadecade</button>
         <h1>{query.isError ? mode === "kumite" ? "DOJO CONNECTION LOST" : "PRECINCT RADIO LOST" : "CALLING THE BLOCK…"}</h1>
         {query.isError && (
           <button onClick={() => void query.refetch()}>Retry connection</button>
@@ -205,24 +207,22 @@ function LiveBossRaidGame({
       }
     >
       <div className="raid-entry-topbar">
-        <button onClick={onExit}>← Fadecade</button>
-        <button type="button" onClick={onAnunaki}>ANUNAKI RAID · ANU</button>
-        <div className="raid-mode-flip" role="tablist" aria-label="Choose Raid Operation">
+        <button className="raid-back-link" onClick={onExit}><ArrowLeft size={16} aria-hidden="true" /> Fadecade</button>
+        <button type="button" onClick={onAnunaki}>ANUNAKI RAID <ArrowUpRight size={15} aria-hidden="true" /></button>
+        <div className="raid-mode-flip" role="group" aria-label="Choose Raid Operation">
           <button
             type="button"
-            role="tab"
-            aria-selected={mode === "precinct"}
+            aria-pressed={mode === "precinct"}
             onClick={() => switchMode("precinct")}
           >
-            PRECINCT RAID · OINK
+            PRECINCT
           </button>
           <button
             type="button"
-            role="tab"
-            aria-selected={mode === "kumite"}
+            aria-pressed={mode === "kumite"}
             onClick={() => switchMode("kumite")}
           >
-            KUMITE RAID · DOJO MASTERS
+            DOJO MASTERS
           </button>
         </div>
       </div>
@@ -265,27 +265,29 @@ function LiveBossRaidGame({
           </h1>
           <p>
             {mode === "kumite"
-              ? `Challenge ${kumiteForm.bossTitle} (${kumiteForm.hp} HP · ×${kumiteForm.multiplier} damage). Every full raid, 50+ DMG win, and defeated tier advances your Kumite Fighter Unlocks (${unlockedKumiteCount}/${KUMITE_LINEUP_REWARDS.length} unlocked).`
-              : "Five evolving bosses. Your damage stays on Oink between days—and every completed raid, 50+ DMG win, and tier clear also advances your Kumite Fighter Unlocks."}
+              ? `Challenge ${kumiteForm.bossTitle}. Your Hands hit at ×${kumiteForm.multiplier}.`
+              : "Five bosses. Damage carries over between days."}
           </p>
-          <div className="raid-kumite-unlock-strip" aria-label="Kumite fighter unlock connection">
-            <span>KUMITE LINEUP UNLOCKS ({unlockedKumiteCount}/{KUMITE_LINEUP_REWARDS.length})</span>
+          <details className="raid-kumite-unlock-strip" aria-label="Kumite fighter unlock connection">
+            <summary>FIGHTER UNLOCKS <b>{unlockedKumiteCount}/{KUMITE_LINEUP_REWARDS.length}</b></summary>
+            <p>Finish raids to count fights. Deal 50+ damage to count a win. Defeat tiers to count finals.</p>
             <div className="raid-kumite-unlock-pills">
               {KUMITE_LINEUP_REWARDS.map((item) => {
                 const owned = bootstrap.profile.ownedCardIds.includes(item.cardId);
                 return (
                   <span key={item.id} className="raid-kumite-pill" data-owned={owned}>
-                    {owned ? "✓ " : ""}{item.name}
+                    <img src={battlePortraitUrl(getCardImage(item.cardId))} alt="" loading="lazy" />
+                    <span>{item.name}</span>{owned && <Check size={14} aria-label="Owned" />}
                   </span>
                 );
               })}
             </div>
-          </div>
-          <p>
-            Tier {status.campaign.tier}/5 · {status.campaign.hp} HP remaining ·{" "}
-            {status.campaign.tierAttacks} attacks so far · Personal best:{" "}
-            {status.bestScore} DMG
-          </p>
+          </details>
+          <dl className="raid-entry-stats">
+            <div><dt>BOSS HP</dt><dd>{status.campaign.hp}</dd></div>
+            <div><dt>TIER</dt><dd>{status.campaign.tier}<small>/5</small></dd></div>
+            <div><dt>BEST DAMAGE</dt><dd>{status.bestScore}</dd></div>
+          </dl>
           <div className="raid-entry-launch">
             <small className="raid-entry-crew-label">BRING YOUR CREW</small>
             <CompactDeckPicker

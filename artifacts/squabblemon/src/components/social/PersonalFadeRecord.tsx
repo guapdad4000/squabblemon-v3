@@ -1,3 +1,4 @@
+import { HandFist } from 'lucide-react';
 import { useQuery } from "@tanstack/react-query";
 import { customFetch } from "@workspace/api-client-react";
 import { useSocial } from "../../lib/social";
@@ -67,7 +68,7 @@ export function PersonalFadeRecordDisplay({
     >
       {player.homie && (
         <strong className="personal-fade-record__homie">
-          ✊ FADEBOOK HOMIES
+          <HandFist size={16} aria-hidden="true" /> FADEBOOK HOMIES
         </strong>
       )}
       <span>YOU VS {rival.toUpperCase()}</span>

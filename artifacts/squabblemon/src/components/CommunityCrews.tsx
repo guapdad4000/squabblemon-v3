@@ -1,3 +1,4 @@
+import { HandFist } from 'lucide-react';
 import { CommunityCrewStudio } from "./CommunityCrewStudio";
 import { Link } from "wouter";
 import { usePersistentDeckSelection } from "../lib/deckSelection";
@@ -63,7 +64,7 @@ function CrewCard({
         <h3>{crew.name}</h3>
         {featured && (
           <b className="community-pick-seal">
-            ✊<small>PLAYER PICK</small>
+            <HandFist size={24} aria-hidden="true" /><small>PLAYER PICK</small>
           </b>
         )}
       </div>
@@ -258,7 +259,7 @@ function CrewSelect({
                 </small>
               </span>
               <span className="crew-select__respect">
-                <b>✊ {crew.votes}</b>
+                <b><HandFist size={14} aria-hidden="true" /> {crew.votes}</b>
                 <small>
                   {crew.voted
                     ? "RESPECT GIVEN"
@@ -549,7 +550,7 @@ export function CommunityCrews({ bootstrap }: { bootstrap: PlayerBootstrap }) {
             onClick={() => setArchiveOpen((value) => !value)}
             aria-expanded={archiveOpen}
           >
-            {archiveOpen ? "Close the wall" : "Previous player picks"} ✊
+            {archiveOpen ? "Close the wall" : "Previous player picks"} <HandFist size={15} aria-hidden="true" />
           </button>
           {archiveOpen && (
             <div className="community-archive">
