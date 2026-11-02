@@ -2,6 +2,9 @@ import { getDistrictResults, type CardInstance } from "./gameEngine";
 import type { OnlineRoom } from "./multiplayer";
 import { addReaction } from "./reactions";
 
+/** Temporary preseason ladder participation; one switch removes rivals from standings. */
+export const PARK_RIVALS_IN_STANDINGS = true;
+
 export const PARK_BOT_PERSONAS = [
   {
     id: "coach",
@@ -43,6 +46,16 @@ export const PARK_BOT_PERSONAS = [
     squabbleRound: 4,
     personality: "Competitive · never lets a swing slide",
   },
+  { id: "midnight", name: "Midnight Marco", avatarKey: "plug", bannerCardId: "plug", reactionCharacter: "dr-fade", pace: 700, squabbleRound: 4, personality: "Fast starts" },
+  { id: "fastbreak", name: "Fastbreak Jae", avatarKey: "hooper", bannerCardId: "hooper", reactionCharacter: "kyle", pace: 600, squabbleRound: 3, personality: "Counter pressure" },
+  { id: "velvet", name: "Velvet Vee", avatarKey: "wifey", bannerCardId: "wifey", reactionCharacter: "buddy", pace: 950, squabbleRound: 5, personality: "Late-round closer" },
+  { id: "uptown", name: "Uptown Rell", avatarKey: "cornball", bannerCardId: "cornball", reactionCharacter: "church-auntie", pace: 800, squabbleRound: 4, personality: "Fast starts" },
+  { id: "busstop", name: "Bus Stop Benny", avatarKey: "buddy", bannerCardId: "buddy", reactionCharacter: "dr-fade", pace: 900, squabbleRound: 4, personality: "Counter pressure" },
+  { id: "rooftop", name: "Rooftop Rae", avatarKey: "snow-bunny", bannerCardId: "snow-bunny", reactionCharacter: "kyle", pace: 720, squabbleRound: 3, personality: "Late-round closer" },
+  { id: "sunday", name: "Sunday Sol", avatarKey: "rastamon", bannerCardId: "rastamon", reactionCharacter: "buddy", pace: 1100, squabbleRound: 5, personality: "Fast starts" },
+  { id: "sidewalk", name: "Sidewalk Sly", avatarKey: "all-jokes-roaster", bannerCardId: "all-jokes-roaster", reactionCharacter: "church-auntie", pace: 680, squabbleRound: 3, personality: "Counter pressure" },
+  { id: "corner", name: "Corner Kiki", avatarKey: "church-auntie", bannerCardId: "church-auntie", reactionCharacter: "dr-fade", pace: 850, squabbleRound: 4, personality: "Late-round closer" },
+  { id: "lastcall", name: "Last Call Lou", avatarKey: "kyle", bannerCardId: "kyle", reactionCharacter: "kyle", pace: 780, squabbleRound: 5, personality: "Fast starts" },
 ] as const;
 export function parkBotPersona(id?: string) {
   return (

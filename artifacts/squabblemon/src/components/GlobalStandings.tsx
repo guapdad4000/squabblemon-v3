@@ -13,6 +13,7 @@ type Standing = {
   wins: number;
   games: number;
   isYou: boolean;
+  automated?: boolean;
 };
 export type Standings = {
   season: string;
@@ -41,7 +42,7 @@ export function GlobalStandings({ playerId }: { playerId: string }) {
         </h2>
         <p>
           {query.data?.you
-            ? `You’re #${query.data.you.position} of ${query.data.total} ranked players · ${query.data.you.points} RP`
+            ? `You’re #${query.data.you.position} of ${query.data.total} ranked opponents · ${query.data.you.points} RP`
             : "Finish a ranked fade to take your place."}
         </p>
       </header>
@@ -74,7 +75,7 @@ export function GlobalStandings({ playerId }: { playerId: string }) {
                       {player.isYou ? " · YOU" : ""}
                     </strong>
                     <small>
-                      {player.tier} · {player.wins} W / {player.games} played
+                      {player.automated ? 'AI · ' : ''}{player.tier} · {player.wins} W / {player.games} played
                     </small>
                   </div>
                   <span>

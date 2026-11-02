@@ -27,12 +27,12 @@ import { usePersistentDeckSelection } from '../../lib/deckSelection';
 import { getRankedLobby } from '../../lib/multiplayer';
 import '../../components/breakthrough/production.css';
 
-/** CPU practice is explicit; full public entry retains its release requirements. */
+/** Legacy practice links enter the same PvP queue; local fixtures keep their isolated renderer. */
 export function Breakthrough(props: { bootstrap: PlayerBootstrap }) {
   const [location] = useLocation();
-  if (location !== '/game/kumite/breakthrough/practice' && !getBreakthroughLaunchReadiness().canLaunch)
-    return <Redirect to="/game/kumite" />;
-  return location === '/game/kumite/breakthrough/practice' ? <BreakthroughPractice {...props} /> : <BreakthroughOnline key={props.bootstrap.profile.id} {...props} />;
+  if (location === '/game/kumite/breakthrough/practice') return <Redirect to="/game/kumite/breakthrough" />;
+  if (!getBreakthroughLaunchReadiness().canLaunch) return <Redirect to="/game/kumite" />;
+  return <BreakthroughOnline key={props.bootstrap.profile.id} {...props} />;
 }
 
 /** Local CPU matches have no account rewards or online room admission. */

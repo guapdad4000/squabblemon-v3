@@ -45,6 +45,7 @@
     "./parkChess": "./src/parkChess.ts",
     "./parkChessLessons": "./src/parkChessLessons.ts",
     "./parkChessRating": "./src/parkChessRating.ts",
+    "./breakthroughRivals": "./src/breakthroughRivals.ts",
     "./parkBots": "./src/parkBots.ts",
     "./ranked": "./src/ranked.ts",
     "./battleArtwork": "./src/battleArtwork.ts",

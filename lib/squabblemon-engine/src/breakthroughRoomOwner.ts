@@ -1,3 +1,4 @@
+import { chooseAi } from './breakthrough';
 import { getBreakthroughLaunchReadiness } from './breakthroughCatalog';
 import {
   BreakthroughRoomError,
@@ -49,6 +50,7 @@ export interface RoomOwnerOptions {
 export class BreakthroughRoomOwnerForSimulation {
   private room: BreakthroughRoomCheckpoint | null = null;
   private pending: RoomJournalEntry[] = [];
+  private nextRivalDecisionAt = 0;
   private durableRevision = 0;
   private lastCheckpointMs = 0;
   private lastFlushMs = 0;
@@ -178,6 +180,21 @@ export class BreakthroughRoomOwnerForSimulation {
       const result = tickBreakthroughRoom(room, now);
       this.room = result.checkpoint;
       if (result.journal) this.pending.push(result.journal);
+      // Use the existing serialized host tick, at most one legal rival intent per second.
+      // Durable command sequence + journal make recovery/retries use the same authority as humans.
+      const automated = this.room.automated;
+      if (automated && this.room.phase === 'active' && now >= this.nextRivalDecisionAt) {
+        this.nextRivalDecisionAt = now + 1000;
+        const play = chooseAi(this.room.game, automated, this.room.game.aiStyle);
+        if (play) {
+          const sequence = this.room.seats[automated].lastSequence + 1;
+          const command = commandBreakthroughRoom(this.room, this.room.members[automated], {
+            commandId: `rival:${sequence}`, sequence, command: { kind: 'deploy', ...play },
+          }, now);
+          this.room = command.checkpoint;
+          if (command.journal) this.pending.push(command.journal);
+        }
+      }
       await this.flush();
     });
   }

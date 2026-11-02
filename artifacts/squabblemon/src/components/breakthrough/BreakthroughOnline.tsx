@@ -178,6 +178,7 @@ export default function BreakthroughOnline({
             label="Choose your Breakthrough deck"
           />
           {!legal && <p>Choose a saved gang of ten unique cards you own.</p>}
+          <p className="bt-matchmaking-note">Players first · AI rivals after 6s</p>
           <div className="bt-lobby-actions">
             <button
               className="bt-primary"

@@ -137,3 +137,14 @@ test('all fifteen real canonical starter crews complete actual CPU practice and 
     assert.deepEqual(createGame(BREAKTHROUGH_ROSTER, { seed, decks }), initial);
   }
 });
+
+test('ten matchmaking rivals have distinct valid crews and stable named identities', async () => {
+  const { BREAKTHROUGH_RIVALS } = await import('@workspace/squabblemon-engine/breakthroughRivals');
+  assert.equal(BREAKTHROUGH_RIVALS.length, 10);
+  assert.equal(new Set(BREAKTHROUGH_RIVALS.map(r => r.userId)).size, 10);
+  assert.equal(new Set(BREAKTHROUGH_RIVALS.map(r => r.cards.join(','))).size, 10);
+  for (const rival of BREAKTHROUGH_RIVALS) {
+    assert.doesNotMatch(rival.name, /bot|cpu/i);
+    assert.equal(practiceDeckLegality({id:rival.userId,name:rival.name,cardIds:rival.cards,heroCardId:rival.avatarKey}, owned).valid, true, rival.name);
+  }
+});

@@ -1,3 +1,4 @@
+import { BREAKTHROUGH_RIVALS, BREAKTHROUGH_RIVAL_WAIT_MS } from '@workspace/squabblemon-engine/breakthroughRivals';
 import { randomUUID, randomInt } from "node:crypto";
 import type { pool as applicationPool } from "@workspace/db";
 import {
@@ -127,11 +128,14 @@ export class BreakthroughOnlineService {
         WHERE user_id=$1 AND status='waiting'
         AND heartbeat_at>clock_timestamp()-interval '30 seconds'
         AND heartbeat_at<=clock_timestamp()-interval '10 seconds'
-      ) SELECT request_id,deck_id,status,room_id FROM breakthrough_searches
+      ) SELECT request_id,deck_id,status,room_id,created_at FROM breakthrough_searches
         WHERE user_id=$1 AND (status='paired' OR
         (status='waiting' AND heartbeat_at>clock_timestamp()-interval '30 seconds'))`,
       [userId],
     );
+    let currentSearch = result.rows[0];
+    if (currentSearch?.status === 'waiting' && Date.now() - new Date(currentSearch.created_at).getTime() >= BREAKTHROUGH_RIVAL_WAIT_MS)
+      currentSearch = await this.fillWaitingSearch(userId);
     const record = await this.options.pool.query(
       "SELECT trophies,wins,losses,draws FROM breakthrough_records WHERE user_id=$1 AND season=$2",
       [userId, BREAKTHROUGH_SEASON],
@@ -143,7 +147,7 @@ export class BreakthroughOnlineService {
           [userId],
         );
     return {
-      search: this.search(recent.rows[0]),
+      search: this.search(currentSearch ?? recent.rows[0]),
       record: record.rows[0] ?? { trophies: 0, wins: 0, losses: 0, draws: 0 },
     };
   }
@@ -196,33 +200,41 @@ export class BreakthroughOnlineService {
         [userId, requestId, deckId, JSON.stringify(member)],
       );
       if (!rival.rowCount) return inserted.rows[0];
-      const other = rival.rows[0].member as BreakthroughMember,
-        now = Date.now(),
-        roomId = randomUUID();
-      const checkpoint = this.engine.create({
-        roomId,
-        ownerFence: 1,
-        members: { player: other.userId, opponent: userId },
-        serverTimeMs: now,
-        expiresAtMs: now + 10 * 60 * 1000,
-        game: createGame(this.engine.roster(), {
-          seed: randomInt(1, 0x7fffffff),
-          decks: { player: other.cards, opponent: member.cards },
-        }),
-      });
-      // Creation, both seats and queue outcome commit together. An expired lease lets the host claim ownership.
-      await c.query(
-        `INSERT INTO breakthrough_rooms(room_id,owner_fence,lease_until,revision,checkpoint_revision,checkpoint,expires_at)
-        VALUES($1,1,clock_timestamp(),0,0,$2,to_timestamp($3/1000.0))`,
-        [roomId, JSON.stringify(checkpoint), checkpoint.expiresAtMs],
-      );
-      await c.query(
-        "UPDATE breakthrough_searches SET status='paired',room_id=$1 WHERE status='waiting' AND user_id=ANY($2::text[])",
-        [roomId, [userId, other.userId]],
-      );
+      const roomId = await this.pair(c, rival.rows[0].member, member);
       return { ...inserted.rows[0], status: "paired", room_id: roomId };
     });
     return this.search(result);
+  }
+  private async pair(c: BreakthroughClient, first: BreakthroughMember, second: BreakthroughMember, automated = false) {
+    const now = Date.now(), roomId = randomUUID();
+    const rival = automated ? BREAKTHROUGH_RIVALS.find(r => r.userId === second.userId) : undefined;
+    const checkpoint = this.engine.create({
+      roomId, ownerFence: 1, members: { player: first.userId, opponent: second.userId },
+      profiles: { player: { name: first.name, avatarKey: first.avatarKey }, opponent: { name: second.name, avatarKey: second.avatarKey, ...(automated ? { automated: true } : {}) } },
+      ...(automated ? { automated: 'opponent' as const } : {}),
+      serverTimeMs: now, expiresAtMs: now + 10 * 60 * 1000,
+      game: createGame(this.engine.roster(), { seed: randomInt(1, 0x7fffffff), aiStyle: rival?.style, decks: { player: first.cards, opponent: second.cards } }),
+    });
+    await c.query(`INSERT INTO breakthrough_rooms(room_id,owner_fence,lease_until,revision,checkpoint_revision,checkpoint,expires_at)
+      VALUES($1,1,clock_timestamp(),0,0,$2,to_timestamp($3/1000.0))`, [roomId, JSON.stringify(checkpoint), checkpoint.expiresAtMs]);
+    await c.query("UPDATE breakthrough_searches SET status='paired',room_id=$1 WHERE status='waiting' AND user_id=ANY($2::text[])", [roomId, [first.userId, second.userId]]);
+    return roomId;
+  }
+  /** Existing waiting-lobby polls trigger fallback; no new scheduler, socket or synthetic account. */
+  private async fillWaitingSearch(userId: string) {
+    return this.transaction(async c => {
+      await c.query("SELECT pg_advisory_xact_lock(hashtext('breakthrough-matchmaking-v1'))");
+      const own = await c.query("SELECT * FROM breakthrough_searches WHERE user_id=$1 AND status IN ('waiting','paired') FOR UPDATE", [userId]);
+      const row = own.rows[0];
+      if (!row || row.status !== 'waiting' || Date.now() - new Date(row.created_at).getTime() < BREAKTHROUGH_RIVAL_WAIT_MS || Date.now() - new Date(row.heartbeat_at).getTime() >= 30000) return row;
+      const count = await c.query("SELECT count(*)::int AS n FROM breakthrough_rooms WHERE checkpoint->>'phase'='active'");
+      if (count.rows[0].n >= 100) return row;
+      const waiting = await c.query("SELECT * FROM breakthrough_searches WHERE status='waiting' AND user_id<>$1 AND heartbeat_at>clock_timestamp()-interval '30 seconds' ORDER BY created_at LIMIT 1 FOR UPDATE", [userId]);
+      // Recheck humans under the same lock used by admission and cancellation.
+      const opponent = waiting.rows[0]?.member ?? BREAKTHROUGH_RIVALS[randomInt(BREAKTHROUGH_RIVALS.length)];
+      const roomId = await this.pair(c, row.member, opponent, !waiting.rowCount);
+      return { ...row, status: 'paired', room_id: roomId };
+    });
   }
   async cancel(
     userId: string,

@@ -1,3 +1,4 @@
+import { recordParkRivalResult } from './parkRivalStandings';
 import { storeOnlineRoom as stored, restoreOnlineRoom as restore } from './onlineRoomPersistence';
 import { bankRankedMatchClout } from './rankedMatchClout';
 import { equippedPlayerMat } from '@workspace/squabblemon-engine/playerMats';
@@ -417,7 +418,7 @@ async function saveRoom(tx: Tx, row: RoomRow, room: OnlineRoom, now: number) {
 }
 
 /** Room lock + profile locks make the result and both rating changes a single receipt. */
-async function settleRankedRoom(tx: Tx, room: OnlineRoom, now: number, roomId: string): Promise<OnlineRoom> {
+export async function settleRankedRoom(tx: Tx, room: OnlineRoom, now: number, roomId: string): Promise<OnlineRoom> {
   if (room.rulesVersion !== ONLINE_RULES_VERSION || room.reason === 'rules-updated')
     return retireIncompatibleOnlineRoom(room, now);
   // Full human battles only. Timeouts, concessions and ranked bot matches never advance these tasks.
@@ -459,6 +460,7 @@ async function settleRankedRoom(tx: Tx, room: OnlineRoom, now: number, roomId: s
       updatedAt: new Date(now) }).where(eq(playerProfilesTable.clerkUserId, userId));
     settlement[seat] = { ...award.result, rewards, matchClout: matchClout.receipt };
   }
+  if (room.ranked.bot) await recordParkRivalResult(tx, room, now);
   return { ...room, revision: room.revision + 1, ranked: { ...room.ranked, settlement } };
 }
 
@@ -526,7 +528,7 @@ async function matchWaitingRoom(tx: Tx, own: RoomRow, input: OnlineRoom, now: nu
     const rookie = (await tx.select({ progress: playerProfilesTable.storyProgress }).from(playerProfilesTable).where(eq(playerProfilesTable.clerkUserId, own.hostUserId)))[0];
     const beginner = rankedStats(rookie?.progress.fadePark).points < 100;
     const persona = PARK_BOT_PERSONAS[parseInt(own.code.slice(-4), 16) % PARK_BOT_PERSONAS.length];
-    const bot: OnlineMember = { userId: `park-bot:${own.code}`, name: `${persona.name} · Park Bot`, avatarKey: persona.avatarKey, banner: { cardId: persona.bannerCardId, finish: 'base' }, level: beginner ? 3 : 10, ready: false, supportsAnunaki: true,
+    const bot: OnlineMember = { userId: `park-bot:${own.code}`, name: persona.name, avatarKey: persona.avatarKey, banner: { cardId: persona.bannerCardId, finish: 'base' }, level: beginner ? 3 : 10, ready: false, supportsAnunaki: true,
       deck: { id: 'park-bot', name: persona.personality, hero: beginner ? 'hooper' : recipe.hero,
         cards: catalogIdsToEngineIds(beginner ? [...ROOKIE_CORE_IDS] : recipe.catalogCardIds) } };
     room = readyRanked({ ...room, ranked: { ...room.ranked!, bot: true, botPersona: persona.id, botReactionCount: 0, botNextAt: now + persona.pace,

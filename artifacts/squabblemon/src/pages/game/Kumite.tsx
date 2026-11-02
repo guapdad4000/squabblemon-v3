@@ -1,3 +1,4 @@
+import { isBreakthroughPublicEntryEnabled } from '@workspace/squabblemon-engine/breakthroughRelease';
 import breakthroughScene from '../../components/breakthrough/assets/dojo-landscape.webp';
 import breakthroughImpact from '../../components/breakthrough/assets/progression/breach-fx.webp';
 import { KUMITE_FILMS } from '../../lib/kumiteFilms';
@@ -182,7 +183,7 @@ export function Kumite({ bootstrap }: { bootstrap: PlayerBootstrap }) {
           {(
             <article className="kumite-mode-card kumite-mode-card--breakthrough" data-mode="breakthrough">
               <div className="kumite-mode-card__media"><img src={breakthroughScene} alt="" draggable={false} /><img className="kumite-mode-card__chibi" src={breakthroughImpact} alt="" draggable={false} /><span className="kumite-mode-card__badge kumite-mode-card__badge--gold"><i /> THREE LANES · TWO BREACHES</span></div>
-              <div className="kumite-mode-card__body"><span className="kumite-mode-card__eyebrow">CPU PRACTICE · BRING YOUR DECK</span><h2>BREAK<em>THROUGH</em></h2><div className="kumite-entry__actions"><Link className="kumite-button" href="/game/kumite/breakthrough/practice">Practice Breakthrough<ArrowRight size={18} aria-hidden="true" /></Link></div></div>
+              <div className="kumite-mode-card__body"><span className="kumite-mode-card__eyebrow">LIVE PVP · BRING YOUR DECK</span><h2>BREAK<em>THROUGH</em></h2><div className="kumite-entry__actions">{isBreakthroughPublicEntryEnabled() ? <Link className="kumite-button" href="/game/kumite/breakthrough">Find opponent<ArrowRight size={18} aria-hidden="true" /></Link> : <button className="kumite-button" disabled>PvP in preparation</button>}</div></div>
             </article>
           )}
           <article className="kumite-mode-card kumite-mode-card--tournament" data-mode="tournament">

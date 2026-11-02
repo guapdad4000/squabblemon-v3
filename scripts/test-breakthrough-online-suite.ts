@@ -331,6 +331,47 @@ export async function verifyOnline(pool: BreakthroughRuntimeOptions["pool"]) {
       lastReceipts.filter((r) => r?.exclusion === "daily-cap").length,
       1,
     );
+    // The same authenticated queue fills with a rival only after the human-first wait.
+    const rivalSearchId = randomUUID();
+    const queuedRival = await call('rival-human', '/search', { deckId: 'owned', requestId: rivalSearchId });
+    assert.equal(queuedRival.status, 'waiting');
+    assert.equal((await call('rival-human')).search.status, 'waiting');
+    await pool.query("UPDATE breakthrough_searches SET created_at=clock_timestamp()-interval '7 seconds' WHERE user_id='rival-human'");
+    const pairedRivals = await Promise.all([call('rival-human'), call('rival-human')]);
+    const rivalRoomId = pairedRivals[0].search.roomId;
+    assert(rivalRoomId);
+    assert.equal(pairedRivals[1].search.roomId, rivalRoomId);
+    const rivalInitial = await service.view(rivalRoomId, 'rival-human');
+    assert(rivalInitial.profiles?.opponent.automated);
+    assert(!/bot|cpu/i.test(rivalInitial.profiles!.opponent.name));
+    assert(!JSON.stringify(rivalInitial).includes('kumite-rival:'));
+    for (let i = 0; i < 8; i++) {
+      await new Promise(resolve => setTimeout(resolve, 300));
+      await service.cycle();
+      if ((await service.view(rivalRoomId, 'rival-human')).metrics.opponent.deployments > 0) break;
+    }
+    const rivalPlaying = await service.view(rivalRoomId, 'rival-human');
+    assert(rivalPlaying.metrics.opponent.deployments > 0, 'rival plays a legal server-side card');
+    const deployed = rivalPlaying.metrics.opponent.deployments;
+    await Promise.all([service.cycle(), service.cycle()]);
+    assert.equal((await service.view(rivalRoomId, 'rival-human')).metrics.opponent.deployments, deployed, 'decision cadence bounded across overlapping host cycles');
+    await service.stop();
+    await pool.query("UPDATE breakthrough_rooms SET lease_until=clock_timestamp()-interval '1 second' WHERE room_id=$1", [rivalRoomId]);
+    service = new BreakthroughOnlineService(options, engine);
+    const recoveredRival = await service.view(rivalRoomId, 'rival-human');
+    assert.deepEqual(recoveredRival.profiles, rivalPlaying.profiles);
+    assert.equal(recoveredRival.metrics.opponent.deployments, deployed);
+    await service.command(rivalRoomId, 'rival-human', {commandId:'rival-surrender',sequence:1,command:{kind:'surrender'}});
+    await service.settle();
+    const rivalReceipt = await service.receipt(rivalRoomId, 'rival-human');
+    assert.equal(rivalReceipt?.exclusion, 'incomplete');
+    await service.settle();
+    assert.deepEqual(await service.receipt(rivalRoomId, 'rival-human'), rivalReceipt);
+    const cancelledId=randomUUID();
+    await call('cancel-rival','/search',{deckId:'owned',requestId:cancelledId});
+    await pool.query("UPDATE breakthrough_searches SET created_at=clock_timestamp()-interval '7 seconds' WHERE user_id='cancel-rival'");
+    await call('cancel-rival','/cancel',{requestId:cancelledId});
+    assert.equal((await call('cancel-rival')).search, null, 'cancelled search cannot create a rival');
     assert.deepEqual(errors, []);
     console.log(
       JSON.stringify(
@@ -341,6 +382,9 @@ export async function verifyOnline(pool: BreakthroughRuntimeOptions["pool"]) {
             "auth and protocol",
             "owned-deck admission",
             "atomic human pairing",
+            "timed rival pairing and concurrent lobby retries",
+            "bounded server rival decisions and recovery",
+            "rival receipt retry and cancellation",
             "cancel race",
             "membership privacy",
             "durable command retry",

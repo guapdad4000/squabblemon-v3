@@ -500,3 +500,8 @@
 .bt-arena .bt-mini-explainer summary { min-height: 44px; }
 .bt-arena .bt-choice-options button { font: 700 12px/1.35 BTHemi, sans-serif; background: #183b2ccd; border: 1px solid #c5b88f66; clip-path: none; }
 .bt-arena .bt-choice-options button:focus-visible, .bt-arena .bt-choice-options button:hover { background: #f1d58c; color: #152319; }
+
+.bt-arena .bt-nameplate-opps .bt-banner-copy { max-width: 100%; min-width: 0; box-sizing: border-box; }
+.bt-arena .bt-nameplate-opps .bt-banner-copy > strong { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.bt-lobby .bt-matchmaking-note { font-size: 12px; line-height: 1.5; color: #c5c6b0; }

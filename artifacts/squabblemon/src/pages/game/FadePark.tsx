@@ -207,7 +207,7 @@ export function FadePark({ bootstrap }: { bootstrap: PlayerBootstrap }) {
               {searching && <div className="park-search park-search-overlay" data-testid="ranked-search">
                 <div className="park-search-art"><img className="park-search-poster" src={getAssetUrl('assets/fade-park/search-versus.webp')} alt="" /><img className="park-search-fighters" src={getAssetUrl('assets/fade-park/search.gif')} alt="Dr. Fade and Guap warming up" /><img className="park-search-phone" src={getAssetUrl('assets/props/sticker-phone.webp')} alt="" /></div>
                 <div className="park-search-status" role="status"><span className="park-pulse" /><h3>{connected ? 'Calling for a fade…' : 'Reconnecting…'}</h3><time>{String(Math.floor(elapsed / 60)).padStart(2, '0')}:{String(elapsed % 60).padStart(2, '0')}</time></div>
-                <p>Checking for players first. A Park Bot joins after 6 seconds. Hang up to cancel.</p>
+                <p>Checking for players first. An AI rival joins after 6 seconds. Hang up to cancel.</p>
               </div>}
             </div>
             <FadeFinderButton reduced={profile.settings.reducedMotion} busy={busy} searching={searching}
@@ -221,7 +221,7 @@ export function FadePark({ bootstrap }: { bootstrap: PlayerBootstrap }) {
             <img className="park-search-phone" src={getAssetUrl('assets/props/sticker-phone.webp')} alt="" />
           </div>
           <div className="park-search-status" role="status"><span className="park-pulse" /><h3>{connected ? 'Calling for a fade…' : 'Reconnecting…'}</h3><time>{String(Math.floor(elapsed / 60)).padStart(2, '0')}:{String(elapsed % 60).padStart(2, '0')}</time></div>
-          <p>Finding The Opps. Hang up the phone to cancel. A Park Bot steps in after a short wait, with reduced rank rewards.</p>
+          <p>Finding The Opps. Hang up the phone to cancel. An AI rival steps in after a short wait, with reduced rank rewards.</p>
           {!chosen && <button className="park-cancel" disabled={busy} onClick={() => void cancel()}>{busy ? 'Hanging up…' : 'Hang up — cancel search'}</button>}
         </div> : null}
         <div className="park-floating-info">

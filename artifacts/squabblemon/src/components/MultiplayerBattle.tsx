@@ -121,7 +121,7 @@ export function onlineBattleProjection(room: OnlineRoomView, mappedCards = new W
     turnSeconds: TURN_SECONDS, rivalHandCount: room.rivalHandCount,
     playerIdentity: room.members[room.seat] ?? undefined,
     rivalIdentity: room.members[rival] ?? undefined,
-    mode: room.kumite ? 'Kumite' : room.ranked ? room.ranked.opponent === 'bot' ? 'Park bot' : 'Ranked' : 'Friend fade',
+    mode: room.kumite ? 'Kumite' : room.ranked ? room.ranked.opponent === 'bot' ? 'Ranked · AI' : 'Ranked' : 'Friend fade',
   } };
 }
 
@@ -356,7 +356,7 @@ export function MultiplayerBattle({ room, busy, connected, reducedMotion: profil
   return <main className="h-[100dvh] bg-black text-white font-sans flex flex-col relative overflow-hidden game-bg" style={room.kumite ? { '--kumite-platform': `url("${getAssetUrl('assets/kumite/layers/platform.webp')}")` } as CSSProperties : undefined} data-kumite={Boolean(room.kumite)} data-testid="online-battle" data-turn={myTurn ? 'you' : 'rival'} data-round={room.round} data-revision={room.revision} data-status={room.status} data-connected={connected}>
     {room.kumite && <KumiteArena reducedMotion={Boolean(reducedMotion)} platform={false} className="kumite-arena-scene--battle" />}
     {!surrender && arrival && room.status === 'active' && <button type="button" className="pvp-exit-control" data-testid="pvp-exit" onClick={openExit}>Leave battle</button>}
-    <AnimatePresence>{arrival && <MatchArrival player={room.members[room.seat]!} rival={rival} label={room.ranked?.opponent === 'bot' ? 'Park Bot found · ranked sparring' : 'Your fade is ready'} onContinue={() => setArrival(false)} />}</AnimatePresence>
+    <AnimatePresence>{arrival && <MatchArrival player={room.members[room.seat]!} rival={rival} label={room.ranked?.opponent === 'bot' ? 'Park rival found · AI opponent' : 'Your fade is ready'} onContinue={() => setArrival(false)} />}</AnimatePresence>
     {battleStartEffectVisible && !arrival && room.status === 'active' && !reducedMotion && (
       <BattleStartSmoke onComplete={() => setBattleStartEffectVisible(false)} />
     )}

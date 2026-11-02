@@ -34,9 +34,9 @@ export const BREAKTHROUGH_RULE_INPUT_SHA256: Readonly<Record<string, string>> =
     'breakthroughReactions.ts':
       '80c5773f06efa8a7e3c2b47c121ac0f857c6b97653cae91c32f295af96d57ebb',
     'breakthroughRoom.ts':
-      'c0ff0353e40b4d5d23ef8311c6a1cd52566e043a7268c5b4c27050138a9ebfbf',
+      'cf1307b31f1138e473166a259212b05c3439c5ce24cb4b91f804cc7ed617e58a',
     'breakthroughRoomOwner.ts':
-      '42f995882a23b44f577986e323bb1abad61f72848c8411a33fd01927eea7e70a',
+      '3c3bdfb66be5767d8068c6a1284ca876a9aefd0014fc6d9af97d76b64ee992f7',
     'breakthroughRoomStream.ts':
       'ab366669bdf23cc31c91a1f00bffc2d3ae00df74bf4cd5ef055e7aa7636d283d',
     'breakthroughSpecials.ts':

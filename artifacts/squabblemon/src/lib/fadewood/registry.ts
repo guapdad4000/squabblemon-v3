@@ -55,7 +55,7 @@ const park = mode('ranked','Enter Fade Park','/game/online');
 const home = mode('safehouse','Enter Safehouse','/game');
 const dojo = mode('training','Practice at the Dojo','/game/training');
 const kumite = mode('arena','Enter Kumite','/game/kumite');
-const breakthrough = mode('breakthrough-practice','Breakthrough · CPU practice','/game/kumite/breakthrough/practice');
+const breakthrough = mode('breakthrough-practice','Breakthrough · PvP','/game/kumite/breakthrough/practice');
 const patrol = mode('patrol','Punch on Patrol','/game/challenges?game=punch-on-patrol');
 const events = mode('events','Events on the block','/game/events');
 const bounties = mode('bounties','Check the bounties','/game/missions');

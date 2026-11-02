@@ -16,3 +16,5 @@ export * from './communityDecks';
 export * from "./breakthroughRooms";
 
 export * from './breakthroughOnline';
+
+export * from './parkRivalStandings';

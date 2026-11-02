@@ -76,12 +76,15 @@ export interface RoomTerminalEvent {
     metrics: Record<Side, MatchMetrics>;
   };
 }
+export type RoomPublicIdentity = { name: string; avatarKey: string; automated?: boolean };
 export interface BreakthroughRoomCheckpoint {
   schemaVersion: typeof BREAKTHROUGH_ROOM_SCHEMA;
   roomId: string;
   ownerFence: number;
   revision: number;
   members: Record<Side, string>;
+  profiles?: Record<Side, RoomPublicIdentity>;
+  automated?: Side;
   phase: RoomPhase;
   lastServerTimeMs: number;
   expiresAtMs: number;
@@ -299,6 +302,8 @@ export function createBreakthroughRoom(
 export interface CreateBreakthroughRoomInput {
   roomId: string;
   members: Record<Side, string>;
+  profiles?: Record<Side, RoomPublicIdentity>;
+  automated?: Side;
   ownerFence: number;
   serverTimeMs: number;
   expiresAtMs: number;
@@ -326,6 +331,8 @@ export function createBreakthroughRoomForSimulation(
     ownerFence: input.ownerFence,
     revision: 0,
     members: copy(input.members),
+    ...(input.profiles ? { profiles: copy(input.profiles) } : {}),
+    ...(input.automated ? { automated: input.automated } : {}),
     phase: input.game.status === 'complete' ? 'complete' : 'active',
     lastServerTimeMs: input.serverTimeMs,
     expiresAtMs: input.expiresAtMs,
@@ -515,6 +522,7 @@ type PublicPlayer = {
   nextDrawAt: number;
 };
 export interface BreakthroughRoomView {
+  profiles?: Record<Side, RoomPublicIdentity>;
   roomId: string;
   revision: number;
   phase: RoomPhase;
@@ -675,6 +683,7 @@ export function projectBreakthroughRoom(
     nextSequence: room.seats[side].lastSequence + 1,
     lastAck: copy(room.seats[side].receipts.at(-1)?.ack ?? null),
     players: { player: summary('player'), opponent: summary('opponent') },
+    ...(room.profiles ? { profiles: copy(room.profiles) } : {}),
     hand: [...own.hand],
     nextCard: own.queue[0] ?? null,
     drawsLocked: !!game.drawsLocked,

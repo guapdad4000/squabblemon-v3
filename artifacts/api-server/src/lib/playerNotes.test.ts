@@ -140,7 +140,7 @@ test(
       async () => {
         const view = await rankedStandings(users[0]);
         assert.equal(view.you?.position, 1);
-        assert.equal(view.total, 3);
+        assert.equal(view.total, 17);
         assert.equal(view.leaders.filter((p) => p.position === 1).length, 2);
         assert(!view.leaders.some((p) => p.name === "Player 3"));
         assert.equal(
@@ -219,7 +219,7 @@ test(
         const view = await rankedStandings(users[0]);
         assert.equal(view.leaders.length, 20);
         assert.equal(view.you?.position, 2);
-        assert.equal(view.total, 28);
+        assert.equal(view.total, 42);
       },
     );
   },

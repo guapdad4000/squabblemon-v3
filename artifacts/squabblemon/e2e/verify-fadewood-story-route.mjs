@@ -47,7 +47,7 @@ try {
     await send('inspect',{sourceId:'dr-fade'});
     const panel=page.locator('.fadewood-character-panel');
     await panel.waitFor();
-    assert.equal(await panel.getByRole('button',{name:'Breakthrough · CPU practice',exact:true}).count(),1);
+    assert.equal(await panel.getByRole('button',{name:'Breakthrough · PvP',exact:true}).count(),1);
     await panel.getByRole('button',{name:/^Continue /}).click();
     await page.locator('.story-atlas__viewport').waitFor();
     assert.equal(await page.locator('.fadewood-world').count(),0,'Host opens map, not another character interaction');
@@ -67,14 +67,11 @@ try {
   {
     const {context,page,send,autoFocus,errors}=await setup({width:390,height:844},'?route=1&dynamic=kumite');
     await autoFocus(); await send('inspect',{sourceId:'dr-fade'});
-    await page.getByRole('button',{name:'Breakthrough · CPU practice',exact:true}).click();
-    await page.getByTestId('breakthrough-lobby').waitFor();
-    await page.getByRole('button',{name:/TRY A REVIEWED LOANER/}).click();
-    assert.equal(await page.getByRole('button',{name:/PLAY CPU PRACTICE/}).isEnabled(),true);
-    await page.getByRole('button',{name:/PLAY CPU PRACTICE/}).click();
-    await page.getByRole('button',{name:'Open rules and practice settings'}).waitFor();
+    await page.getByRole('button',{name:'Breakthrough · PvP',exact:true}).click();
+    await page.waitForFunction(() => document.querySelector('[data-fixture-route]')?.getAttribute('data-fixture-route') === '/game/kumite');
+    assert.equal(await page.getByRole('button',{name:/PLAY CPU PRACTICE/}).count(),0);
     assert.deepEqual(errors,[]);
-    report.push({practiceFromDrFade:true,loanerStartsCpuMatch:true,errors});
+    report.push({pvpFromDrFade:true,legacyPracticeRemoved:true,releaseGatePreserved:true,errors});
     await context.close();
   }
   await writeFile(join(output,'route-summary.json'),JSON.stringify(report,null,2));

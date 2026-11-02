@@ -142,6 +142,8 @@ export default function BreakthroughArena({
   onChangeDeck,
   onExit,
 }: Props) {
+  const rivalProfile = online?.view.profiles?.[online.view.side === 'player' ? 'opponent' : 'player'];
+  const rivalName = rivalProfile?.name ?? (online ? 'OPPONENT' : 'CPU');
   const [matchKey, setMatchKey] = useState(0);
   const [resultReady, setResultReady] = useState(false);
   const [osReducedMotion, setOsReducedMotion] = useState(
@@ -762,15 +764,16 @@ export default function BreakthroughArena({
             reducedMotion={reducedMotion}
           />
           <div className="bt-banner-portrait">
-            {online ? <HandFist className="bt-opponent-sigil" aria-hidden="true" /> : <FighterPortrait
-              cardId={opponentDeck[0]}
-              name="CPU"
+            {online && !rivalProfile ? <HandFist className="bt-opponent-sigil" aria-hidden="true" /> : <FighterPortrait
+              cardId={rivalProfile?.avatarKey ?? opponentDeck[0]}
+              avatarKey={rivalProfile?.avatarKey}
+              name={rivalName}
               battleArtwork
               decorative
             />}
           </div>
           <div className="bt-banner-copy">
-            <strong>{online ? 'OPPONENT' : 'CPU'}</strong>
+            <strong title={rivalName}>{rivalName}</strong>
             <div
               className="bt-base-pips"
               aria-label={`${game.players.opponent.breaches} of 2 base breaches`}
@@ -800,7 +803,7 @@ export default function BreakthroughArena({
         }}
       >
         <div className="bt-base bt-base-opps">
-          {online ? 'OPPONENT' : 'CPU'} BASE <span>↑ BREAK THROUGH</span>
+          {rivalName} BASE <span>↑ BREAK THROUGH</span>
         </div>
         {!reducedMotion &&
           smoke.map((event) => {

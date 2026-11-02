@@ -80,7 +80,7 @@ export async function verifyBrowser(pool: BreakthroughRuntimeOptions["pool"]) {
       create: (input) =>
         createBreakthroughRoomForSimulation({
           ...input,
-          game: createGame(roster, {
+          game: input.automated ? input.game : createGame(roster, {
             seed: 129,
             durationMs: 45000,
             decks: { player: cards, opponent: cards },
@@ -262,6 +262,28 @@ export async function verifyBrowser(pool: BreakthroughRuntimeOptions["pool"]) {
       await aContext.close();
       await bContext.close();
     }
+    const rivalContext = await browser.newContext({viewport:{width:390,height:844},reducedMotion:'reduce',extraHTTPHeaders:{'x-test-user':'browser-rival-human'}});
+    const rivalPage=await rivalContext.newPage();
+    await rivalPage.goto('http://127.0.0.1:4289/squabblemon/e2e/breakthrough-online.fixture.html?account=browser-rival-human');
+    await rivalPage.screenshot({path:`${directory}/rival-lobby.png`,fullPage:true});
+    await rivalPage.getByRole('button',{name:'FIND OPPONENT →'}).click();
+    await expect(rivalPage.locator('[data-room-phase="active"]')).toBeVisible({timeout:20000});
+    const queued=await service.lobby('browser-rival-human');
+    const rivalRoomId=queued.search!.roomId!;
+    const initial=await service.view(rivalRoomId,'browser-rival-human');
+    assert(initial.profiles?.opponent.automated);
+    await expect(rivalPage.locator('.bt-nameplate-opps strong')).toHaveText(initial.profiles!.opponent.name);
+    await expect.poll(async()=> (await service.view(rivalRoomId,'browser-rival-human')).metrics.opponent.deployments,{timeout:12000}).toBeGreaterThan(0);
+    await rivalPage.screenshot({path:`${directory}/rival-match.png`,fullPage:true});
+    await rivalPage.reload();await expect(rivalPage.locator('[data-room-phase="active"]')).toBeVisible({timeout:15000});
+    await expect(rivalPage.locator('.bt-nameplate-opps strong')).toHaveText(initial.profiles!.opponent.name);
+    await rivalPage.getByRole('button',{name:'Open rules and settings'}).click();
+    await rivalPage.getByRole('button',{name:'SURRENDER MATCH',exact:true}).click();
+    await rivalPage.getByRole('button',{name:'SURRENDER MATCH',exact:true}).click();
+    await expect(rivalPage.locator('.bt-finish')).toBeVisible({timeout:20000});
+    await expect(rivalPage.getByText(/TROPHIES · .* TOTAL/)).toBeVisible({timeout:15000});
+    await rivalPage.screenshot({path:`${directory}/rival-result.png`,fullPage:true});
+    await rivalContext.close();
     assert.deepEqual(errors, []);
     const storage = await pool.query(`SELECT count(*)::int AS rooms,
       sum(octet_length(checkpoint::text))::bigint AS logical_checkpoint_bytes,
@@ -277,6 +299,7 @@ export async function verifyBrowser(pool: BreakthroughRuntimeOptions["pool"]) {
       JSON.stringify(
         {
           passed: true,
+          matchedRival: { automatic: true, humanFirstWait: true, namedOpponent: true, serverDeployment: true, reconnect: true, savedResult: true },
           records,
           databaseTraffic,
           walBytes,

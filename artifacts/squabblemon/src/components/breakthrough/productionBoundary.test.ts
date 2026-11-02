@@ -27,18 +27,11 @@ test('nested routes precede Kumite hub and Breakthrough stays outside eager idle
   assert.match(modules, /key !== 'Breakthrough'/);
 });
 
-test('CPU practice is discoverable while full public entry retains readiness', () => {
-  const page = text('../../pages/game/Breakthrough.tsx'),
-    hub = text('../../pages/game/Kumite.tsx');
+test('Kumite opens PvP matchmaking and legacy practice links redirect to it', () => {
+  const page = text('../../pages/game/Breakthrough.tsx'), hub = text('../../pages/game/Kumite.tsx');
   assert.match(page, /getBreakthroughLaunchReadiness\(\)\.canLaunch/);
-  assert.match(page, /<Redirect to=["']\/game\/kumite["']/);
-  assert.ok(page.includes("location !== '/game/kumite/breakthrough/practice' && !getBreakthroughLaunchReadiness().canLaunch"));
-  assert.match(page, /breakthroughDeckEditorPath\(deck\.id,\s*['"]\/game\/kumite\/breakthrough\/practice['"]\)/);
-  assert.ok(hub.includes('href="/game/kumite/breakthrough/practice"'));
-  assert.ok(hub.includes('Practice Breakthrough'));
-  assert.doesNotMatch(hub, /href="\/game\/kumite\/breakthrough"/);
-  assert.doesNotMatch(
-    hub,
-    /from ["']@workspace\/squabblemon-engine\/breakthroughCatalog/,
-  );
+  assert.ok(page.includes(`if (location === '/game/kumite/breakthrough/practice') return <Redirect to="/game/kumite/breakthrough" />;`));
+  assert.ok(hub.includes('href="/game/kumite/breakthrough"'));
+  assert.ok(hub.includes('Find opponent'));
+  assert.doesNotMatch(hub, /CPU PRACTICE|Practice Breakthrough|Face the rivals/);
 });
