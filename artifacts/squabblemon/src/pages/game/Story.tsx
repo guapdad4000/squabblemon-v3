@@ -883,23 +883,31 @@ function BattleBriefing({
   const isBoss = battle.encounter.phases && battle.encounter.phases.length > 0;
 
   return (
-    <div className="story-briefing">
+    <div className="story-briefing story-briefing--illustrated">
       <div className="story-briefing__bg">
         <img src={getAssetUrl(battle.cinematic?.environmentAssetId ?? 'assets/venues/red-fence-night-court.webp')} alt="" />
       </div>
       <div className="story-briefing__container">
-        <div className="story-briefing__header">
+        <div className="story-briefing__header" style={{ backgroundImage: `linear-gradient(90deg, #07120bea, #07120b55 65%, #07120b25), url("${getAssetUrl(battle.cinematic?.environmentAssetId ?? 'assets/venues/red-fence-night-court.webp')}")` }}>
           <div className={`story-briefing__title ${isBoss ? 'is-boss' : ''}`}>
             {battle.optional && <span className="eyebrow">Mastery Node</span>}
             {!battle.optional && <span className="eyebrow">{cleared ? 'Mastery replay' : battle.battleType}</span>}
             <h2>{battle.encounter.enemy.name}</h2>
-            <p>{getMatchRoundLimit(battle.encounter)} rounds · win two districts</p>
-            <div className="story-briefing__history">{historyButton}</div>
+            <p>{battle.title}</p>
           </div>
           <div className="story-briefing__enemy">
             <img src={getAssetUrl(battle.encounter.enemy.portraitAssetId)} alt={battle.encounter.enemy.name} />
           </div>
         </div>
+
+        <div className="story-briefing__record">
+          <span><strong>{getMatchRoundLimit(battle.encounter)}</strong> rounds</span>
+          <span><strong>2</strong> districts to win</span>
+          <span className="story-briefing__star-record" aria-label={`${Math.min(stars, battle.starObjectives.length)} of ${battle.starObjectives.length} stars earned`}>
+            {battle.starObjectives.map((objective, index) => <Star key={objective.id} size={20} fill={index < stars ? 'currentColor' : 'none'} aria-hidden="true" />)}
+          </span>
+        </div>
+        <nav className="story-briefing__history" aria-label="Story scenes">{historyButton}</nav>
 
         <div className="story-briefing__dossier">
           {battle.teaching && (
@@ -925,8 +933,8 @@ function BattleBriefing({
           )}
 
           <div className="story-briefing__grid">
-            <div className="story-briefing__card taped">
-              <div className="story-briefing__section-title">Encounter Rules</div>
+            <div className="story-briefing__card story-briefing__card--rules taped">
+              <div className="story-briefing__section-title"><GameGlyph name="fight" /> Encounter Rules</div>
               <div className="mt-2">
                 {modifiers.length ? modifiers.map((modifier) => <p key={modifier} className="text-sm font-semibold mb-1">{modifier}</p>) : <p className="text-sm font-semibold">Standard district rules apply.</p>}
               </div>
@@ -940,8 +948,8 @@ function BattleBriefing({
               )}
             </div>
 
-            <div className="story-briefing__card taped">
-              <div className="story-briefing__section-title">Objectives</div>
+            <div className="story-briefing__card story-briefing__card--objectives taped">
+              <div className="story-briefing__section-title"><GameGlyph name="mastery" /> Objectives</div>
               <div className="text-[10px] font-mono uppercase tracking-wider text-[#555] mb-3 font-bold" data-testid="briefing-best-stars">
                 Stars earned: {Math.min(stars, battle.starObjectives.length)} / {battle.starObjectives.length}
               </div>
@@ -956,8 +964,8 @@ function BattleBriefing({
               </div>
             </div>
 
-            <div className="story-briefing__card taped">
-              <div className="story-briefing__section-title">First-clear rewards</div>
+            <div className="story-briefing__card story-briefing__card--rewards taped">
+              <div className="story-briefing__section-title"><GameGlyph name="ticket" /> First-clear rewards</div>
               <div className="story-briefing__prizes">
                 {battle.rewards.map((reward, index) => <RewardPrize key={`${reward.id}-${index}`} reward={reward} />)}
                 {battle.rewards.length === 0 && <p>No first-clear rewards.</p>}

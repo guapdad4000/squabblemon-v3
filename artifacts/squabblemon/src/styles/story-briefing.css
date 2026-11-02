@@ -539,3 +539,57 @@ html[data-reduce-motion="true"] .story-briefing__title .eyebrow { transform: non
 .story-history-dialog{overflow:hidden}
 .story-history{position:relative}
 .story-history .reward-street-file__paper{max-height:calc(100dvh - 40px);overflow-y:auto;background-image:repeating-linear-gradient(0deg,transparent 0 27px,#846a2820 28px 29px),linear-gradient(110deg,#f1e2bd,#e3c98f)}
+
+/* Illustrated encounter sheet: the opponent and their location lead the file. */
+.story-briefing--illustrated .story-briefing__container{max-width:1100px;gap:18px}
+.story-briefing--illustrated .story-briefing__actions{max-width:1100px}
+.story-briefing--illustrated .story-briefing__header{position:relative;isolation:isolate;display:flex;align-items:flex-end;min-height:340px;flex:none;margin:0;gap:0;padding:26px;background-size:cover;background-position:center;border:1px solid #b39860;box-shadow:0 8px 24px #0007;overflow:hidden}
+.story-briefing--illustrated .story-briefing__header::after{content:'';position:absolute;inset:9px;pointer-events:none;border:1px solid #e6c4774d;z-index:3}
+.story-briefing--illustrated .story-briefing__title{flex:none;width:56%;max-width:510px;padding:22px;z-index:2;box-shadow:5px 7px 0 #0008;transform:rotate(-2deg)}
+.story-briefing--illustrated .story-briefing__title h2{font:700 clamp(34px,4.5vw,56px)/.96 var(--font-action-sign,var(--font-display));margin-bottom:10px}
+.story-briefing--illustrated .story-briefing__title p{font:700 12px/1.45 var(--font-mono);text-transform:uppercase;letter-spacing:.04em;color:#6d492e}
+.story-briefing--illustrated .story-briefing__enemy{position:absolute;inset:12px 0 0 45%;width:auto;margin:0;display:flex;align-items:flex-end;justify-content:center;z-index:1}
+.story-briefing--illustrated .story-briefing__enemy img{height:100%;width:100%;max-height:none;max-width:none;object-fit:contain;object-position:center bottom;filter:drop-shadow(0 8px 10px #000a)}
+.story-briefing__record{display:flex;align-items:center;justify-content:space-around;gap:12px;margin-top:-18px;padding:12px 18px;border:1px solid #b39860;border-top:0;background:linear-gradient(110deg,#263e2c,#14281f);color:#f1dbab;font:700 11px/1.3 var(--font-mono);text-transform:uppercase}
+.story-briefing__record>span{display:flex;align-items:center;gap:9px}.story-briefing__record strong{font:700 30px/1 var(--font-action-sign,var(--font-display));color:#f4ce83}
+.story-briefing__record .story-briefing__star-record{gap:5px;color:#edc76d}
+.story-briefing--illustrated .story-briefing__history{margin:0;justify-content:flex-end}
+.story-briefing--illustrated .story-briefing__history button{background:#172a22;border-color:#b3986070;color:#ebd5aa;box-shadow:2px 3px #0008}
+.story-briefing--illustrated .story-briefing__dossier{padding:28px;transform:none;border:1px solid #ab8f59;box-shadow:0 12px 30px #0008;background-image:repeating-linear-gradient(0deg,transparent 0 27px,#846a2819 28px 29px),linear-gradient(110deg,#f1e2bd,#e3c98f);background-size:auto}
+.story-briefing--illustrated .story-briefing__grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:22px;margin-top:22px}
+.story-briefing--illustrated .story-briefing__card{padding:22px 20px;background:#faf0d7;border-color:#ab8e5c;box-shadow:4px 6px #66522a26;transform:rotate(-.6deg)}
+.story-briefing--illustrated .story-briefing__card--objectives{transform:rotate(.6deg)}
+.story-briefing--illustrated .story-briefing__card--rewards{grid-column:1 / -1;background:#1b3226;color:#f6e4bf;transform:none;border-color:#b59d67}
+.story-briefing--illustrated .story-briefing__card>.story-briefing__section-title{display:flex;align-items:center;gap:10px;background:none;color:#483420;box-shadow:none;padding:0;font:700 20px/1.15 var(--font-action-sign,var(--font-display))}
+.story-briefing--illustrated .story-briefing__section-title .game-glyph{--glyph-size:42px}
+.story-briefing--illustrated .story-briefing__card--rewards>.story-briefing__section-title{color:#f1d392}
+.story-briefing--illustrated .story-briefing__prizes{grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}
+.story-briefing--illustrated .story-briefing__prizes .story-prize{padding:12px;background:#f4e5bf;box-shadow:2px 3px #0005}
+.story-briefing--illustrated .story-briefing__focus{margin-top:0;background:#172c22;border:1px solid #a98e55;transform:none}
+.story-briefing--illustrated .story-briefing__focus-card{flex-basis:140px;padding:10px 10px 14px;background:#e8dbb9;box-shadow:3px 5px #0008;transform:rotate(-2deg);border:1px solid #a19069}
+.story-briefing--illustrated .story-briefing__focus-card:nth-child(even){transform:rotate(2deg)}
+.story-briefing--illustrated .story-briefing__focus-card img{height:145px;background:radial-gradient(ellipse at bottom,#5b7052,#1c3328)}
+.story-briefing--illustrated .story-briefing__focus-name{color:#302d20;font-size:12px;text-transform:uppercase}
+.story-briefing--illustrated .story-briefing__focus-rarity{color:#665331}
+.story-briefing--illustrated .story-briefing__focus-cards{padding:8px 5px 14px}
+@media(max-width:768px){
+ .story-briefing--illustrated .story-briefing__header{min-height:280px;padding:18px 14px;background-position:60% center}
+ .story-briefing--illustrated .story-briefing__title{width:60%;padding:17px 12px}
+ .story-briefing--illustrated .story-briefing__title h2{font-size:clamp(28px,8vw,42px)}
+ .story-briefing--illustrated .story-briefing__title p{font-size:10px;line-height:1.5}
+ .story-briefing--illustrated .story-briefing__enemy{inset:8px -8px 0 32%;max-width:none}
+ .story-briefing__record{padding:12px 9px;gap:8px;font-size:9px}
+ .story-briefing__record>span{gap:5px}.story-briefing__record strong{font-size:25px}
+ .story-briefing__record .story-briefing__star-record{gap:3px}.story-briefing__star-record svg{width:16px;height:16px}
+ .story-briefing--illustrated .story-briefing__history{justify-content:center;gap:8px}
+ .story-briefing--illustrated .story-briefing__dossier{padding:20px 14px}
+ .story-briefing--illustrated .story-briefing__grid{grid-template-columns:minmax(0,1fr);gap:20px}
+ .story-briefing--illustrated .story-briefing__card{padding:18px 14px}
+ .story-briefing--illustrated .story-briefing__card>.story-briefing__section-title{font-size:18px}
+ .story-briefing--illustrated .story-briefing__prizes{grid-template-columns:minmax(0,1fr)}
+ .story-briefing--illustrated .story-briefing__focus-card{flex-basis:120px}
+ .story-briefing--illustrated .story-briefing__focus-card img{height:125px}
+}
+@media(max-height:620px) and (max-width:600px){.story-briefing--illustrated .story-briefing__header{min-height:230px}}
+@media(prefers-reduced-motion:reduce){.story-briefing--illustrated .story-briefing__title{transform:none}}
+html[data-reduce-motion=true] .story-briefing--illustrated .story-briefing__title{transform:none}
