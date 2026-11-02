@@ -71,6 +71,13 @@
       "cwd": ".",
       "command": "node scripts/test-breakthrough-database.mjs",
       "evidence": "Fresh native PostgreSQL, independent-connection CAS and takeover, JSONB replay, atomic rollback and terminal deduplication; no real accounts"
+    },
+    {
+      "id": "park-rival-standings",
+      "when": "Ranked fallback rivals, ladder participation or settlement changes",
+      "cwd": ".",
+      "command": "node scripts/test-park-rivals-database.mjs",
+      "evidence": "Fresh native PostgreSQL; concurrent settlement, rollback, public standings, human pairing, fallback and complete ranked match"
     }
   ],
   "nativePrerequisites": [

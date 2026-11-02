@@ -16,7 +16,7 @@ function fixture(t) {
 }
 
 test('current native history covers development SQL, schema, and consolidated online-room baseline', () => {
-  assert.equal(checkNetlifyMigrationCoverage().tables, 29);
+  assert.equal(checkNetlifyMigrationCoverage().tables, 30);
 });
 
 test('native live-state columns without their writer trigger block release', t => {
@@ -251,3 +251,15 @@ $function$;
 `);
   assert.doesNotThrow(() => checkNetlifyMigrationCoverage(root));
 });
+
+for (const change of ['omit', 'disable']) {
+  test(`native rival standings row security cannot ${change}`, t => {
+    const root = fixture(t);
+    const file = path.join(root, 'netlify/database/migrations/202611020003_park-rival-standings/migration.sql');
+    const sql = readFileSync(file, 'utf8');
+    writeFileSync(file, change === 'omit'
+      ? sql.replace('ALTER TABLE park_rival_standings ENABLE ROW LEVEL SECURITY;', '')
+      : sql + '\nALTER TABLE park_rival_standings DISABLE ROW LEVEL SECURITY;\n');
+    assert.throws(() => checkNetlifyMigrationCoverage(root), /row security park_rival_standings/);
+  });
+}

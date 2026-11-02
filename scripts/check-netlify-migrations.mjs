@@ -56,7 +56,7 @@ function normalizeConstraint(value) {
 }
 
 function sqlCoverage(sql, file, strict = false) {
-  const coverage = { tables: new Map(), indexes: new Map(), constraints: new Map(), foreignKeys: new Map(), droppedIndexes: new Set() };
+  const coverage = { tables: new Map(), indexes: new Map(), constraints: new Map(), foreignKeys: new Map(), rowSecurity: new Map(), droppedIndexes: new Set() };
   const clean = sql.replace(/--[^\n]*/g, '')
     .replace(/\$(\w*)\$[\s\S]*?\$\1\$/g, "''");
   if (strict) {
@@ -118,7 +118,9 @@ function sqlCoverage(sql, file, strict = false) {
     }
     const constraint = alter[3].match(namedConstraint);
     if (constraint) coverage.constraints.set(`${table}.${name(constraint)}`, normalizeConstraint(constraint[3]));
-    if (strict && (!addedCount && !constraint ||
+    const rowSecurity = alter[3].trim().match(/^(ENABLE|DISABLE)\s+ROW\s+LEVEL\s+SECURITY$/i);
+    if (rowSecurity) coverage.rowSecurity.set(table, rowSecurity[1].toUpperCase() === 'ENABLE');
+    if (strict && (!addedCount && !constraint && !rowSecurity ||
       /\bADD\s+COLUMN\b/i.test(alter[3]) && !addedCount ||
       /\bADD\s+CONSTRAINT\b/i.test(alter[3]) && !constraint)) {
       throw new Error(`Unsupported development ALTER TABLE ${table} in ${file}; add coverage before releasing.`);
@@ -150,14 +152,14 @@ function merge(into, from) {
     if (!columns.size && !into.tables.has(table)) into.tables.set(table, new Map());
     for (const [column, definition] of columns) addColumn(into, table, column, definition);
   }
-  for (const key of ['indexes', 'constraints', 'foreignKeys']) {
+  for (const key of ['indexes', 'constraints', 'foreignKeys', 'rowSecurity']) {
     for (const [name, signature] of from[key]) into[key].set(name, signature);
   }
   for (const name of from.droppedIndexes) into.droppedIndexes.add(name);
 }
 
 function schemaCoverage(root) {
-  const coverage = { tables: new Map(), indexes: new Map(), constraints: new Map(), foreignKeys: new Map(), droppedIndexes: new Set() };
+  const coverage = { tables: new Map(), indexes: new Map(), constraints: new Map(), foreignKeys: new Map(), rowSecurity: new Map(), droppedIndexes: new Set() };
   const directory = path.join(root, 'lib/db/src/schema');
   for (const file of readdirSync(directory).filter(file => file.endsWith('.ts'))) {
     const source = readFileSync(path.join(directory, file), 'utf8');
@@ -247,11 +249,11 @@ function checkNativeTransactionSafety(sql, file) {
 export function checkNetlifyMigrationCoverage(root = process.cwd()) {
   const required = schemaCoverage(root);
   const devDir = path.join(root, 'lib/db/migrations');
-  for (const file of readdirSync(devDir).filter(file => file.endsWith('.sql'))) {
+  for (const file of readdirSync(devDir).filter(file => file.endsWith('.sql')).sort()) {
     merge(required, sqlCoverage(readFileSync(path.join(devDir, file), 'utf8'), file, true));
   }
   const nativeDir = path.join(root, 'netlify/database/migrations');
-  const native = { tables: new Map(), indexes: new Map(), constraints: new Map(), foreignKeys: new Map(), droppedIndexes: new Set() };
+  const native = { tables: new Map(), indexes: new Map(), constraints: new Map(), foreignKeys: new Map(), rowSecurity: new Map(), droppedIndexes: new Set() };
   const entries = readdirSync(nativeDir).sort();
   const nativeText = entries.map(entry => readFileSync(path.join(nativeDir, entry, 'migration.sql'), 'utf8')).join('\n');
   const developmentText = readdirSync(devDir).filter(file => file.endsWith('.sql')).map(file => readFileSync(path.join(devDir, file), 'utf8')).join('\n');
@@ -303,6 +305,9 @@ export function checkNetlifyMigrationCoverage(root = process.cwd()) {
   }
   for (const [constraint, signature] of required.constraints) {
     if (native.constraints.get(constraint) !== signature) missing.push(`constraint ${constraint}`);
+  }
+  for (const [table, enabled] of required.rowSecurity) {
+    if (native.rowSecurity.get(table) !== enabled) missing.push(`row security ${table}`);
   }
   for (const index of required.droppedIndexes) {
     if (!native.droppedIndexes.has(index)) missing.push(`drop index ${index}`);
