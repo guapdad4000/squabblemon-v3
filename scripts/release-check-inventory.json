@@ -64,6 +64,13 @@
       "cwd": ".",
       "command": "node scripts/test-events-feedback-database.mjs",
       "evidence": "Full fresh native event/feedback and outbox suite, separate from migration-only replay"
+    },
+    {
+      "id": "breakthrough-rooms",
+      "when": "Breakthrough journals, checkpoints, lease ownership, outbox or schema changes",
+      "cwd": ".",
+      "command": "node scripts/test-breakthrough-database.mjs",
+      "evidence": "Fresh native PostgreSQL, independent-connection CAS and takeover, JSONB replay, atomic rollback and terminal deduplication; no real accounts"
     }
   ],
   "nativePrerequisites": [
@@ -163,6 +170,16 @@
       "command": "node --import tsx e2e/verify-story-delivery.ts",
       "server": "Owns isolated port4193; phone and desktop real Story components with mocked account API",
       "evidence": "Chapter network isolation, cached revisit, deep links, retry, stale revision and cancellation; exact generated content checked separately"
+    },
+    {
+      "id": "breakthrough-anunaki",
+      "when": "Breakthrough Anunaki effects, Tablet presentation or arena input changes",
+      "cwd": "artifacts/squabblemon",
+      "commands": [
+        "pnpm exec playwright test --config e2e/playwright.config.ts e2e/breakthrough-anunaki.spec.ts --project=chromium-desktop"
+      ],
+      "server": "Local Vite with BASE_PATH=/squabblemon and STORY_TEST_PORT; complete assets required",
+      "evidence": "Five viewports, Tablet placement/consumption, exact Anu price, Yakub summon, loaded portraits and no horizontal overflow; synthetic CPU practice, not hosted PvP"
     }
   ],
   "browserPrerequisites": [
