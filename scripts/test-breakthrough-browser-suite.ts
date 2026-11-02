@@ -39,9 +39,34 @@ export async function verifyBrowser(pool: BreakthroughRuntimeOptions["pool"]) {
       "anu",
     ];
   const errors: unknown[] = [];
+  const databaseTraffic = { queries: 0, parameterBytes: 0, resultJsonBytes: 0 };
+  const measure = (target: any): any =>
+    new Proxy(target, {
+      get(object, key) {
+        if (key === "connect")
+          return async () => measure(await object.connect());
+        if (key === "query")
+          return async (...args: any[]) => {
+            databaseTraffic.queries++;
+            databaseTraffic.parameterBytes += Buffer.byteLength(
+              JSON.stringify(args[1] ?? []),
+            );
+            const result = await object.query(...args);
+            databaseTraffic.resultJsonBytes += Buffer.byteLength(
+              JSON.stringify(result.rows),
+            );
+            return result;
+          };
+        const value = object[key];
+        return typeof value === "function" ? value.bind(object) : value;
+      },
+    });
+  const walStart = (
+    await pool.query("SELECT pg_current_wal_insert_lsn() AS lsn")
+  ).rows[0].lsn;
   const service = new BreakthroughOnlineService(
     {
-      pool,
+      pool: measure(pool),
       report: (e) => errors.push(String(e)),
       member: async (_c, userId) => ({
         userId,
@@ -104,7 +129,7 @@ export async function verifyBrowser(pool: BreakthroughRuntimeOptions["pool"]) {
         accountB = `browser-b-${suffix}`;
       const aContext = await browser.newContext({
         viewport,
-        reducedMotion: "reduce",
+        reducedMotion: viewport.width === 390 ? "no-preference" : "reduce",
         extraHTTPHeaders: { "x-test-user": accountA },
       });
       const bContext = await browser.newContext({
@@ -115,6 +140,27 @@ export async function verifyBrowser(pool: BreakthroughRuntimeOptions["pool"]) {
       const a = await aContext.newPage(),
         b = await bContext.newPage(),
         pageErrors: string[] = [];
+      const network = await aContext.newCDPSession(a);
+      await network.send("Network.enable");
+      const resources = new Map<string, any>();
+      network.on("Network.responseReceived", (event: any) => {
+        const { requestId, type, response } = event;
+        resources.set(requestId, {
+          url: response.url,
+          type,
+          bytes: 0,
+          cached: !!(response.fromDiskCache || response.fromServiceWorker),
+          cacheControl: response.headers["cache-control"] ?? null,
+        });
+      });
+      network.on("Network.loadingFinished", (event: any) => {
+        const record = resources.get(event.requestId);
+        if (record) record.bytes = event.encodedDataLength;
+      });
+      const media = () =>
+        [...resources.values()].filter((r) =>
+          ["Image", "Media", "Font"].includes(r.type),
+        );
       a.on("pageerror", (e: Error) => pageErrors.push(e.message));
       b.on("pageerror", (e: Error) => pageErrors.push(e.message));
       const url = (account: string) =>
@@ -156,6 +202,7 @@ export async function verifyBrowser(pool: BreakthroughRuntimeOptions["pool"]) {
           () => document.documentElement.scrollWidth <= innerWidth,
         ),
       );
+      const firstEntryMedia = media().map((r) => ({ ...r }));
       const elapsed = Number(
         await a.locator("[data-elapsed-ms]").getAttribute("data-elapsed-ms"),
       );
@@ -184,7 +231,9 @@ export async function verifyBrowser(pool: BreakthroughRuntimeOptions["pool"]) {
         });
         await expect(b.getByText(/TROPHIES · .* TOTAL/)).toBeVisible();
         await a.reload();
-        await expect(a.getByText(/TROPHIES · .* TOTAL/)).toBeVisible({timeout:15000});
+        await expect(a.getByText(/TROPHIES · .* TOTAL/)).toBeVisible({
+          timeout: 15000,
+        });
         await a.screenshot({
           path: `${directory}/390-result.png`,
           fullPage: true,
@@ -198,17 +247,42 @@ export async function verifyBrowser(pool: BreakthroughRuntimeOptions["pool"]) {
         anunakiPlay: true,
         reconnected: true,
         resultReceipt: viewport.width === 390,
+        motion: viewport.width === 390 ? "normal" : "reduced",
+        firstEntryMediaBytes: firstEntryMedia.reduce(
+          (sum, r) => sum + r.bytes,
+          0,
+        ),
+        firstEntryMedia,
+        totalMediaBytesIncludingReloads: media().reduce(
+          (sum, r) => sum + r.bytes,
+          0,
+        ),
+        mediaIncludingReloads: media(),
       });
       await aContext.close();
       await bContext.close();
     }
     assert.deepEqual(errors, []);
+    const storage = await pool.query(`SELECT count(*)::int AS rooms,
+      sum(octet_length(checkpoint::text))::bigint AS logical_checkpoint_bytes,
+      sum(pg_column_size(checkpoint))::bigint AS stored_checkpoint_bytes FROM breakthrough_rooms`);
+    const walBytes = (
+      await pool.query(
+        "SELECT pg_wal_lsn_diff(pg_current_wal_insert_lsn(),$1)::bigint AS bytes",
+        [walStart],
+      )
+    ).rows[0].bytes;
     writeFileSync(
       `${directory}/verification.json`,
       JSON.stringify(
         {
           passed: true,
           records,
+          databaseTraffic,
+          walBytes,
+          storage: storage.rows[0],
+          limitations:
+            "Local Vite fixture: media encoded response bytes include HTTP headers; excludes production JS/CSS delivery. Database counters cover service SQL parameters/results, not PostgreSQL protocol. WAL includes owned native database background work; storage includes prior native fixtures.",
           auth: "injected owned test principals; actual Clerk staging still required",
         },
         null,

@@ -1,5 +1,6 @@
 import { useLayoutEffect, useRef, useState } from 'react';
 import { getCardImage } from '../data';
+import { battlePortraitUrl } from '../lib/battlePortrait';
 import '../styles/compact-deck-picker.css';
 export type PickerDeck = { id: string; name: string; heroCardId: string; cardIds: string[] };
 export function CompactDeckPicker({ decks, selectedId, onSelect, disabled = false, label = 'Choose your crew', id }: { decks: PickerDeck[]; selectedId: string; onSelect: (id: string) => void; disabled?: boolean; label?: string; id?: string }) {
@@ -36,7 +37,7 @@ export function CompactDeckPicker({ decks, selectedId, onSelect, disabled = fals
     <div ref={rail} className="compact-deck-picker__rail">
     {!decks.length && <span>No battle-ready crew available</span>}
     {decks.map(deck => <button type="button" key={deck.id} aria-pressed={selectedId === deck.id} disabled={disabled} onClick={() => onSelect(deck.id)} className="compact-deck-picker__deck">
-      <span className="compact-deck-picker__box" aria-hidden="true"><img src={getCardImage(deck.heroCardId)} alt="" loading="lazy" draggable={false} decoding="async" /></span>
+      <span className="compact-deck-picker__box" aria-hidden="true"><img src={battlePortraitUrl(getCardImage(deck.heroCardId))} alt="" loading="lazy" draggable={false} decoding="async" /></span>
       <span><strong>{deck.name}</strong><small>{deck.cardIds.length} cards {selectedId === deck.id ? '· READY' : ''}</small></span>
     </button>)}
     </div>

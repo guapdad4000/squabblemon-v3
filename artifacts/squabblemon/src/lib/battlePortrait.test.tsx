@@ -41,3 +41,10 @@ test('battle move URLs retain original quality for galleries and fall back for f
     assert.equal(getMoveClipUrl({...clip,revision:'future'},'battle'),getMoveClipUrl({...clip,revision:'future'}));
   }
 });
+
+// Expansion cards must not silently fall back to megabyte source art on the live board.
+test('all ten Anunaki portraits use current bounded derivatives', () => {
+  for (const id of ['nabu','enki','utu','ninhursag','inanna','yakub','enlil','ereshkigal','caucus-mountaineer','anu']) {
+    assert.match(battlePortraitUrl(getCardImage(id)), /\/assets\/battle-portraits\//, id);
+  }
+});

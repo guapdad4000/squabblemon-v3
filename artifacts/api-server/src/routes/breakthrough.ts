@@ -44,13 +44,11 @@ export function breakthroughRouter(
               : e.code.includes("conflict") || e.code === "sequence-gap"
                 ? 409
                 : 400;
-      res
-        .status(status)
-        .json({
-          error: e.message,
-          code: e.code,
-          expectedSequence: e.expectedSequence,
-        });
+      res.status(status).json({
+        error: e.message,
+        code: e.code,
+        expectedSequence: e.expectedSequence,
+      });
       return;
     }
     req.log?.error({ err: e }, "Breakthrough request failed");
@@ -159,14 +157,19 @@ export function breakthroughRouter(
     let last: BreakthroughRoomView | null = null,
       closed = false,
       busy = false,
+      blocked = false,
       unsubscribe = () => {},
       timer: ReturnType<typeof setTimeout> | undefined,
-      expiry: ReturnType<typeof setTimeout> | undefined;
+      expiry: ReturnType<typeof setTimeout> | undefined,
+      drainDeadline: ReturnType<typeof setTimeout> | undefined;
+    let onDrain = () => {};
     const close = () => {
       if (closed) return;
       closed = true;
       clearTimeout(timer);
       clearTimeout(expiry);
+      clearTimeout(drainDeadline);
+      res.removeListener("drain", onDrain);
       unsubscribe();
       res.end();
       const set = streams.get(who.userId);
@@ -197,15 +200,21 @@ export function breakthroughRouter(
       const send = (view: BreakthroughRoomView) => {
         if (closed) return;
         const frame = encodeRoomStream(last, view);
-        if (!res.write(`data: ${JSON.stringify(frame)}\n\n`)) {
+        // false means accepted into Node's buffer, not failed. Wait for drain and coalesce
+        // subsequent ticks; immediately closing would loop forever on large snapshots.
+        const ready = res.write(`data: ${JSON.stringify(frame)}\n\n`);
+        last = view;
+        if (view.phase !== "active") {
           close();
           return;
-        } // bounded slow-reader backpressure
-        last = view;
-        if (view.phase !== "active") close();
+        }
+        if (!ready) {
+          blocked = true;
+          drainDeadline = setTimeout(close, 10000);
+        }
       };
       const update = () => {
-        if (closed || busy || timer) return;
+        if (closed || busy || blocked || timer) return;
         timer = setTimeout(async () => {
           timer = undefined;
           if (closed) return;
@@ -221,6 +230,12 @@ export function breakthroughRouter(
           }
         }, 100);
       };
+      onDrain = () => {
+        blocked = false;
+        clearTimeout(drainDeadline);
+        update();
+      };
+      res.on("drain", onDrain);
       unsubscribe = service.subscribe(room(req), update);
       send(initial);
     } catch (e) {

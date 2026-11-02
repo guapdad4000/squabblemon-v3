@@ -120,9 +120,16 @@ export class BreakthroughOnlineService {
   }
   async lobby(userId: string): Promise<BreakthroughLobby> {
     this.engine.admit();
+    // Heartbeat only queued searches, at most once per ten seconds. Paired/idle reads do not write.
     const result = await this.options.pool.query(
-      `UPDATE breakthrough_searches SET heartbeat_at=clock_timestamp()
-      WHERE user_id=$1 AND status IN ('waiting','paired') AND (status='paired' OR heartbeat_at>clock_timestamp()-interval '30 seconds') RETURNING *`,
+      `WITH heartbeat AS (
+        UPDATE breakthrough_searches SET heartbeat_at=clock_timestamp()
+        WHERE user_id=$1 AND status='waiting'
+        AND heartbeat_at>clock_timestamp()-interval '30 seconds'
+        AND heartbeat_at<=clock_timestamp()-interval '10 seconds'
+      ) SELECT request_id,deck_id,status,room_id FROM breakthrough_searches
+        WHERE user_id=$1 AND (status='paired' OR
+        (status='waiting' AND heartbeat_at>clock_timestamp()-interval '30 seconds'))`,
       [userId],
     );
     const record = await this.options.pool.query(
@@ -132,7 +139,7 @@ export class BreakthroughOnlineService {
     const recent = result.rowCount
       ? result
       : await this.options.pool.query(
-          "SELECT * FROM breakthrough_searches WHERE user_id=$1 AND status='complete' ORDER BY created_at DESC LIMIT 1",
+          "SELECT request_id,deck_id,status,room_id FROM breakthrough_searches WHERE user_id=$1 AND status='complete' ORDER BY created_at DESC LIMIT 1",
           [userId],
         );
     return {
@@ -337,20 +344,32 @@ export class BreakthroughOnlineService {
     userId: string,
   ): Promise<BreakthroughReceipt | null> {
     this.engine.admit();
-    await this.authorize(roomId, userId);
+    if (!uuid.test(roomId)) invalid("Invalid arena ID.");
+    // Membership and receipt in one small result: never transfer the full roster/checkpoint to poll a result.
     const r = await this.options.pool.query(
-      "SELECT receipt FROM breakthrough_receipts WHERE room_id=$1 AND user_id=$2",
+      `SELECT r.checkpoint->'members' AS members, p.receipt
+       FROM breakthrough_rooms r LEFT JOIN breakthrough_receipts p
+       ON p.room_id=r.room_id AND p.user_id=$2 WHERE r.room_id=$1`,
       [roomId, userId],
     );
-    return r.rows[0]?.receipt ?? null;
+    if (!r.rowCount)
+      throw new BreakthroughRoomError("room-not-found", "Arena not found.");
+    if (!Object.values(r.rows[0].members).includes(userId))
+      throw new BreakthroughRoomError(
+        "unauthorized",
+        "You are not a member of this arena.",
+      );
+    return r.rows[0].receipt ?? null;
   }
   /** Unique terminal outbox + unique per-seat receipt; all records and outbox ack share one transaction. */
-  async settle(): Promise<void> {
-    await this.transaction(async (c) => {
+  async settle(): Promise<boolean> {
+    return this.transaction(async (c) => {
       const pending =
-        await c.query(`SELECT o.id,o.room_id,o.event,r.checkpoint FROM breakthrough_room_outbox o JOIN breakthrough_rooms r ON r.room_id=o.room_id
+        await c.query(`SELECT o.id,o.room_id,o.event,jsonb_build_object(
+          'roomId',r.room_id,'phase',r.checkpoint->'phase',
+          'members',r.checkpoint->'members','terminal',r.checkpoint->'terminal') AS checkpoint FROM breakthrough_room_outbox o JOIN breakthrough_rooms r ON r.room_id=o.room_id
         WHERE o.settled_at IS NULL ORDER BY o.created_at LIMIT 1 FOR UPDATE OF o SKIP LOCKED`);
-      if (!pending.rowCount) return;
+      if (!pending.rowCount) return false;
       const row = pending.rows[0],
         room = row.checkpoint as BreakthroughRoomCheckpoint;
       if (
@@ -457,19 +476,22 @@ export class BreakthroughOnlineService {
         "UPDATE breakthrough_room_outbox SET settled_at=clock_timestamp() WHERE id=$1",
         [row.id],
       );
+      return true;
     });
   }
   async cycle(): Promise<void> {
     if (this.stopping) return;
     this.engine.admit();
     if (Date.now() >= this.scanAt) {
-      this.scanAt = Date.now() + 1000;
+      this.scanAt = Date.now() + (this.rooms.size ? 1000 : 15000);
       const expired = await this.options.pool.query(
         "SELECT room_id FROM breakthrough_rooms WHERE checkpoint->>'phase'='active' AND lease_until<=clock_timestamp() LIMIT 100",
       );
       for (const row of expired.rows)
         await this.host(row.room_id).catch(this.options.report);
-      await this.settle();
+      // Drain a bounded batch; busy result queues should not leave players polling for minutes.
+      for (let i = 0; i < 10 && (await this.settle()); i++)
+        this.scanAt = Date.now() + 1000;
     }
     await Promise.all(
       [...this.rooms].map(async ([id, entry]) => {
@@ -489,6 +511,7 @@ export class BreakthroughOnlineService {
           if (view.phase !== "active") {
             await entry.owner.close();
             this.rooms.delete(id);
+            this.scanAt = 0; // Wake settlement immediately even when the last room finishes.
           }
         } catch (e) {
           this.rooms.delete(id);

@@ -20,9 +20,11 @@ if(process.argv.includes('--check')){
  process.exit(0);
 }
 await fs.mkdir(directory,{recursive:true});sharp.concurrency(2);
+const onlyIndex=process.argv.indexOf('--only');
+const only=onlyIndex>=0?new Set((process.argv[onlyIndex+1]??'').split(',')):null;
 const folders=['assets/characters','assets/kumite/fighters'];
-const sources=(await Promise.all(folders.map(async dir=>(await fs.readdir(path.join(publicRoot,dir))).filter(name=>name.endsWith('.webp')).map(name=>dir+'/'+name)))).flat().sort();
-const entries={},sizes=[];let cursor=0;
+const sources=(await Promise.all(folders.map(async dir=>(await fs.readdir(path.join(publicRoot,dir))).filter(name=>name.endsWith('.webp')).map(name=>dir+'/'+name)))).flat().filter(source=>!only||only.has(path.basename(source,'.webp'))).sort();
+const entries=only?JSON.parse(await fs.readFile(manifestPath,'utf8')):{},sizes=[];let cursor=0;
 async function worker(){
  while(cursor<sources.length){const source=sources[cursor++],input=await fs.readFile(path.join(publicRoot,source)),metadata=await sharp(input).metadata();
   if((metadata.pages??1)>1)continue;

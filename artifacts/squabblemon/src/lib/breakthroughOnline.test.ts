@@ -123,3 +123,111 @@ test("online journal retries the same command after a lost ack and remount; next
   connection.stop();
   await running;
 });
+
+test("transient command failure backs off despite incoming frames; hidden tabs disconnect and resume", async (t) => {
+  const storage = new Map<string, string>();
+  const visibility = new EventTarget() as EventTarget & { hidden: boolean };
+  visibility.hidden = false;
+  for (const [key, value] of Object.entries({
+    document: visibility,
+    sessionStorage: {
+      getItem: (k: string) => storage.get(k) ?? null,
+      setItem: (k: string, v: string) => storage.set(k, v),
+      removeItem: (k: string) => storage.delete(k),
+    },
+  })) {
+    const previous = Object.getOwnPropertyDescriptor(globalThis, key);
+    Object.defineProperty(globalThis, key, { value, configurable: true });
+    t.after(() =>
+      previous
+        ? Object.defineProperty(globalThis, key, previous)
+        : Reflect.deleteProperty(globalThis, key),
+    );
+  }
+  const room = createBreakthroughRoomForSimulation({
+    roomId: "bandwidth",
+    ownerFence: 1,
+    members: { player: "a", opponent: "b" },
+    serverTimeMs: 1000,
+    expiresAtMs: 100000,
+    game: createGame(roster),
+  });
+  const view = projectBreakthroughRoom(room, "a");
+  let streamCount = 0,
+    aborted = 0,
+    publications = 0;
+  let streamController: ReadableStreamDefaultController<Uint8Array>;
+  const sent: RoomCommandEnvelope[] = [];
+  const frame = () =>
+    new TextEncoder().encode(
+      `data: ${JSON.stringify({ kind: "snapshot", view })}\n\n`,
+    );
+  t.mock.method(
+    globalThis,
+    "fetch",
+    async (input: RequestInfo | URL, init?: RequestInit) => {
+      if (String(input).endsWith("/stream")) {
+        streamCount++;
+        return new Response(
+          new ReadableStream({
+            start(c) {
+              streamController = c;
+              c.enqueue(frame());
+              init?.signal?.addEventListener(
+                "abort",
+                () => {
+                  aborted++;
+                  try {
+                    c.error(new DOMException("Stopped", "AbortError"));
+                  } catch {}
+                },
+                { once: true },
+              );
+            },
+          }),
+        );
+      }
+      sent.push(JSON.parse(String(init?.body)));
+      return Response.json({ error: "Temporary outage" }, { status: 503 });
+    },
+  );
+  const connection = new BreakthroughConnection(
+    "a",
+    "bandwidth",
+    () => publications++,
+    () => {},
+  );
+  const running = connection.start();
+  t.after(async () => {
+    connection.stop();
+    await running;
+  });
+  await until(() => publications > 0);
+  await connection.command({ kind: "deploy", cardId: view.hand[0], lane: 0 });
+  for (let i = 0; i < 100; i++) streamController!.enqueue(frame());
+  await until(() => publications === 101);
+  assert.equal(
+    sent.length,
+    1,
+    "100 frames must not cause 100 HTTP command retries",
+  );
+  await new Promise((r) => setTimeout(r, 1100));
+  assert.equal(sent.length, 2, "one bounded retry after the first backoff");
+  assert.deepEqual(sent[0], sent[1]);
+  visibility.hidden = true;
+  visibility.dispatchEvent(new Event("visibilitychange"));
+  await until(() => aborted === 1);
+  await new Promise((r) => setTimeout(r, 500));
+  assert.equal(streamCount, 1, "no reconnects while hidden");
+  assert.equal(publications, 101);
+  visibility.hidden = false;
+  visibility.dispatchEvent(new Event("visibilitychange"));
+  await until(() => streamCount === 2 && publications === 102);
+  connection.stop();
+  await running;
+  assert.equal(
+    storage.size,
+    1,
+    "unconfirmed intent survives suspension and stop",
+  );
+});

@@ -49,6 +49,21 @@ export async function verifyOnline(pool: BreakthroughRuntimeOptions["pool"]) {
   let service = new BreakthroughOnlineService(options, engine);
   const app = express();
   app.use(express.json());
+  // Exercise Node's accepted-but-buffered write contract deterministically.
+  app.use((req: any, res: any, next: any) => {
+    if (req.header("x-test-backpressure")) {
+      const write = res.write.bind(res);
+      let first = true;
+      res.write = (...args: any[]) => {
+        const result = write(...args);
+        if (!first) return result;
+        first = false;
+        setTimeout(() => res.emit("drain"), 20);
+        return false;
+      };
+    }
+    next();
+  });
   app.use(
     "/api",
     breakthroughRouter(service, (req) =>
@@ -108,6 +123,19 @@ export async function verifyOnline(pool: BreakthroughRuntimeOptions["pool"]) {
     );
     await call("b", "/search", { deckId: "other", requestId: bId }, 403);
     await call("stranger", `/${roomId}`, undefined, 403);
+    await call("stranger", `/${roomId}/receipt`, undefined, 403);
+    const heartbeat = await pool.query(
+      "SELECT heartbeat_at FROM breakthrough_searches WHERE user_id='a' AND status='paired'",
+    );
+    await service.lobby("a");
+    assert.deepEqual(
+      (
+        await pool.query(
+          "SELECT heartbeat_at FROM breakthrough_searches WHERE user_id='a' AND status='paired'",
+        )
+      ).rows,
+      heartbeat.rows,
+    );
     const first = await call("a", `/${roomId}`);
     assert.equal(first.hand.length, 4);
     assert(!("queue" in first));
@@ -132,6 +160,7 @@ export async function verifyOnline(pool: BreakthroughRuntimeOptions["pool"]) {
     const stream = await fetch(base + `/${roomId}/stream`, {
       headers: {
         "x-test-user": "b",
+        "x-test-backpressure": "true",
         "x-breakthrough-protocol": BREAKTHROUGH_PROTOCOL,
       },
       signal: control.signal,
@@ -316,7 +345,9 @@ export async function verifyOnline(pool: BreakthroughRuntimeOptions["pool"]) {
             "membership privacy",
             "durable command retry",
             "conflicting retry",
-            "SSE snapshot and delta",
+            "SSE snapshot and delta under backpressure",
+            "paired lobby does not write heartbeat",
+            "compact receipt membership privacy",
             "restart recovery",
             "independent settlement workers",
             "settlement rollback",

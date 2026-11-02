@@ -34,6 +34,15 @@ export class BreakthroughConnection {
   private pending: RoomCommandEnvelope | null = null;
   private writing = false;
   private nextSequence = 1;
+  private retryAt = 0;
+  private commandFailures = 0;
+  private retryTimer?: ReturnType<typeof setTimeout>;
+  private available() {
+    return (
+      (typeof document === "undefined" || !document.hidden) &&
+      (typeof navigator === "undefined" || navigator.onLine !== false)
+    );
+  }
   private key: string;
   constructor(
     readonly accountId: string,
@@ -49,7 +58,14 @@ export class BreakthroughConnection {
     }
   }
   private async flush() {
-    if (!this.pending || this.writing || this.controller.signal.aborted) return;
+    if (
+      !this.pending ||
+      this.writing ||
+      this.controller.signal.aborted ||
+      !this.available() ||
+      Date.now() < this.retryAt
+    )
+      return;
     this.writing = true;
     try {
       const ack = await breakthroughRequest<RoomAck>(
@@ -59,6 +75,8 @@ export class BreakthroughConnection {
       );
       if (this.controller.signal.aborted) return;
       this.nextSequence = Math.max(this.nextSequence, ack.nextSequence);
+      this.commandFailures = 0;
+      this.retryAt = 0;
       this.pending = null;
       sessionStorage.removeItem(this.key);
       this.status(
@@ -76,6 +94,15 @@ export class BreakthroughConnection {
         this.pending = null;
         sessionStorage.removeItem(this.key);
       }
+      if (this.pending) {
+        const delay = Math.min(
+          30000,
+          1000 * 2 ** Math.min(this.commandFailures++, 5),
+        );
+        this.retryAt = Date.now() + delay;
+        clearTimeout(this.retryTimer);
+        this.retryTimer = setTimeout(() => void this.flush(), delay);
+      }
       this.status(
         e instanceof Error ? e.message : "Reconnecting to confirm your play…",
       );
@@ -84,7 +111,13 @@ export class BreakthroughConnection {
     }
   }
   async command(command: RoomIntent) {
-    if (!this.view || this.pending || this.controller.signal.aborted) return;
+    if (
+      !this.view ||
+      this.pending ||
+      this.controller.signal.aborted ||
+      !this.available()
+    )
+      return;
     const envelope = {
       commandId: crypto.randomUUID(),
       sequence: Math.max(this.nextSequence, this.view.nextSequence),
@@ -105,9 +138,34 @@ export class BreakthroughConnection {
   async start() {
     let failures = 0;
     while (!this.controller.signal.aborted) {
+      // The host clock continues; a returning tab requests a fresh authoritative snapshot.
+      if (!this.available()) {
+        await new Promise<void>((resolve) => {
+          const wake = () => {
+            if (!this.controller.signal.aborted && !this.available()) return;
+            globalThis.document?.removeEventListener("visibilitychange", wake);
+            globalThis.removeEventListener?.("online", wake);
+            this.controller.signal.removeEventListener("abort", wake);
+            resolve();
+          };
+          globalThis.document?.addEventListener("visibilitychange", wake);
+          globalThis.addEventListener?.("online", wake);
+          this.controller.signal.addEventListener("abort", wake, {
+            once: true,
+          });
+          wake();
+        });
+      }
+      if (this.controller.signal.aborted) return;
       let reader: ReadableStreamDefaultReader<Uint8Array> | undefined;
       const attempt = new AbortController();
+      const connectedAt = Date.now();
       const timeout = setTimeout(() => attempt.abort(), 55000);
+      const suspend = () => {
+        if (!this.available()) attempt.abort();
+      };
+      globalThis.document?.addEventListener("visibilitychange", suspend);
+      globalThis.addEventListener?.("offline", suspend);
       try {
         const response = await customFetch<Response>(
           `/api/breakthrough/${this.roomId}/stream`,
@@ -141,13 +199,14 @@ export class BreakthroughConnection {
               throw Error("Arena identity changed.");
             this.view = next;
             this.nextSequence = Math.max(this.nextSequence, next.nextSequence);
-            failures = 0;
+            if (Date.now() - connectedAt >= 5000) failures = 0;
             this.publish(next);
             if (!this.pending) this.status("");
             void this.flush();
             if (next.phase !== "active") return;
           }
         }
+        if (Date.now() - connectedAt < 5000) failures++;
       } catch (e) {
         if (this.controller.signal.aborted) return;
         this.status("Reconnecting… Your match continues.");
@@ -161,6 +220,8 @@ export class BreakthroughConnection {
         failures++;
       } finally {
         clearTimeout(timeout);
+        globalThis.document?.removeEventListener("visibilitychange", suspend);
+        globalThis.removeEventListener?.("offline", suspend);
         attempt.abort();
         await reader?.cancel().catch(() => undefined);
       }
@@ -182,6 +243,7 @@ export class BreakthroughConnection {
     }
   }
   stop() {
+    clearTimeout(this.retryTimer);
     this.controller.abort();
   }
 }

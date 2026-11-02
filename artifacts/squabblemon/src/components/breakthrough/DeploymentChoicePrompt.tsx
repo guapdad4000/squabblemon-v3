@@ -7,6 +7,7 @@ import {
   type Lane,
 } from '@workspace/squabblemon-engine/breakthrough';
 import { getAssetUrl } from '../../lib/assets';
+import { battlePortraitUrl } from '../../lib/battlePortrait';
 import './deploymentChoice.css';
 export default function DeploymentChoicePrompt({
   game,
@@ -81,7 +82,7 @@ export default function DeploymentChoicePrompt({
           event.stopPropagation();
         }}
       >
-        <img src={card.art} alt="" draggable={false} />
+        <img src={battlePortraitUrl(card.art)} alt="" draggable={false} />
         <div className="bt-choice-body">
           <small>LANE {lane + 1}</small>
           <h2 id="bt-choice-title">{card.name}</h2>

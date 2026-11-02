@@ -1,5 +1,6 @@
 /** Reproducible uncompressed application-payload benchmark; excludes TLS/WebSocket
  * framing, compression, network RTT and database execution time. */
+import { serializeRoomCheckpointUpdate } from "../artifacts/api-server/src/lib/breakthroughRooms";
 import { performance } from "node:perf_hooks";
 import {
   createGame,
@@ -36,10 +37,12 @@ const deck = [
 ];
 const game = createGame(BREAKTHROUGH_ROSTER, {
   seed: 20261102,
-  travelMs: 1e9,
+  // Advance visible motion over the minute, with normal lane queue spacing.
+  travelMs: 120000,
   decks: { player: deck, opponent: deck },
 });
-for (let i = 0; i < 60; i++)
+const unitCount = Number(process.env.BT_BENCH_UNITS ?? 60);
+for (let i = 0; i < unitCount; i++)
   game.units.push({
     id: `bench-${i}`,
     cardId: "nabu",
@@ -67,7 +70,12 @@ let now = 1000,
   loads = 0,
   oldBytes = 0,
   oldWire = 0,
-  newWire = 0;
+  newWire = 0,
+  maxFrameBytes = 0,
+  rosterWriteBytes = 0,
+  checkpointBytes = 0,
+  journalBytes = 0,
+  compactCheckpointBytes = 0;
 const store: RoomJournalStore = {
   recover: async () => {
     loads++;
@@ -76,7 +84,15 @@ const store: RoomJournalStore = {
   append: async (input) => {
     newBytes += bytes(input);
     newWrites++;
-    if (input.checkpoint) checkpoints++;
+    journalBytes += bytes(input.entries);
+    if (input.checkpoint) {
+      checkpoints++;
+      checkpointBytes += bytes(input.checkpoint);
+      compactCheckpointBytes += Buffer.byteLength(
+        serializeRoomCheckpointUpdate(input.checkpoint),
+      );
+      rosterWriteBytes += bytes(input.checkpoint.game.roster);
+    }
     return true;
   },
 };
@@ -92,6 +108,7 @@ let previous: Record<string, BreakthroughRoomView | null> = {
   b: null,
 };
 await owner.view("a");
+const stressTemplate = projectBreakthroughRoom(base, "a");
 const start = performance.now();
 for (let time = 1050; time <= 61000; time += 50) {
   now = time;
@@ -108,20 +125,45 @@ for (let time = 1050; time <= 61000; time += 50) {
       const view = await owner.view(account);
       assert.deepEqual(view, projectBreakthroughRoom(base, account));
       oldWire += bytes(view);
+      // Production reauth closes each stream at 45 seconds, requiring another snapshot.
+      if (time === 46000) previous[account] = null;
       const frame = encodeRoomStream(previous[account], view);
-      newWire += bytes(frame);
+      const frameBytes = bytes(frame) + 8; // "data: " plus double newline
+      newWire += frameBytes;
+      maxFrameBytes = Math.max(maxFrameBytes, frameBytes);
       assert.deepEqual(applyRoomStream(previous[account], frame), view);
       previous[account] = view;
     }
 }
 await owner.close();
+// Separate codec stress: change every unit on every frame, regardless of engine queue spacing.
+// This is an artificial bandwidth stress case, not a prediction of normal combat or CPU capacity.
+let churnBytes = 0;
+const template = stressTemplate;
+let churnPrevious: BreakthroughRoomView | null = null;
+for (let frame = 0; frame < 600; frame++) {
+  const next = structuredClone(template);
+  next.revision = frame;
+  next.units = next.units.map((unit, index) => ({
+    ...unit,
+    position: ((frame * 13 + index * 17) % 1000) / 1000,
+    hands: 1 + (frame % 9),
+    burnStacks: frame % 4,
+  }));
+  if (frame === 450) churnPrevious = null;
+  const encoded = encodeRoomStream(churnPrevious, next);
+  churnBytes += bytes(encoded) + 8;
+  assert.deepEqual(applyRoomStream(churnPrevious, encoded), next);
+  churnPrevious = next;
+}
 console.log(
   JSON.stringify(
     {
       workload: {
         seed: 20261102,
         seconds: 60,
-        units: 60,
+        units: unitCount,
+        travelMs: 120000,
         engineHz: 20,
         sendHz: 10,
         seats: 2,
@@ -134,14 +176,32 @@ console.log(
         optimizedCheckpoints: checkpoints,
         baselinePayloadBytes: oldBytes,
         optimizedPayloadBytes: newBytes,
+        checkpointBytes,
+        journalBytes,
+        rosterWriteBytes,
+        compactCheckpointBytes,
+        postgresPayloadEstimateBytes:
+          newBytes - checkpointBytes + compactCheckpointBytes,
+        checkpointNetworkReductionPercent:
+          100 * (1 - compactCheckpointBytes / checkpointBytes),
+        finalCheckpointBytes: bytes(base),
+        fullRosterBytes: bytes(base.game.roster),
+        smallReceiptMembershipBytes: bytes({
+          members: base.members,
+          receipt: null,
+        }),
         reductionPercent: 100 * (1 - newBytes / oldBytes),
       },
       wire: {
         baselineBytes: oldWire,
+        maxFrameBytes,
+        reauthSnapshotsIncluded: true,
+        sseFramingIncluded: true,
         optimizedBytes: newWire,
         optimizedBytesPerPlayerMinute: newWire / 2,
         reductionPercent: 100 * (1 - newWire / oldWire),
       },
+      artificialAllUnitsChangingBytesPerPlayerMinute: churnBytes,
       localHarnessMs: performance.now() - start,
       limitations:
         "Synthetic CPU execution and uncompressed application JSON only; no network RTT, compression, TLS, database latency or human player claim.",

@@ -6,6 +6,6 @@ import BreakthroughOnline from '../src/components/breakthrough/BreakthroughOnlin
 if(!import.meta.env.DEV)throw Error('Owned integration fixture only');
 const cards=['nabu','enki','utu','ninhursag','inanna','yakub','enlil','ereshkigal','caucus-mountaineer','anu'];
 const profile={id:new URLSearchParams(location.search).get('account')??'browser-a',displayName:'Local player',avatarKey:'nabu',level:1,
-  ownedCardIds:cards,savedDecks:[{id:'owned',name:'Anunaki',cardIds:cards,heroCardId:'anu'}],equippedVariants:{},settings:{reducedMotion:true}};
+  ownedCardIds:cards,savedDecks:[{id:'owned',name:'Anunaki',cardIds:cards,heroCardId:'anu'}],equippedVariants:{},settings:{reducedMotion:matchMedia('(prefers-reduced-motion: reduce)').matches}};
 const root=createRoot(document.getElementById('root')!);import.meta.hot?.dispose(()=>root.unmount());
 root.render(<QueryClientProvider client={new QueryClient()}><BreakthroughOnline bootstrap={{profile} as PlayerBootstrap}/></QueryClientProvider>);

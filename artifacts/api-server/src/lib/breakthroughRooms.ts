@@ -8,6 +8,16 @@ import {
   type RoomJournalEntry,
 } from "@workspace/squabblemon-engine/breakthroughRoom";
 import type { RoomJournalStore } from "@workspace/squabblemon-engine/breakthroughRoomOwner";
+/** Roster definitions are immutable for the room's lifetime. Send them once on creation;
+ * PostgreSQL retains that exact catalog on subsequent checkpoint writes, including takeover.
+ * Recovery still returns a self-contained checkpoint, independent of a newer deployed catalog.
+ */
+export function serializeRoomCheckpointUpdate(
+  checkpoint: BreakthroughRoomCheckpoint,
+): string {
+  const { roster: _roster, ...game } = checkpoint.game;
+  return JSON.stringify({ ...checkpoint, game });
+}
 /** Inject an explicitly selected pool. No import-time connection or live migration. */
 export class PostgresBreakthroughRoomStore implements RoomJournalStore {
   constructor(private readonly pool: Pool) {}
@@ -118,8 +128,8 @@ export class PostgresBreakthroughRoomStore implements RoomJournalStore {
         );
       if (input.checkpoint) {
         await c.query(
-          "UPDATE breakthrough_rooms SET revision=$2,checkpoint_revision=$2,checkpoint=$3 WHERE room_id=$1",
-          [input.roomId, head, JSON.stringify(input.checkpoint)],
+          "UPDATE breakthrough_rooms SET revision=$2,checkpoint_revision=$2,checkpoint=jsonb_set($3::jsonb,'{game,roster}',checkpoint#>'{game,roster}') WHERE room_id=$1",
+          [input.roomId, head, serializeRoomCheckpointUpdate(input.checkpoint)],
         );
         await c.query(
           "DELETE FROM breakthrough_room_journal WHERE room_id=$1 AND revision<=$2",
@@ -175,12 +185,12 @@ export class PostgresBreakthroughRoomStore implements RoomJournalStore {
       );
       checkpoint.ownerFence++;
       const updated = await c.query(
-        `UPDATE breakthrough_rooms SET owner_fence=$2,checkpoint=$3,checkpoint_revision=$4,
+        `UPDATE breakthrough_rooms SET owner_fence=$2,checkpoint=jsonb_set($3::jsonb,'{game,roster}',checkpoint#>'{game,roster}'),checkpoint_revision=$4,
         lease_until=clock_timestamp()+$5*interval '1 millisecond' WHERE room_id=$1 RETURNING extract(epoch FROM lease_until)*1000 AS until`,
         [
           roomId,
           checkpoint.ownerFence,
-          JSON.stringify(checkpoint),
+          serializeRoomCheckpointUpdate(checkpoint),
           checkpoint.revision,
           leaseMs,
         ],

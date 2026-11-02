@@ -47,7 +47,8 @@ export default function BreakthroughOnline({
       breakthroughRequest<BreakthroughLobby>("", undefined, signal),
     enabled: !roomId,
     refetchInterval: (q) =>
-      q.state.data?.search?.status === "waiting" ? 1000 : 5000,
+      q.state.data?.search?.status === "waiting" ? 2000 : 30000,
+    refetchIntervalInBackground: false,
     retry: false,
   });
   useEffect(() => {
@@ -260,7 +261,16 @@ export function OnlineMatch({
         signal,
       ),
     enabled: !!view && view.phase !== "active",
-    refetchInterval: (q) => (q.state.data ? false : 1000),
+    refetchInterval: (q) =>
+      q.state.data
+        ? false
+        : Math.min(
+            30000,
+            1000 *
+              2 **
+                Math.min(q.state.dataUpdateCount + q.state.errorUpdateCount, 5),
+          ),
+    refetchIntervalInBackground: false,
     retry: false,
   });
   if (!view)
