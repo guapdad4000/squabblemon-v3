@@ -1,4 +1,4 @@
-import { BreakthroughRoomOwner as PublicRoomOwner } from './src/breakthroughRoomOwner';
+import { BreakthroughRoomOwner as PublicRoomOwner } from "./src/breakthroughRoomOwner";
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import { createGame, type FighterDefinition } from "./src/breakthrough";
@@ -239,19 +239,56 @@ test("wire transmits only changed live fields and contains no opponent hand or p
     Buffer.byteLength(json) < Buffer.byteLength(JSON.stringify(after)) * 0.7,
   );
 });
-test('entity deltas retain reordering, deletion and removal of optional art without stale fields', async () => {
-  const h = harness(), o = h.owner();
-  const card = (await o.view('a')).hand[0]; await o.command('a', envelope(card));
-  const before = await o.view('a');
-  before.units = Array.from({length:20},(_,i)=>({...before.units[0],id:`u${i}`,art:'/old.webp'}));
-  const after = structuredClone(before); after.revision++;
-  after.units = after.units.slice(1).reverse(); delete after.units[0].art; after.units[1].hands++;
-  const frame = encodeRoomStream(before,after); assert.equal(frame.kind,'delta');
-  assert.deepEqual(applyRoomStream(before,frame),after);
+test("entity deltas retain reordering, deletion and removal of optional art without stale fields", async () => {
+  const h = harness(),
+    o = h.owner();
+  const card = (await o.view("a")).hand[0];
+  await o.command("a", envelope(card));
+  const before = await o.view("a");
+  before.units = Array.from({ length: 20 }, (_, i) => ({
+    ...before.units[0],
+    id: `u${i}`,
+    art: "/old.webp",
+  }));
+  const after = structuredClone(before);
+  after.revision++;
+  after.units = after.units.slice(1).reverse();
+  delete after.units[0].art;
+  after.units[1].hands++;
+  const frame = encodeRoomStream(before, after);
+  assert.equal(frame.kind, "delta");
+  assert.deepEqual(applyRoomStream(before, frame), after);
 });
 
-test('public efficient owner remains closed until the all-card release gate passes', () => {
-  const store=new Store();
-  assert.throws(()=>new PublicRoomOwner({roomId:'r',ownerFence:1,store,now:()=>1000,leaseExpiresAt:()=>300000}), {code:'mode-unavailable'});
-  assert.equal(store.reads,0);
+test("public efficient owner remains closed until the all-card release gate passes", () => {
+  const store = new Store();
+  assert.throws(
+    () =>
+      new PublicRoomOwner({
+        roomId: "r",
+        ownerFence: 1,
+        store,
+        now: () => 1000,
+        leaseExpiresAt: () => 300000,
+      }),
+    { code: "mode-unavailable" },
+  );
+  assert.equal(store.reads, 0);
+});
+
+test("surrender is durably acknowledged once, terminal and replayable after owner restart", async () => {
+  const h = harness(),
+    owner = h.owner();
+  const envelope = {
+    commandId: "surrender-one",
+    sequence: 1,
+    command: { kind: "surrender" },
+  };
+  const ack = await owner.command("a", envelope);
+  assert(ack.accepted);
+  assert.equal((await owner.view("a")).winner, "opponent");
+  assert.equal((await owner.view("b")).reason, "surrender");
+  assert.equal(h.store.terminals.size, 1);
+  assert.deepEqual(await h.owner().command("a", envelope), ack);
+  assert.equal(h.store.terminals.size, 1);
 });

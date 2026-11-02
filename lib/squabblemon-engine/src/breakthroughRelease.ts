@@ -3,6 +3,8 @@ export const BREAKTHROUGH_PUBLIC_LAUNCH_APPROVED: boolean = false;
 /** Bound by required source tests; changing mechanics invalidates earlier release evidence. */
 export const BREAKTHROUGH_RULE_INPUT_SHA256: Readonly<Record<string, string>> =
   {
+    'breakthroughOnline.ts':
+      '3a8f167b8fe4658f2816973b6e60b17202aecee7eaacd3b889e634a2c09066cd',
     'breakthrough.ts':
       '487cd4b5266f1de0bf9d7b277b54a125f2ce2665f099c032fbef6754381eabab',
     'breakthroughAnunaki.ts':
@@ -32,7 +34,7 @@ export const BREAKTHROUGH_RULE_INPUT_SHA256: Readonly<Record<string, string>> =
     'breakthroughReactions.ts':
       '80c5773f06efa8a7e3c2b47c121ac0f857c6b97653cae91c32f295af96d57ebb',
     'breakthroughRoom.ts':
-      'b7beefa539c7a1fa21c56b697d26be54bb2aa9277d2c926834e4e44668bd5a21',
+      'c0ff0353e40b4d5d23ef8311c6a1cd52566e043a7268c5b4c27050138a9ebfbf',
     'breakthroughRoomOwner.ts':
       '42f995882a23b44f577986e323bb1abad61f72848c8411a33fd01927eea7e70a',
     'breakthroughRoomStream.ts':

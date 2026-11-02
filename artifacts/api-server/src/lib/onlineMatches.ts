@@ -51,7 +51,7 @@ const commandFingerprint = (command: object) =>
   );
 
 export async function loadMember(
-  tx: Tx,
+  tx: Pick<Tx, "select">,
   userId: string,
   deckId: string,
   lock = true,

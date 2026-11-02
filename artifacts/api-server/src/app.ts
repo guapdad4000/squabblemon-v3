@@ -27,6 +27,7 @@ function productionAuthMiddleware(): RequestHandler {
 
 export function createApp(
   authMiddleware: RequestHandler = productionAuthMiddleware(),
+  persistentRoutes?: express.Router,
 ): Express {
   const app: Express = express();
 
@@ -109,6 +110,7 @@ export function createApp(
   });
   app.use(authMiddleware);
 
+  if (persistentRoutes) app.use("/api", persistentRoutes);
   app.use("/api", router);
   return app;
 }

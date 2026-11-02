@@ -65,6 +65,15 @@ try {
       "utf8",
     ),
   );
+  await pool.query(
+    readFileSync(
+      new URL(
+        "../lib/db/migrations/20261102_breakthrough_sessions.sql",
+        import.meta.url,
+      ),
+      "utf8",
+    ),
+  );
   const output = join(directory, "test.mjs");
   await build({
     entryPoints: [
@@ -77,6 +86,40 @@ try {
     outfile: output,
   });
   await (await import(output)).verify(pool);
+  const onlineOutput = join(directory, "online.mjs");
+  await build({
+    entryPoints: [
+      new URL("./test-breakthrough-online-suite.ts", import.meta.url).pathname,
+    ],
+    bundle: true,
+    platform: "node",
+    format: "esm",
+    outfile: onlineOutput,
+    banner: {
+      js: 'import { createRequire as __createRequire } from "node:module"; const require=__createRequire(import.meta.url);',
+    },
+  });
+  await (await import(onlineOutput)).verifyOnline(pool);
+  if (process.argv.includes("--browser")) {
+    await pool.query(
+      "TRUNCATE breakthrough_searches,breakthrough_receipts,breakthrough_records,breakthrough_room_outbox,breakthrough_room_journal,breakthrough_rooms CASCADE",
+    );
+    const browserOutput = join(directory, "browser.mjs");
+    await build({
+      entryPoints: [
+        new URL("./test-breakthrough-browser-suite.ts", import.meta.url)
+          .pathname,
+      ],
+      bundle: true,
+      platform: "node",
+      format: "esm",
+      outfile: browserOutput,
+      banner: {
+        js: 'import { createRequire as __createRequire } from "node:module"; const require=__createRequire(import.meta.url);',
+      },
+    });
+    await (await import(browserOutput)).verifyBrowser(pool);
+  }
 } finally {
   await pool?.end();
   if (started) run("pg_ctl", ["-D", data, "-m", "fast", "-w", "stop"]);

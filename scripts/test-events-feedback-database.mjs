@@ -51,7 +51,7 @@ function run(command, args, label, visible = false) {
 }
 function runTests(command, args) {
   return new Promise((resolve, reject) => {
-    child = spawn(command, args, { cwd: root, env: environment, stdio: ["ignore", "pipe", "pipe"] });
+    child = spawn(command, args, { cwd: join(root, "artifacts/api-server"), env: environment, stdio: ["ignore", "pipe", "pipe"] });
     let output = "";
     child.stdout.on("data", chunk => { output += chunk.toString(); });
     child.stderr.on("data", chunk => { output += chunk.toString(); });
@@ -136,14 +136,13 @@ try {
     if (history === "native") environment.DATABASE_URL = url;
   }
   console.info("Both isolated development and native migration histories verified.");
-  const pnpm = process.env.npm_execpath ? [process.execPath, process.env.npm_execpath] : ["pnpm"];
   const browserOnly = process.argv.includes("--browser-only");
   const migrationsOnly = process.argv.includes("--migrations-only");
   const tests = ["src/lib/eventFeedback.test.ts", "src/lib/patches.test.ts", ...(startupPerformance ? [
     "src/lib/playerBootstrapPerformance.test.ts", "src/lib/playerState.test.ts",
     "src/lib/playerRewardTransactions.test.ts", "src/lib/collectionTransactions.test.ts", "src/lib/accountRewards.test.ts",
   ] : [])];
-  if (!browserOnly && !migrationsOnly) await runTests(pnpm[0], [...pnpm.slice(1), "--filter", "@workspace/api-server", "exec", process.execPath, "--import", "tsx", "--test", "--test-concurrency=1", ...tests]);
+  if (!browserOnly && !migrationsOnly) await runTests(process.execPath, ["--import", "tsx", "--test", "--test-concurrency=1", ...tests]);
   if (browserOnly || process.argv.includes("--browser")) {
     const separator = process.argv.indexOf("--");
     const browserArgs = separator < 0 ? [] : process.argv.slice(separator + 1);

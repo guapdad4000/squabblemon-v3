@@ -412,3 +412,5 @@
   outline: 2px dashed #ffdf40;
   outline-offset: 3px;
 }
+
+.bt-online-status { position: fixed; z-index: 90; top: max(8px, env(safe-area-inset-top)); left: 50%; transform: translateX(-50%); max-width: calc(100vw - 24px); padding: 10px 16px; border-radius: 8px; color: #fff; background: #231c16; box-shadow: 0 2px 12px #0009; font: 600 14px/1.4 sans-serif; pointer-events: none; }

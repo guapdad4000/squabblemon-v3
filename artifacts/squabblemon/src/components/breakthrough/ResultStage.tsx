@@ -1,8 +1,11 @@
+import type { BreakthroughReceipt } from "@workspace/squabblemon-engine/breakthroughOnline";
 import { useRef, useEffect, type KeyboardEvent } from "react";
 import { BREAKTHROUGH_TROPHY } from "./progressionArt";
 import { KumiteMatchMedia } from "../kumite/KumiteMatchMedia";
 
 export default function ResultStage({
+  online = false,
+  receipt,
   winner,
   reason,
   breaches,
@@ -13,6 +16,8 @@ export default function ResultStage({
   newDeal,
   onExit,
 }: {
+  online?: boolean;
+  receipt?: BreakthroughReceipt | null;
   winner?: string | null;
   reason?: string | null;
   breaches: [number, number];
@@ -164,8 +169,14 @@ export default function ResultStage({
         <div className="bt-trophy-summary">
           <img src={BREAKTHROUGH_TROPHY} alt="Breakthrough fist trophy" />
           <div>
-            <small>CPU PRACTICE</small>
-            <span>NO ACCOUNT REWARDS</span>
+            <small>{online ? "BREAKTHROUGH PVP" : "CPU PRACTICE"}</small>
+            <span>
+              {online
+                ? receipt
+                  ? `${receipt.delta >= 0 ? "+" : ""}${receipt.delta} TROPHIES · ${receipt.after} TOTAL${receipt.exclusion ? " · UNRATED MATCH" : ""}`
+                  : "SAVING RESULT…"
+                : "NO ACCOUNT REWARDS"}
+            </span>
           </div>
           {stats && (
             <dl className="bt-match-stats">

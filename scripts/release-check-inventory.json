@@ -180,6 +180,13 @@
       ],
       "server": "Local Vite with BASE_PATH=/squabblemon and STORY_TEST_PORT; complete assets required",
       "evidence": "Five viewports, Tablet placement/consumption, exact Anu price, Yakub summon, loaded portraits and no horizontal overflow; synthetic CPU practice, not hosted PvP"
+    },
+    {
+      "id": "breakthrough-online-native",
+      "when": "Breakthrough live arena, auth, matchmaking, streaming, reconnect or settlement changes",
+      "cwd": ".",
+      "command": "node scripts/test-breakthrough-database.mjs --browser",
+      "evidence": "Owned native PostgreSQL and two Chromium clients at five viewports; injected test principals, not live Clerk proof"
     }
   ],
   "browserPrerequisites": [

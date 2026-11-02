@@ -14,3 +14,5 @@ export * from './patches';
 export * from './communityDecks';
 
 export * from "./breakthroughRooms";
+
+export * from './breakthroughOnline';

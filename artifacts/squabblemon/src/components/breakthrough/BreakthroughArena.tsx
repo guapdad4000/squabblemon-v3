@@ -1,3 +1,9 @@
+import type {
+  BreakthroughRoomView,
+  RoomIntent,
+} from '@workspace/squabblemon-engine/breakthroughRoom';
+import type { BreakthroughReceipt } from '@workspace/squabblemon-engine/breakthroughOnline';
+import { onlinePresentation } from './onlinePresentation';
 import {
   useEffect,
   useMemo,
@@ -75,6 +81,12 @@ export type BreakthroughIdentity = {
   rank?: string;
 };
 type Props = {
+  online?: {
+    view: BreakthroughRoomView;
+    command(intent: RoomIntent): void;
+    message: string;
+    receipt: BreakthroughReceipt | null;
+  };
   roster: FighterDefinition[];
   playerDeck: string[];
   opponentDeck: string[];
@@ -118,6 +130,7 @@ const clock = (ms: number) => {
 };
 
 export default function BreakthroughArena({
+  online,
   roster,
   playerDeck,
   opponentDeck,
@@ -136,11 +149,13 @@ export default function BreakthroughArena({
   const [sound, setSound] = useState(false);
   const [theme, setTheme] = useState<'dojo' | 'rooftop'>('dojo');
   const [game, setGame] = useState(() =>
-    createGame(roster, {
-      seed: initialSeed,
-      aiStyle: 'counter',
-      decks: { player: playerDeck, opponent: opponentDeck },
-    }),
+    online
+      ? onlinePresentation(online.view, roster)
+      : createGame(roster, {
+          seed: initialSeed,
+          aiStyle: 'counter',
+          decks: { player: playerDeck, opponent: opponentDeck },
+        }),
   );
   const live = useRef(game);
   const handSlots = useRef(
@@ -154,6 +169,7 @@ export default function BreakthroughArena({
     () => !document.hidden,
   );
   const [menu, setMenu] = useState(false);
+  const [confirmSurrender, setConfirmSurrender] = useState(false);
   const [selected, setSelected] = useState<string | null>(null);
   const [inspected, setInspected] = useState<string | null>(null);
   const [inspectedUnitId, setInspectedUnitId] = useState<string | null>(null);
@@ -182,7 +198,11 @@ export default function BreakthroughArena({
     () => new Map(game.roster.map((card) => [card.id, card])),
     [game.roster],
   );
-  const active = !paused && !menu && game.status === 'playing';
+  const active =
+    (!paused || !!online) &&
+    !menu &&
+    (!online || !online.message) &&
+    game.status === 'playing';
   const remaining = Math.max(0, game.durationMs - game.elapsedMs);
   const lastStand = !!game.drawsLocked || remaining <= 30000;
   const chosen = selected ? byId.get(selected) : undefined;
@@ -212,12 +232,8 @@ export default function BreakthroughArena({
     : undefined;
   const dragCost = draggedCard
     ? dragging.drag?.lane != null
-      ? deploymentCost(game, 'player', draggedCard.id, dragging.drag.lane)
-      : Math.min(
-          ...LANES.map((lane) =>
-            deploymentCost(game, 'player', draggedCard.id, lane),
-          ),
-        )
+      ? quoteCost(draggedCard.id, dragging.drag.lane)
+      : Math.min(...LANES.map((lane) => quoteCost(draggedCard.id, lane)))
     : 0;
 
   // Set the shared battle priority before any later on-demand warmup.
@@ -335,6 +351,10 @@ export default function BreakthroughArena({
     noticeTimer.current = setTimeout(() => setNotice(''), 2400);
   }
   function reset() {
+    if (online) {
+      onChangeDeck();
+      return;
+    }
     inputClock.stop();
     setMatchKey((value) => value + 1);
     eventBirths.current.clear();
@@ -414,6 +434,7 @@ export default function BreakthroughArena({
     return () => query.removeEventListener('change', change);
   }, []);
   function catchUp() {
+    if (online) return live.current;
     if (document.hidden) {
       inputClock.stop();
       return live.current;
@@ -422,6 +443,14 @@ export default function BreakthroughArena({
     publish(next);
     return next;
   }
+  function quoteCost(id: string, lane: 0 | 1 | 2) {
+    return online
+      ? (online.view.handPlans[id]?.lanes[lane]?.cost ?? Infinity)
+      : deploymentCost(game, 'player', id, lane);
+  }
+  useEffect(() => {
+    if (online) publish(onlinePresentation(online.view, roster));
+  }, [online?.view, roster]);
   function playLane(
     lane: 0 | 1 | 2,
     id = selected,
@@ -433,7 +462,10 @@ export default function BreakthroughArena({
       card = byId.get(id);
     if (
       card &&
-      deploymentChoices(current, 'player', id, lane).required &&
+      (online
+        ? online.view.handPlans[id]?.lanes[lane]?.choices
+        : deploymentChoices(current, 'player', id, lane)
+      )?.required &&
       choice === undefined
     ) {
       setPendingChoice({ cardId: id, lane, squabble });
@@ -445,12 +477,33 @@ export default function BreakthroughArena({
         say('Action cards cannot Squabble. Disarm to play.');
         return;
       }
-      const target = legalActionTarget(current, 'player', id, lane);
+      const target = online
+        ? online.view.handPlans[id]?.lanes[lane]?.target
+        : legalActionTarget(current, 'player', id, lane);
+      if (!target) return;
       if (!target.valid) {
         say(target.error ?? 'No legal target in this lane');
         return;
       }
       targetUnitId = target.targetUnitId;
+    }
+    if (online) {
+      online.command({
+        kind: 'deploy',
+        cardId: id,
+        lane,
+        squabble,
+        target: {
+          ...(targetUnitId ? { unitId: targetUnitId } : {}),
+          ...(choice !== undefined ? { choice } : {}),
+        },
+      });
+      setPendingChoice(null);
+      setSelected(null);
+      setInspected(null);
+      setInspectedUnitId(null);
+      setArmed(false);
+      return;
     }
     const result = deploy(
       current,
@@ -479,14 +532,14 @@ export default function BreakthroughArena({
     clearTimeout(noticeTimer.current);
   }
   useEffect(() => {
-    if (!active || document.hidden) return;
+    if (online || !active || document.hidden) return;
     inputClock.resume(performance.now());
     const id = setInterval(catchUp, 100);
     return () => {
       clearInterval(id);
       inputClock.stop();
     };
-  }, [active, inputClock]);
+  }, [active, inputClock, !!online]);
   useEffect(() => {
     if (!active) {
       setPendingChoice(null);
@@ -498,6 +551,7 @@ export default function BreakthroughArena({
   useEffect(() => {
     function hide() {
       setPresentationVisible(!document.hidden);
+      if (online) return;
       if (document.hidden && started) {
         // Visibility events can precede React's pause commit or a queued frame.
         inputClock.stop();
@@ -510,7 +564,7 @@ export default function BreakthroughArena({
     return () => {
       document.removeEventListener('visibilitychange', hide);
     };
-  }, [started, inputClock]);
+  }, [started, inputClock, !!online]);
   useEffect(() => {
     function key(event: KeyboardEvent) {
       if (event.defaultPrevented) return;
@@ -632,6 +686,9 @@ export default function BreakthroughArena({
         if (!(event.target as HTMLElement).closest('.bt-finish'))
           dragging.clickCapture(event);
       }}
+      data-room-revision={online?.view.revision}
+      data-room-phase={online?.view.phase}
+      data-elapsed-ms={online?.view.elapsedMs}
       data-active={active || (game.status === 'complete' && !resultReady)}
       data-presentation-visible={presentationVisible}
       data-reduced-motion={reducedMotion}
@@ -700,13 +757,13 @@ export default function BreakthroughArena({
           <div className="bt-banner-portrait">
             <FighterPortrait
               cardId={opponentDeck[0]}
-              name="CPU"
+              name={online ? 'Opponent' : 'CPU'}
               battleArtwork
               decorative
             />
           </div>
           <div className="bt-banner-copy">
-            <strong>CPU</strong>
+            <strong>{online ? 'OPPONENT' : 'CPU'}</strong>
             <div
               className="bt-base-pips"
               aria-label={`${game.players.opponent.breaches} of 2 base breaches`}
@@ -717,7 +774,7 @@ export default function BreakthroughArena({
         </div>
         <button
           className="bt-menu-trigger"
-          aria-label="Open rules and practice settings"
+          aria-label="Open rules and settings"
           onClick={() => {
             inputClock.stop();
             setMenu(true);
@@ -734,7 +791,7 @@ export default function BreakthroughArena({
         }}
       >
         <div className="bt-base bt-base-opps">
-          CPU BASE <span>↑ BREAK THROUGH</span>
+          {online ? 'OPPONENT' : 'CPU'} BASE <span>↑ BREAK THROUGH</span>
         </div>
         {!reducedMotion &&
           smoke.map((event) => {
@@ -758,7 +815,7 @@ export default function BreakthroughArena({
           })}
         <div
           className="bt-lanes"
-          inert={menu || resultReady || paused || !!pendingChoice}
+          inert={menu || resultReady || (!online && paused) || !!pendingChoice}
         >
           <img
             className="bt-base-art bt-base-art-opps"
@@ -771,14 +828,14 @@ export default function BreakthroughArena({
             alt=""
           />
           {LANES.map((lane) => {
-            const cost = selected
-              ? deploymentCost(game, 'player', selected, lane)
-              : 0;
+            const cost = selected ? quoteCost(selected, lane) : 0;
             const affordable = cost <= game.players.player.motion + 1e-8;
             const support = !!chosen && isActionCard(chosen);
             const actionTarget =
               support && selected
-                ? legalActionTarget(game, 'player', selected, lane)
+                ? online
+                  ? online.view.handPlans[selected]?.lanes[lane]?.target
+                  : legalActionTarget(game, 'player', selected, lane)
                 : undefined;
             const targetError =
               actionTarget && !actionTarget.valid
@@ -1137,7 +1194,7 @@ export default function BreakthroughArena({
                           ),
                           left: '50%',
                         }}
-                        aria-label={`${card?.name}, ${unit.side === 'player' ? 'you' : 'CPU'}, ${effectiveHands(unit)} Hands${unit.protected ? ', protected' : ''}${unit.immune ? (unit.immunityScope === 'abilities' ? ', ability immune' : ', damage immune') : ''}${unit.silenced ? ', silenced' : ''}${unit.frozen ? ', frozen' : ''}${unit.movementLocks?.some((lock) => lock.expiresAt > game.elapsedMs) ? ', movement locked' : ''}${unit.weakened ? ', weakened' : ''}, lane ${lane + 1}`}
+                        aria-label={`${card?.name}, ${unit.side === 'player' ? 'you' : online ? 'opponent' : 'CPU'}, ${effectiveHands(unit)} Hands${unit.protected ? ', protected' : ''}${unit.immune ? (unit.immunityScope === 'abilities' ? ', ability immune' : ', damage immune') : ''}${unit.silenced ? ', silenced' : ''}${unit.frozen ? ', frozen' : ''}${unit.movementLocks?.some((lock) => lock.expiresAt > game.elapsedMs) ? ', movement locked' : ''}${unit.weakened ? ', weakened' : ''}, lane ${lane + 1}`}
                       >
                         <img
                           key={`portrait-${lastHit?.id ?? 'idle'}`}
@@ -1352,26 +1409,32 @@ export default function BreakthroughArena({
             ]}
             hands={[playerHands, opponentHands]}
             stats={game.metrics.player}
+            online={!!online}
+            receipt={online?.receipt}
             reducedMotion={reducedMotion}
             rematch={reset}
             newDeal={onChangeDeck}
             onExit={onExit}
           />
         )}
-        {paused && !menu && !resultReady && game.status === 'playing' && (
-          <div className="bt-cover">
-            <div className="bt-cover-content">
-              <small>{pauseReason}</small>
-              <h2>HOLD UP</h2>
-              <button
-                className="bt-primary"
-                onClick={() => setPaused(document.hidden)}
-              >
-                RESUME →
-              </button>
+        {!online &&
+          paused &&
+          !menu &&
+          !resultReady &&
+          game.status === 'playing' && (
+            <div className="bt-cover">
+              <div className="bt-cover-content">
+                <small>{pauseReason}</small>
+                <h2>HOLD UP</h2>
+                <button
+                  className="bt-primary"
+                  onClick={() => setPaused(document.hidden)}
+                >
+                  RESUME →
+                </button>
+              </div>
             </div>
-          </div>
-        )}
+          )}
       </section>
       {active && (
         <footer className="bt-footer">
@@ -1400,9 +1463,7 @@ export default function BreakthroughArena({
                 const actionLabel =
                   card.kind === 'blockbuster' ? 'BLOCKBUSTER' : 'SUPPORT';
                 const cheapest = Math.min(
-                  ...LANES.map((lane) =>
-                    deploymentCost(game, 'player', id, lane),
-                  ),
+                  ...LANES.map((lane) => quoteCost(id, lane)),
                 );
                 const affordable =
                   cheapest <= game.players.player.motion + 1e-8;
@@ -1542,6 +1603,11 @@ export default function BreakthroughArena({
           <span>{draggedCard.name}</span>
         </div>
       )}
+      {online?.message && (
+        <div className="bt-online-status" role="status">
+          {online.message}
+        </div>
+      )}
       {active && (
         <div className="bt-live-events" aria-live="polite" aria-atomic="true">
           {recentEvents.slice(-1).map((event) => (
@@ -1552,6 +1618,11 @@ export default function BreakthroughArena({
       {pendingChoice && active && byId.has(pendingChoice.cardId) && (
         <DeploymentChoicePrompt
           game={game}
+          quotedPlan={
+            online?.view.handPlans[pendingChoice.cardId]?.lanes[
+              pendingChoice.lane
+            ]?.choices
+          }
           card={byId.get(pendingChoice.cardId)!}
           lane={pendingChoice.lane}
           onCancel={() => setPendingChoice(null)}
@@ -1572,19 +1643,25 @@ export default function BreakthroughArena({
             className="bt-menu"
             role="dialog"
             aria-modal="true"
-            aria-label="Breakthrough practice menu"
+            aria-label={
+              online ? 'Breakthrough match menu' : 'Breakthrough practice menu'
+            }
             onClick={(event) => event.stopPropagation()}
           >
             <button
               className="bt-close"
-              aria-label="Close practice menu"
+              aria-label="Close menu"
               onClick={() => setMenu(false)}
             >
               ×
             </button>
-            <small>KUMITE · CPU PRACTICE</small>
+            <small>KUMITE · {online ? 'LIVE PVP' : 'CPU PRACTICE'}</small>
             <h2>BREAKTHROUGH</h2>
-            <p>No account rewards.</p>
+            <p>
+              {online
+                ? 'The match continues while this menu is open or you leave.'
+                : 'No account rewards.'}
+            </p>
             <button
               className="bt-primary"
               onClick={() => {
@@ -1617,8 +1694,26 @@ export default function BreakthroughArena({
                 <option value="rooftop">Rooftop showdown</option>
               </select>
             </label>
+            {online && game.status === 'playing' && (
+              <button
+                className="bt-text-button"
+                onClick={() => {
+                  if (!confirmSurrender) {
+                    setConfirmSurrender(true);
+                    return;
+                  }
+                  online.command({ kind: 'surrender' });
+                  setMenu(false);
+                  setConfirmSurrender(false);
+                }}
+              >
+                {confirmSurrender
+                  ? 'CONFIRM SURRENDER · NO TROPHIES'
+                  : 'SURRENDER MATCH'}
+              </button>
+            )}
             <button className="bt-text-button" onClick={onChangeDeck}>
-              CHANGE DECK ↗
+              {online ? 'BACK TO LOBBY' : 'CHANGE DECK'} ↗
             </button>
             <button className="bt-text-button" onClick={onExit}>
               BACK TO KUMITE ←

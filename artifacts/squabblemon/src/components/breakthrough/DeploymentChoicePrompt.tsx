@@ -3,25 +3,28 @@ import {
   deploymentChoices,
   type FighterDefinition,
   type GameState,
+  type DeploymentChoices,
   type Lane,
 } from '@workspace/squabblemon-engine/breakthrough';
 import { getAssetUrl } from '../../lib/assets';
 import './deploymentChoice.css';
 export default function DeploymentChoicePrompt({
   game,
+  quotedPlan,
   card,
   lane,
   onChoose,
   onCancel,
 }: {
   game: GameState;
+  quotedPlan?: DeploymentChoices;
   card: FighterDefinition;
   lane: Lane;
   onChoose(value: string): void;
   onCancel(): void;
 }) {
   const ref = useRef<HTMLElement>(null);
-  const plan = deploymentChoices(game, 'player', card.id, lane);
+  const plan = quotedPlan ?? deploymentChoices(game, 'player', card.id, lane);
   useEffect(() => {
     const previous =
       document.activeElement instanceof HTMLElement

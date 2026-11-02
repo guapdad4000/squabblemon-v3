@@ -1,3 +1,4 @@
+import BreakthroughOnline from '../../components/breakthrough/BreakthroughOnline';
 import { useMemo, useState, useRef, useEffect } from 'react';
 import { Link, Redirect, useLocation } from 'wouter';
 import { useQuery } from '@tanstack/react-query';
@@ -31,7 +32,7 @@ export function Breakthrough(props: { bootstrap: PlayerBootstrap }) {
   const [location] = useLocation();
   if (location !== '/game/kumite/breakthrough/practice' && !getBreakthroughLaunchReadiness().canLaunch)
     return <Redirect to="/game/kumite" />;
-  return <BreakthroughPractice {...props} />;
+  return location === '/game/kumite/breakthrough/practice' ? <BreakthroughPractice {...props} /> : <BreakthroughOnline key={props.bootstrap.profile.id} {...props} />;
 }
 
 /** Local CPU matches have no account rewards or online room admission. */

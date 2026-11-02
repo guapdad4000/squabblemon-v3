@@ -1,6 +1,12 @@
 import { getBreakthroughLaunchReadiness } from './breakthroughCatalog';
 import {
   advance,
+  deploymentCost,
+  deploymentChoices,
+  deploymentBaseHands,
+  legalActionTarget,
+  type DeploymentChoices,
+  type ActionTargetResult,
   unitDefinition,
   BREAKTHROUGH_RULESET,
   replayCommand,
@@ -25,7 +31,8 @@ export type RoomIntent =
       squabble?: boolean;
       target?: { unitId?: string; choice?: string };
     }
-  | { kind: 'cancel-reinforcement'; cardId: string };
+  | { kind: 'cancel-reinforcement'; cardId: string }
+  | { kind: 'surrender' };
 export interface RoomCommandEnvelope {
   commandId: string;
   sequence: number;
@@ -193,7 +200,9 @@ function normalizeEnvelope(input: unknown): RoomCommandEnvelope {
     fail('invalid-request', 'Invalid room command envelope.');
   const intent = input.command;
   let command: RoomIntent;
-  if (
+  if (object(intent, ['kind']) && intent.kind === 'surrender') {
+    command = { kind: 'surrender' };
+  } else if (
     object(intent, ['kind', 'cardId']) &&
     intent.kind === 'cancel-reinforcement' &&
     identifier(intent.cardId)
@@ -247,7 +256,10 @@ function fingerprint(command: RoomIntent): string {
         command.target?.unitId ?? null,
         command.target?.choice ?? null,
       ])
-    : JSON.stringify([command.kind, command.cardId]);
+    : JSON.stringify([
+        command.kind,
+        command.kind === 'surrender' ? null : command.cardId,
+      ]);
 }
 function serverTime(value: number): number {
   if (!integer(value))
@@ -436,25 +448,31 @@ export function commandBreakthroughRoom(
   let message: string | undefined;
   if (room.phase === 'active') {
     const intent = envelope.command;
-    const engineCommand: DeployCommand = {
-      tick: room.game.tick,
-      elapsedMs: room.game.elapsedMs,
-      side,
-      cardId: intent.cardId,
-      lane: intent.kind === 'deploy' ? intent.lane : 0,
-      squabble: intent.kind === 'deploy' && !!intent.squabble,
-      ...(intent.kind === 'cancel-reinforcement'
-        ? { action: intent.kind }
-        : {}),
-      ...(intent.kind === 'deploy' && intent.target
-        ? { target: { ...intent.target } }
-        : {}),
-    };
-    const result = replayCommand(room.game, engineCommand);
-    if (result.error) {
-      code = 'invalid-play';
-      message = result.error;
-    } else room.game = result.state;
+    if (intent.kind === 'surrender') {
+      room.game.status = 'complete';
+      room.game.winner = side === 'player' ? 'opponent' : 'player';
+      room.game.reason = 'surrender';
+    } else {
+      const engineCommand: DeployCommand = {
+        tick: room.game.tick,
+        elapsedMs: room.game.elapsedMs,
+        side,
+        cardId: intent.cardId,
+        lane: intent.kind === 'deploy' ? intent.lane : 0,
+        squabble: intent.kind === 'deploy' && !!intent.squabble,
+        ...(intent.kind === 'cancel-reinforcement'
+          ? { action: intent.kind }
+          : {}),
+        ...(intent.kind === 'deploy' && intent.target
+          ? { target: { ...intent.target } }
+          : {}),
+      };
+      const result = replayCommand(room.game, engineCommand);
+      if (result.error) {
+        code = 'invalid-play';
+        message = result.error;
+      } else room.game = result.state;
+    }
     if (room.game.status === 'complete') room.phase = 'complete';
   }
   const ack: RoomAck = {
@@ -514,6 +532,20 @@ export interface BreakthroughRoomView {
   lastAck: RoomAck | null;
   players: Record<Side, PublicPlayer>;
   hand: string[];
+  nextCard: string | null;
+  drawsLocked: boolean;
+  metrics: Record<Side, MatchMetrics>;
+  handPlans: Record<
+    string,
+    {
+      hands: number;
+      lanes: {
+        cost: number | null;
+        choices: DeploymentChoices;
+        target: ActionTargetResult;
+      }[];
+    }
+  >;
   returns: { cardId: string; readyAt: number }[];
   transferTicket: boolean;
   discountOrigin: Lane | null;
@@ -644,6 +676,27 @@ export function projectBreakthroughRoom(
     lastAck: copy(room.seats[side].receipts.at(-1)?.ack ?? null),
     players: { player: summary('player'), opponent: summary('opponent') },
     hand: [...own.hand],
+    nextCard: own.queue[0] ?? null,
+    drawsLocked: !!game.drawsLocked,
+    metrics: copy(game.metrics),
+    handPlans: Object.fromEntries(
+      own.hand.map((cardId) => [
+        cardId,
+        {
+          hands:
+            own.returnedHands?.[cardId] ??
+            deploymentBaseHands(game, side, cardId),
+          lanes: ([0, 1, 2] as Lane[]).map((lane) => {
+            const cost = deploymentCost(game, side, cardId, lane);
+            return {
+              cost: Number.isFinite(cost) ? cost : null,
+              choices: deploymentChoices(game, side, cardId, lane),
+              target: legalActionTarget(game, side, cardId, lane),
+            };
+          }),
+        },
+      ]),
+    ),
     returns: own.returns.map((item) => ({
       cardId: item.cardId,
       readyAt: item.readyAt,

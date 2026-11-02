@@ -84,6 +84,7 @@ export const criticalSuites = [
     'lib/squabblemon-engine/breakthroughRoomOwner.test.ts',
     'lib/squabblemon-engine/breakthroughRelease.test.ts',
     sourceTest('components/breakthrough/practiceDecks.test.ts'),
+    sourceTest('lib/breakthroughOnline.test.ts'),
     sourceTest('components/breakthrough/productionBoundary.test.ts'),
     sourceTest('components/breakthrough/handSlots.test.ts'),
     sourceTest('components/breakthrough/deploymentInput.test.ts'),

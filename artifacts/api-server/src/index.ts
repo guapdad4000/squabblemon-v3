@@ -1,4 +1,5 @@
-import app from "./app";
+import app, { createApp } from "./app";
+import { createBreakthroughRuntime } from "./lib/breakthroughRuntime";
 import { logger } from "./lib/logger";
 
 const rawPort = process.env["PORT"];
@@ -15,7 +16,14 @@ if (Number.isNaN(port) || port <= 0) {
   throw new Error(`Invalid PORT value: "${rawPort}"`);
 }
 
-app.listen(port, (err) => {
+const breakthrough =
+  process.env.BREAKTHROUGH_PVP_ENABLED === "true"
+    ? createBreakthroughRuntime()
+    : null;
+breakthrough?.service.start();
+const server = (
+  breakthrough ? createApp(undefined, breakthrough.router) : app
+).listen(port, (err) => {
   if (err) {
     logger.error({ err }, "Error listening on port");
     process.exit(1);
@@ -23,3 +31,9 @@ app.listen(port, (err) => {
 
   logger.info({ port }, "Server listening");
 });
+
+for (const signal of ["SIGTERM", "SIGINT"] as const)
+  process.once(signal, () => {
+    server.close();
+    void breakthrough?.service.stop();
+  });

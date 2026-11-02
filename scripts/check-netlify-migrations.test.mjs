@@ -16,7 +16,7 @@ function fixture(t) {
 }
 
 test('current native history covers development SQL, schema, and consolidated online-room baseline', () => {
-  assert.equal(checkNetlifyMigrationCoverage().tables, 26);
+  assert.equal(checkNetlifyMigrationCoverage().tables, 29);
 });
 
 test('native live-state columns without their writer trigger block release', t => {
