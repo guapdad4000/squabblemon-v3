@@ -62,8 +62,8 @@ async function freezeAnimatedMarks(page: Page) {
 }
 
 const resultCases = [
-  { name: 'story-victory', state: 'story', outcome: 'win', status: 'You Won The Room', action: 'Continue Chapter', story: true, markAlt: 'Victory' },
-  { name: 'story-loss', state: 'story-loss', outcome: 'loss', status: 'You Got Cleared', action: 'Continue Chapter', story: true, markAlt: 'Defeat' },
+  { name: 'story-victory', state: 'story', outcome: 'win', status: 'You Won The Room', action: 'Return to chapter map', story: true, markAlt: 'Victory' },
+  { name: 'story-loss', state: 'story-loss', outcome: 'loss', status: 'You Got Cleared', action: 'Return to chapter map', story: true, markAlt: 'Defeat' },
   { name: 'standard-victory', state: 'win', outcome: 'win', status: 'You Won The Room', action: 'Continue the fade', story: false, markAlt: 'Victory' },
   { name: 'standard-loss', state: 'loss', outcome: 'loss', status: 'You Got Cleared', action: 'Continue the fade', story: false, markAlt: 'Defeat' },
 ] as const;
@@ -125,7 +125,7 @@ for (const resultCase of [
     await expect(page.getByTestId('status-match-result')).toHaveText('Nobody Owns The Room');
     await expect(page.getByTestId('button-restart-match')).toBeVisible();
     if (resultCase.story) {
-      await expect(page.getByText('Continue Chapter')).toBeVisible();
+      await expect(page.getByText('Return to chapter map')).toBeVisible();
       await result.getByRole('button', { name: 'Details', exact: true }).click();
       const details = page.getByRole('dialog', { name: 'Match details' });
       await expect(details.getByText('Encounter tied · no side claimed the chapter.')).toBeVisible();
@@ -175,7 +175,7 @@ test('phone project renders the actual full result screen with reduced motion an
   await waitForStableArtwork(page);
   await expect.poll(() => page.evaluate(() => matchMedia('(prefers-reduced-motion: reduce)').matches)).toBe(true);
   await expect(page.locator('.result-immersive__scores > div').first()).toHaveCSS('opacity', '1');
-  await expectInViewport(page.getByRole('button', { name: 'Continue Chapter', exact: true }), 'story final action', page);
+  await expectInViewport(page.getByRole('button', { name: 'Return to chapter map', exact: true }), 'story final action', page);
 
   await page.goto(`${fixtureBase}/e2e/result-stage.fixture.html?state=draw`);
   await waitForStableArtwork(page);

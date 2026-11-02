@@ -42,8 +42,8 @@ export function ChapterTickets({ chapters, activeId, onSelect }: Props) {
     const el = strip.current;
     if (el) el.scrollBy({ left: direction * Math.max(220, el.clientWidth * .75), behavior: 'auto' });
   };
-  return <section className="chapter-passes" aria-label="Chapter tickets">
-    <div className="chapter-passes__toolbar"><span>Story passes <b>{String(available.length).padStart(2, '0')}</b></span>
+  return <section className={`chapter-passes${available.length === 1 ? ' chapter-passes--single' : ''}`} aria-label="Chapter tickets">
+    <div className="chapter-passes__toolbar"><span>Chapters <b>{String(available.length).padStart(2, '0')}</b></span>
       {available.length > 1 && <div><small>Swipe to explore</small><button type="button" aria-label="Scroll to earlier chapters" disabled={!edges.back} onClick={() => scroll(-1)}><ArrowLeft size={16}/></button><button type="button" aria-label="Scroll to later chapters" disabled={!edges.next} onClick={() => scroll(1)}><ArrowRight size={16}/></button></div>}
     </div>
     <nav ref={strip} className="chapter-passes__strip" aria-label="Chapters" tabIndex={0}

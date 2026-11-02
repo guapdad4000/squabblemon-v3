@@ -147,7 +147,7 @@ export function ResultScreen({
                 onClick={onGoHome}
                 disabled={rewardPending || !!rewardError || !reward}
               >
-                Continue Chapter
+                Return to chapter map
                 <ArrowRight size={15} />
               </button>
             </>
@@ -202,6 +202,7 @@ export function ResultScreen({
       ref={stageRef}
       className={`battle-result-screen studio-results result-stage result-stage--art world-decor-host ${isVictory ? 'is-victory' : isDraw ? 'is-draw' : 'is-defeat'}`}
       data-testid="battle-result-screen"
+      data-story-result={isStory || undefined}
     >
       <div className="result-stage__content">
         <ResultArtwork victory={isVictory} draw={isDraw} results={results} districts={districts}

@@ -257,3 +257,28 @@ html[data-reduce-motion=true] .result-immersive__results--slam,html[data-reduce-
 .result-immersive__caption { transform:translate(6px,4px); }
 
 @media(prefers-reduced-motion:reduce) { .result-immersive--loss .result-immersive__gloves { animation:none; } }
+
+/* Story's main exit stays visually distinct from an optional retry. */
+[data-story-result=true] .result-immersive__actions .studio-action--gold.result-street-sign{color:#302213!important;text-shadow:none;background:#ffe0a5!important;max-width:340px}
+[data-story-result=true] .result-immersive__actions .studio-action--gold.result-street-sign::before{background:linear-gradient(#f6d28c,#dba34e)}
+[data-story-result=true] .result-immersive__actions button{min-height:44px}
+@media(max-height:700px) and (max-aspect-ratio:1/1){
+ [data-story-result=true] .result-immersive{padding-top:64px}
+ [data-story-result=true] .result-immersive__title{padding-top:62px}
+ [data-story-result=true] .result-immersive__mark{height:70px;top:-14px}
+ [data-story-result=true] .result-immersive__plaque{padding-top:42px;padding-bottom:20px}
+}
+@media(max-height:500px) and (min-aspect-ratio:1/1){
+ [data-story-result=true] .result-immersive{padding:50px 20px 12px}
+ [data-story-result=true] .result-immersive__results{width:min(100%,1000px);margin-inline:auto;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:8px 20px;align-items:center}
+ [data-story-result=true] .result-immersive__title{grid-column:1;grid-row:1;padding-top:76px}
+ [data-story-result=true] .result-immersive__mark{top:0;height:72px}
+ [data-story-result=true] .result-immersive__stars{position:static;margin-top:5px}
+ [data-story-result=true] .result-immersive__plaque{grid-column:2;grid-row:1;padding:42px 20px 18px}
+ [data-story-result=true] .result-immersive__scores{grid-column:2;grid-row:2}
+ [data-story-result=true] .result-immersive__details{grid-column:1;grid-row:2}
+ [data-story-result=true] .result-immersive__actions{grid-column:1 / -1;grid-row:3}
+ [data-story-result=true] .result-immersive .result-stage__actions{flex-wrap:nowrap}
+}
+@media(max-aspect-ratio:1/1){[data-story-result=true] .result-immersive{padding-top:clamp(64px,20svh,160px)}}
+@media(max-height:700px) and (max-aspect-ratio:1/1){[data-story-result=true] .result-immersive{padding-top:48px}}

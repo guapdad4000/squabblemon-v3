@@ -5,7 +5,7 @@ import { revealStoryRewards } from '../../lib/rewardReceipts';
 import { GameGlyph } from '../../components/venue/GameGlyph';
 import { PageDecor } from '../../components/venue/PageDecor';
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
-import { ArrowRight, Check, LockKeyhole, MessageCircle, Star, Ticket, X, Film, UtensilsCrossed, BookOpen } from 'lucide-react';
+import { ArrowRight, Check, LockKeyhole, MessageCircle, Star, Ticket, X, Film, Puzzle } from 'lucide-react';
 import '../../styles/studio.css';
 import '../../styles/story-map.css';
 import '../../styles/cinema-atlas.css';
@@ -55,6 +55,9 @@ import {
 } from '../../components/story';
 import { CardRarityTreatment, getRarityClass } from '../../components/CardRarityTreatment';
 import { StoryTheater } from './story/StoryTheater';
+import { StoryDialog } from '../../components/story/StoryDialog';
+import { GamePopupFrame, GamePopupTitle, GamePopupClose, RewardFilePaper } from '../../components/ui/game-popup';
+import { battlePortraitUrl } from '../../lib/battlePortrait';
 import { StoryPuzzle } from './story/StoryPuzzle';
 import { saveStoryResume } from '../../lib/fadewood/journey';
 
@@ -88,20 +91,6 @@ function sceneEntries(node: StoryNode): SceneEntry[] {
   }));
 }
 
-function rewardLabel(reward: StoryReward | StoryGrantedReward) {
-  if (reward.kind === 'card') return 'duplicateShards' in reward
-    ? reward.duplicateShards ? `${cards[reward.id]?.name ?? reward.id} duplicate · +${reward.duplicateShards} Style Shards` : `${cards[reward.id]?.name ?? reward.id} card added`
-    : `${cards[reward.id]?.name ?? reward.id} card · duplicates become ${STORY_DUPLICATE_STYLE_SHARDS} Style Shards`;
-  if (reward.kind === 'chapter-key') return 'Next chapter key';
-  if (reward.kind === 'pack-ticket')
-    return reward.amount === 10
-      ? '10× Street Pack Tickets · One upgraded ten-pull'
-      : `${reward.amount}x Pack Ticket${reward.amount === 1 ? '' : 's'}`;
-  if (reward.kind === 'cosmetic') return `Cosmetic: ${reward.id}`;
-  if (reward.kind === 'character-unlock') return `${STORY_CHARACTERS.find((character) => character.id === reward.id)?.name ?? reward.id} story character unlocked`;
-  return reward.id === 'clout' ? `+${reward.amount} Clout · Training fund` : `+${reward.amount} Account XP`;
-}
-
 const resolveStoryRewardCharacter = (id: string) => STORY_CHARACTERS.find(character => character.id === id);
 
 function RewardPrize({ reward, compact = false }: { reward: StoryReward | StoryGrantedReward; compact?: boolean }) {
@@ -110,11 +99,11 @@ function RewardPrize({ reward, compact = false }: { reward: StoryReward | StoryG
   const amount = reward.kind === 'currency' || reward.kind === 'pack-ticket' ? reward.amount : undefined;
   return <div className={`story-prize ${compact ? 'story-prize--compact' : ''}`} data-testid={`story-prize-${reward.kind}-${reward.id}`}>
     <span className="story-prize__icon">
-      {image ? <img src={image} alt="" loading="lazy" /> : reward.kind === 'pack-ticket' ? <Ticket size={compact ? 21 : 27} /> : reward.kind === 'chapter-key' ? <LockKeyhole size={compact ? 21 : 27} /> : reward.kind === 'currency' ? <GameGlyph name={reward.id === 'clout' ? 'cloutStack' : 'xp'} /> : <Star size={compact ? 21 : 27} />}
+      {image ? <img src={battlePortraitUrl(image)} alt="" loading="lazy" /> : reward.kind === 'pack-ticket' ? <GameGlyph name="ticket" /> : reward.kind === 'chapter-key' ? <LockKeyhole size={compact ? 21 : 27} /> : reward.kind === 'currency' ? <GameGlyph name={reward.id === 'clout' ? 'cloutStack' : 'xp'} /> : <Star size={compact ? 21 : 27} />}
     </span>
     <span className="story-prize__copy">
-      <strong>{amount !== undefined ? `+${amount} ${reward.kind === 'pack-ticket' ? 'Pack Tickets' : reward.id === 'clout' ? 'Clout' : 'Account XP'}` : reward.kind === 'card' ? cards[reward.id]?.name ?? reward.id : reward.kind === 'chapter-key' ? 'Chapter key' : character?.name ?? reward.id}</strong>
-      {!compact && <small>{reward.kind === 'card' ? 'Card reward · duplicate converts to shards' : reward.kind === 'pack-ticket' && reward.amount === 10 ? 'Upgraded ten-pull' : reward.kind === 'character-unlock' ? 'Story character' : reward.kind === 'chapter-key' ? 'Unlock the next chapter' : reward.kind === 'cosmetic' ? 'Cosmetic reward' : 'Added to your account'}</small>}
+      <strong>{amount !== undefined ? `+${amount} ${reward.kind === 'pack-ticket' ? reward.amount === 1 ? 'Pack Ticket' : 'Pack Tickets' : reward.id === 'clout' ? 'Clout' : 'Account XP'}` : reward.kind === 'card' ? cards[reward.id]?.name ?? reward.id : reward.kind === 'chapter-key' ? 'Chapter key' : character?.name ?? reward.id}</strong>
+      {!compact && reward.kind !== 'currency' && <small>{reward.kind === 'card' ? ('duplicateShards' in reward ? reward.duplicateShards > 0 ? `Duplicate: +${reward.duplicateShards} Style Shards` : 'Card added' : `Duplicates: ${STORY_DUPLICATE_STYLE_SHARDS} Style Shards`) : reward.kind === 'pack-ticket' && reward.amount === 10 ? 'Upgraded ten-pull' : reward.kind === 'character-unlock' ? 'Story character' : reward.kind === 'chapter-key' ? 'Unlock the next chapter' : reward.kind === 'cosmetic' ? 'Cosmetic reward' : 'Added to your account'}</small>}
     </span>
   </div>;
 }
@@ -157,13 +146,6 @@ export function Story({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   const [activeChapterId, setActiveChapterId] = useViewMemory<string | null>(`story-chapter:${bootstrap.profile.id}`, null);
   const [activeSeasonId, setActiveSeasonId] = useState<string | null>(null);
   const [rewardsOpen, setRewardsOpen] = useState(false);
-
-  useEffect(() => {
-    if (!rewardsOpen) return;
-    const closeOnEscape = (event: KeyboardEvent) => { if (event.key === 'Escape') setRewardsOpen(false); };
-    window.addEventListener('keydown', closeOnEscape);
-    return () => window.removeEventListener('keydown', closeOnEscape);
-  }, [rewardsOpen]);
 
   useEffect(() => {
     setScopedMusicMode(activeSeasonId || selectedNodeId ? 'story' : null);
@@ -362,7 +344,7 @@ export function Story({ bootstrap }: { bootstrap: PlayerBootstrap }) {
       <header className="story-atlas__header">
 
         <ChapterTickets chapters={campaign.chapters.filter(c => !activeSeasonId || getStorySeason(activeSeasonId)?.chapterIds.includes(c.id)).map((chapter, index) => chapter.id.startsWith('squabble-house-') ? { ...chapter, order: index + 1 } : chapter)} activeId={currentChapter?.id} onSelect={setActiveChapterId} />
-        <h1 className="story-title">{currentChapter?.title}</h1>
+        <h1 className="sr-only">{currentChapter?.title}</h1>
       </header>
 
       <div className="story-atlas__viewport" style={{ backgroundImage: `url("${getAssetUrl(currentChapter?.mapAssetId || '')}")` }}>
@@ -433,17 +415,16 @@ export function Story({ bootstrap }: { bootstrap: PlayerBootstrap }) {
                 onClick={() => {
                   if (!locked) setLocation(`/game/story?view=archive&node=${encodeURIComponent(node.nodeId)}`);
                 }}
-                className={`story-atlas__node ${isNext ? 'is-next' : ''} ${boss ? 'is-boss' : ''} ${locked ? 'is-locked' : ''} ${cleared ? 'is-cleared' : ''} ${node.optional ? 'is-optional' : ''}`}
+                className={`story-atlas__node ${isNext ? 'is-next' : ''} ${boss ? 'is-boss' : ''} ${locked ? 'is-locked' : ''} ${cleared ? 'is-cleared' : ''} ${node.optional ? 'is-optional' : ''} ${content?.puzzle ? 'is-puzzle' : ''}`}
                 style={{ left: `${node.mapPosition.x}%`, top: `${node.mapPosition.y}%` }}
               >
                 <span className="story-atlas__marker">
-                  {node.nodeId.startsWith('squabble-house-') ? (
+                  {content?.puzzle ? <><Puzzle size={23} aria-hidden="true" />{locked ? <LockKeyhole className="story-puzzle-marker-state" size={12} /> : cleared ? <Check className="story-puzzle-marker-state" size={13} /> : null}</> : node.nodeId.startsWith('squabble-house-') ? (
                     <>{content?.kind === 'battle' ? <img src={getAssetUrl(content.encounter.enemy.portraitAssetId)} alt="" />
-                      : content?.puzzle ? <UtensilsCrossed size={24} />
                       : node.nodeId.endsWith('-opening') ? <Film size={25} /> : <GameGlyph name="mastery" />}
                       {locked && <LockKeyhole className="house-node-lock" size={13} />}
                       {cleared && <Check className="house-node-lock" size={16} />}</>
-                  ) : content?.puzzle?.presentation?.theme==='kumite' ? (<BookOpen size={22}/>) : boss && content?.kind === 'battle' ? (
+                  ) : boss && content?.kind === 'battle' ? (
                     <img src={getAssetUrl(content.encounter.enemy.portraitAssetId)} alt="" />
                   ) : locked ? (
                     <LockKeyhole size={15} />
@@ -459,7 +440,7 @@ export function Story({ bootstrap }: { bootstrap: PlayerBootstrap }) {
                 <span className="story-atlas__label">
                   <strong>{node.title}</strong>
                   <small>
-                    {locked ? 'Locked' : isNext ? 'Up next' : node.optional ? 'Side story' : cleared ? 'Cleared' : 'Available'}
+                    {content?.puzzle ? `${node.optional ? 'Optional puzzle' : 'Puzzle'}${locked ? ' · locked' : cleared ? ' · solved' : isNext ? ' · up next' : ''}` : locked ? 'Locked' : isNext ? 'Up next' : cleared ? 'Cleared' : node.optional ? 'Side story' : 'Available'}
                   </small>
                 </span>
                 {node.kind === 'battle' && (
@@ -497,17 +478,7 @@ export function Story({ bootstrap }: { bootstrap: PlayerBootstrap }) {
 
       <AnimatePresence>
         {rewardsOpen && currentChapter && chapterContent && (
-          <motion.div
-            key="rewards"
-            className="story-atlas__rewards-panel"
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 24 }}
-            transition={{ duration: 0.2, ease: 'easeOut' }}
-            role="dialog"
-            aria-label="Chapter rewards"
-            aria-modal="true"
-          >
+          <StoryDialog className="story-atlas__rewards-panel" label="Chapter rewards" onClose={() => setRewardsOpen(false)}>
             <div className="story-atlas__rewards-panel__head">
               <span className="story-atlas__rewards-panel__title"><Ticket size={16} /><strong>Chapter awards</strong></span>
               <button
@@ -520,9 +491,9 @@ export function Story({ bootstrap }: { bootstrap: PlayerBootstrap }) {
             </div>
             <div className="story-atlas__rewards-panel__body">
               <section className="story-awards-hero" style={{ backgroundImage: `linear-gradient(90deg, #0c1718 6%, #0c1718ce 50%, #0c171830), url("${getAssetUrl(chapterContent.mapAssetId)}")` }}>
-                <span className="story-awards-hero__kicker">The neighborhood remembers</span>
+                <span className="story-awards-hero__kicker">CHAPTER REWARDS</span>
                 <h2>{currentChapter.title}</h2>
-                <p>Every stop has its own prize. Clear a battle to earn its awards; finish a scene to claim what waits there.</p>
+                <p>Clear each stop to claim its first-clear rewards.</p>
                 <div className="story-awards-hero__count"><span>{chapterContent.nodes.filter(node => campaign.nodes.find(progress => progress.nodeId === node.id)?.cleared).length}<small> / {chapterContent.nodes.length}</small></span> stops cleared</div>
               </section>
               <div className="story-awards-section-heading"><span>THE REWARD ROUTE</span><small>First-clear awards are granted once</small></div>
@@ -550,7 +521,7 @@ export function Story({ bootstrap }: { bootstrap: PlayerBootstrap }) {
                 }}
               />
             </div>
-          </motion.div>
+          </StoryDialog>
         )}
       </AnimatePresence>
 
@@ -560,6 +531,7 @@ export function Story({ bootstrap }: { bootstrap: PlayerBootstrap }) {
             key={selectedNodeId}
             nodeId={selectedNodeId}
             campaign={campaign}
+            returnToMap={new URLSearchParams(search).get('returnToMap') === '1'}
             onClose={() => {
               setSelectedNodeId(null);
               const season = getStorySeasonForChapter(currentChapter!.id);
@@ -577,8 +549,10 @@ export function NodeOverlay({
   campaign,
   onClose,
   onStartBattle,
+  returnToMap = false,
 }: {
   nodeId: string;
+  returnToMap?: boolean;
   campaign: StoryCampaign;
   onClose: () => void;
   onStartBattle: (nodeId: string) => void;
@@ -631,8 +605,9 @@ export function NodeOverlay({
   useEffect(() => {
     setActionError(null);
     if (pendingEntries.length) setScreen('dialogue');
+    else if (returnToMap && isBattle) onClose();
     else setScreen(isBattle ? 'briefing' : hasPuzzle && !isCleared ? 'puzzle' : 'completed');
-  }, [isBattle, hasPuzzle, isCleared, nodeId, pendingEntries.length]);
+  }, [isBattle, hasPuzzle, isCleared, nodeId, pendingEntries.length, returnToMap, onClose]);
 
   if (!storyNode && nodeProgress && chapterQuery.isPending) {
     return <div className="fixed inset-0 z-50 grid place-content-center gap-4 bg-black/95 p-6 text-center" role="status"><p>Loading chapter...</p><button type="button" onClick={onClose}>Back to map</button></div>;
@@ -814,15 +789,15 @@ export function NodeOverlay({
             <div className="story-complete-scene" style={{ backgroundImage: `url("${getAssetUrl(storyNode.cinematic.environmentAssetId)}")` }}>
               <div className="story-complete-scene__stamp">{isCleared ? <Check size={16} /> : <Star size={16} />} {isCleared ? 'SCENE COMPLETE' : 'SCENE READY'}</div>
               <img src={getAssetUrl(storyNode.scenes.at(-1)?.portraitAssetId ?? 'assets/characters/snitch.webp')} alt="" className="story-complete-scene__character" data-story-player={storyNode.scenes.at(-1)?.portraitAssetId === 'assets/characters/player.webp' || undefined} />
-              <span className="story-complete-scene__caption">A NEW PAGE IN THE NEIGHBORHOOD</span>
+              <span className="story-complete-scene__caption">STORY RECORD</span>
             </div>
             <div className="story-complete-content">
               <span className="story-complete-content__eyebrow">{rewardChapter?.title ?? 'Story'} <span>/</span> {storyNode.kind === 'reward' ? 'Reward stop' : 'Story scene'}</span>
               <h2>{storyNode.title}</h2>
               {storyNode.puzzle && nodeProgress.cleared && <p role="status" className="story-complete-content__outcome">{nodeProgress.lastOutcome === 'puzzle-skipped' ? storyNode.puzzle.skipText : storyNode.puzzle.solvedText}</p>}
-              <div className="story-complete-content__divider"><span>{grantedRewards.length ? 'JUST ADDED TO YOUR COLLECTION' : isCleared ? 'FIRST-CLEAR AWARDS' : 'WAITING TO BE CLAIMED'}</span></div>
+              <div className="story-complete-content__divider"><span>{grantedRewards.length ? 'REWARDS SAVED' : isCleared ? 'FIRST-CLEAR AWARDS' : 'WAITING TO BE CLAIMED'}</span></div>
               <div className="story-complete-prizes" data-testid="story-completed-rewards">
-                {(grantedRewards.length ? grantedRewards : storyNode.rewards).length ? (grantedRewards.length ? grantedRewards : storyNode.rewards).map((reward, index) => <RewardPrize reward={reward} key={`${reward.kind}-${reward.id}-${index}`} />) : <p className="story-complete-prizes__empty">The scene itself is the reward. Your place in this story is saved.</p>}
+                {(grantedRewards.length ? grantedRewards : storyNode.rewards).length ? (grantedRewards.length ? grantedRewards : storyNode.rewards).map((reward, index) => <RewardPrize reward={reward} key={`${reward.kind}-${reward.id}-${index}`} />) : <p className="story-complete-prizes__empty">Progress saved.</p>}
               </div>
               {actionError && <p role="alert" className="story-complete-content__error">{actionError}</p>}
               {deliveryStatus && <p role="status" className="story-complete-content__status">{deliveryStatus}</p>}
@@ -836,30 +811,23 @@ export function NodeOverlay({
         </div>
       )}
 
-      <AnimatePresence>
-        {showHistory && (
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: 30 }}
-            className="absolute inset-0 z-20 overflow-y-auto bg-zinc-950 p-5 md:left-auto md:w-[430px] md:border-l md:border-white/15"
-          >
-            <div className="flex items-center justify-between">
-              <h3 className="font-display text-2xl font-black italic uppercase">Dialogue History</h3>
-              <button type="button" onClick={() => setShowHistory(false)} className="border border-white/20 px-3 py-2 font-mono text-[8px] uppercase">Close</button>
-            </div>
-            <div className="mt-5 space-y-3">
-              {history.map((entry) => (
-                <div key={entry.token} className="border-l-2 border-primary bg-white/5 p-3">
-                  <div className="font-mono text-[8px] uppercase tracking-widest text-primary">{entry.line.speaker}</div>
-                  <p className="mt-1 text-sm text-white/75">{formatDialogueText(entry.line.text)}</p>
-                </div>
-              ))}
-              {!history.length && <p className="text-sm text-white/45">No saved dialogue yet.</p>}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {showHistory && <StoryDialog className="story-history-dialog" label="Dialogue History" onClose={() => setShowHistory(false)}>
+        <GamePopupFrame className="story-history" material="dossier">
+          <GamePopupClose aria-label="Close dialogue history" onClick={() => setShowHistory(false)} />
+          <RewardFilePaper>
+            <span className="game-popup__label">{storyNode.title}</span>
+            <GamePopupTitle feature>Dialogue History</GamePopupTitle>
+            <ol className="story-history__lines">
+              {history.map(entry => <li key={entry.token}>
+                <strong>{entry.line.speaker}</strong>
+                <p>{formatDialogueText(entry.line.text)}</p>
+              </li>)}
+            </ol>
+            {!history.length && <p className="game-popup__copy">No saved dialogue yet.</p>}
+          </RewardFilePaper>
+        </GamePopupFrame>
+      </StoryDialog>}
+
     </motion.div>
   );
 }
@@ -925,7 +893,7 @@ function BattleBriefing({
             {battle.optional && <span className="eyebrow">Mastery Node</span>}
             {!battle.optional && <span className="eyebrow">{cleared ? 'Mastery replay' : battle.battleType}</span>}
             <h2>{battle.encounter.enemy.name}</h2>
-            <p>{battle.encounter.enemy.behaviorProfile}  · The Opps · {getMatchRoundLimit(battle.encounter)} rounds · first to two districts</p>
+            <p>{getMatchRoundLimit(battle.encounter)} rounds · win two districts</p>
             <div className="story-briefing__history">{historyButton}</div>
           </div>
           <div className="story-briefing__enemy">
@@ -973,10 +941,11 @@ function BattleBriefing({
             </div>
 
             <div className="story-briefing__card taped">
-              <div className="story-briefing__section-title">Objectives</div><p className="story-replay-objectives">Complete a replay and meet the missing objective. Victory objectives still need a win; other objectives can be earned after your first clear. Earned stars stay saved.</p>
+              <div className="story-briefing__section-title">Objectives</div>
               <div className="text-[10px] font-mono uppercase tracking-wider text-[#555] mb-3 font-bold" data-testid="briefing-best-stars">
-                Stars earned: {Math.min(stars, battle.starObjectives.length)} / {battle.starObjectives.length} · earned stars stay saved
+                Stars earned: {Math.min(stars, battle.starObjectives.length)} / {battle.starObjectives.length}
               </div>
+              {cleared && <details className="story-replay-rules"><summary>Replay rules</summary><p>Earned stars stay saved. Victory objectives need a win; other missing objectives can be earned on any completed replay.</p></details>}
               <div>
                 {battle.starObjectives.map((objective) => (
                   <div key={objective.id} className="story-briefing__objective" data-earned={completedObjectiveIds.includes(objective.id)}>
@@ -988,9 +957,9 @@ function BattleBriefing({
             </div>
 
             <div className="story-briefing__card taped">
-              <div className="story-briefing__section-title">Rewards</div>
-              <div className="mt-2 text-sm font-semibold">
-                {battle.rewards.map((reward, index) => <p key={`${reward.id}-${index}`} className="mb-1">• {rewardLabel(reward)}</p>)}
+              <div className="story-briefing__section-title">First-clear rewards</div>
+              <div className="story-briefing__prizes">
+                {battle.rewards.map((reward, index) => <RewardPrize key={`${reward.id}-${index}`} reward={reward} />)}
                 {battle.rewards.length === 0 && <p>No first-clear rewards.</p>}
               </div>
             </div>
@@ -1004,9 +973,9 @@ function BattleBriefing({
           <div className="story-briefing__focus-cards">
             {(battle.teaching.focusCards.length ? battle.teaching.focusCards : battle.recommendedCollection).map((cardId) => {
               const rarity = catalogCardByEngineId[cardId].rarity;
-              return <div key={cardId} aria-label={`${cards[cardId].name}. ${CARD_RARITY_DEFINITIONS[rarity].label} rarity`} className={`story-briefing__focus-card ${getRarityClass(rarity)}`} style={{ display: 'flex', flexDirection: 'column', padding: '8px', border: '1px solid rgba(255,255,255,0.2)' }}>
-                <img src={getCardImage(cards[cardId].id)} alt="" style={{ height: '70px', objectFit: 'contain', width: '100%' }} />
-                <span style={{ fontSize: '10px', fontWeight: 'bold', textTransform: 'uppercase', textAlign: 'center', marginTop: '4px' }}>{cards[cardId].name}</span>
+              return <div key={cardId} aria-label={`${cards[cardId].name}. ${CARD_RARITY_DEFINITIONS[rarity].label} rarity`} className={`story-briefing__focus-card ${getRarityClass(rarity)}`}>
+                <img src={battlePortraitUrl(getCardImage(cards[cardId].id))} alt="" loading="lazy" />
+                <span className="story-briefing__focus-name">{cards[cardId].name}</span>
                 <span className="story-briefing__focus-rarity">◆ {CARD_RARITY_DEFINITIONS[rarity].label}</span>
                 <CardRarityTreatment rarity={rarity} compact />
               </div>
@@ -1014,13 +983,16 @@ function BattleBriefing({
           </div>
         </div>
 
-        <div className="story-briefing__actions">
-          <GameBackButton onClick={onClose} className="story-briefing__btn story-briefing__btn--back" label="Back to map" />
-          <button type="button" onClick={onStart} className={`story-briefing__btn story-briefing__btn--start ${isBoss ? 'boss' : ''}`}>
-            {cleared ? 'Replay Encounter' : 'Engage Target'}
-          </button>
-        </div>
       </div>
+        <div className="story-briefing__actions">
+          {cleared ? <>
+            <button type="button" onClick={onStart} className="story-briefing__btn story-briefing__btn--back">Replay battle</button>
+            <button type="button" onClick={onClose} className="story-briefing__btn story-briefing__btn--start">Return to chapter map</button>
+          </> : <>
+            <GameBackButton onClick={onClose} className="story-briefing__btn story-briefing__btn--back" label="Back to map" />
+            <button type="button" onClick={onStart} className={`story-briefing__btn story-briefing__btn--start ${isBoss ? 'boss' : ''}`}>Start battle</button>
+          </>}
+        </div>
     </div>
   );
 }

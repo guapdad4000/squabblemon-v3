@@ -126,7 +126,7 @@ try {
   });
   for(const size of [{width:375,height:568},{width:1440,height:900}]) {
    await page.setViewportSize(size);
-   await page.goto(`${origin}/e2e/story-reward-recovery.fixture.html?season=season-1&panel=1`);
+   await page.goto(`${origin}/e2e/story-reward-recovery.fixture.html?view=archive&season=season-1&panel=1`);
    if(size.width===375){
     await page.locator('dialog[open].reward-reveal--story').waitFor();
     assert(await page.getByText('Missing first-clear rewards · added now').isVisible());

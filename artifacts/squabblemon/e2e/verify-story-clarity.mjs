@@ -45,7 +45,7 @@ try {
     await page.setViewportSize({width:width+8,height});
     await page.waitForTimeout(250);
     const manual=await page.evaluate(()=>{const rail=document.querySelector('.theater-posters').getBoundingClientRect(),current=document.querySelector('.cinema-poster[data-current=true]').getBoundingClientRect(),selected=document.querySelector('.cinema-poster[data-selected=true]');return {selected:selected.getAttribute('data-testid'),currentDistance:Math.abs((current.left+current.right-rail.left-rail.right)/2),scrollLeft:document.querySelector('.theater-posters').scrollLeft};});
-    assert.equal(manual.selected,width<600?'button-presentation-season-2':'button-presentation-special-squabble-house');assert.ok(manual.currentDistance>100,'Manual browsing remains away from the recommended season');
+    assert.equal(manual.selected,width<600?'button-presentation-season-2':await page.locator('.cinema-poster').last().getAttribute('data-testid'));assert.ok(manual.currentDistance>100,'Manual browsing remains away from the recommended season');
     await page.screenshot({path:join(output,`story-${name}-manual.png`)});
     // Continue always opens the destination printed on the ticket, even after
     // browsing a locked poster at the other end of the theater.

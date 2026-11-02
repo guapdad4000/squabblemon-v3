@@ -1,3 +1,4 @@
+import { Zap } from 'lucide-react';
 import { StoryEnvironmentProp } from './StoryEnvironmentProp';
 import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState, type MouseEvent, type ReactNode } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
@@ -370,7 +371,7 @@ export function StoryStage({ nodeId, node: authoredNode, section, line, position
       <div className="story-stage__location"><span>{chapter?.title ?? 'BLOCK PARTY OPEN'}</span><h2>{scene.place}</h2><p>{scene.caption}</p></div>
       {prop && <div className={`story-stage__prop story-stage__prop--${prop}`} aria-hidden="true">
         {prop === 'vip' ? <><small>VERY IMPORTANT</small><strong>VENDING<br />MACHINE</strong><span>VIP · $3 DISPUTE PENDING</span></> :
-          prop === 'power' ? <><small>THE ENTIRE EMPIRE</small><strong>⚡</strong><span>DO NOT UNPLUG</span></> :
+          prop === 'power' ? <><small>THE ENTIRE EMPIRE</small><strong><Zap size={30} aria-hidden="true" /></strong><span>DO NOT UNPLUG</span></> :
           prop === 'receipt' ? <><small>THE RECEIPTS</small><strong>ON RECORD.</strong><span>NO REFUNDS ON WHAT YOU SAID.</span></> :
           prop === 'live' ? <><small>● LIVE</small><strong>SNITCH<br />NEWS</strong><span>PROFESSIONAL AIR FRYER DESK</span></> :
           <><small>ENTRANCE MUSIC</small><strong>BATTERY LOW</strong><span>PLEASE CHARGE YOUR DEVICE</span></>}

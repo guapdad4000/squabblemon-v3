@@ -164,3 +164,10 @@
 @media (prefers-reduced-motion: reduce) {
   .story-award-stop { transition: none; }
 }
+/* Native dialogs center in the viewport, independent of the map scroll position. */
+.story-atlas dialog.story-atlas__rewards-panel{inset:0;margin:auto;padding:0;width:min(860px,calc(100vw - 24px));height:fit-content;max-height:calc(100dvh - 32px);transform:none}
+.story-atlas dialog.story-atlas__rewards-panel::backdrop{background:#030a0bd9;backdrop-filter:blur(5px)}
+.story-atlas .story-atlas__rewards-panel__close{width:44px;height:44px;flex:none}
+.story-node-overlay .story-reward-completion>.story-complete-layout{margin-inline:auto}
+.story-complete-actions button,.story-complete-content__claim{min-height:44px}
+.story-award-stop__action{min-height:44px}

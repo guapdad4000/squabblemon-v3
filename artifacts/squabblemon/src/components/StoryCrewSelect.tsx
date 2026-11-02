@@ -2,6 +2,7 @@ import { useLayoutEffect, useRef, useState, type CSSProperties, type ReactNode }
 import { getCardImage, catalogCardById } from '../data';
 import { getAssetUrl } from '../lib/assets';
 import type { PickerDeck } from './CompactDeckPicker';
+import { battlePortraitUrl } from '../lib/battlePortrait';
 import { Pencil } from 'lucide-react';
 import { Link } from 'wouter';
 import '../styles/story-crew-select.css';
@@ -29,11 +30,11 @@ export function StoryCrewSelect({ decks, selectedId, onSelect, editHref, onBack,
    <figure className="story-crew-select__hero">{selected && <><img key={selected.heroCardId} src={getCardImage(selected.heroCardId)} alt={catalogCardById[selected.heroCardId]?.name ?? selected.name} /><figcaption><small>PLAYER 1 / STREET FILE</small><h1>{selected.name}</h1><p>{catalogCardById[selected.heroCardId]?.name} · {selected.cardIds.length} cards</p><Link href={editHref(selected.id)} className="story-crew-select__edit" aria-label={`Edit deck: ${selected.name}`}><Pencil size={15} aria-hidden="true" /> Edit deck</Link></figcaption></>}</figure>
    <div ref={roster} className="story-crew-select__roster"><h2>Who all in there?</h2>
     <svg className="crew-evidence-threads" aria-hidden="true">{threads.map((line,i)=><line key={i} {...line} />)}</svg>
-    <div ref={grid} className="story-crew-select__grid" style={{gridTemplateColumns:`repeat(${columns},minmax(0,1fr))`}} role="group" aria-label="Available crews">{decks.map(deck => <button key={deck.id} aria-pressed={selected?.id === deck.id} onClick={() => onSelect(deck.id)}><img src={getCardImage(deck.heroCardId)} alt="" /><span>{deck.name}</span>{selected?.id === deck.id && <><b>P1</b><i className="crew-paperclip" aria-hidden="true" /></>}</button>)}</div>
+    <div ref={grid} className="story-crew-select__grid" style={{gridTemplateColumns:`repeat(${columns},minmax(0,1fr))`}} role="group" aria-label="Available crews">{decks.map(deck => <button key={deck.id} aria-pressed={selected?.id === deck.id} onClick={() => onSelect(deck.id)}><img src={battlePortraitUrl(getCardImage(deck.heroCardId))} alt="" loading="lazy" /><span>{deck.name}</span>{selected?.id === deck.id && <><b>P1</b><i className="crew-paperclip" aria-hidden="true" /></>}</button>)}</div>
     {selected && <div className="crew-case" aria-label="Selected crew evidence dossier">
      <img className="crew-case__folder" src={getAssetUrl('assets/selection/dossier.webp')} alt="" />
      <span className="crew-case__stamp">PERSONS OF INTEREST</span>
-     {selected.cardIds.map((id,i)=> <figure className="crew-case__photo" key={`${id}-${i}`} style={{'--photo-x':`${12+(i%5)*18}%`,'--photo-y':`${i<5?27:66}%`,'--photo-angle':`${(i%5-2)*5+(i<5?-3:3)}deg`} as CSSProperties}><img src={getCardImage(id)} alt={catalogCardById[id]?.name ?? id}/><figcaption>{catalogCardById[id]?.name ?? id}</figcaption><i aria-hidden="true" /></figure>)}
+     {selected.cardIds.map((id,i)=> <figure className="crew-case__photo" key={`${id}-${i}`} style={{'--photo-x':`${12+(i%5)*18}%`,'--photo-y':`${i<5?27:66}%`,'--photo-angle':`${(i%5-2)*5+(i<5?-3:3)}deg`} as CSSProperties}><img src={battlePortraitUrl(getCardImage(id))} loading="lazy" alt={catalogCardById[id]?.name ?? id}/><figcaption>{catalogCardById[id]?.name ?? id}</figcaption><i aria-hidden="true" /></figure>)}
     </div>}
     {!decks.length && <p>No battle-ready crew. Build a ten-card deck first.</p>}
    </div>

@@ -58,7 +58,7 @@ try {
       await page.getByRole('button', { name: 'View result', exact: true }).click();
     }
     if (name.startsWith('online')) await page.getByRole('button', { name: name.endsWith('rematch') ? 'Ask for a rematch' : 'Back to friend fades', exact: true }).click();
-    else if (name === 'story') await page.getByRole('button', { name: 'Continue Chapter' }).click();
+    else if (name === 'story') await page.getByRole('button', { name: 'Return to chapter map' }).click();
     else if (name === 'challenge') await page.getByRole('button', { name: 'Return to the road' }).click();
     else await page.getByTestId('button-restart-match').click();
     if (name !== 'no-level') {

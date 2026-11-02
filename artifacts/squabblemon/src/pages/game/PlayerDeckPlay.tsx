@@ -193,7 +193,7 @@ export function PlayerDeckPlay({ bootstrap, storyNodeId }: { bootstrap: PlayerBo
         turnTimerEnabled={bootstrap.profile.settings.turnTimerEnabled}
         equippedVariants={bootstrap.profile.equippedVariants}
         cardProgression={bootstrap.profile.cardProgression}
-        onExit={() => (storyNodeId ? goBack() : setSelected(null))}
+        onExit={() => (storyNodeId ? navigate(`/game/story?node=${encodeURIComponent(storyNodeId)}&returnToMap=1`, { replace: true }) : setSelected(null))}
       />
     );
   const fightButton = (

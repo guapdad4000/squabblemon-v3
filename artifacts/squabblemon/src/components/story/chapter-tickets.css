@@ -15,3 +15,20 @@
 .chapter-pass:focus-visible,.chapter-passes__toolbar button:focus-visible,.chapter-passes__strip:focus-visible{outline:2px solid #ffdb8d;outline-offset:2px}
 @media(max-width:600px){.chapter-pass{flex-basis:222px;min-height:88px}.chapter-pass__body{padding:10px;gap:6px}.chapter-pass__body>strong{font-size:14px}.chapter-passes__strip{gap:9px}.chapter-passes__toolbar{letter-spacing:.08em}.chapter-passes__toolbar small{font-size:7px}}
 @media(prefers-reduced-motion:reduce){.chapter-pass{transition:none}}
+
+/* Keep chapter identity on the ticket; leave the stage to the map. */
+.chapter-passes{max-width:1120px;margin-inline:auto;display:flex;align-items:center;gap:12px}
+.chapter-passes__toolbar{flex:none;flex-direction:column;align-items:flex-start;padding:0}
+.chapter-passes__toolbar small{display:none}
+.chapter-passes__toolbar button{width:44px;height:44px}
+.chapter-passes--single .chapter-passes__toolbar{display:none}
+.chapter-passes--single .chapter-passes__strip{justify-content:center}
+.chapter-pass{flex-basis:234px;min-height:64px}
+.chapter-pass__stub{flex-basis:42px;padding:6px 4px;gap:3px}
+.chapter-pass__stub b{font-size:24px}.chapter-pass__stub i{display:none}
+.chapter-pass::before,.chapter-pass::after{left:36px}
+.chapter-pass__body{padding:9px 12px;gap:5px}
+.chapter-pass__body>small,.chapter-pass__status em{display:none}
+.chapter-pass__body>strong{font-size:14px;line-height:1.1}
+.chapter-pass__status{font-size:8px}
+@media(max-width:600px){.chapter-passes{gap:8px}.chapter-passes__toolbar>span{display:none}.chapter-passes__toolbar>div{flex-direction:column;gap:0}.chapter-passes__toolbar button{height:44px}.chapter-passes__strip{padding-block:5px}.chapter-pass{flex-basis:210px;min-height:64px}}

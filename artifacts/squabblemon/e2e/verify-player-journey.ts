@@ -195,7 +195,7 @@ async function run(width: number, height: number) {
       await page.waitForTimeout(100);
     }
     if (await page.getByTestId('status-match-result').count()) {
-      assert.equal(await page.getByRole('button', { name: 'Continue Chapter', exact: true }).count(), 0, 'Tutorial must use the tutorial result actions');
+      assert.equal(await page.getByRole('button', { name: 'Return to chapter map', exact: true }).count(), 0, 'Tutorial must use the tutorial result actions');
       await page.getByTestId('button-complete-tutorial').click();
     }
     await expect(page.getByTestId('rookie-post-fight-handoff')).toBeVisible();

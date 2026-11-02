@@ -720,3 +720,7 @@
  .kumite-atlas .chapter-pass__body{padding:6px;gap:3px}
  .kumite-atlas .chapter-pass__body>strong{font-size:12px}
 }
+
+.story-atlas .story-atlas__header{padding:6px 12px;gap:0}
+.story-atlas__marker .story-puzzle-marker-state{position:absolute;right:-3px;bottom:-3px;display:grid;place-items:center;width:20px;height:20px;border:1px solid #e7be78;border-radius:50%;background:#14221d;color:#ffdf9f}
+.story-atlas .story-atlas__rewards-fab{min-height:44px;min-width:44px}
