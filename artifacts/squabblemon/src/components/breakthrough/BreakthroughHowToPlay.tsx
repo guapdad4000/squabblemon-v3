@@ -4,7 +4,7 @@ import { RULES } from '@workspace/squabblemon-engine/breakthrough';
 import './howToPlay.css';
 
 /** Shared player rules. Availability and reward promises belong to the calling surface. */
-export default function BreakthroughHowToPlay() {
+export default function BreakthroughHowToPlay({ online = false }: { online?: boolean }) {
   const titleId = useId();
   return (
     <section className="bt-howto" aria-labelledby={titleId}
@@ -55,7 +55,7 @@ export default function BreakthroughHowToPlay() {
           </div>
         </li>
       </ol>
-      <p className="bt-howto-availability" role="note"><strong>BETA IN PREPARATION</strong> Current preview is local CPU practice, with no account rewards. Online matchmaking and its rewards are not live.</p>
+      {!online && <p className="bt-howto-availability" role="note"><strong>BETA IN PREPARATION</strong> Current preview is local CPU practice, with no account rewards. Online matchmaking and its rewards are not live.</p>}
       <details className="bt-howto-detail">
         <summary>SQUABBLE · YOUR ONE BIG PUSH</summary>
         <p>Arm Squabble before deploying a fighter to double that fighter’s deployment base Hands. You get one successful Squabble per match; its Motion cost is unchanged. Bonus Hands from effects are separate. Action cards cannot Squabble.</p>

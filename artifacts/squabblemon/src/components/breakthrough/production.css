@@ -456,3 +456,47 @@
 }
 
 .bt-lobby .compact-deck-picker__deck:focus-visible { outline:3px solid #fff2d8; outline-offset:3px; }
+
+/* Match overlays share the existing cached brick wall; no extra image or animation. */
+.bt-arena .bt-menu.game-popup--brick {
+  box-sizing: border-box;
+  background: linear-gradient(110deg, #071912b8, #10171094), var(--popup-brick-wall) center/cover;
+  border: 2px solid #c5b88f;
+  box-shadow: 7px 8px 0 #030b08b3, 0 18px 60px #000b;
+  padding: 26px 20px 18px;
+}
+.bt-menu.game-popup > small, .bt-surrender-confirm > small { color: #e6d9b6; letter-spacing: 1.7px; }
+.bt-menu.game-popup h2 { margin: 12px 24px 18px 0; }
+.bt-menu.game-popup p { color: #f0e9d5; font-size: 13px; }
+.bt-menu.game-popup > .bt-primary, .bt-surrender-confirm .bt-primary { width: 100%; min-height: 48px; font-family: BTHemi, sans-serif; font-weight: 700; }
+.bt-menu.game-popup summary { min-height: 44px; align-content: center; }
+.bt-menu.game-popup .bt-text-button { width: 100%; min-height: 44px; font-size: 12px; }
+.bt-surrender-confirm { text-align: center; }
+.bt-surrender-confirm h2 { margin-right: 0 !important; }
+.bt-menu-emblem { display: block; width: 54px; height: 54px; margin: 0 auto 16px; color: #efdec0; }
+.bt-surrender-action { width: 100%; min-height: 48px; margin-top: 10px; border: 2px solid #dcb29b; color: #fff4df; background: #7d2a20; font: 700 14px BTHemi, sans-serif; cursor: pointer; }
+.bt-opponent-sigil { width: 100%; height: 100%; padding: 7px; box-sizing: border-box; color: #f4dda2; background: radial-gradient(ellipse, #541e17bf, transparent 72%); }
+.bt-arena .bt-mini-explainer {
+  background: linear-gradient(110deg, #081910df, #0a1817b8), var(--bt-match-brick) center/cover;
+  border: 1px solid #c5b88f; box-shadow: 4px 5px 0 #030b08b3;
+  max-height: calc(100dvh - 285px); overflow-y: auto; box-sizing: border-box;
+}
+.bt-arena .bt-online-status {
+  top: auto; bottom: calc(180px + env(safe-area-inset-bottom));
+  border: 1px solid #d8bd86; border-radius: 0; text-align: center;
+  background: linear-gradient(#151b12e6, #151b12cf), var(--bt-match-brick) center/cover;
+  font-family: var(--popup-font-body, sans-serif); font-size: 12px;
+}
+@media (max-height: 500px) and (orientation: landscape) {
+  .bt-arena .bt-mini-explainer { max-height: calc(100dvh - 185px); }
+  .bt-arena .bt-online-status { bottom: 115px; }
+  .bt-menu.game-popup { max-height: calc(100dvh - 28px); }
+}
+
+.bt-arena .bt-squabble { position: relative; }
+.bt-arena .bt-squabble-state { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); color: #fff0ca; background: #35170eee; padding: 2px 5px; font: 700 9px/1.2 BTHemi, sans-serif; }
+
+.bt-arena .bt-menu-trigger { position: absolute; top: calc(100% + 4px); right: 0; transform: none; z-index: 3; display: grid; place-items: center; background: #133b2ce8; border: 1px solid #c5b88f; box-shadow: 2px 3px 0 #030b0899; }
+.bt-arena .bt-mini-explainer summary { min-height: 44px; }
+.bt-arena .bt-choice-options button { font: 700 12px/1.35 BTHemi, sans-serif; background: #183b2ccd; border: 1px solid #c5b88f66; clip-path: none; }
+.bt-arena .bt-choice-options button:focus-visible, .bt-arena .bt-choice-options button:hover { background: #f1d58c; color: #152319; }

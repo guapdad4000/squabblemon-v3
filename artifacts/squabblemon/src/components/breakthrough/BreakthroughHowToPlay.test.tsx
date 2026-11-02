@@ -61,3 +61,9 @@ test('multiple mounted guides have distinct accessible heading IDs', () => {
   assert.notEqual(labels[0], labels[1]);
   for (const label of labels) assert.ok(html.includes(`id="${label}"`));
 });
+
+test('active online match rules do not describe a CPU-only preview', () => {
+  const html = renderToStaticMarkup(<BreakthroughHowToPlay online />);
+  assert.doesNotMatch(html, /BETA IN PREPARATION|local CPU practice|rewards are not live/);
+  assert.match(html, /Both sides play at once/);
+});

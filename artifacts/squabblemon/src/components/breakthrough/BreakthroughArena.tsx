@@ -1,4 +1,5 @@
-import { HandFist } from 'lucide-react';
+import { HandFist, Settings2 } from 'lucide-react';
+import { GamePopupFrame, GamePopupTitle } from '../ui/game-popup';
 import type {
   BreakthroughRoomView,
   RoomIntent,
@@ -185,7 +186,8 @@ export default function BreakthroughArena({
   const [pauseReason, setPauseReason] = useState(() =>
     document.hidden ? 'Tab hidden · practice paused' : 'Practice paused',
   );
-  const menuRef = useRef<HTMLElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
+  const surrenderSent = useRef(false);
   const eventBirths = useRef(new Map<number, number>());
   const visualEvents = useRef<Array<BattleEvent & { born: number }>>([]);
   const baseSmoke = useRef<Array<BattleEvent & { born: number }>>([]);
@@ -620,6 +622,9 @@ export default function BreakthroughArena({
       previous?.focus();
     };
   }, [menu]);
+  useEffect(() => {
+    if (menu) menuRef.current?.querySelector<HTMLButtonElement>(confirmSurrender ? '[data-keep-playing]' : '.bt-primary')?.focus();
+  }, [confirmSurrender, menu]);
   const recentEvents = game.events
     .filter(
       (event) =>
@@ -705,6 +710,7 @@ export default function BreakthroughArena({
           setInspectedUnitId(null);
         }
       }}
+      style={{ '--bt-match-brick': `url("${getAssetUrl('assets/progression/brick-ui-v1.webp')}")` } as CSSProperties}
       className={`bt-arena ${lastStand ? 'bt-last-stand' : ''} ${active && remaining <= 5000 ? 'bt-danger' : ''} ${dragging.drag ? 'bt-dragging' : ''}`}
     >
       {!reducedMotion && (!resultReady || menu) && (
@@ -756,12 +762,12 @@ export default function BreakthroughArena({
             reducedMotion={reducedMotion}
           />
           <div className="bt-banner-portrait">
-            <FighterPortrait
+            {online ? <HandFist className="bt-opponent-sigil" aria-hidden="true" /> : <FighterPortrait
               cardId={opponentDeck[0]}
-              name={online ? 'Opponent' : 'CPU'}
+              name="CPU"
               battleArtwork
               decorative
-            />
+            />}
           </div>
           <div className="bt-banner-copy">
             <strong>{online ? 'OPPONENT' : 'CPU'}</strong>
@@ -778,10 +784,12 @@ export default function BreakthroughArena({
           aria-label="Open rules and settings"
           onClick={() => {
             inputClock.stop();
+            setConfirmSurrender(false);
+            surrenderSent.current = false;
             setMenu(true);
           }}
         >
-          •••
+          <Settings2 size={22} aria-hidden="true" />
         </button>
       </header>
       <section
@@ -1574,6 +1582,8 @@ export default function BreakthroughArena({
                 !active || game.players.player.squabbleUsed || !!dragging.drag
               }
               aria-pressed={armed}
+              aria-label={game.players.player.squabbleUsed ? 'Squabble used' : armed ? 'Squabble armed' : 'Squabble'}
+              title={game.players.player.squabbleUsed ? 'Squabble used' : armed ? 'Cancel Squabble' : 'Arm Squabble'}
               onClick={() => setArmed(!armed)}
             >
               <span className="bt-sigil" aria-hidden="true">
@@ -1588,11 +1598,7 @@ export default function BreakthroughArena({
                   />
                 )}
               </span>
-              {game.players.player.squabbleUsed
-                ? 'USED'
-                : armed
-                  ? 'ARMED'
-                  : 'SQUABBLE'}
+              {(game.players.player.squabbleUsed || armed) && <small className="bt-squabble-state">{game.players.player.squabbleUsed ? 'USED' : 'ARMED'}</small>}
             </button>
           </div>
         </footer>
@@ -1639,13 +1645,16 @@ export default function BreakthroughArena({
       )}
       {menu && (
         <div className="bt-modal-backdrop" onClick={() => setMenu(false)}>
-          <section
+          <GamePopupFrame
             ref={menuRef}
+            material="brick"
+            family={confirmSurrender ? 'confirmation' : 'announcement'}
+            tone={confirmSurrender ? 'destructive' : 'neutral'}
             className="bt-menu"
             role="dialog"
             aria-modal="true"
             aria-label={
-              online ? 'Breakthrough match menu' : 'Breakthrough practice menu'
+              confirmSurrender ? 'Surrender this match?' : online ? 'Breakthrough match menu' : 'Breakthrough practice menu'
             }
             onClick={(event) => event.stopPropagation()}
           >
@@ -1656,8 +1665,22 @@ export default function BreakthroughArena({
             >
               ×
             </button>
+            {confirmSurrender && online ? <div className="bt-surrender-confirm">
+              <HandFist className="bt-menu-emblem" aria-hidden="true" />
+              <small>KUMITE · LEAVE THE FIGHT</small>
+              <GamePopupTitle>SURRENDER?</GamePopupTitle>
+              <p>This ends the match as a loss.</p>
+              <button className="bt-primary" data-keep-playing onClick={() => setConfirmSurrender(false)}>KEEP PLAYING</button>
+              <button className="bt-surrender-action" onClick={() => {
+                if (surrenderSent.current) return;
+                surrenderSent.current = true;
+                online.command({ kind: 'surrender' });
+                setMenu(false);
+                setConfirmSurrender(false);
+              }}>SURRENDER MATCH</button>
+            </div> : <>
             <small>KUMITE · {online ? 'LIVE PVP' : 'CPU PRACTICE'}</small>
-            <h2>BREAKTHROUGH</h2>
+            <GamePopupTitle>BREAKTHROUGH</GamePopupTitle>
             <p>
               {online
                 ? 'The match continues while this menu is open or you leave.'
@@ -1674,7 +1697,7 @@ export default function BreakthroughArena({
             </button>
             <details>
               <summary>HOW TO PLAY</summary>
-              <BreakthroughHowToPlay />
+              <BreakthroughHowToPlay online={!!online} />
             </details>
             <button
               className="bt-sound-toggle"
@@ -1698,19 +1721,9 @@ export default function BreakthroughArena({
             {online && game.status === 'playing' && (
               <button
                 className="bt-text-button"
-                onClick={() => {
-                  if (!confirmSurrender) {
-                    setConfirmSurrender(true);
-                    return;
-                  }
-                  online.command({ kind: 'surrender' });
-                  setMenu(false);
-                  setConfirmSurrender(false);
-                }}
+                onClick={() => setConfirmSurrender(true)}
               >
-                {confirmSurrender
-                  ? 'CONFIRM SURRENDER · NO TROPHIES'
-                  : 'SURRENDER MATCH'}
+                SURRENDER MATCH
               </button>
             )}
             <button className="bt-text-button" onClick={onChangeDeck}>
@@ -1719,7 +1732,8 @@ export default function BreakthroughArena({
             <button className="bt-text-button" onClick={onExit}>
               BACK TO KUMITE ←
             </button>
-          </section>
+            </>}
+          </GamePopupFrame>
         </div>
       )}
     </main>

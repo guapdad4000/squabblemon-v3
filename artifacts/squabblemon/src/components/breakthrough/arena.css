@@ -1058,9 +1058,7 @@
   overflow: auto;
   width: min(500px, 100%);
   padding: 28px;
-  background:
-    linear-gradient(#0c120dec, #0c120df0),
-    url('/assets/progression/brick.webp') center/cover;
+
   border: 1px solid #ddd5b460;
   box-shadow: 0 12px 60px #000;
 }
