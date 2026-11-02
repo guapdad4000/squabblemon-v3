@@ -1,3 +1,4 @@
+import { PARK_BOT_PERSONAS } from '@workspace/squabblemon-engine/parkBots';
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { randomUUID } from 'node:crypto';
@@ -198,7 +199,7 @@ test('ranked routes: human pairing, retries, cancellation race, bot completion, 
   await changeState(botQueue.code, r => ({ ...r, ranked: { ...r.ranked!, botAfter: Date.now() - 1 } }));
   let botView = (await ok(users[4], '/ranked')).room as OnlineRoomView;
   assert.equal(botView.status, 'active'); assert.equal(botView.ranked?.opponent, 'bot');
-  assert.match(botView.members.cpu!.name, /Park Bot/); assert(botView.members.cpu!.avatarKey); assert(botView.members.cpu!.banner);
+  assert.doesNotMatch(botView.members.cpu!.name, /bot|cpu/i); assert(PARK_BOT_PERSONAS.some(p => p.name === botView.members.cpu!.name)); assert(botView.members.cpu!.avatarKey); assert(botView.members.cpu!.banner);
   assert.equal((await state(botView.code)).guestUserId, null, 'synthetic bots never become real accounts');
   assert.equal((await search(users[4])).room.code, botView.code);
   for (let step = 0; step < 160 && botView.status === 'active'; step++) {

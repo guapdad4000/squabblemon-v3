@@ -115,6 +115,7 @@ try {
       "--test-concurrency=1",
       "src/lib/parkRivalStandings.native.test.ts",
       "src/lib/playerNotes.test.ts",
+      "src/lib/rankedMatches.test.ts",
     ],
     env,
     root + "/artifacts/api-server",
