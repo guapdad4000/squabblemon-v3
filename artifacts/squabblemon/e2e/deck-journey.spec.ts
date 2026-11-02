@@ -19,6 +19,7 @@ async function enterGame(page: Page) {
   // background reads; an unexpected API request should still fail the journey.
   const shellReads: Record<string, unknown> = {
     '/api/player/bootstrap': {},
+    '/api/player/boss-raid': { day: '2026-11-02', attemptsRemaining: 0, campaign: { completed: true } },
     '/api/player/mail': { messages: [] },
     '/api/player/shop/daily-clout': {
       date: '2026-09-27', available: false, amount: 50, attemptsRemaining: 0, resetsAt: '2026-09-28T00:00:00.000Z',
@@ -174,6 +175,54 @@ test('direct, missing, and refreshed deck links recover without trapping the pla
   await openFirstExample(page);
   await page.reload();
   await expect(page.getByRole('textbox', { name: 'Deck name' })).toBeVisible();
+});
+
+test('saved-deck CPU practice returns from editing and survives a saved edit and refresh', async ({ page }, testInfo) => {
+  await page.route('**/api/multiplayer/ranked', route => route.fulfill({ json: {
+    stats: { season: 'fade-park-preseason-v1', points: 0, rating: 1000, wins: 0, losses: 0, draws: 0, botWins: 0, games: 0, streak: 0, bestPoints: 0 },
+    progress: { tier: 'Rookie', floor: 0, nextTier: 'Bronze', nextAt: 100, progress: 0 },
+    room: null,
+  } }));
+
+  // Save a real legal starter through the existing editor and preview account
+  // persistence, so the practice picker must restore an account deck.
+  await openFirstExample(page);
+  const exampleUrl = page.url();
+  await page.getByRole('textbox', { name: 'Deck name' }).fill('Practice Journey Crew');
+  await page.getByRole('button', { name: 'Save deck', exact: true }).click();
+  await expect(page).not.toHaveURL(exampleUrl);
+
+  await page.goto('/squabblemon/game/kumite/breakthrough/practice');
+  const lobby = page.getByTestId('breakthrough-lobby');
+  await expect(lobby.getByRole('heading', { name: 'Practice Journey Crew', exact: true })).toBeVisible();
+  await expect(lobby.getByRole('button', { name: 'PLAY CPU PRACTICE →', exact: true })).toBeEnabled();
+  const edit = lobby.getByRole('link', { name: /CLICK TO EDIT/ });
+  await expect(edit).toHaveAttribute('href', /returnTo=%2Fgame%2Fkumite%2Fbreakthrough%2Fpractice$/);
+  await edit.click();
+  await expect(page.getByRole('textbox', { name: 'Deck name' })).toHaveValue('Practice Journey Crew');
+  await page.getByRole('button', { name: 'Back to Breakthrough', exact: true }).click();
+  await expect(page).toHaveURL(/\/game\/kumite\/breakthrough\/practice$/);
+  await expect(lobby).toBeVisible();
+
+  await edit.click();
+  await page.getByRole('textbox', { name: 'Deck name' }).fill('Practice Crew Revisited');
+  await page.getByRole('button', { name: 'Save deck', exact: true }).click();
+  await expect.poll(() => page.evaluate(() =>
+    JSON.parse(localStorage.getItem('squabblemon.preview-decks.v1') ?? '[]')
+      .some((deck: { name: string }) => deck.name === 'Practice Crew Revisited'),
+  )).toBe(true);
+  await page.reload();
+  await expect(page.getByRole('textbox', { name: 'Deck name' })).toHaveValue('Practice Crew Revisited');
+  await expect(page).toHaveURL(/returnTo=%2Fgame%2Fkumite%2Fbreakthrough%2Fpractice$/);
+  await page.getByRole('button', { name: 'Back to Breakthrough', exact: true }).click();
+  await expect(page).toHaveURL(/\/game\/kumite\/breakthrough\/practice$/);
+  await expect(lobby.getByRole('heading', { name: 'Practice Crew Revisited', exact: true })).toBeVisible();
+  await expect(lobby.getByRole('button', { name: /Practice Crew Revisited/ })).toHaveAttribute('aria-pressed', 'true');
+  await expect(lobby.getByRole('button', { name: 'PLAY CPU PRACTICE →', exact: true })).toBeEnabled();
+
+  await page.reload();
+  await expect(lobby.getByRole('button', { name: /Practice Crew Revisited/ })).toHaveAttribute('aria-pressed', 'true');
+  await testInfo.attach('practice-return', { body: await page.screenshot({ fullPage: true }), contentType: 'image/png' });
 });
 
 test('reports a broken deck image even if the server returns HTML with status 200', async ({ page }) => {

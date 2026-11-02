@@ -33,6 +33,7 @@ test('CPU practice is discoverable while full public entry retains readiness', (
   assert.match(page, /getBreakthroughLaunchReadiness\(\)\.canLaunch/);
   assert.match(page, /<Redirect to=["']\/game\/kumite["']/);
   assert.ok(page.includes("location !== '/game/kumite/breakthrough/practice' && !getBreakthroughLaunchReadiness().canLaunch"));
+  assert.match(page, /breakthroughDeckEditorPath\(deck\.id,\s*['"]\/game\/kumite\/breakthrough\/practice['"]\)/);
   assert.ok(hub.includes('href="/game/kumite/breakthrough/practice"'));
   assert.ok(hub.includes('Practice Breakthrough'));
   assert.doesNotMatch(hub, /href="\/game\/kumite\/breakthrough"/);

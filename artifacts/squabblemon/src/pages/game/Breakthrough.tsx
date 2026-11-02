@@ -188,7 +188,7 @@ export function BreakthroughPractice({
               PLAY CPU PRACTICE →
             </button>
             {deck && !loaner && (
-              <Link href={breakthroughDeckEditorPath(deck.id)}>
+              <Link href={breakthroughDeckEditorPath(deck.id, '/game/kumite/breakthrough/practice')}>
                 CLICK TO EDIT ↗
               </Link>
             )}

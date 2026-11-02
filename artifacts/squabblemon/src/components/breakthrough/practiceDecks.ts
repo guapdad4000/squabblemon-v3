@@ -59,5 +59,9 @@ export function practiceOpponent(seed: number): string[] {
   if (!recipe) throw new Error('No reviewed CPU crew available');
   return [...recipe.catalogCardIds];
 }
-export const breakthroughDeckEditorPath = (id: string) =>
-  `/game/decks/${encodeURIComponent(id)}?returnTo=${encodeURIComponent('/game/kumite/breakthrough')}`;
+export const breakthroughDeckEditorPath = (
+  id: string,
+  returnTo:
+    | '/game/kumite/breakthrough'
+    | '/game/kumite/breakthrough/practice' = '/game/kumite/breakthrough',
+) => `/game/decks/${encodeURIComponent(id)}?returnTo=${encodeURIComponent(returnTo)}`;

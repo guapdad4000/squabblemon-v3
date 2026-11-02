@@ -74,18 +74,30 @@ test('loaner is explicit, compatible and does not mutate account crews', () => {
   assert.equal(practiceDeckLegality(loaner, loaner.cardIds).valid, true);
   assert.equal(JSON.stringify(profile), before);
 });
-test('editor return permits only the exact Breakthrough destination and keeps encoding safe', () => {
+test('editor return preserves both exact Breakthrough destinations and keeps encoding safe', () => {
   const path = breakthroughDeckEditorPath('saved / one');
   assert(path.startsWith('/game/decks/saved%20%2F%20one?'));
   assert.equal(
     storyDeckReturnPath(path.split('?')[1]),
     '/game/kumite/breakthrough',
   );
+  const practicePath = breakthroughDeckEditorPath(
+    'saved / one',
+    '/game/kumite/breakthrough/practice',
+  );
+  assert(practicePath.startsWith('/game/decks/saved%20%2F%20one?'));
+  assert.equal(
+    storyDeckReturnPath(practicePath.split('?')[1]),
+    '/game/kumite/breakthrough/practice',
+  );
   for (const target of [
     'https://evil.test',
     '//evil.test',
     '/game/kumite/breakthrough/../../settings',
     '/game/kumite/breakthrough?evil=1',
+    '/game/kumite/breakthrough/practice/../../settings',
+    '/game/kumite/breakthrough/practice?evil=1',
+    '/game/kumite/breakthrough/practice/other',
   ])
     assert.equal(
       storyDeckReturnPath(`returnTo=${encodeURIComponent(target)}`),

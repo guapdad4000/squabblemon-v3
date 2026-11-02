@@ -1,6 +1,6 @@
 # Breakthrough: Anunaki integration coverage, launch still closed
 
-User decision, October 29, 2026: no public launch until every collectible card is playable and usable. A restricted-card public beta is not the release policy.
+User decision, October 29, 2026: no public PvP launch until every collectible card is playable and usable. A restricted-card PvP beta is not the release policy. The subsequent shipped release permits explicit, reward-free CPU practice. The [November 2 PvP launch worklist](kumite-breakthrough-pvp-launch-readiness.md) records the current deployed baseline and remaining service work.
 
 ## Current implementation
 
@@ -34,7 +34,7 @@ The 256 previously missing adapters are implemented across Supports, Network, Fi
 
 ## Verification and evidence
 
-Current candidate: `breakthrough-v9-full-catalog`, branch `codex/kumite-breakthrough-integration`, based on fetched main `77f44c8b597a908202d5f65b8ecc293e4b47f5d6`. The dirty original audition checkout is preserved. No commit, push or deployment is implied.
+Historical full-catalog implementation candidate: `breakthrough-v9-full-catalog`, branch `codex/kumite-breakthrough-integration`, based on fetched main `77f44c8b597a908202d5f65b8ecc293e4b47f5d6`. The dirty original audition checkout is preserved. No commit, push or deployment is implied.
 
 The historical 301-card candidate evidence is under `output/kumite-breakthrough-full-catalog-20261029/`. It predates the ten-card Anunaki addition and is not full-catalog evidence for this 311-card integration:
 
@@ -50,6 +50,6 @@ Every reviewed Breakthrough card also runs through legal immediate deployment, i
 
 `BREAKTHROUGH_PUBLIC_LAUNCH_APPROVED` stays false and `BREAKTHROUGH_FULL_CATALOG_EVIDENCE` stays null. Ten Anunaki conversions and full release acceptance remain outstanding. The ledger requires activation, targeting/choices, rejected input, interactions, lifecycle, Last Stand, replay and presentation evidence for exactly the current catalog, bound to the current rules and all 17 behavior-module hashes. Even hypothetical complete proof and approval cannot bypass the ten missing concrete adapters.
 
-The hub CTA remains hidden. Both public mode URLs redirect to Kumite; default room creation and service admission reject before a store read. Internal simulation constructors and DEV fixtures remain explicitly named and isolated. Loaners, query parameters, local storage and account roles do not bypass release admission.
+The public PvP CTA remains closed and the gated lobby redirects to Kumite; the explicit `/game/kumite/breakthrough/practice` route now permits local CPU matches with no account rewards. Default multiplayer room creation and service admission still reject before a store read. Internal simulation constructors and DEV fixtures remain explicitly named and isolated. Loaners, query parameters, local storage and account roles do not bypass multiplayer release admission.
 
 Before promotion: real-device touch/drag and crowded-match presentation acceptance; authenticated two-client transport/reconnect/latency and durable store/lease proof; authoritative separate trophy/roadmap receipts and anti-farming rules; staged deployment revision/readiness evidence. The room domain and its test store are not a hosted PvP service. Local CPU results grant no account progression. Normal-PvP rank extensions remain a separate economy task.

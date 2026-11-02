@@ -1,5 +1,7 @@
 # Kumite Breakthrough: production integration supplement
 
+> Historical integration target, retained for its contracts. The [November 2 PvP worklist](kumite-breakthrough-pvp-launch-readiness.md) supersedes the old catalog counts, source/deployment status and CPU-entry restrictions below. Explicit reward-free CPU practice has since shipped; public PvP remains closed.
+
 Status: integration in progress, October 29, 2026. Isolated branch `codex/kumite-breakthrough-integration` starts from fetched `origin/main` `77f44c8b597a908202d5f65b8ecc293e4b47f5d6`. No push or deployment is implied by this document.
 
 ## Mandatory launch gate — user decision, October 29

@@ -125,6 +125,7 @@ export const criticalSuites = [
   { id: 'release-guard-regressions', files: [
     'scripts/build-netlify.test.mjs', 'scripts/release-checks.test.mjs', 'scripts/boot-assets.test.mjs',
     'scripts/check-netlify-migrations.test.mjs', 'scripts/database-test-tiers.test.mjs',
+    'scripts/kumite-pvp-preflight.test.mjs',
     `${frontend}/scripts/check-entry-bundle.test.mjs`,
     `${frontend}/scripts/check-style-invalidation.test.mjs`,
   ] },
