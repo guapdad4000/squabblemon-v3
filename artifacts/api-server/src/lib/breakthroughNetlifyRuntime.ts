@@ -28,25 +28,36 @@ export const netlifyBreakthroughHandler = createNetlifyBreakthroughHandler({
 /** Public, bounded, read-only readiness; no account data or connection strings. Cache briefly
  * so operators/clients cannot accidentally create a notification connection storm. */
 let probe: Promise<boolean> | undefined, probeAt = 0;
+let transportStage = 'unchecked';
 async function checkTransport() {
   const channel = replyChannel();
   let done!: (value: boolean) => void;
   const delivered = new Promise<boolean>(resolve => { done = resolve; });
-  const timer = setTimeout(() => done(false), 2500);
+  let timer: ReturnType<typeof setTimeout> | undefined;
   let bus: BreakthroughBus | undefined;
   try {
+    transportStage = 'schema';
     await pool.query('SELECT worker_wake_at FROM breakthrough_rooms LIMIT 0');
+    transportStage = 'listen';
     bus = await BreakthroughBus.open(pool, channel, message => done(message.probe === channel), () => done(false));
+    transportStage = 'delivery';
+    timer = setTimeout(() => done(false), 2500);
     await BreakthroughBus.send(pool, channel, {probe: channel});
-    return await delivered;
-  } catch { return false; } finally { clearTimeout(timer); await bus?.close(); }
+    const received = await delivered;
+    if (received) transportStage = 'ready';
+    return received;
+  } catch (error) {
+    const code = (error as {code?: string})?.code;
+    if (code && /^[A-Z0-9]{5}$/.test(code)) transportStage += ':' + code;
+    return false;
+  } finally { clearTimeout(timer); await bus?.close(); }
 }
 export async function breakthroughStatus() {
   if (!probe || Date.now() - probeAt > 15000) { probeAt = Date.now(); probe = checkTransport(); }
   const transport = await probe, release = getBreakthroughLaunchReadiness();
   const configured = Netlify.env.get('BREAKTHROUGH_PVP_ENABLED') === 'true' && (Netlify.env.get('BREAKTHROUGH_WORKER_SECRET')?.length ?? 0) >= 32;
   const ready = transport && configured && release.canLaunch;
-  return Response.json({status: ready ? 'ready' : 'preparing', transport, configured,
+  return Response.json({status: ready ? 'ready' : 'preparing', transport, transportStage, configured,
     release: {ready: release.canLaunch, supportedCards: release.supportedCards, totalCards: release.totalCards},
     revision: process.env.BREAKTHROUGH_BUILD_SHA ?? 'unknown',
     hosting: 'netlify-background-worker'}, {status: ready ? 200 : 503, headers: {'Cache-Control': 'no-store'}});

@@ -4,6 +4,23 @@ type Pool = typeof pool;
 const connect = (pool: Pool) => pool.connect();
 type Client = Awaited<ReturnType<typeof connect>>;
 const MAX_BYTES = 2 * 1024 * 1024;
+const sessionPools = new WeakMap<Pool, Pool>();
+/** Neon transaction pooling cannot retain LISTEN state. Keep ordinary queries pooled,
+ * but use the same branch/role's documented direct endpoint for notification sessions. */
+function notificationPool(pool: Pool): Pool {
+  const connectionString = pool.options.connectionString;
+  if (!connectionString) return pool;
+  const url = new URL(connectionString);
+  if (!url.hostname.endsWith('.neon.tech') || !url.hostname.includes('-pooler.')) return pool;
+  let direct = sessionPools.get(pool);
+  if (!direct) {
+    url.hostname = url.hostname.replace('-pooler.', '.');
+    const SessionPool = pool.constructor as new (options: typeof pool.options) => Pool;
+    direct = new SessionPool({...pool.options, connectionString: url.toString(), max: 5, allowExitOnIdle: true});
+    sessionPools.set(pool, direct);
+  }
+  return direct;
+}
 /** Database notifications are transient transport, never the journal or a command acknowledgement.
  * Each request/stream owns a session and releases it on close. A transaction-mode pooler
  * is incompatible: the hosted readiness probe must prove LISTEN/NOTIFY before admission. */
@@ -13,7 +30,7 @@ export class BreakthroughBus {
   private constructor(private client: Client, readonly channel: string) {}
   static async open(pool: Pool, channel: string, receive: (value: any) => void, failed: (error: Error) => void) {
     if (!/^bt_[a-z0-9_]{1,59}$/.test(channel)) throw Error('Invalid room channel');
-    const client = await pool.connect(), bus = new BreakthroughBus(client, channel);
+    const client = await notificationPool(pool).connect(), bus = new BreakthroughBus(client, channel);
     client.on('error', failed);
     client.on('notification', notification => {
       if (notification.channel !== channel || bus.closed) return;
