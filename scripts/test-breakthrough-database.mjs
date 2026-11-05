@@ -100,6 +100,15 @@ try {
     },
   });
   await (await import(onlineOutput)).verifyOnline(pool);
+  if (process.argv.includes('--netlify')) {
+    await pool.query('TRUNCATE breakthrough_searches,breakthrough_receipts,breakthrough_records,breakthrough_room_outbox,breakthrough_room_journal,breakthrough_rooms CASCADE');
+    await pool.query(readFileSync(new URL('../lib/db/migrations/20261105_breakthrough_worker.sql', import.meta.url), 'utf8'));
+    const netlifyOutput = join(directory, 'netlify.mjs');
+    await build({entryPoints: [new URL('./test-breakthrough-netlify-suite.ts', import.meta.url).pathname], bundle: true,
+      platform: 'node', format: 'esm', outfile: netlifyOutput,
+      banner: {js: 'import { createRequire as __createRequire } from "node:module"; const require=__createRequire(import.meta.url);'}});
+    await (await import(netlifyOutput)).verifyNetlify(pool);
+  }
   if (process.argv.includes("--browser")) {
     await pool.query(
       "TRUNCATE breakthrough_searches,breakthrough_receipts,breakthrough_records,breakthrough_room_outbox,breakthrough_room_journal,breakthrough_rooms CASCADE",

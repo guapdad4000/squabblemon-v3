@@ -164,3 +164,14 @@ for (const [path, method, status] of [
   assert.equal(response.status, status, `Auth configuration boundary: ${path}: ${await response.text()}`);
 }
 console.log('Release API bundle: only the exact raw payment webhook bypasses Clerk configuration.');
+
+const {config: workerConfig} = await import('../artifacts/api-server/dist/netlify-functions/breakthrough-worker.mjs');
+const {config: recoveryConfig} = await import('../artifacts/api-server/dist/netlify-functions/breakthrough-recovery.mjs');
+assert.equal(workerConfig.background, true);
+assert.equal(recoveryConfig.schedule, '* * * * *');
+process.env.CLERK_PUBLISHABLE_KEY = 'pk_test_Y2xlcmsuZXhhbXBsZS5jb20k';
+process.env.CLERK_SECRET_KEY = 'sk_test_build_validation_only';
+const unauthorizedBreakthrough = await handler(new Request('https://squabble.today/api/breakthrough', {
+  headers: {'x-breakthrough-protocol': 'breakthrough-online-v1'},
+}), {ip: '127.0.0.1', deploy: {context:'production', id:'release-build-smoke'}});
+assert.equal(unauthorizedBreakthrough.status,401);

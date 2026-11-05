@@ -41,6 +41,8 @@ export interface BreakthroughMember {
 /** Eligibility is the existing owned-deck/onboarding validator, using this transaction's connection. */
 export interface BreakthroughRuntimeOptions {
   pool: Pool;
+  /** A serverless worker may own exactly one room, never scan/steal unrelated rooms. */
+  hostedRoomId?: string;
   member(
     client: BreakthroughClient,
     userId: string,
@@ -494,10 +496,11 @@ export class BreakthroughOnlineService {
   async cycle(): Promise<void> {
     if (this.stopping) return;
     this.engine.admit();
-    if (Date.now() >= this.scanAt) {
+    if (!this.options.hostedRoomId && Date.now() >= this.scanAt) {
       this.scanAt = Date.now() + (this.rooms.size ? 1000 : 15000);
       const expired = await this.options.pool.query(
-        "SELECT room_id FROM breakthrough_rooms WHERE checkpoint->>'phase'='active' AND lease_until<=clock_timestamp() LIMIT 100",
+        "SELECT room_id FROM breakthrough_rooms WHERE checkpoint->>'phase'='active' AND lease_until<=clock_timestamp() AND ($1::text IS NULL OR room_id=$1) LIMIT 100",
+        [this.options.hostedRoomId ?? null],
       );
       for (const row of expired.rows)
         await this.host(row.room_id).catch(this.options.report);

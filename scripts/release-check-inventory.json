@@ -78,6 +78,13 @@
       "cwd": ".",
       "command": "node scripts/test-park-rivals-database.mjs",
       "evidence": "Fresh native PostgreSQL; concurrent settlement, rollback, public standings, human pairing, fallback and complete ranked match"
+    },
+    {
+      "id": "breakthrough-netlify",
+      "when": "Breakthrough Netlify worker, streaming notification transport or worker recovery changes",
+      "cwd": ".",
+      "command": "node scripts/test-breakthrough-database.mjs --netlify",
+      "evidence": "Isolated PostgreSQL session notifications, chunking, private auth, dispatch races, command idempotency, streaming, worker takeover and settlement; separate hosted verification required"
     }
   ],
   "nativePrerequisites": [

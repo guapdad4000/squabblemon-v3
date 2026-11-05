@@ -6,9 +6,10 @@ import { logger } from "./logger";
 import { BreakthroughOnlineService } from "./breakthroughOnline";
 import { breakthroughRouter } from "../routes/breakthrough";
 /** Existing profile/deck admission and Clerk app middleware, with a format-specific room engine. */
-export function createBreakthroughRuntime() {
+export function createBreakthroughRuntime(hostedRoomId?: string) {
   const service = new BreakthroughOnlineService({
     pool,
+    hostedRoomId,
     report: (error) => logger.error({ err: error }, "Breakthrough host"),
     member: async (client, userId, deckId) => {
       const member = await loadMember(

@@ -36,6 +36,12 @@ export default async function api(request: Request, context: Context) {
   // keeps this trusted identity scoped to the current request while the
   // Express adapter and its singleton app handle concurrent invocations.
   return runWithDeploymentContext(runtime, async () => {
+    const path = new URL(request.url).pathname;
+    if (path === '/api/breakthrough' || path.startsWith('/api/breakthrough/')) {
+      const mode = await import('../../lib/breakthroughNetlifyRuntime');
+      if (path === '/api/breakthrough/status' && request.method === 'GET') return mode.breakthroughStatus();
+      return mode.netlifyBreakthroughHandler(request);
+    }
     handler ??= getHandler().catch(error => {
       handler = undefined;
       throw error;

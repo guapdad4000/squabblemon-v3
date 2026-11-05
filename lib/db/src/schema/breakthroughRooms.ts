@@ -21,6 +21,7 @@ export const breakthroughRoomsTable = pgTable(
     }).notNull(),
     checkpoint: jsonb('checkpoint').notNull().$type<Record<string, unknown>>(),
     expiresAt: timestamp('expires_at', { withTimezone: true }).notNull(),
+    workerWakeAt: timestamp('worker_wake_at', {withTimezone: true}).notNull().default(sql`'1970-01-01T00:00:00Z'`),
   },
   (t) => [
     check('breakthrough_rooms_owner_fence_check', sql`${t.ownerFence} > 0`),

@@ -1,6 +1,7 @@
 import { build } from 'esbuild';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { execFileSync } from 'node:child_process';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -40,6 +41,8 @@ await build({
     'artifacts/api-server/src/netlify/functions/patch-delivery.mts',
     'artifacts/api-server/src/netlify/functions/kumite-tick.mts',
     'artifacts/api-server/src/netlify/functions/room-retention.mts',
+    'artifacts/api-server/src/netlify/functions/breakthrough-worker.mts',
+    'artifacts/api-server/src/netlify/functions/breakthrough-recovery.mts',
   ],
   outdir: 'artifacts/api-server/dist/netlify-functions',
   outExtension: { '.js': '.mjs' },
@@ -57,7 +60,8 @@ await build({
   sourcemap: false,
   plugins: [sideEffectFree],
   external: ['pg-native'],
-  define: { 'process.env.NODE_ENV': '"production"' },
+  define: { 'process.env.NODE_ENV': '"production"',
+    'process.env.BREAKTHROUGH_BUILD_SHA': JSON.stringify(process.env.COMMIT_REF || execFileSync('git', ['rev-parse', 'HEAD'], {cwd: root, encoding: 'utf8'}).trim()) },
   banner: { js: "import { createRequire } from 'node:module'; const require = createRequire(import.meta.url);" },
   alias: {
     '@workspace/db': path.join(root, 'lib/db/src/index.ts'),
