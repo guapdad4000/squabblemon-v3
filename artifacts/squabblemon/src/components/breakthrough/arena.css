@@ -296,7 +296,7 @@
   color: white;
   box-shadow: 0 5px 4px #0006;
   transition:
-    bottom 0.1s linear,
+    bottom var(--bt-unit-travel, 100ms) linear,
     width 0.18s ease,
     height 0.18s ease;
   overflow: visible;
@@ -2883,3 +2883,5 @@
 .bt-deploy-explainer details {
   pointer-events: auto;
 }
+
+.bt-arena .bt-finish .bt-finish-reason { display: block; margin-top: 6px; font: 12px/1.4 Arial, sans-serif; color: #463019; }

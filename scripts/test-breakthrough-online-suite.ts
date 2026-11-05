@@ -237,7 +237,7 @@ export async function verifyOnline(pool: BreakthroughRuntimeOptions["pool"]) {
       "reload retains completed result",
     );
     // Independent settlement workers, transaction rollback and anti-farming caps use seeded authoritative terminals.
-    async function terminal(a: string, b: string) {
+    async function terminal(a: string, b: string, winner: "player" | "opponent" | "draw" = "draw") {
       const now = Date.now(),
         id = randomUUID();
       const initial = createBreakthroughRoomForSimulation({
@@ -252,6 +252,7 @@ export async function verifyOnline(pool: BreakthroughRuntimeOptions["pool"]) {
           decks: { player: cards, opponent: cards },
         }),
       });
+      if (winner !== "draw") initial.game.players[winner].breaches = 1;
       initial.game.metrics.player.deployments = 2;
       initial.game.metrics.opponent.deployments = 2;
       const end = tickBreakthroughRoom(initial, now).checkpoint;
@@ -265,6 +266,20 @@ export async function verifyOnline(pool: BreakthroughRuntimeOptions["pool"]) {
         [end.terminal!.id, id, JSON.stringify(end.terminal)],
       );
       return id;
+    }
+    for (const winner of ["player", "opponent"] as const) {
+      const a = `result-${winner}-a`, b = `result-${winner}-b`;
+      const id = await terminal(a, b, winner);
+      while (await service.settle()) {}
+      for (const [user, side] of [[a, "player"], [b, "opponent"]] as const) {
+        const receipt = await service.receipt(id, user);
+        assert.equal(receipt?.outcome, winner === side ? "win" : "loss");
+        assert.equal(receipt?.delta, winner === side ? 20 : 0);
+        const record = (await service.lobby(user)).record;
+        assert.equal(record.wins, Number(winner === side));
+        assert.equal(record.losses, Number(winner !== side));
+      }
+      assert.equal(await service.settle(), false, "terminal retry cannot award twice");
     }
     const settledId = await terminal("c", "d");
     await pool.query(`CREATE FUNCTION reject_bt_receipt() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION 'test rollback'; END $$;

@@ -6,7 +6,7 @@ import "./kumite-opponent-search.css";
 export interface KumiteSearchIdentity {
   name: string;
   art: string;
-  level: number;
+  level?: number;
   crewName: string;
   rank?: string;
 }
@@ -65,11 +65,13 @@ export function KumiteOpponentSearch({
   onCancel,
   onRetry,
   onEntryComplete,
+  cancelLabel,
 }: {
   player: KumiteSearchIdentity;
   state: KumiteSearchState;
   reducedMotion?: boolean;
   busy?: boolean;
+  cancelLabel?: string;
   onCancel(): void;
   onRetry?(): void;
   /** Decorative entry readiness only; the owner retains navigation/transport authority. */
@@ -212,10 +214,10 @@ export function KumiteOpponentSearch({
       <section className="km-search-player" aria-label="Your fighter">
         <div className="km-search-side-label">YOU / CREW LOCKED</div>
         <div className="km-search-player-name">
-          <span className="km-search-level">
+          {player.level !== undefined && <span className="km-search-level">
             <small>LV</small>
             {player.level}
-          </span>
+          </span>}
           <h2>{player.name}</h2>
         </div>
         <p>{player.crewName}</p>
@@ -229,7 +231,7 @@ export function KumiteOpponentSearch({
           {opponent ? "THE OPPS / LOCKED IN" : "CHALLENGER / UNKNOWN"}
         </div>
         <div className="km-search-opponent-name">
-          {opponent && (
+          {opponent?.level !== undefined && (
             <span className="km-search-level">
               <small>LV</small>
               {opponent.level}
@@ -293,16 +295,16 @@ export function KumiteOpponentSearch({
             onClick={onCancel}
             disabled={busy}
             aria-label={
-              state.phase === "cancelled"
+              cancelLabel ?? (state.phase === "cancelled"
                 ? "Back to Kumite"
-                : "Back out of opponent search"
+                : "Back out of opponent search")
             }
           >
-            {busy
+            {cancelLabel ?? (busy
               ? "BACKING OUT…"
               : state.phase === "cancelled"
                 ? "BACK TO KUMITE"
-                : "BACK OUT"}
+                : "BACK OUT")}
             <span aria-hidden="true">↙</span>
           </button>
         </div>

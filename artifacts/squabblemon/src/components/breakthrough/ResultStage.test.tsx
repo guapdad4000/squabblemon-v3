@@ -370,3 +370,12 @@ test("the victory artwork uses the visibility-gated image player and receives th
     "Win",
   );
 });
+
+test("online results use the account receipt and label the deciding score", () => {
+  const html = renderToStaticMarkup(<ResultStage {...base} online winner="opponent" reason="Timeout · surviving Hands"
+    receipt={{roomId:'r',policy:'breakthrough-trophies-v1',season:'breakthrough-season-1',outcome:'win',eligible:true,exclusion:null,before:0,after:20,delta:20}} />);
+  assert.match(html, /aria-label="Win"/);
+  assert.match(html, /YOU \/ OPPONENT/);
+  assert.match(html, /Timeout · surviving Hands/);
+  assert.doesNotMatch(html, /aria-label="Loss"|CPU/);
+});

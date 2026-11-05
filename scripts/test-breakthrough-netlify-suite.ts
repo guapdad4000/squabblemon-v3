@@ -83,6 +83,8 @@ export async function verifyNetlify(pool: BreakthroughRuntimeOptions['pool']) {
     let receipt;
     for(let i=0;i<50;i++){ receipt=await call('one',`/${roomId}/receipt`); if(receipt) break; await new Promise(resolve=>setTimeout(resolve,50)); }
     assert(receipt,'background owner settles without a request-owned timer');
+    assert.equal(receipt.outcome, 'loss');
+    assert.equal((await call('two',`/${roomId}/receipt`)).outcome, 'win');
     assert.equal((await call('one','/'+roomId)).phase,'complete');
     assert.equal((await pool.query('SELECT count(*)::int AS n FROM breakthrough_receipts WHERE room_id=$1',[roomId])).rows[0].n,2);
     await reader.cancel(); reader = undefined;

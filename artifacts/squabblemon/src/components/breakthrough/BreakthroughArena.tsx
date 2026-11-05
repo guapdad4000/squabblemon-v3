@@ -6,6 +6,7 @@ import type {
 } from '@workspace/squabblemon-engine/breakthroughRoom';
 import type { BreakthroughReceipt } from '@workspace/squabblemon-engine/breakthroughOnline';
 import { onlinePresentation } from './onlinePresentation';
+import { OnlineMovementCadence } from './onlineMovement';
 import {
   useEffect,
   useMemo,
@@ -162,6 +163,8 @@ export default function BreakthroughArena({
         }),
   );
   const live = useRef(game);
+  const movementCadence = useRef(new OnlineMovementCadence());
+  const movementMs = useRef(200);
   const handSlots = useRef(
     reconcileHandSlots([], handOccupants(game.players.player)),
   );
@@ -454,7 +457,10 @@ export default function BreakthroughArena({
       : deploymentCost(game, 'player', id, lane);
   }
   useEffect(() => {
-    if (online) publish(onlinePresentation(online.view, roster));
+    if (online) {
+      movementMs.current = movementCadence.current.receive(online.view.elapsedMs, performance.now());
+      publish(onlinePresentation(online.view, roster));
+    }
   }, [online?.view, roster]);
   function playLane(
     lane: 0 | 1 | 2,
@@ -712,7 +718,7 @@ export default function BreakthroughArena({
           setInspectedUnitId(null);
         }
       }}
-      style={{ '--bt-match-brick': `url("${getAssetUrl('assets/progression/brick-ui-v1.webp')}")` } as CSSProperties}
+      style={{ '--bt-unit-travel': `${online ? movementMs.current : 100}ms`, '--bt-match-brick': `url("${getAssetUrl('assets/progression/brick-ui-v1.webp')}")` } as CSSProperties}
       className={`bt-arena ${lastStand ? 'bt-last-stand' : ''} ${active && remaining <= 5000 ? 'bt-danger' : ''} ${dragging.drag ? 'bt-dragging' : ''}`}
     >
       {!reducedMotion && (!resultReady || menu) && (

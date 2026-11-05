@@ -87,6 +87,8 @@ export const criticalSuites = [
     sourceTest('lib/breakthroughOnline.test.ts'),
     sourceTest('components/breakthrough/productionBoundary.test.ts'),
     sourceTest('components/breakthrough/handSlots.test.ts'),
+    sourceTest('components/breakthrough/onlineMovement.test.ts'),
+    sourceTest('components/breakthrough/onlinePresentation.test.ts'),
     sourceTest('components/breakthrough/deploymentInput.test.ts'),
     sourceTest('components/breakthrough/combatPresentation.test.ts'),
     sourceTest('components/breakthrough/laneGeometry.test.ts'),

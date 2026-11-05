@@ -87,7 +87,8 @@ export default function ResultStage({
       first?.focus();
     }
   }
-  const outcome =
+  // A saved per-account receipt takes precedence over a seat-relative stream projection.
+  const outcome = online && receipt && receipt.outcome !== "expired" ? receipt.outcome :
     winner === "player" ? "win" : winner === "opponent" ? "loss" : "draw";
   const handsDecided = breaches[0] === breaches[1] && reason?.includes("Hands");
   return (
@@ -149,12 +150,13 @@ export default function ResultStage({
         )}
         <div
           className="bt-finish-score"
-          aria-label={`Breaches: you ${breaches[0]}, CPU ${breaches[1]}`}
+          aria-label={`Breaches: you ${breaches[0]}, ${online ? "opponent" : "CPU"} ${breaches[1]}`}
         >
-          <small>BREACHES</small>
+          <small>BREACHES · YOU / {online ? "OPPONENT" : "CPU"}</small>
           <strong>
             {breaches[0]} <i>—</i> {breaches[1]}
           </strong>
+          {reason && <span className="bt-finish-reason">{reason === "surrender" ? "Surrender" : reason === "room-expired" ? "Match expired" : reason}</span>}
           {handsDecided && (
             <span className="bt-finish-hands">
               HANDS {hands[0]} — {hands[1]}

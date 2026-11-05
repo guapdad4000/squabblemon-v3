@@ -15,17 +15,36 @@ import {
   breakthroughRequest,
   BreakthroughConnection,
 } from "../../lib/breakthroughOnline";
+import { KumiteOpponentSearch, type KumiteSearchIdentity } from "../kumite/KumiteOpponentSearch";
+import { catalogPortrait } from "../profile/FighterPortrait";
 import { FighterPortrait } from "../profile/FighterPortrait";
 import { getCardImage } from "../../data";
 import BreakthroughArena from "./BreakthroughArena";
 import { BREAKTHROUGH_TROPHY } from "./progressionArt";
 import "./production.css";
+function searchIdentity(name: string, avatarKey: string, level?: number, crewName = "BREAKTHROUGH"): KumiteSearchIdentity {
+  const hero = catalogPortrait(avatarKey);
+  return { name, art: getCardImage(hero?.catalogId ?? avatarKey), level, crewName };
+}
+function useSearchMotion(preferred: boolean) {
+  const [os, setOs] = useState(() => matchMedia("(prefers-reduced-motion: reduce)").matches);
+  useEffect(() => {
+    const query = matchMedia("(prefers-reduced-motion: reduce)");
+    const change = () => setOs(query.matches);
+    query.addEventListener("change", change);
+    return () => query.removeEventListener("change", change);
+  }, []);
+  return preferred || os;
+}
 /** Same saved-deck picker, account identity and arena artwork as practice; live controls send intent only. */
 export default function BreakthroughOnline({
   bootstrap,
 }: {
   bootstrap: PlayerBootstrap;
 }) {
+  const reducedMotion = useSearchMotion(bootstrap.profile.settings.reducedMotion);
+  const [searchStarted, setSearchStarted] = useState(() => Date.now());
+  const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const { profile } = bootstrap,
     client = useQueryClient();
   const [, navigate] = useLocation();
@@ -63,11 +82,21 @@ export default function BreakthroughOnline({
     )
       setRoomId(search.roomId);
   }, [lobby.data]);
+  const waiting = lobby.data?.search?.status === "waiting";
+  useEffect(() => {
+    if (!waiting || roomId) return;
+    const update = () => { if (!document.hidden) setElapsedSeconds((Date.now() - searchStarted) / 1000); };
+    update();
+    const timer = setInterval(update, 1000);
+    return () => clearInterval(timer);
+  }, [waiting, roomId, searchStarted]);
   const scope = `breakthrough-search:${profile.id}`;
   async function search() {
     if (!deck || !legal || busy) return;
     setBusy(true);
     setError("");
+    setSearchStarted(Date.now());
+    setElapsedSeconds(0);
     try {
       const stored = sessionStorage.getItem(scope),
         prior = stored ? JSON.parse(stored) : null;
@@ -143,7 +172,11 @@ export default function BreakthroughOnline({
         }}
       />
     );
-  const waiting = lobby.data?.search?.status === "waiting";
+  if (waiting) return <KumiteOpponentSearch
+    player={searchIdentity(profile.displayName, deck?.heroCardId ?? profile.avatarKey, profile.level, deck?.name)}
+    state={error || lobby.error ? {phase: "error", elapsedSeconds, message: error || lobby.error!.message} : {phase: "searching", elapsedSeconds}}
+    reducedMotion={reducedMotion} busy={busy} onCancel={() => void cancel()} onRetry={() => void lobby.refetch()}
+  />;
   return (
     <main className="bt-lobby" data-testid="breakthrough-online-lobby">
       <header className="bt-lobby-nav">
@@ -231,6 +264,9 @@ export function OnlineMatch({
   onLobby(): void;
 }) {
   const { profile } = bootstrap;
+  const reducedMotion = useSearchMotion(profile.settings.reducedMotion);
+  const [intro, setIntro] = useState<"matched" | "connecting" | "done">("matched");
+  const firstView = useRef(false);
   const [view, setView] = useState<BreakthroughRoomView | null>(null),
     [message, setMessage] = useState("Connecting…");
   const connection = useRef<BreakthroughConnection | null>(null);
@@ -247,7 +283,14 @@ export function OnlineMatch({
     const current = new BreakthroughConnection(
       profile.id,
       roomId,
-      setView,
+      next => {
+        if (!firstView.current) {
+          firstView.current = true;
+          // Rejoining an underway/finished match must go straight to the authoritative board.
+          if (next.phase !== "active" || next.elapsedMs > 5000) setIntro("done");
+        }
+        setView(next);
+      },
       setMessage,
     );
     connection.current = current;
@@ -257,6 +300,13 @@ export function OnlineMatch({
       if (connection.current === current) connection.current = null;
     };
   }, [profile.id, roomId]);
+  useEffect(() => {
+    if (!view || intro === "done") return;
+    if (view.phase !== "active") { setIntro("done"); return; }
+    const timer = setTimeout(() => setIntro(intro === "matched" ? "connecting" : "done"),
+      intro === "matched" ? (reducedMotion ? 450 : 1000) : 1500);
+    return () => clearTimeout(timer);
+  }, [!!view, view?.phase, intro, reducedMotion]);
   const receipt = useQuery({
     queryKey: ["breakthrough-receipt", profile.id, roomId],
     queryFn: ({ signal }) =>
@@ -280,11 +330,16 @@ export function OnlineMatch({
   });
   if (!view)
     return (
-      <main className="bt-lobby">
-        <p className="bt-lobby-status" role="status">{message}</p>
-        <button onClick={onExit}>BACK TO KUMITE</button>
-      </main>
+      <KumiteOpponentSearch player={searchIdentity(profile.displayName, profile.avatarKey, profile.level)}
+        state={message && message !== "Connecting…" ? {phase: "error", elapsedSeconds: 0, message} : {phase: "reconnecting", elapsedSeconds: 0}} reducedMotion={reducedMotion}
+        onCancel={onExit} />
     );
+  const opponent = view.profiles?.[view.side === "player" ? "opponent" : "player"];
+  if (intro !== "done" && view.phase === "active") return <KumiteOpponentSearch
+    player={searchIdentity(profile.displayName, profile.avatarKey, profile.level)}
+    state={{phase: intro, elapsedSeconds: 0, opponent: searchIdentity(opponent?.name ?? "OPPONENT", opponent?.avatarKey ?? "")}}
+    reducedMotion={reducedMotion} onCancel={() => setIntro("done")} cancelLabel="ENTER ARENA"
+    onEntryComplete={() => setIntro("done")} />;
   return (
     <BreakthroughArena
       roster={roster}
@@ -299,7 +354,12 @@ export function OnlineMatch({
       }}
       preferredReducedMotion={profile.settings.reducedMotion}
       onChangeDeck={onLobby}
-      onExit={onExit}
+      onExit={() => {
+        // Leaving a completed result must retire its retry ID just like Run it back.
+        // Otherwise a later search can recover that old loss instead of creating a match.
+        if (view.phase !== "active") onLobby();
+        onExit();
+      }}
       online={{
         view,
         message,
