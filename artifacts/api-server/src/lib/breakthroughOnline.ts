@@ -43,6 +43,8 @@ export interface BreakthroughRuntimeOptions {
   pool: Pool;
   /** A serverless worker may own exactly one room, never scan/steal unrelated rooms. */
   hostedRoomId?: string;
+  /** Bound live workers and their notification sessions during the initial rollout. */
+  maxActiveRooms?: number;
   member(
     client: BreakthroughClient,
     userId: string,
@@ -56,9 +58,12 @@ interface EngineBoundary {
   owner(options: RoomOwnerOptions): BreakthroughRoomOwnerForSimulation;
   roster(): FighterDefinition[];
 }
+// Deployment inputs are immutable for this process. Do not reserialize the 311-card
+// acceptance manifest on every 50ms clock tick. A new deploy creates a new process.
+let productionReleaseReady: boolean | undefined;
 const productionEngine: EngineBoundary = {
   admit() {
-    if (!getBreakthroughLaunchReadiness().canLaunch)
+    if (!(productionReleaseReady ??= getBreakthroughLaunchReadiness().canLaunch))
       throw new BreakthroughRoomError(
         "mode-unavailable",
         "Breakthrough public play is awaiting release verification.",
@@ -79,7 +84,8 @@ type Hosted = {
   until: number;
   members: string[];
 };
-/** Persistent process only. Netlify functions never instantiate an owner or start a timer. */
+/** Authoritative room service. Standalone servers run a global loop; bounded Netlify
+ * background workers own one room. Request functions use admission/receipts only. */
 export class BreakthroughOnlineService {
   private readonly store: PostgresBreakthroughRoomStore;
   private readonly rooms = new Map<string, Hosted>();
@@ -187,7 +193,7 @@ export class BreakthroughOnlineService {
       const count = await c.query(
         "SELECT count(*)::int AS n FROM breakthrough_rooms WHERE checkpoint->>'phase'='active'",
       );
-      if (count.rows[0].n >= 100)
+      if (count.rows[0].n >= (this.options.maxActiveRooms ?? 100))
         throw new BreakthroughRoomError(
           "mode-unavailable",
           "Live arenas are full. Please retry shortly.",
@@ -230,7 +236,7 @@ export class BreakthroughOnlineService {
       const row = own.rows[0];
       if (!row || row.status !== 'waiting' || Date.now() - new Date(row.created_at).getTime() < BREAKTHROUGH_RIVAL_WAIT_MS || Date.now() - new Date(row.heartbeat_at).getTime() >= 30000) return row;
       const count = await c.query("SELECT count(*)::int AS n FROM breakthrough_rooms WHERE checkpoint->>'phase'='active'");
-      if (count.rows[0].n >= 100) return row;
+      if (count.rows[0].n >= (this.options.maxActiveRooms ?? 100)) return row;
       const waiting = await c.query("SELECT * FROM breakthrough_searches WHERE status='waiting' AND user_id<>$1 AND heartbeat_at>clock_timestamp()-interval '30 seconds' ORDER BY created_at LIMIT 1 FOR UPDATE", [userId]);
       // Recheck humans under the same lock used by admission and cancellation.
       const opponent = waiting.rows[0]?.member ?? BREAKTHROUGH_RIVALS[randomInt(BREAKTHROUGH_RIVALS.length)];

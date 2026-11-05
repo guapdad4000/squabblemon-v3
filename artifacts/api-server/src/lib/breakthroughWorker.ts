@@ -65,7 +65,7 @@ export async function runBreakthroughWorker(
         const now = Date.now();
         const current = await service.view(roomId, members[0]);
         if (now >= nextPublish || current.phase !== 'active') {
-          nextPublish = now + 100;
+          nextPublish = now + 200;
           for (const [reply, subscription] of subscribers) {
             if (subscription.expires <= now) { subscribers.delete(reply); continue; }
             const view = subscription.user === members[0] ? current : await service.view(roomId, subscription.user);

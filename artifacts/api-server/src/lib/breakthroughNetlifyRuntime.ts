@@ -4,7 +4,7 @@ import { getBreakthroughLaunchReadiness } from '@workspace/squabblemon-engine/br
 import { BreakthroughRoomError } from '@workspace/squabblemon-engine/breakthroughRoom';
 import { createBreakthroughRuntime } from './breakthroughRuntime';
 import { createNetlifyBreakthroughHandler, wakeBreakthroughWorker } from './breakthroughNetlify';
-import { BreakthroughBus, replyChannel } from './breakthroughBus';
+import { type BreakthroughTransport, BreakthroughBus, replyChannel } from './breakthroughBus';
 import { currentDeploymentContext } from './runtimeDeploymentContext';
 
 const {service} = createBreakthroughRuntime(); // Admission/receipts only; no clock in a request function.
@@ -25,7 +25,7 @@ export const netlifyBreakthroughHandler = createNetlifyBreakthroughHandler({
   wake: roomId => wakeBreakthroughWorker(pool, roomId, currentDeploymentContext()!.origin, Netlify.env.get('BREAKTHROUGH_WORKER_SECRET') ?? ''),
 });
 
-/** Public, bounded, read-only readiness; no account data or connection strings. Cache briefly
+/** Public, bounded readiness; only an expiring synthetic transport probe, no account data or connection strings. Cache briefly
  * so operators/clients cannot accidentally create a notification connection storm. */
 let probe: Promise<boolean> | undefined, probeAt = 0;
 let transportStage = 'unchecked';
@@ -34,7 +34,7 @@ async function checkTransport() {
   let done!: (value: boolean) => void;
   const delivered = new Promise<boolean>(resolve => { done = resolve; });
   let timer: ReturnType<typeof setTimeout> | undefined;
-  let bus: BreakthroughBus | undefined;
+  let bus: BreakthroughTransport | undefined;
   try {
     transportStage = 'schema';
     await pool.query('SELECT worker_wake_at FROM breakthrough_rooms LIMIT 0');
@@ -60,5 +60,5 @@ export async function breakthroughStatus() {
   return Response.json({status: ready ? 'ready' : 'preparing', transport, transportStage, configured,
     release: {ready: release.canLaunch, supportedCards: release.supportedCards, totalCards: release.totalCards},
     revision: process.env.BREAKTHROUGH_BUILD_SHA ?? 'unknown',
-    hosting: 'netlify-background-worker'}, {status: ready ? 200 : 503, headers: {'Cache-Control': 'no-store'}});
+    hosting: 'netlify-background-worker', messaging: 'compressed-sql-mailbox'}, {status: ready ? 200 : 503, headers: {'Cache-Control': 'no-store'}});
 }

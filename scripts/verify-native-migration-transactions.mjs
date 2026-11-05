@@ -61,6 +61,7 @@ export async function verifyNativeMigrationTransactions(client, root) {
   await batch(pending);
   await client.query("INSERT INTO social_identities (user_id, friend_code, username) VALUES ('migration_retry_probe', 'A1B2C3D4E5F6', 'existing_player')");
 
+  assert.equal((await client.query("SELECT relrowsecurity FROM pg_class WHERE oid='breakthrough_transport'::regclass")).rows[0].relrowsecurity,true);
   // Replaying the forward migration over a complete schema is nondestructive.
   await batch(pending);
   assert.deepEqual((await client.query("SELECT friend_code, username FROM social_identities WHERE user_id = 'migration_retry_probe'")).rows,

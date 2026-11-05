@@ -55,6 +55,9 @@ export async function verifyNetlify(pool: BreakthroughRuntimeOptions['pool']) {
     await call('one','/search',{deckId:'owned',requestId:randomUUID()});
     const paired = await call('two','/search',{deckId:'owned',requestId:randomUUID()});
     const roomId = paired.roomId;
+    const limited = new BreakthroughOnlineService({...options, maxActiveRooms: 1}, engine);
+    await assert.rejects(limited.searchMatch('capacity-check', 'owned', randomUUID()), {code: 'mode-unavailable'});
+    await limited.stop();
     await Promise.all([wake(roomId), wake(roomId), wake(roomId)]);
     assert.equal(dispatches,1,'dispatch reservation stops worker invocation storms');
     assert.equal((await request('stranger','/'+roomId)).status,403);

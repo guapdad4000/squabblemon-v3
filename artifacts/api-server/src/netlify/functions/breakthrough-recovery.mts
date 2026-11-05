@@ -5,6 +5,7 @@ import { wakeBreakthroughWorker } from '../../lib/breakthroughNetlify';
 import { getBreakthroughLaunchReadiness } from '@workspace/squabblemon-engine/breakthroughCatalog';
 /** Recovery after an invocation dies without a connected player. Normal play never waits for cron. */
 export default async function recovery() {
+  await pool.query('DELETE FROM breakthrough_transport WHERE expires_at<=clock_timestamp()');
   if (Netlify.env.get('BREAKTHROUGH_PVP_ENABLED') !== 'true' || !getBreakthroughLaunchReadiness().canLaunch) return;
   const {service} = createBreakthroughRuntime();
   for (let i=0; i<10 && await service.settle(); i++) {}

@@ -1,6 +1,7 @@
 import { sql } from 'drizzle-orm';
 import {
   bigint,
+  bigserial,
   check,
   index,
   jsonb,
@@ -62,3 +63,16 @@ export const breakthroughRoomOutboxTable = pgTable(
       .where(sql`${t.settledAt} IS NULL`),
   ],
 );
+
+/** Short-lived transport only; private game authority remains in rooms/journal. */
+export const breakthroughTransportTable = pgTable('breakthrough_transport', {
+  id: bigserial('id', {mode:'number'}).primaryKey(),
+  channel: text('channel').notNull(),
+  payload: text('payload').notNull(),
+  expiresAt: timestamp('expires_at', {withTimezone:true}).notNull(),
+}, t => [
+  index('breakthrough_transport_channel').on(t.channel,t.id),
+  index('breakthrough_transport_expiry').on(t.expiresAt),
+  check('breakthrough_transport_channel_check',sql`${t.channel} ~ '^bt_[a-z0-9_]{1,59}$'`),
+  check('breakthrough_transport_payload_check',sql`length(${t.payload}) <= 2800000`),
+]);

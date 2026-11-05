@@ -1,5 +1,5 @@
 import { createHmac, randomUUID, timingSafeEqual } from 'node:crypto';
-import { BreakthroughBus, replyChannel, roomChannel } from './breakthroughBus';
+import { type BreakthroughTransport, BreakthroughBus, replyChannel, roomChannel } from './breakthroughBus';
 import type { BreakthroughOnlineService, BreakthroughRuntimeOptions } from './breakthroughOnline';
 import { BreakthroughRoomError, type BreakthroughRoomCheckpoint } from '@workspace/squabblemon-engine/breakthroughRoom';
 import { BREAKTHROUGH_PROTOCOL } from '@workspace/squabblemon-engine/breakthroughOnline';
@@ -75,7 +75,7 @@ export function createNetlifyBreakthroughHandler(options: Options) {
   async function stream(request: Request, roomId: string, principal: Principal) {
     const reply = replyChannel(), id = randomUUID(), user = principal.userId;
     const expires = Math.min(Date.now() + 44000, principal.expiresAt - 1000);
-    let bus: BreakthroughBus | undefined, timer: ReturnType<typeof setTimeout> | undefined;
+    let bus: BreakthroughTransport | undefined, timer: ReturnType<typeof setTimeout> | undefined;
     let retry: ReturnType<typeof setInterval> | undefined, closed = false, started = false;
     let controller: ReadableStreamDefaultController<Uint8Array>;
     const close = () => {

@@ -16,7 +16,7 @@ function fixture(t) {
 }
 
 test('current native history covers development SQL, schema, and consolidated online-room baseline', () => {
-  assert.equal(checkNetlifyMigrationCoverage().tables, 30);
+  assert.equal(checkNetlifyMigrationCoverage().tables, 31);
 });
 
 test('native live-state columns without their writer trigger block release', t => {
@@ -263,3 +263,10 @@ for (const change of ['omit', 'disable']) {
     assert.throws(() => checkNetlifyMigrationCoverage(root), /row security park_rival_standings/);
   });
 }
+
+test('native private transport must retain row security', t => {
+  const root=fixture(t);
+  const file=path.join(root,'netlify/database/migrations/202611050002_breakthrough-transport/migration.sql');
+  writeFileSync(file,readFileSync(file,'utf8').replace('ALTER TABLE breakthrough_transport ENABLE ROW LEVEL SECURITY;',''));
+  assert.throws(()=>checkNetlifyMigrationCoverage(root),/row security breakthrough_transport/);
+});

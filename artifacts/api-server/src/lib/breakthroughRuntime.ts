@@ -10,6 +10,7 @@ export function createBreakthroughRuntime(hostedRoomId?: string) {
   const service = new BreakthroughOnlineService({
     pool,
     hostedRoomId,
+    maxActiveRooms: 20,
     report: (error) => logger.error({ err: error }, "Breakthrough host"),
     member: async (client, userId, deckId) => {
       const member = await loadMember(
