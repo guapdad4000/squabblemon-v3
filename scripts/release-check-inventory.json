@@ -201,6 +201,13 @@
       "cwd": ".",
       "command": "node scripts/test-breakthrough-database.mjs --browser",
       "evidence": "Owned native PostgreSQL and two Chromium clients at five viewports; injected test principals, not live Clerk proof"
+    },
+    {
+      "id": "breakthrough-full-catalog",
+      "when": "Breakthrough launch evidence or canonical card presentation changes",
+      "cwd": "artifacts/squabblemon",
+      "command": "node --import tsx ../../scripts/verify-breakthrough-catalog.ts /tmp/bt-catalog-mechanics.json && node e2e/verify-breakthrough-catalog.mjs",
+      "evidence": "3,800 both-seat/lane/choice/Last Stand gameplay scenarios plus 311 actual arena portraits and descriptions; local Vite at port 5178 required, separate hosted journey proof"
     }
   ],
   "browserPrerequisites": [

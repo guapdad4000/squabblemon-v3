@@ -260,19 +260,11 @@ test("entity deltas retain reordering, deletion and removal of optional art with
   assert.deepEqual(applyRoomStream(before, frame), after);
 });
 
-test("public efficient owner remains closed until the all-card release gate passes", () => {
+test("approved public owner does not load a room before its first request", () => {
   const store = new Store();
-  assert.throws(
-    () =>
-      new PublicRoomOwner({
-        roomId: "r",
-        ownerFence: 1,
-        store,
-        now: () => 1000,
-        leaseExpiresAt: () => 300000,
-      }),
-    { code: "mode-unavailable" },
-  );
+  assert.doesNotThrow(() => new PublicRoomOwner({
+    roomId:'r',ownerFence:1,store,now:()=>1000,leaseExpiresAt:()=>300000,
+  }));
   assert.equal(store.reads, 0);
 });
 

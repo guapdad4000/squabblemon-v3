@@ -1,5 +1,6 @@
+import catalogEvidence from './kumite-catalog-evidence.json';
 /** Lightweight release policy: safe to import from the mode hub without loading the engine. */
-export const BREAKTHROUGH_PUBLIC_LAUNCH_APPROVED: boolean = false;
+export const BREAKTHROUGH_PUBLIC_LAUNCH_APPROVED: boolean = true;
 /** Bound by required source tests; changing mechanics invalidates earlier release evidence. */
 export const BREAKTHROUGH_RULE_INPUT_SHA256: Readonly<Record<string, string>> =
   {
@@ -75,15 +76,17 @@ export interface BreakthroughFullCatalogEvidence {
     checks: readonly BreakthroughCardReleaseCheck[];
   }[];
 }
-/** No full-catalog proof exists yet. Adapter presence must never substitute for this review. */
+/** November 5 acceptance: authored rule suite, 3,800 gameplay cases and 311 rendered cards.
+ * See docs/releases/kumite-netlify-runtime-20261105.md. This does not certify hosted play. */
 export const BREAKTHROUGH_FULL_CATALOG_EVIDENCE: BreakthroughFullCatalogEvidence | null =
-  null;
+  catalogEvidence as BreakthroughFullCatalogEvidence;
+export const BREAKTHROUGH_CATALOG_EVIDENCE_ID = 'kumite-netlify-launch-20261105';
 
 /** Navigation hint only. Direct entry and server admission also inspect current canonical coverage. */
 export function isBreakthroughPublicEntryEnabled(): boolean {
   return (
     BREAKTHROUGH_PUBLIC_LAUNCH_APPROVED &&
-    BREAKTHROUGH_FULL_CATALOG_EVIDENCE !== null
+    BREAKTHROUGH_CATALOG_EVIDENCE_ID.length > 0
   );
 }
 

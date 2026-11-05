@@ -46,7 +46,7 @@ function proof(
     })),
   };
 }
-test('all 311 adapters stay closed without evidence and approval', () => {
+test('all 311 cards have current acceptance evidence and public approval', () => {
   const status = getBreakthroughLaunchReadiness();
   assert.equal(status.totalCards, 311);
   assert.equal(status.supportedCards, 311);
@@ -54,8 +54,9 @@ test('all 311 adapters stay closed without evidence and approval', () => {
     [...status.unsupportedCardIds].sort(),
     [],
   );
-  assert.equal(status.canLaunch, false);
-  assert.equal(isBreakthroughPublicEntryEnabled(), false);
+  assert.equal(status.canLaunch, true);
+  assert.equal(isBreakthroughPublicEntryEnabled(), true);
+  assert.equal(status.verifiedCards,311);
 });
 test('complete adapter presence never replaces per-card proof or explicit approval', () => {
   const allSupported = {
@@ -142,7 +143,7 @@ test('duplicate, partial, extra or unnamed proof sets fail closed', () => {
     false,
   );
 });
-test('public room admission rejects before creating a room; internal simulation still works', () => {
+test('approved public rooms and internal simulations preserve their input', () => {
   const deck = BREAKTHROUGH_STARTER_DECKS[0].catalogCardIds;
   const input = {
     roomId: 'not-released',
@@ -155,12 +156,7 @@ test('public room admission rejects before creating a room; internal simulation 
     }),
   };
   const before = structuredClone(input);
-  assert.throws(
-    () => createBreakthroughRoom(input),
-    (error) =>
-      error instanceof BreakthroughRoomError &&
-      error.code === 'mode-unavailable',
-  );
+  assert.equal(createBreakthroughRoom(input).phase, 'active');
   assert.deepEqual(input, before);
   assert.equal(createBreakthroughRoomForSimulation(input).phase, 'active');
 });
@@ -186,25 +182,11 @@ test('release evidence fingerprints the current engine, adapters and room implem
     );
   }
 });
-test('default room service cannot resume or view private simulation rooms before launch', () => {
+test('approved room service does not load a room until requested', () => {
   let loads = 0;
-  assert.throws(
-    () =>
-      new BreakthroughRoomService({
-        roomId: 'private-fixture',
-        ownerFence: 1,
-        now: () => 1000,
-        store: {
-          load: async () => {
-            loads++;
-            return null;
-          },
-          commit: async () => true,
-        },
-      }),
-    (error) =>
-      error instanceof BreakthroughRoomError &&
-      error.code === 'mode-unavailable',
-  );
+  assert.doesNotThrow(() => new BreakthroughRoomService({
+    roomId:'approved-room',ownerFence:1,now:()=>1000,
+    store:{load:async()=>{loads++;return null;},commit:async()=>true},
+  }));
   assert.equal(loads, 0);
 });

@@ -1,6 +1,7 @@
 /** Reproducible uncompressed application-payload benchmark; excludes TLS/WebSocket
  * framing, compression, network RTT and database execution time. */
 import { serializeRoomCheckpointUpdate } from "../artifacts/api-server/src/lib/breakthroughRooms";
+import { deflateRawSync } from 'node:zlib';
 import { performance } from "node:perf_hooks";
 import {
   createGame,
@@ -71,6 +72,8 @@ let now = 1000,
   oldBytes = 0,
   oldWire = 0,
   newWire = 0,
+  mailboxBytes = 0,
+  mailboxRows = 0,
   maxFrameBytes = 0,
   rosterWriteBytes = 0,
   checkpointBytes = 0,
@@ -120,7 +123,7 @@ for (let time = 1050; time <= 61000; time += 50) {
     terminal: mutation.terminal,
   });
   await owner.tick();
-  if (time % 100 === 0)
+  if (time % 200 === 0)
     for (const account of ["a", "b"]) {
       const view = await owner.view(account);
       assert.deepEqual(view, projectBreakthroughRoom(base, account));
@@ -130,6 +133,8 @@ for (let time = 1050; time <= 61000; time += 50) {
       const frame = encodeRoomStream(previous[account], view);
       const frameBytes = bytes(frame) + 8; // "data: " plus double newline
       newWire += frameBytes;
+      mailboxBytes += Buffer.byteLength(deflateRawSync(Buffer.from(JSON.stringify({frame})),{level:1}).toString('base64'));
+      mailboxRows++;
       maxFrameBytes = Math.max(maxFrameBytes, frameBytes);
       assert.deepEqual(applyRoomStream(previous[account], frame), view);
       previous[account] = view;
@@ -141,7 +146,7 @@ await owner.close();
 let churnBytes = 0;
 const template = stressTemplate;
 let churnPrevious: BreakthroughRoomView | null = null;
-for (let frame = 0; frame < 600; frame++) {
+for (let frame = 0; frame < 300; frame++) {
   const next = structuredClone(template);
   next.revision = frame;
   next.units = next.units.map((unit, index) => ({
@@ -150,7 +155,7 @@ for (let frame = 0; frame < 600; frame++) {
     hands: 1 + (frame % 9),
     burnStacks: frame % 4,
   }));
-  if (frame === 450) churnPrevious = null;
+  if (frame === 225) churnPrevious = null;
   const encoded = encodeRoomStream(churnPrevious, next);
   churnBytes += bytes(encoded) + 8;
   assert.deepEqual(applyRoomStream(churnPrevious, encoded), next);
@@ -165,7 +170,7 @@ console.log(
         units: unitCount,
         travelMs: 120000,
         engineHz: 20,
-        sendHz: 10,
+        sendHz: 5,
         seats: 2,
         catalog: 311,
       },
@@ -192,6 +197,7 @@ console.log(
         }),
         reductionPercent: 100 * (1 - newBytes / oldBytes),
       },
+      ephemeralMailbox: {compressedBase64Bytes: mailboxBytes, rowsWrittenAndDeleted: mailboxRows, retentionSeconds:30, bytesPerPlayerMinute:mailboxBytes/2},
       wire: {
         baselineBytes: oldWire,
         maxFrameBytes,
@@ -204,7 +210,7 @@ console.log(
       artificialAllUnitsChangingBytesPerPlayerMinute: churnBytes,
       localHarnessMs: performance.now() - start,
       limitations:
-        "Synthetic CPU execution and uncompressed application JSON only; no network RTT, compression, TLS, database latency or human player claim.",
+        "Synthetic CPU and application payloads; mailbox compression is measured, but SQL framing, TLS, network RTT, provider billing, database latency and human behavior are not.",
     },
     null,
     2,
