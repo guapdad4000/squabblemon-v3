@@ -7,7 +7,7 @@ export const BREAKTHROUGH_RULE_INPUT_SHA256: Readonly<Record<string, string>> =
     'breakthroughOnline.ts':
       '3a8f167b8fe4658f2816973b6e60b17202aecee7eaacd3b889e634a2c09066cd',
     'breakthrough.ts':
-      '487cd4b5266f1de0bf9d7b277b54a125f2ce2665f099c032fbef6754381eabab',
+      '6a9bf0e51caf714d8365261001c82f555c5c48f81cc2ac8727d8107c95efe927',
     'breakthroughAnunaki.ts':
       '4ca5cca3104378f3fad08bcbd9267bfd9986691d94a88ccdb87b2870d7233839',
     'breakthroughBlockbusters.ts':
@@ -21,7 +21,7 @@ export const BREAKTHROUGH_RULE_INPUT_SHA256: Readonly<Record<string, string>> =
     'breakthroughControl.ts':
       'caf775709ba5a5d45d84db921bae97366f6cacb0dceb2c4ca5a0fc32126aec8e',
     'breakthroughFactions.ts':
-      'c4371109632fc55e7b41ca967c6a578e7071b4750ab804a09e7b71eb9d3a1905',
+      'f418fb838bb51edac04d30bf418ff37db01534d50200f4b357fce2dd33509601',
     'breakthroughFitness.ts':
       '4d67d75e282b5e43d5fba23dbc9cae549bdd679029b0e094637158bc715a8061',
     'breakthroughHouse.ts':

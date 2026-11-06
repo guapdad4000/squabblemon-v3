@@ -306,6 +306,7 @@ export interface FighterDefinition {
     'music' | 'fitness' | 'family' | 'homeless' | 'squabblehouse'
   )[];
   gangColor?: 'red' | 'blue';
+  /** Ability/status Hands-loss resistance; lane collisions still deal damage. */
   cannotLoseHands?: boolean;
   cannotBeSilenced?: boolean;
   allowedLanes?: readonly Lane[];
@@ -3744,15 +3745,13 @@ function preventEnemyDamage(
   source: DamageSource,
   physical = false,
 ): number {
-  if (
-    !canLoseHands(s, target) &&
-    !(
-      physical &&
-      target.immunityScope === 'abilities' &&
-      !definition(s, target).cannotLoseHands
-    )
-  )
-    return amount;
+  // Printed Hands-loss resistance protects against effects, not lane combat.
+  // Keep full immunity (as distinct from ability-only immunity) effective here.
+  const blocksDamage = physical
+    ? target.canFight === false ||
+      (target.immune && target.immunityScope !== 'abilities')
+    : !canLoseHands(s, target);
+  if (blocksDamage) return amount;
   if (source.sourceSide === target.side) return 0;
   if (housePreventHostile(houseContext(s), target, source.sourceSide, 'harm'))
     return amount;

@@ -87,6 +87,21 @@ function play(
   return result.state;
 }
 const find = (s: GameState, u: Unit) => s.units.find((v) => v.id === u.id);
+function seedStatus(s: GameState, target: Unit, kind: 'freeze' | 'silence') {
+  s.statuses.push({
+    id: s.nextEffectId++,
+    kind,
+    targetId: target.id,
+    sourceUnitId: 'fixture-status-source',
+    sourceSide: target.side === 'player' ? 'opponent' : 'player',
+    sourceLane: target.lane,
+    sourcePosition: target.side === 'player' ? 1 : 0,
+    appliedAt: s.elapsedMs,
+    nextTickAt: s.elapsedMs + 10000,
+    expiresAt: s.elapsedMs + 10000,
+    stacks: 1,
+  });
+}
 
 test('Scammer copies a real Stockz ongoing kit without its entrance or membership and growth fires on later character play', () => {
   const target = unit('stockz', 'opponent', 0, 12);
@@ -369,16 +384,72 @@ test('Mary suspends Burn while absent, drops expired statuses and resumes a live
   s = advance(s, 2000);
   assert.equal(find(s, mary)?.hands, 5);
 });
-test('Immutable OG Blue still takes no physical Hands loss while an ability-only immune Guyana can fall', () => {
-  const blue = unit('blue-side-1', 'player', 0, 4),
-    enemy = unit('nguyen', 'opponent', 0, 8);
-  blue.position = 0.4;
+for (const cardId of ['blue-side-1', 'triple-og-blue'])
+  for (const side of ['player', 'opponent'] as const)
+    for (const disabled of [false, true])
+      test(`${cardId} on ${side} can lose Hands and die in lane combat${disabled ? ' while disabled' : ''}`, () => {
+        const other = side === 'player' ? 'opponent' : 'player';
+        const blue = unit(cardId, side, 0, 8);
+        const first = unit('nguyen', other, 0, 3);
+        blue.position = side === 'player' ? 0.4 : 0.62;
+        first.position = side === 'player' ? 0.62 : 0.4;
+        let s = game([blue, first]);
+        if (disabled) seedStatus(s, blue, 'silence');
+        s = advance(s, 50);
+        assert.equal(find(s, blue)?.silenced, disabled);
+        assert.equal(find(s, blue)?.hands, 5, 'ordinary contact deals damage');
+        assert.equal(find(s, first), undefined);
+        assert.equal(s.metrics[other].damage, 3);
+        const next = unit('nguyen', other, 0, 9);
+        next.position = first.position;
+        s.units.push(next);
+        s = advance(s, 50);
+        assert.equal(find(s, blue), undefined, 'lethal contact removes OG Blue');
+        assert.equal(find(s, next)?.hands, 4, 'both sides exchange damage');
+        assert.equal(s.metrics[other].damage, 8);
+        assert.equal(s.metrics[side].damage, 8);
+        assert.equal(s.players[side].breaches, 0, 'defeated fighter cannot breach');
+      });
+for (const cardId of ['blue-side-1', 'triple-og-blue'])
+  test(`${cardId} still resists ability Hands loss before taking lethal collision damage`, () => {
+    const blue = unit(cardId, 'player', 0, 4);
+    let s = game([blue]);
+    seedStatus(s, blue, 'silence');
+    s = play(s, 'cornball', 0, 'opponent');
+    s = advance(s, 6000);
+    assert.equal(find(s, blue)?.silenced, true);
+    assert.equal(find(s, blue)?.hands, 4, 'ability resistance survives Silence');
+    s.units = s.units.filter((u) => u.id === blue.id);
+    find(s, blue)!.position = 0.4;
+    const enemy = unit('nguyen', 'opponent', 0, 8);
+    enemy.position = 0.62;
+    s.units.push(enemy);
+    s = advance(s, 50);
+    assert.equal(find(s, blue), undefined);
+    assert.equal(find(s, enemy)?.hands, 4);
+  });
+for (const cardId of ['blue-side-1', 'triple-og-blue'])
+  test(`${cardId} remains vulnerable to the frozen-fighter collision rule`, () => {
+    const blue = unit(cardId, 'player', 0, 8);
+    blue.position = 0.4;
+    const enemy = unit('nguyen', 'opponent', 0, 1);
+    enemy.position = 0.62;
+    const initial = game([blue, enemy]);
+    seedStatus(initial, blue, 'freeze');
+    const s = advance(initial, 50);
+    assert.equal(find(s, blue), undefined);
+    assert.equal(s.metrics.opponent.damage, 8);
+  });
+test('full damage immunity still blocks collisions, unlike printed Hands-loss resistance', () => {
+  const target = unit('nguyen', 'player', 0, 4);
+  target.immune = true;
+  target.position = 0.4;
+  const enemy = unit('nguyen', 'opponent', 0, 8);
   enemy.position = 0.62;
-  let s = advance(game([blue, enemy]), 50);
-  assert.equal(find(s, blue)?.hands, 4);
+  const s = advance(game([target, enemy]), 50);
+  assert.equal(find(s, target)?.hands, 4);
   assert.equal(find(s, enemy)?.hands, 4);
   assert.equal(s.metrics.opponent.damage, 0);
-  assert.equal(s.metrics.player.damage, 4);
 });
 test('A genuinely returned Scammer clears copied ongoing kit and runs its own Imposter again on next play', () => {
   const stock = unit('stockz', 'opponent', 0, 12);

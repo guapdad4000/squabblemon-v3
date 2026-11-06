@@ -21,13 +21,13 @@ export const FACTION_ABILITY_DESCRIPTIONS = {
   'eyes-on-the-crossing':
     'Deploy and at the next two global 10-second pulses: make one attempt to steal 1 actual Hand from the strongest eligible enemy here. Only with no enemies here may you instead take 1 from your strongest other ally with at least 2. Blocked steals grant nothing; echoes cannot repeat an attempt in the same pulse.',
   'blue-side-crossfire':
-    'Deploy: hit the strongest enemy in another lane for 3. Gain +1 per friendly Blue Side fighter, including yourself, plus +1 per other lane containing a friendly Blue Set fighter, at most +2 extra. This printed identity cannot lose Hands even while disabled; statuses and legal movement can still affect it.',
+    'Deploy: hit the strongest enemy in another lane for 3. Gain +1 per friendly Blue Side fighter, including yourself, plus +1 per other lane containing a friendly Blue Set fighter, at most +2 extra. Abilities and statuses cannot reduce its Hands, even while disabled. Lane combat still deals damage and can defeat it; statuses and legal movement can still affect it.',
   'stand-behind-me':
     'Deploy: gain +1 and prepare Protection for the next other friendly character deployed while this fighter remains active. One pending cover per source; actions and summons never spend it.',
   'clear-the-route':
     'Deploy and each global 10-second pulse: snapshot your weakest other fighter in each lane and try to move each exactly one adjacent lane. Outer lanes enter the center; center tries right then left. One seeded coin flip per route either gives each successful mover +1 or steals 1 actual Hand from a local enemy for that mover. No fighter moves twice in one route.',
   homage:
-    'Deploy only in the left lane. If losing here, collect up to +3: other Blue Set characters contribute first without losing Hands, then eligible other characters pay 1 while retaining at least 1. Send the weakest enemy here to your strongest other legal lane and hit it for 1 only if moved. Your weakest Blue Set character in each other lane gains +1 and Protection. This identity cannot lose Hands or be Silenced.',
+    'Deploy only in the left lane. If losing here, collect up to +3: other Blue Set characters contribute first without losing Hands, then eligible other characters pay 1 while retaining at least 1. Send the weakest enemy here to your strongest other legal lane and hit it for 1 only if moved. Your weakest Blue Set character in each other lane gains +1 and Protection. Abilities and statuses cannot reduce its Hands, and it cannot be Silenced. Lane combat still deals damage and can defeat it.',
   'roll-call':
     'Deploy only in the right lane. Other local characters lose 1 actual Hand; up to three strongest touchable enemies take 2 instead. Gain the actual total lost, capped at +6. Untouchable characters are instead asked to move to another legal lane, with hostile movement defenses still applying. This printed ability cannot be Silenced.',
   'spin-the-block':
@@ -37,7 +37,7 @@ export const FACTION_ABILITY_DESCRIPTIONS = {
   'red-line-bodyguard':
     'Deploy and each 10-second pulse: walk one adjacent legal lane toward your earliest Red Triple OG; when together, hit the strongest eligible enemy there for 1 once this pulse. After the OG’s ordinary shields, jump legally from anywhere to tank one counterable targeted ability per pulse. Disabled or movement-locked dogs cannot jump; generated attacks never intercept recursively.',
   'blue-nose-backup':
-    'Deploy and each 10-second pulse: walk one adjacent legal lane toward your earliest Blue Triple OG; when together, give it +1 and your weakest remote Blue Set character +2 once this pulse. After the OG’s ordinary shields, jump legally from anywhere to tank one counterable targeted ability per pulse. Blue OG retains immunity to Hands loss.',
+    'Deploy and each 10-second pulse: walk one adjacent legal lane toward your earliest Blue Triple OG; when together, give it +1 and your weakest remote Blue Set character +2 once this pulse. After the OG’s ordinary shields, jump legally from anywhere to tank one counterable targeted ability per pulse. Blue OG resists ability Hands loss but can still take damage and fall in lane combat.',
   'sign-here':
     'Deploy: bond your weakest other local character to one active Auntie through the second following pulse. Redirect its next targeted hostile ability to Auntie once. Actual damage or a newly harmful status arms one credit through two following pulses: the next Poison character successfully entering a different lane refunds 1 Motion. One Bond and credit per side; blocked packets never arm credit.',
 } as const;
