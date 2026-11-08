@@ -51,6 +51,12 @@ export async function verifyNetlify(pool: BreakthroughRuntimeOptions['pool']) {
   let reader: ReadableStreamDefaultReader<Uint8Array> | undefined;
   try {
     assert.equal((await request('')).status, 401);
+    assert.equal((await request('', '/standings')).status,401);
+    assert.equal((await request('rank-reader','/standings',undefined,{origin:'https://foreign.test'})).status,403);
+    assert.equal((await request('rank-reader','/standings',undefined,{'x-breakthrough-protocol':'old'})).status,409);
+    const ranks = await request('rank-reader','/standings');
+    assert.equal(ranks.status,200); assert.equal(ranks.headers.get('cache-control'),'private, no-store');
+    assert.deepEqual((await ranks.json()).leaders,[]); assert.equal(dispatches,0,'standings never wakes a match worker');
     assert.equal((await request('one','/search',{}, {origin:'https://foreign.test'})).status,403);
     await call('one','/search',{deckId:'owned',requestId:randomUUID()});
     const paired = await call('two','/search',{deckId:'owned',requestId:randomUUID()});

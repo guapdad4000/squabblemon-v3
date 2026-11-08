@@ -20,8 +20,11 @@ import { catalogPortrait } from "../profile/FighterPortrait";
 import { FighterPortrait } from "../profile/FighterPortrait";
 import { getCardImage } from "../../data";
 import BreakthroughArena from "./BreakthroughArena";
-import { BREAKTHROUGH_TROPHY } from "./progressionArt";
+import { KUMITE_ENTRY_READY } from "../kumite/FlyerWipe";
+import { hallwayArt } from "../kumite/hallwayArt";
+import { KumiteStandings } from "./KumiteStandings";
 import "./production.css";
+import "./flyerLobby.css";
 function searchIdentity(name: string, avatarKey: string, level?: number, crewName = "BREAKTHROUGH"): KumiteSearchIdentity {
   const hero = catalogPortrait(avatarKey);
   return { name, art: getCardImage(hero?.catalogId ?? avatarKey), level, crewName };
@@ -42,6 +45,7 @@ export default function BreakthroughOnline({
 }: {
   bootstrap: PlayerBootstrap;
 }) {
+  useEffect(() => { document.dispatchEvent(new Event(KUMITE_ENTRY_READY)); }, []);
   const reducedMotion = useSearchMotion(bootstrap.profile.settings.reducedMotion);
   const [searchStarted, setSearchStarted] = useState(() => Date.now());
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
@@ -166,6 +170,7 @@ export default function BreakthroughOnline({
             "1",
           );
           setRoomId(null);
+          void client.invalidateQueries({ queryKey: ["breakthrough-standings", profile.id] });
           void client.invalidateQueries({
             queryKey: ["breakthrough-lobby", profile.id],
           });
@@ -178,7 +183,8 @@ export default function BreakthroughOnline({
     reducedMotion={reducedMotion} busy={busy} onCancel={() => void cancel()} onRetry={() => void lobby.refetch()}
   />;
   return (
-    <main className="bt-lobby" data-testid="breakthrough-online-lobby">
+    <main className="bt-lobby bt-flyer-lobby" data-testid="breakthrough-online-lobby" data-reduced-motion={reducedMotion}>
+      <div className="bt-flyer-lobby__alley" aria-hidden="true"><img src={hallwayArt.alley} alt="" /></div>
       <header className="bt-lobby-nav">
         <Link href="/game/kumite">← KUMITE</Link>
         <span>LIVE PVP</span>
@@ -187,16 +193,12 @@ export default function BreakthroughOnline({
         className="bt-lobby-stage"
         aria-label="Find a Breakthrough opponent"
       >
-        <div className="bt-lobby-title">
-          <small>KUMITE</small>
-          <h1>
-            BREAK
-            <br />
-            THROUGH.
-          </h1>
-          <img src={BREAKTHROUGH_TROPHY} alt="Breakthrough fist trophy" />
-        </div>
         <div className="bt-lobby-crew">
+          <img className="bt-flyer-lobby__paper" src={hallwayArt.paper} alt="" draggable={false} />
+          <div className="bt-flyer-lobby__masthead">
+            <img className="bt-flyer-lobby__poster" src={hallwayArt.flyer} alt="" draggable={false} />
+            <div><small>LIVE PVP / THREE LANES</small><h1>BREAKTHROUGH</h1><span>FIGHT REGISTRATION</span></div>
+          </div>
           <div className="bt-lobby-identity">
             <FighterPortrait cardId={deck?.heroCardId ?? profile.avatarKey} avatarKey={profile.avatarKey} name={profile.displayName} decorative battleArtwork />
             <div><strong>{profile.displayName}</strong><small>YOUR CREW</small></div>
@@ -208,6 +210,8 @@ export default function BreakthroughOnline({
             onSelect={(id) => {
               if (!waiting && !busy) select(id);
             }}
+            disabled={busy}
+            showScrollControls reducedMotion={reducedMotion}
             label="Choose your Breakthrough deck"
           />
           {!legal && <p>Choose a saved gang of ten unique cards you own.</p>}
@@ -249,6 +253,7 @@ export default function BreakthroughOnline({
           </details>
         </div>
       </section>
+      <KumiteStandings profileId={profile.id} />
     </main>
   );
 }
@@ -264,6 +269,7 @@ export function OnlineMatch({
   onLobby(): void;
 }) {
   const { profile } = bootstrap;
+  useEffect(() => { document.dispatchEvent(new Event(KUMITE_ENTRY_READY)); }, []);
   const reducedMotion = useSearchMotion(profile.settings.reducedMotion);
   const [intro, setIntro] = useState<"matched" | "connecting" | "done">("matched");
   const firstView = useRef(false);

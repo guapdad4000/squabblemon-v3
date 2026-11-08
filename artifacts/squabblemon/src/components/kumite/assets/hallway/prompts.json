@@ -1,0 +1,15 @@
+{
+  "mode": "built-in image_gen",
+  "date": "2026-11-05",
+  "prompts": {
+    "breakthrough-flyer": "Use case: style-transfer. Edit target image 1: Breakthrough fight flyer. Image 2 is a supporting reference for the game's detailed hand-painted anime environment and palette, not a background to include.\nRedraw the flyer as a mature Japanese anime production prop: hand-drawn confident varied ink linework, anatomically convincing clenched fist with clear knuckles and tendons, sophisticated 3-tone cel shadows, subtle controlled hatching and drawn print scuffs. Underground martial arts anime tournament poster. Strong bold expressive lines but finer internal detail and restrained natural proportions. The fist is an ink illustration printed on paper, NOT a glossy vector gold icon. Muted ochre, oxblood red, warm bone paper, charcoal, small bright gold highlights. Mostly straight paper edges with a few natural tears and creases, two modest tape strips. Keep front-on rectangular vertical flyer and exact text: small \"LIVE PVP\", large brush-lettered \"BREAK\" then \"THROUGH\", footer \"THREE LANES / TWO BREACHES\". One small clenched-fist emblem. Fist breaking a wall illustration occupies lower half. Match the visual sophistication and believable material shapes of the alley reference while staying decisively 2D cel-shaded anime. Avoid uniform thick sticker outlines, cartoon clip art, sawtooth paper edges, mobile casual game icon style, plastic shine, photorealism, 3D render, crowns, extra text. Isolated flyer with genuinely transparent background outside its paper and tape."
+  },
+  "userSuppliedArtDirection": "hand drawn anime cel shaded version of this",
+  "userSuppliedAssets": [
+    "alley",
+    "record-banner",
+    "kumite-sign",
+    "hanging-clock",
+    "flyer-paper"
+  ]
+}

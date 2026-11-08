@@ -1,16 +1,10 @@
-import { isBreakthroughPublicEntryEnabled } from '@workspace/squabblemon-engine/breakthroughRelease';
-import breakthroughScene from '../../components/breakthrough/assets/dojo-landscape.webp';
-import breakthroughImpact from '../../components/breakthrough/assets/progression/breach-fx.webp';
-import { KUMITE_FILMS } from '../../lib/kumiteFilms';
 import { kumiteBracketClock } from '../../lib/kumiteClock';
-import { KUMITE_BOSS_FORMS } from '@workspace/squabblemon-engine/bossRaid';
-import { catalogCardById } from '@workspace/squabblemon-engine/data';
 import { useEffect, useId, useMemo, useRef, useState, type CSSProperties, type KeyboardEvent } from 'react';
 import { Link, useLocation } from 'wouter';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { ArrowLeft, ArrowRight, Check, HandFist, LoaderCircle, RefreshCw } from 'lucide-react';
 import { getGetPlayerBootstrapQueryKey, type PlayerBootstrap } from '@workspace/api-client-react';
-import { getAssetUrl, getCardImage, starterRecipes, validateSavedDeck } from '../../data';
+import { getAssetUrl, starterRecipes, validateSavedDeck } from '../../data';
 import { usePersistentDeckSelection } from '../../lib/deckSelection';
 import { onlineErrorMessage } from '../../lib/multiplayer';
 import { enterKumiteMatch, getKumite, getKumiteWinners, kumiteCountdown, kumiteDate, registerKumite, withdrawKumite, type KumiteCurrent } from '../../lib/kumite';
@@ -23,31 +17,16 @@ import { KumiteScoreboard } from '../../components/kumite/KumiteScoreboard';
 import { KumiteRewards } from '../../components/kumite/KumiteRewards';
 import { KumiteArena } from '../../components/kumite/KumiteArena';
 import '../../styles/kumite.css';
-import '../../styles/kumite-breakthrough-entry.css';
+import { hallwayArt } from '../../components/kumite/hallwayArt';
+import { KumiteHallway } from '../../components/kumite/KumiteHallway';
 
 const tabs = [{ id: 'signup', label: 'Sign up' }, { id: 'bracket', label: 'Bracket' }, { id: 'history', label: 'Past winners' }, { id: 'rules', label: 'Rules' }] as const;
 type KumiteTab = typeof tabs[number]['id'];
 
-const DOJO_RAID_BOSSES = KUMITE_BOSS_FORMS.map(form => ({
-  id: form.fighterId, name: catalogCardById[form.fighterId].name, tier: `T${form.tier}`,
-}));
-
-const BREAK_BRACKET_EPISODES = [
-  '01 · The Invitation',
-  '02 · Belt Check',
-  '03 · Find the Glo',
-  '04 · Professional Courtesy',
-  '05 · Break the Bracket',
-  '06 · The Arena Is Ours',
-  '07 · I Got the Glo',
-  '08 · Legends Remain',
-] as const;
-
 function Environment({ entrance, reducedMotion }: { entrance: boolean; reducedMotion: boolean }) {
   if (!entrance) return <KumiteArena className="kumite-arena-scene--lobby" reducedMotion={reducedMotion} />;
-  const prefix = 'hallway';
   return <div className={`kumite-environment ${entrance ? 'kumite-environment--hallway' : ''}`} aria-hidden="true">
-    <picture><source media="(max-width: 700px)" srcSet={getAssetUrl(`assets/kumite/${prefix}-portrait.webp`)} /><img src={getAssetUrl(`assets/kumite/${prefix}-wide.webp`)} alt="" fetchPriority="high" draggable={false} /></picture>
+    <picture><img src={hallwayArt.alley} alt="" fetchPriority="high" draggable={false} /></picture>
     <div className="kumite-environment__shade" />
   </div>;
 }
@@ -159,122 +138,10 @@ export function Kumite({ bootstrap }: { bootstrap: PlayerBootstrap }) {
     <Environment entrance={!inside} reducedMotion={profile.settings.reducedMotion} />
     <div className="kumite-shell">
       <header className="kumite-topbar"><Link href="/game/online" className="kumite-back" aria-label="Back to fight modes"><ArrowLeft size={18} aria-hidden="true" /><span>Fight modes</span></Link><Link href="/game" className="kumite-home" aria-label="Squabblemon Safehouse"><KumiteLogo decorative /></Link>{inside && <button type="button" className="kumite-mode-back" onClick={() => { setInside(false); window.history.replaceState(window.history.state, '', window.location.pathname); }}><span>All Kumite Modes</span></button>}{inside && <Link href="/game/challenges?game=punch-on-patrol&raid=kumite" className="kumite-raid-cta"><HandFist size={14} aria-hidden="true" /><span>Dojo Boss Raid</span></Link>}<span className="kumite-topbar__stamp">KUMITE · ARENA</span></header>
-      {!inside ? <section className="kumite-entry kumite-hub" aria-label="Kumite mode select">
-        <header className="kumite-hub__hero">
-          <div className="kumite-hub__title-block">
-            <span className="kumite-hub__kicker"><i /> UNDERGROUND DOJO ARENA</span>
-            <h1><span className="kumite-hub__title-lead">THE</span><span className="kumite-hub__title-main">KUMITE<span className="kumite-hub__title-dot">.</span></span></h1>
-          </div>
-          <div className="kumite-hub__telemetry">
-            <div className="kumite-hub__clock" aria-label="Next Kumite tournament countdown">
-              <span className="kumite-hub__clock-dot" />
-              <small>{bracketClock.label}</small>
-              <strong>{query.isError && !current ? 'OFFLINE' : bracketClock.value}</strong>
-            </div>
-            <div className="kumite-hub__record-strip" aria-label="Your Kumite record">
-              <span><b>{current?.progression?.matchWins ?? 0}</b> WINS</span>
-              <span><b>{current?.progression?.championships ?? 0}</b> TITLES</span>
-              <span><b>{current?.progression?.rewards.filter(r => r.claimed || r.owned).length ?? 0}/9</b> FIGHTERS</span>
-            </div>
-          </div>
-        </header>
-
-        <div className="kumite-mode-grid">
-          {(
-            <article className="kumite-mode-card kumite-mode-card--breakthrough" data-mode="breakthrough">
-              <div className="kumite-mode-card__media"><img src={breakthroughScene} alt="" draggable={false} /><img className="kumite-mode-card__chibi" src={breakthroughImpact} alt="" draggable={false} /><span className="kumite-mode-card__badge kumite-mode-card__badge--gold"><i /> THREE LANES · TWO BREACHES</span></div>
-              <div className="kumite-mode-card__body"><span className="kumite-mode-card__eyebrow">LIVE PVP · BRING YOUR DECK</span><h2>BREAK<em>THROUGH</em></h2><div className="kumite-entry__actions">{isBreakthroughPublicEntryEnabled() ? <Link className="kumite-button" href="/game/kumite/breakthrough">Find opponent<ArrowRight size={18} aria-hidden="true" /></Link> : <button className="kumite-button" disabled>PvP in preparation</button>}</div></div>
-            </article>
-          )}
-          <article className="kumite-mode-card kumite-mode-card--tournament" data-mode="tournament">
-            <div className="kumite-mode-card__media">
-              <img src={getAssetUrl('assets/kumite/layers/backdrop.webp')} alt="" draggable={false} />
-              <img className="kumite-mode-card__chibi" src={getAssetUrl('assets/kumite/dragonfly-vs-chonk-chibi-v1.webp')} alt="" draggable={false} />
-              <span className="kumite-mode-card__badge" data-live={tournament?.status === 'active'}>
-                <i /> {tournament?.status === 'active' ? 'FIGHTS LIVE NOW' : tournament ? `${tournament.entrants.length}/${tournament.capacity} LOCKED` : '8-PLAYER PVP'}
-              </span>
-              <span className="kumite-mode-card__number">01</span>
-            </div>
-            <div className="kumite-mode-card__body">
-              <span className="kumite-mode-card__eyebrow">LIVE PVP TOURNAMENT</span>
-              <h2>WEEKLY <em>BRACKET</em></h2>
-              <div className="kumite-entry__actions">
-                <button type="button" className="kumite-button" onClick={enterArena}>
-                  <HandFist size={20} aria-hidden="true" />Enter Kumite<ArrowRight size={18} aria-hidden="true" />
-                </button>
-              </div>
-            </div>
-          </article>
-
-          <article className="kumite-mode-card kumite-mode-card--raid" data-mode="boss-raid">
-            <div className="kumite-mode-card__media">
-              <img src={getAssetUrl('assets/kumite/films/v1/unlock-shonuff-landscape.webp')} alt="" draggable={false} />
-              <span className="kumite-mode-card__badge kumite-mode-card__badge--gold">
-                <i /> 5 GRANDMASTERS
-              </span>
-              <span className="kumite-mode-card__number">02</span>
-            </div>
-            <div className="kumite-mode-card__body">
-              <span className="kumite-mode-card__eyebrow">GAUNTLET · HANDS OVERDRIVE</span>
-              <h2>DOJO <em>BOSS RAID</em></h2>
-              <div className="kumite-mode-card__boss-strip" aria-label="Dojo Boss Lineup">
-                {DOJO_RAID_BOSSES.map(boss => (
-                  <div key={boss.id} className="kumite-mode-card__boss" title={boss.name}>
-                    <span className="kumite-portrait"><img src={getCardImage(boss.id)} alt="" decoding="async" /></span>
-                    <small>{boss.tier}</small>
-                  </div>
-                ))}
-              </div>
-              <div className="kumite-entry__actions">
-                <Link href="/game/challenges?game=punch-on-patrol&raid=kumite" className="kumite-button kumite-button--gold">
-                  <HandFist size={20} aria-hidden="true" />Play Dojo Boss Raid<ArrowRight size={18} aria-hidden="true" />
-                </Link>
-              </div>
-            </div>
-          </article>
-
-          <article className="kumite-mode-card kumite-mode-card--arc" data-mode="break-the-bracket">
-            <div className="kumite-mode-card__media">
-              <img src={getAssetUrl('assets/kumite/films/v1/unlock-glo-landscape.webp')} alt="" draggable={false} />
-              <span className="kumite-mode-card__badge kumite-mode-card__badge--crimson">
-                <i /> 8 ANIME EPISODES
-              </span>
-              <span className="kumite-mode-card__number">03</span>
-            </div>
-            <div className="kumite-mode-card__body">
-              <span className="kumite-mode-card__eyebrow">STORY SPECIAL · FIND THE GLO</span>
-              <h2>BREAK THE <em>BRACKET</em></h2>
-              <div className="kumite-entry__actions kumite-entry__actions--row">
-                <Link href="/game/story?season=special-kumite-break-the-bracket" className="kumite-button kumite-button--arc">
-                  <HandFist size={18} aria-hidden="true" /><span>Play Break the Bracket</span><ArrowRight size={16} aria-hidden="true" />
-                </Link>
-              </div>
-            </div>
-          </article>
-
-          <article className="kumite-mode-card kumite-mode-card--camp" data-mode="dojo-camp">
-            <div className="kumite-mode-card__media">
-              <img src={getAssetUrl('assets/kumite/films/v1/unlock-ptang-landscape.webp')} alt="" draggable={false} />
-              <span className="kumite-mode-card__badge">
-                <i /> {current?.progression?.rewards.length ?? 9} REWARDS · {KUMITE_FILMS.length} UNLOCK REELS
-              </span>
-              <span className="kumite-mode-card__number">04</span>
-            </div>
-            <div className="kumite-mode-card__body">
-              <span className="kumite-mode-card__eyebrow">UNLOCK ROAD & HALL OF FAME</span>
-              <h2>FIGHTER <em>ROAD & FILMS</em></h2>
-              <div className="kumite-entry__actions kumite-entry__actions--row">
-                <button type="button" className="kumite-text-button kumite-mode-card__cta" onClick={() => { enterArena(); window.setTimeout(() => document.querySelector('.kumite-roadmap')?.scrollIntoView({ behavior: 'smooth' }), 80); }}>
-                  <span>Open Unlock Road</span><ArrowRight size={15} aria-hidden="true" />
-                </button>
-                <button type="button" className="kumite-text-button kumite-mode-card__cta" onClick={() => { enterArena(); switchTab('history'); }}>
-                  <span>Hall of Champions</span><ArrowRight size={15} aria-hidden="true" />
-                </button>
-              </div>
-            </div>
-          </article>
-        </div>
-      </section> : <>
+      {!inside ? <KumiteHallway current={current} clock={bracketClock} offline={query.isError && !current}
+        reducedMotion={profile.settings.reducedMotion} onEnter={enterArena}
+        onRoad={() => { enterArena(); window.setTimeout(() => document.querySelector('.kumite-roadmap')?.scrollIntoView({ behavior: profile.settings.reducedMotion || matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' }), 80); }}
+        onHistory={() => { enterArena(); switchTab('history'); }} /> : <>
         <section className="kumite-arena-head" aria-label="Kumite weekly tournament">
           {tournament && <KumiteScoreboard tournament={tournament} currentMatch={match} lastWinner={archive.data?.winners[0]} records={current?.records} archiveStatus={archive.isError ? 'error' : archive.isPending ? 'pending' : 'ready'} now={now} />}
           <div className="kumite-arena-head__line"><span className="kumite-week">{tournament?.weekLabel ?? 'WEEKLY TOURNAMENT'}</span><h1 className="sr-only">Kumite weekly PvP tournament</h1><span className="kumite-live-mark" data-active={tournament?.status === 'active'}><i />{tournament?.status === 'active' ? 'FIGHTS LIVE' : tournament?.status === 'complete' ? 'TOURNAMENT COMPLETE' : tournament?.status === 'cancelled' ? 'TOURNAMENT CANCELLED' : 'REGISTRATION'}</span></div>

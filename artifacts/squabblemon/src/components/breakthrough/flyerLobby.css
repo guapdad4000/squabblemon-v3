@@ -1,0 +1,132 @@
+.bt-lobby.bt-flyer-lobby { position:relative; isolation:isolate; height:100dvh; min-height:0; overflow-x:hidden; overflow-y:auto; padding:24px clamp(18px,4vw,64px) max(40px,env(safe-area-inset-bottom)); background:#171513; color:#30201a; }
+.bt-flyer-lobby__alley { position:fixed; inset:0; z-index:-2; pointer-events:none; }
+.bt-flyer-lobby__alley img { width:100%; height:100%; object-fit:cover; }
+.bt-flyer-lobby__alley::after { content:''; position:absolute; inset:0; background:linear-gradient(90deg,#17110c66,#0e111a44),linear-gradient(0deg,#0d0b09c9,transparent 70%); }
+.bt-flyer-lobby .bt-lobby-nav { max-width:1100px; margin:0 auto; color:#ffe4ac; }
+.bt-flyer-lobby .bt-lobby-nav a { display:flex; align-items:center; min-height:44px; color:#ffe4ac; }
+.bt-flyer-lobby .bt-lobby-crew { position:relative; isolation:isolate; min-width:0; padding:32px clamp(26px,5vw,60px) 30px; border:0; background:none; box-shadow:none; transform:none; }
+.bt-flyer-lobby__paper { position:absolute; z-index:-1; inset:0; width:100%; height:100%; pointer-events:none; }
+.bt-flyer-lobby .bt-lobby-identity { display:flex; align-items:center; gap:12px; margin-bottom:20px; color:#2b1c17; }
+.bt-flyer-lobby .bt-lobby-identity strong { color:#2b1c17; }
+.bt-flyer-lobby .bt-lobby-identity small { color:#6a2a20; }
+.bt-flyer-lobby .bt-lobby-identity .fighter-portrait { width:65px; height:76px; flex-shrink:0; }
+.bt-flyer-lobby .bt-lobby-record { margin-left:auto; border:2px solid #85291f; padding:8px; text-align:center; transform:rotate(-7deg); }
+.bt-flyer-lobby .bt-lobby-record b { color:#85291f; font-size:28px; }
+.bt-flyer-lobby .compact-deck-picker { margin:0 -6px; }
+.bt-flyer-lobby .compact-deck-picker__rail { padding:12px 6px 18px; gap:14px; }
+.bt-flyer-lobby .compact-deck-picker__deck { position:relative; display:flex; flex-direction:column; flex:0 0 134px; min-width:134px; min-height:190px; padding:10px; gap:10px; background:#e9d5af; border:1px solid #79634b; color:#38251d; box-shadow:3px 4px 0 #765d4940; transform:rotate(-3deg); transition:transform 160ms ease; }
+.bt-flyer-lobby .compact-deck-picker__deck:nth-child(even) { transform:rotate(3deg); }
+.bt-flyer-lobby .compact-deck-picker__deck[aria-pressed=true] { transform:translateY(-7px) rotate(0); border:2px solid #8a251d; background:#fff0cd; box-shadow:3px 5px 0 #8a251d55; }
+.bt-flyer-lobby .compact-deck-picker__deck[aria-pressed=true]::after { content:'READY'; position:absolute; top:80px; right:2px; border:2px solid #92271e; padding:4px; color:#92271e; background:#f5e2b9; font:800 13px/1 var(--font-action-sign,var(--font-display)); transform:rotate(-13deg); }
+.bt-flyer-lobby .compact-deck-picker__box { width:100%; height:106px; flex:0 0 106px; transform:none; border:0; background:#2c2622; }
+.bt-flyer-lobby .compact-deck-picker__box img { width:100%; height:100%; object-fit:contain; }
+.bt-flyer-lobby .compact-deck-picker__deck strong { color:#38251d; font-size:15px; line-height:1.15; white-space:normal; }
+.bt-flyer-lobby .compact-deck-picker__deck small { color:#59402f; font-size:11px; }
+.bt-flyer-lobby .bt-matchmaking-note { color:#59402f; font-size:12px; margin:10px 0; }
+.bt-flyer-lobby .bt-lobby-actions { margin:0; }
+.bt-flyer-lobby .bt-primary { width:100%; min-height:56px; border:2px solid #441a13; background:#92271e; color:#fff2d5; box-shadow:4px 5px 0 #441a13; transform:rotate(-1deg); font:800 20px/1.15 var(--font-action-sign,var(--font-display)); }
+.bt-flyer-lobby .bt-primary:active { transform:translateY(3px) rotate(-1deg); box-shadow:1px 2px 0 #441a13; }
+.bt-flyer-lobby .bt-primary:disabled { opacity:.6; }
+.bt-flyer-lobby .bt-text-button { color:#6b241c; min-height:44px; }
+.bt-flyer-lobby .bt-mode-rules { border-top:1px dashed #74533b; margin-top:22px; color:#3c2c20; }
+.bt-flyer-lobby .bt-mode-rules > summary { color:#56271c; min-height:48px; }
+.bt-flyer-lobby .bt-mode-rules p { color:#463123; font-size:12px; line-height:1.6; }
+.bt-flyer-lobby .bt-trophy-values { color:#52231c; }
+.bt-flyer-lobby .bt-trophy-values b { color:#7e261e; }
+.bt-flyer-lobby .bt-lobby-status { color:#8a2018; font-size:13px; background:#fff1d1; padding:10px; }
+.bt-flyer-lobby :is(a,button,summary):focus-visible { outline:3px solid #bd381e; outline-offset:5px; }
+.bt-flyer-lobby .bt-lobby-nav a:focus-visible { outline-color:#ffdb7d; }
+@media (max-width:700px) {
+ .bt-lobby.bt-flyer-lobby { padding:12px 12px 32px; }
+ .bt-flyer-lobby .bt-lobby-crew { padding:44px 26px 32px; transform:none; }
+ .bt-flyer-lobby .bt-lobby-identity { gap:8px; margin-bottom:10px; }
+ .bt-flyer-lobby .bt-lobby-identity .fighter-portrait { width:46px; height:58px; }
+ .bt-flyer-lobby .bt-lobby-record { padding:5px; } .bt-flyer-lobby .bt-lobby-record b { font-size:22px; }
+ .bt-flyer-lobby .compact-deck-picker__deck { min-width:120px; flex-basis:120px; }
+ .bt-flyer-lobby .bt-primary { font-size:18px; }
+}
+@media (max-height:500px) and (min-width:701px) {
+ .bt-flyer-lobby .bt-lobby-crew { padding:40px 30px 30px; }
+}
+.bt-flyer-lobby[data-reduced-motion=true] .compact-deck-picker__deck { transition:none; }
+@media (prefers-reduced-motion:reduce) { .bt-flyer-lobby .compact-deck-picker__deck { transition:none; } }
+
+.bt-flyer-lobby .compact-deck-picker__deck:is([aria-pressed=true],:hover:not(:disabled)) .compact-deck-picker__box { transform:none; box-shadow:none; }
+
+.bt-flyer-lobby .compact-deck-picker__edge { background:#dcc198; }
+/* The player's next decision leads; the poster becomes a small registration stamp. */
+.bt-flyer-lobby .bt-lobby-stage { display:block; width:100%; max-width:850px; margin:18px auto 0; }
+.bt-flyer-lobby__masthead { display:flex; align-items:center; gap:20px; margin-bottom:16px; padding-bottom:14px; border-bottom:2px solid #773424; }
+.bt-flyer-lobby .bt-flyer-lobby__poster { display:block; width:68px; height:102px; object-fit:contain; transform:rotate(-6deg); flex:none; filter:drop-shadow(3px 4px 0 #52351e55); }
+.bt-flyer-lobby__masthead h1 { font:800 clamp(25px,4.5vw,46px)/1 var(--font-action-sign,var(--font-display)); letter-spacing:-.02em; color:#72231b; margin:6px 0; }
+.bt-flyer-lobby__masthead small,.bt-flyer-lobby__masthead span { font:800 10px/1.3 var(--font-mono); color:#68402a; }
+.bt-flyer-lobby .bt-lobby-identity { margin-bottom:4px; }
+.bt-flyer-lobby .bt-lobby-identity .fighter-portrait { width:44px; height:52px; }
+.bt-flyer-lobby .bt-lobby-record { padding:4px 10px; transform:rotate(-4deg); }
+.bt-flyer-lobby .bt-lobby-record b { font-size:23px; }
+.bt-flyer-lobby .compact-deck-picker__controls { display:flex; align-items:center; gap:6px; margin:4px 6px 0; }
+.bt-flyer-lobby .compact-deck-picker__controls span { flex:1; color:#6a2a20; font:800 11px/1.2 var(--font-mono); }
+.bt-flyer-lobby .compact-deck-picker__controls button { width:44px; height:44px; border:1px solid #773424; background:#ead5ad; color:#65231b; font:bold 25px/1 var(--font-sans); box-shadow:2px 2px 0 #773424; }
+.bt-flyer-lobby .compact-deck-picker__controls button:disabled { opacity:.35; box-shadow:none; cursor:default; }
+.bt-flyer-lobby .compact-deck-picker__edge { top:54px; bottom:16px; }
+.bt-flyer-lobby .bt-matchmaking-note { margin:4px 0 12px; }
+.bt-flyer-lobby .bt-mode-rules { margin-top:16px; }
+.bt-standings { position:relative; isolation:isolate; width:100%; max-width:850px; margin:16px auto 0; padding:34px clamp(26px,5vw,60px) 30px; color:#38251d; }
+.bt-standings header { display:flex; align-items:center; justify-content:space-between; gap:10px; border-bottom:2px solid #6a2a20; padding-bottom:12px; }
+.bt-standings header small,.bt-standings header > span { font:800 10px/1.3 var(--font-mono); color:#68341f; }
+.bt-standings h2 { margin:4px 0 0; color:#72231b; font:800 clamp(26px,4vw,36px)/1 var(--font-action-sign,var(--font-display)); }
+.bt-standings ol { list-style:none; padding:0; margin:0; }
+.bt-standings li { display:flex; align-items:center; gap:12px; padding:12px 0; min-width:0; border-bottom:1px dashed #987958; }
+.bt-standings li[data-you=true] { background:#a7351b16; }
+.bt-standings__position { width:30px; flex-shrink:0; color:#8d2c1e; font:800 24px/1 var(--font-display); }
+.bt-standings .fighter-portrait { width:40px; height:48px; flex-shrink:0; }
+.bt-standings__name { min-width:0; flex:1; }
+.bt-standings__name strong { display:block; overflow-wrap:anywhere; font:800 15px/1.2 var(--font-display); }
+.bt-standings__name small { display:block; margin-top:5px; font:700 10px/1.2 var(--font-mono); color:#694a35; }
+.bt-standings__name em { display:inline-block; margin-left:6px; padding:2px 4px; background:#85291f; color:#ffeccc; font:800 9px var(--font-mono); }
+.bt-standings__score { text-align:right; flex-shrink:0; }
+.bt-standings__score b { display:block; font:800 23px/1.2 var(--font-display); color:#72231b; }
+.bt-standings__score small { font:800 8px var(--font-mono); }
+.bt-standings__you { margin-top:10px!important; border-top:2px solid #6a2a20; }
+.bt-standings__note,.bt-standings p { font:500 12px/1.5 var(--font-sans); }
+.bt-standings button { min-height:44px; color:#72231b; background:none; border:0; font:800 12px var(--font-mono); cursor:pointer; }
+.bt-standings__expand { width:100%; text-align:center; padding-top:12px; }
+@media(max-width:700px) {
+ .bt-flyer-lobby .bt-lobby-stage { margin-top:0; }
+ .bt-flyer-lobby .bt-lobby-crew { padding:28px 24px 22px; }
+ .bt-flyer-lobby__masthead { gap:12px; padding-bottom:12px; margin-bottom:12px; }
+ .bt-flyer-lobby .bt-flyer-lobby__poster { width:40px; height:60px; }
+ .bt-flyer-lobby__masthead h1 { font-size:clamp(21px,6.3vw,34px); }
+ .bt-flyer-lobby__masthead small,.bt-flyer-lobby__masthead span { font-size:8px; }
+ .bt-flyer-lobby .bt-lobby-identity strong { font-size:17px; }
+ .bt-flyer-lobby .compact-deck-picker__deck { min-height:176px; }
+ .bt-standings { padding:30px 24px 22px; }
+ .bt-standings li { gap:7px; }
+ .bt-standings__position { width:23px; font-size:20px; }
+ .bt-standings .fighter-portrait { width:30px; height:38px; }
+ .bt-standings__name strong { font-size:13px; }
+ .bt-standings__name small { font-size:8px; }
+ .bt-standings__score b { font-size:19px; }
+ .bt-standings header > span { font-size:8px; }
+}
+
+.bt-flyer-lobby__masthead h1 { text-shadow:none; transform:none; }
+.bt-flyer-lobby .bt-lobby-crew { padding-top:48px; }
+.bt-standings { padding-top:44px; }
+.bt-standings[data-expanded=true] > ol:first-of-type { max-height:420px; overflow-y:auto; overscroll-behavior:contain; scrollbar-color:#8d2c1e #dcc198; scrollbar-width:thin; }
+.bt-standings > ol:focus-visible { outline:2px solid #8d2c1e; outline-offset:3px; }
+@media(max-width:700px) {
+ .bt-flyer-lobby .bt-lobby-crew { padding:38px 32px 28px; }
+ .bt-flyer-lobby__masthead h1 { font-size:clamp(18px,5.7vw,30px); }
+ .bt-flyer-lobby__masthead { gap:10px; }
+ .bt-standings { padding:40px 32px 28px; }
+ .bt-standings header { flex-wrap:wrap; }
+}
+@media(max-height:500px) and (min-width:701px) {
+ .bt-lobby.bt-flyer-lobby { padding-top:12px; }
+ .bt-flyer-lobby .bt-lobby-stage { margin-top:0; }
+ .bt-flyer-lobby .bt-lobby-crew { padding:40px 60px 28px; }
+ .bt-flyer-lobby .bt-flyer-lobby__poster { width:40px; height:60px; }
+ .bt-flyer-lobby__masthead { margin-bottom:10px; gap:14px; }
+ .bt-flyer-lobby__masthead h1 { font-size:30px; }
+}

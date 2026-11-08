@@ -3,7 +3,7 @@ import { getCardImage } from '../data';
 import { battlePortraitUrl } from '../lib/battlePortrait';
 import '../styles/compact-deck-picker.css';
 export type PickerDeck = { id: string; name: string; heroCardId: string; cardIds: string[] };
-export function CompactDeckPicker({ decks, selectedId, onSelect, disabled = false, label = 'Choose your crew', id }: { decks: PickerDeck[]; selectedId: string; onSelect: (id: string) => void; disabled?: boolean; label?: string; id?: string }) {
+export function CompactDeckPicker({ decks, selectedId, onSelect, disabled = false, label = 'Choose your crew', id, showScrollControls = false, reducedMotion = false }: { decks: PickerDeck[]; selectedId: string; onSelect: (id: string) => void; disabled?: boolean; label?: string; id?: string; showScrollControls?: boolean; reducedMotion?: boolean }) {
   const rail = useRef<HTMLDivElement>(null);
   const [edges, setEdges] = useState({ left: false, right: false });
   useLayoutEffect(() => {
@@ -34,6 +34,11 @@ export function CompactDeckPicker({ decks, selectedId, onSelect, disabled = fals
     else if (item.right > viewport.right - 8) node.scrollLeft += item.right - viewport.right + 8;
   }, [selectedId]);
   return <div id={id} className="compact-deck-picker" role="group" aria-label={label} data-left-overflow={edges.left} data-right-overflow={edges.right}>
+    {showScrollControls && <div className="compact-deck-picker__controls">
+      <span>CHOOSE YOUR CREW</span>
+      <button type="button" aria-label="Previous decks" disabled={disabled || !edges.left} onClick={() => rail.current?.scrollBy({ left: -Math.max(160, rail.current.clientWidth * .75), behavior: reducedMotion || matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' })}>←</button>
+      <button type="button" aria-label="Next decks" disabled={disabled || !edges.right} onClick={() => rail.current?.scrollBy({ left: Math.max(160, rail.current.clientWidth * .75), behavior: reducedMotion || matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' })}>→</button>
+    </div>}
     <div ref={rail} className="compact-deck-picker__rail">
     {!decks.length && <span>No battle-ready crew available</span>}
     {decks.map(deck => <button type="button" key={deck.id} aria-pressed={selectedId === deck.id} disabled={disabled} onClick={() => onSelect(deck.id)} className="compact-deck-picker__deck">

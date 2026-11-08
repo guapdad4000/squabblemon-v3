@@ -15,3 +15,5 @@ export {bossRaidRunId,bossRaidStartInput,bossRaidActionInput} from './bossRaid';
 export { parkChessRunId, parkChessStartInput, parkChessMoveInput, parkChessResignInput } from './parkChess';
 
 export { anunakiRaidStartInput, anunakiRaidActionInput } from './anunakiRaid';
+
+export type { BreakthroughStanding, BreakthroughStandings } from './breakthroughStandings';

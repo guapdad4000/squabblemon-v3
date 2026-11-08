@@ -28,6 +28,7 @@ window.fetch = async (input,init) => {
  const path = url.pathname.slice('/api/breakthrough'.length);
  const json = (data:unknown)=>new Response(JSON.stringify(data),{headers:{'content-type':'application/json'}});
  if (!path) return json({search,record:{trophies:100,wins:5,losses:2,draws:0}});
+ if (path==='/standings') return json({season:'fixture',total:0,updatedAt:new Date().toISOString(),leaders:[],you:null});
  if (path==='/search') { const body=JSON.parse(String(init?.body)); if(search?.requestId===body.requestId) return json(search); search={...body,status:'waiting',roomId:null};setTimeout(()=>{search={...search,status:'paired',roomId:room.roomId}},1500);return json(search); }
  if (path==='/cancel') {search={...search,status:'cancelled'};return json(search);}
  if (path.endsWith('/receipt')) return json(room.phase==='complete'?{roomId:room.roomId,policy:'breakthrough-trophies-v1',season:'breakthrough-season-1',outcome:room.game.winner===own?'win':'loss',eligible:true,exclusion:null,before:100,after:room.game.winner===own?120:94,delta:room.game.winner===own?20:-6}:null);

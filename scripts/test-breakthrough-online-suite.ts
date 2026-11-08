@@ -1,3 +1,4 @@
+import { verifyStandings } from './test-breakthrough-standings-suite';
 import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
 import { createRequire } from "node:module";
@@ -23,6 +24,7 @@ const require = createRequire(
 );
 const express = require("express");
 export async function verifyOnline(pool: BreakthroughRuntimeOptions["pool"]) {
+  await verifyStandings(pool);
   const roster = buildBreakthroughRoster(),
     cards = roster
       .filter((c) => c.kind !== "token" && c.cost <= 3)
@@ -93,6 +95,11 @@ export async function verifyOnline(pool: BreakthroughRuntimeOptions["pool"]) {
   const connections: AbortController[] = [];
   try {
     await call("", "", undefined, 401);
+    await call("", "/standings", undefined, 401);
+    const standings = await call("standings-test", "/standings");
+    assert.deepEqual(standings.leaders, []); assert.equal(standings.you, null);
+    const privateResponse = await fetch(base + '/standings', {headers:{'x-test-user':'standings-test','x-breakthrough-protocol':BREAKTHROUGH_PROTOCOL}});
+    assert.equal(privateResponse.headers.get('cache-control'), 'private, no-store');
     await call(
       "a",
       "/search",

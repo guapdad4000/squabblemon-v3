@@ -1,3 +1,4 @@
+import { breakthroughStandings } from './breakthroughStandings';
 import { BREAKTHROUGH_RIVALS, BREAKTHROUGH_RIVAL_WAIT_MS } from '@workspace/squabblemon-engine/breakthroughRivals';
 import { randomUUID, randomInt } from "node:crypto";
 import type { pool as applicationPool } from "@workspace/db";
@@ -127,6 +128,7 @@ export class BreakthroughOnlineService {
         }
       : null;
   }
+  async standings(userId: string) { return breakthroughStandings(this.options.pool, userId); }
   async lobby(userId: string): Promise<BreakthroughLobby> {
     this.engine.admit();
     // Heartbeat only queued searches, at most once per ten seconds. Paired/idle reads do not write.

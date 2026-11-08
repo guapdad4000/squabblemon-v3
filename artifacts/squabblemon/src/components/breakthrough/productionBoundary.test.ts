@@ -28,10 +28,13 @@ test('nested routes precede Kumite hub and Breakthrough stays outside eager idle
 });
 
 test('Kumite opens PvP matchmaking and legacy practice links redirect to it', () => {
-  const page = text('../../pages/game/Breakthrough.tsx'), hub = text('../../pages/game/Kumite.tsx');
+  const page = text('../../pages/game/Breakthrough.tsx'), hub = text('../../pages/game/Kumite.tsx'), hallway = text('../kumite/KumiteHallway.tsx');
   assert.match(page, /getBreakthroughLaunchReadiness\(\)\.canLaunch/);
   assert.ok(page.includes(`if (location === '/game/kumite/breakthrough/practice') return <Redirect to="/game/kumite/breakthrough" />;`));
-  assert.ok(hub.includes('href="/game/kumite/breakthrough"'));
-  assert.ok(hub.includes('Find opponent'));
-  assert.doesNotMatch(hub, /CPU PRACTICE|Practice Breakthrough|Face the rivals/);
+  assert.match(hub, /import \{ KumiteHallway \} from/);
+  assert.match(hub, /!inside \? <KumiteHallway/);
+  assert.ok(hallway.includes('href="/game/kumite/breakthrough"'));
+  assert.ok(hallway.includes('Find opponent'));
+  assert.match(hallway, /isBreakthroughPublicEntryEnabled\(\)/);
+  assert.doesNotMatch(hub + hallway, /CPU PRACTICE|Practice Breakthrough|Face the rivals/);
 });

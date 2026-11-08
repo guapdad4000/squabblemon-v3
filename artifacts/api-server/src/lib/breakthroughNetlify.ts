@@ -130,6 +130,7 @@ export function createNetlifyBreakthroughHandler(options: Options) {
         try { input = JSON.parse(text + decoder.decode()); } catch { return json({error: 'Invalid request.'}, 400); }
         if (!input || Array.isArray(input) || typeof input !== 'object') return json({error: 'Invalid request.'}, 400);
       }
+      if (path[0] === 'standings' && path.length === 1 && request.method === 'GET') return json(await options.service.standings(user));
       if (!path.length && request.method === 'GET') {
         const result = await options.service.lobby(user);
         if (result.search?.roomId && result.search.status === 'paired') await options.wake(result.search.roomId);

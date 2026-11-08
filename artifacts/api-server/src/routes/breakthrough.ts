@@ -105,6 +105,7 @@ export function breakthroughRouter(
         error(req, res, e);
       }
     };
+  router.get("/breakthrough/standings", endpoint((_req, user) => service.standings(user)));
   const room = (req: Request) => String(req.params.roomId);
   router.get(
     "/breakthrough",
